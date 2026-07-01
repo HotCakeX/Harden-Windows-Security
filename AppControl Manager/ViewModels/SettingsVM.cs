@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.Foundation;
 using Windows.UI.Shell;
 using Windows.UI.StartScreen;
 using Microsoft.UI.Xaml.Controls;
@@ -47,6 +48,48 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class SettingsVM : ViewModelBase
 {
+#if HARDEN_SYSTEM_SECURITY
+	private const string UkrainianLanguageToken = "uk";
+	private const string UkrainianLanguageResourceId = "uk-UA";
+	private const string PersianLanguageToken = "fa";
+	private const string PersianLanguageResourceId = "fa-IR";
+	private const string ItalianLanguageToken = "it";
+	private const string ItalianLanguageResourceId = "it-IT";
+	private const string MandarinChineseLanguageToken = "zh";
+	private const string MandarinChineseLanguageResourceId = "zh-CN";
+	private const string IndonesianLanguageToken = "id";
+	private const string IndonesianLanguageResourceId = "id-ID";
+	private const string ThaiLanguageToken = "th";
+	private const string ThaiLanguageResourceId = "th-TH";
+	private const string LanguageAddonsResourceId = "ExtraLanguagesPack1";
+
+	private static readonly bool ExtraLanguagesPack1Installed = GetLanguageAddonsPackage() is not null;
+	private bool _suppressExtraLanguagesPack1ToggleSwitchToggled;
+
+	private void SetExtraLanguagesPack1ToggleSwitchIsOn(ToggleSwitch toggleSwitch, bool isOn)
+	{
+		_suppressExtraLanguagesPack1ToggleSwitchToggled = true;
+
+		try
+		{
+			toggleSwitch.IsOn = isOn;
+		}
+		finally
+		{
+			_suppressExtraLanguagesPack1ToggleSwitchToggled = false;
+		}
+	}
+
+	internal void ExtraLanguagesPack1ToggleSwitch_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	{
+		if (sender is ToggleSwitch toggleSwitch)
+		{
+			// Synchronize the startup UI state without invoking the add/remove workflow.
+			SetExtraLanguagesPack1ToggleSwitchIsOn(toggleSwitch, ExtraLanguagesPack1Installed);
+		}
+	}
+#endif
+
 	internal SettingsVM()
 	{
 		// Populate the ComboBoxes' ItemsSource collections
@@ -68,6 +111,17 @@ internal sealed partial class SettingsVM : ViewModelBase
 		LanguageOptions.Add(new("മലയാളം", "ms-appx:///Assets/CountryFlags/india-240.png"));
 		LanguageOptions.Add(new("Deutsch", "ms-appx:///Assets/CountryFlags/germany-240.png"));
 		LanguageOptions.Add(new("Français", "ms-appx:///Assets/CountryFlags/france-240.png"));
+#if HARDEN_SYSTEM_SECURITY
+		if (ExtraLanguagesPack1Installed)
+		{
+			LanguageOptions.Add(new("Українська", "ms-appx:///Assets/CountryFlags/ukraine-240.png"));
+			LanguageOptions.Add(new("فارسی", "ms-appx:///Assets/CountryFlags/iran-240.png"));
+			LanguageOptions.Add(new("Italiano", "ms-appx:///Assets/CountryFlags/italy-240.png"));
+			LanguageOptions.Add(new("中文（普通话）", "ms-appx:///Assets/CountryFlags/china-240.png"));
+			LanguageOptions.Add(new("Bahasa Indonesia", "ms-appx:///Assets/CountryFlags/indonesia-240.png"));
+			LanguageOptions.Add(new("ไทย", "ms-appx:///Assets/CountryFlags/thailand-240.png"));
+		}
+#endif
 #if APP_CONTROL_MANAGER
 		LanguageOptions.Add(new("日本語", "ms-appx:///Assets/CountryFlags/japan-96.png"));
 #endif
@@ -111,34 +165,94 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
-	internal static readonly Dictionary<string, int> SupportedLanguages = new(StringComparer.OrdinalIgnoreCase)
-	{
-		{ "en-US", 0 },
-		{ "he", 1 },
-		{ "el", 2 },
-		{ "hi", 3 },
-		{ "pl", 4 },
-		{ "ar", 5 },
-		{ "es", 6 },
-		{ "ml", 7 },
-		{ "de", 8 },
-		{ "fr", 9 },
-		{ "ja", 10 }
-	};
+	internal static readonly Dictionary<string, int> SupportedLanguages = CreateSupportedLanguages();
 
-	internal static readonly string[] SupportedLanguagesReverse = [
-		 "en-US",
-		 "he",
-		 "el",
-		 "hi",
-		 "pl",
-		 "ar",
-		 "es",
-		 "ml",
-		 "de",
-		 "fr",
-		 "ja"
-	];
+	private static Dictionary<string, int> CreateSupportedLanguages()
+	{
+		Dictionary<string, int> languages = new(StringComparer.OrdinalIgnoreCase)
+		{
+			{ "en-US", 0 },
+			{ "he", 1 },
+			{ "el", 2 },
+			{ "hi", 3 },
+			{ "pl", 4 },
+			{ "ar", 5 },
+			{ "es", 6 },
+			{ "ml", 7 },
+			{ "de", 8 },
+			{ "fr", 9 }
+		};
+#if APP_CONTROL_MANAGER
+		languages.Add("ja", 10);
+#endif
+#if HARDEN_SYSTEM_SECURITY
+		if (ExtraLanguagesPack1Installed)
+		{
+			languages.Add(UkrainianLanguageToken, 10);
+			languages.Add(PersianLanguageToken, 11);
+			languages.Add(ItalianLanguageToken, 12);
+			languages.Add(MandarinChineseLanguageToken, 13);
+			languages.Add(IndonesianLanguageToken, 14);
+			languages.Add(ThaiLanguageToken, 15);
+		}
+#endif
+
+		return languages;
+	}
+
+	internal static readonly string[] SupportedLanguagesReverse = CreateSupportedLanguagesReverse();
+
+	private static string[] CreateSupportedLanguagesReverse()
+	{
+		List<string> languages =
+		[
+			"en-US",
+			"he",
+			"el",
+			"hi",
+			"pl",
+			"ar",
+			"es",
+			"ml",
+			"de",
+			"fr"
+		];
+#if APP_CONTROL_MANAGER
+		languages.Add("ja");
+#endif
+#if HARDEN_SYSTEM_SECURITY
+		if (ExtraLanguagesPack1Installed)
+		{
+			languages.Add(UkrainianLanguageToken);
+			languages.Add(PersianLanguageToken);
+			languages.Add(ItalianLanguageToken);
+			languages.Add(MandarinChineseLanguageToken);
+			languages.Add(IndonesianLanguageToken);
+			languages.Add(ThaiLanguageToken);
+		}
+#endif
+		return [.. languages];
+	}
+
+#if HARDEN_SYSTEM_SECURITY
+	private static bool IsLanguageAddonResource(string language) =>
+		string.Equals(language, UkrainianLanguageToken, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, UkrainianLanguageResourceId, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, PersianLanguageToken, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, PersianLanguageResourceId, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, ItalianLanguageToken, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, ItalianLanguageResourceId, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, MandarinChineseLanguageToken, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, MandarinChineseLanguageResourceId, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, IndonesianLanguageToken, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, IndonesianLanguageResourceId, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, ThaiLanguageToken, StringComparison.OrdinalIgnoreCase) ||
+		string.Equals(language, ThaiLanguageResourceId, StringComparison.OrdinalIgnoreCase);
+
+	private static bool IsUnavailableLanguageAddonResource(string language) => IsLanguageAddonResource(language) && !ExtraLanguagesPack1Installed;
+
+	private static Package? GetLanguageAddonsPackage() => Package.Current.Dependencies.FirstOrDefault(package => string.Equals(package.Id.ResourceId, LanguageAddonsResourceId, StringComparison.OrdinalIgnoreCase));
+#endif
 
 	/// <summary>
 	/// Runs very early at app startup to detect and set the app's language.
@@ -150,6 +264,15 @@ internal sealed partial class SettingsVM : ViewModelBase
 			// If a language has already been assigned then use it.
 			if (!string.IsNullOrEmpty(Atlas.Settings.ApplicationGlobalLanguage))
 			{
+#if HARDEN_SYSTEM_SECURITY
+				// If the language saved in the settings belongs to one of those included in Resource Package, and that resource package is not currently installed, then fall back to en-US
+				if (IsUnavailableLanguageAddonResource(Atlas.Settings.ApplicationGlobalLanguage))
+				{
+					ApplicationLanguages.PrimaryLanguageOverride = "en-US";
+					Atlas.Settings.ApplicationGlobalLanguage = "en-US";
+					return;
+				}
+#endif
 				// Set the language of the application to the user's preferred language
 				ApplicationLanguages.PrimaryLanguageOverride = Atlas.Settings.ApplicationGlobalLanguage;
 
@@ -167,6 +290,13 @@ internal sealed partial class SettingsVM : ViewModelBase
 				// See if the same exact language is supported by the app.
 				if (SupportedLanguages.ContainsKey(language))
 				{
+#if HARDEN_SYSTEM_SECURITY
+					// Skip if the language was supported but it is in a resource package that is currently not installed.
+					if (IsUnavailableLanguageAddonResource(language))
+					{
+						continue;
+					}
+#endif
 					// Set the app's language
 					ApplicationLanguages.PrimaryLanguageOverride = language;
 
@@ -183,6 +313,13 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 					if (SupportedLanguages.ContainsKey(neutralLanguage))
 					{
+#if HARDEN_SYSTEM_SECURITY
+						// If the current system language partially matches one of the languages that exists in the Resource package that is currently not installed then skip it.
+						if (IsUnavailableLanguageAddonResource(neutralLanguage))
+						{
+							continue;
+						}
+#endif
 						// Set the app's language
 						ApplicationLanguages.PrimaryLanguageOverride = neutralLanguage;
 
@@ -213,6 +350,146 @@ internal sealed partial class SettingsVM : ViewModelBase
 			Atlas.Settings.ApplicationGlobalLanguage = "en-US";
 		}
 	}
+
+#if HARDEN_SYSTEM_SECURITY
+
+	// It doesn't successfully add/remove the resource package when elevated.
+	internal bool ExtraLanguagesPack1ToggleIsEnabled => !Atlas.IsElevated && !LanguageAddonsOperationInProgress;
+
+	internal Visibility LanguageAddonsOperationProgressVisibility => LanguageAddonsOperationInProgress ? Visibility.Visible : Visibility.Collapsed;
+
+	internal double LanguageAddonsOperationProgressValue { get; set => SP(ref field, value); }
+
+	private bool LanguageAddonsOperationInProgress
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				OnPropertyChanged(nameof(ExtraLanguagesPack1ToggleIsEnabled));
+				OnPropertyChanged(nameof(LanguageAddonsOperationProgressVisibility));
+			}
+		}
+	}
+
+	internal async void ManageExtraLanguagesPack1(object sender, RoutedEventArgs e)
+	{
+		if (_suppressExtraLanguagesPack1ToggleSwitchToggled)
+		{
+			return;
+		}
+
+		if (sender is ToggleSwitch ts)
+		{
+			try
+			{
+				bool isInstalled = GetLanguageAddonsPackage() is not null;
+
+				if (ts.IsOn == isInstalled)
+				{
+					return;
+				}
+
+				if (ts.IsOn)
+				{
+					await AddLanguageAddonsAsync();
+				}
+				else
+				{
+					await RemoveLanguageAddonsAsync();
+				}
+
+				// Keep the toggle synchronized if the user cancels the dialog or Windows does not change the package state.
+				SetExtraLanguagesPack1ToggleSwitchIsOn(ts, GetLanguageAddonsPackage() is not null);
+			}
+			catch (Exception ex)
+			{
+				// Set it back to what it was if the operation was not successful.
+				SetExtraLanguagesPack1ToggleSwitchIsOn(ts, !ts.IsOn);
+				MainInfoBar.WriteError(ex);
+			}
+			finally
+			{
+				LanguageAddonsOperationInProgress = false;
+				LanguageAddonsOperationProgressValue = 0;
+			}
+		}
+	}
+
+	private async Task AddLanguageAddonsAsync()
+	{
+		using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+		{
+			Title = "Add Extra Languages Pack 1 Add-on",
+			Content = "Windows will download the language add-on for this app. If the package is added successfully, the app will be restarted so the new resources can be loaded.",
+			PrimaryButtonText = "Add",
+			CloseButtonText = Atlas.GetStr("Cancel"),
+			DefaultButton = ContentDialogButton.Primary
+		};
+
+		ContentDialogResult dialogResult = await dialog.ShowAsync();
+		if (dialogResult is not ContentDialogResult.Primary)
+		{
+			return;
+		}
+
+		LanguageAddonsOperationInProgress = true;
+
+		PackageCatalog packageCatalog = PackageCatalog.OpenForCurrentPackage();
+		IAsyncOperationWithProgress<PackageCatalogAddResourcePackageResult, PackageInstallProgress> operation =
+			packageCatalog.AddResourcePackageAsync(
+				resourcePackageFamilyName: Package.Current.Id.FamilyName,
+				resourceID: LanguageAddonsResourceId,
+				options: AddResourcePackageOptions.ApplyUpdateIfAvailable | AddResourcePackageOptions.ForceTargetAppShutdown);
+
+		operation.Progress = (asyncOperation, progress) => _ = Atlas.AppDispatcher.TryEnqueue(() => LanguageAddonsOperationProgressValue = progress.PercentComplete);
+
+		PackageCatalogAddResourcePackageResult result = await operation;
+		if (result.ExtendedError is not null)
+		{
+			throw result.ExtendedError;
+		}
+
+		MainInfoBar.WriteSuccess("The language add-ons package was added. Restart Harden System Security if it did not restart automatically.");
+	}
+
+	private async Task RemoveLanguageAddonsAsync()
+	{
+		Package? languageAddonsPackage = GetLanguageAddonsPackage();
+		if (languageAddonsPackage is null)
+		{
+			MainInfoBar.WriteWarning("The language add-ons package is already removed.");
+			return;
+		}
+
+		using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+		{
+			Title = "Remove Extra Languages Pack 1 Add-on",
+			Content = "Windows will remove the language add-on if it is not required for the current user or device. Restart Harden System Security after removal so the available languages list is refreshed.",
+			PrimaryButtonText = "Remove",
+			CloseButtonText = Atlas.GetStr("Cancel"),
+			DefaultButton = ContentDialogButton.Primary
+		};
+
+		ContentDialogResult dialogResult = await dialog.ShowAsync();
+		if (dialogResult is not ContentDialogResult.Primary)
+		{
+			return;
+		}
+
+		LanguageAddonsOperationInProgress = true;
+
+		PackageCatalog packageCatalog = PackageCatalog.OpenForCurrentPackage();
+		Package[] languageAddonsPackages = [languageAddonsPackage];
+		PackageCatalogRemoveResourcePackagesResult result = await packageCatalog.RemoveResourcePackagesAsync(languageAddonsPackages);
+		if (result.ExtendedError is not null)
+		{
+			throw result.ExtendedError;
+		}
+
+		MainInfoBar.WriteSuccess("The language add-on was removed. Restart Harden System Security to refresh the available languages.");
+	}
+#endif
 
 	internal int LanguageComboBoxSelectedIndex
 	{

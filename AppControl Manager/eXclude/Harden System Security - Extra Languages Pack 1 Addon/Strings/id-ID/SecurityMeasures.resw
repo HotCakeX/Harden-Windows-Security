@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>Layanan Perlindungan Filming Diaktifkan.</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>Enhanced Phishing Protection: Beritahu App Tak Aman</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>Enhanced Phishing Protection: Beritahu Penggunaan ulang Sandi</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>Enhanced Phishing Protection: Beritahu Malicious</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>Enhanced Phishing Protection: Menangkap Ancaman Jendela</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>Hapus Item Setelah Tundaan</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>Ukuran maksimum dari berkas yang diunduh dan lampiran yang akan dipindai</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>Memindai Drives Jaringan Yang Dipetik Untuk Pindai Penuh</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>Memindai Berkas Jaringan</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>Kandar Dapat Dihapus Memindai</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>undo-type</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>Kedalaman maksimum untuk memindai berkas archive</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>Periksa terbaru virus dan spyware intelijen keamanan pada startup</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>Tentukan jumlah hari sebelum keamanan virus intelijen dianggap keluar dari tanggal</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>Tentukan jumlah hari sebelum intelijen keamanan spyware dianggap keluar dari tanggal</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>Aktifkan Blok Pada Fitur Penglihatan Pertama.</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>Data Diagnostik Opsional Diperlukan untuk Kendali App Cerdas, dll.</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>Atur opsi data diagnostik dalam antar muka pengguna pengaturan</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>Parah Threat level default action = Hapus</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>Ancaman tingkat baku tinggi = Hapus</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>Moderate Ancaman tingkat default aksi = Karantina</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>Ancaman Rendah tingkat default aksi = Karantina</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>Memungkinkan Microsoft Defender Antivirus untuk memperbarui lebih dari koneksi meter</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>Kirim contoh berkas ketika analisis lebih lanjut diperlukan</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>Atur tindakan baku untuk tingkat ancaman</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>Aktifkan Akses Folder Terkontrol</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>Aktifkan Perlindungan Jaringan</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>Aktifkan Perlindungan Jaringan pada Server Windows</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>Aktifkan Intel TDT: Ancaman Teknologi Deteksi.</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>Atur Tingkat Blok Awan ke nilai maksimum: Tak Ada Tolerance.</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>Tenggat pemeriksaan awan yang diperluas ditata ke nilai maksimum.</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>Aktifkan perhitungan Hashes Berkas.</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>Matikan Dev Drive apos; s lax keamanan sekitar pemindaian file.</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>Aktifkan RTP Dan Signature Update selama OOBE mode.</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>Aktifkan fitur Perlindungan BruteForce.</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Mengkonfigurasi tingkat agresivitas Brute Force ke tinggi.</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>Aktifkan fitur Perlindungan Enkripsi Jarak Jauh.</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Atur tingkat agresivitas Perlindungan Enkripsi Jauh ke tinggi.</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>Aktifkan Pemindaian Email.</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>Aktifkan Saus Cepat Pemindaian.</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>Periksa Tanda-tanda sebelum Menjalankan Pindai.</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>Meningkatkan interval untuk memeriksa update intelijen keamanan.</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>Bergabung dengan Microsoft MAPS (juga dikenal sebagai SpyNet) jaringan untuk tetap up to date dengan intelijen keamanan terbaru.</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>Atur Aturan ASR</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>PenyalahkanBlok dari dieksploitasi driver yang ditandatangani rentan</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>Blokir Adobe Reader dari pembuatan proses anak</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>Blokir semua aplikasi Kantor dari membuat proses anak</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>Blok credential mencuri dari Windows subsistem otoritas keamanan lokal (lsass.exe)</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>Blokir isi executable dari klien surel dan webmail</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>Blokir berkas yang dapat dieksekusi dari yang dijalankan kecuali mereka menemui tingkat penyebaran, usia, atau kriteria daftar terpercaya</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>Eksekusi blok dari skrip yang berpotensi diobfustasi</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>Blok JavaScript atau VBScript dari meluncurkan isi executable yang diunduh</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>Aplikasi Kantor Blok dari membuat isi dapat dieksekusi</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>Aplikasi Kantor Blok dari menyuntikkan kode ke proses lain</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>Aplikasi komunikasi Kantor Blok dari menciptakan proses anak</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>Block ketekunan melalui WMI event berlangganan
+* Berkas dan pengecualian folder tidak didukung.</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>Proses blok kreasi berasal dari perintah PSExec dan WMI</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>Blokir mesin reboot dalam Mode Aman</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>Blokir proses yang tak terpercaya dan tak ditandatangani yang dijalankan dari USB</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>Penggunaan blok dari perangkat sistem yang disalin atau disalin</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>Membuat Blog Webshell untuk Server</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>Blok panggilan API Win32 dari Kantor Makro</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>Gunakan perlindungan canggih terhadap ransomware</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>Batalkan PIN Pengguna Standar</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>Ijinkan OS untuk memerlukan otentikasi tambahan saat startup</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>Jangan biarkan BitLocker tanpa TPM</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>Jangan ijinkan menggunakan TPM saja</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>Ijinkan memakai PIN TPM + pada Startup.</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>Ijinkan menggunakan kunci TPM + pada Startup.</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>Ijinkan memakai TPM + Startup Key + PIN pada Startup.</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>Mengkonfigurasi metode Enkripsi yang benar untuk drive OS: XTS- AES- 256</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>Konfigurasikan metode Enkripsi yang benar untuk kandar data tetap: XTS-AES- 256</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>Konfigurasikan metode Enkripsi yang benar untuk kandar yang dapat dilepas: XTS- AES- 256</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>Gunakan PIN Enhanced dengan mengijinkan simbol dan karakter lain untuk digunakan dalam PIN.</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>Konfigurasikan tipe enkripsi disk lengkap untuk OS drive</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Konfigurasikan tipe enkripsi disk lengkap untuk kandar yang dapat dilepas</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>Mencegah akses ke drive data BitLocker-proteksi yang dapat dilepas dari versi sebelumnya dari Windows</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>Jangan instal "BitLocker To Go" Reader on FAT format kandar yang dapat dilepas karena mereka tidak aman.</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>Atur panjang PIN minimum untuk startup.</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>Status siaga tidak valid (S1-S3) ketika tidur (ditancapkan)</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>Keadaan siaga tidak valid (S1-S3) ketika tidur (pada baterai)</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>Tampilkan Opsi Hibernasi pada opsi daya di OS sehingga Anda dapat hibernasi perangkat Anda jika Anda mau.</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Konfigurasikan tipe enkripsi aman untuk Drives Data Tetap</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>Mengkonfigurasi setelan cipher TLS yang benar</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>Atur CCC Curves dan posisi mereka.</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>Nonaktifkan klien TLS 1.0 - Dinonaktifkan Oleh Baku</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>Nonaktifkan klien TLS 1.0 - Aktifkan</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>Nonaktifkan server TLS 1.0 - Dinonaktifkan Oleh Baku</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>Nonaktifkan server TLS 1.0 - Aktifkan</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>Nonaktifkan klien TLS 1.1 - Dinonaktifkan Oleh Baku</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>Nonaktifkan klien TLS 1.1 - Aktifkan</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>Nonaktifkan server TLS 1.1 - Dinonaktifkan Oleh Baku</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>Nonaktifkan server TLS 1.1 - Aktifkan</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>Matikan Cipher Suite NULL</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>Nonaktifkan 56 / 56 Cipher Suite</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>Matikan 40 / 128 Cipher Suite</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>Matikan RC2 56 / 128 Cipher Suite</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>Matikan RC2 128 / 128 Cipher Suite</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>Matikan RC4 40 / 128 Cipher Suite</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>Matikan RC4 56 / 128 Cipher Suite</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>Matikan RC4 64 / 128 Cipher Suite</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>Matikan RC4 128 / 128 Cipher Suite</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>Nonaktifkan Triple DES 168 Cipher Suite</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>Nonaktifkan Algoritma Hashing MD5</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>Perlu digit dalam PIN Hello Windows</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>Perlu huruf huruf huruf kecil dalam PIN Windows Hello</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>Set Ekspirasi untuk Windows Hello PIN</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>Simpan riwayat PIN Windows Hello</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>Jangan tampilkan Pilihan Jaringan UI pada layar terkunci</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>Sembunyikan titik masukan Cepat Switching Pengguna</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>Aktifkan Virtualisasi Berdasarkan Keamanan</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>Perlu Fitur Keamanan Platform</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>Kunci Kode Hipervisor Dipaksa</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>Perlu HVCI MAT (Tabel Atribut Memori)</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>Credential Guard Konfigurasi - UEFI Lock</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>Aktifkan Peluncuran Sistem Penjaga Aman jika dukungan perangkat keras ada</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>Mengkonfigurasi Kernel Shadow Stacks Peluncuran</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>Aktifkan Otoritas Keamanan Lokal (LSA) proses Perlindungan dengan Kunci UEFI</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>Konfigurasi Konfigurasi Identitas Mesin</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>Aktifkan Integritas VBS dan Memori dalam Mode Wajib</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>Aktifkan Windows Firewall untuk profil Domain</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Tata Aksi Keluar Baku untuk profil Domain</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Atur Aksi Inbound Baku untuk profil Domain</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Tampilkan pemberitahuan bagi profil Domain</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>Konfigurasikan path berkas Log untuk profil domain</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>Atur ukuran berkas Log untuk profil domain</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Log diblokir koneksi untuk profil domain</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Log sukses koneksi untuk profil domain</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Aktifkan Windows Firewall untuk profil Pribadi</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Tampilkan pemberitahuan untuk profil privat</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>Atur ukuran berkas Log untuk profil privat</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Log diblokir koneksi untuk profil Swasta</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Konfigurasikan path berkas Log untuk profil privat</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>Aktifkan Windows Firewall untuk profil Publik</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Tampilkan pemberitahuan bagi profil Publik</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>Atur ukuran berkas Log untuk profil Publik</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Log diblokir koneksi untuk profil Publik</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>Konfigurasikan path berkas Log untuk profil Publik</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>Mengkonfigurasi versi Kebijakan Firewall Windows</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>Nonaktifkan NetBIOS</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>Nonaktifkan Resolusi Nama Pintar</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>Matikan Multicast</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>Nonaktifkan Pencetak HTTP</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>Nonaktifkan Unduh Web PnP</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>Nonaktifkan pencarian protokol LMHOSTS pada semua adaptor jaringan</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>Aktifkan Server SMB Over QUIC</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>Aktifkan SMB Client Over QUIC</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>Konfigurasikan Order Server SMB yang aman</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>Konfigurasikan urutan SMB Client Cipher Suite</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>Set versi server SMB minimum</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>Set versi minimum klien SMB</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>Blok NTLM untuk SMB</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>Perlu enkripsi untuk klien SMB</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>Nonaktifkan Otentikasi Klien Mapper Titik RPC</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>Aktifkan Enkripsi Server SMB</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>Sertakan baris perintah dalam proses pembuatan peristiwa</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>Nonaktifkan Lokasi</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>Nonaktifkan Skrip Lokasi</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>Nonaktifkan Operator Lokasi Windows</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>Aktifkan Mitigasi Svchost</value>
+</data>
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
+    <value>Boot- Mulai Kebijakan Inisialisasi Driver diatur ke Good only</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>Aktifkan pencarian yang ditingkatkan di Windows</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>Atur Microsoft Edge (Stable) untuk memperbarui koneksi yang Dimasukkan</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>Atur Microsoft Edge (Beta) untuk memperbarui koneksi yang Dimasukkan</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>Set Microsoft Edge (Dev) untuk mengupdate koneksi yang Dimasukkan</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>Implikasi Validasi Tanda Tangan WinVerifyTrust bagian 1</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>Implement WinVerifyTrust Signature Validasi bagian 2</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>Permintaan klaim dan compound otentikasi untuk DAC dan Kerberos armoring</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>Aktifkan Windows Protected Cetak</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>Aktifkan dukungan bagi path panjang</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>Matikan Tips Daring.</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>Nonaktifkan Fitur Cari Perangkat-Ku.</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>Matikan Update Otomatis Data Pidato.</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>Matikan ID iklan, mencegah aplikasi dari menggunakan ID untuk pengalaman di seluruh aplikasi.</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>Matikan Tips dan saran ketika menggunakan Windows.</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>Matikan konten teroptimasi awan dalam semua pengalaman Windows.</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>Jangan tampilkan pemberitahuan umpan balik.</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>Matikan Unduhan Otomatis dan Update Data Peta.</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>Matikan Layanan Pesan Penyelarasan untuk pesan teks seluler.</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>Blokir Windows dari mengunduh Fonts Catalog.</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>Nonaktifkan "Lanjutkan pengalaman pada perangkat ini" fitur.</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>Nonaktifkan dukungan untuk web-to-app yang terhubung dengan penangan URI app.</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>Jangan cari di web atau tampilkan hasil web dalam Pencarian.</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>Jangan ijinkan pencarian web.</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>Memungkinkan pemutakhiran untuk diunduh secara otomatis melalui koneksi bermetered</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>Aktifkan fitur yang diperkenalkan via layanan yang mati secara baku</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Nyatakan jumlah hari sebelum pemutakhiran fitur terpasang pada perangkat secara otomatis</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Nyatakan jumlah hari sebelum pemutakhiran kualitas dipasang pada perangkat secara otomatis</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Banyaknya hari sebelum pemutakhiran kualitas dipasang pada perangkat secara otomatis</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>Banyaknya hari perioda rahmat sebelum pemutakhiran kualitas dipasang pada perangkat secara otomatis</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Banyaknya hari sebelum pemutakhiran fitur dipasang pada perangkat secara otomatis</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Banyaknya hari periode rahmat sebelum pemutakhiran fitur terpasang pada perangkat secara otomatis</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>Set komputer untuk menerima pemutakhiran keamanan dan unduhan penting lainnya melalui Windows Update</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>Otomatis mengunduh pemutakhiran dan memasangnya pada hari perawatan</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>Pasang pemutakhiran selama perawatan otomatis</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>Atur hari instalasi yang dijadwalkan setiap hari</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>Set dijadwalkan waktu instalasi untuk setiap saat</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>Pasang pemutakhiran untuk produk Microsoft lainnya</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>Aktifkan pemberitahuan restart bagi pemutakhiran Windows</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>Hapus penjadwalan untuk memasang pemutakhiran hanya pada minggu tertentu.</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Atur tenggat waktu pelengkapan bagi pemutakhiran fitur.</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Atur tenggat waktu kepatuhan untuk pemutakhiran kualitas.</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>Block 3 kue pesta</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>Set DNS Over HTTPS Mode untuk memakai pengaturan sistem DoH</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>Aktifkan Klien Terenkripsi Halo</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>Otentikasi dasar blok untuk HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>Ijinkan Edge untuk menerima fitur baru bahkan setelah menggunakan kebijakan</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>Memaksa proses audio untuk menjalankan sandboxed</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>Disarankan bahwa pengaturan sistem operasi tambahan berbagi yang tak akan pernah ditata</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ ECDIA _ RSA _ WITH _ AES _ 128 _ CBC _ SHA - (CBC - SHA1)</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ ECDH_ RSA _ WITH _ AES _ 256 _ CBC _ SHA - (CBC - SHA1)</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ RSA _ WITH _ AES _ 256 _ CBC _ SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ RSA _ WITH _ AES _ 128 _ CBC _ SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ RSA _ WITH _ AES _ 128 _ GCM _ SHA256 - (NO PFS)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ RSA _ WITH _ AES _ 256 _ GCM _ SHA384 - (NO PFS)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>Jangan pernah matikan dukungan ekstensi Confold V2</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>Jangan biarkan situs web menanyakan untuk mengakses perangkat terhubung USB lokal</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>Menyangkal izin Manajemen Jendela di semua situs secara baku</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>Mencegah proses peramban dari membuat kode dinamis</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>Aktifkan menampilkan ekstensi Berkas dalam Explorer Berkas</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>Aktifkan menampilkan berkas tersembunyi dalam Explorer Berkas</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>Nonaktifkan situs web dari akses daftar bahasa lokal</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>Matikan pencarian aman dalam pencarian Windows</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>Aktifkan Riwayat Papan Klip</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>Tampilkan saran teks ketika mengetik pada papan ketik fisik</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>Aktifkan saran teks Multibahasa</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>Matikan tombol pintas lengket untuk menekan tombol 5 waktu cepat</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>Nonaktifkan menampilkan pengingat dan panggilan VoIP masuk pada layar kunci</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>Terapkan pembatasan UAC ke akun lokal pada logon jaringan</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>Biarkan OS memakai kandar terenkripsi BitLocker dibuat dalam organisasi lain.</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>Jangan matikan pengalaman yang membantu konsumen membuat sebagian besar perangkat mereka dan Microsoft account.</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>Ijinkan Fitur Game DVR yang akan digunakan.</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>Aktifkan antar muka pengguna Internet Connection Sharing (ICS) untuk Admin lokal.</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>Ijinkan pengguna memakai fitur Sudo.</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>Jangan menyembunyikan pengecualian di Microsoft Defender dari Admin lokal.</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>Ijinkan pemetaan kandar dalam Sesi Desktop Jauh dan Hyper- V</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>Ijinkan Clipboard berbagi dalam Sesi Desktop Jauh dan Hyper- V</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>Mengkonfigurasi versi kebijakan Windows Firewall</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>Jangan matikan pemberitahuan dalam Firewall Windows untuk Profil Pribadi</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Ijinkan kebijakan Windows Firewall didefinisikan dalam bagian pengaturan canggih Windows Firewall yang akan digunakan daripada hanya menegakkan yang didefinisikan dalam Kebijakan Grup.</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Ijinkan kebijakan Windows Firewall IPSec didefinisikan dalam bagian pengaturan lanjutan Windows Firewall yang akan digunakan ketimbang hanya menegakkan yang didefinisikan dalam Kebijakan Grup.</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>Jangan matikan pemberitahuan dalam Firewall Windows untuk Profil Publik</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>Biarkan OS menulis ke kandar yang dapat dilepas tidak dienkripsi oleh BitLocker</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>Disarankan untuk memblokir cookies pihak 3</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>Tata Edge untuk memakai DNS melalui HTTPS. Hal ini membuat MDAG bekerja dengan baik juga</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>Aktifkan Klien Terenkripsi Halo</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>Otentikasi dasar blok untuk HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>Memungkinkan perangkat menggunakan perlindungan kategori tepi untuk menerima fitur dan eksperimen baru seperti perangkat normal</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>Memaksa proses audio untuk menjalankan sandboxed</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>Disarankan bahwa pengaturan sistem operasi tambahan saham yang tak pernah ditetapkan.</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ ECDIA _ RSA _ WITH _ AES _ 128 _ CBC _ SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ ECDH_ RSA _ WITH _ AES _ 256 _ CBC _ SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ RSA _ WITH _ AES _ 256 _ CBC _ SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ RSA _ WITH _ AES _ 128 _ CBC _ SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ RSA _ WITH _ AES _ 128 _ GCM _ SHA256 - (NO PFS)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>Nonaktifkan TLS _ RSA _ WITH _ AES _ 256 _ GCM _ SHA384 - (NO PFS)</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>Jangan biarkan situs web menanyakan untuk mengakses perangkat terhubung USB lokal</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>Menyangkal izin Manajemen Jendela di semua situs secara baku</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: DES 56- bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: RC2 40-bit</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: RC2 56- bit</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: RC2 128- bit</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: RC4 40-bit</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: RC4 56- bit</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: RC4 64- bit</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: RC4 128- bit</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>Nonaktifkan Cipher lemah untuk Schannel: 3DES 168- bit (Tiga DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>Nonaktifkan Algoritma Hashing MD5 bagi SChannel.</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>Ijinkan kurang aman "TLS _ RSA _ WITH _ AES _ 256 _ CBC _ SHA" Cipher yang akan digunakan untuk memberikan kompatibilitas dengan klien game Battle Net.</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>Nyalakan Smart App Control. Harap juga aktifkan data diagnostik opsional yang diperlukan untuk fungsi yang tepat dari Kendali App Cerdas.</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>Atur kebijakan non-aktif Mesin sehingga perangkat secara otomatis akan mengunci setelah 120 detik dari ketiadaan.</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>Atur kebijakan logon Interaktif untuk memerlukan kombinasi kunci CTRL + ALT + DEL di Lock Screen sebelum Anda dapat memasukkan kredensial Anda. Ini dapat mengurangi serangan tertentu yang menggunakan layar kunci palsu untuk menangkap kredensial pengguna dalam teks jelas seperti password.</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>Atur kebijakan logon Interaktif untuk threshold kunci akun Machine sehingga perangkat terenkripsi BitLocker akan dikunci setelah 5 percobaan gagal untuk masuk. Anda diharuskan memasukkan kunci pemulihan BitLocker untuk drive OS untuk log masuk lagi.</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>Atur kebijakan logon Interaktif untuk berhenti menampilkan informasi pengguna ketika sesi terkunci.</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>Atur kebijakan logon Interaktif untuk berhenti menampilkan nama pengguna di Lock Screen.</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>Atur kebijakan logon Interaktif untuk berhenti menampilkan tanda terakhir dalam rincian di Lock Screen.</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>Tata perilaku dari prompt elevation bagi administrator dalam Mode Pendekatan Admin: Prompt untuk Consent pada Desktop Aman</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>Tata perilaku dari prompt ketinggian bagi pengguna standar: Prompt untuk Kredensial pada Desktop Aman</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>Atur sistem hanya untuk mengangkat executable yang ditandatangani dan Validasi. Setiap program yang tidak ditandatangani atau ditandatangani dengan sertifikat yang ditandatangani sendiri tidak akan dapat dijalankan sebagai administrator.</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>Tata perilaku dari prompt elevation bagi administrator dalam Mode Perlindungan Terenhanced: Konfirmasi untuk Kredit pada Desktop Aman</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>Perlindungan Administrator: Atur tipe Mode Pendekatan Admin untuk menjadi Mode Pendekatan Admin dengan perlindungan khusus yang ditingkatkan</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Hapus jalur registri akses jarak jauh.</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Hapus jalur registri dan sub akses jarak jauh.</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Deny masuk koneksi NTLM untuk semua akun.</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Deny outgoing NTLM koneksi.</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>Paksa proteksi kunci kunci yang kuat bagi kunci pengguna yang disimpan pada komputer. Anda akan dapat menyimpan kunci pribadi dari sertifikat yang Anda pasang pada komputer dan kredensial yang sama diperlukan ketika mengakses kunci pribadi seperti untuk menandatangani operasi.</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>Atur jumlah tanda gagal yang diijinkan dalam percobaan ke 5. Dalam kombinasi dengan kebijakan lain dalam kategori ini, ini berarti setiap 5 gagal dalam upaya akan membutuhkan hari penuh untuk lulus sebelum 5 lebih mencoba dapat dibuat, jika BitLocker akan terlibat, sistem akan mulai ulang dan 48- digit kode BitLocker akan diperlukan. Kebijakan ini sangat mencegah percobaan kekerasan.</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>Set rekening lockout durasi sampai 1440 menit atau 1 hari. Dalam kombinasi dengan kebijakan lain dalam kategori ini, ini berarti setiap 5 gagal dalam upaya akan membutuhkan hari penuh untuk lulus sebelum 5 lebih mencoba dapat dibuat, jika BitLocker akan terlibat, sistem akan mulai ulang dan 48- digit kode BitLocker akan diperlukan.</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>Set reset lockout account counter ke 1440 menit atau 1 hari.</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>Nonaktifkan Klien v1 TLS - Bagian 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>Nonaktifkan Klien v1 TLS - Bagian 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>Matikan TLS v1 Server - Bagian 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>Nonaktifkan TLS v1 Server - Bagian 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>Nonaktifkan Klien TLS v1.1 - Bagian 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>Nonaktifkan Klien TLS v1.1 - Bagian 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>Matikan TLS v1.1 Server - Bagian 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>Nonaktifkan TLS v1.1 Server - Bagian 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>Buat tampilan ubahan dalam Penilik Acara Windows untuk akses mudah ke acara keamanan penting.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>Konfigurasi konfigurasi klien SSH untuk menggunakan MAC aman (Kode Otentikasi Pesan).</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>Aktifkan audit dan pelacakan Kunci Layar dan membuka kunci.</value>
+</data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>Ijinkan konektivitas jaringan selama tersambung -modern- siaga (hanya ketika ditancapkan)</value>
+</data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Set waktu maksimum alamat IP diblokir oleh Brute- Force Protection ke maksimum mungkin nilai. Setelah saat ini, alamat IP diblokir akan dapat menandatangani dan memulai sesi.</value>
+</data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Set waktu maksimum alamat IP diblokir oleh Perlindungan Enkripsi Jarak Jauh ke maksimum mungkin nilai. Setelah saat ini, alamat IP diblokir akan dapat memulai sambungan.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>Aktifkan deteksi bagi aplikasi yang berpotensi tidak diinginkan. Mereka akan menunjukkan di Microsoft Defender sejarah bersama dengan ancaman lain.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>Nonaktifkan aturan mDNS UDPin Firewall. Hal ini menambah keamanan ekstra di tempat-tempat umum, seperti kedai kopi tapi mungkin mengganggu dengan berbagi layar Miracast, yang mengandalkan profil publik atau jaringan rumah di mana profil pribadi tidak dipilih.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Tata Lokasi Jaringan dari semua koneksi ke Publik. Jaringan publik berarti kurang percaya kepada perangkat jaringan lain.</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>Boot- Mulai Kebijakan Inisialisasi Driver diatur ke Baik dan Tak Dikenal</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>Ijinkan penandatanganan melalui Layanan Desktop Jauh. Ini akan memungkinkan Anda untuk menggunakan Desktop Jauh (RDP) lokal untuk masuk ke dalam mesin Anda.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Tampilkan ekstensi berkas untuk pintasan (.lnk) berkas dalam Penjelajah Berkas. Penyerang sering bergantung pada keadaan baku tersembunyi jalan pintas untuk menyamarkan payload berbahaya sebagai dokumen tidak berbahaya. Mengungkapkan ekstensi memungkinkan Anda untuk memverifikasi tipe berkas benar dan mengidentifikasi jalan pintas menipu sebelum eksekusi.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Tampilkan ekstensi berkas untuk (.url) berkas dalam Penjelajah Berkas. Mencegah jalan pintas internet dari menyamar sebagai file yang sah. Ini mengurangi risiko keamanan mana penyerang menggunakan ekstensi tersembunyi untuk menyamarkan phishing link atau berbahaya mengalihkan sebagai dokumen aman.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Tampilkan ekstensi berkas untuk (.pif) berkas dalam Penjelajah Berkas. Fungsi Program Informasi Berkas (PIF) sama dengan berkas.exe dan sering digunakan oleh penyerang untuk menyembunyikan malware di balik tipe berkas yang kurang akrab.</value>
+</data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>Konfigurasikan Antimalware Pindai Interface (AMSI) untuk menegakkan persyaratan penandatanganan kode authenticode untuk semua penyedia antimalware pihak ketiga.</value>
+</data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>Menonaktifkan layanan WebClient mencegah penyerang dari menyalahgunakan WebDAV untuk mencegat dan mencuri kredensial NTLM dan data sensitif lainnya melalui link berbahaya.</value>
+</data>
+<data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
+    <value>Tata kebijakan eksekusi Windows PowerShell untuk membatasi sehingga perintah individu akan diijinkan tetapi menjalankan skrip tidak akan diijinkan.</value>
+</data>
+  <data name="EnhanceSecurityMode-Edge" xml:space="preserve">
+    <value>Mode keamanan yang ditingkatkan di Microsoft Edge mengingat kerentanan yang terkait dengan menonaktifkan hanya dalam waktu (JIT) kompilasi JavaScript dan mengaktifkan perlindungan sistem operasi tambahan bagi peramban.</value>
+  </data>
+<data name="DefaultLocalFontsSetting-Edge" xml:space="preserve">
+    <value>Mencegah situs web untuk mengakses informasi tentang fonta terpasang lokal.</value>
+</data>
+<data name="BrowserCodeIntegritySetting-Edge" xml:space="preserve">
+    <value>Integritas Kode Peramban di Microsoft Edge memastikan bahwa hanya binari yang ditandatangani Microsoft yang diizinkan untuk dimuat dalam proses Edge, meningkatkan keamanan peramban.</value>
+</data>
+<data name="RestrictCoreSharingOnRenderer-HardcoreMode-Edge" xml:space="preserve">
+    <value>Batasi berbagi inti CPU untuk proses perender. Membantu mitigate sisi saluran lintas-proses serangan memori dengan mengisolasi proses perender ke core CPU didedikasikan, mencegah proses lain dari yang dijadwalkan pada inti yang sama.</value>
+</data>
+<data name="RendererAppContainerEnabled-HardcoreMode-Edge" xml:space="preserve">
+    <value>Meluncurkan proses Perender ke dalam Kontainer App untuk manfaat keamanan lebih banyak.</value>
+</data>
+<data name="PreferSlowKexAlgorithms-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge akan lebih suka algoritma yang diperlukan untuk Algoritma Keamanan Nasional Komersial Suite 2.0 (CNSA 2.0) untuk TLS 1,3 dan QUIC koneksi.</value>
+</data>
+<data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
+    <value>Mengkonfigurasi Microsoft Edge untuk memilih sandi yang diperlukan untuk kepatuhan dengan Keamanan Nasional Algoritma Suite versi 1.0 dan 2.0 (CNSA 1.0 dan 2.0). Hanya mempengaruhi TLS 1.3 dan QUIC.</value>
+</data>
+</root>

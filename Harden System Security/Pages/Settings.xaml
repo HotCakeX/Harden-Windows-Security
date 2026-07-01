@@ -452,7 +452,6 @@
                                 <FontIcon Glyph="&#xF69E;" />
                             </customUI:SettingsCardV2.HeaderIcon>
                             <ComboBox ItemsSource="{x:Bind ViewModel.LanguageOptions}" SelectedIndex="{x:Bind ViewModel.LanguageComboBoxSelectedIndex, Mode=TwoWay}">
-
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate x:DataType="CC:LanguageOption">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
@@ -465,7 +464,6 @@
                                         </StackPanel>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
-
                             </ComboBox>
                         </customUI:SettingsCardV2>
                         <customUI:SettingsCardV2 x:Uid="UIFlowDirectionSettingsCard">
@@ -475,6 +473,24 @@
                             <ToggleSwitch IsOn="{x:Bind ViewModel.UIFlowDirectionToggleSwitch, Mode=TwoWay}"
                                       Toggled="{x:Bind ViewModel.FlowDirectionToggleSwitch_Toggled}"
                                       x:Uid="UIFlowDirectionToggleSwitch" />
+                        </customUI:SettingsCardV2>
+                        <customUI:SettingsCardV2 Header="Extra Languages Pack 1 Add-on"
+                                                 Description="Adds support for additional languages: Ukrainian, Persian, Italian, Mandarin Chinese, Indonesian and Thai."
+                                                 IsEnabled="{x:Bind ViewModel.ExtraLanguagesPack1ToggleIsEnabled, Mode=OneWay}">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE8AB;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
+                            <StackPanel Spacing="8">
+                                <ProgressBar Minimum="0"
+                                             Maximum="100"
+                                             Value="{x:Bind ViewModel.LanguageAddonsOperationProgressValue, Mode=OneWay}"
+                                             Visibility="{x:Bind ViewModel.LanguageAddonsOperationProgressVisibility, Mode=OneWay}" />
+                                <ToggleSwitch OnContent="Added"
+                                              OffContent="Not Added"
+                                              Loaded="{x:Bind ViewModel.ExtraLanguagesPack1ToggleSwitch_Loaded}"
+                                              Toggled="{x:Bind ViewModel.ManageExtraLanguagesPack1}"
+                                              IsEnabled="{x:Bind ViewModel.ExtraLanguagesPack1ToggleIsEnabled, Mode=OneWay}"/>
+                            </StackPanel>
                         </customUI:SettingsCardV2>
                     </CCToolKit:SettingsExpander.Items>
                 </CCToolKit:SettingsExpander>

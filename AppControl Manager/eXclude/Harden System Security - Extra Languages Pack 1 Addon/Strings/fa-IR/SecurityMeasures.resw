@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>سرویس حفاظت پیشرفته در برابر فیشینگ فعال شد.</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>حفاظت پیشرفته در برابر فیشینگ: اطلاع‌رسانی برنامه ناامن</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>حفاظت پیشرفته در برابر فیشینگ: اطلاع‌رسانی استفاده مجدد از گذرواژه</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>حفاظت پیشرفته در برابر فیشینگ: اطلاع‌رسانی مورد مخرب</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>حفاظت پیشرفته در برابر فیشینگ: ضبط پنجره تهدید</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>پاکسازی موارد پس از تأخیر</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>حداکثر اندازه فایل‌های دانلودشده و پیوست‌هایی که باید اسکن شوند</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>اسکن درایوهای شبکه نگاشت‌شده برای اسکن کامل</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>اسکن فایل‌های شبکه</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>اسکن درایو قابل‌حمل</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>اسکن نقطه بازتحلیل</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>حداکثر عمق برای اسکن فایل‌های آرشیو</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>بررسی آخرین هوشمندی امنیتی ویروس و جاسوس‌افزار هنگام راه‌اندازی</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>تعیین تعداد روزها پیش از اینکه هوشمندی امنیتی ویروس منقضی تلقی شود</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>تعیین تعداد روزها پیش از اینکه هوشمندی امنیتی جاسوس‌افزار منقضی تلقی شود</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>فعال کردن ویژگی Block At First Sight.</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>داده‌های تشخیصی اختیاری موردنیاز برای Smart App Control و غیره.</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>پیکربندی رابط کاربری تنظیمات رضایت برای داده‌های تشخیصی</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>اقدام پیش‌فرض سطح تهدید شدید = Remove</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>اقدام پیش‌فرض سطح تهدید بالا = Remove</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>اقدام پیش‌فرض سطح تهدید متوسط = Quarantine</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>اقدام پیش‌فرض سطح تهدید پایین = Quarantine</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>به Microsoft Defender Antivirus اجازه می‌دهد از طریق اتصال اندازه‌گیری‌شده به‌روزرسانی شود</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>ارسال نمونه‌های فایل زمانی که تحلیل بیشتر لازم است</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>پیکربندی اقدامات پیش‌فرض برای شدت‌های تهدید</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>فعال کردن Controlled Folder Access</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>فعال کردن Network Protection</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>فعال کردن Network Protection در Windows Server</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>فعال کردن Intel TDT: Threat Detection Technology.</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>تنظیم Cloud Block Level روی حداکثر مقدار: No Tolerance.</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>مهلت بررسی ابری توسعه‌یافته روی حداکثر مقدار تنظیم شد.</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>فعال کردن محاسبه File Hashes.</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>غیرفعال کردن امنیت سهل‌گیرانه Dev Drive درباره اسکن فایل.</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>فعال کردن RTP و به‌روزرسانی امضا در حالت OOBE.</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>فعال کردن ویژگی BruteForce Protection.</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>پیکربندی سطح تهاجمی Brute Force روی زیاد.</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>فعال کردن ویژگی Remote Encryption Protection.</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>پیکربندی سطح تهاجمی Remote Encryption Protection روی زیاد.</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>فعال کردن اسکن ایمیل.</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>فعال کردن اسکن‌های سریع Catchup.</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>بررسی امضاها پیش از اجرای اسکن.</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>افزایش بازه بررسی به‌روزرسانی‌های هوشمندی امنیتی.</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>پیوستن به شبکه Microsoft MAPS (همچنین با نام SpyNet شناخته می‌شود) برای به‌روز ماندن با آخرین هوشمندی امنیتی.</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>پیکربندی قوانین ASR</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>مسدود کردن سوءاستفاده از درایورهای امضاشده آسیب‌پذیر بهره‌برداری‌شده</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>مسدود کردن Adobe Reader از ایجاد فرایندهای فرزند</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>مسدود کردن همه برنامه‌های Office از ایجاد فرایندهای فرزند</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>مسدود کردن سرقت اعتبارنامه از زیرسامانه مرجع امنیت محلی Windows (lsass.exe)</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>مسدود کردن محتوای اجرایی از سرویس‌گیرنده ایمیل و وب‌میل</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>مسدود کردن اجرای فایل‌های اجرایی مگر اینکه با معیار شیوع، سن یا فهرست مورداعتماد مطابقت داشته باشند</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>مسدود کردن اجرای اسکریپت‌های بالقوه مبهم‌سازی‌شده</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>مسدود کردن JavaScript یا VBScript از راه‌اندازی محتوای اجرایی دانلودشده</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>مسدود کردن برنامه‌های Office از ایجاد محتوای اجرایی</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>مسدود کردن برنامه‌های Office از تزریق کد به فرایندهای دیگر</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>مسدود کردن برنامه ارتباطی Office از ایجاد فرایندهای فرزند</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>مسدود کردن پایداری از طریق اشتراک رویداد WMI
+* استثناهای فایل و پوشه پشتیبانی نمی‌شوند.</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>مسدود کردن ایجاد فرایندهای منشأگرفته از فرمان‌های PSExec و WMI</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>مسدود کردن راه‌اندازی دوباره دستگاه در Safe Mode</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>مسدود کردن فرایندهای نامطمئن و بدون امضا که از USB اجرا می‌شوند</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>مسدود کردن استفاده از ابزارهای سیستمی کپی‌شده یا جعل هویت‌شده</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>مسدود کردن ایجاد Webshell برای سرورها</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>مسدود کردن فراخوانی‌های Win32 API از ماکروهای Office</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>استفاده از حفاظت پیشرفته در برابر باج‌افزار</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>ممنوع کردن بازنشانی PIN توسط کاربر استاندارد</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>اجازه دادن به OS برای الزام احراز هویت اضافی هنگام راه‌اندازی</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>اجازه ندادن به BitLocker بدون TPM</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>اجازه ندادن به استفاده از TPM به‌تنهایی</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>اجازه استفاده از TPM + PIN در راه‌اندازی.</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>اجازه استفاده از TPM + کلید در راه‌اندازی.</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>اجازه استفاده از TPM + کلید راه‌اندازی + PIN در راه‌اندازی.</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>پیکربندی روش رمزگذاری صحیح برای درایو OS: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>پیکربندی روش رمزگذاری صحیح برای درایوهای داده ثابت: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>پیکربندی روش رمزگذاری صحیح برای درایوهای قابل‌حمل: XTS-AES-256</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>استفاده از PIN پیشرفته با اجازه دادن به استفاده از نمادها و نویسه‌های دیگر در PIN.</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>پیکربندی نوع رمزگذاری کامل دیسک امن برای درایو OS</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>پیکربندی نوع رمزگذاری کامل دیسک امن برای درایوهای قابل‌حمل</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>جلوگیری از دسترسی نسخه‌های قبلی Windows به درایوهای داده قابل‌حمل محافظت‌شده با BitLocker</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>نصب نکردن خواننده &quot;BitLocker To Go&quot; روی درایوهای قابل‌حمل قالب‌بندی‌شده با FAT، زیرا ناامن هستند.</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>پیکربندی حداقل طول PIN برای راه‌اندازی.</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>ممنوع کردن حالت‌های آماده‌به‌کار (S1-S3) هنگام خواب (متصل به برق)</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>ممنوع کردن حالت‌های آماده‌به‌کار (S1-S3) هنگام خواب (روی باتری)</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>نمایش گزینه Hibernate در گزینه‌های برق در OS تا در صورت تمایل بتوانید دستگاه خود را Hibernate کنید.</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>پیکربندی نوع رمزگذاری امن برای درایوهای داده ثابت</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>پیکربندی TLS Cipher Suites صحیح</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>پیکربندی ECC Curves سرویس و موقعیت‌های آن‌ها.</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>غیرفعال کردن سرویس‌گیرنده TLS 1.0 - Disabled By Default</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>غیرفعال کردن سرویس‌گیرنده TLS 1.0 - Enabled</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>غیرفعال کردن سرور TLS 1.0 - Disabled By Default</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>غیرفعال کردن سرور TLS 1.0 - Enabled</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>غیرفعال کردن سرویس‌گیرنده TLS 1.1 - Disabled By Default</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>غیرفعال کردن سرویس‌گیرنده TLS 1.1 - Enabled</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>غیرفعال کردن سرور TLS 1.1 - Disabled By Default</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>غیرفعال کردن سرور TLS 1.1 - Enabled</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>غیرفعال کردن NULL Cipher Suite</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>غیرفعال کردن 56/56 Cipher Suite</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>غیرفعال کردن 40/128 Cipher Suite</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>غیرفعال کردن RC2 56/128 Cipher Suite</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>غیرفعال کردن RC2 128/128 Cipher Suite</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>غیرفعال کردن RC4 40/128 Cipher Suite</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>غیرفعال کردن RC4 56/128 Cipher Suite</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>غیرفعال کردن RC4 64/128 Cipher Suite</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>غیرفعال کردن RC4 128/128 Cipher Suite</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Triple DES 168 Cipher Suite</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>غیرفعال کردن الگوریتم هش MD5</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>الزام وجود رقم در Windows Hello PIN</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>الزام وجود حروف کوچک در Windows Hello PIN</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>تنظیم انقضا برای Windows Hello PIN</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>ذخیره تاریخچه Windows Hello PIN</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>نمایش ندادن رابط کاربری انتخاب شبکه در صفحه قفل</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>پنهان کردن نقاط ورود Fast User Switching</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>فعال کردن امنیت مبتنی بر مجازی‌سازی</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>الزام ویژگی‌های امنیتی پلتفرم</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>Hypervisor Enforced Code Integrity - UEFI Lock</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>الزام HVCI MAT (Memory Attribute Table)</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>پیکربندی Credential Guard - UEFI Lock</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>فعال کردن System Guard Secure Launch در صورت وجود پشتیبانی سخت‌افزاری</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>پیکربندی راه‌اندازی Kernel Shadow Stacks</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>فعال کردن حفاظت فرایند Local Security Authority (LSA) با UEFI Lock</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>پیکربندی Machine Identity Isolation Configuration</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>فعال کردن VBS و Memory Integrity در حالت اجباری</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>فعال کردن Windows Firewall برای نمایه Domain</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>تنظیم اقدام خروجی پیش‌فرض برای نمایه Domain</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>تنظیم اقدام ورودی پیش‌فرض برای نمایه Domain</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>نمایش اعلان‌ها برای نمایه Domain</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>پیکربندی مسیر فایل گزارش برای نمایه domain</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>پیکربندی اندازه فایل گزارش برای نمایه domain</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>ثبت اتصالات مسدودشده برای نمایه domain</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>ثبت اتصالات موفق برای نمایه domain</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>فعال کردن Windows Firewall برای نمایه Private</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>نمایش اعلان‌ها برای نمایه Private</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>پیکربندی اندازه فایل گزارش برای نمایه Private</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>ثبت اتصالات مسدودشده برای نمایه Private</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>پیکربندی مسیر فایل گزارش برای نمایه Private</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>فعال کردن Windows Firewall برای نمایه Public</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>نمایش اعلان‌ها برای نمایه Public</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>پیکربندی اندازه فایل گزارش برای نمایه Public</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>ثبت اتصالات مسدودشده برای نمایه Public</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>پیکربندی مسیر فایل گزارش برای نمایه Public</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>پیکربندی نسخه سیاست Windows Firewall</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>غیرفعال کردن NetBIOS</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>غیرفعال کردن Smart Name Resolution</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>غیرفعال کردن Multicast</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>غیرفعال کردن HTTP Printing</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>غیرفعال کردن Web PnP Download</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>غیرفعال کردن پروتکل جستجوی LMHOSTS روی همه آداپتورهای شبکه</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>فعال کردن SMB Server Over QUIC</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>فعال کردن SMB Client Over QUIC</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>پیکربندی ترتیب امن SMB Server Cipher Suite</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>پیکربندی ترتیب امن SMB Client Cipher Suite</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>تنظیم حداقل نسخه SMB server</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>تنظیم حداقل نسخه SMB client</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>مسدود کردن NTLM برای SMB</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>الزام رمزگذاری برای SMB client</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>غیرفعال کردن احراز هویت سرویس‌گیرنده RPC Endpoint Mapper</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>فعال کردن رمزگذاری SMB Server</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>گنجاندن خط فرمان در رویدادهای ایجاد فرایند</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن موقعیت مکانی</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن اسکریپت‌نویسی موقعیت مکانی</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن ارائه‌دهنده موقعیت مکانی Windows</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>فعال کردن کاهش ریسک Svchost</value>
+</data>
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
+    <value>سیاست مقداردهی اولیه درایور Boot-Start فقط روی Good تنظیم شد</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>فعال کردن جستجوی پیشرفته در Windows</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>تنظیم Microsoft Edge (Stable) برای به‌روزرسانی از طریق اتصالات اندازه‌گیری‌شده</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>تنظیم Microsoft Edge (Beta) برای به‌روزرسانی از طریق اتصالات اندازه‌گیری‌شده</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>تنظیم Microsoft Edge (Dev) برای به‌روزرسانی از طریق اتصالات اندازه‌گیری‌شده</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>پیاده‌سازی اعتبارسنجی امضای WinVerifyTrust بخش 1</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>پیاده‌سازی اعتبارسنجی امضای WinVerifyTrust بخش 2</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>درخواست ادعاها و احراز هویت مرکب برای DAC و Kerberos armoring</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>فعال کردن Windows Protected Print</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>فعال کردن پشتیبانی از مسیرهای طولانی</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن Online Tips.</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن ویژگی Find My Device.</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن به‌روزرسانی خودکار داده‌های گفتار.</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>خاموش کردن advertising ID، جلوگیری از استفاده برنامه‌ها از ID برای تجربه‌ها در میان برنامه‌ها.</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>خاموش کردن دریافت نکته‌ها و پیشنهادها هنگام استفاده از Windows.</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>خاموش کردن محتوای بهینه‌شده ابری در همه تجربه‌های Windows.</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>اعلان‌های بازخورد را نشان نده.</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>خاموش کردن دانلود و به‌روزرسانی خودکار داده‌های نقشه.</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن همگام‌سازی ابری Message Service برای پیام‌های متنی سلولی.</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>مسدود کردن Windows از دانلود Fonts Catalog.</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن ویژگی &quot;Continue experiences on this device&quot;.</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن پشتیبانی از پیوند web-to-app با کنترل‌کننده‌های URI برنامه.</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>وب را جستجو نکن یا نتایج وب را در Search نمایش نده.</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>جستجوی وب را مجاز نکن.</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>اجازه دادن به دانلود خودکار به‌روزرسانی‌ها از طریق اتصالات اندازه‌گیری‌شده</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>فعال کردن ویژگی‌هایی که از طریق servicing معرفی شده‌اند و به‌صورت پیش‌فرض خاموش هستند</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تعیین تعداد روزها پیش از نصب خودکار به‌روزرسانی‌های ویژگی روی دستگاه‌ها</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تعیین تعداد روزها پیش از نصب خودکار به‌روزرسانی‌های کیفیت روی دستگاه‌ها</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تعداد روزها پیش از نصب خودکار به‌روزرسانی‌های کیفیت روی دستگاه‌ها</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>تعداد روزهای دوره مهلت پیش از نصب خودکار به‌روزرسانی‌های کیفیت روی دستگاه‌ها</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تعداد روزها پیش از نصب خودکار به‌روزرسانی‌های ویژگی روی دستگاه‌ها</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تعداد روزهای دوره مهلت پیش از نصب خودکار به‌روزرسانی‌های ویژگی روی دستگاه‌ها</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>تنظیم رایانه برای دریافت به‌روزرسانی‌های امنیتی و دانلودهای مهم دیگر از طریق Windows Update</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>دانلود خودکار به‌روزرسانی‌ها و نصب آن‌ها در روز نگهداری</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>نصب به‌روزرسانی‌ها هنگام نگهداری خودکار</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>تنظیم روز نصب زمان‌بندی‌شده روی هر روز</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>تنظیم زمان نصب زمان‌بندی‌شده روی هر زمان</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>نصب به‌روزرسانی‌ها برای سایر محصولات Microsoft</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>فعال کردن اعلان راه‌اندازی مجدد برای Windows update</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>حذف زمان‌بندی برای نصب به‌روزرسانی‌ها فقط در هفته‌های مشخص.</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تنظیم مهلت انطباق برای به‌روزرسانی‌های ویژگی.</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>تنظیم مهلت انطباق برای به‌روزرسانی‌های کیفی.</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>مسدود کردن کوکی‌های شخص ثالث</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>تنظیم حالت DNS Over HTTPS برای استفاده از تنظیمات DoH سیستم</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>فعال کردن Encrypted Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>مسدود کردن احراز هویت Basic برای HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>اجازه دادن به Edge برای دریافت ویژگی‌های جدید حتی پس از استفاده از سیاست‌ها</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>اجبار فرایند صوتی به اجرا در sandbox</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>توصیه می‌کند تنظیم اشتراک‌گذاری منطقه اضافی سیستم‌عامل روی هرگز تنظیم شود</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_RSA_WITH_AES_256_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_RSA_WITH_AES_128_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_RSA_WITH_AES_128_GCM_SHA256 - (NO PFS)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_RSA_WITH_AES_256_GCM_SHA384 - (NO PFS)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>هرگز پشتیبانی از افزونه‌های Manifest V2 را غیرفعال نکنید</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>هرگز به وب‌سایت‌ها اجازه ندهید برای دسترسی به دستگاه‌های USB محلی درخواست دهند</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>به‌صورت پیش‌فرض مجوز Window Management را در همه سایت‌ها رد می‌کند</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>جلوگیری از ایجاد کد پویا توسط فرایند مرورگر</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>فعال کردن نمایش پسوند فایل‌ها در File Explorer</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>فعال کردن نمایش فایل‌های مخفی در File Explorer</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>غیرفعال کردن دسترسی وب‌سایت‌ها به فهرست زبان محلی</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>خاموش کردن جستجوی ایمن در جستجوی Windows</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>فعال کردن سابقه Clipboard</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>روشن کردن نمایش پیشنهادهای متنی هنگام تایپ با صفحه‌کلید فیزیکی</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>روشن کردن پیشنهادهای متنی چندزبانه</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>خاموش کردن میانبر کلیدهای چسبنده با فشردن سریع کلید Shift به تعداد 5 بار</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>نمایش یادآورها و تماس‌های ورودی VoIP روی صفحه قفل را غیرفعال می‌کند</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>اعمال محدودیت‌های UAC بر حساب‌های محلی هنگام ورودهای شبکه‌ای</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>اجازه دادن به OS برای استفاده از درایوهای رمزگذاری‌شده با BitLocker که در سازمان‌های دیگر ایجاد شده‌اند.</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>تجربه‌هایی را که به مصرف‌کنندگان کمک می‌کنند بیشترین بهره را از دستگاه‌ها و حساب Microsoft خود ببرند خاموش نکنید.</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>اجازه استفاده از ویژگی Game DVR.</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>فعال کردن رابط کاربری Internet Connection Sharing (ICS) برای Admin محلی.</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>اجازه دادن به کاربران برای استفاده از ویژگی Sudo.</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>استثناها در Microsoft Defender را از Admins محلی مخفی نکنید.</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>اجازه دادن به نگاشت درایو در Remote Desktop Sessions و Hyper-V</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>اجازه دادن به اشتراک‌گذاری Clipboard در Remote Desktop Sessions و Hyper-V</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>پیکربندی نسخه سیاست Windows Firewall</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>اعلان‌ها در Windows Firewall را برای Private Profile غیرفعال نکنید</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>اجازه استفاده از سیاست‌های Windows Firewall تعریف‌شده در بخش تنظیمات پیشرفته Windows Firewall به‌جای اعمال اجباری فقط سیاست‌های تعریف‌شده در Group Policy.</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>اجازه استفاده از سیاست‌های Windows Firewall IPSec تعریف‌شده در بخش تنظیمات پیشرفته Windows Firewall به‌جای اعمال اجباری فقط سیاست‌های تعریف‌شده در Group Policy.</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>اعلان‌ها در Windows Firewall را برای Public Profile غیرفعال نکنید</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>اجازه دادن به OS برای نوشتن روی درایوهای جداشدنی که با BitLocker رمزگذاری نشده‌اند</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>توصیه می‌کند کوکی‌های شخص ثالث مسدود شوند</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>Edge را برای استفاده از DNS over HTTPS سیستم تنظیم می‌کند. این کار باعث می‌شود MDAG نیز به‌درستی کار کند</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>فعال کردن Encrypted Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>مسدود کردن احراز هویت Basic برای HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>اجازه دادن به دستگاه‌هایی که از حفاظت دسته Edge استفاده می‌کنند تا مانند دستگاه‌های عادی ویژگی‌ها و آزمایش‌های جدید دریافت کنند</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>اجبار فرایند صوتی به اجرا در sandbox</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>توصیه می‌کند تنظیم اشتراک‌گذاری منطقه اضافی سیستم‌عامل روی هرگز تنظیم شود.</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_RSA_WITH_AES_256_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_RSA_WITH_AES_128_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_RSA_WITH_AES_128_GCM_SHA256 - (NO PFS)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>غیرفعال کردن TLS_RSA_WITH_AES_256_GCM_SHA384 - (NO PFS)</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>هرگز به وب‌سایت‌ها اجازه ندهید برای دسترسی به دستگاه‌های USB محلی درخواست دهند</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>به‌صورت پیش‌فرض مجوز Window Management را در همه سایت‌ها رد می‌کند</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: DES 56-bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: RC2 40-bit</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: RC2 56-bit</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: RC2 128-bit</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: RC4 40-bit</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: RC4 56-bit</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: RC4 64-bit</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: RC4 128-bit</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>غیرفعال کردن Cipher ضعیف برای Schannel: 3DES 168-bit (Triple DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>غیرفعال کردن الگوریتم Hashing MD5 برای SChannel.</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>اجازه استفاده از Cipher کم‌امنیت‌تر &quot;TLS_RSA_WITH_AES_256_CBC_SHA&quot; برای فراهم کردن سازگاری با کلاینت بازی Battle Net.</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>روشن کردن Smart App Control. لطفاً داده‌های تشخیصی اختیاری را نیز فعال کنید که برای عملکرد صحیح Smart App Control لازم است.</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>تنظیم سیاست محدودیت بی‌فعالیتی Machine تا دستگاه پس از 120 ثانیه بی‌فعالیتی به‌طور خودکار قفل شود.</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>تنظیم یک سیاست Interactive logon برای الزام ترکیب کلید CTRL+ALT+DEL روی Lock Screen پیش از وارد کردن اعتبارنامه‌ها. این کار می‌تواند برخی حملات را که از صفحه‌های قفل جعلی برای دریافت اعتبارنامه‌های کاربر به‌صورت متن آشکار مانند گذرواژه‌ها استفاده می‌کنند کاهش دهد.</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>تنظیم یک سیاست Interactive logon برای آستانه قفل شدن حساب Machine تا دستگاه رمزگذاری‌شده با BitLocker پس از 5 تلاش ناموفق برای ورود قفل شود. برای ورود دوباره باید کلید بازیابی BitLocker را برای درایو OS وارد کنید.</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>تنظیم یک سیاست Interactive logon برای توقف نمایش اطلاعات کاربر هنگام قفل بودن نشست.</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>تنظیم یک سیاست Interactive logon برای توقف نمایش نام کاربری در Lock Screen.</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>تنظیم یک سیاست Interactive logon برای توقف نمایش جزئیات آخرین ورود در Lock Screen.</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>تنظیم رفتار اعلان ارتقای دسترسی برای مدیران در Admin Approval Mode: Prompt for Consent on the Secure Desktop</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>تنظیم رفتار اعلان ارتقای دسترسی برای کاربران استاندارد: Prompt for Credentials on the Secure Desktop</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>پیکربندی سیستم به‌گونه‌ای که فقط فایل‌های اجرایی امضاشده و اعتبارسنجی‌شده ارتقا یابند. هر برنامه‌ای که امضا نشده یا با گواهی‌های خودامضاشده امضا شده باشد، نمی‌تواند به‌عنوان مدیر اجرا شود.</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>تنظیم رفتار اعلان ارتقای دسترسی برای مدیران در Enhanced Privilege Protection Mode: Prompt for Credentials on the Secure Desktop</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>Administrator Protection: تنظیم نوع Admin Approval Mode به Admin Approval Mode با حفاظت پیشرفته از امتیازها</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>حذف مسیرهای رجیستری قابل دسترسی از راه دور.</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>حذف مسیرها و زیرمسیرهای رجیستری قابل دسترسی از راه دور.</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>رد کردن اتصال‌های ورودی NTLM برای همه حساب‌ها.</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>رد کردن اتصال‌های خروجی NTLM.</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>اعمال اجباری حفاظت قوی از کلیدها برای کلیدهای کاربر ذخیره‌شده روی رایانه. می‌توانید کلیدهای خصوصی گواهی‌هایی را که روی رایانه نصب می‌کنید به‌صورت امن ذخیره کنید و هنگام دسترسی به کلید خصوصی، مانند عملیات امضا، همان اعتبارنامه‌ها لازم خواهد بود.</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>تنظیم تعداد تلاش‌های ناموفق مجاز برای ورود به 5. در ترکیب با سایر سیاست‌های این دسته، یعنی پس از هر 5 تلاش ناموفق برای ورود باید یک روز کامل سپری شود تا 5 تلاش دیگر امکان‌پذیر شود، در غیر این صورت BitLocker فعال می‌شود، سیستم راه‌اندازی مجدد می‌شود و کد 48 رقمی BitLocker لازم خواهد بود. این سیاست به‌طور چشمگیری از تلاش‌های brute force جلوگیری می‌کند.</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>تنظیم مدت قفل شدن حساب به 1440 دقیقه یا 1 روز. در ترکیب با سایر سیاست‌های این دسته، یعنی پس از هر 5 تلاش ناموفق برای ورود باید یک روز کامل سپری شود تا 5 تلاش دیگر امکان‌پذیر شود، در غیر این صورت BitLocker فعال می‌شود، سیستم راه‌اندازی مجدد می‌شود و کد 48 رقمی BitLocker لازم خواهد بود.</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>تنظیم بازنشانی شمارنده قفل حساب به 1440 دقیقه یا 1 روز.</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>غیرفعال کردن TLS v1 Client - Part 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>غیرفعال کردن TLS v1 Client - Part 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>غیرفعال کردن TLS v1 Server - Part 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>غیرفعال کردن TLS v1 Server - Part 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>غیرفعال کردن TLS v1.1 Client - Part 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>غیرفعال کردن TLS v1.1 Client - Part 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>غیرفعال کردن TLS v1.1 Server - Part 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>غیرفعال کردن TLS v1.1 Server - Part 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>ایجاد نماهای سفارشی در Windows Event Viewer برای دسترسی آسان به رویدادهای مهم امنیتی.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>پیکربندی تنظیمات کلاینت SSH برای استفاده از MACs امن (Message Authentication Codes).</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>فعال کردن ممیزی و ردیابی قفل‌ها و بازگشایی‌های Lock Screen.</value>
+</data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>اجازه اتصال شبکه در طول connected-modern-standby (فقط هنگام اتصال به برق)</value>
+</data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>تنظیم حداکثر مدت مسدود شدن یک آدرس IP توسط Brute-Force Protection روی بیشترین مقدار ممکن. پس از این زمان، آدرس‌های IP مسدودشده قادر به ورود و آغاز نشست‌ها خواهند بود.</value>
+</data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>تنظیم حداکثر مدت مسدود شدن یک آدرس IP توسط Remote Encryption Protection روی بیشترین مقدار ممکن. پس از این زمان، آدرس‌های IP مسدودشده قادر به آغاز اتصال خواهند بود.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>فعال کردن شناسایی برنامه‌های بالقوه ناخواسته. آن‌ها همراه با سایر تهدیدها در تاریخچه Microsoft Defender نمایش داده خواهند شد.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>غیرفعال کردن قوانین mDNS UDP-In Firewall. این کار یک اقدام امنیتی اضافی در مکان‌های عمومی، مانند کافی‌شاپ، اضافه می‌کند اما ممکن است با اشتراک‌گذاری صفحه Miracast که به Public profile وابسته است یا با شبکه‌های خانگی که Private profile انتخاب نشده است تداخل داشته باشد.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>تنظیم Network Location همه اتصال‌ها روی Public. شبکه Public به معنی اعتماد کمتر به دستگاه‌های شبکه دیگر است.</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>سیاست Boot-Start Driver Initialization روی Good and Unknown تنظیم شده است</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>اجازه ورود از طریق Remote Desktop Services. این کار به شما اجازه می‌دهد از Remote Desktop (RDP) به‌صورت محلی برای ورود به دستگاه خود استفاده کنید.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>نمایش پسوند فایل برای فایل‌های میانبر (.lnk) در File Explorer. مهاجمان اغلب به وضعیت پیش‌فرض مخفی بودن میانبرها تکیه می‌کنند تا payloadهای مخرب را به‌عنوان اسناد بی‌ضرر پنهان کنند. آشکار کردن پسوند به شما امکان می‌دهد نوع واقعی فایل را بررسی کرده و میانبرهای فریبنده را پیش از اجرا شناسایی کنید.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>نمایش پسوند فایل برای فایل‌های (.url) در File Explorer. از جا زدن میانبرهای اینترنتی به‌عنوان فایل‌های معتبر جلوگیری می‌کند. این کار خطرات امنیتی را کاهش می‌دهد، در مواردی که مهاجمان از پسوندهای مخفی برای پنهان کردن لینک‌های فیشینگ یا تغییرمسیرهای مخرب به‌عنوان اسناد امن استفاده می‌کنند.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>نمایش پسوند فایل برای فایل‌های (.pif) در File Explorer. Program Information Files (PIF) عملکردی مشابه فایل‌های .exe دارند و مهاجمان اغلب از آن‌ها برای پنهان کردن بدافزار پشت نوع فایلی کمتر آشنا استفاده می‌کنند.</value>
+</data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>پیکربندی Antimalware Scan Interface (AMSI) برای اعمال سخت‌گیرانه الزامات امضای کد Authenticode برای همه ارائه‌دهندگان ضدبدافزار شخص ثالث.</value>
+</data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>غیرفعال کردن سرویس WebClient از سوءاستفاده مهاجمان از WebDAV برای رهگیری و سرقت اعتبارنامه‌های NTLM و سایر داده‌های حساس از طریق لینک‌های مخرب جلوگیری می‌کند.</value>
+</data>
+<data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
+    <value>تنظیم سیاست اجرای Windows PowerShell روی restricted تا فرمان‌های تکی مجاز باشند اما اجرای اسکریپت‌ها مجاز نباشد.</value>
+</data>
+  <data name="EnhanceSecurityMode-Edge" xml:space="preserve">
+    <value>حالت enhanced security در Microsoft Edge با غیرفعال کردن just-in-time (JIT) JavaScript compilation و فعال کردن حفاظت‌های اضافی سیستم‌عامل برای مرورگر، آسیب‌پذیری‌های مرتبط با حافظه را کاهش می‌دهد.</value>
+  </data>
+<data name="DefaultLocalFontsSetting-Edge" xml:space="preserve">
+    <value>جلوگیری از دسترسی وب‌سایت‌ها به اطلاعات مربوط به فونت‌های نصب‌شده محلی.</value>
+</data>
+<data name="BrowserCodeIntegritySetting-Edge" xml:space="preserve">
+    <value>Browser Code Integrity در Microsoft Edge تضمین می‌کند که فقط باینری‌های امضاشده توسط Microsoft اجازه بارگذاری در فرایند Edge را دارند و امنیت مرورگر را افزایش می‌دهد.</value>
+</data>
+<data name="RestrictCoreSharingOnRenderer-HardcoreMode-Edge" xml:space="preserve">
+    <value>محدود کردن اشتراک‌گذاری هسته CPU برای فرایند renderer. با ایزوله کردن فرایند renderer روی یک هسته اختصاصی CPU و جلوگیری از زمان‌بندی فرایندهای دیگر روی همان هسته، به کاهش حملات حافظه بین‌فرایندی از نوع side-channel کمک می‌کند.</value>
+</data>
+<data name="RendererAppContainerEnabled-HardcoreMode-Edge" xml:space="preserve">
+    <value>فرایندهای Renderer را برای مزایای امنیتی بیشتر در App Container اجرا می‌کند.</value>
+</data>
+<data name="PreferSlowKexAlgorithms-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge الگوریتم‌های مورد نیاز برای Commercial National Security Algorithm Suite 2.0 (CNSA 2.0) را برای اتصال‌های TLS 1.3 و QUIC ترجیح خواهد داد.</value>
+</data>
+<data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge را برای ترجیح Cipherهای مورد نیاز جهت انطباق با نسخه‌های Commercial National Security Algorithm Suite 1.0 و 2.0 (CNSA 1.0 and 2.0) پیکربندی می‌کند. فقط بر TLS 1.3 و QUIC اثر می‌گذارد.</value>
+</data>
+</root>

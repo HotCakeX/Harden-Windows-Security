@@ -1,5 +1,13 @@
-This release introduces a brand-new WinGet Management page that makes everyday app management much easier and more convenient. You can now search for apps, view and manage the apps already installed on your device, work with app bundles, and manage app sources, all from one dedicated place inside the app. The goal of this new page is to give you a simpler and more organized way to handle app-related tasks without needing to jump between different tools, settings or command line.
+* Added an optional language Add-on for the Harden System Security app. The Add-on can be installed or removed on demand from the Settings page, allowing the app to remain lightweight by default while giving users the option to download additional language resources when needed. When installed, the Add-on is downloaded from Microsoft servers.
 
-It also brings a smoother and more polished experience overall, with clearer progress updates, better status messages, easier cancellation when something is taking too long, and more helpful feedback when an app action cannot be completed. App bundles make it faster to set up or remove groups of apps together, while the improved installed apps and search experience helps you find what you need more quickly. Overall, this update is focused on making app management easier to understand, easier to use, and much more user-friendly for everyone.
+This Add-on provides support for additional languages and localizations, including Ukrainian, Persian, Italian, Mandarin Chinese, Indonesian, and Thai. These languages were selected based on user requests and their global usage, making the app more accessible to a wider audience.
 
-You do not need to use search engine or websites anymore to find the apps you want to install. You can also find and install fonts on your system in this new page. Give it a try and if you have any feedback, please don't hesitate sharing it with me on GitHub 🩵 https://github.com/HotCakeX/Harden-Windows-Security/discussions
+The use of Add-ons was also introduced in response to feedback received through this repository’s discussions. Moving forward, optional features will be delivered on demand through Add-ons when possible, so users only download and install the components they actually need.
+
+All Add-ons are available through the Microsoft Store.
+
+At the moment, add-ons can only be modified (added/downloaded or removed/uninstalled) in the Settings page when the Harden System Security app is running unelevated (Not running as admin).
+
+* The Optional Windows Features page now displays a more user friendly notice for verification results, completing this: https://github.com/HotCakeX/Harden-Windows-Security/issues/1178
+
+* Added icons to 2 buttons in the WinGet management page that didn't have one.

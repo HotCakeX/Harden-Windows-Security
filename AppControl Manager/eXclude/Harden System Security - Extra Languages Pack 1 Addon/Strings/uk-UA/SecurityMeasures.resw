@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>Службу посиленого захисту від фішингу ввімкнено.</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>Посилений захист від фішингу: сповіщати про небезпечну програму</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>Посилений захист від фішингу: сповіщати про повторне використання пароля</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>Посилений захист від фішингу: сповіщати про шкідливі дії</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>Посилений захист від фішингу: захоплення вікна загрози</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>Очищати елементи після затримки</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>Максимальний розмір завантажених файлів і вкладень для сканування</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>Сканування підключених мережевих дисків під час повного сканування</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>Сканування мережевих файлів</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>Сканування знімних дисків</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>Сканування точок повторного аналізу</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>Максимальна глибина сканування архівних файлів</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>Перевіряти наявність найновіших антивірусних і антишпигунських відомостей безпеки під час запуску</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>Визначити кількість днів, після яких антивірусні відомості безпеки вважаються застарілими</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>Визначити кількість днів, після яких антишпигунські відомості безпеки вважаються застарілими</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>Увімкнути функцію Block At First Sight.</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>Додаткові діагностичні дані, потрібні для Smart App Control тощо.</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>Налаштувати інтерфейс користувача параметрів згоди на діагностичні дані</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>Рівень серйозної загрози, дія за замовчуванням = Видалити</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>Рівень високої загрози, дія за замовчуванням = Видалити</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>Рівень помірної загрози, дія за замовчуванням = Карантин</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>Рівень низької загрози, дія за замовчуванням = Карантин</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>Дозволяє Microsoft Defender Antivirus оновлюватися через лімітоване підключення</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>Надсилати зразки файлів, коли потрібен подальший аналіз</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>Налаштувати дії за замовчуванням для рівнів серйозності загроз</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>Увімкнути контрольований доступ до папок</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>Увімкнути захист мережі</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>Увімкнути захист мережі на Windows Server</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>Увімкнути Intel TDT: Threat Detection Technology.</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>Установити Cloud Block Level на максимальне значення: No Tolerance.</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>Розширений час очікування хмарної перевірки встановлено на максимальне значення.</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>Увімкнути обчислення хешів файлів.</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>Вимкнути послаблену безпеку Dev Drive щодо сканування файлів.</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>Увімкнути RTP і оновлення сигнатур під час режиму OOBE.</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>Увімкнути функцію BruteForce Protection.</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Налаштувати рівень агресивності Brute Force на високий.</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>Увімкнути функцію Remote Encryption Protection.</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>Налаштувати рівень агресивності Remote Encryption Protection на високий.</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>Увімкнути сканування електронної пошти.</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>Увімкнути швидкі сканування Catchup.</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>Перевіряти сигнатури перед запуском сканування.</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>Збільшити інтервал перевірки оновлень відомостей безпеки.</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>Приєднатися до мережі Microsoft MAPS (також відомої як SpyNet), щоб залишатися в курсі найновіших відомостей безпеки.</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>Налаштувати правила ASR</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>Блокувати зловживання експлуатованими вразливими підписаними драйверами</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>Блокувати створення дочірніх процесів Adobe Reader</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>Блокувати створення дочірніх процесів усіма програмами Office</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>Блокувати викрадення облікових даних із підсистеми локального центру безпеки Windows (lsass.exe)</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>Блокувати виконуваний вміст з поштового клієнта та вебпошти</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>Блокувати запуск виконуваних файлів, якщо вони не відповідають критерію поширеності, віку або довіреного списку</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>Блокувати виконання потенційно обфускованих сценаріїв</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>Блокувати запуск завантаженого виконуваного вмісту з JavaScript або VBScript</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>Блокувати створення виконуваного вмісту програмами Office</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>Блокувати впровадження коду програмами Office в інші процеси</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>Блокувати створення дочірніх процесів комунікаційною програмою Office</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>Блокувати сталість через підписку на події WMI
+* Виключення файлів і папок не підтримуються.</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>Блокувати створення процесів, що походять від команд PSExec і WMI</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>Блокувати перезавантаження комп’ютера в Safe Mode</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>Блокувати ненадійні та непідписані процеси, що запускаються з USB</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>Блокувати використання скопійованих або імітованих системних інструментів</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>Блокувати створення Webshell для серверів</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>Блокувати виклики Win32 API з макросів Office</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>Використовувати розширений захист від програм-вимагачів</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>Заборонити скидання PIN стандартним користувачем</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>Дозволити OS вимагати додаткову автентифікацію під час запуску</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>Не дозволяти BitLocker без TPM</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>Не дозволяти використання лише TPM</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>Дозволити використання TPM + PIN під час запуску.</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>Дозволити використання TPM + ключ під час запуску.</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>Дозволити використання TPM + ключ запуску + PIN під час запуску.</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>Налаштувати правильний метод шифрування для диска OS: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>Налаштувати правильний метод шифрування для фіксованих дисків даних: XTS-AES-256</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>Налаштувати правильний метод шифрування для знімних дисків: XTS-AES-256</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>Використовувати розширений PIN, дозволивши символи та інші знаки в PIN.</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>Налаштувати безпечний тип повнодискового шифрування для диска OS</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Налаштувати безпечний тип повнодискового шифрування для знімних дисків</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>Запобігти доступу до знімних дисків даних, захищених BitLocker, з попередніх версій Windows</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>Не інсталювати засіб читання &quot;BitLocker To Go&quot; на знімні диски, відформатовані FAT, оскільки вони небезпечні.</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>Налаштувати мінімальну довжину PIN для запуску.</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>Заборонити стани очікування (S1-S3) під час сну (підключено до живлення)</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>Заборонити стани очікування (S1-S3) під час сну (від батареї)</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>Показати параметр Hibernate у параметрах живлення в OS, щоб ви могли перевести пристрій у режим гібернації, якщо захочете.</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>Налаштувати безпечний тип шифрування для фіксованих дисків даних</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>Налаштувати правильні TLS Cipher Suites</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>Налаштувати службові ECC Curves та їхні позиції.</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>Вимкнути клієнт TLS 1.0 - Disabled By Default</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>Вимкнути клієнт TLS 1.0 - Enabled</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>Вимкнути сервер TLS 1.0 - Disabled By Default</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>Вимкнути сервер TLS 1.0 - Enabled</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>Вимкнути клієнт TLS 1.1 - Disabled By Default</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>Вимкнути клієнт TLS 1.1 - Enabled</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>Вимкнути сервер TLS 1.1 - Disabled By Default</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>Вимкнути сервер TLS 1.1 - Enabled</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>Вимкнути NULL Cipher Suite</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>Вимкнути 56/56 Cipher Suite</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>Вимкнути 40/128 Cipher Suite</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>Вимкнути RC2 56/128 Cipher Suite</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>Вимкнути RC2 128/128 Cipher Suite</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>Вимкнути RC4 40/128 Cipher Suite</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>Вимкнути RC4 56/128 Cipher Suite</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>Вимкнути RC4 64/128 Cipher Suite</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>Вимкнути RC4 128/128 Cipher Suite</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>Вимкнути Triple DES 168 Cipher Suite</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>Вимкнути алгоритм хешування MD5</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>Вимагати цифри в Windows Hello PIN</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>Вимагати малі літери в Windows Hello PIN</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>Установити строк дії для Windows Hello PIN</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>Зберігати історію Windows Hello PIN</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>Не відображати інтерфейс вибору мережі на екрані блокування</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>Приховати точки входу швидкого перемикання користувачів</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>Увімкнути безпеку на основі віртуалізації</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>Вимагати функції безпеки платформи</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>Цілісність коду, забезпечена гіпервізором - UEFI Lock</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>Вимагати HVCI MAT (Memory Attribute Table)</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>Конфігурація Credential Guard - UEFI Lock</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>Увімкнути System Guard Secure Launch, якщо є апаратна підтримка</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>Налаштувати запуск Kernel Shadow Stacks</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>Увімкнути захист процесу Local Security Authority (LSA) з UEFI Lock</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>Налаштувати конфігурацію ізоляції ідентичності комп’ютера</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>Увімкнути VBS і цілісність пам’яті в обов’язковому режимі</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>Увімкнути Windows Firewall для профілю Domain</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Установити дію за замовчуванням для вихідних підключень профілю Domain</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>Установити дію за замовчуванням для вхідних підключень профілю Domain</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Відображати сповіщення для профілю Domain</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>Налаштувати шлях до файлу журналу для профілю domain</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>Налаштувати розмір файлу журналу для профілю domain</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Журналювати заблоковані підключення для профілю domain</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>Журналювати успішні підключення для профілю domain</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Увімкнути Windows Firewall для профілю Private</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Відображати сповіщення для профілю Private</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>Налаштувати розмір файлу журналу для профілю Private</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Журналювати заблоковані підключення для профілю Private</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>Налаштувати шлях до файлу журналу для профілю Private</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>Увімкнути Windows Firewall для профілю Public</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Відображати сповіщення для профілю Public</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>Налаштувати розмір файлу журналу для профілю Public</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Журналювати заблоковані підключення для профілю Public</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>Налаштувати шлях до файлу журналу для профілю Public</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>Налаштувати версію політики Windows Firewall</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>Вимкнути NetBIOS</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>Вимкнути Smart Name Resolution</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>Вимкнути Multicast</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>Вимкнути HTTP Printing</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>Вимкнути Web PnP Download</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>Вимкнути протокол пошуку LMHOSTS на всіх мережевих адаптерах</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>Увімкнути SMB Server Over QUIC</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>Увімкнути SMB Client Over QUIC</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>Налаштувати безпечний порядок SMB Server Cipher Suite</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>Налаштувати безпечний порядок SMB Client Cipher Suite</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>Установити мінімальну версію SMB server</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>Установити мінімальну версію SMB client</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>Блокувати NTLM для SMB</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>Вимагати шифрування для SMB client</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>Вимкнути автентифікацію клієнта RPC Endpoint Mapper</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>Увімкнути шифрування SMB Server</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>Включати командний рядок у події створення процесів</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути розташування</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути сценарії розташування</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути постачальник розташування Windows</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>Увімкнути пом’якшення Svchost</value>
+</data>
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
+    <value>Політику ініціалізації драйверів Boot-Start установлено лише на Good</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>Увімкнути розширений пошук у Windows</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>Налаштувати Microsoft Edge (Stable) на оновлення через лімітовані підключення</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>Налаштувати Microsoft Edge (Beta) на оновлення через лімітовані підключення</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>Налаштувати Microsoft Edge (Dev) на оновлення через лімітовані підключення</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>Реалізувати перевірку підпису WinVerifyTrust, частина 1</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>Реалізувати перевірку підпису WinVerifyTrust, частина 2</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>Запитувати твердження та складену автентифікацію для DAC і Kerberos armoring</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>Увімкнути Windows Protected Print</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>Увімкнути підтримку довгих шляхів</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути Online Tips.</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути функцію Find My Device.</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути автоматичне оновлення мовленнєвих даних.</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути advertising ID, запобігаючи використанню ID програмами для взаємодії між програмами.</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути отримання порад і пропозицій під час використання Windows.</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути хмарно оптимізований вміст у всіх можливостях Windows.</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>Не показувати сповіщення зворотного зв’язку.</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути автоматичне завантаження та оновлення картографічних даних.</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути хмарну синхронізацію Message Service для текстових повідомлень стільникового зв’язку.</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>Блокувати завантаження каталогу шрифтів Windows.</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути функцію &quot;Continue experiences on this device&quot;.</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>Вимкнути підтримку зв’язування web-to-app з обробниками URI програм.</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>Не шукати в Інтернеті та не відображати вебрезультати в Search.</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>Не дозволяти вебпошук.</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>Дозволити автоматичне завантаження оновлень через лімітовані підключення</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>Увімкнути функції, введені через обслуговування, які за замовчуванням вимкнені</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Указати кількість днів до автоматичного встановлення оновлень функцій на пристроях</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Указати кількість днів до автоматичного встановлення якісних оновлень на пристроях</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Кількість днів до автоматичного встановлення якісних оновлень на пристроях</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>Кількість днів пільгового періоду до автоматичного встановлення якісних оновлень на пристроях</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Кількість днів до автоматичного встановлення оновлень функцій на пристроях</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Кількість днів пільгового періоду до автоматичного встановлення оновлень функцій на пристроях</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>Налаштувати комп’ютер на отримання оновлень безпеки та інших важливих завантажень через Windows Update</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>Автоматично завантажувати оновлення та інсталювати їх у день обслуговування</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>Інсталювати оновлення під час автоматичного обслуговування</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>Установити запланований день інсталяції на кожен день</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>Установити запланований час інсталяції на будь-який час</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>Інсталювати оновлення для інших продуктів Microsoft</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>Увімкнути сповіщення про перезапуск для Windows update</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>Видалити планування встановлення оновлень лише в певні тижні.</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Установити крайній термін відповідності для оновлень функцій.</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>Установити крайній термін відповідності для якісних оновлень.</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>Блокувати сторонні файли cookie</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>Установити для режиму DNS Over HTTPS використання системних налаштувань DoH</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>Увімкнути Encrypted Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>Блокувати базову автентифікацію для HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>Дозволити Edge отримувати нові функції навіть після застосування політик</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>Примусово запускати аудіопроцес у пісочниці</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>Рекомендує встановити параметр надання спільного доступу до додаткового регіону операційної системи значення ніколи</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_RSA_WITH_AES_256_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_RSA_WITH_AES_128_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_RSA_WITH_AES_128_GCM_SHA256 - (NO PFS)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_RSA_WITH_AES_256_GCM_SHA384 - (NO PFS)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>Ніколи не вимикати підтримку розширень Manifest V2</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>Ніколи не дозволяти вебсайтам запитувати доступ до локальних USB-пристроїв</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>За замовчуванням забороняє дозвіл Window Management на всіх сайтах</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>Заборонити процесу браузера створювати динамічний код</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>Увімкнути показ розширень файлів у File Explorer</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>Увімкнути показ прихованих файлів у File Explorer</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>Заборонити вебсайтам доступ до локального списку мов</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>Вимкнути безпечний пошук у пошуку Windows</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>Увімкнути історію буфера обміну</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>Увімкнути показ текстових пропозицій під час введення на фізичній клавіатурі</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>Увімкнути багатомовні текстові пропозиції</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>Вимкнути сполучення клавіш залипання, що спрацьовує після швидкого натискання клавіші Shift 5 разів</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>Вимикає показ нагадувань і вхідних VoIP-викликів на екрані блокування</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>Застосувати обмеження UAC до локальних облікових записів під час мережевих входів</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>Дозволити OS використовувати зашифровані BitLocker диски, створені в інших організаціях.</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>Не вимикати можливості, які допомагають споживачам максимально ефективно використовувати свої пристрої та обліковий запис Microsoft.</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>Дозволити використання функції Game DVR.</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>Увімкнути інтерфейс користувача Internet Connection Sharing (ICS) для локального Admin.</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>Дозволити користувачам використовувати функцію Sudo.</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>Не приховувати виключення в Microsoft Defender від локальних Admins.</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>Дозволити зіставлення дисків у Remote Desktop Sessions і Hyper-V</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>Дозволити спільний доступ до Clipboard у Remote Desktop Sessions і Hyper-V</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>Налаштувати версію політики Windows Firewall</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>Не вимикати сповіщення у Windows Firewall для Private Profile</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Дозволити використовувати політики Windows Firewall, визначені в розділі розширених налаштувань Windows Firewall, замість примусового застосування лише політик, визначених у Group Policy.</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>Дозволити використовувати політики Windows Firewall IPSec, визначені в розділі розширених налаштувань Windows Firewall, замість примусового застосування лише політик, визначених у Group Policy.</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>Не вимикати сповіщення у Windows Firewall для Public Profile</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>Дозволити OS записувати на знімні диски, не зашифровані BitLocker</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>Рекомендує блокувати сторонні файли cookie</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>Налаштовує Edge на використання системного DNS over HTTPS. Це також забезпечує належну роботу MDAG</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>Увімкнути Encrypted Client Hello</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>Блокувати базову автентифікацію для HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>Дозволити пристроям, які використовують захист категорії Edge, отримувати нові функції та експерименти як звичайні пристрої</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>Примусово запускати аудіопроцес у пісочниці</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>Рекомендує встановити параметр надання спільного доступу до додаткового регіону операційної системи значення ніколи.</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_RSA_WITH_AES_256_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_RSA_WITH_AES_128_CBC_SHA - (NO PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_RSA_WITH_AES_128_GCM_SHA256 - (NO PFS)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>Вимкнути TLS_RSA_WITH_AES_256_GCM_SHA384 - (NO PFS)</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>Ніколи не дозволяти вебсайтам запитувати доступ до локальних USB-пристроїв</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>За замовчуванням забороняє дозвіл Window Management на всіх сайтах</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: DES 56-bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: RC2 40-bit</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: RC2 56-bit</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: RC2 128-bit</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: RC4 40-bit</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: RC4 56-bit</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: RC4 64-bit</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: RC4 128-bit</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>Вимкнути слабкий шифр для Schannel: 3DES 168-bit (Triple DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>Вимкнути алгоритм хешування MD5 для SChannel.</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>Дозволити використання менш безпечного шифру &quot;TLS_RSA_WITH_AES_256_CBC_SHA&quot; для забезпечення сумісності з ігровим клієнтом Battle Net.</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>Увімкнути Smart App Control. Також увімкніть необов'язкові діагностичні дані, потрібні для належної роботи Smart App Control.</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>Установити політику обмеження бездіяльності Machine, щоб пристрій автоматично блокувався після 120 секунд бездіяльності.</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>Установити політику інтерактивного входу, яка вимагатиме комбінацію клавіш CTRL+ALT+DEL на Lock Screen перед введенням облікових даних. Це може зменшити ризик певних атак, які використовують підроблені екрани блокування для захоплення облікових даних користувача у відкритому тексті, наприклад паролів.</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>Установити політику інтерактивного входу для порога блокування облікового запису Machine, щоб зашифрований BitLocker пристрій було заблоковано після 5 невдалих спроб входу. Для повторного входу потрібно буде ввести ключ відновлення BitLocker для диска OS.</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>Установити політику інтерактивного входу, щоб припинити відображення відомостей про користувача, коли сеанс заблоковано.</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>Установити політику інтерактивного входу, щоб припинити відображення імені користувача на Lock Screen.</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>Установити політику інтерактивного входу, щоб припинити відображення відомостей про останній вхід на Lock Screen.</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>Установити поведінку запиту підвищення прав для адміністраторів у Admin Approval Mode: Prompt for Consent on the Secure Desktop</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>Установити поведінку запиту підвищення прав для стандартних користувачів: Prompt for Credentials on the Secure Desktop</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>Налаштувати систему так, щоб підвищувалися лише виконувані файли, які підписані та перевірені. Будь-яка програма без підпису або підписана самопідписаними сертифікатами не зможе запускатися як адміністратор.</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>Установити поведінку запиту підвищення прав для адміністраторів у Enhanced Privilege Protection Mode: Prompt for Credentials on the Secure Desktop</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>Administrator Protection: установити тип Admin Approval Mode як Admin Approval Mode з посиленим захистом привілеїв</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Видалити віддалено доступні шляхи реєстру.</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>Видалити віддалено доступні шляхи та підшляхи реєстру.</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Заборонити вхідні NTLM-з'єднання для всіх облікових записів.</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>Заборонити вихідні NTLM-з'єднання.</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>Примусово застосувати надійний захист ключів для ключів користувача, що зберігаються на комп'ютері. Ви зможете безпечно зберігати приватні ключі сертифікатів, які встановлюєте на комп'ютері, і ті самі облікові дані будуть потрібні під час доступу до приватного ключа, наприклад для операцій підписування.</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>Установити кількість дозволених невдалих спроб входу на 5. У поєднанні з іншими політиками в цій категорії це означає, що після кожних 5 невдалих спроб входу має минути повний день, перш ніж можна буде зробити ще 5 спроб, інакше спрацює BitLocker, система перезавантажиться та знадобиться 48-значний код BitLocker. Ця політика значно запобігає атакам грубої сили.</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>Установити тривалість блокування облікового запису на 1440 хвилин або 1 день. У поєднанні з іншими політиками в цій категорії це означає, що після кожних 5 невдалих спроб входу має минути повний день, перш ніж можна буде зробити ще 5 спроб, інакше спрацює BitLocker, система перезавантажиться та знадобиться 48-значний код BitLocker.</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>Установити скидання лічильника блокування облікового запису на 1440 хвилин або 1 день.</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>Вимкнути TLS v1 Client - Part 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>Вимкнути TLS v1 Client - Part 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>Вимкнути TLS v1 Server - Part 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>Вимкнути TLS v1 Server - Part 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>Вимкнути TLS v1.1 Client - Part 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>Вимкнути TLS v1.1 Client - Part 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>Вимкнути TLS v1.1 Server - Part 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>Вимкнути TLS v1.1 Server - Part 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>Створити користувацькі подання у Windows Event Viewer для легкого доступу до важливих подій безпеки.</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>Налаштувати конфігурації клієнта SSH для використання безпечних MACs (Message Authentication Codes).</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>Увімкнути аудит і відстеження блокувань та розблокувань Lock Screen.</value>
+</data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>Дозволити мережеве підключення під час connected-modern-standby (лише коли підключено до живлення)</value>
+</data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Установити максимальний час блокування IP-адреси Brute-Force Protection на максимально можливе значення. Після цього часу заблоковані IP-адреси зможуть входити та ініціювати сеанси.</value>
+</data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>Установити максимальний час блокування IP-адреси Remote Encryption Protection на максимально можливе значення. Після цього часу заблоковані IP-адреси зможуть ініціювати підключення.</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>Увімкнути виявлення потенційно небажаних програм. Вони відображатимуться в історії Microsoft Defender разом з іншими загрозами.</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>Вимкнути правила mDNS UDP-In Firewall. Це додає додатковий захід безпеки в громадських місцях, наприклад у кав'ярні, але може заважати спільному використанню екрана Miracast, яке залежить від Public profile, або домашнім мережам, де Private profile не вибрано.</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>Установити Network Location усіх підключень як Public. Мережа Public означає меншу довіру до інших мережевих пристроїв.</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>Політика Boot-Start Driver Initialization установлена на Good and Unknown</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>Дозволити вхід через Remote Desktop Services. Це дозволить використовувати Remote Desktop (RDP) локально для входу на ваш комп'ютер.</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Відображати розширення файлів для ярликів (.lnk) у File Explorer. Зловмисники часто покладаються на стандартний прихований стан ярликів, щоб маскувати шкідливі корисні навантаження під безпечні документи. Відображення розширення дає змогу перевірити справжній тип файлу та виявити оманливі ярлики перед виконанням.</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Відображати розширення файлів для файлів (.url) у File Explorer. Запобігає маскуванню інтернет-ярликів під легітимні файли. Це зменшує ризики безпеки, коли зловмисники використовують приховані розширення, щоб маскувати фішингові посилання або шкідливі перенаправлення під безпечні документи.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>Відображати розширення файлів для файлів (.pif) у File Explorer. Program Information Files (PIF) функціонують подібно до файлів .exe і часто використовуються зловмисниками для приховування шкідливого ПЗ за менш знайомим типом файлу.</value>
+</data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>Налаштувати Antimalware Scan Interface (AMSI) для суворого застосування вимог підписування коду Authenticode для всіх сторонніх постачальників захисту від зловмисного ПЗ.</value>
+</data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>Вимкнення служби WebClient запобігає зловживанню WebDAV з боку зловмисників для перехоплення та викрадення облікових даних NTLM і інших конфіденційних даних через шкідливі посилання.</value>
+</data>
+<data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
+    <value>Установити політику виконання Windows PowerShell як restricted, щоб окремі команди були дозволені, але запуск сценаріїв не дозволявся.</value>
+</data>
+  <data name="EnhanceSecurityMode-Edge" xml:space="preserve">
+    <value>Режим enhanced security у Microsoft Edge зменшує ризик вразливостей, пов'язаних із пам'яттю, вимикаючи just-in-time (JIT) JavaScript compilation і вмикаючи додаткові засоби захисту операційної системи для браузера.</value>
+  </data>
+<data name="DefaultLocalFontsSetting-Edge" xml:space="preserve">
+    <value>Заборонити вебсайтам доступ до інформації про локально встановлені шрифти.</value>
+</data>
+<data name="BrowserCodeIntegritySetting-Edge" xml:space="preserve">
+    <value>Browser Code Integrity у Microsoft Edge гарантує, що лише підписані Microsoft двійкові файли можуть завантажуватися в процес Edge, підвищуючи безпеку браузера.</value>
+</data>
+<data name="RestrictCoreSharingOnRenderer-HardcoreMode-Edge" xml:space="preserve">
+    <value>Обмежити спільне використання ядер CPU для процесу renderer. Допомагає пом'якшити міжпроцесні атаки на пам'ять через побічні канали, ізолюючи процес renderer на виділеному ядрі CPU та запобігаючи плануванню інших процесів на тому самому ядрі.</value>
+</data>
+<data name="RendererAppContainerEnabled-HardcoreMode-Edge" xml:space="preserve">
+    <value>Запускає процеси Renderer в App Container для додаткових переваг безпеки.</value>
+</data>
+<data name="PreferSlowKexAlgorithms-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge надаватиме перевагу алгоритмам, потрібним для Commercial National Security Algorithm Suite 2.0 (CNSA 2.0), для підключень TLS 1.3 і QUIC.</value>
+</data>
+<data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
+    <value>Налаштовує Microsoft Edge на пріоритет шифрів, потрібних для відповідності версіям Commercial National Security Algorithm Suite 1.0 і 2.0 (CNSA 1.0 and 2.0). Впливає лише на TLS 1.3 і QUIC.</value>
+</data>
+</root>

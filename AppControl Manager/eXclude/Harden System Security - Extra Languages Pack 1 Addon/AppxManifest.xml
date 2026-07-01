@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- https://learn.microsoft.com/en-us/windows/msix/package/resource-package -->
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10">
+  <Identity Name="VioletHansen.HardenSystemSecurity" Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189" Version="1.0.71.0" ResourceId="ExtraLanguagesPack1" />
+  <Properties>
+    <DisplayName>Harden System Security - Extra Languages Pack 1</DisplayName>
+    <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
+    <Description>Ukrainian, Persian, Italian, Mandarin Chinese, Indonesian, and Thai language resources for Harden System Security.</Description>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <ResourcePackage>true</ResourcePackage>
+  </Properties>
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.22621.0" MaxVersionTested="10.0.26200.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22621.0" MaxVersionTested="10.0.26200.0" />
+  </Dependencies>
+  <Resources>
+    <Resource Language="uk-UA" />    
+    <Resource Language="it-IT" />
+    <Resource Language="zh-CN" />
+    <Resource Language="fa-IR" />
+    <Resource Language="id-ID" />
+    <Resource Language="th-TH" />
+  </Resources>
+</Package>

@@ -1651,6 +1651,14 @@
                                             <SplitButton x:Uid="WinGetInstallAllSplitButton"
                                                          IsEnabled="{x:Bind ViewModel.BundlesUIElementsAreEnabled, Mode=OneWay}"
                                                          Click="{x:Bind ViewModel.InstallSelectedBundle_Click}">
+                                                <SplitButton.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xEDAB;" FontSize="16" />
+                                                            <TextBlock Text="{x:Bind}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </SplitButton.ContentTemplate>
                                                 <SplitButton.Flyout>
                                                     <MenuFlyout>
                                                         <SplitMenuFlyoutItem x:Uid="WinGetSilentMenuFlyoutItem"
@@ -1675,6 +1683,14 @@
                                             <SplitButton x:Uid="WinGetUninstallAllSplitButton"
                                                          IsEnabled="{x:Bind ViewModel.BundlesUIElementsAreEnabled, Mode=OneWay}"
                                                          Click="{x:Bind ViewModel.UninstallSelectedBundle_Click}">
+                                                <SplitButton.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xEC91;" FontSize="16" />
+                                                            <TextBlock Text="{x:Bind}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </SplitButton.ContentTemplate>
                                                 <SplitButton.Flyout>
                                                     <MenuFlyout>
                                                         <SplitMenuFlyoutItem x:Uid="WinGetSilentMenuFlyoutItem"

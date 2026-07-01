@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>เปิดใช้งานบริการป้องกันการบิดเบือนเพิ่มเติม</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>ป้องกัน ตัว เอง มาก ขึ้น:</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>การป้องกันการบิดเบือนเพิ่มเติม:</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>การ ป้องกัน ที่ เพิ่ม ขึ้น:</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>เพิ่มการป้องกันการจับ: จับภาพหน้าต่างอันตราย</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>ล้างรายการหลังจากหน่วงเวลา</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>ขนาดสูงสุดของแฟ้มที่ดาวน์โหลดมา และแฟ้มที่แนบมาจะถูกสแกน</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>กําลังตรวจหาไดรฟ์เครือข่ายที่ถูกทําแผนที่สําหรับการค้นหา</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>กําลังสแกนแฟ้มเครือข่าย</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>ตรวจหาไดรฟ์ที่ถอดได้</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>สแกนจุดกลับด้าน</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>ความลึกสูงสุดที่จะค้นหาแฟ้มสํารองข้อมูล</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>ตรวจสอบข้อมูลความปลอดภัยล่าสุดของไวรัสและสปายแวร์เมื่อเริ่มต้น</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>กําหนดจํานวนวันก่อนที่จะมีการพิจารณาหน่วยสืบราชการลับของไวรัส</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>กําหนดจํานวนวันก่อนที่จะพิจารณาหน่วยสืบราชการลับของสปายแวร์</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>เปิดใช้งานบล็อกที่คุณสมบัติการมองเห็นครั้งแรก</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>ต้องการข้อมูลการตรวจสอบเพิ่มเติม สําหรับการควบคุมสมาร์ท แอป เป็นต้น</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>ปรับแต่งส่วนติดต่อผู้ใช้สําหรับวิเคราะห์ข้อมูล</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>รุนแรง การกระทําปริยายสําหรับภัยคุกคามระดับ:</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>การกระทําปริยายในการข่มขู่ระดับสูง</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>โมเด็ม ระดับภัยคุกคามการกระทําปริยาย = ควอแรนติน</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>การกระทําปริยายของภัยคุกคามต่ํา = Qurantin</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>อนุญาตให้โปรแกรมปกป้องไมโครซอฟท์ แอนตี้ไวรัสปรับปรุงการเชื่อมต่อแบบเมตร</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>ส่งตัวอย่างแฟ้มเมื่อต้องการการวิเคราะห์เพิ่มเติม</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>ปรับแต่งการกระทําปริยายสําหรับการยุติการขู่</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>เปิดใช้การเข้าใช้งานโฟลเดอร์ที่ควบคุมได้</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>เปิดใช้การป้องกันเครือข่าย</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>เปิดใช้การป้องกันเครือข่ายบนเซิร์ฟเวอร์วินโดวส์</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>เปิดใช้งาน TDT เทล: เครื่องมือตรวจสอบภัยคุกคาม</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>ตั้งค่าระดับก้อนเมฆเป็นค่าสูงสุด: no toolence</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>กําหนดเวลาออกของกลุ่มเมฆให้เป็นค่าสูงสุด</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>เปิดใช้การคํานวณแฟ้ม Haches</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>ปิดการใช้งาน Dev ไดรฟ์ของ รปภ. อัตโนมัติ รอบการสแกนไฟล์</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>เปิดการใช้งาน RTP และปรับปรุงลายเซ็นในโหมด OOBE</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>เปิดใช้การป้องกัน BruteForce</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>ปรับแต่งระดับความก้าวร้าวของแรง Brute ไปสูง</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>เปิดใช้การป้องกันการเข้ารหัสทางไกล</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>ปรับแต่งระดับความก้าวร้าวของการป้องกันการเข้ารหัสระยะไกลแบบสูง</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>เปิดใช้การสแกนอีเมล</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>เปิดใช้งานการตรวจสอบด่วน</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>ตรวจสอบลายเซ็นก่อนที่จะทําการค้นหา</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>เพิ่มระยะเวลา เพื่อตรวจสอบข้อมูลความปลอดภัย</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>เข้าร่วมเครือข่ายไมโครซอฟท์ MAPS (หรือที่รู้จักกันในชื่อเครือข่าย SpyNet) เพื่อติดตามข้อมูลล่าสุดของหน่วยสืบราชการลับ</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>ปรับแต่งกฏ ASR</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>ปิดกั้นการบริโภคของคนขับที่ง่าย</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>บล็อคโปรแกรมอ่าน Adobe จากการสร้างโพรเซสลูก</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>บล็อคโปรแกรมในสํานักงานทั้งหมดจากการสร้างโพรเซสลูก</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>ปิดกั้นการขโมยความเชื่อถือจากระบบรักษาความปลอดภัยของวินโดวส์ (Sass.exe)</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>บล็อคเนื้อหาที่ประมวลผลได้จากไคลเอนต์อีเมลและเว็บอีเมล</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>บล็อคแฟ้มที่ประมวลผลได้จากการประมวลผล จนกว่าจะพบค่าความจุ, อายุ, หรือค่าพื้นฐานที่เชื่อถือได้</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>การประมวลผลบล็อกของสคริปต์ที่อาจเสียหาย</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>บล็อคจาวาสคริปต์หรือ VBScript จากการเรียกใช้เนื้อหาที่ประมวลผลได้</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>โปรแกรมสํานักงานบล็อคจากการสร้างเนื้อหาที่ประมวลผลได้</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>บล็อคโปรแกรมสํานักงานจากการฉีดโค้ดเข้าไปในโพรเซสอื่น ๆ</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>บล็อคโปรแกรมการสื่อสารในสํานักงานจากการสร้างโพรเซสลูก</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>ปิดกั้นการบอกรับเหตุการณ์จาก WMI
+* ยังไม่รองรับแฟ้มและโฟลเดอร์</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>บล็อคการสร้างโพรเซส ที่มาจากคําสั่ง PSExec และ WMI</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>บล็อคการรีบูตเครื่องในโหมดความปลอดภัย</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>บล็อคโพรเซสที่ยังไม่ได้รับความไว้ใจและยังไม่รวมที่ประมวลผลจาก USB</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>เครื่องมือของระบบเลียนแบบหรือเลียนแบบบล็อก</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>บล็อคการสร้างเว็บเชลล์สําหรับเซิร์ฟเวอร์</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>บล็อก Win32 เอพีโทรจากสํานักงานแมโครส</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>ใช้ การ ปก ป้อง ล่วง หน้า จาก เครื่อง บูชา ไถ่</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>ตั้งค่าผู้ใช้งานแบบมาตรฐาน</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>อนุญาตให้ OS ต้องการการตรวจสอบสิทธิ์เพิ่มเติมเมื่อเริ่มการทํางาน</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>อย่าอนุญาตให้บิตล็อกเกอร์ขาด TPM</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>ไม่อนุญาตให้ใช้ TPM เท่านั้น</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>อนุญาตให้ใช้ TPM + PIN เมื่อเริ่มใช้งาน</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>อนุญาตให้ใช้ปุ่ม TPM + เมื่อเริ่มใช้งาน</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>อนุญาตให้ใช้งาน TPM + เริ่มงานคีย์ + PIN ได้เมื่อเริ่มใช้งาน</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>ปรับแต่งวิธีการเข้ารหัสที่ถูกต้องสําหรับไดรฟ์ OS: XTS- AES--256</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>ปรับแต่งวิธีการเข้ารหัสที่ถูกต้องสําหรับไดรฟ์ข้อมูลคงที่: XTS- AES--256</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>ปรับแต่งวิธีการเข้ารหัสที่ถูกต้องสําหรับไดรฟ์ที่ย้ายได้: XTS- AS-256</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>ใช้ PIN เสริม โดยอนุญาตให้สัญลักษณ์และตัวอักษรอื่น ๆ ถูกใช้ใน PIN</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>ปรับแต่งการเข้ารหัสแบบเต็มรูปแบบบนดิสก์สําหรับไดรฟ์ OS</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>ปรับแต่งการเข้ารหัสดิสก์แบบเต็มรูปแบบของดิสก์สําหรับใช้งานอีกครั้ง</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>ป้องกันการเข้าถึงบิตล็อกเกอร์เพื่อป้องกันข้อมูลจากวินโดวส์รุ่นก่อน ๆ</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>อย่าติดตั้ง "BitLocker to Go" โปรแกรมอ่านเมื่อ FAT ฟอร์แมตไดรฟ์ได้เนื่องจากมันไม่ปลอดภัย</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>ปรับแต่งค่าความยาวของ PIN ที่น้อยที่สุดสําหรับการเริ่มทํางาน</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>ปิดการใช้งาน รัฐสแตนด์บาย (S1-S3) เมื่อนอนหลับ (เสียบปลั๊ก)</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>แจ้งเตือนรัฐสแตนบาย (S1-S3) เมื่อนอนหลับ (บนแบตเตอรี)</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>แสดงตัวเลือก Hibernate ในตัวเลือกตัวเลือกพลังงานใน OS เพื่อให้คุณสามารถดูอุปกรณ์ของคุณได้ ถ้าคุณต้องการ</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>ปรับแต่งชนิดการเข้ารหัสแบบปลอดภัยสําหรับไดรฟ์ข้อมูลความกว้างคงที่</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>ปรับแต่งชุดรหัสอักขระของ TLSName</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>ปรับแต่งเส้นโค้ง ECC และตําแหน่งของบริการ</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานไคลเอนต์ TLS 1. 0 - ปิดการใช้งานโดยค่าปริยาย</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานไคลเอนต์ TLS 1. 0 - เปิดใช้งาน</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานเซิร์ฟเวอร์ TLS 1. 0 - ปิดการใช้งานโดยค่าปริยาย</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานเซิร์ฟเวอร์ TLS 1. 0 - เปิดใช้งาน</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานไคลเอนต์ TLS 1. 1 - ปิดการใช้งานโดยค่าปริยาย</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานไคลเอนต์ TLS 1. 1 - เปิดใช้งาน</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานเซิร์ฟเวอร์ TLS 1. 1 - ปิดการใช้งานโดยค่าปริยาย</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานเซิร์ฟเวอร์ TLS 1. 1 - เปิดใช้งาน</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานชุดรหัส NULLL</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานชุดรหัส 56/56</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานชุดรหัส 40/128</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานชุดชุดรหัส RC2 56/128</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานชุดชุดรหัส RC2 128/128</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานชุดชุดรหัส RC4 40/128</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานชุดชุดรหัส RC4 56/128</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานชุดชุดรหัส RC4 64/128</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานชุดชุดรหัส RC4 128/128</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>ปิดการใช้งาน DES 168 ชุดรหัส</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>ปิดการใช้งาน MD5 Hasching Algorith</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>ต้องการหมายเลขในวินโดวส์</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>ต้องการอักษรตัวพิมพ์เล็กในวินโดวส์</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>ตั้งค่าการหมดอายุของวินโดวส์ Hello Pin</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>บันทึกประวัติของวินโดวส์ Hello Pin</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>ไม่ต้องแสดงการเลือกเครือข่ายUI บนหน้าจอล็อค</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>ซ่อนตําแหน่งผู้ใช้ด่วน</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>เปิดใช้งานการสร้างความปลอดภัยพื้นฐาน</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>ต้องการคุณสมบัติความปลอดภัยแบบแพลตฟอร์ม</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>ความสมบูรณ์ของรหัสไฮเปอร์ไวเซอร์ - ล็อค UEFI</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>ต้องการ MAT จาก HVCI (ตารางแอททริบิวต์ของเมอรี่)</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>การปรับแต่งการป้องกันการเกิดขึ้นอีก - ล็อคการทํางานแบบ UEFI</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>เปิดใช้การป้องกันระบบเรียกใช้งานอย่างปลอดภัยหากมีการรองรับฮาร์ดแวร์อยู่</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>ปรับแต่งการเรียกใช้เครื่องมือเงาของเคอร์เนลName</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>เปิดใช้การป้องกันความปลอดภัยภายใน (LSA) ประมวลผลการป้องกันด้วยล็อค UEFI</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>ปรับแต่งค่าการแสดงตัวของเครื่อง</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>เปิดใช้งานความถูกต้องของข้อมูล VBS และหน่วยความจําในโหมด Mindy</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>เปิดใช้งานไฟร์วอลล์ของวินโดวส์สําหรับโพรไฟล์โดเมน</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>ตั้งค่าการกระทําออกจากระบบสําหรับโพรไฟล์โดเมนปริยาย</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>ตั้งค่าการกระทําแบบลินุกซ์ปริยายสําหรับโพรไฟล์โดเมน</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>แสดงการแจ้งเตือนสําหรับโพรไฟล์โดเมน</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>ปรับแต่งพาธของแฟ้มปูมบันทึกสําหรับโพรไฟล์โดเมน</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>ปรับแต่งขนาดแฟ้มปูมบันทึกสําหรับโพรไฟล์โดเมน</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>เชื่อมต่อปูมบันทึกสําหรับโพรไฟล์โดเมน</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>ปูมบันทึกการเชื่อมต่อที่ประสบความสําเร็จสําหรับโพรไฟล์โดเมน</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>เปิดใช้งานไฟร์วอลล์ของวินโดวส์สําหรับโพรไฟล์ส่วนตัว</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>แสดงการแจ้งเตือนสําหรับโพรไฟล์ส่วนตัว</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>ปรับแต่งขนาดแฟ้มปูมบันทึกสําหรับโพรไฟล์ส่วนตัว</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>เชื่อมต่อปูมบันทึกสําหรับโพรไฟล์ส่วนตัว</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>ปรับแต่งพาธของแฟ้มปูมบันทึกสําหรับโพรไฟล์ส่วนตัว</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>เปิดใช้งานไฟร์วอลล์ของวินโดวส์สําหรับโพรไฟล์สาธารณะ</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>แสดงการแจ้งให้ทราบสําหรับโพรไฟล์สาธารณะ</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>ปรับแต่งขนาดแฟ้มปูมบันทึกสําหรับโพรไฟล์สาธารณะ</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>เชื่อมต่อปูมบันทึกสําหรับโพรไฟล์สาธารณะ</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>ปรับแต่งพาธของแฟ้มปูมบันทึกสําหรับโพรไฟล์สาธารณะ</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>ปรับแต่งการตั้งค่าไฟร์วอลล์ของวินโดวส์ รุ่น</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>ปิดการใช้งาน NetBIOS</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>ปิดการใช้งานความละเอียดชื่อ</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>ปิดการใช้งานมัลติแคสต์</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>ปิดการพิมพ์แบบ HTTP</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>ปิดการดาวน์โหลดหน้าเว็บ PnP</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>ปิดการค้นหาโพรโทคอล LMHOSTS บนเครื่องมือปรับตัวเครือข่ายทั้งหมด</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>เปิดใช้งานเซิร์ฟเวอร์ SMB มากกว่า QUIC</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>เปิดใช้งานไคลเอนต์ SMB มากกว่า QUIC</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>ปรับแต่งชุดชุดรหัสอักขระของ SMB ที่ปลอดภัย</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>ปรับแต่งชุดรหัสอักขระของไคลเอนต์ SMB ที่ปลอดภัย</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>ตั้งค่ารุ่นเซิร์ฟเวอร์ SMB ที่น้อยที่สุด</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>ตั้งค่ารุ่นไคลเอนต์ SMB น้อยที่สุด</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>บล็อค NTLM สําหรับ SMB</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>ต้องการการเข้ารหัสสําหรับไคลเอนต์ SMB</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>ปิดการตรวจสอบสิทธิ์สําหรับไคลเอนต์ Mapper ของ RPC</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>เปิดใช้การเข้ารหัสของบริการ SMB</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>รวมบรรทัดคําสั่งในโพรเซสการสร้างเหตุการณ์</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>ปิดตําแหน่ง</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>ปิดการใช้สคริปต์ตําแหน่ง</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>ปิดการใช้งานผู้ให้บริการวินโดวส์</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>เปิดการใช้งานระบบ Svchost</value>
+</data>
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
+    <value>ตั้งข้อกําหนดการเริ่มใช้งานไดรเวอร์บูต-สตาร์แล้ว</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>เปิดใช้การเพิ่มการค้นหาในวินโดวส์</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>ตั้งค่าขอบไมโครซอฟต์ (กระดานเล่น) เพื่อปรับปรุงส่วนการเชื่อมต่อ mettered</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>ตั้งค่าขอบไมโครซอฟต์ (Beta) เพื่อปรับปรุงส่วนการเชื่อมต่อ mettered</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>ตั้งค่าขอบไมโครซอฟต์ (Deview) เพื่อปรับปรุงส่วนการเชื่อมต่อ mettered</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>Winverified ลายเซ็นตรวจสอบความถูกต้องในส่วน 1</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>Winverified ลายเซ็นตรวจสอบความถูกต้องในส่วน 2</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>ร้องขอการเรียกร้องและการตรวจสอบสิทธิ์รวมสําหรับ DAC และ Kerberos การรักษาความปลอดภัย</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>เปิดใช้การพิมพ์ป้องกันของวินโดวส์</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>เปิดใช้การรองรับเส้นทางยาว</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>ปิดการใช้งานคําแนะนําออนไลน์</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>ปิดการค้นหาคุณสมบัติอุปกรณ์ของฉัน</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>ปิดการปรับปรุงข้อมูลคําพูดอัตโนมัติ</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>ปิดหมายเลขโฆษณา ป้องกันไม่ให้โปรแกรมใช้ ID แทนประสบการณ์ในโปรแกรม</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>ปิดการใช้คําแนะนําและคําแนะนําเมื่อใช้งานวินโดวส์</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>ปิดข้อมูลจากก้อนเมฆ ที่เหมาะกับประสบการณ์ของวินโดวส์</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>ไม่ให้แสดงการแจ้งกลับ</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>ปิดการดาวน์โหลดอัตโนมัติและปรับปรุงข้อมูลแผนที่</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>ปิดการใช้งานบริการจดหมาย</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>บล็อคหน้าต่างจากการดาวน์โหลดแบบอักษรKatalog</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>ปิดการใช้งานความสามารถ "ต่อประสบการณ์บนอุปกรณ์นี้"</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>ปิดการรองรับการเชื่อมโยงแบบเว็บ-to-app กับผู้ดูแล URI ของโปรแกรม</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>ไม่ต้องสืบค้นหน้าเว็บหรือแสดงผลลัพธ์ในการค้นหา</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>ไม่อนุญาตให้ทําการค้นหาบนเว็บ</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>อนุญาตให้ดาวน์โหลดข้อมูลล่าสุดได้โดยอัตโนมัติ</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>เปิดใช้การแสดงคุณสมบัติต่าง ๆ ที่ใช้ในการใช้งานโดยปริยาย</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>กําหนดจํานวนวันก่อนที่จะมีการปรับปรุงคุณสมบัติได้ติดตั้งบนอุปกรณ์โดยอัตโนมัติ</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>ระบุจํานวนวันก่อนที่จะมีการปรับปรุงคุณภาพบนอุปกรณ์โดยอัตโนมัติ</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>จํานวนวันก่อนที่จะมีการปรับปรุงคุณภาพบนอุปกรณ์โดยอัตโนมัติ</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>จํานวนของช่วงเวลาของพระคุณ ก่อนที่จะมีการปรับปรุงคุณภาพบนอุปกรณ์โดยอัตโนมัติ</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>จํานวนวันก่อนที่การปรับปรุงคุณสมบัติจะถูกติดตั้งบนอุปกรณ์โดยอัตโนมัติ</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>จํานวนของช่วงเวลาของพระคุณ ก่อนที่จะมีการปรับปรุงคุณสมบัติบนอุปกรณ์โดยอัตโนมัติ</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>ตั้งค่าคอมพิวเตอร์เพื่อให้ได้รับการปรับปรุงความปลอดภัย และการดาวน์โหลดที่สําคัญอื่น ๆ ผ่านทางวินโดวส์อัปเดต</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>ดาวน์โหลดการปรับปรุงอัตโนมัติและติดตั้งมันในวันซ่อมบํารุง</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>ติดตั้งการปรับปรุงระหว่างการปรับปรุงอัตโนมัติ</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>ตั้งค่าวันที่ติดตั้งทุกวัน</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>ตั้งค่าเวลาติดตั้งให้ตลอดเวลา</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>ติดตั้งการปรับปรุงผลิตภัณฑ์ไมโครซอฟต์ตัวอื่น ๆ</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>เปิดใช้การแจ้งเตือนการเริ่มการทํางานของวินโดวส์ใหม่อีกครั้ง</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>ลบรายการสําหรับการติดตั้งปรับปรุงเฉพาะสัปดาห์</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>ตั้งเส้นตายตามบรรทัดสําหรับการปรับปรุงคุณสมบัติ</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>ตั้งเส้นตายตามบรรทัดสําหรับการปรับปรุงคุณภาพ</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>บล็อกที่ 3 คุกกี้</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>ตั้ง DNS เหนือ HTTPs โหมดที่ใช้การตั้งค่า DH ของระบบ</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>เปิดใช้งานโปรแกรมที่ถูกเข้ารหัสไว้ สวัสดี</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>บล็อคการตรวจสอบสิทธิ์พื้นฐานสําหรับ HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>อนุญาตให้ขอบได้รับคุณสมบัติใหม่ได้ แม้จะใช้นโยบายแล้วก็ตาม</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>บังคับให้โพรเซสเสียงทํางาน กล่องทราย</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>แนะนําให้การตั้งค่าขอบเขตการปฏิบัติการร่วมกันของระบบปฏิบัติการที่ไม่มีการกําหนด</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS  ECDHHE RSA SVHTH AES 128 CBC SHA - (CBC - SHA1)</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>ปิดการใช้ TLS  ECDHE RSA  RITHTH AES 256 CBC HA - (CBC - SHA1)</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS RSA VITH AES 256 CBC SA - (No PFS - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS RSA VITH AES 128 CBC SHA - (No PFS - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS RSA WITH AES  128 GCM SA256 - (No PFS)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS RSA WITH AES 256 GCM SA384 - (No PFS)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>ไม่ปิดการรองรับส่วนขยายการพิมพ์ KOffice V2</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>ไม่อนุญาตให้เว็บไซต์ร้องขอใช้งานอุปกรณ์ USB ภายในระบบที่เชื่อมต่ออยู่</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>ปฏิเสธสิทธิ์ในการจัดการหน้าต่างบนเว็บไซต์ทั้งหมดโดยปริยาย</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>ป้องกันโพรเซสของเบราว์เซอร์จากการสร้างการเข้ารหัสแบบไม่ตายตัว</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>เปิดใช้การแสดงนามสกุลแฟ้มในเครื่องมือสํารวจแฟ้ม</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>เปิดใช้การแสดงแฟ้มที่ซ่อนไว้ในเครื่องมือสํารวจแฟ้ม</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>ปิดการใช้งานเว็บไซต์จากการเข้าถึงรายการภาษาท้องถิ่น</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>ปิดการค้นหาในวินโดวส์</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>เปิดการใช้งานประวัติของคลิปบอร์ด</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>เปิดการแสดงข้อความแนะนําเมื่อมีการพิมพ์แป้นพิมพ์</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>เปิด ข้อ เสนอ แนะ หลาย ภาษา</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>ปิดปุ่มพิมพ์ลัดปักหมุดของกดปุ่มเลื่อน 5 ครั้งอย่างรวดเร็ว</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>ปิดการแสดงการแจ้งเตือน และการเรียก offIP ที่เข้ามาบนหน้าจอล็อค</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>ปรับใช้ข้อจํากัดของ UAC กับบัญชีผู้ใช้ท้องถิ่นบนปูมบันทึกเครือข่าย</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>ให้ OS ใช้ BitLocker เข้ารหัส ไดรฟ์ที่สร้างในองค์กรอื่น</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>อย่า ปิด ประสบการณ์ ที่ ช่วย ผู้ บริโภค ให้ ใช้ อุปกรณ์ และ บัญชี ไมโครซอฟท์ ได้ มาก ที่ สุด.</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>อนุญาตให้ใช้คุณสมบัติของเกม DVR</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>เปิดใช้การใช้การเชื่อมต่ออินเทอร์เน็ตร่วมกัน (ICS) สําหรับ Admin ภายในเครื่อง</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>อนุญาตให้ผู้ใช้ใช้คุณสมบัติ Sudo ได้</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>อย่า ซ่อน ข้อ บกพร่อง ไว้ ใน เครื่อง ป้องกัน ไมโครซอฟต์ จาก แอดมินส์ ใน ท้อง ถิ่น.</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>อนุญาตให้มีการหมุนในวาระงานพื้นที่ทํางานทางไกลและ Hyper-V</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>อนุญาตให้ใช้คลิปบอร์ดร่วมกันในวาระงานพื้นที่ทํางานทางไกลและ Hyper-V</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>ปรับแต่งการตั้งค่าไฟร์วอลล์ของวินโดวส์Name</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>อย่าปิดการแจ้งเตือนในไฟร์วอลล์ของวินโดวส์สําหรับโพรไฟล์ส่วนตัว</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>อนุญาตให้กําหนดข้อกําหนดการใช้ไฟร์วอลล์ของวินโดวส์ ได้ในส่วนการตั้งค่าขั้นสูงของวินโดวส์ แทนที่จะใช้เพียงบังคับใช้ข้อกําหนดของกลุ่มเท่านั้น</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>อนุญาตให้ใช้ข้อกําหนดของไฟร์วอลล์ IPSec ของวินโดวส์ ในส่วนการตั้งค่าไฟร์วอลล์ขั้นสูง แทนที่จะใช้เพียงบังคับใช้ข้อกําหนดของกลุ่มเท่านั้น</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>อย่าปิดการแจ้งเตือนในไฟร์วอลล์ของวินโดวส์สําหรับโพรไฟล์สาธารณะ</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>ให้ OS เขียนมา เพื่อ กู้ ไดรฟ์ ที่ ไม่ ได้ เข้ารหัส ไว้ โดย บิตLocker</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>คําแนะนําที่จะบล็อกคุกกี้บุคคลที่ 3</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>ตั้งค่าขอบที่จะใช้ DNS ของระบบมากกว่า HTTPs นี้ทําให้ MDAG ทํางานอย่างถูกต้องเกินไป</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>เปิดใช้งานโปรแกรมที่ถูกเข้ารหัสไว้ สวัสดี</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>บล็อคการตรวจสอบสิทธิ์พื้นฐานสําหรับ HTTP</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>อนุญาตให้อุปกรณ์ใช้การป้องกันประเภทขอบ เพื่อรับคุณสมบัติใหม่ ๆ และทดลองเช่นอุปกรณ์ทั่วไป</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>บังคับให้โพรเซสเสียงทํางาน กล่องทราย</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>แนะนําให้ระบบปฏิบัติการอื่น ๆ ร่วมกัน กําหนดไม่ให้เกิดขึ้น</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS  ECDHHE RSA SVHTH AES 128 CBC SHA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>ปิดการใช้ TLS  ECDHE RSA  RITHTH AES 256 CBC HA - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS RSA VITH AES 256 CBC SA - (No PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS RSA VITH AES 128 CBC SHA - (No PFS - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS RSA WITH AES  128 GCM SA256 - (No PFS)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>ปิดการใช้งาน TLS RSA WITH AES 256 GCM SA384 - (No PFS)</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>ไม่อนุญาตให้เว็บไซต์ร้องขอใช้งานอุปกรณ์ USB ภายในระบบที่เชื่อมต่ออยู่</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>ปฏิเสธสิทธิ์ในการจัดการหน้าต่างบนเว็บไซต์ทั้งหมดโดยปริยาย</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานการเข้ารหัสแบบอ่อนแอสําหรับ SULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานการเข้ารหัสแบบอ่อนแอสําหรับ SSL: DES 56-bit</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>ปิดการเข้ารหัสภาษาสําหรับ SSL: RC2 40- บิต</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานการเข้ารหัสแบบอ่อนสําหรับ SC2 56 บิต</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>ปิดการใช้รหัสอักขระอ่อนแอสําหรับ sC2 128 บิต</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>ปิดการเข้ารหัสภาษาสําหรับ SSL: RC4 40- บิต</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>ปิดการใช้รหัสอักขระอ่อนแอสําหรับ SC4 56 บิต</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานการเข้ารหัสแบบอ่อนแอสําหรับ SC4 64 บิต</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานการเข้ารหัสแบบอ่อนแอสําหรับ SC4 128 บิต</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>ปิดการเข้ารหัสแบบอ่อนแอสําหรับ SSL: 3DES 168 บิต (Triple DE 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>ปิดการใช้ MD5 Hashing Allgorith สําหรับ SChannel</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>อนุญาตให้มีความปลอดภัยน้อยลง "TLS RSA WITH AES 256 CBC SHA" ไซเฟอร์ที่จะใช้ในการให้ความเข้ากันได้ กับลูกความของเกมสงครามเน็ต</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>เปิดระบบควบคุมสมาร์ท แอป โปรดเปิดโอกาสในการตรวจสอบข้อมูล ที่จําเป็นสําหรับการทํางานได้อย่างถูกต้องของ สมาร์ท แอปคอนโทรล</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>ตั้งค่าข้อกําหนดจํากัดการใช้งานของเครื่อง เพื่อให้อุปกรณ์จะล็อคโดยอัตโนมัติ หลังจากไม่มีการทํางาน 120 วินาที</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>ตั้งค่านโยบายการติดตามการทํางาน เพื่อเรียกใช้งาน CTRL+ALT+DEL บนหน้าจอล็อค ก่อนที่คุณจะสามารถป้อนใบรับรองของคุณ นี้อาจจะทําให้บางการโจมตีที่ใช้งานหน้าจอล็อคปลอม เพื่อจับภาพสิทธิ์ของผู้ใช้ในข้อความชัดเจน เช่น รหัสผ่าน</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>ตั้งค่าข้อกําหนดการล็อคบัญชีผู้ใช้ของเครื่องแบบโต้ตอบ เพื่อให้อุปกรณ์ที่เข้ารหัสแบบ BitLocker ถูกล็อคไว้ หลังจากลองล็อกอิน 5 ครั้งล้มเหลว คุณจําเป็นจะต้องป้อนกุญแจ BitLocker เพื่อใช้ล็อกอินอีกครั้ง</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>ตั้งค่าข้อกําหนดการติดตามการทํางานเพื่อหยุดการแสดงข้อมูลผู้ใช้ เมื่อมีการล็อควาระงาน</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>ตั้งค่านโยบายการติดตามการทํางาน เพื่อหยุดการแสดงชื่อผู้ใช้ที่หน้าจอล็อค</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>ตั้งค่านโยบายการติดตามการทํางาน เพื่อหยุดการแสดงรายละเอียดล่าสุดที่เซ็นที่หน้าจอล็อค</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>ตั้งค่าพฤติกรรมของการแจ้งเตือนระดับความสูงสําหรับผู้ดูแลระบบในโหมด Admin Apporal: แจ้งเตือนสําหรับการตอบกลับบนพื้นที่ทํางานที่ปลอดภัย</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>ตั้งค่าพฤติกรรมของการแจ้งเตือนระดับความสูงสําหรับผู้ใช้มาตรฐาน: เรียกใช้โปรแกรม Cresentials บนพื้นที่ทํางานที่ปลอดภัย</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>ปรับแต่งระบบเพื่อยกระดับการประมวลผลที่เซ็นและตรวจสอบความถูกต้องเท่านั้น โปรแกรมใด ๆ ก็ตามที่มีการเซ็นรับรองหรือเซ็นรับรองด้วยตนเอง จะไม่สามารถเรียกใช้งานเป็นผู้ดูแลระบบได้</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>ตั้งค่าพฤติกรรมของการแจ้งเตือนระดับความสูงสําหรับผู้ดูแลระบบในโหมดการป้องกันคุณสมบัติเพิ่มเติม: แจ้งเตือนสําหรับ Cresentials บนพื้นที่ทํางานที่ปลอดภัย</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>การ ป้องกัน ผู้ บริหาร: ตั้ง ประเภท ของ เอ ดมิน ตาม แบบ ที่ เหมาะ สม เพื่อ เป็น การ ปรับ ปรุง ให้ เหมาะ สม กับ แอ ดมิน โดย มี การ ป้องกัน สิทธิ พิเศษ เพิ่ม ขึ้น</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>ลบพาธของสิ่งอํานวยความสะดวกจากระยะไกล</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>ลบพาธของสิ่งอํานวยความสะดวกจากระยะไกล และเส้นทางย่อย</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>เครือข่าย NTLM ที่เข้ามา ถูกปฏิเสธสําหรับทุกบัญชี</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>เชื่อมต่อ NTLM อย่างปฏิเสธไม่ได้</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>บังคับให้มีการป้องกันกุญแจที่แน่นหนา สําหรับกุญแจของผู้ใช้ที่เก็บไว้ในคอมพิวเตอร์ คุณจะสามารถบันทึกกุญแจส่วนตัวของใบรับรองที่คุณติดตั้งบนคอมพิวเตอร์ได้อย่างปลอดภัย และต้องป้อนกุญแจส่วนตัว เช่น การเซ็น</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>ตั้งค่าจํานวนของการเซ็นที่ล้มเหลวเป็น 5. ในการรวมกับนโยบายอื่น ๆ ในหมวดหมู่นี้ ซึ่งหมายความว่าทุก ๆ 5 ครั้งที่ล้มเหลว จะต้องใช้วันเต็ม ก่อนจะทําการลองอีก 5 ครั้ง มิฉะนั้นบิตล็อกเกอร์จะมีส่วนร่วม ระบบจะเริ่มทํางานใหม่ และ 48 บิตล็อกเกอร์จะจําเป็น นโยบายนี้ป้องกันการพยายามใช้กําลัง</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>ตั้งค่าระยะเวลาการล็อคบัญชีผู้ใช้เป็น 1440 นาทีหรือ 1 วัน ในการรวมกับนโยบายอื่น ๆ ในหมวดหมู่นี้ ซึ่งหมายความว่าทุก ๆ 5 ครั้งที่ล้มเหลว จะต้องใช้วันเต็ม ก่อนจะทําการลองอีก 5 ครั้ง มิฉะนั้นบิตล็อกเกอร์จะมีส่วนร่วม ระบบจะเริ่มทํางานใหม่ และ 48 บิตล็อกเกอร์จะจําเป็น</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>ตั้งค่าตัวตรวจการล็อคบัญชีใหม่เป็น 1440 นาทีหรือ 1 วัน</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานไคลเอนต์ TLS รุ่น v1 - ตอน 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานไคลเอนต์ TLS รุ่น v1 - ส่วน 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานเซิร์ฟเวอร์ TLS รุ่น v1 - ตอน 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานเซิร์ฟเวอร์ TLS รุ่น v1 - ตอน 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานไคลเอนต์ TLS รุ่น 1. 1 - ตอน 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานไคลเอนต์ TLS รุ่น 1. 1 - ส่วน 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานเซิร์ฟเวอร์ TLS รุ่น 1. 1 - ตอน 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>ปิดการใช้งานเซิร์ฟเวอร์ TLS รุ่น 1. 1 - ตอน 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>สร้างมุมมองกําหนดเองในเครื่องมือแสดงเหตุการณ์ในวินโดวส์ เพื่อให้ง่ายต่อการเข้าถึงเหตุการณ์ความปลอดภัยที่สําคัญ</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>ปรับแต่งการปรับแต่งโปรแกรมลูกข่าย SSH เพื่อใช้ MACs (รหัสการตรวจสอบสิทธิ์)</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>เปิดใช้การตรวจสอบและติดตามการล็อคหน้าจอและปลดล็อค</value>
+</data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>อนุญาตให้เชื่อมต่อเครือข่ายระหว่างการเชื่อมต่อแบบเดิร์นเดบิวต์ (เฉพาะเมื่อเสียบปลั๊ก)</value>
+</data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>ตั้งค่าเวลาสูงสุดของที่อยู่ IP ถูกบล็อคโดย brute- Force เพื่อใช้เป็นค่าสูงสุดที่เป็นไปได้ หลังจากเวลานี้ ที่อยู่ IP จะสามารถเข้าสู่ระบบและเริ่มต้นการทํางานได้</value>
+</data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>ตั้งค่าเวลาที่มากที่สุดที่อยู่ IP ถูกบล็อคโดยการป้องกันการเข้ารหัสระยะไกล เป็นค่าสูงสุดที่เป็นไปได้ หลังจากเวลานี้ ที่อยู่ IP จะสามารถเริ่มการเชื่อมต่อได้</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>เปิดใช้การตรวจสอบโปรแกรมที่อาจจะไม่ต้องการ พวกเขาจะแสดงในประวัติศาสตร์ของไมโครซอฟท์การป้องกัน พร้อมกับภัยคุกคามอื่น ๆ</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>ปิดการใช้งานกฏ USDP ในไฟร์วอลล์ มันเพิ่มมาตรการรักษาความปลอดภัยเป็นพิเศษ ในสถานที่สาธารณะ เช่นร้านกาแฟ แต่อาจแทรกแซงการแบ่งปันหน้าจอมิราคาส ซึ่งขึ้นอยู่กับโปรไฟล์สาธารณะ หรือเครือข่ายที่บ้าน</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>ตั้งค่าตําแหน่งเครือข่ายของการเชื่อมต่อทั้งหมดสู่สาธารณะ เครือข่ายสาธารณะ หมายถึง ความไว้วางใจน้อยกับอุปกรณ์เครือข่ายอื่น</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>ตั้งข้อกําหนดการเริ่มใช้งานไดรเวอร์บูต-สตาร์แล้ว</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>อนุญาตให้ทําการเซ็นผ่านทางบริการพื้นที่ทํางานทางไกล ให้คุณได้ใช้งานพื้นที่ทํางานทางไกล (RDP) ในเครื่องของคุณ</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>แสดงส่วนขยายของแฟ้มสําหรับปุ่มพิมพ์ลัด (. lnk) ในเครื่องมือสํารวจแฟ้ม คน ที่ ถูก โจมตี มัก จะ อาศัย ทางลัด ที่ ถูก ซ่อน ไว้ ซึ่ง เป็น การ ปลอม แปลง เอกสาร ที่ ไม่ เป็น อันตราย. การเปิดเผยนามสกุล ให้คุณได้ตรวจสอบประเภทแฟ้มจริง และระบุปุ่มพิมพ์ลัดที่หลอกลวงก่อนที่จะทําการประมวลผล</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>แสดงส่วนขยายของแฟ้มสําหรับ (.url) ในเครื่องมือสํารวจแฟ้ม ป้องกันทางลัดอินเทอร์เน็ตจากการปลอมตัวเป็นแฟ้มที่ถูกต้อง การ ทํา เช่น นี้ ช่วย ลด ความ เสี่ยง ต่อ การ ถูก ทํา ร้าย โดย ใช้ ส่วน ต่อ ที่ ซ่อน อยู่ เพื่อ ปลอม ตัว เป็น ส่วน เชื่อม โยง ที่ แยบยล หรือ มุ่ง ร้าย เป็น เอกสาร ที่ ปลอด ภัย.</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>แสดงส่วนขยายของแฟ้ม (. pif) ในเครื่องมือสํารวจแฟ้ม แฟ้มข้อมูลของโปรแกรม (PIF) จะทํางานคล้าย ๆ กับแฟ้ม.exe และมักถูกใช้โดยผู้โจมตี เพื่อซ่อนมัลแวร์ หลังประเภทแฟ้มที่คุ้นเคยน้อยลง</value>
+</data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>ปรับแต่งอินเทอร์เฟซของแอนทิมัลแวร์ (AMSI) เพื่อบังคับใช้การเซ็นรหัสที่ถูกต้องสําหรับผู้ให้บริการต่อต้านมัลแวร์ที่ 3 ทั้งหมด</value>
+</data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>การยกเลิกบริการเว็บไซด์ ป้องกันผู้โจมตีจากการใช้เว็บดีเอที เพื่อดักจับและขโมยข้อมูล NTLM</value>
+</data>
+<data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
+    <value>ตั้งค่าข้อกําหนดการประมวลผลของพาวเวอร์เชลล์ของวินโดวส์ เพื่อจํากัดการใช้คําสั่งแต่ละตัว แต่จะไม่อนุญาตให้ประมวลผลสคริปต์</value>
+</data>
+  <data name="EnhanceSecurityMode-Edge" xml:space="preserve">
+    <value>เพิ่มโหมดความปลอดภัยใน Microsoft Edges etlections about menuments continuations continuations by distitle (อังกฤษ) Completements (JIT) และเปิดใช้การป้องกันการทํางานของระบบสําหรับเบราว์เซอร์)</value>
+  </data>
+<data name="DefaultLocalFontsSetting-Edge" xml:space="preserve">
+    <value>ป้องกันเว็บไซต์จากการเข้าถึงข้อมูลเกี่ยวกับแบบอักษรที่ถูกติดตั้งไว้ภายในเครื่อง</value>
+</data>
+<data name="BrowserCodeIntegritySetting-Edge" xml:space="preserve">
+    <value>ความเที่ยงตรงของโค้ดเบราว์เซอร์ใน Microsoft Edge เพื่อให้แน่ใจว่า เฉพาะการเซ็นของไมโครซอฟต์เท่านั้น ที่จะถูกอนุญาตให้โหลดในโพรเซสของ Edge เพื่อส่งเสริมความปลอดภัยของเบราว์เซอร์</value>
+</data>
+<data name="RestrictCoreSharingOnRenderer-HardcoreMode-Edge" xml:space="preserve">
+    <value>จํากัดการเชื่อมต่อแกน CPU สําหรับตัวประมวลผล ช่วยให้จําด้าน-เอฟเฟกต์ข้ามโพรเซสหน่วยความจําได้ โดยการแยกกระบวนการนี้</value>
+</data>
+<data name="RendererAppContainerEnabled-HardcoreMode-Edge" xml:space="preserve">
+    <value>เรียกตัวแสดงผลออกมาเป็นโปรแกรมบรรจุ App เพื่อเพิ่มประโยชน์ด้านความปลอดภัย</value>
+</data>
+<data name="PreferSlowKexAlgorithms-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge จะเลือกอัลกอริทึมที่ต้องการสําหรับ Algorith National Algorith Watch 2. 2. 0 (CNSA 2. 0) สําหรับการเชื่อมต่อแบบ TLS 1. 3 และ QUIC</value>
+</data>
+<data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
+    <value>ปรับแต่งขอบของไมโครซอฟต์ที่ต้องการใช้การเข้ารหัสสําหรับใช้กับ Algorith Watch รุ่น 1. 0 และ 2.0 (CNSA 1. 0 และ 2. 0) มีผลกระทบกับ TLS 1.3 และ QUIC</value>
+</data>
+</root>

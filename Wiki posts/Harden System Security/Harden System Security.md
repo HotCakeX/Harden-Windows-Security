@@ -457,7 +457,7 @@ function Build_HSS {
 
     Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1 -Force
 
-    [System.String]$script:AppControlManagerDirectory
+    [System.String]$script:HardenSystemSecurityDirectory
 
     if ($DownloadRepo) {
 
@@ -466,19 +466,19 @@ function Build_HSS {
         [System.String]$RepoUrl = "https://github.com/HotCakeX/$RepoName/archive/refs/heads/$BranchName.zip"
         [System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, "$RepoName.zip")
         [System.String]$InitialWorkingDirectory = $PWD.Path
-        $script:AppControlManagerDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, "$RepoName-$BranchName", 'Harden System Security')
+        $script:HardenSystemSecurityDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, "$RepoName-$BranchName", 'Harden System Security')
 
-        if (Test-Path -Path $script:AppControlManagerDirectory -PathType Container) {
-            Remove-Item -Path $script:AppControlManagerDirectory -Recurse -Force
+        if (Test-Path -Path $script:HardenSystemSecurityDirectory -PathType Container) {
+            Remove-Item -Path $script:HardenSystemSecurityDirectory -Recurse -Force
         }
 
         Invoke-WebRequest -Uri $RepoUrl -OutFile $ZipPath
         Expand-Archive -Path $ZipPath -DestinationPath $InitialWorkingDirectory -Force
         Remove-Item -Path $ZipPath -Force
-        Set-Location -Path $script:AppControlManagerDirectory
+        Set-Location -Path $script:HardenSystemSecurityDirectory
     }
     else {
-        $script:AppControlManagerDirectory = $PWD.Path
+        $script:HardenSystemSecurityDirectory = $PWD.Path
     }
 
     if ($InstallDeps) {
@@ -830,6 +830,24 @@ function Build_HSS {
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging ARM64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
+    #region Resource Package
+    $AddonSource = '..\AppControl Manager\eXclude\Harden System Security - Extra Languages Pack 1 Addon'
+    $BasePri = Get-ChildItem '.\bin\x64\Release\*\win-x64\resources.pri'
+    if ($null -eq $BasePri) { throw 'Build or publish Harden System Security first so its base resources.pri exists under bin.' }
+    $Stage = Join-Path $env:TEMP ([guid]::NewGuid())
+    [System.String]$ExtraLanguagesPack1MSIXPathName = 'HardenSystemSecurity.ExtraLanguagesPack1.msix'
+    [System.String]$ExtraLanguagesPack1MSIXPath = Join-Path $AddonSource $ExtraLanguagesPack1MSIXPathName
+    New-Item -ItemType Directory -Path $Stage | Out-Null
+    Copy-Item (Join-Path $AddonSource 'AppxManifest.xml') $Stage
+    Copy-Item (Join-Path $AddonSource 'Assets') $Stage -Recurse
+    makepri.exe resourcepack /ProjectRoot (Join-Path $AddonSource 'Strings') /ConfigXml (Join-Path $AddonSource 'priconfig.xml') /IndexFile $BasePri.FullName /OutputFile (Join-Path $Stage 'resources.pri') /Overwrite
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed creating resource package's PRI config via makepri.exe. Exit Code: $LASTEXITCODE") }
+    makeappx.exe pack /d $Stage /p $ExtraLanguagesPack1MSIXPath /nv /o
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed creating resource package's MSIX via makeappx.exe. Exit Code: $LASTEXITCODE") }
+    Remove-Item $Stage -Recurse -Force
+    Write-Host "Successfully created the Resource Package's MSIX at: $ExtraLanguagesPack1MSIXPath"
+    #endregion Resource Package
+
     function Get-MSIXFile {
         param(
             [System.String]$BasePath,
@@ -911,11 +929,13 @@ function Build_HSS {
     #endregion
 
     # Creating the directory where the MSIX packages will be copied to
-    [System.String]$MSIXBundleOutput = [System.IO.Directory]::CreateDirectory([System.IO.Path]::Combine($script:AppControlManagerDirectory, 'MSIXBundleOutput')).FullName
+    [System.String]$MSIXBundleOutput = [System.IO.Directory]::CreateDirectory([System.IO.Path]::Combine($script:HardenSystemSecurityDirectory, 'MSIXBundleOutput')).FullName
 
     [System.IO.File]::Copy($FinalMSIXX64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXX64Name), $true)
 
     [System.IO.File]::Copy($FinalMSIXARM64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXARM64Name), $true)
+
+    [System.IO.File]::Copy($ExtraLanguagesPack1MSIXPath, [System.IO.Path]::Combine($MSIXBundleOutput, $ExtraLanguagesPack1MSIXPathName), $true)
 
     # The path to the final MSIX Bundle file
     [System.String]$MSIXBundle = [System.IO.Path]::Combine($MSIXBundleOutput, $FinalBundleFileName)
@@ -1061,7 +1081,6 @@ function Build_HSS {
 # Build_HSS -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Upload $true
 # Local - ARM64 + X64
 Build_HSS -DownloadRepo $true -InstallDeps $true -Workflow $false -UpdateWorkLoads $false -Upload $false
-
 ```
 
 <br>

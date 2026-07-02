@@ -212,16 +212,22 @@ The following chart explains various symbols you will see throughout the documen
 
 The Harden System Security fully supports the following languages.
 
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/usa.svg" width="25" alt="Country flag"> English
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/israel.svg" width="25" alt="Country flag"> Hebrew
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/greece.svg" width="25" alt="Country flag"> Greek
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/india.svg" width="25" alt="Country flag"> Hindi
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/india.svg" width="25" alt="Country flag"> Malayalam
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/saudi-arabia.svg" width="25" alt="Country flag"> Arabic
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/mexico.svg" width="25" alt="Country flag"> Spanish
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/ea13e9ebae5baa7343c9c1721f58cf4400cd88f6/Pictures/Country%20Flags/poland.svg" width="25" alt="Country flag"> Polish
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/2f006adff77201f244cacdbe7c3ad8ac34f50199/Pictures/Country%20Flags/icons8-germany.svg" width="25" alt="Country flag"> German
-* <img src="https://raw.githubusercontent.com/HotCakeX/.github/2fd2894faa6e16175cb5088323a452bb90b08ea8/Pictures/Country%20Flags/france.svg" width="25" alt="Country flag"> French
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/usa.svg?raw=true" width="25" alt="Country flag"> English
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/israel.svg?raw=true" width="25" alt="Country flag"> Hebrew
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/greece.svg?raw=true" width="25" alt="Country flag"> Greek
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/india.svg?raw=true" width="25" alt="Country flag"> Hindi
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/india.svg?raw=true" width="25" alt="Country flag"> Malayalam
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/saudi-arabia.svg?raw=true" width="25" alt="Country flag"> Arabic
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/mexico.svg?raw=true" width="25" alt="Country flag"> Spanish
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/poland.svg?raw=true" width="25" alt="Country flag"> Polish
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/icons8-germany.svg?raw=true" width="25" alt="Country flag"> German
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/france.svg?raw=true" width="25" alt="Country flag"> French
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/ukraine.svg?raw=true" width="25" alt="Country flag"> Ukrainian
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/iran.svg?raw=true" width="25" alt="Country flag"> Persian
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/thailand.svg?raw=true" width="25" alt="Country flag"> Thai
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/indonesia.svg?raw=true" width="25" alt="Country flag"> Indonesian
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/china.svg?raw=true" width="25" alt="Country flag"> Mandarin Chinese
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/italy.svg?raw=true" width="25" alt="Country flag"> Italian
 
 <br>
 

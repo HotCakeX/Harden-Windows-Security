@@ -112,6 +112,8 @@ Please feel free to open a discussion if you have any questions about the build 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Validate%20Policies.gif" alt="AppControl Manager Menu Item" width="20"> [View File Certificates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730bc82a790f56a61e301b6663dfc9d5a/Pictures/Gifs/AppControl%20Manager%20Menu/Microsoft%20Graph.gif" alt="AppControl Manager Menu Item" width="20"> [Microsoft Graph](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/b7bce8f390bcfe8d9882d3b716a1b9d5e89928d3/Pictures/Gifs/AppControl%20Manager%20Menu/Firewall%20Sentinel.gif" alt="AppControl Manager Menu Item" width="20"> [Firewall Sentinel](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Firewall-Sentinel)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/blue-star.gif" alt="AppControl Manager Menu Item" width="20"> [Data Analysis in AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Data-Analysis-in-AppControl-Manager)
+- <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/AppControl%20Manager%20Menu/Policy%20Comparer.gif?raw=true" alt="AppControl Manager Menu Item" width="20"> [Compare Policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Compare-Policies)
 
 *More features will come very quickly in the near future.*
 

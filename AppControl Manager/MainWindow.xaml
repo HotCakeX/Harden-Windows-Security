@@ -502,6 +502,7 @@
                 <NavigationViewItemHeader x:Name="PolicyManagementNavigationViewItemHeader" x:Uid="PolicyManagementNavigationViewItemHeader"/>
                 <NavigationViewItem x:Name="ConfigurePolicyRuleOptionsNavItem" x:Uid="ConfigurePolicyRuleOptionsNavItem" Icon="{x:Bind ViewModel.ConfigurePolicyRuleOptionsIcon, Mode=OneWay}" Tag="ConfigurePolicyRuleOptions" />
                 <NavigationViewItem x:Name="MergePoliciesNavItem" x:Uid="MergePoliciesNavItem" Icon="{x:Bind ViewModel.MergePoliciesIcon, Mode=OneWay}" Tag="MergePolicies" />
+                <NavigationViewItem x:Name="ComparePoliciesNavItem" x:Uid="ComparePoliciesNavItem" Icon="{x:Bind ViewModel.ComparePoliciesIcon, Mode=OneWay}" Tag="ComparePolicies" />
                 <NavigationViewItem x:Name="DeploymentNavItem" x:Uid="DeploymentNavItem" Icon="{x:Bind ViewModel.DeploymentIcon, Mode=OneWay}" Tag="Deployment" />
                 <NavigationViewItem x:Name="ValidatePoliciesNavItem" x:Uid="ValidatePoliciesNavItem" Icon="{x:Bind ViewModel.ValidatePoliciesIcon, Mode=OneWay}" Tag="ValidatePolicies" />
 

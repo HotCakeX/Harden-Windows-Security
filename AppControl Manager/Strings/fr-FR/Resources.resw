@@ -7753,4 +7753,40 @@
   <data name="DeployingAuditModePolicy" xml:space="preserve">
     <value>Déploiement de la stratégie en mode audit.</value>
   </data>
+  <data name="ComparePoliciesNavItem.Content" xml:space="preserve">
+    <value>Comparer les stratégies</value>
+  </data>
+  <data name="ComparePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Comparez deux stratégies App Control et affichez en détail toutes leurs différences, avec la possibilité d’exporter les résultats de la comparaison.</value>
+  </data>
+  <data name="ComparePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Comparez deux stratégies App Control et affichez en détail toutes leurs différences, avec la possibilité d’exporter les résultats de la comparaison.</value>
+  </data>
+  <data name="ComparePoliciesFirstBrowseButton.Content" xml:space="preserve">
+    <value>Parcourir pour sélectionner la stratégie 1</value>
+  </data>
+  <data name="ComparePoliciesSecondBrowseButton.Content" xml:space="preserve">
+    <value>Parcourir pour sélectionner la stratégie 2</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Comparez les deux stratégies sélectionnées et affichez leurs différences</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Comparez les deux stratégies sélectionnées et affichez leurs différences</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.Content" xml:space="preserve">
+    <value>Comparer</value>
+  </data>
+  <data name="ComparePoliciesFirstPolicyLabel" xml:space="preserve">
+    <value>Première stratégie</value>
+  </data>
+  <data name="ComparePoliciesSecondPolicyLabel" xml:space="preserve">
+    <value>Deuxième stratégie</value>
+  </data>
+  <data name="ComparePolicies_SelectBothMessage" xml:space="preserve">
+    <value>Veuillez sélectionner les deux stratégies avant de comparer.</value>
+  </data>
+  <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
+    <value>Comparaison des deux stratégies...</value>
+  </data>
 </root>

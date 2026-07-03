@@ -7753,4 +7753,40 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="DeployingAuditModePolicy" xml:space="preserve">
     <value>Wdrażanie zasad w trybie inspekcji.</value>
   </data>
+  <data name="ComparePoliciesNavItem.Content" xml:space="preserve">
+    <value>Porównaj zasady</value>
+  </data>
+  <data name="ComparePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Porównaj dwie zasady App Control i wyświetl szczegółowo wszystkie różnice między nimi, z możliwością eksportu wyników porównania.</value>
+  </data>
+  <data name="ComparePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Porównaj dwie zasady App Control i wyświetl szczegółowo wszystkie różnice między nimi, z możliwością eksportu wyników porównania.</value>
+  </data>
+  <data name="ComparePoliciesFirstBrowseButton.Content" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu zasady 1</value>
+  </data>
+  <data name="ComparePoliciesSecondBrowseButton.Content" xml:space="preserve">
+    <value>Przeglądaj w poszukiwaniu zasady 2</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Porównaj dwie wybrane zasady i pokaż różnice między nimi</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Porównaj dwie wybrane zasady i pokaż różnice między nimi</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.Content" xml:space="preserve">
+    <value>Porównaj</value>
+  </data>
+  <data name="ComparePoliciesFirstPolicyLabel" xml:space="preserve">
+    <value>Pierwsza zasada</value>
+  </data>
+  <data name="ComparePoliciesSecondPolicyLabel" xml:space="preserve">
+    <value>Druga zasada</value>
+  </data>
+  <data name="ComparePolicies_SelectBothMessage" xml:space="preserve">
+    <value>Przed porównaniem wybierz obie zasady.</value>
+  </data>
+  <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
+    <value>Porównywanie dwóch zasad...</value>
+  </data>
 </root>

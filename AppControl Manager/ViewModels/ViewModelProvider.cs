@@ -47,6 +47,9 @@ internal static class ViewModelProvider
 	private static readonly Lazy<MergePoliciesVM> _mergePoliciesVM = new(() =>
 		new MergePoliciesVM(), false);
 
+	private static readonly Lazy<ComparePoliciesVM> _comparePoliciesVM = new(() =>
+		new ComparePoliciesVM(), false);
+
 	private static readonly Lazy<ConfigurePolicyRuleOptionsVM> _configurePolicyRuleOptionsVM = new(() =>
 		new ConfigurePolicyRuleOptionsVM(), false);
 
@@ -134,6 +137,7 @@ internal static class ViewModelProvider
 	internal static ViewCurrentPoliciesVM ViewCurrentPoliciesVM => _viewCurrentPoliciesVM.Value;
 	internal static SettingsVM SettingsVM => _settingsVM.Value;
 	internal static MergePoliciesVM MergePoliciesVM => _mergePoliciesVM.Value;
+	internal static ComparePoliciesVM ComparePoliciesVM => _comparePoliciesVM.Value;
 	internal static ConfigurePolicyRuleOptionsVM ConfigurePolicyRuleOptionsVM => _configurePolicyRuleOptionsVM.Value;
 	internal static AllowNewAppsVM AllowNewAppsVM => _allowNewAppsVM.Value;
 	internal static CreateDenyPolicyVM CreateDenyPolicyVM => _createDenyPolicyVM.Value;

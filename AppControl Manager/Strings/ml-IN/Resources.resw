@@ -7753,4 +7753,40 @@
   <data name="DeployingAuditModePolicy" xml:space="preserve">
     <value>നയം ഓഡിറ്റ് മോഡിൽ വിന്യസിക്കുന്നു.</value>
   </data>
+  <data name="ComparePoliciesNavItem.Content" xml:space="preserve">
+    <value>നയങ്ങൾ താരതമ്യം ചെയ്യുക</value>
+  </data>
+  <data name="ComparePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>രണ്ട് App Control നയങ്ങൾ താരതമ്യം ചെയ്ത്, താരതമ്യ ഫലങ്ങൾ എക്സ്പോർട്ട് ചെയ്യാനുള്ള സൗകര്യത്തോടെ അവയിലെ എല്ലാ വ്യത്യാസങ്ങളും വിശദമായി കാണുക.</value>
+  </data>
+  <data name="ComparePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>രണ്ട് App Control നയങ്ങൾ താരതമ്യം ചെയ്ത്, താരതമ്യ ഫലങ്ങൾ എക്സ്പോർട്ട് ചെയ്യാനുള്ള സൗകര്യത്തോടെ അവയിലെ എല്ലാ വ്യത്യാസങ്ങളും വിശദമായി കാണുക.</value>
+  </data>
+  <data name="ComparePoliciesFirstBrowseButton.Content" xml:space="preserve">
+    <value>നയം 1 തിരഞ്ഞെടുക്കാൻ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="ComparePoliciesSecondBrowseButton.Content" xml:space="preserve">
+    <value>നയം 2 തിരഞ്ഞെടുക്കാൻ ബ്രൗസ് ചെയ്യുക</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത രണ്ട് നയങ്ങൾ താരതമ്യം ചെയ്ത് അവയിലെ വ്യത്യാസങ്ങൾ കാണിക്കുക</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത രണ്ട് നയങ്ങൾ താരതമ്യം ചെയ്ത് അവയിലെ വ്യത്യാസങ്ങൾ കാണിക്കുക</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.Content" xml:space="preserve">
+    <value>താരതമ്യം ചെയ്യുക</value>
+  </data>
+  <data name="ComparePoliciesFirstPolicyLabel" xml:space="preserve">
+    <value>ആദ്യ നയം</value>
+  </data>
+  <data name="ComparePoliciesSecondPolicyLabel" xml:space="preserve">
+    <value>രണ്ടാം നയം</value>
+  </data>
+  <data name="ComparePolicies_SelectBothMessage" xml:space="preserve">
+    <value>താരതമ്യം ചെയ്യുന്നതിന് മുമ്പ് രണ്ട് നയങ്ങളും തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
+    <value>രണ്ട് നയങ്ങളും താരതമ്യം ചെയ്യുന്നു...</value>
+  </data>
 </root>

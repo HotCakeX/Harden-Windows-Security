@@ -7753,4 +7753,40 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="DeployingAuditModePolicy" xml:space="preserve">
     <value>Implementando la directiva en modo de auditoría.</value>
   </data>
+  <data name="ComparePoliciesNavItem.Content" xml:space="preserve">
+    <value>Comparar directivas</value>
+  </data>
+  <data name="ComparePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Compare dos directivas de App Control y vea todas sus diferencias en detalle, con la posibilidad de exportar los resultados de la comparación.</value>
+  </data>
+  <data name="ComparePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Compare dos directivas de App Control y vea todas sus diferencias en detalle, con la posibilidad de exportar los resultados de la comparación.</value>
+  </data>
+  <data name="ComparePoliciesFirstBrowseButton.Content" xml:space="preserve">
+    <value>Buscar directiva 1</value>
+  </data>
+  <data name="ComparePoliciesSecondBrowseButton.Content" xml:space="preserve">
+    <value>Buscar directiva 2</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Compare las dos directivas seleccionadas y muestre sus diferencias</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Compare las dos directivas seleccionadas y muestre sus diferencias</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.Content" xml:space="preserve">
+    <value>Comparar</value>
+  </data>
+  <data name="ComparePoliciesFirstPolicyLabel" xml:space="preserve">
+    <value>Primera directiva</value>
+  </data>
+  <data name="ComparePoliciesSecondPolicyLabel" xml:space="preserve">
+    <value>Segunda directiva</value>
+  </data>
+  <data name="ComparePolicies_SelectBothMessage" xml:space="preserve">
+    <value>Seleccione ambas directivas antes de comparar.</value>
+  </data>
+  <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
+    <value>Comparando las dos directivas...</value>
+  </data>
 </root>

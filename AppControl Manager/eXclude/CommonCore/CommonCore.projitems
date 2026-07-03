@@ -215,5 +215,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Animated Icons\View.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Animated Icons\ViewAllCertificates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Animated Icons\Launch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Animated Icons\Scales.cs" />
   </ItemGroup>
 </Project>

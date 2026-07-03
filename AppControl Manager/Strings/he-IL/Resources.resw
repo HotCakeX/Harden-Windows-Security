@@ -7753,4 +7753,40 @@
   <data name="DeployingAuditModePolicy" xml:space="preserve">
     <value>פורס את המדיניות במצב ביקורת.</value>
   </data>
+  <data name="ComparePoliciesNavItem.Content" xml:space="preserve">
+    <value>השוואת מדיניות</value>
+  </data>
+  <data name="ComparePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השווה בין שתי מדיניות App Control והצג בפירוט את כל ההבדלים ביניהן, עם אפשרות לייצא את תוצאות ההשוואה.</value>
+  </data>
+  <data name="ComparePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השווה בין שתי מדיניות App Control והצג בפירוט את כל ההבדלים ביניהן, עם אפשרות לייצא את תוצאות ההשוואה.</value>
+  </data>
+  <data name="ComparePoliciesFirstBrowseButton.Content" xml:space="preserve">
+    <value>עיון לבחירת מדיניות 1</value>
+  </data>
+  <data name="ComparePoliciesSecondBrowseButton.Content" xml:space="preserve">
+    <value>עיון לבחירת מדיניות 2</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השווה בין שתי המדיניות שנבחרו והצג את ההבדלים ביניהן</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השווה בין שתי המדיניות שנבחרו והצג את ההבדלים ביניהן</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.Content" xml:space="preserve">
+    <value>השוואה</value>
+  </data>
+  <data name="ComparePoliciesFirstPolicyLabel" xml:space="preserve">
+    <value>מדיניות ראשונה</value>
+  </data>
+  <data name="ComparePoliciesSecondPolicyLabel" xml:space="preserve">
+    <value>מדיניות שנייה</value>
+  </data>
+  <data name="ComparePolicies_SelectBothMessage" xml:space="preserve">
+    <value>בחר את שתי המדיניות לפני ביצוע ההשוואה.</value>
+  </data>
+  <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
+    <value>מתבצעת השוואה בין שתי המדיניות...</value>
+  </data>
 </root>

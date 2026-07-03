@@ -7753,4 +7753,40 @@
   <data name="DeployingAuditModePolicy" xml:space="preserve">
     <value>يتم نشر النهج في وضع التدقيق.</value>
   </data>
+  <data name="ComparePoliciesNavItem.Content" xml:space="preserve">
+    <value>مقارنة السياسات</value>
+  </data>
+  <data name="ComparePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قارن بين سياستين من سياسات App Control واعرض جميع الاختلافات بينهما بالتفصيل، مع إمكانية تصدير نتائج المقارنة.</value>
+  </data>
+  <data name="ComparePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قارن بين سياستين من سياسات App Control واعرض جميع الاختلافات بينهما بالتفصيل، مع إمكانية تصدير نتائج المقارنة.</value>
+  </data>
+  <data name="ComparePoliciesFirstBrowseButton.Content" xml:space="preserve">
+    <value>استعراض لاختيار السياسة 1</value>
+  </data>
+  <data name="ComparePoliciesSecondBrowseButton.Content" xml:space="preserve">
+    <value>استعراض لاختيار السياسة 2</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>قارن بين السياستين المحددتين واعرض الاختلافات بينهما</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>قارن بين السياستين المحددتين واعرض الاختلافات بينهما</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.Content" xml:space="preserve">
+    <value>مقارنة</value>
+  </data>
+  <data name="ComparePoliciesFirstPolicyLabel" xml:space="preserve">
+    <value>السياسة الأولى</value>
+  </data>
+  <data name="ComparePoliciesSecondPolicyLabel" xml:space="preserve">
+    <value>السياسة الثانية</value>
+  </data>
+  <data name="ComparePolicies_SelectBothMessage" xml:space="preserve">
+    <value>يرجى تحديد كلتا السياستين قبل المقارنة.</value>
+  </data>
+  <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
+    <value>جارٍ مقارنة السياستين...</value>
+  </data>
 </root>

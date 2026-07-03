@@ -7753,4 +7753,40 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="DeployingAuditModePolicy" xml:space="preserve">
     <value>Die Richtlinie wird im Überwachungsmodus bereitgestellt.</value>
   </data>
+  <data name="ComparePoliciesNavItem.Content" xml:space="preserve">
+    <value>Richtlinien vergleichen</value>
+  </data>
+  <data name="ComparePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Vergleichen Sie zwei App Control-Richtlinien und zeigen Sie alle Unterschiede im Detail an, mit der Möglichkeit, die Vergleichsergebnisse zu exportieren.</value>
+  </data>
+  <data name="ComparePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Vergleichen Sie zwei App Control-Richtlinien und zeigen Sie alle Unterschiede im Detail an, mit der Möglichkeit, die Vergleichsergebnisse zu exportieren.</value>
+  </data>
+  <data name="ComparePoliciesFirstBrowseButton.Content" xml:space="preserve">
+    <value>Nach Richtlinie 1 suchen</value>
+  </data>
+  <data name="ComparePoliciesSecondBrowseButton.Content" xml:space="preserve">
+    <value>Nach Richtlinie 2 suchen</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Vergleichen Sie die beiden ausgewählten Richtlinien und zeigen Sie ihre Unterschiede an</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Vergleichen Sie die beiden ausgewählten Richtlinien und zeigen Sie ihre Unterschiede an</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.Content" xml:space="preserve">
+    <value>Vergleichen</value>
+  </data>
+  <data name="ComparePoliciesFirstPolicyLabel" xml:space="preserve">
+    <value>Erste Richtlinie</value>
+  </data>
+  <data name="ComparePoliciesSecondPolicyLabel" xml:space="preserve">
+    <value>Zweite Richtlinie</value>
+  </data>
+  <data name="ComparePolicies_SelectBothMessage" xml:space="preserve">
+    <value>Bitte wählen Sie vor dem Vergleich beide Richtlinien aus.</value>
+  </data>
+  <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
+    <value>Die beiden Richtlinien werden verglichen...</value>
+  </data>
 </root>

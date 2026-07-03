@@ -7753,4 +7753,40 @@
   <data name="DeployingAuditModePolicy" xml:space="preserve">
     <value>ポリシーを監査モードで展開しています。</value>
   </data>
+  <data name="ComparePoliciesNavItem.Content" xml:space="preserve">
+    <value>ポリシーの比較</value>
+  </data>
+  <data name="ComparePoliciesNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>2 つの App Control ポリシーを比較し、比較結果をエクスポートできる状態で、すべての相違点を詳細に表示します。</value>
+  </data>
+  <data name="ComparePoliciesNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>2 つの App Control ポリシーを比較し、比較結果をエクスポートできる状態で、すべての相違点を詳細に表示します。</value>
+  </data>
+  <data name="ComparePoliciesFirstBrowseButton.Content" xml:space="preserve">
+    <value>ポリシー 1 を参照</value>
+  </data>
+  <data name="ComparePoliciesSecondBrowseButton.Content" xml:space="preserve">
+    <value>ポリシー 2 を参照</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>選択した 2 つのポリシーを比較し、相違点を表示します</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>選択した 2 つのポリシーを比較し、相違点を表示します</value>
+  </data>
+  <data name="ComparePoliciesCompareButton.Content" xml:space="preserve">
+    <value>比較</value>
+  </data>
+  <data name="ComparePoliciesFirstPolicyLabel" xml:space="preserve">
+    <value>最初のポリシー</value>
+  </data>
+  <data name="ComparePoliciesSecondPolicyLabel" xml:space="preserve">
+    <value>2 番目のポリシー</value>
+  </data>
+  <data name="ComparePolicies_SelectBothMessage" xml:space="preserve">
+    <value>比較する前に両方のポリシーを選択してください。</value>
+  </data>
+  <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
+    <value>2 つのポリシーを比較しています...</value>
+  </data>
 </root>

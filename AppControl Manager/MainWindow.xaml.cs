@@ -1278,6 +1278,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			AutomationProperties.SetHelpText(FirewallSentinelNavItem, Atlas.GetStr("FirewallSentinelNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(FirewallSentinelNavItem, Atlas.GetStr("FirewallSentinelNavItem/ToolTipService/ToolTip"));
 
+			ComparePoliciesNavItem.Content = Atlas.GetStr("ComparePoliciesNavItem/Content");
+			AutomationProperties.SetHelpText(ComparePoliciesNavItem, Atlas.GetStr("ComparePoliciesNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(ComparePoliciesNavItem, Atlas.GetStr("ComparePoliciesNavItem/ToolTipService/ToolTip"));
+
 #endif
 
 			Logger.Write("MainWindow localized text refreshed successfully");

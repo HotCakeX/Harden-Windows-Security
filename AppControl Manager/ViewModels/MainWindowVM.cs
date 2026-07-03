@@ -211,6 +211,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		typeof(Pages.GetCIHashes),
 		typeof(Pages.PolicyEditor),
 		typeof(Pages.MergePolicies),
+		typeof(Pages.ComparePolicies),
 		typeof(Pages.Settings),
 		typeof(Pages.ConfigurePolicyRuleOptions),
 		typeof(Pages.ViewFileCertificates),
@@ -351,6 +352,12 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			pages: [typeof(Pages.MergePolicies)]
 		);
 
+		breadCrumbMappingsV2[typeof(Pages.ComparePolicies)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("ComparePoliciesNavItem/Content")],
+			pages: [typeof(Pages.ComparePolicies)]
+		);
+
 		breadCrumbMappingsV2[typeof(Pages.CreateSupplementalPolicy)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("CreateSupplementalPolicyNavItem/Content"), Atlas.GetStr("ScanResults")],
@@ -457,6 +464,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		{ "BuildNewCertificate", typeof(Pages.BuildNewCertificate) },
 		{ "CreateSupplementalPolicy", typeof(Pages.CreateSupplementalPolicy) },
 		{ "MergePolicies", typeof(Pages.MergePolicies) },
+		{ "ComparePolicies", typeof(Pages.ComparePolicies) },
 		{ "CreateDenyPolicy", typeof(Pages.CreateDenyPolicy) },
 		{ "ValidatePolicies", typeof(Pages.ValidatePolicy) },
 		{ "ViewFileCertificates", typeof(Pages.ViewFileCertificates) },
@@ -498,6 +506,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		NavigationPageToItemContentMapForSearch[Atlas.GetStr("SimulationNavItem/Content")] = typeof(Pages.Simulation);
 		NavigationPageToItemContentMapForSearch[Atlas.GetStr("DeploymentNavItem/Content")] = typeof(Pages.DeploymentPage);
 		NavigationPageToItemContentMapForSearch[Atlas.GetStr("MergePoliciesNavItem/Content")] = typeof(Pages.MergePolicies);
+		NavigationPageToItemContentMapForSearch[Atlas.GetStr("ComparePoliciesNavItem/Content")] = typeof(Pages.ComparePolicies);
 		NavigationPageToItemContentMapForSearch[Atlas.GetStr("ValidatePoliciesNavItem/Content")] = typeof(Pages.ValidatePolicy);
 		NavigationPageToItemContentMapForSearch[Atlas.GetStr("PolicyEditorNavItem/Content")] = typeof(Pages.PolicyEditor);
 		NavigationPageToItemContentMapForSearch[Atlas.GetStr("UpdateNavItem/Content")] = typeof(Pages.UpdatePage);
@@ -978,6 +987,11 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	internal IconElement? MergePoliciesIcon { get; set => SP(ref field, value); }
 
 	/// <summary>
+	/// Icon for the Compare Policies navigation item.
+	/// </summary>
+	internal IconElement? ComparePoliciesIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
 	/// Icon for the Deployment navigation item.
 	/// </summary>
 	internal IconElement? DeploymentIcon { get; set => SP(ref field, value); }
@@ -1299,6 +1313,12 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						Source = new Merge()
 					};
 
+					ComparePoliciesIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -6, -6, -6),
+						Source = new Scales()
+					};
+
 					CreateDenyPolicyIcon = new AnimatedIcon
 					{
 						Margin = new Thickness(0, -9, -9, -9),
@@ -1444,6 +1464,12 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						Foreground = accentBrush
 					};
 
+					ComparePoliciesIcon = new FontIcon
+					{
+						Glyph = "\uE8AB",
+						Foreground = accentBrush
+					};
+
 					CreateDenyPolicyIcon = new FontIcon
 					{
 						Glyph = "\uE8D0",
@@ -1502,6 +1528,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 					DeploymentIcon = new FontIcon { Glyph = "\uF32A" };
 					CreateSupplementalPolicyIcon = new FontIcon { Glyph = "\uE8F9" };
 					MergePoliciesIcon = new FontIcon { Glyph = "\uEE49" };
+					ComparePoliciesIcon = new FontIcon { Glyph = "\uE8AB" };
 					CreateDenyPolicyIcon = new FontIcon { Glyph = "\uE8D0" };
 					ValidatePoliciesIcon = new FontIcon { Glyph = "\uED5E" };
 					ViewFileCertificatesIcon = new FontIcon { Glyph = "\uEBD2" };

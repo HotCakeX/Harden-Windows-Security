@@ -1046,7 +1046,7 @@ DeviceEvents
 		if (string.IsNullOrWhiteSpace(mailNickname))
 		{
 			// Fallback if everything was stripped
-			mailNickname = "Group" + Guid.NewGuid().ToString("N")[..8];
+			mailNickname = "Group" + Guid.CreateVersion7().ToString("N")[..8];
 		}
 
 		// Prepare payload according to group type.

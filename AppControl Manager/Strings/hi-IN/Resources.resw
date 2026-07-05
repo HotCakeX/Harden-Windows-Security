@@ -7789,4 +7789,34 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>दोनों नीतियों की तुलना की जा रही है...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>ऐप मैनिफ़ेस्ट नीति</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>एक आधार नीति बनाएं और उसमें चयनित ऐप मैनिफ़ेस्ट शामिल करें.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>नीति बनाएं</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>नीति का नाम</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>जनरेट की गई ऐप मैनिफ़ेस्ट नीति के लिए एक नाम निर्धारित करें.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>ऐप मैनिफ़ेस्ट चुनें</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>नीति में शामिल किए जाने वाले ऐप मैनिफ़ेस्ट चुनें.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>ऐप मैनिफ़ेस्ट नीति बनाई जा रही है...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>ऐप मैनिफ़ेस्ट नीति सफलतापूर्वक बनाई गई</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>कोई ऐप मैनिफ़ेस्ट चयनित नहीं है.</value>
+  </data>
 </root>

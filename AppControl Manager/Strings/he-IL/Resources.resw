@@ -7789,4 +7789,34 @@
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>מתבצעת השוואה בין שתי המדיניות...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>מדיניות מניפסטי אפליקציות</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>צור מדיניות בסיס וכלול בה את מניפסטי האפליקציות שנבחרו.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>צור מדיניות</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>שם המדיניות</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>הגדר שם עבור מדיניות מניפסטי האפליקציות שתיווצר.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>בחר מניפסטי אפליקציות</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>בחר את מניפסטי האפליקציות שייכללו במדיניות.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>יוצר מדיניות מניפסטי אפליקציות...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>מדיניות מניפסטי האפליקציות נוצרה בהצלחה</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>לא נבחרו מניפסטי אפליקציות.</value>
+  </data>
 </root>

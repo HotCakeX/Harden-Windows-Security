@@ -7789,4 +7789,34 @@
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>جارٍ مقارنة السياستين...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>نهج ملفات بيان التطبيقات</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>أنشئ نهجًا أساسيًا وقم بتضمين ملفات بيان التطبيقات المحددة فيه.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>إنشاء نهج</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>اسم النهج</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>حدد اسمًا لنهج ملفات بيان التطبيقات الذي سيتم إنشاؤه.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>تحديد ملفات بيان التطبيقات</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>اختر ملفات بيان التطبيقات التي سيتم تضمينها في النهج.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>جارٍ إنشاء نهج ملفات بيان التطبيقات...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>تم إنشاء نهج ملفات بيان التطبيقات بنجاح</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>لم يتم تحديد أي ملفات بيان للتطبيقات.</value>
+  </data>
 </root>

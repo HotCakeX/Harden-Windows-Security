@@ -7789,4 +7789,34 @@
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>2 つのポリシーを比較しています...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>アプリ マニフェスト ポリシー</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>基本ポリシーを作成し、選択したアプリ マニフェストを含めます。</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>ポリシーの作成</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>ポリシー名</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>生成されるアプリ マニフェスト ポリシーの名前を定義します。</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>アプリ マニフェストの選択</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>ポリシーに含めるアプリ マニフェストを選択します。</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>アプリ マニフェスト ポリシーを作成しています...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>アプリ マニフェスト ポリシーが正常に作成されました</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>アプリ マニフェストが選択されていません。</value>
+  </data>
 </root>

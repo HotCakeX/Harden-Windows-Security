@@ -15,12 +15,16 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
 using AppControlManager.SiPolicy;
+using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace AppControlManager.ViewModels;
 
@@ -862,4 +866,140 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	#endregion
 
+	#region App Manifests
+
+	internal bool AppManifestsSectionIsEnabled { get; set => SP(ref field, value); } = true;
+	internal Visibility AppManifestsInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+	internal SiPolicy.PolicyFileRepresent? _policyPathAppManifests { get; set => SP(ref field, value); }
+	internal bool AppManifestsSettingsIsExpanded { get; set => SP(ref field, value); }
+	internal readonly InfoBarSettings AppManifestsInfoBar = new();
+	internal bool AppManifestsCreateAndDeploy { get; set => SP(ref field, value); }
+
+	internal string AppManifestsPolicyName { get; set => SP(ref field, value); } = "AppManifestsAllowAllPolicy";
+
+	internal readonly List<AppManifestItem> AppManifestsList = [
+		new(name: "Command Prompt",
+			description: "Causes CMD to obtain an exclusive handle to the batch file, effectively allowing batch scripts to be integrity verified a single time, than for each statement executed in the batch script.",
+			path: Path.Join(AppContext.BaseDirectory, "AppManifests", "WinCMD-Manifest.xml")),
+		new(name: "PowerShell",
+			description: "The default behavior with WDAC and Powershell is that when a script fails to pass policy, the language mode that the script is executed under changes to ConstrainedLanguageMode. This new policy setting changes that behavior when set, and instead blocks the script from executing entirely.",
+			path: Path.Join(AppContext.BaseDirectory, "AppManifests", "WinPS-Manifest.xml"))
+		];
+
+	private readonly List<AppManifestItem> SelectedAppManifestsInListView = [];
+
+	internal void AppManifestsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		if (e.AddedItems.Count > 0)
+		{
+			foreach (var item in e.AddedItems)
+			{
+				if (item is AppManifestItem manifestItem && !SelectedAppManifestsInListView.Contains(manifestItem))
+				{
+					SelectedAppManifestsInListView.Add(manifestItem);
+				}
+			}
+		}
+		if (e.RemovedItems.Count > 0)
+		{
+			foreach (var item in e.RemovedItems)
+			{
+				if (item is AppManifestItem manifestItem && SelectedAppManifestsInListView.Contains(manifestItem))
+				{
+					_ = SelectedAppManifestsInListView.Remove(manifestItem);
+				}
+			}
+		}
+	}
+
+	internal async void AppManifestsPolicyCreateButton_Click(object sender, RoutedEventArgs e)
+	{
+		try
+		{
+			AppManifestsInfoBarActionButtonVisibility = Visibility.Collapsed;
+			AppManifestsInfoBar.IsClosable = false;
+			AppManifestsInfoBar.WriteInfo(Atlas.GetStr("CreatingPolicyAppManifests"));
+
+			AppManifestsSettingsIsExpanded = true;
+			AppManifestsSectionIsEnabled = false;
+
+			if (SelectedAppManifestsInListView.Count == 0)
+			{
+				AppManifestsInfoBar.WriteWarning(Atlas.GetStr("NoAppManifestsSelectedWarning"));
+				return;
+			}
+
+			string policyNameStr = string.IsNullOrWhiteSpace(AppManifestsPolicyName) ? "AppManifestsAllowAllPolicy" : AppManifestsPolicyName;
+
+			_policyPathAppManifests = await Task.Run(() =>
+			{
+				SiPolicy.SiPolicy policyObj = Management.Initialize(Atlas.AllowAllTemplatePolicyPath, null);
+
+				List<AppRoot> appRoots = [];
+
+				foreach (AppManifestItem manifestItem in SelectedAppManifestsInListView)
+				{
+					Uri manifestUri = new(manifestItem.Path);
+					AppManifest applicationManifest = Helper.RetrieveApplicationManifest(manifestUri);
+					List<AppSetting> appSettingsList = [];
+
+					foreach (SettingDefinition def in applicationManifest.SettingDefinition)
+					{
+						if (def.Type == SettingType.Bool)
+						{
+							appSettingsList.Add(new AppSetting(["true"], def.Name));
+						}
+					}
+
+					appRoots.Add(new AppRoot(appSettingsList, manifestUri.AbsoluteUri));
+				}
+
+				policyObj.AppSettings = new AppSettingRegion(appRoots);
+				policyObj.PolicyID = Guid.CreateVersion7().ToString("B").ToUpperInvariant();
+				policyObj.BasePolicyID = policyObj.PolicyID;
+
+				policyObj = SetCiPolicyInfo.Set(policyObj, true, policyNameStr, null);
+				policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"), null);
+				policyObj = CiRuleOptions.Set(policyObj, template: CiRuleOptions.PolicyTemplate.Base, EnableAuditMode: false, RequireEVSigners: false, ScriptEnforcement: true, TestMode: false);
+
+				if (AppManifestsCreateAndDeploy)
+				{
+					CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+				}
+
+				return new SiPolicy.PolicyFileRepresent(policyObj);
+			});
+
+			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathAppManifests);
+
+			if (sender is not null)
+				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+
+			AppManifestsInfoBarActionButtonVisibility = Visibility.Visible;
+			AppManifestsInfoBar.WriteSuccess(Atlas.GetStr("AppManifestsPolicyCreatedSuccessfully"));
+		}
+		catch (Exception ex)
+		{
+			AppManifestsInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AppManifestsInfoBar.IsClosable = true;
+			AppManifestsSectionIsEnabled = true;
+		}
+	}
+
+	internal async void OpenInPolicyEditor_AppManifestsPolicy() => await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(_policyPathAppManifests);
+	internal async void OpenInDefaultFileHandler_AppManifestsPolicy() => await PolicyFileRepresent.OpenInDefaultFileHandler(_policyPathAppManifests);
+	internal async void OpenInConfigurePolicyRuleOptions_AppManifestsPolicy() => await ConfigurePolicyRuleOptionsViewModel.OpenInConfigurePolicyRuleOptions(_policyPathAppManifests);
+
+	#endregion
+
+}
+
+internal sealed class AppManifestItem(string name, string description, string path)
+{
+	internal string Name = name;
+	internal string Description = description;
+	internal string Path => path;
 }

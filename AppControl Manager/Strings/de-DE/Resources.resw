@@ -7789,4 +7789,34 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>Die beiden Richtlinien werden verglichen...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>Richtlinie für App-Manifeste</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>Erstellen Sie eine Basisrichtlinie und schließen Sie die ausgewählten App-Manifeste ein.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>Richtlinie erstellen</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Richtlinienname</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>Legen Sie einen Namen für die generierte Richtlinie für App-Manifeste fest.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>App-Manifeste auswählen</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Wählen Sie die App-Manifeste aus, die in die Richtlinie aufgenommen werden sollen.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>Richtlinie für App-Manifeste wird erstellt...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Die Richtlinie für App-Manifeste wurde erfolgreich erstellt</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>Keine App-Manifeste ausgewählt.</value>
+  </data>
 </root>

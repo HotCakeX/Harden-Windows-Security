@@ -7789,4 +7789,34 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>Comparing the two policies...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>App Manifests Policy</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>Create a base policy and include selected App Manifests in it.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>Create Policy</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Policy Name</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>Define a name for the generated App Manifests policy.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Select App Manifests</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Choose the App Manifests to be included in the policy.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>Creating App Manifests policy...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Successfully created the App Manifests policy</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>No App Manifests selected.</value>
+  </data>
 </root>

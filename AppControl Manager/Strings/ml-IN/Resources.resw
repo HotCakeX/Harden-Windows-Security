@@ -7789,4 +7789,34 @@
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>രണ്ട് നയങ്ങളും താരതമ്യം ചെയ്യുന്നു...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>ആപ്പ് മാനിഫെസ്റ്റ് നയം</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>ഒരു അടിസ്ഥാന നയം സൃഷ്ടിച്ച് അതിൽ തിരഞ്ഞെടുത്ത ആപ്പ് മാനിഫെസ്റ്റുകൾ ഉൾപ്പെടുത്തുക.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>നയം സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>നയത്തിന്റെ പേര്</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>സൃഷ്ടിക്കുന്ന ആപ്പ് മാനിഫെസ്റ്റ് നയത്തിന് ഒരു പേര് നിർവചിക്കുക.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>ആപ്പ് മാനിഫെസ്റ്റുകൾ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>നയത്തിൽ ഉൾപ്പെടുത്തേണ്ട ആപ്പ് മാനിഫെസ്റ്റുകൾ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>ആപ്പ് മാനിഫെസ്റ്റ് നയം സൃഷ്ടിക്കുന്നു...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>ആപ്പ് മാനിഫെസ്റ്റ് നയം വിജയകരമായി സൃഷ്ടിച്ചു</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>ആപ്പ് മാനിഫെസ്റ്റുകളൊന്നും തിരഞ്ഞെടുത്തിട്ടില്ല.</value>
+  </data>
 </root>

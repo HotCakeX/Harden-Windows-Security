@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Company: Microsoft; Product: Windows Powershell (powershell.exe) and Powershell 7 (pwsh.exe) -->
+<!-- 
+The default behavior with WDAC and Powershell, is that when a script
+fails to pass policy, the language mode that the script is executed
+under changes to ConstrainedLanguageMode.
+
+This new policy setting changes that behavior when set, and instead
+blocks the script from executing entirely.
+
+This setting is supported on both Windows PS (on select OS')
+and PS7.
+
+https://github.com/MicrosoftDocs/MS-AppControl-AppManifests/blob/main/Manifests/MS/WinPS-Manifest.xml
+ -->
+<AppManifest Id="Powershell" xmlns="urn:schemas-microsoft-com:windows-defender-application-control">
+    <!--
+        When specified, scripts will be blocked from executing on
+        policy failure vs being allowed to run in Constrained
+        Language Mode.
+
+        (WldpCanExecute* family will return WLDP_EXECUTION_POLICY_BLOCKED).
+
+        Supported on both PS7 and Windows PowerShell
+    -->
+    <SettingDefinition
+        Name="BlockScriptOnPolicyFailure"
+        Type="Bool"
+        IgnoreAuditPolicies="true"
+        />
+</AppManifest>

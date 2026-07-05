@@ -1268,7 +1268,7 @@ public sealed partial class PipelineBuilder
 	/// <param name="factory">A <see cref="Func{TResult}"/> instance that will return the initial <see cref="CompositionBrush"/></param>
 	internal PipelineBuilder(Func<ValueTask<CompositionBrush>> factory)
 	{
-		string id = ToUppercaseAsciiLetters(Guid.NewGuid());
+		string id = ToUppercaseAsciiLetters(Guid.CreateVersion7());
 
 		sourceProducer = () => new ValueTask<IGraphicsEffectSource>(new CompositionEffectSourceParameter(id));
 		animationProperties = [];
@@ -1357,7 +1357,7 @@ public sealed partial class PipelineBuilder
 		EffectBorderMode mode = EffectBorderMode.Hard,
 		EffectOptimization optimization = EffectOptimization.Balanced)
 	{
-		string name = ToUppercaseAsciiLetters(Guid.NewGuid());
+		string name = ToUppercaseAsciiLetters(Guid.CreateVersion7());
 
 		target = $"{name}.{nameof(GaussianBlurEffect.BlurAmount)}";
 

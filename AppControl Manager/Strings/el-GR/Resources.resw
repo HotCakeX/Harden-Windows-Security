@@ -7789,4 +7789,34 @@
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>Γίνεται σύγκριση των δύο πολιτικών...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>Πολιτική δηλωτικών εφαρμογών</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>Δημιουργήστε μια βασική πολιτική και συμπεριλάβετε σε αυτή τα επιλεγμένα δηλωτικά εφαρμογών.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>Δημιουργία πολιτικής</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Όνομα πολιτικής</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>Ορίστε ένα όνομα για την πολιτική δηλωτικών εφαρμογών που θα δημιουργηθεί.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Επιλογή δηλωτικών εφαρμογών</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Επιλέξτε τα δηλωτικά εφαρμογών που θα συμπεριληφθούν στην πολιτική.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>Δημιουργία πολιτικής δηλωτικών εφαρμογών...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Η πολιτική δηλωτικών εφαρμογών δημιουργήθηκε με επιτυχία</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>Δεν επιλέχθηκαν δηλωτικά εφαρμογών.</value>
+  </data>
 </root>

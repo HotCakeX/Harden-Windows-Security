@@ -7789,4 +7789,34 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>Porównywanie dwóch zasad...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>Zasady manifestów aplikacji</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>Utwórz zasady bazowe i uwzględnij w nich wybrane manifesty aplikacji.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>Utwórz zasady</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Nazwa zasad</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>Zdefiniuj nazwę dla wygenerowanych zasad manifestów aplikacji.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Wybierz manifesty aplikacji</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Wybierz manifesty aplikacji, które mają zostać uwzględnione w zasadach.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>Tworzenie zasad manifestów aplikacji...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>Pomyślnie utworzono zasady manifestów aplikacji</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>Nie wybrano żadnych manifestów aplikacji.</value>
+  </data>
 </root>

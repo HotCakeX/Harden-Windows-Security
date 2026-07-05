@@ -7789,4 +7789,34 @@
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>Comparaison des deux stratégies...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>Stratégie des manifestes d’applications</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>Créez une stratégie de base et incluez-y les manifestes d’applications sélectionnés.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>Créer une stratégie</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Nom de la stratégie</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>Définissez un nom pour la stratégie des manifestes d’applications générée.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Sélectionner des manifestes d’applications</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Choisissez les manifestes d’applications à inclure dans la stratégie.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>Création de la stratégie des manifestes d’applications...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>La stratégie des manifestes d’applications a été créée avec succès</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>Aucun manifeste d’application sélectionné.</value>
+  </data>
 </root>

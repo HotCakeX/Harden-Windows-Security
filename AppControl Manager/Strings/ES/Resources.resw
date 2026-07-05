@@ -7789,4 +7789,34 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="ComparePolicies_ComparingMessage" xml:space="preserve">
     <value>Comparando las dos directivas...</value>
   </data>
+  <data name="AppManifestsSection.Header" xml:space="preserve">
+    <value>Directiva de manifiestos de aplicaciones</value>
+  </data>
+  <data name="AppManifestsSection.Description" xml:space="preserve">
+    <value>Cree una directiva base e incluya en ella los manifiestos de aplicaciones seleccionados.</value>
+  </data>
+  <data name="AppManifestsCreateButton.Content" xml:space="preserve">
+    <value>Crear directiva</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Header" xml:space="preserve">
+    <value>Nombre de la directiva</value>
+  </data>
+  <data name="AppManifestsPolicyNameSettingsCard.Description" xml:space="preserve">
+    <value>Defina un nombre para la directiva de manifiestos de aplicaciones generada.</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Header" xml:space="preserve">
+    <value>Seleccionar manifiestos de aplicaciones</value>
+  </data>
+  <data name="AppManifestsSelectionSettingsCard.Description" xml:space="preserve">
+    <value>Elija los manifiestos de aplicaciones que se incluirán en la directiva.</value>
+  </data>
+  <data name="CreatingPolicyAppManifests" xml:space="preserve">
+    <value>Creando la directiva de manifiestos de aplicaciones...</value>
+  </data>
+  <data name="AppManifestsPolicyCreatedSuccessfully" xml:space="preserve">
+    <value>La directiva de manifiestos de aplicaciones se creó correctamente</value>
+  </data>
+  <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
+    <value>No se seleccionaron manifiestos de aplicaciones.</value>
+  </data>
 </root>

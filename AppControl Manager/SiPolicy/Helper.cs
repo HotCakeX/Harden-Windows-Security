@@ -403,7 +403,7 @@ internal static class Helper
 	internal static AppManifest RetrieveApplicationManifest(Uri Manifest)
 	{
 		string content = Manifest.Scheme == Uri.UriSchemeFile
-			? File.ReadAllText(Manifest.AbsolutePath)
+			? File.ReadAllText(Manifest.LocalPath)
 			: Manifest.Scheme == Uri.UriSchemeHttp || Manifest.Scheme == Uri.UriSchemeHttps
 				? SecHttpClient.Instance.GetStringAsync(Manifest).GetAwaiter().GetResult()
 				: throw new InvalidOperationException(string.Format(Atlas.GetStr("InvalidUrlDetectedForAppManifest"), Manifest.Scheme));

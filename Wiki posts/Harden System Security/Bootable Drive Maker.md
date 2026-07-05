@@ -40,8 +40,11 @@ Use this mode if you have already partitioned your USB drive or want to select s
 ### Automatic Partitioning
 
 Use this mode for a completely hands-off experience. **Warning: This will erase all data on the selected physical disk.**
+
 * **Select Target Drive:** Choose the physical disk you wish to convert into a bootable drive from the drop-down list.
+
 * **Format Remaining Space:** By default, the app creates the necessary BOOT and DATA partitions. You can check the box to format any remaining unallocated space on the drive into a third partition.
+
 * **File System Selection:** If formatting the remaining space, you can choose your preferred file system for that extra partition (`exFAT`, `NTFS`, or `FAT32`).
 
 Once your settings are configured, click **Create Bootable Drive** to begin the process. The app displays a live progress bar and status text so you can monitor the copy and configuration operations.

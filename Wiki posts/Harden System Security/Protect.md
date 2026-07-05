@@ -54,7 +54,7 @@ Each security measure in their own dedicated page is also annotated with device 
 
 <div align="center">
 
-![HSS Small Intents Demo](https://github.com/user-attachments/assets/28d1363c-0911-47f8-bc28-516579eeec91)
+<img src="https://github.com/user-attachments/assets/28d1363c-0911-47f8-bc28-516579eeec91" alt="HSS Small Intents Demo"/>
 
 </div>
 
@@ -73,7 +73,7 @@ The preview **ListView** lets you remove individual security measures before pre
 
 <br>
 
-![HardenSystemSecurity_FIWig6IIer](https://github.com/user-attachments/assets/fae592a3-3473-4d92-b11f-911094f162c9)
+<img src="https://github.com/user-attachments/assets/fae592a3-3473-4d92-b11f-911094f162c9" alt="HardenSystemSecurity_FIWig6IIer">
 
 <br>
 

@@ -117,7 +117,7 @@ Use the <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730b
 
 <div align="center">
 
-![AppControlManager](https://github.com/user-attachments/assets/02cfbcbe-98fe-4e15-a0a2-7a2f42acacfd)
+<img src="https://github.com/user-attachments/assets/02cfbcbe-98fe-4e15-a0a2-7a2f42acacfd" alt="AppControl Manager Screenshot">
 
 </div>
 

@@ -386,7 +386,7 @@
 	<xs:simpleType name="SigningScenarioIDsType">
 		<xs:annotation>
 			<xs:documentation>
-				Multiple ID_SIGNINGSCENARIO_ seperated by ','
+				Multiple ID_SIGNINGSCENARIO_ separated by ','
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">

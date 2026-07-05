@@ -113,7 +113,7 @@ internal static partial class CIManager
 					throw new InvalidOperationException($"ManageCI_Commit failed with 0x{hrCommit:X8}");
 				}
 
-				// We obviously cant destroy/free the SiPolicyView* like CiTool does because no exported destructor is available.
+				// We obviously can't destroy/free the SiPolicyView* like CiTool does because no exported destructor is available.
 				// CiTool frees it internally by defining the dctor:
 				// void __fastcall CodeIntegrity::Management::SiPolicyView::~SiPolicyView(CodeIntegrity::Management::SiPolicyView *this)
 				// which it calls at the end of the following function: void __fastcall UpsertPolicy(_QWORD *a1)

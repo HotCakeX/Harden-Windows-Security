@@ -368,7 +368,7 @@ namespace AnimatedVisuals
             }
 
             // - - - - - Layer aggregator
-            // - - - ShapeGroup: horisontal line Offset:<24, 10>
+            // - - - ShapeGroup: horizontal line Offset:<24, 10>
             // - Path
             CanvasGeometry Geometry_06()
             {
@@ -388,7 +388,7 @@ namespace AnimatedVisuals
             }
 
             // - - - - - Layer aggregator
-            // - - - ShapeGroup: horisontal line Offset:<24, 10>
+            // - - - ShapeGroup: horizontal line Offset:<24, 10>
             // - Path
             CanvasGeometry Geometry_07()
             {
@@ -425,7 +425,7 @@ namespace AnimatedVisuals
             }
 
             // - - - - - Layer aggregator
-            // - - - ShapeGroup: horisontal line Offset:<24, 10>
+            // - - - ShapeGroup: horizontal line Offset:<24, 10>
             // - Path
             CanvasGeometry Geometry_09()
             {
@@ -445,7 +445,7 @@ namespace AnimatedVisuals
             }
 
             // - - - - - Layer aggregator
-            // - - - ShapeGroup: horisontal line Offset:<24, 10>
+            // - - - ShapeGroup: horizontal line Offset:<24, 10>
             // - Path
             CanvasGeometry Geometry_10()
             {
@@ -482,7 +482,7 @@ namespace AnimatedVisuals
             }
 
             // - - - - - Layer aggregator
-            // - - - ShapeGroup: horisontal line Offset:<24, 10>
+            // - - - ShapeGroup: horizontal line Offset:<24, 10>
             // - Path
             CanvasGeometry Geometry_12()
             {
@@ -614,7 +614,7 @@ namespace AnimatedVisuals
             }
 
             // - - - - - Shape tree root for layer: overlay
-            // - - - ShapeGroup: horisontal line Offset:<24, 10>
+            // - - - ShapeGroup: horizontal line Offset:<24, 10>
             // - Path
             CanvasGeometry Geometry_18()
             {
@@ -634,7 +634,7 @@ namespace AnimatedVisuals
             }
 
             // - - - - - Shape tree root for layer: overlay
-            // - - - ShapeGroup: horisontal line Offset:<24, 10>
+            // - - - ShapeGroup: horizontal line Offset:<24, 10>
             // - Path
             CanvasGeometry Geometry_19()
             {
@@ -654,7 +654,7 @@ namespace AnimatedVisuals
             }
 
             // - - - - - Shape tree root for layer: overlay
-            // - - - ShapeGroup: horisontal line Offset:<24, 10>
+            // - - - ShapeGroup: horizontal line Offset:<24, 10>
             // - Path
             CanvasGeometry Geometry_20()
             {
@@ -674,7 +674,7 @@ namespace AnimatedVisuals
             }
 
             // - - - - - Shape tree root for layer: overlay
-            // - - - ShapeGroup: horisontal line Offset:<24, 10>
+            // - - - ShapeGroup: horizontal line Offset:<24, 10>
             // - Path
             CanvasGeometry Geometry_21()
             {
@@ -713,7 +713,7 @@ namespace AnimatedVisuals
             }
 
             // - - Shape tree root for layer: overlay
-            // ShapeGroup: horisontal line Offset:<24, 10>
+            // ShapeGroup: horizontal line Offset:<24, 10>
             CompositionColorBrush ColorBrush_AlmostDarkOrange_FFEB7900()
             {
                 return _c.CreateColorBrush(Color.FromArgb(0xFF, 0xEB, 0x79, 0x00));
@@ -740,7 +740,7 @@ namespace AnimatedVisuals
                 var result = _containerShape_0 = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(24F, 8.125F);
                 var shapes = result.Shapes;
-                // ShapeGroup: horisontal line Offset:<24, 10>
+                // ShapeGroup: horizontal line Offset:<24, 10>
                 shapes.Add(SpriteShape_0());
                 // ShapeGroup: right bowl
                 shapes.Add(ContainerShape_1());
@@ -779,7 +779,7 @@ namespace AnimatedVisuals
                 if (_containerShape_3 != null) { return _containerShape_3; }
                 var result = _containerShape_3 = _c.CreateContainerShape();
                 result.CenterPoint = new Vector2(24F, 8.125F);
-                // ShapeGroup: horisontal line Offset:<24, 10>
+                // ShapeGroup: horizontal line Offset:<24, 10>
                 result.Shapes.Add(SpriteShape_4());
                 return result;
             }
@@ -874,7 +874,7 @@ namespace AnimatedVisuals
             }
 
             // - - Layer aggregator
-            // ShapeGroup: horisontal line Offset:<24, 10>
+            // ShapeGroup: horizontal line Offset:<24, 10>
             CompositionPathGeometry PathGeometry_0()
             {
                 if (_pathGeometry_0 != null) { return _pathGeometry_0; }
@@ -906,7 +906,7 @@ namespace AnimatedVisuals
             }
 
             // - - Shape tree root for layer: overlay
-            // ShapeGroup: horisontal line Offset:<24, 10>
+            // ShapeGroup: horizontal line Offset:<24, 10>
             CompositionPathGeometry PathGeometry_4()
             {
                 if (_pathGeometry_4 != null) { return _pathGeometry_4; }
@@ -1072,7 +1072,7 @@ namespace AnimatedVisuals
             }
 
             // - - - Layer aggregator
-            // - ShapeGroup: horisontal line Offset:<24, 10>
+            // - ShapeGroup: horizontal line Offset:<24, 10>
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_0()
             {
@@ -1112,7 +1112,7 @@ namespace AnimatedVisuals
             }
 
             // - - - Shape tree root for layer: overlay
-            // - ShapeGroup: horisontal line Offset:<24, 10>
+            // - ShapeGroup: horizontal line Offset:<24, 10>
             // Path
             PathKeyFrameAnimation PathKeyFrameAnimation_1()
             {

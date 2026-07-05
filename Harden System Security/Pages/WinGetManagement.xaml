@@ -1503,7 +1503,7 @@
                                 <CompositeTransform x:Name="BundleTilesTransform" />
                             </Grid.RenderTransform>
                             <GridView ItemsSource="{x:Bind ViewModel.PackageBundles}"
-                                      ItemTemplate="{StaticResource WinGetBundleTileTemplate}"                                      
+                                      ItemTemplate="{StaticResource WinGetBundleTileTemplate}"
                                       IsItemClickEnabled="True"
                                       ItemClick="{x:Bind BundleGridView_ItemClick}"
                                       SelectionMode="None"
@@ -1727,7 +1727,7 @@
                                         </toolkits:WrapPanel>
                                         <GridView x:Name="BundleOverlayAppsGrid"
                                                   Grid.Row="1"
-                                                  ItemsSource="{x:Bind ViewModel.SelectedPackageBundlePackages, Mode=OneWay}"                                                 
+                                                  ItemsSource="{x:Bind ViewModel.SelectedPackageBundlePackages, Mode=OneWay}"
                                                   ItemTemplate="{StaticResource WinGetBundleAppTemplate}"
                                                   SelectionMode="None"
                                                   IsItemClickEnabled="False"

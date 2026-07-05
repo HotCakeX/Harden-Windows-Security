@@ -90,7 +90,7 @@ A few seconds after enrolling the device in Intune, you will see a notification
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Intune%20encrolled%20device%20Bitlocker%20notification%20for%20encryotion.png" alt="Intune encrolled device BitLocker notification for encryption">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Intune%20encrolled%20device%20Bitlocker%20notification%20for%20encryotion.png" alt="Intune enrolled device BitLocker notification for encryption">
 
 </div>
 

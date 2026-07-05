@@ -643,7 +643,7 @@ internal static class AuditPolicyManager
 
 		// Without the following logics, we would only add and never remove audit flags.
 		// E.g., we couldn't move from "Success and Failure" to "Success" or "Failure".
-		// E.g., If a policy was "Success" and we set it to "Failure" (or vise versa) it would just change to "Success and Failure".
+		// E.g., If a policy was "Success" and we set it to "Failure" (or vice versa) it would just change to "Success and Failure".
 
 		for (int i = 0; i < auditPolicies.Length; i++)
 		{

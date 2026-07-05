@@ -18,7 +18,7 @@
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
 
         Note about CsWinRT: It is bundled by default with WinAppSDK but it's usually older version there, it's used to generate the WinUI C# projections.
-        By installing it ourselves as a NuGet package, we guarantee we use the latest and most up to date version, especailly the perview versions.
+        By installing it ourselves as a NuGet package, we guarantee we use the latest and most up to date version, especially the preview versions.
         If we don't install it as NuGet package ourselves, WinAppSDK's CsWinRT will be used during compilation.
         -->
         <WindowsSdkPackageVersion>10.0.26100.84</WindowsSdkPackageVersion>

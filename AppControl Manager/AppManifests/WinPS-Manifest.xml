@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Company: Microsoft; Product: Windows Powershell (powershell.exe) and Powershell 7 (pwsh.exe) -->
-<!-- 
+<!--
 The default behavior with WDAC and Powershell, is that when a script
 fails to pass policy, the language mode that the script is executed
 under changes to ConstrainedLanguageMode.

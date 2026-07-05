@@ -6633,10 +6633,10 @@ Thumbprint: {3}</value>
     <value>Add links</value>
   </data>
   <data name="AddLinksAppBarButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Add links to files to be downlaoded.</value>
+    <value>Add links to files to be downloaded.</value>
   </data>
   <data name="AddLinksAppBarButton.AutomationProperties.HelpText" xml:space="preserve">
-    <value>Add links to files to be downlaoded.</value>
+    <value>Add links to files to be downloaded.</value>
   </data>
   <data name="SettingsAppBarButton.Label" xml:space="preserve">
     <value>Settings</value>

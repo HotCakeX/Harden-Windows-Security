@@ -26,7 +26,7 @@ Press F2 to see the complete list of the Predictive IntelliSense suggestions as 
 
 <br>
 
-## Where Is the Powershell Command History Stored?
+## Where Is the PowerShell Command History Stored?
 
 In this directory
 
@@ -54,7 +54,7 @@ Set-PSReadLineOption -MaximumHistoryCount 1
 
 <br>
 
-## How to Clear the Automatic Error Variable in Powershell
+## How to Clear the Automatic Error Variable in PowerShell
 
 ```powershell
 $error.clear()
@@ -62,7 +62,7 @@ $error.clear()
 
 <br>
 
-## How to Get the Last Error Type in Powershell
+## How to Get the Last Error Type in PowerShell
 
 ```powershell
 $Error[0].Exception.GetType().FullName
@@ -70,7 +70,7 @@ $Error[0].Exception.GetType().FullName
 
 <br>
 
-## How to Display All Environment Variables and Their Values in Powershell
+## How to Display All Environment Variables and Their Values in PowerShell
 
 ```powershell
 gci env:
@@ -82,7 +82,7 @@ gci env:
 
 <br>
 
-## List All MSCs and CPLs for Microsoft Management Console and Control Panels in Powershell
+## List All MSCs and CPLs for Microsoft Management Console and Control Panels in PowerShell
 
 ```powershell
 Get-ChildItem -Path C:\Windows\system32\* -Include *.msc, *.cpl | Sort-Object -Property Extension | Select-Object -Property Name | Format-Wide -Column 2
@@ -102,7 +102,7 @@ With that command you can mount the EFI partition and assign the letter `U` to i
 
 <br>
 
-## How to Check if a File Is in Use in Powershell?
+## How to Check if a File Is in Use in PowerShell?
 
 Here is an example function that tries to rename files given to it with the same names and if it was successful, it will consider that file not in use.
 
@@ -129,7 +129,7 @@ You can use it like this:
 
 <br>
 
-## Choosing Between Powershell and Powershell Preview
+## Choosing Between PowerShell and PowerShell Preview
 
 Use PowerShell Preview if you want to test new features and don't need to call PowerShell with its alias, pwsh, from CMD. If you do need to call it like that, use PowerShell stable.
 
@@ -139,7 +139,7 @@ PowerShell Preview by default doesn't set its `pwsh.exe` available system-wide, 
 
 <br>
 
-## Variable Types in Powershell
+## Variable Types in PowerShell
 
 PowerShell variables can have types and type accelerator. The following command lists all of the types and their equivalent type accelerators. The fully qualified type names replace implicit with explicit.
 
@@ -155,7 +155,7 @@ In PowerShell, or for programming languages in general, 0 = success, 1 or anythi
 
 <br>
 
-## How to Get the Names and AppIDs of Installed Apps of the Current User in Powershell?
+## How to Get the Names and AppIDs of Installed Apps of the Current User in PowerShell?
 
 ```powershell
 Get-StartApps
@@ -182,7 +182,7 @@ PowerShell supports sync/async commands workflows, also known as parallel.
 
 <br>
 
-## How to Enable a Disabled Event Log Using Powershell
+## How to Enable a Disabled Event Log Using PowerShell
 
 First we create a new `EventLogConfiguration` object and pass it the name of the log we want to configure, then we set it to enabled and save the changes.
 
@@ -203,7 +203,7 @@ Using the same method we can configure many other options of the log file, just 
 
 <br>
 
-## Find the Current User’s Username in Powershell
+## Find the Current User’s Username in PowerShell
 
 ```powershell
 [Environment]::UserName
@@ -232,7 +232,7 @@ $UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value
 
 <br>
 
-## How to Access Properties of an Object in Powershell
+## How to Access Properties of an Object in PowerShell
 
 For example, you can first assign the entire object to a variable:
 
@@ -277,7 +277,7 @@ The dot operator tells PowerShell to execute the script file in the current scop
 
 <br>
 
-## A Custom Script to Generate Random Words in Powershell
+## A Custom Script to Generate Random Words in PowerShell
 
 ```powershell
 # Generate four variables with random names
@@ -349,7 +349,7 @@ Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_Fan
 
 <br>
 
-## How to Get the Last Reboot Time in Powershell
+## How to Get the Last Reboot Time in PowerShell
 
 ```powershell
 [System.DateTime](Get-CimInstance -ClassName win32_operatingsystem -ComputerName $_.Name).LastBootUpTime

@@ -1,7 +1,7 @@
 * Added support for using Application Manifests. Microsoft currently offers 2 types of App Manifests, and AppControl Manager supports all of them: https://github.com/MicrosoftDocs/MS-AppControl-AppManifests
 
     * CMD: Causes CMD to obtain an exclusive handle to the batch file, effectively allowing batch scripts to be integrity verified a single time, than for each statement executed in the batch script.
-    
+
     * PowerShell: The default behavior with WDAC and PowerShell is that when a script fails to pass policy, the language mode that the script is executed under changes to ConstrainedLanguageMode. This new policy setting changes that behavior when set, and instead blocks the script from executing entirely.
 
 You can access the new features in the "Create Policy" page.

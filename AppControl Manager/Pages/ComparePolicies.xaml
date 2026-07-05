@@ -226,7 +226,7 @@
                                                                FontWeight="SemiBold"
                                                                TextWrapping="WrapWholeWords"/>
                                                 </StackPanel>
-                                                <ToggleButton Grid.Column="1"                                                              
+                                                <ToggleButton Grid.Column="1"
                                                               MinHeight="60"
                                                               MinWidth="100"
                                                               HorizontalAlignment="Stretch"
@@ -242,7 +242,7 @@
                                                         </Viewbox>
                                                     </StackPanel>
                                                 </ToggleButton>
-                                                <ToggleButton Grid.Column="2"                                                              
+                                                <ToggleButton Grid.Column="2"
                                                               MinHeight="60"
                                                               MinWidth="100"
                                                               HorizontalAlignment="Stretch"

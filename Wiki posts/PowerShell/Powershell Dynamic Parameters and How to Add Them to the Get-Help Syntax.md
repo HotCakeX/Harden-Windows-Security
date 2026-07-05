@@ -1,4 +1,4 @@
-# Powershell Dynamic Parameters and How to Add Them to the Get-Help Syntax
+# PowerShell Dynamic Parameters and How to Add Them to the Get-Help Syntax
 
 PowerShell has a feature called dynamic parameters that allows you to add parameters to a cmdlet based on the value of another parameter. This is useful when you have a parameter that can take multiple values and you want to add additional parameters based on the value of the first parameter.
 

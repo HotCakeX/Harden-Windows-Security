@@ -729,13 +729,11 @@ internal static class ShadowHelpers
 			{
 				string[] values = text.Split(',');
 
-				if (values.Length == 2)
+				if (values.Length == 2 &&
+					float.TryParse(values[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float x) &&
+					float.TryParse(values[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float y))
 				{
-					if (float.TryParse(values[0], NumberStyles.Float, CultureInfo.InvariantCulture, out float x) &&
-						float.TryParse(values[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float y))
-					{
-						return new(x, y);
-					}
+					return new(x, y);
 				}
 			}
 		}

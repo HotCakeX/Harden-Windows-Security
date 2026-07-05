@@ -70,13 +70,10 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SP(ref field, value) && !field)
 			{
-				if (!field)
-				{
-					Level3Test = false;
-					Level4Test = false;
-				}
+				Level3Test = false;
+				Level4Test = false;
 			}
 		}
 	} = true;
@@ -105,13 +102,10 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value))
+			if (SP(ref field, value) && field)
 			{
-				if (field)
-				{
-					Level2Test = true;
-					Level3Test = true;
-				}
+				Level2Test = true;
+				Level3Test = true;
 			}
 		}
 	} = true;

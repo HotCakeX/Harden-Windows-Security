@@ -303,12 +303,9 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 			// Prevent unchecking if the other one isn't checked
 			if (!value && !KernelModeSigningScenarioSelected) return;
 
-			if (SP(ref field, value))
+			if (SP(ref field, value) && value)
 			{
-				if (value)
-				{
-					KernelModeSigningScenarioSelected = false;
-				}
+				KernelModeSigningScenarioSelected = false;
 			}
 		}
 	}
@@ -319,12 +316,9 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 			// Prevent unchecking if the other one isn't checked
 			if (!UserModeSigningScenarioSelected && !value) return;
 
-			if (SP(ref field, value))
+			if (SP(ref field, value) && value)
 			{
-				if (value)
-				{
-					UserModeSigningScenarioSelected = false;
-				}
+				UserModeSigningScenarioSelected = false;
 			}
 		}
 	} = true;

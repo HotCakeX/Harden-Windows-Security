@@ -102,12 +102,9 @@ internal sealed partial class SettingsExpander : Control
 
 	private void SetAccessibleName()
 	{
-		if (string.IsNullOrEmpty(AutomationProperties.GetName(this)))
+		if (string.IsNullOrEmpty(AutomationProperties.GetName(this)) && Header is string headerString && !string.IsNullOrEmpty(headerString))
 		{
-			if (Header is string headerString && !string.IsNullOrEmpty(headerString))
-			{
-				AutomationProperties.SetName(this, headerString);
-			}
+			AutomationProperties.SetName(this, headerString);
 		}
 	}
 
@@ -530,14 +527,7 @@ internal sealed partial class SettingsExpanderItemStyleSelector : StyleSelector
 
 	protected override Style SelectStyleCore(object item, DependencyObject container)
 	{
-		if (container is SettingsCard card && card.IsClickEnabled)
-		{
-			return ClickableStyle;
-		}
-		else
-		{
-			return DefaultStyle;
-		}
+		return container is SettingsCard { IsClickEnabled: true } ? ClickableStyle : DefaultStyle;
 	}
 }
 

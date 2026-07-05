@@ -48,14 +48,9 @@ internal static class LLPackageReader
 
 		try
 		{
-			if (packagePath.EndsWith(".msixbundle", StringComparison.OrdinalIgnoreCase))
-			{
-				return InspectBundle(packagePath);
-			}
-			else
-			{
-				return InspectPackage(packagePath);
-			}
+			return packagePath.EndsWith(".msixbundle", StringComparison.OrdinalIgnoreCase)
+				   ? InspectBundle(packagePath)
+				   : InspectPackage(packagePath);
 		}
 		finally
 		{

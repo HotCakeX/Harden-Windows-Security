@@ -65,13 +65,10 @@ internal sealed partial class ListBoxV2 : UserControl
 		object? tagContent = ((Button)sender).Tag;
 
 		// Handle PolicyFileRepresent removal
-		if (tagContent is PolicyFileRepresent itemToRemove)
+		if (tagContent is PolicyFileRepresent itemToRemove && ItemsSource is UniquePolicyFileRepresentObservableCollection collectionToRemoveFrom)
 		{
-			if (ItemsSource is UniquePolicyFileRepresentObservableCollection collectionToRemoveFrom)
-			{
-				_ = collectionToRemoveFrom.Remove(itemToRemove);
-				return;
-			}
+			_ = collectionToRemoveFrom.Remove(itemToRemove);
+			return;
 		}
 
 		// Handle string removal

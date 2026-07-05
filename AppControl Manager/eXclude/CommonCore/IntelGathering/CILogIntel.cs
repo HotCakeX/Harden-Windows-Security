@@ -95,12 +95,10 @@ internal static class CILogIntel
 		"Resource page hash mismatch." // Index 28
 	];
 
-
 	// Array length constants for performance optimization
 	private const uint ReqValSigningLevelsLength = 15;
 	private const uint SignatureTypeTableLength = 8;
 	private const uint VerificationErrorTableLength = 29;
-
 
 	/// <summary>
 	/// Resolves the Validated/Requested Signing Level int to friendly string
@@ -108,24 +106,10 @@ internal static class CILogIntel
 	/// <param name="SigningLevelInt"></param>
 	/// <returns></returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	internal static string? GetValidatedRequestedSigningLevel(int? SigningLevelInt)
-	{
-		if (SigningLevelInt.HasValue)
-		{
-			if ((uint)SigningLevelInt.Value < ReqValSigningLevelsLength)
-			{
-				return ReqValSigningLevels[SigningLevelInt.Value];
-			}
-			else
-			{
-				return null;
-			}
-		}
-		else
-		{
-			return null;
-		}
-	}
+	internal static string? GetValidatedRequestedSigningLevel(int? SigningLevelInt) =>
+		 SigningLevelInt.HasValue && (uint)SigningLevelInt.Value < ReqValSigningLevelsLength
+				? ReqValSigningLevels[SigningLevelInt.Value]
+				: null;
 
 	/// <summary>
 	/// Resolves the VerificationError int to a friendly string
@@ -133,24 +117,10 @@ internal static class CILogIntel
 	/// <param name="VerificationError"></param>
 	/// <returns></returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	internal static string? GetVerificationError(int? VerificationError)
-	{
-		if (VerificationError.HasValue)
-		{
-			if ((uint)VerificationError.Value < VerificationErrorTableLength)
-			{
-				return VerificationErrorTable[VerificationError.Value];
-			}
-			else
-			{
-				return null;
-			}
-		}
-		else
-		{
-			return null;
-		}
-	}
+	internal static string? GetVerificationError(int? VerificationError) =>
+		VerificationError.HasValue && (uint)VerificationError.Value < VerificationErrorTableLength
+			? VerificationErrorTable[VerificationError.Value]
+			: null;
 
 	/// <summary>
 	/// Resolves the SignatureType int to a friendly string
@@ -158,23 +128,8 @@ internal static class CILogIntel
 	/// <param name="SignatureType"></param>
 	/// <returns></returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	internal static string? GetSignatureType(int? SignatureType)
-	{
-		if (SignatureType.HasValue)
-		{
-			if ((uint)SignatureType.Value < SignatureTypeTableLength)
-			{
-				return SignatureTypeTable[SignatureType.Value];
-			}
-			else
-			{
-				return null;
-			}
-		}
-		else
-		{
-			return null;
-		}
-	}
-
+	internal static string? GetSignatureType(int? SignatureType) =>
+		SignatureType.HasValue && (uint)SignatureType.Value < SignatureTypeTableLength
+			? SignatureTypeTable[SignatureType.Value]
+			: null;
 }

@@ -602,7 +602,7 @@ namespace AnimatedVisuals
 
 			CompositionEffectFactory EffectFactory_0()
 			{
-				var compositeEffect = new CompositeEffect();
+				using CompositeEffect compositeEffect = new();
 				compositeEffect.Mode = CanvasComposite.DestinationOut;
 				compositeEffect.Sources.Add(new CompositionEffectSourceParameter("destination"));
 				compositeEffect.Sources.Add(new CompositionEffectSourceParameter("source"));
@@ -612,7 +612,7 @@ namespace AnimatedVisuals
 
 			CompositionEffectFactory EffectFactory_1()
 			{
-				var compositeEffect = new CompositeEffect();
+				using CompositeEffect compositeEffect = new();
 				compositeEffect.Mode = CanvasComposite.DestinationIn;
 				compositeEffect.Sources.Add(new CompositionEffectSourceParameter("destination"));
 				compositeEffect.Sources.Add(new CompositionEffectSourceParameter("source"));

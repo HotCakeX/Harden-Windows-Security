@@ -123,12 +123,9 @@ internal static class SupplementalForSelf
 			if (!string.Equals(policyObj.FriendlyName, "Microsoft Windows Driver Policy", StringComparison.OrdinalIgnoreCase))
 			{
 				// Make sure the policy is a base policy and it doesn't have allow all rule
-				if (policyObj.PolicyType is PolicyType.BasePolicy)
+				if (policyObj.PolicyType is PolicyType.BasePolicy && !PreDeploymentChecks.CheckForAllowAll(policyObj))
 				{
-					if (!PreDeploymentChecks.CheckForAllowAll(policyObj))
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 		}

@@ -442,17 +442,9 @@ internal partial class SettingsCard : ButtonBase
 		return null;
 	}
 
-	private FrameworkElement? GetFocusedElement()
-	{
-		if (XamlRoot != null)
-		{
-			return FocusManager.GetFocusedElement(XamlRoot) as FrameworkElement;
-		}
-		else
-		{
-			return FocusManager.GetFocusedElement() as FrameworkElement;
-		}
-	}
+	private FrameworkElement? GetFocusedElement() => XamlRoot != null
+			? FocusManager.GetFocusedElement(XamlRoot) as FrameworkElement
+			: FocusManager.GetFocusedElement() as FrameworkElement;
 
 	private static bool IsNullOrEmptyString(object obj)
 	{
@@ -731,17 +723,9 @@ internal sealed partial class SettingsCardAutomationPeer(SettingsCard owner) : B
 	/// Gets the control type for the element that is associated with the UI Automation peer.
 	/// </summary>
 	/// <returns>The control type.</returns>
-	protected override AutomationControlType GetAutomationControlTypeCore()
-	{
-		if (Owner is SettingsCard settingsCard && settingsCard.IsClickEnabled)
-		{
-			return AutomationControlType.Button;
-		}
-		else
-		{
-			return AutomationControlType.Group;
-		}
-	}
+	protected override AutomationControlType GetAutomationControlTypeCore() => Owner is SettingsCard { IsClickEnabled: true }
+			? AutomationControlType.Button
+			: AutomationControlType.Group;
 
 	/// <summary>
 	/// Called by GetClassName that gets a human readable name that, in addition to AutomationControlType,
@@ -772,22 +756,12 @@ internal sealed partial class SettingsCardAutomationPeer(SettingsCard owner) : B
 		return base.GetNameCore();
 	}
 
-	protected override object? GetPatternCore(PatternInterface patternInterface)
-	{
-		if (patternInterface == PatternInterface.Invoke)
-		{
-			if (Owner is SettingsCard settingsCard && settingsCard.IsClickEnabled)
-			{
+	protected override object? GetPatternCore(PatternInterface patternInterface) =>
+		 patternInterface == PatternInterface.Invoke
+			? Owner is SettingsCard { IsClickEnabled: true }
 				// Only provide Invoke pattern if the card is clickable
-				return this;
-			}
-			else
-			{
+				? this
 				// Not clickable, do not provide Invoke pattern
-				return null;
-			}
-		}
-
-		return base.GetPatternCore(patternInterface);
-	}
+				: null
+			: base.GetPatternCore(patternInterface);
 }

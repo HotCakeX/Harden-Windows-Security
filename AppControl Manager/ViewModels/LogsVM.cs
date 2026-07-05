@@ -285,16 +285,11 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 					// Check if this is the currently active log file being written to
 					bool isActiveLogFile = string.Equals(filePath, Logger.LogFileName, StringComparison.OrdinalIgnoreCase);
 
-					if (isActiveLogFile)
-					{
+					return isActiveLogFile
 						// Use stream-based provider for the active log file
-						return new StreamBasedFileDataProvider(filePath);
-					}
-					else
-					{
+						? new StreamBasedFileDataProvider(filePath)
 						// Use memory-mapped provider for inactive log files
-						return new MemoryMappedFileDataProvider(filePath);
-					}
+						: new MemoryMappedFileDataProvider(filePath);
 				}
 				catch (Exception ex)
 				{

@@ -75,7 +75,7 @@ internal sealed partial class PropertySizer : SizerBase
 
 	protected override void OnDragStarting()
 	{
-		if (ReadLocalValue(BindingProperty) != DependencyProperty.UnsetValue)
+		if (!ReferenceEquals(ReadLocalValue(BindingProperty), DependencyProperty.UnsetValue))
 		{
 			_currentSize = Binding;
 		}
@@ -91,12 +91,12 @@ internal sealed partial class PropertySizer : SizerBase
 		double newSize = _currentSize + change;
 
 		// Check Minimum
-		if (ReadLocalValue(MinimumProperty) != DependencyProperty.UnsetValue && newSize < Minimum)
+		if (!ReferenceEquals(ReadLocalValue(MinimumProperty), DependencyProperty.UnsetValue) && newSize < Minimum)
 		{
 			SetValue(BindingProperty, Minimum);
 		}
 		// Check Maximum
-		else if (ReadLocalValue(MaximumProperty) != DependencyProperty.UnsetValue && newSize > Maximum)
+		else if (!ReferenceEquals(ReadLocalValue(MaximumProperty), DependencyProperty.UnsetValue) && newSize > Maximum)
 		{
 			SetValue(BindingProperty, Maximum);
 		}

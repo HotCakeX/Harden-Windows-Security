@@ -250,13 +250,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		}
 
 		// use the policy to merge with file if that option is enabled by the user
-		if (OperationModeComboBoxSelectedIndex is 1)
+		if (OperationModeComboBoxSelectedIndex is 1 && PolicyFileToMergeWith is null)
 		{
-			if (PolicyFileToMergeWith is null)
-			{
-				FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
-				return;
-			}
+			FilesAndFoldersInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
+			return;
 		}
 
 		// All validation passed - NOW we set button state to indicate operation starting
@@ -716,13 +713,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		}
 
 		// use the policy to merge with file if that option is enabled by the user
-		if (OperationModeComboBoxSelectedIndex is 1)
+		if (OperationModeComboBoxSelectedIndex is 1 && PolicyFileToMergeWith is null)
 		{
-			if (PolicyFileToMergeWith is null)
-			{
-				PFNInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
-				return;
-			}
+			PFNInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
+			return;
 		}
 
 		// All validation passed - NOW we set button state to indicate operation starting
@@ -1057,13 +1051,10 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		}
 
 		// use the policy to merge with file if that option is enabled by the user
-		if (OperationModeComboBoxSelectedIndex is 1)
+		if (OperationModeComboBoxSelectedIndex is 1 && PolicyFileToMergeWith is null)
 		{
-			if (PolicyFileToMergeWith is null)
-			{
-				CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
-				return;
-			}
+			CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("SelectPolicyToAddRulesToSubtitle"), Atlas.GetStr("SelectPolicyToAddRulesToTitle"));
+			return;
 		}
 
 		// All validation passed - NOW we set button state to indicate operation starting

@@ -396,16 +396,9 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			KernelModeBlockListInfoBar.WriteInfo(Atlas.GetStr("CreatingRecommendedDriverBlockRulesPolicy"));
 
 			_policyPathMSFTRecommendedDriverBlockRules = await Task.Run(() =>
-			{
-				if (RecommendedDriverBlockRulesCreateAndDeploy)
-				{
-					return BasePolicyCreator.DeployDriversBlockRules();
-				}
-				else
-				{
-					return BasePolicyCreator.GetDriversBlockRules();
-				}
-			});
+				RecommendedDriverBlockRulesCreateAndDeploy
+					? BasePolicyCreator.DeployDriversBlockRules()
+					: BasePolicyCreator.GetDriversBlockRules());
 
 			// Assign the created policy to the Sidebar
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathMSFTRecommendedDriverBlockRules);
@@ -875,7 +868,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal readonly InfoBarSettings AppManifestsInfoBar = new();
 	internal bool AppManifestsCreateAndDeploy { get; set => SP(ref field, value); }
 
-	internal string AppManifestsPolicyName { get; set => SP(ref field, value); } = "AppManifestsAllowAllPolicy";
+	internal string AppManifestsPolicyName { get; set => SP(ref field, value); } = "App Manifest Policy";
 
 	internal readonly List<AppManifestItem> AppManifestsList = [
 		new(name: "Command Prompt",
@@ -904,7 +897,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		{
 			foreach (var item in e.RemovedItems)
 			{
-				if (item is AppManifestItem manifestItem && SelectedAppManifestsInListView.Contains(manifestItem))
+				if (item is AppManifestItem manifestItem)
 				{
 					_ = SelectedAppManifestsInListView.Remove(manifestItem);
 				}
@@ -999,7 +992,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 internal sealed class AppManifestItem(string name, string description, string path)
 {
-	internal string Name = name;
-	internal string Description = description;
+	internal string Name => name;
+	internal string Description => description;
 	internal string Path => path;
 }

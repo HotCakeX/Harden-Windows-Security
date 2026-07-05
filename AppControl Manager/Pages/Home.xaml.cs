@@ -640,12 +640,9 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 
 			float q = e.Layer == 0 ? q20L0 : q20L1;
 			bool veryShort = len <= q * 1.02f;
-			if (veryShort)
+			if (veryShort && _random.NextDouble() < 0.50)
 			{
-				if (_random.NextDouble() < 0.50)
-				{
-					continue;
-				}
+				continue;
 			}
 
 			kept.Add(e);
@@ -803,16 +800,13 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 		}
 
 		// Low probability attempt
-		if (_random.NextDouble() < 0.35)
+		if (_random.NextDouble() < 0.35 && TryCreateStarUsingNodes(pos, w, h, out StarEdgePersist[] starEdges))
 		{
-			if (TryCreateStarUsingNodes(pos, w, h, out StarEdgePersist[] starEdges))
+			for (int k = 0; k < starEdges.Length; k++)
 			{
-				for (int k = 0; k < starEdges.Length; k++)
-				{
-					_bgStarEdges.Add(starEdges[k]);
-				}
-				_bgLastStarCreateTime = _animationTimeSeconds;
+				_bgStarEdges.Add(starEdges[k]);
 			}
+			_bgLastStarCreateTime = _animationTimeSeconds;
 		}
 	}
 

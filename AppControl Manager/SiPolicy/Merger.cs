@@ -818,12 +818,9 @@ internal static partial class Merger
 		}
 
 		// If rule types are provided, they must match.
-		if (ruleTypeX is not null || ruleTypeY is not null)
+		if ((ruleTypeX is not null || ruleTypeY is not null) && ruleTypeX != ruleTypeY)
 		{
-			if (ruleTypeX != ruleTypeY)
-			{
-				return false;
-			}
+			return false;
 		}
 
 		// Rule 1: If both have a non-empty PackageFamilyName that is equal (ignoring case), consider them equal.

@@ -169,61 +169,57 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 
 	private void CardContainer_PointerExited(object sender, PointerRoutedEventArgs e)
 	{
-		if (sender is GridViewItem container)
+		if (sender is GridViewItem container && container.Projection is PlaneProjection projection && container.RenderTransform is CompositeTransform transform)
 		{
-			if (container.Projection is PlaneProjection projection &&
-				container.RenderTransform is CompositeTransform transform)
+			// Reset to original state with smooth animation
+			Storyboard resetStoryboard = new();
+
+			DoubleAnimation resetRotationX = new()
 			{
-				// Reset to original state with smooth animation
-				Storyboard resetStoryboard = new();
+				To = 0,
+				Duration = TimeSpan.FromMilliseconds(200),
+				EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
+			};
 
-				DoubleAnimation resetRotationX = new()
-				{
-					To = 0,
-					Duration = TimeSpan.FromMilliseconds(200),
-					EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
-				};
+			DoubleAnimation resetRotationY = new()
+			{
+				To = 0,
+				Duration = TimeSpan.FromMilliseconds(200),
+				EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
+			};
 
-				DoubleAnimation resetRotationY = new()
-				{
-					To = 0,
-					Duration = TimeSpan.FromMilliseconds(200),
-					EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
-				};
+			DoubleAnimation resetScaleX = new()
+			{
+				To = 1.0,
+				Duration = TimeSpan.FromMilliseconds(200),
+				EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
+			};
 
-				DoubleAnimation resetScaleX = new()
-				{
-					To = 1.0,
-					Duration = TimeSpan.FromMilliseconds(200),
-					EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
-				};
+			DoubleAnimation resetScaleY = new()
+			{
+				To = 1.0,
+				Duration = TimeSpan.FromMilliseconds(200),
+				EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
+			};
 
-				DoubleAnimation resetScaleY = new()
-				{
-					To = 1.0,
-					Duration = TimeSpan.FromMilliseconds(200),
-					EasingFunction = new QuadraticEase() { EasingMode = EasingMode.EaseOut }
-				};
+			Storyboard.SetTarget(resetRotationX, projection);
+			Storyboard.SetTargetProperty(resetRotationX, "RotationX");
 
-				Storyboard.SetTarget(resetRotationX, projection);
-				Storyboard.SetTargetProperty(resetRotationX, "RotationX");
+			Storyboard.SetTarget(resetRotationY, projection);
+			Storyboard.SetTargetProperty(resetRotationY, "RotationY");
 
-				Storyboard.SetTarget(resetRotationY, projection);
-				Storyboard.SetTargetProperty(resetRotationY, "RotationY");
+			Storyboard.SetTarget(resetScaleX, transform);
+			Storyboard.SetTargetProperty(resetScaleX, "ScaleX");
 
-				Storyboard.SetTarget(resetScaleX, transform);
-				Storyboard.SetTargetProperty(resetScaleX, "ScaleX");
+			Storyboard.SetTarget(resetScaleY, transform);
+			Storyboard.SetTargetProperty(resetScaleY, "ScaleY");
 
-				Storyboard.SetTarget(resetScaleY, transform);
-				Storyboard.SetTargetProperty(resetScaleY, "ScaleY");
+			resetStoryboard.Children.Add(resetRotationX);
+			resetStoryboard.Children.Add(resetRotationY);
+			resetStoryboard.Children.Add(resetScaleX);
+			resetStoryboard.Children.Add(resetScaleY);
 
-				resetStoryboard.Children.Add(resetRotationX);
-				resetStoryboard.Children.Add(resetRotationY);
-				resetStoryboard.Children.Add(resetScaleX);
-				resetStoryboard.Children.Add(resetScaleY);
-
-				resetStoryboard.Begin();
-			}
+			resetStoryboard.Begin();
 		}
 	}
 

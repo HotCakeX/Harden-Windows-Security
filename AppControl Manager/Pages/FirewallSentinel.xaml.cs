@@ -99,36 +99,30 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 	/// <param name="e"></param>
 	private void Card_Loaded(object sender, RoutedEventArgs e)
 	{
-		if (sender is Grid overlayGrid)
+		// Find the parent grid (the main card)
+		if (sender is Grid overlayGrid && overlayGrid.Parent is Grid parentCard && !_neonVisualsMap.ContainsKey(parentCard))
 		{
-			// Find the parent grid (the main card)
-			if (overlayGrid.Parent is Grid parentCard)
+			// Create visuals attached to the overlay grid.
+			NeonBorderVisuals? visuals = null;
+
+			try
 			{
-				if (!_neonVisualsMap.ContainsKey(parentCard))
+				visuals = new(overlayGrid);
+
+				// Ownership is transferred to the map. FirewallSentinel_Unloaded disposes it.
+				_neonVisualsMap[parentCard] = visuals;
+				NeonBorderVisuals storedVisuals = visuals;
+				visuals = null;
+
+				// Update layout immediately
+				if (overlayGrid.ActualWidth > 0 && overlayGrid.ActualHeight > 0)
 				{
-					// Create visuals attached to the overlay grid.
-					NeonBorderVisuals? visuals = null;
-
-					try
-					{
-						visuals = new(overlayGrid);
-
-						// Ownership is transferred to the map. FirewallSentinel_Unloaded disposes it.
-						_neonVisualsMap[parentCard] = visuals;
-						NeonBorderVisuals storedVisuals = visuals;
-						visuals = null;
-
-						// Update layout immediately
-						if (overlayGrid.ActualWidth > 0 && overlayGrid.ActualHeight > 0)
-						{
-							storedVisuals.UpdateLayout(new Vector2((float)overlayGrid.ActualWidth, (float)overlayGrid.ActualHeight));
-						}
-					}
-					finally
-					{
-						visuals?.Dispose();
-					}
+					storedVisuals.UpdateLayout(new Vector2((float)overlayGrid.ActualWidth, (float)overlayGrid.ActualHeight));
 				}
+			}
+			finally
+			{
+				visuals?.Dispose();
 			}
 		}
 	}
@@ -138,13 +132,10 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 		if (sender is Grid parentCard && _neonVisualsMap.TryGetValue(parentCard, out NeonBorderVisuals? visuals))
 		{
 			// Check if there is another card that is currently active (e.g., from a touch interaction that didn't clear)
-			if (_currentActiveCard != null && _currentActiveCard != parentCard)
+			if (_currentActiveCard != null && _currentActiveCard != parentCard && _neonVisualsMap.TryGetValue(_currentActiveCard, out NeonBorderVisuals? prevVisuals))
 			{
 				// Force close the previous card
-				if (_neonVisualsMap.TryGetValue(_currentActiveCard, out NeonBorderVisuals? prevVisuals))
-				{
-					prevVisuals.PlayClose();
-				}
+				prevVisuals.PlayClose();
 			}
 
 			// Update the current active card

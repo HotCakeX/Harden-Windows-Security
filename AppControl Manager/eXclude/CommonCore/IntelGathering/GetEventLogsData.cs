@@ -60,18 +60,11 @@ internal static class GetEventLogsData
 		// 3114 - Standalone Block for Dynamic Code Security
 		const string query = "*[System[(EventID=3076 or EventID=3077 or EventID=3089 or EventID=3114)]]";
 
-		EventLogQuery eventQuery;
-
-		if (EvtxFilePath is null)
-		{
+		EventLogQuery eventQuery = EvtxFilePath is null
 			// Initialize the EventLogQuery with the log path and query
-			eventQuery = new(CodeIntegrityLogPath, PathType.LogName, query);
-		}
-		else
-		{
+			? new(CodeIntegrityLogPath, PathType.LogName, query)
 			// Initialize the EventLogQuery with the input evtx log path and query
-			eventQuery = new(EvtxFilePath, PathType.FilePath, query);
-		}
+			: new(EvtxFilePath, PathType.FilePath, query);
 
 		// Use EventLogReader to read the events
 		List<EventRecord> rawEvents = [];
@@ -697,7 +690,6 @@ internal static class GetEventLogsData
 	/// <summary>
 	/// Retrieves the AppLocker events from the local and EVTX files
 	/// </summary>
-	/// <returns></returns>
 	private static HashSet<FileIdentity> AppLockerEventsRetriever(string? EvtxFilePath = null, CancellationToken? cToken = null)
 	{
 
@@ -710,18 +702,11 @@ internal static class GetEventLogsData
 		// 8038 - Correlated
 		const string query = "*[System[(EventID=8028 or EventID=8029 or EventID=8038)]]";
 
-		EventLogQuery eventQuery;
-
-		if (EvtxFilePath is null)
-		{
+		EventLogQuery eventQuery = EvtxFilePath is null
 			// Initialize the EventLogQuery with the log path and query
-			eventQuery = new(AppLockerLogPath, PathType.LogName, query);
-		}
-		else
-		{
+			? new(AppLockerLogPath, PathType.LogName, query)
 			// Initialize the EventLogQuery with the input EVTX log path and query
-			eventQuery = new(EvtxFilePath, PathType.FilePath, query);
-		}
+			: new(EvtxFilePath, PathType.FilePath, query);
 
 		// Use EventLogReader to read the events
 		List<EventRecord> rawEvents = [];
@@ -790,7 +775,6 @@ internal static class GetEventLogsData
 					// Get the XML string directly
 					string xmlString = possibleAuditEvent.ToXml();
 					ReadOnlySpan<char> xmlSpan = xmlString.AsSpan();
-
 
 					#region Get File name - the file path doesn't need fixing like Code integrity ones
 					string? FilePath = GetStringValue(xmlSpan, "FilePath");
@@ -880,7 +864,6 @@ internal static class GetEventLogsData
 
 						// Add the current signer info/correlated event data to the main event package
 						_ = eventData.FileSignerInfos.Add(signerInfo);
-
 					}
 
 					// Set the SignatureStatus based on the number of signers
@@ -899,7 +882,6 @@ internal static class GetEventLogsData
 					// Get the XML string directly
 					string xmlString = possibleBlockEvent.ToXml();
 					ReadOnlySpan<char> xmlSpan = xmlString.AsSpan();
-
 
 					#region Get File name - the file path doesn't need fixing like Code integrity ones
 					string? FilePath = GetStringValue(xmlSpan, "FilePath");
@@ -1014,7 +996,6 @@ internal static class GetEventLogsData
 			}
 		}
 	}
-
 
 	#region Helper methods to extract values
 
@@ -1162,7 +1143,6 @@ internal static class GetEventLogsData
 	}
 
 	#endregion
-
 
 	#region Async processing
 

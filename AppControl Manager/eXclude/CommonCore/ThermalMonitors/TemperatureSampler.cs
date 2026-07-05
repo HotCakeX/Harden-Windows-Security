@@ -150,12 +150,9 @@ internal sealed partial class TemperatureSampler : IDisposable
 				{
 					ReadOnlySpan<char> nameSpan = MemoryMarshal.CreateReadOnlySpanFromNullTerminated((char*)itemPtr->NamePtr);
 
-					if (!nameSpan.IsEmpty && ContainsAnyKeyword(nameSpan))
+					if (!nameSpan.IsEmpty && ContainsAnyKeyword(nameSpan) && (double.IsNaN(bestCpuLike) || celsius > bestCpuLike))
 					{
-						if (double.IsNaN(bestCpuLike) || celsius > bestCpuLike)
-						{
-							bestCpuLike = celsius;
-						}
+						bestCpuLike = celsius;
 					}
 				}
 			}

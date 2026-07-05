@@ -310,12 +310,9 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		// Handle regular InnerException chain (applies to ALL exception types)
 		// This is crucial for detecting nested exceptions in non-AggregateException hierarchies
-		if (exception.InnerException != null)
+		if (exception.InnerException is Exception innerException && ContainsOperationCanceledExceptionRecursive(innerException, visited))
 		{
-			if (ContainsOperationCanceledExceptionRecursive(exception.InnerException, visited))
-			{
-				return true;
-			}
+			return true;
 		}
 
 		return false;

@@ -1888,12 +1888,9 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		{
 			DependencyObject child = VisualTreeHelper.GetChild(parent, i);
 
-			if (child is FrameworkElement frameworkElement)
+			if (child is FrameworkElement frameworkElement && string.Equals(frameworkElement.Name, controlName, StringComparison.OrdinalIgnoreCase))
 			{
-				if (string.Equals(frameworkElement.Name, controlName, StringComparison.OrdinalIgnoreCase))
-				{
-					return child;
-				}
+				return child;
 			}
 
 			DependencyObject? result = TryFindChildByName(child, controlName);

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:MSGraph="using:CommonCore.MicrosoftGraph"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
     Loaded="{x:Bind GraphAuthPanel_Loaded}"
@@ -474,7 +475,9 @@
                             <Button.Flyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem x:Uid="SetAccountAsActiveButton"
-                                                    Click="SetAccountAsActiveButton_Click">
+                                                    Click="SetAccountAsActiveButton_Click"
+                                                    PointerEntered="{x:Bind customUI:GraphAuthPanel.AccountActionMenuFlyoutItem_PointerEntered}"
+                                                    PointerExited="{x:Bind customUI:GraphAuthPanel.AccountActionMenuFlyoutItem_PointerExited}">
                                         <MenuFlyoutItem.Icon>
                                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
                                                 <AnimatedIcon.Source>
@@ -484,7 +487,9 @@
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutItem x:Uid="RemoveAccountButton"
-                                                    Click="RemoveAccountButton_Click">
+                                                    Click="RemoveAccountButton_Click"
+                                                    PointerEntered="{x:Bind customUI:GraphAuthPanel.AccountActionMenuFlyoutItem_PointerEntered}"
+                                                    PointerExited="{x:Bind customUI:GraphAuthPanel.AccountActionMenuFlyoutItem_PointerExited}">
                                         <MenuFlyoutItem.Icon>
                                             <AnimatedIcon Height="25" Width="25" Margin="-5,-5,0,-5">
                                                 <AnimatedIcon.Source>
@@ -843,7 +848,7 @@
                                         <Style TargetType="ListViewItem">
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                             <Setter Property="Padding" Value="0" />
-                                            <Setter Property="Margin" Value="0,0,0,6" />
+                                            <Setter Property="Margin" Value="0,0,0,10" />
                                             <Setter Property="MinHeight" Value="0" />
                                         </Style>
                                     </ListView.ItemContainerStyle>

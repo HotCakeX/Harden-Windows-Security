@@ -403,4 +403,14 @@ internal sealed partial class GraphAuthPanel : UserControl
 
 	#endregion
 
+	// MenuFlyoutItem does not automatically drive AnimatedIcon states, so the flyout action icons need explicit state updates.
+	internal static void AccountActionMenuFlyoutItem_PointerEntered(object sender, PointerRoutedEventArgs args) => SetAccountActionMenuFlyoutItemAnimatedIconState(sender, "Pressed");
+
+	internal static void AccountActionMenuFlyoutItem_PointerExited(object sender, PointerRoutedEventArgs args) => SetAccountActionMenuFlyoutItemAnimatedIconState(sender, "Normal");
+
+	private static void SetAccountActionMenuFlyoutItemAnimatedIconState(object sender, string state)
+	{
+		if (sender is MenuFlyoutItem menuFlyoutItem && menuFlyoutItem.Icon is AnimatedIcon animatedIcon)
+			AnimatedIcon.SetState(animatedIcon, state);
+	}
 }

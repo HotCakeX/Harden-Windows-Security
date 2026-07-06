@@ -289,7 +289,7 @@ internal partial class SettingsExpander
 		foreach (object item in items)
 		{
 			if (item is FrameworkElement element &&
-				element.ReadLocalValue(StyleProperty) == DependencyProperty.UnsetValue)
+				ReferenceEquals(element.ReadLocalValue(StyleProperty), DependencyProperty.UnsetValue))
 			{
 				element.Style = ItemContainerStyleSelector.SelectStyle(null, element);
 			}
@@ -525,10 +525,8 @@ internal sealed partial class SettingsExpanderItemStyleSelector : StyleSelector
 	{
 	}
 
-	protected override Style SelectStyleCore(object item, DependencyObject container)
-	{
-		return container is SettingsCard { IsClickEnabled: true } ? ClickableStyle : DefaultStyle;
-	}
+	protected override Style SelectStyleCore(object item, DependencyObject container) =>
+		 container is SettingsCard { IsClickEnabled: true } ? ClickableStyle : DefaultStyle;
 }
 
 /// <summary>

@@ -136,7 +136,7 @@ internal abstract class SizerBase : UserControl
 	private void SizerBase_Loaded(object sender, RoutedEventArgs e)
 	{
 		// Set Default Foreground if not provided. It's important to be set in OnLoaded.
-		if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
+		if (ReferenceEquals(ReadLocalValue(ForegroundProperty), DependencyProperty.UnsetValue))
 		{
 			Foreground = Application.Current.Resources.TryGetValue("SystemControlStrongFillColorDefaultBrush", out object? res) && res is Brush b
 				? b

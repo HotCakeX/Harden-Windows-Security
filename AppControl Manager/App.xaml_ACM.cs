@@ -552,15 +552,10 @@ public sealed partial class App : Application
 					_activationFilePath = filePath;
 
 					// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-					if (string.Equals(Path.GetExtension(filePath), ".xml", StringComparison.OrdinalIgnoreCase))
-					{
-						requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true);
-					}
-					else
-					{
-						// If the file extension is not XML then it's not something we write back to so it's ok if we just have read access to the file.
-						requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: false);
-					}
+					requireAdminPrivilege = string.Equals(Path.GetExtension(filePath), ".xml", StringComparison.OrdinalIgnoreCase)
+						? !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true)
+						: // If the file extension is not XML then it's not something we write back to so it's ok if we just have read access to the file.
+						!FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: false);
 				}
 			}
 

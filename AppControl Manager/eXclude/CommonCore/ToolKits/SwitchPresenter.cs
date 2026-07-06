@@ -162,7 +162,7 @@ internal static partial class SwitchHelpers
 	{
 		if (compare == null || value == null)
 		{
-			return compare == value;
+			return ReferenceEquals(compare, value);
 		}
 
 		if (targetType == null || (targetType == compare.GetType() && targetType == value.GetType()))

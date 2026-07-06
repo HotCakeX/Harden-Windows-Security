@@ -246,23 +246,23 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		}
 	}
 
-	private void RestoreWindow_Click(object sender, RoutedEventArgs args) => overlappedPresenter.Restore();
+	private void RestoreWindow_Click() => overlappedPresenter.Restore();
 
-	private void MoveWindow_Click(object sender, RoutedEventArgs args)
+	private void MoveWindow_Click()
 	{
 		TopBarOverrideMenuFlyout.Hide();
 		_ = NativeMethods.SendMessageW(Atlas.hWnd, WinMsg.WM_SYSCOMMAND, 0xF010, 0);
 	}
 
-	private void ResizeWindow_Click(object sender, RoutedEventArgs args)
+	private void ResizeWindow_Click()
 	{
 		TopBarOverrideMenuFlyout.Hide();
 		_ = NativeMethods.SendMessageW(Atlas.hWnd, WinMsg.WM_SYSCOMMAND, 0xF000, 0);
 	}
 
-	private void MinimizeWindow_Click(object sender, RoutedEventArgs args) => overlappedPresenter.Minimize();
+	private void MinimizeWindow_Click() => overlappedPresenter.Minimize();
 
-	private void MaximizeWindow_Click(object sender, RoutedEventArgs args) => overlappedPresenter.Maximize();
+	private void MaximizeWindow_Click() => overlappedPresenter.Maximize();
 
 	private void ToggleWindowAlwaysOnTop_Click(object sender, RoutedEventArgs args)
 	{
@@ -284,7 +284,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		}
 	}
 
-	private async void CloseWindow_Click(object sender, RoutedEventArgs args)
+	private async void CloseWindow_Click()
 	{
 		// If we should always ask for confirmation
 		if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 0)
@@ -539,6 +539,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		RectInt32 menuRect = MainWindowVM.CalculatePixelRect(HamburgerMenuButton, scale);
 		RectInt32 searchRect = MainWindowVM.CalculatePixelRect(TitleBarSearchBox, scale);
 		RectInt32 elevationButtonRect = MainWindowVM.CalculatePixelRect(ElevationContextSwitchButton, scale);
+		RectInt32 intuneCheckInButtonRect = MainWindowVM.CalculatePixelRect(IntuneCheckInTitleBarButton, scale);
 		RectInt32 notificationAreaButtonRect = MainWindowVM.CalculatePixelRect(MinimizeToNotificationAreaButton, scale);
 		RectInt32 sidebarRect = MainWindowVM.CalculatePixelRect(SidebarButton, scale);
 
@@ -551,6 +552,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			menuRect = MainWindowVM.FlipHorizontally(menuRect, windowWidthPx);
 			searchRect = MainWindowVM.FlipHorizontally(searchRect, windowWidthPx);
 			elevationButtonRect = MainWindowVM.FlipHorizontally(elevationButtonRect, windowWidthPx);
+			intuneCheckInButtonRect = MainWindowVM.FlipHorizontally(intuneCheckInButtonRect, windowWidthPx);
 			notificationAreaButtonRect = MainWindowVM.FlipHorizontally(notificationAreaButtonRect, windowWidthPx);
 			sidebarRect = MainWindowVM.FlipHorizontally(sidebarRect, windowWidthPx);
 		}
@@ -561,7 +563,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 		nonClient.SetRegionRects(
 			NonClientRegionKind.Passthrough,
-			[backRect, menuRect, searchRect, elevationButtonRect, notificationAreaButtonRect, sidebarRect]
+			[backRect, menuRect, searchRect, elevationButtonRect, intuneCheckInButtonRect, notificationAreaButtonRect, sidebarRect]
 		);
 	}
 
@@ -1894,9 +1896,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// The method responsible for clearing the Sidebar's policies library.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void ClearPoliciesLibrary(object sender, RoutedEventArgs e)
+	private async void ClearPoliciesLibrary()
 	{
 		await ViewModel.PoliciesLibraryCacheLock.WaitAsync();
 		try
@@ -1955,9 +1955,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// The method responsible for backing up the entire Policies Library to XML files.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void BackupLibrary(object sender, RoutedEventArgs e)
+	private async void BackupLibrary()
 	{
 		await ViewModel.PoliciesLibraryCacheLock.WaitAsync();
 		try
@@ -2156,9 +2154,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Event handler for the UI button that opens the location of the Policies Library cache on disk.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void OpenPoliciesLibraryCacheLocation(object sender, RoutedEventArgs e)
+	private async void OpenPoliciesLibraryCacheLocation()
 	{
 		try
 		{
@@ -2338,7 +2334,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Switches elevation context for the entire app.
 	/// </summary>
-	private async void SwitchElevationContext(TeachingTip sender, object args)
+	private async void SwitchElevationContext()
 	{
 		try
 		{
@@ -2377,8 +2373,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	}
 
 	// When the Elevation Context Switch button on the toolbar is right-tapped.
-	private void ElevationContextSwitchButton_RightTapped(object sender, RightTappedRoutedEventArgs e) =>
-		ElevationContextSwitchButtonTeachingTip.IsOpen = true;
+	private void ElevationContextSwitchButton_RightTapped() => ElevationContextSwitchButtonTeachingTip.IsOpen = true;
 
 	// Subtitle text for the UI's TeachingTip
 	private readonly string ElevationContextSwitchButtonTeachingTipSubtitle = Atlas.GetStr(Atlas.IsElevated ? "ElevationContextSwitchButtonTeachingTipSubtitleElevated" : "ElevationContextSwitchButtonTeachingTipSubtitleUnelevated");

@@ -938,15 +938,15 @@ internal sealed partial class SettingsVM : ViewModelBase
 	internal void StopRainbowAnimation() => CustomUIElements.AppWindowBorderCustomization.StopAnimatedFrame();
 	internal void ColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
 	{
-		R = args.NewColor.R;
-		G = args.NewColor.G;
-		B = args.NewColor.B;
+		_R = args.NewColor.R;
+		_G = args.NewColor.G;
+		_B = args.NewColor.B;
 	}
-	private byte R;
-	private byte G;
-	private byte B;
+	private byte _R;
+	private byte _G;
+	private byte _B;
 
-	internal void StartCustomColorAnimation() => CustomUIElements.AppWindowBorderCustomization.SetBorderColor(R, G, B);
+	internal void StartCustomColorAnimation() => CustomUIElements.AppWindowBorderCustomization.SetBorderColor(_R, _G, _B);
 	internal void StopCustomColorAnimation() => CustomUIElements.AppWindowBorderCustomization.ResetBorderColor();
 
 	#endregion

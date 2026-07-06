@@ -191,8 +191,9 @@
                 <ColumnDefinition x:Name="SearchColumn" Width="3*"/>
                 <ColumnDefinition x:Name="RightDragColumn" Width="*" />
                 <ColumnDefinition x:Name="SidebarAndElevationContextSwitchButtonPadding" Width="30"/>
-                <ColumnDefinition x:Name="ElevationContextSwitchButtonColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="IntuneCheckInButtonColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="SidebarButtonColumn" Width="Auto"/>
+                <ColumnDefinition x:Name="ElevationContextSwitchButtonColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="MinimizeToNotificationAreaButtonColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="CaptionButtonsSeparatorColumn" Width="Auto"/>
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
@@ -331,11 +332,15 @@
                 </StackPanel>
             </Grid>
 
+            <!-- Intune check-in access point -->
+            <customUI:IntuneCheckInButton x:Name="IntuneCheckInTitleBarButton"
+                                          Grid.Column="9" />
+
             <!-- Sidebar access point -->
             <Button x:Name="SidebarButton"
                     x:Uid="SidebarButton"
                     Click="{x:Bind ViewModel.SidebarButton_Click}"
-                    Grid.Column="9"
+                    Grid.Column="10"
                     Width="40"
                     Height="40"
                     Background="Transparent"
@@ -363,7 +368,7 @@
                     Width="40"
                     Height="40"
                     BorderThickness="0"
-                    Grid.Column="10">
+                    Grid.Column="11">
                 <Button.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <FontIcon Glyph="&#xE748;" FontSize="18"/>
@@ -387,7 +392,7 @@
                     Click="{x:Bind MinimizeToNotificationAreaButton_Click}"
                     Width="40"
                     Height="40"
-                    Grid.Column="11"
+                    Grid.Column="12"
                     Background="Transparent"
                     BorderThickness="0">
                 <Button.Content>
@@ -395,7 +400,7 @@
                 </Button.Content>
             </Button>
 
-            <Rectangle Grid.Column="12"
+            <Rectangle Grid.Column="13"
                        Width="1"
                        Height="24"
                        Margin="8,0,8,0"

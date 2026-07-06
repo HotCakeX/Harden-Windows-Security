@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl x:Class="AppControlManager.CustomUIElements.IntuneCheckInButton"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="40"
+             Height="40"
+             AutomationProperties.Name="Intune check-in"
+             ToolTipService.ToolTip="Intune check-in">
+    <Button Width="40"
+            Height="40"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="Transparent"
+            BorderThickness="0">
+        <Button.Content>
+            <FontIcon FontSize="18"
+                      Glyph="&#xE895;" />
+        </Button.Content>
+        <Button.Flyout>
+            <Flyout Placement="BottomEdgeAlignedRight">
+                <StackPanel Width="380"
+                            Padding="4"
+                            Spacing="12">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="10">
+                        <FontIcon FontSize="18"
+                                  Glyph="&#xE895;" />
+                        <TextBlock VerticalAlignment="Center"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   Text="Intune check-in" />
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource CaptionTextBlockStyle}"
+                               Text="Check in with your organization to get the latest policies, apps, compliance updates, and pending actions."
+                               TextWrapping="WrapWholeWords" />
+                    <Button HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Click="{x:Bind StartCheckInAsync}"
+                            IsEnabled="{x:Bind IsCheckInButtonEnabled, Mode=OneWay}">
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="8">
+                            <FontIcon FontSize="16"
+                                      Glyph="&#xE895;" />
+                            <TextBlock Text="Check in / sync now" />
+                        </StackPanel>
+                    </Button>
+                    <ProgressBar Maximum="100"
+                                 Minimum="0"
+                                 Value="{x:Bind ProgressValue, Mode=OneWay}" />
+                    <Border Padding="12"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                        <StackPanel Spacing="8">
+                            <TextBlock Style="{StaticResource BodyTextBlockStyle}"
+                                       Text="{x:Bind StatusText, Mode=OneWay}"
+                                       TextWrapping="WrapWholeWords" />
+                            <Grid ColumnSpacing="12"
+                                  RowSpacing="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="104" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Opacity="0.70"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="Session ID" />
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="1"
+                                           IsTextSelectionEnabled="True"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind SessionIdText, Mode=OneWay}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Opacity="0.70"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="State" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="1"
+                                           IsTextSelectionEnabled="True"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind SessionStateText, Mode=OneWay}"
+                                           TextWrapping="WrapWholeWords" />
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="0"
+                                           Opacity="0.70"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="Note" />
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="1"
+                                           IsTextSelectionEnabled="True"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind SessionNoteText, Mode=OneWay}"
+                                           TextWrapping="WrapWholeWords" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <Border Padding="12"
+                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8">
+                        <StackPanel Spacing="8">
+                            <TextBlock Style="{StaticResource BodyTextBlockStyle}"
+                                       Text="Latest local MDM session" />
+                            <Grid ColumnSpacing="12"
+                                  RowSpacing="6">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="104" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="0"
+                                           Opacity="0.70"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="Session ID" />
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="1"
+                                           IsTextSelectionEnabled="True"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind LatestSessionIdText, Mode=OneWay}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Opacity="0.70"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="State" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="1"
+                                           IsTextSelectionEnabled="True"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind LatestSessionStateText, Mode=OneWay}"
+                                           TextWrapping="WrapWholeWords" />
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="0"
+                                           Opacity="0.70"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="Note" />
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="1"
+                                           IsTextSelectionEnabled="True"
+                                           Style="{StaticResource CaptionTextBlockStyle}"
+                                           Text="{x:Bind LatestSessionNoteText, Mode=OneWay}"
+                                           TextWrapping="WrapWholeWords" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <Button HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Click="{x:Bind RetrieveLatestLocalMdmSession}">
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="8">
+                            <FontIcon FontSize="16"
+                                      Glyph="&#xE8EF;" />
+                            <TextBlock Text="Retrieve latest local MDM session" />
+                        </StackPanel>
+                    </Button>
+                    <Button HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Click="{x:Bind OpenWorkSchoolSettingsAsync}">
+                        <StackPanel HorizontalAlignment="Center"
+                                    Orientation="Horizontal"
+                                    Spacing="8">
+                            <FontIcon FontSize="16"
+                                      Glyph="&#xE713;" />
+                            <TextBlock Text="Open work or school settings" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Flyout>
+        </Button.Flyout>
+    </Button>
+</UserControl>

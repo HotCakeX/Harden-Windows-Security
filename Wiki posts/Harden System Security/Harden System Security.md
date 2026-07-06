@@ -26,7 +26,7 @@ Please [**follow this guide**](https://github.com/HotCakeX/Harden-Windows-Securi
 
 <br>
 
-Please feel free to open a discussion if you have any questions about the build process, security, how to use or have feedbacks. [**Source code on this repository**](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security)
+Please feel free to open a discussion if you have any questions about the build process, security, how to use it or have feedback. [**Source code on this repository**](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security)
 
 <br>
 

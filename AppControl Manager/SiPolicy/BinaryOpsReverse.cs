@@ -620,7 +620,7 @@ internal static class BinaryOpsReverse
 				18 => "CN=Microsoft ECC Product Root Certificate Authority 2018",
 				19 => "CN=Microsoft ECC Devices Root Certificate Authority 2017",
 				20 => "AuthRoot.STL",
-				21 => "CN=Microsoft OEM Root Cerificate Authority 2017",
+				21 => "CN=Microsoft OEM Root Certificate Authority 2017",
 				22 => "CN=Microsoft Identity Verification Root Certificate Authority 2020, O=Microsoft Corporation, C=US",
 				_ => string.Empty
 			};

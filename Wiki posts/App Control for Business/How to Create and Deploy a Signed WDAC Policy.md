@@ -203,7 +203,7 @@ These are some optional ***deviations*** from the [official guide](https://learn
 
 * On the Compatibility tab, you can select Windows Server 2016 from the Certification Authority list and select Windows 10 / Windows Server 2016 from the Certificate recipient list.
 
-* On the General tab, you can set the Validity period to 30 years and Renewal period to 22 years. (The maximum allowed Renewal period for the validity period we chose.)
+* On the General tab, you can set the Validity period to 30 years and Renewal period to 22 years. (This is the maximum allowed renewal period for the selected validity period.)
 
 * On the Cryptography tab, you can set the Provider Category to `Key Storage Provider` [(KSP)](https://learn.microsoft.com/en-us/windows/win32/secgloss/c-gly?redirectedfrom=MSDN#_security_cryptographic_service_provider_gly). Set the Algorithm Name to `RSA`. Set the Minimum key size to `4096`. Set Request hash to `SHA512`.
 

@@ -3289,7 +3289,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 				activeDownloadOperation.DeleteRequested = true;
 				activeDownloadOperation.PauseRequested = false;
 				activeDownloadOperation.RestartRequested = false;
-#pragma warning disable CA1849 // Cann't await in a Lock.
+#pragma warning disable CA1849 // Can't await in a Lock.
 				_ = activeDownloadOperation.CancellationTokenSource.CancelAsync();
 #pragma warning restore CA1849
 			}

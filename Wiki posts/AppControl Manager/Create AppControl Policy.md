@@ -84,10 +84,10 @@ They are [insecure](https://textslashplain.com/2024/05/20/attack-techniques-full
 
 App Manifests are XML-based definitions used by App Control for Business to describe the application-specific settings that a policy can configure for a particular app. They act as a trusted contract between the application and the App Control policy by declaring which settings exist, what type of value each setting accepts, and how those settings should be handled by policy processing.
 
-They are injested into the App Control policy at compilation time and are not resolved at runtime. This means that the policy will not be able to dynamically adapt to changes in the application after the policy has been created.
+They are ingested into the App Control policy at compilation time and are not resolved at runtime. This means that the policy will not be able to dynamically adapt to changes in the application after the policy has been created.
 
 At the moment, [Microsoft provides](https://github.com/MicrosoftDocs/MS-AppControl-AppManifests) 2 App Manifests for the built-in Windows executables and AppControl Manager supports all of them. Any new App Manifests will be also supported by AppControl Manager.
 
-* CMD: Causes CMD to obtain an exclusive handle to the batch file, effectively allowing batch scripts to be integrity verified a single time, than for each statement executed in the batch script.
+* CMD: Causes CMD to obtain an exclusive handle to the batch file, effectively allowing batch scripts to be integrity verified a single time, rather than for each statement executed in the batch script.
 
 * PowerShell: The default behavior with WDAC and PowerShell is that when a script fails to pass policy, the language mode that the script is executed under changes to ConstrainedLanguageMode. This new policy setting changes that behavior when set, and instead blocks the script from executing entirely.

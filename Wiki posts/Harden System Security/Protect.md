@@ -14,7 +14,7 @@ Each Security Measure category on this page has its own dedicated page where you
 
 ### System Security Score
 
-When you press the **Verify Selected** in this page, you will be given a security score at the end to help you understand how well your system is hardened. The score is calculated based on the number of compliant items versus the total number of items in the selected categories and their sub-categories, giving you a clear percentage that reflects your system's security posture. This score can be a useful metric to track your progress as you apply more security measures and harden your system further.
+When you press the **Verify Selected** on this page, you will be given a security score at the end to help you understand how well your system is hardened. The score is calculated based on the number of compliant items versus the total number of items in the selected categories and their sub-categories, giving you a clear percentage that reflects your system's security posture. This score can be a useful metric to track your progress as you apply more security measures and harden your system further.
 
 <div align="center">
 

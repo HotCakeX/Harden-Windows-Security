@@ -872,10 +872,10 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal readonly List<AppManifestItem> AppManifestsList = [
 		new(name: "Command Prompt",
-			description: "Causes CMD to obtain an exclusive handle to the batch file, effectively allowing batch scripts to be integrity verified a single time, than for each statement executed in the batch script.",
+			description: "Causes CMD to obtain an exclusive handle to the batch file, effectively allowing batch scripts to be integrity verified a single time, rather than for each statement executed in the batch script.",
 			path: Path.Join(AppContext.BaseDirectory, "AppManifests", "WinCMD-Manifest.xml")),
 		new(name: "PowerShell",
-			description: "The default behavior with WDAC and Powershell is that when a script fails to pass policy, the language mode that the script is executed under changes to ConstrainedLanguageMode. This new policy setting changes that behavior when set, and instead blocks the script from executing entirely.",
+			description: "The default behavior with WDAC and PowerShell is that when a script fails to pass policy, the language mode that the script is executed under changes to ConstrainedLanguageMode. This new policy setting changes that behavior when set, and instead blocks the script from executing entirely.",
 			path: Path.Join(AppContext.BaseDirectory, "AppManifests", "WinPS-Manifest.xml"))
 		];
 

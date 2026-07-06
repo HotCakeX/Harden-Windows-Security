@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Company: Microsoft; Product: Windows Command Prompt (cmd.exe) -->
 <!--
-In the latest windows flight (BETA WIP 2.27.26), this is
+In the latest Windows flight (BETA WIP 2.27.26), this is
 a setting that can be specified in both policy and registry
 that causes CMD to obtain an exclusive handle to the batch
 file. For application control for business, this effectively
 allows batch scripts to be integrity verified a single time,
-than for each statement executed in the batch script.
+rather than for each statement executed in the batch script.
 
 https://github.com/MicrosoftDocs/MS-AppControl-AppManifests/blob/main/Manifests/MS/WinCMD-Manifest.xml
 -->

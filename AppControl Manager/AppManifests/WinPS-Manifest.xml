@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Company: Microsoft; Product: Windows Powershell (powershell.exe) and Powershell 7 (pwsh.exe) -->
+<!-- Company: Microsoft; Product: Windows PowerShell (PowerShell.exe) and PowerShell 7 (pwsh.exe) -->
 <!--
-The default behavior with WDAC and Powershell, is that when a script
+The default behavior with WDAC and PowerShell, is that when a script
 fails to pass policy, the language mode that the script is executed
 under changes to ConstrainedLanguageMode.
 
 This new policy setting changes that behavior when set, and instead
 blocks the script from executing entirely.
 
-This setting is supported on both Windows PS (on select OS')
-and PS7.
+This setting is supported on both Windows PowerShell (on select OS versions)
+and PowerShell 7.
 
 https://github.com/MicrosoftDocs/MS-AppControl-AppManifests/blob/main/Manifests/MS/WinPS-Manifest.xml
  -->

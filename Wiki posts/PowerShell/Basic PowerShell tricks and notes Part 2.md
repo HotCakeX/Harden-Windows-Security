@@ -338,7 +338,7 @@ Select-Object -Property name, position
 
 <br>
 
-## How to Get the Number of Fans and Details About Them in Powershell
+## How to Get the Number of Fans and Details About Them in PowerShell
 
 ```powershell
 (Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_Fan).count

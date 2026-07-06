@@ -39,7 +39,7 @@ Please [**follow this guide**](https://github.com/HotCakeX/Harden-Windows-Securi
 
 <br>
 
-Please feel free to open a discussion if you have any questions about the build process, security, how to use or have feedbacks. [**Source code on this repository**](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager)
+Please feel free to open a discussion if you have any questions about the build process, security, how to use it or have feedback. [**Source code on this repository**](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/AppControl%20Manager)
 
 <br>
 
@@ -213,8 +213,8 @@ Here is the complete list of all of the URLs the AppControl Manager application 
 | https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules.md | Source for the Microsoft Recommended Drivers Block Rules |
 | https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/MSIXBundleDownloadURL.txt | The file on this repository that contains the download link to the latest version of the AppControl Manager. That text file is updated via automated GitHub action workflow that securely builds and uploads the MSIXBundle package to the GitHub releases. |
 | https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/version.txt | The latest available version of the AppControl Manager application. That text file is updated via automated GitHub action workflow that securely builds and uploads the MSIXBundle package to the GitHub releases. |
-| https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction | The link that opens in the GitHub documentations page in the app via the built-in WebView 2 |
-| https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol | The link that opens in the Microsoft documentations page in the app via the built-in WebView 2 |
+| https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction | The link that opens in the GitHub documentation page in the app via the built-in WebView 2 |
+| https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/appcontrol | The link that opens in the Microsoft documentation page in the app via the built-in WebView 2 |
 | https://github.com/HotCakeX/Harden-Windows-Security/releases | During the update process, this link that is for the GitHub releases will be displayed on the update page as a quick way to read the release notes |
 | https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager | Will be displayed on the Update page when a new version is available and being downloaded |
 | https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose | Link for the "Send Feedback" button at the bottom of the about section in settings |

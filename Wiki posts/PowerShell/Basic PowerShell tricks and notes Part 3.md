@@ -61,7 +61,7 @@ You can find more information about the Group-Object cmdlet and its parameters i
 
 <br>
 
-## Install Big Powershell Modules System-Wide
+## Install Big PowerShell Modules System-Wide
 
 Modules such as [Az](https://www.powershellgallery.com/packages/AZ/) or [Microsoft.Graph.Beta](https://www.powershellgallery.com/packages/Microsoft.Graph.Beta/) are big, can have thousands of files and take more than 1GB space after installation.
 

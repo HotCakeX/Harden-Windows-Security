@@ -162,11 +162,11 @@ $WindowClosedSub = Register-EngineEvent -SourceIdentifier 'WindowClosed' -Action
     )
     Write-Host -Object 'The GUI has been closed.'
 
-    # Remove the event subscription and the job for the button click event since the GUI Windows was closed
+    # Remove the event subscription and the job for the button click event since the GUI window was closed
     Unregister-Event -SubscriptionId $Button1ClickedSub.Id
     Remove-Job -InstanceId $Button1ClickedSub.InstanceId
 
-    # Remove the event subscription and the job for the errors occurred event since the GUI Windows was closed
+    # Remove the event subscription and the job for the ErrorsOccurred event since the GUI window was closed
     Unregister-Event -SubscriptionId $ErrorsOccurredSub.Id
     Remove-Job -InstanceId $ErrorsOccurredSub.InstanceId
 
@@ -179,7 +179,7 @@ $WindowClosedSub = Register-EngineEvent -SourceIdentifier 'WindowClosed' -Action
     Remove-Job -InstanceId $WindowClosedSub.InstanceId
 }
 
-# Register an event for the errors occurred in the GUI RunSpace
+# Register an event for the ErrorsOccurred in the GUI RunSpace
 $ErrorsOccurredSub = Register-EngineEvent -SourceIdentifier 'ErrorsOccurred' -Action {
     Write-Host -Object "Errors Occurred: $($SyncedHashtable.errorMessage)"
 }

@@ -64,7 +64,7 @@ The Signed In Accounts list displays the following details for each authenticate
 * Environment
 * Context
 * Profile Picture
-    * If the account has a profile picture and you've given consent to retreive it, then it will be displayed, otherwise the initials will be displayed. You can give consent by clicking/tapping on the avatar. If the avatar has already been loaded, clicking on it will attempt to retrieve it again, useful if you've changed your picture in the portal and want to sync it with the app.
+    * If the account has a profile picture and you've given consent to retrieve it, then it will be displayed, otherwise the initials will be displayed. You can give consent by clicking/tapping on the avatar. If the avatar has already been loaded, clicking on it will attempt to retrieve it again, useful if you've changed your picture in the portal and want to sync it with the app.
 
 <br>
 

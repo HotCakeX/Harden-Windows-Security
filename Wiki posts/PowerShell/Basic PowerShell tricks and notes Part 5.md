@@ -26,7 +26,7 @@ When you are working with .NET methods in PowerShell, you should never use relat
 [System.Environment]::CurrentDirectory
 ```
 
-Always remembers the first directory the PowerShell instance was started in. If you use `cd` or `Set-Location` to change the current working directory, it will not change that environment variable, which is what .NET methods use when you pass in a relative path such as `.\file.txt`. That means .NET methods always consider that environment variable when you pass in a relative path from PowerShell, not the current working directory in PowerShell.
+It always remembers the first directory the PowerShell instance was started in. If you use `cd` or `Set-Location` to change the current working directory, it will not change that environment variable, which is what .NET methods use when you pass in a relative path such as `.\file.txt`. That means .NET methods always consider that environment variable when you pass in a relative path from PowerShell, not the current working directory in PowerShell.
 
 <br>
 

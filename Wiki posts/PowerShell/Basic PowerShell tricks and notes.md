@@ -166,7 +166,7 @@ Everything is inside a bracket except for -DisplayName, that means it is mandato
 
 <br>
 
-## How to Suppress Errors in Powershell
+## How to Suppress Errors in PowerShell
 
 ```powershell
 -ErrorAction SilentlyContinue
@@ -222,7 +222,7 @@ ipconfig /all > mynetworksettings.txt
 
 <br>
 
-## How to Add Delay/Pause to the Execution of Powershell Script
+## How to Add Delay/Pause to the Execution of a PowerShell Script
 
 To sleep a PowerShell script for 5 seconds, you can run the following command
 
@@ -240,7 +240,7 @@ Start-Sleep -Milliseconds 25
 
 <br>
 
-## How to Stop/Kill a Process or (.exe) Executable in Powershell
+## How to Stop/Kill a Process or (.exe) Executable in PowerShell
 
 Using native PowerShell cmdlet
 
@@ -260,7 +260,7 @@ taskkill /IM "photoshop app.exe" /F
 
 <br>
 
-## Automatically Answer “Yes” to a Prompt in Powershell
+## Automatically Answer “Yes” to a Prompt in PowerShell
 
 Use `–force` at the end of the command
 
@@ -334,7 +334,7 @@ When we define Stringlist in a parameter, then the argument will keep asking for
 
 <br>
 
-## How to Run a Powershell (.PS1) Script ?
+## How to Run a PowerShell (.PS1) Script ?
 
 * Method 1:
 
@@ -377,7 +377,7 @@ the markers `@"` and `"@` indicating the beginning and end of the string must be
 
 <br>
 
-## How to Find the Type of the Output of a Command in Powershell
+## How to Find the Type of the Output of a Command in PowerShell
 
 Using `GetType()`
 

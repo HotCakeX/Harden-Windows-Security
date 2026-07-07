@@ -260,7 +260,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.WindowsPackageManager.ComInterop" Version="1.29.190-preview" />
+        <PackageReference Include="Microsoft.WindowsPackageManager.ComInterop" Version="1.29.280" />
         <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.9" />
 
     </ItemGroup>

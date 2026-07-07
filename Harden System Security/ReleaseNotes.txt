@@ -1,13 +1,5 @@
-* Added an optional language Add-on for the Harden System Security app. The Add-on can be installed or removed on demand from the Settings page, allowing the app to remain lightweight by default while giving users the option to download additional language resources when needed. When installed, the Add-on is downloaded from Microsoft servers.
+* Only available for MDM/Intune enrolled devices: Added an Intune check-in control that allows you to start a local Windows MDM sync session, reports the session ID and state, and provides quick access to work or school settings. The control also surfaces app-visible local MDM session details and handles unenrolled or disconnected MDM states. It is added to the top bar for quick access.
 
-This Add-on provides support for additional languages and localizations, including Ukrainian, Persian, Italian, Mandarin Chinese, Indonesian, and Thai. These languages were selected based on user requests and their global usage, making the app more accessible to a wider audience.
+* Download Manager now displays the real-time remaining time for each running download to complete based on the live speed.
 
-The use of Add-ons was also introduced in response to feedback received through this repository’s discussions. Moving forward, optional features will be delivered on demand through Add-ons when possible, so users only download and install the components they actually need.
-
-All Add-ons are available through the Microsoft Store.
-
-At the moment, add-ons can only be modified (added/downloaded or removed/uninstalled) in the Settings page when the Harden System Security app is running unelevated (Not running as admin).
-
-* The Optional Windows Features page now displays a more user friendly notice for verification results, completing this: https://github.com/HotCakeX/Harden-Windows-Security/issues/1178
-
-* Added icons to 2 buttons in the WinGet management page that didn't have one.
+* Updated dependencies to the latest version.

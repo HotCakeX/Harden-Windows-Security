@@ -77,13 +77,8 @@ internal unsafe static partial class WindowsUpdateManager
 	/// <param name="selectedUpdates">The selected updates.</param>
 	/// <param name="isHidden">The desired hidden state.</param>
 	/// <returns>Per-update hidden-state operation results.</returns>
-	internal static List<HiddenStateChangeResult> SetHiddenStates(IReadOnlyList<WindowsUpdateItem> selectedUpdates, bool isHidden)
-	{
-		return ExecuteWithUpdateSession(updateSession =>
-		{
-			return SetHiddenStates(updateSession, selectedUpdates, isHidden);
-		});
-	}
+	internal static List<HiddenStateChangeResult> SetHiddenStates(IReadOnlyList<WindowsUpdateItem> selectedUpdates, bool isHidden) =>
+		ExecuteWithUpdateSession(updateSession => SetHiddenStates(updateSession, selectedUpdates, isHidden));
 
 	// Creates and configures the WUA session, then runs the requested operation inside a COM lifetime boundary.
 	private static T ExecuteWithUpdateSession<T>(Func<ComObject, T> operation)

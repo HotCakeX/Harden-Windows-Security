@@ -18,6 +18,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using CommonCore.Interop;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
 using Windows.Management;
@@ -35,7 +37,15 @@ internal sealed partial class IntuneCheckInButton : UserControl, INPCImplant
 	public void RaisePropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
 	#endregion
 
-	internal IntuneCheckInButton() => InitializeComponent();
+	internal IntuneCheckInButton()
+	{
+		InitializeComponent();
+
+#if HARDEN_SYSTEM_SECURITY // Only for HSS because ACM is more enterprise-oriented.
+		// Updates the control visibility based on the device MDM registration state.
+		Visibility = IsDeviceRegisteredWithMdm() ? Visibility.Visible : Visibility.Collapsed;
+#endif
+	}
 
 	private const double InitialProgressValue = 0D;
 	private const double SessionCreatedProgressValue = 20D;
@@ -53,6 +63,33 @@ internal sealed partial class IntuneCheckInButton : UserControl, INPCImplant
 	private string LatestSessionIdText { get; set => this.SP(ref field, value); } = "Not retrieved";
 	private string LatestSessionStateText { get; set => this.SP(ref field, value); } = "Not retrieved";
 	private string LatestSessionNoteText { get; set => this.SP(ref field, value); } = "Use the retrieve button to read the most recent local MDM session record exposed by Windows.";
+
+	/// <summary>
+	/// Checks whether Windows reports this device as registered with an MDM service.
+	/// </summary>
+	private static bool IsDeviceRegisteredWithMdm()
+	{
+		try
+		{
+			int hResult = NativeMethods.IsDeviceRegisteredWithManagement(
+				out bool isRegisteredWithMdm,
+				0U,
+				IntPtr.Zero);
+
+			if (hResult != 0)
+			{
+				Logger.Write($"MDM enrollment detection failed. Error code: 0x{hResult:X8}.");
+				return false;
+			}
+
+			return isRegisteredWithMdm;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"MDM enrollment detection failed. Error code: 0x{ex.HResult:X8}. {ex.Message}");
+			return false;
+		}
+	}
 
 	private async void StartCheckInAsync()
 	{

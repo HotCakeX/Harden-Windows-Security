@@ -3630,4 +3630,15 @@ internal static unsafe partial class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool GlobalMemoryStatusEx(ref MEMORYSTATUSEX lpBuffer);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/mdmregistration/nf-mdmregistration-isdeviceregisteredwithmanagement
+	/// </summary>
+	[LibraryImport("MDMRegistration.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int IsDeviceRegisteredWithManagement(
+		[MarshalAs(UnmanagedType.Bool)] out bool pfIsDeviceRegisteredWithManagement,
+		uint cchUPN,
+		IntPtr pszUPN);
+
 }

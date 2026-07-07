@@ -340,6 +340,33 @@ internal sealed partial class DownloadManagerItem : ViewModelBase
 		? $"Added {CreatedAtUtc.ToLocalTime():g} • Server {ServerFileTimestampUtc.Value.ToLocalTime():g}"
 		: $"Added {CreatedAtUtc.ToLocalTime():g}";
 	internal string DownloadSpeedText => CurrentBytesPerSecond > 0 ? $"{HomeVM.FormatDataSize(CurrentBytesPerSecond)}/s" : "Calculating speed...";
+	internal string? TimeRemainingText
+	{
+		get
+		{
+			if (State is not DownloadState.Running || !TotalBytes.HasValue || TotalBytes.Value <= 0)
+			{
+				return null;
+			}
+
+			long remainingBytes = Math.Max(0, TotalBytes.Value - BytesReceived);
+			if (remainingBytes == 0)
+			{
+				return "Remaining: 0 seconds";
+			}
+			if (CurrentBytesPerSecond <= 0)
+			{
+				return "Remaining: Calculating...";
+			}
+			long totalSeconds = remainingBytes / CurrentBytesPerSecond;
+			if (remainingBytes % CurrentBytesPerSecond != 0)
+			{
+				totalSeconds++;
+			}
+			return $"Remaining: {FormatRemainingDuration(totalSeconds)}";
+		}
+	}
+
 	internal Brush StatusForeground => State switch
 	{
 		DownloadState.Completed when !IsFileAvailable => MissingFileStatusBrush,
@@ -363,7 +390,7 @@ internal sealed partial class DownloadManagerItem : ViewModelBase
 		ErrorMessage is not null && State is DownloadState.Failed or DownloadState.Interrupted
 			? $"{StatusText}: {ErrorMessage}"
 			: State is DownloadState.Running
-				? $"{StatusText} • {DownloadSpeedText} • {ProgressText}"
+				? $"{StatusText} • {DownloadSpeedText} • {ProgressText} • {TimeRemainingText}"
 				: $"{StatusText} • {ProgressText}";
 
 	internal string TransferModeSummary => SupportsRangeRequests
@@ -388,6 +415,7 @@ internal sealed partial class DownloadManagerItem : ViewModelBase
 		OnPropertyChanged(nameof(PauseOrResumeToolTip));
 		OnPropertyChanged(nameof(AddedAtText));
 		OnPropertyChanged(nameof(DownloadSpeedText));
+		OnPropertyChanged(nameof(TimeRemainingText));
 		OnPropertyChanged(nameof(StatusForeground));
 		OnPropertyChanged(nameof(PreviewVisibility));
 		OnPropertyChanged(nameof(PreviewPlaceholderVisibility));
@@ -402,6 +430,36 @@ internal sealed partial class DownloadManagerItem : ViewModelBase
 		OnPropertyChanged(nameof(TransferModeSummary));
 	}
 
+	private static string FormatRemainingDuration(long totalSeconds)
+	{
+		const long SecondsPerMinute = 60;
+		const long SecondsPerHour = SecondsPerMinute * 60;
+		const long SecondsPerDay = SecondsPerHour * 24;
+		if (totalSeconds <= 0)
+		{
+			return "0 seconds";
+		}
+		if (totalSeconds >= SecondsPerDay)
+		{
+			long days = totalSeconds / SecondsPerDay;
+			long hours = totalSeconds % SecondsPerDay / SecondsPerHour;
+			return hours > 0 ? $"{FormatDurationUnit(days, "day")} {FormatDurationUnit(hours, "hour")}" : FormatDurationUnit(days, "day");
+		}
+		if (totalSeconds >= SecondsPerHour)
+		{
+			long hours = totalSeconds / SecondsPerHour;
+			long minutes = totalSeconds % SecondsPerHour / SecondsPerMinute;
+			return minutes > 0 ? $"{FormatDurationUnit(hours, "hour")} {FormatDurationUnit(minutes, "minute")}" : FormatDurationUnit(hours, "hour");
+		}
+		if (totalSeconds >= SecondsPerMinute)
+		{
+			long minutes = totalSeconds / SecondsPerMinute;
+			long seconds = totalSeconds % SecondsPerMinute;
+			return seconds > 0 ? $"{FormatDurationUnit(minutes, "minute")} {FormatDurationUnit(seconds, "second")}" : FormatDurationUnit(minutes, "minute");
+		}
+		return FormatDurationUnit(totalSeconds, "second");
+	}
+	private static string FormatDurationUnit(long value, string singularUnit) => value == 1 ? $"1 {singularUnit}" : $"{value} {singularUnit}s";
 	private bool HasFullBleedPreview
 	{
 		get

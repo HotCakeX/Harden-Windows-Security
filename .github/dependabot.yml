@@ -1,7 +1,6 @@
 # To get started with Dependabot version updates, you'll need to specify which
 # package ecosystems to update and where the package manifests are located.
 # Please see the documentation for all configuration options:
-
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 # https://devblogs.microsoft.com/dotnet/using-dependabot-to-manage-dotnet-sdk-updates/
 # https://learn.microsoft.com/en-us/dotnet/core/tools/global-json
@@ -16,6 +15,7 @@ multi-ecosystem-groups:
       timezone: "Asia/Jerusalem"
     labels:
       - "Dependabot ✨"
+    open-pull-requests-limit: 1
 
 updates:
   - package-ecosystem: "dotnet-sdk"
@@ -27,7 +27,6 @@ updates:
     patterns:
       - "*"
     multi-ecosystem-group: "all-dependencies"
-    open-pull-requests-limit: 1
     cooldown:
       exclude:
         - "*"
@@ -41,7 +40,6 @@ updates:
     patterns:
       - "*"
     multi-ecosystem-group: "all-dependencies"
-    open-pull-requests-limit: 1
     cooldown:
       exclude:
         - "*"
@@ -53,7 +51,6 @@ updates:
     patterns:
       - "*"
     multi-ecosystem-group: "all-dependencies"
-    open-pull-requests-limit: 1
     cooldown:
       exclude:
         - "*"
@@ -64,7 +61,6 @@ updates:
     patterns:
       - "*"
     multi-ecosystem-group: "all-dependencies"
-    open-pull-requests-limit: 1
     cooldown:
       exclude:
         - "*"

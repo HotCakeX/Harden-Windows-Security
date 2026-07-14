@@ -16,6 +16,9 @@ updates:
       day: "tuesday"
     labels:
       - "Dependabot ✨"
+    cooldown:
+      exclude:
+        - "*"
   - package-ecosystem: "nuget"
     directories:
       - "/AppControl Manager/"
@@ -26,6 +29,9 @@ updates:
       timezone: "Israel"
     labels:
       - "Dependabot ✨"
+    cooldown:
+      exclude:
+        - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -33,6 +39,9 @@ updates:
       interval: "daily"
     labels:
       - "Dependabot ✨"
+    cooldown:
+      exclude:
+        - "*"
   - package-ecosystem: "cargo"
     directories:
       - "/AppControl Manager/"
@@ -40,3 +49,6 @@ updates:
       interval: "daily"
       time: "07:30"
       timezone: "Israel"
+    cooldown:
+      exclude:
+        - "*"

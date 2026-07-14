@@ -6,49 +6,64 @@
 # https://learn.microsoft.com/en-us/dotnet/core/tools/global-json
 
 version: 2
+
+multi-ecosystem-groups:
+  all-dependencies:
+    schedule:
+      interval: "daily"
+      time: "07:30"
+      timezone: "Asia/Jerusalem"
+    labels:
+      - "Dependabot ✨"
+
 updates:
   - package-ecosystem: "dotnet-sdk"
     directories:
       - "/AppControl Manager/"
       - "/Harden System Security/"
-    schedule:
-      interval: "weekly"
-      day: "tuesday"
     labels:
       - "Dependabot ✨"
+    patterns:
+      - "*"
+    multi-ecosystem-group: "all-dependencies"
+    open-pull-requests-limit: 1
     cooldown:
       exclude:
         - "*"
+
   - package-ecosystem: "nuget"
     directories:
       - "/AppControl Manager/"
       - "/Harden System Security/"
-    schedule:
-      interval: "daily"
-      time: "07:30"
-      timezone: "Israel"
     labels:
       - "Dependabot ✨"
+    patterns:
+      - "*"
+    multi-ecosystem-group: "all-dependencies"
+    open-pull-requests-limit: 1
     cooldown:
       exclude:
         - "*"
+
   - package-ecosystem: "github-actions"
     directory: "/"
-    schedule:
-      # Check for updates to GitHub Actions every week: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/keeping-your-actions-up-to-date-with-dependabot
-      interval: "daily"
     labels:
       - "Dependabot ✨"
+    patterns:
+      - "*"
+    multi-ecosystem-group: "all-dependencies"
+    open-pull-requests-limit: 1
     cooldown:
       exclude:
         - "*"
+
   - package-ecosystem: "cargo"
     directories:
       - "/AppControl Manager/"
-    schedule:
-      interval: "daily"
-      time: "07:30"
-      timezone: "Israel"
+    patterns:
+      - "*"
+    multi-ecosystem-group: "all-dependencies"
+    open-pull-requests-limit: 1
     cooldown:
       exclude:
         - "*"

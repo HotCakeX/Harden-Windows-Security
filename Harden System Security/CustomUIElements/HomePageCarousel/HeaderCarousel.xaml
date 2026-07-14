@@ -141,6 +141,7 @@
             x:Name="scrollViewer"
             Grid.Row="1"
             Margin="0,24,0,0"
+            HorizontalAlignment="Center"
             HorizontalScrollBarVisibility="Hidden"
             VerticalScrollBarVisibility="Disabled"
             VerticalScrollMode="Disabled">

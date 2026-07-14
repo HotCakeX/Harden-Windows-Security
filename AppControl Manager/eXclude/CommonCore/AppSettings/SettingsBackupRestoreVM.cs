@@ -274,6 +274,9 @@ internal static class SettingsBackupRestoreSerializer
 		CreateStringWithCustomValidation(nameof(Main.CustomSidebarPoliciesLibraryCacheLocation), "Absolute path or empty string", settings => settings.CustomSidebarPoliciesLibraryCacheLocation, (settings, value) => settings.CustomSidebarPoliciesLibraryCacheLocation = value,
 			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
 			$"'{nameof(Main.CustomSidebarPoliciesLibraryCacheLocation)}' must be empty or an absolute path."),
+		CreateStringWithCustomValidation(nameof(Main.CustomTotpVaultDirectory), "Absolute path or empty string", settings => settings.CustomTotpVaultDirectory, (settings, value) => settings.CustomTotpVaultDirectory = value,
+			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
+			$"'{nameof(Main.CustomTotpVaultDirectory)}' must be empty or an absolute path."),
 
 		CreateStringWithCustomValidation(nameof(Main.DownloadManagerDirectory), "Absolute path or empty string", settings => settings.DownloadManagerDirectory, (settings, value) => settings.DownloadManagerDirectory = value,
 			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),

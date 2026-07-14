@@ -7472,4 +7472,250 @@ Huella Digital: {3}</value>
   <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Mostrar corazones</value>
   </data>
+  <data name="SecureVaultNavigationViewItem.Content" xml:space="preserve">
+  <value>Bóveda segura</value>
+</data>
+<data name="SecureVaultNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Bóveda segura es tu caja fuerte digital privada para material confidencial y te ofrece un único espacio cifrado donde tus códigos permanecen protegidos, organizados y listos al instante cuando los necesitas.</value>
+</data>
+<data name="SecureVaultNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Bóveda segura es tu caja fuerte digital privada para material confidencial y te ofrece un único espacio cifrado donde tus códigos permanecen protegidos, organizados y listos al instante cuando los necesitas.</value>
+</data>
+<data name="SecureVaultPasteTotpTextBlock.Text" xml:space="preserve">
+  <value>Pegar texto TOTP</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.Content" xml:space="preserve">
+  <value>Ingresar manualmente</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Cambiar entre el modo de pegado de URI completo y el modo de ingreso manual del secreto</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Cambiar entre el modo de pegado de URI completo y el modo de ingreso manual del secreto</value>
+</data>
+<data name="SecureVaultVaultActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Accede a las acciones principales de la bóveda.</value>
+</data>
+<data name="SecureVaultVaultActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Accede a las acciones principales de la bóveda.</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Bloquear bóveda</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Bloquea la bóveda segura y elimina todos los secretos de la memoria.</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Bloquea la bóveda segura y elimina todos los secretos de la memoria.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Eliminar bóveda actual</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Elimina la bóveda actual y todos sus secretos y tokens. Esta acción no se puede deshacer.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Elimina la bóveda actual y todos sus secretos y tokens. Esta acción no se puede deshacer.</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Abrir la configuración de fecha y hora de Windows</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Abre la configuración de fecha y hora de Windows para sincronizar la hora y asegurarte de que la hora del sistema sea correcta.</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Abre la configuración de fecha y hora de Windows para sincronizar la hora y asegurarte de que la hora del sistema sea correcta.</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Ubicación de la bóveda</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Consulta la ubicación de la Bóveda segura y cámbiala si lo necesitas.</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Consulta la ubicación de la Bóveda segura y cámbiala si lo necesitas.</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Cambiar contraseña de la bóveda</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Cambiar la contraseña actual de la bóveda por una nueva</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Cambiar la contraseña actual de la bóveda por una nueva</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Bloqueo automático después de 1 minuto</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Bloquea automáticamente la bóveda segura después de 1 minuto de inactividad.</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Bloquea automáticamente la bóveda segura después de 1 minuto de inactividad.</value>
+</data>
+<data name="SecureVaultPasteInputTextBox.PlaceholderText" xml:space="preserve">
+  <value>Desbloquea la bóveda y luego pega aquí el texto otpauth://totp/... Se admiten varias entradas.</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.Header" xml:space="preserve">
+  <value>Secreto</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.PlaceholderText" xml:space="preserve">
+  <value>Ejemplo: MFDS55GFDGdCCNDQMBLN</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.Header" xml:space="preserve">
+  <value>Sitio web</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.PlaceholderText" xml:space="preserve">
+  <value>Ejemplo: bing.com</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.Header" xml:space="preserve">
+  <value>Cuenta o correo electrónico</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.PlaceholderText" xml:space="preserve">
+  <value>Opcional</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.Header" xml:space="preserve">
+  <value>Emisor</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.PlaceholderText" xml:space="preserve">
+  <value>Opcional. Déjalo en blanco para usar el nombre del sitio web.</value>
+</data>
+<data name="SecureVaultAddTokenButton.Content" xml:space="preserve">
+  <value>Agregar token</value>
+</data>
+<data name="SecureVaultAddTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Agrega un nuevo token a la bóveda segura.</value>
+</data>
+<data name="SecureVaultAddTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Agrega un nuevo token a la bóveda segura.</value>
+</data>
+<data name="SecureVaultTokenSearchBox.PlaceholderText" xml:space="preserve">
+  <value>Buscar tokens</value>
+</data>
+<data name="SecureVaultTokenActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Acciones del token</value>
+</data>
+<data name="SecureVaultTokenActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Acciones del token</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Borrar todo</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Borra todos los tokens que existen en la bóveda segura.</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Borra todos los tokens que existen en la bóveda segura.</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Agregar todo</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Agregar todos los tokens que se puedan encontrar en el texto de entrada</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Agregar todos los tokens que se puedan encontrar en el texto de entrada</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Agregar token</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Agregar token</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Agregar token</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Mostrar notas del token</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Mostrar notas del token</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Agregar o editar notas del token</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Agregar o editar notas del token</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.Content" xml:space="preserve">
+  <value>Quitar</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Quita el token de la bóveda segura.</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Quita el token de la bóveda segura.</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>Nueva contraseña de la bóveda</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>Crea la contraseña para la nueva bóveda portátil</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Crea la contraseña para la nueva bóveda portátil</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Crea la contraseña para la nueva bóveda portátil</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>Confirmar nueva contraseña de la bóveda</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>Vuelve a ingresar la misma contraseña nueva</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Vuelve a ingresar la misma contraseña nueva</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Vuelve a ingresar la misma contraseña nueva</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.Content" xml:space="preserve">
+  <value>Crear nueva bóveda</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Crear nueva bóveda</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Crear nueva bóveda</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.Content" xml:space="preserve">
+  <value>Importar bóveda</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Importa una bóveda existente a la aplicación.</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Importa una bóveda existente a la aplicación.</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.Header" xml:space="preserve">
+  <value>Contraseña de la bóveda</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>Ingresa la contraseña de esta bóveda portátil</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Ingresa la contraseña de esta bóveda portátil</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Ingresa la contraseña de esta bóveda portátil</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.Content" xml:space="preserve">
+  <value>Desbloquear con contraseña</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Desbloquear con contraseña</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Desbloquear con contraseña</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.Content" xml:space="preserve">
+  <value>Eliminar bóveda actual</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Eliminar la bóveda actual y todo lo que contiene.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Eliminar la bóveda actual y todo lo que contiene.</value>
+</data>
 </root>

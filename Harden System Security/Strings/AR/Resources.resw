@@ -7472,4 +7472,250 @@
   <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>إظهار القلوب</value>
   </data>
+  <data name="SecureVaultNavigationViewItem.Content" xml:space="preserve">
+  <value>الخزنة الآمنة</value>
+</data>
+<data name="SecureVaultNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>الخزنة الآمنة هي خزنتك الرقمية الخاصة للمواد الحساسة، وتوفر مساحة مشفرة واحدة تبقى فيها رموزك محمية ومنظمة وجاهزة فورًا عند الحاجة إليها.</value>
+</data>
+<data name="SecureVaultNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>الخزنة الآمنة هي خزنتك الرقمية الخاصة للمواد الحساسة، وتوفر مساحة مشفرة واحدة تبقى فيها رموزك محمية ومنظمة وجاهزة فورًا عند الحاجة إليها.</value>
+</data>
+<data name="SecureVaultPasteTotpTextBlock.Text" xml:space="preserve">
+  <value>الصق نص TOTP</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.Content" xml:space="preserve">
+  <value>إدخال يدوي</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>التبديل بين وضع لصق URI الكامل ووضع الإدخال اليدوي للسر</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>التبديل بين وضع لصق URI الكامل ووضع الإدخال اليدوي للسر</value>
+</data>
+<data name="SecureVaultVaultActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>الوصول إلى الإجراءات الرئيسية للخزنة.</value>
+</data>
+<data name="SecureVaultVaultActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>الوصول إلى الإجراءات الرئيسية للخزنة.</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>قفل الخزنة</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>اقفل الخزنة الآمنة وأزل جميع الأسرار من الذاكرة.</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>اقفل الخزنة الآمنة وأزل جميع الأسرار من الذاكرة.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>حذف الخزنة الحالية</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>احذف الخزنة الحالية وجميع أسرارها ورموزها. لا يمكن التراجع عن هذا الإجراء.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>احذف الخزنة الحالية وجميع أسرارها ورموزها. لا يمكن التراجع عن هذا الإجراء.</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.Text" xml:space="preserve">
+  <value>فتح إعدادات التاريخ والوقت في Windows</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>افتح إعدادات التاريخ والوقت في Windows لمزامنة الوقت والتأكد من صحة وقت النظام.</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>افتح إعدادات التاريخ والوقت في Windows لمزامنة الوقت والتأكد من صحة وقت النظام.</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.Text" xml:space="preserve">
+  <value>موقع الخزنة</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>اعرض موقع الخزنة الآمنة وغيّره إذا لزم الأمر.</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>اعرض موقع الخزنة الآمنة وغيّره إذا لزم الأمر.</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.Text" xml:space="preserve">
+  <value>تغيير كلمة مرور الخزنة</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>تغيير كلمة مرور الخزنة الحالية إلى كلمة مرور جديدة</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>تغيير كلمة مرور الخزنة الحالية إلى كلمة مرور جديدة</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.Text" xml:space="preserve">
+  <value>قفل تلقائي بعد دقيقة واحدة</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>قفل الخزنة الآمنة تلقائيًا بعد دقيقة واحدة من عدم النشاط.</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>قفل الخزنة الآمنة تلقائيًا بعد دقيقة واحدة من عدم النشاط.</value>
+</data>
+<data name="SecureVaultPasteInputTextBox.PlaceholderText" xml:space="preserve">
+  <value>افتح قفل الخزنة، ثم الصق هنا نص otpauth://totp/... يتم دعم إدخالات متعددة.</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.Header" xml:space="preserve">
+  <value>السر</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.PlaceholderText" xml:space="preserve">
+  <value>مثال: MFDS55GFDGdCCNDQMBLN</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.Header" xml:space="preserve">
+  <value>الموقع الإلكتروني</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.PlaceholderText" xml:space="preserve">
+  <value>مثال: bing.com</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.Header" xml:space="preserve">
+  <value>الحساب أو البريد الإلكتروني</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.PlaceholderText" xml:space="preserve">
+  <value>اختياري</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.Header" xml:space="preserve">
+  <value>الجهة المصدرة</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.PlaceholderText" xml:space="preserve">
+  <value>اختياري. اتركه فارغًا لاستخدام اسم الموقع الإلكتروني.</value>
+</data>
+<data name="SecureVaultAddTokenButton.Content" xml:space="preserve">
+  <value>إضافة رمز</value>
+</data>
+<data name="SecureVaultAddTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>أضف رمزًا جديدًا إلى الخزنة الآمنة.</value>
+</data>
+<data name="SecureVaultAddTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>أضف رمزًا جديدًا إلى الخزنة الآمنة.</value>
+</data>
+<data name="SecureVaultTokenSearchBox.PlaceholderText" xml:space="preserve">
+  <value>العثور على الرموز</value>
+</data>
+<data name="SecureVaultTokenActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>إجراءات الرمز</value>
+</data>
+<data name="SecureVaultTokenActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>إجراءات الرمز</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>مسح الكل</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>امسح جميع الرموز الموجودة في الخزنة الآمنة.</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>امسح جميع الرموز الموجودة في الخزنة الآمنة.</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>إضافة الكل</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>إضافة جميع الرموز التي يمكن العثور عليها في نص الإدخال</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>إضافة جميع الرموز التي يمكن العثور عليها في نص الإدخال</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.Text" xml:space="preserve">
+  <value>إضافة رمز</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>إضافة رمز</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>إضافة رمز</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>إظهار ملاحظات الرمز</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>إظهار ملاحظات الرمز</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>إضافة ملاحظات الرمز أو تحريرها</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>إضافة ملاحظات الرمز أو تحريرها</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.Content" xml:space="preserve">
+  <value>إزالة</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>أزل الرمز من الخزنة الآمنة.</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>أزل الرمز من الخزنة الآمنة.</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>كلمة مرور خزنة جديدة</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>أنشئ كلمة المرور للخزنة المحمولة الجديدة</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>أنشئ كلمة المرور للخزنة المحمولة الجديدة</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>أنشئ كلمة المرور للخزنة المحمولة الجديدة</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>تأكيد كلمة مرور الخزنة الجديدة</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>أدخل كلمة المرور الجديدة نفسها مرة أخرى</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>أدخل كلمة المرور الجديدة نفسها مرة أخرى</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>أدخل كلمة المرور الجديدة نفسها مرة أخرى</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.Content" xml:space="preserve">
+  <value>إنشاء خزنة جديدة</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>إنشاء خزنة جديدة</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>إنشاء خزنة جديدة</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.Content" xml:space="preserve">
+  <value>استيراد خزنة</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>استورد خزنة موجودة إلى التطبيق.</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>استورد خزنة موجودة إلى التطبيق.</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.Header" xml:space="preserve">
+  <value>كلمة مرور الخزنة</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>أدخل كلمة المرور لهذه الخزنة المحمولة</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>أدخل كلمة المرور لهذه الخزنة المحمولة</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>أدخل كلمة المرور لهذه الخزنة المحمولة</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.Content" xml:space="preserve">
+  <value>إلغاء القفل باستخدام كلمة المرور</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>إلغاء القفل باستخدام كلمة المرور</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>إلغاء القفل باستخدام كلمة المرور</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.Content" xml:space="preserve">
+  <value>حذف الخزنة الحالية</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>حذف الخزنة الحالية وكل ما بداخلها.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>حذف الخزنة الحالية وكل ما بداخلها.</value>
+</data>
 </root>

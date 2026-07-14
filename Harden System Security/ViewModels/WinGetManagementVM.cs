@@ -409,7 +409,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 		CancelAllBulkPackageActions();
 		CancelCurrentBundleOperation();
-		_ = CancelBulkSourceAction();
+		bulkSourceActionCancellationTokenSource?.Cancel();
 		bulkSourceActionCancellationTokenSource?.Dispose();
 		bundleOperationCancellationTokenSource?.Dispose();
 	}
@@ -615,7 +615,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 	{
 		if (TryGetPackageSearchResult(sender, out WinGetPackageSearchResult? packageSearchResult))
 		{
-			await InstallOrUpdatePackageAsync(packageSearchResult, packageInstallMode, packageInstallScope, true, CancellationToken.None);
+			await InstallOrUpdatePackageAsync(packageSearchResult, packageInstallMode, packageInstallScope, packageInstallMode is not PackageInstallMode.Silent, CancellationToken.None);
 		}
 	}
 
@@ -863,7 +863,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 			return false;
 		}
 
-		_ = CancelBulkPackageAction(registryKey);
+		CancelBulkPackageAction(registryKey);
 		using CancellationTokenSource cancellationTokenSource = new();
 		bulkPackageActionCancellationTokenSources[registryKey] = cancellationTokenSource;
 		CancellationToken cancellationToken = cancellationTokenSource.Token;
@@ -917,15 +917,25 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		return completed;
 	}
 
-	private bool CancelBulkPackageAction(ListViewHelper.ListViewsRegistry registryKey)
+	private void CancelBulkPackageAction(ListViewHelper.ListViewsRegistry registryKey)
 	{
 		if (!bulkPackageActionCancellationTokenSources.TryGetValue(registryKey, out CancellationTokenSource? cancellationTokenSource))
 		{
-			return false;
+			return;
 		}
 
 		cancellationTokenSource.Cancel();
-		return true;
+	}
+
+	private static void CancelActivePackageOperations(IEnumerable<WinGetPackageSearchResult> packages)
+	{
+		foreach (WinGetPackageSearchResult package in packages)
+		{
+			if (package.IsPackageOperationCancellationAvailable)
+			{
+				package.CancelPackageOperation();
+			}
+		}
 	}
 
 	private void CancelAllBulkPackageActions()
@@ -996,7 +1006,8 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 			return;
 		}
 
-		_ = CancelBulkSourceAction();
+		if (bulkSourceActionCancellationTokenSource is not null)
+			await bulkSourceActionCancellationTokenSource.CancelAsync();
 		using CancellationTokenSource cancellationTokenSource = new();
 		bulkSourceActionCancellationTokenSource = cancellationTokenSource;
 		CancellationToken cancellationToken = cancellationTokenSource.Token;
@@ -1027,18 +1038,6 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 				SourcesUIElementsAreEnabled = true;
 			}
 		}
-	}
-
-	private bool CancelBulkSourceAction()
-	{
-		CancellationTokenSource? cancellationTokenSource = bulkSourceActionCancellationTokenSource;
-		if (cancellationTokenSource is null)
-		{
-			return false;
-		}
-
-		cancellationTokenSource.Cancel();
-		return true;
 	}
 
 	#region WinGet package bundles
@@ -1091,7 +1090,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 			bundlePackage,
 			string.Format(CultureInfo.InvariantCulture, "Installing {0}", bundlePackage.DisplayName),
 			resolveInstalledPackageOnly: false,
-			async (packageSearchResult, cancellationToken) => await InstallOrUpdatePackageAsync(packageSearchResult, packageInstallMode, packageInstallScope, true, cancellationToken));
+			async (packageSearchResult, cancellationToken) => await InstallOrUpdatePackageAsync(packageSearchResult, packageInstallMode, packageInstallScope, packageInstallMode is not PackageInstallMode.Silent, cancellationToken));
 	}
 
 	private async Task RunBundlePackageUninstallActionAsync(object sender, PackageUninstallMode packageUninstallMode, PackageUninstallScope packageUninstallScope)
@@ -2491,7 +2490,8 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 		cancellationTokenSource?.Cancel();
 
-		_ = CancelBulkPackageAction(ListViewHelper.ListViewsRegistry.WinGet_SearchResults);
+		CancelBulkPackageAction(ListViewHelper.ListViewsRegistry.WinGet_SearchResults);
+		CancelActivePackageOperations(SearchResults);
 	}
 
 	internal void CancelInstalledQuery()
@@ -2501,7 +2501,8 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 		cancellationTokenSource?.Cancel();
 
-		_ = CancelBulkPackageAction(ListViewHelper.ListViewsRegistry.WinGet_InstalledPackages);
+		CancelBulkPackageAction(ListViewHelper.ListViewsRegistry.WinGet_InstalledPackages);
+		CancelActivePackageOperations(InstalledPrograms);
 	}
 
 	private void SetCurrentSourceOperation(IAsyncInfo? currentSourceOperation)
@@ -2512,7 +2513,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 	internal void CancelCurrentSourceOperation()
 	{
-		_ = CancelBulkSourceAction();
+		bulkSourceActionCancellationTokenSource?.Cancel();
 		IAsyncInfo? currentSourceOperation = sourceOperation;
 		if (currentSourceOperation is null)
 		{

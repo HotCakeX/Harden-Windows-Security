@@ -7472,4 +7472,250 @@ Empreinte : {3}</value>
   <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Afficher les cœurs</value>
   </data>
+  <data name="SecureVaultNavigationViewItem.Content" xml:space="preserve">
+  <value>Coffre sécurisé</value>
+</data>
+<data name="SecureVaultNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Le Coffre sécurisé est votre coffre-fort numérique privé pour les contenus sensibles. Il offre un espace chiffré unique dans lequel vos codes restent protégés, organisés et immédiatement prêts lorsque vous en avez besoin.</value>
+</data>
+<data name="SecureVaultNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Le Coffre sécurisé est votre coffre-fort numérique privé pour les contenus sensibles. Il offre un espace chiffré unique dans lequel vos codes restent protégés, organisés et immédiatement prêts lorsque vous en avez besoin.</value>
+</data>
+<data name="SecureVaultPasteTotpTextBlock.Text" xml:space="preserve">
+  <value>Coller le texte TOTP</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.Content" xml:space="preserve">
+  <value>Saisir manuellement</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Basculer entre le mode de collage d’URI complet et le mode de saisie manuelle du secret</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Basculer entre le mode de collage d’URI complet et le mode de saisie manuelle du secret</value>
+</data>
+<data name="SecureVaultVaultActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Accéder aux actions principales du coffre.</value>
+</data>
+<data name="SecureVaultVaultActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Accéder aux actions principales du coffre.</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Verrouiller le coffre</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Verrouiller le coffre sécurisé et supprimer tous les secrets de la mémoire.</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Verrouiller le coffre sécurisé et supprimer tous les secrets de la mémoire.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Supprimer le coffre actuel</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Supprimer le coffre actuel ainsi que tous ses secrets et jetons. Cette action est irréversible.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Supprimer le coffre actuel ainsi que tous ses secrets et jetons. Cette action est irréversible.</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Ouvrir les paramètres de date et d’heure de Windows</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Ouvrir les paramètres de date et d’heure de Windows afin de synchroniser l’heure et de s’assurer que l’heure système est correcte.</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Ouvrir les paramètres de date et d’heure de Windows afin de synchroniser l’heure et de s’assurer que l’heure système est correcte.</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Emplacement du coffre</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Afficher l’emplacement du Coffre sécurisé et le modifier si nécessaire.</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Afficher l’emplacement du Coffre sécurisé et le modifier si nécessaire.</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Modifier le mot de passe du coffre</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Remplacer le mot de passe actuel du coffre par un nouveau</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Remplacer le mot de passe actuel du coffre par un nouveau</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Verrouillage automatique après 1 minute</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Verrouiller automatiquement le coffre sécurisé après 1 minute d’inactivité.</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Verrouiller automatiquement le coffre sécurisé après 1 minute d’inactivité.</value>
+</data>
+<data name="SecureVaultPasteInputTextBox.PlaceholderText" xml:space="preserve">
+  <value>Déverrouillez le coffre, puis collez ici le texte otpauth://totp/... Les entrées multiples sont prises en charge.</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.Header" xml:space="preserve">
+  <value>Secret</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.PlaceholderText" xml:space="preserve">
+  <value>Exemple : MFDS55GFDGdCCNDQMBLN</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.Header" xml:space="preserve">
+  <value>Site web</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.PlaceholderText" xml:space="preserve">
+  <value>Exemple : bing.com</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.Header" xml:space="preserve">
+  <value>Compte ou e-mail</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.PlaceholderText" xml:space="preserve">
+  <value>Facultatif</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.Header" xml:space="preserve">
+  <value>Émetteur</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.PlaceholderText" xml:space="preserve">
+  <value>Facultatif. Laissez vide pour utiliser le nom du site web.</value>
+</data>
+<data name="SecureVaultAddTokenButton.Content" xml:space="preserve">
+  <value>Ajouter un jeton</value>
+</data>
+<data name="SecureVaultAddTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Ajouter un nouveau jeton au coffre sécurisé.</value>
+</data>
+<data name="SecureVaultAddTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Ajouter un nouveau jeton au coffre sécurisé.</value>
+</data>
+<data name="SecureVaultTokenSearchBox.PlaceholderText" xml:space="preserve">
+  <value>Rechercher des jetons</value>
+</data>
+<data name="SecureVaultTokenActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Actions du jeton</value>
+</data>
+<data name="SecureVaultTokenActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Actions du jeton</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Tout effacer</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Effacer tous les jetons présents dans le coffre sécurisé.</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Effacer tous les jetons présents dans le coffre sécurisé.</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Tout ajouter</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Ajouter tous les jetons pouvant être trouvés dans le texte saisi</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Ajouter tous les jetons pouvant être trouvés dans le texte saisi</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Ajouter un jeton</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Ajouter un jeton</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Ajouter un jeton</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Afficher les notes du jeton</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Afficher les notes du jeton</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Ajouter ou modifier les notes du jeton</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Ajouter ou modifier les notes du jeton</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.Content" xml:space="preserve">
+  <value>Supprimer</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Supprimer le jeton du coffre sécurisé.</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Supprimer le jeton du coffre sécurisé.</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>Nouveau mot de passe du coffre</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>Créer le mot de passe du nouveau coffre portable</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Créer le mot de passe du nouveau coffre portable</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Créer le mot de passe du nouveau coffre portable</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>Confirmer le nouveau mot de passe du coffre</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>Saisissez à nouveau le même nouveau mot de passe</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Saisissez à nouveau le même nouveau mot de passe</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Saisissez à nouveau le même nouveau mot de passe</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.Content" xml:space="preserve">
+  <value>Créer un nouveau coffre</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Créer un nouveau coffre</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Créer un nouveau coffre</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.Content" xml:space="preserve">
+  <value>Importer un coffre</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Importer un coffre existant dans l’application.</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Importer un coffre existant dans l’application.</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.Header" xml:space="preserve">
+  <value>Mot de passe du coffre</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>Saisissez le mot de passe de ce coffre portable</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Saisissez le mot de passe de ce coffre portable</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Saisissez le mot de passe de ce coffre portable</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.Content" xml:space="preserve">
+  <value>Déverrouiller avec un mot de passe</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Déverrouiller avec un mot de passe</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Déverrouiller avec un mot de passe</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.Content" xml:space="preserve">
+  <value>Supprimer le coffre actuel</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Supprimer le coffre actuel et tout ce qu’il contient.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Supprimer le coffre actuel et tout ce qu’il contient.</value>
+</data>
 </root>

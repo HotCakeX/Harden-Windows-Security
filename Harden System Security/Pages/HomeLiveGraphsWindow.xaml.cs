@@ -31,6 +31,7 @@ using AppControlManager.CustomUIElements;
 using AppControlManager.ViewModels;
 using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Effects;
+using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -91,7 +92,7 @@ internal sealed class WifiProfileRow
 
 	internal string OneXBadge => string.IsNullOrWhiteSpace(OneX) ? "802.1X: Unavailable" : "802.1X: " + OneX;
 }
-internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
+internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 {
 	private const uint ErrorSuccess = 0U;
 	private const uint PdhFormatDouble = 0x00000200U;
@@ -154,6 +155,8 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 	private long _previousLiveNetworkSampleTicks;
 	private PixelShaderEffect? _blackHoleShaderEffect;
 	private byte[]? _blackHoleShaderBytecode;
+	private AnimatedTesseractBackground? _animatedTesseractBackground;
+	private CanvasControl? _blackHoleCanvas;
 	private bool _isDisposed;
 	private DateTimeOffset _blackHoleStartTime;
 
@@ -477,49 +480,119 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 		CpuTemperatureChartMaxLabelTextBlock.Text = FormatTemperatureRangeLabel(CpuTemperatureLiveGraph.EffectiveMaximum.ToString("0.##", CultureInfo.InvariantCulture));
 	}
 
-	private void OnBackgroundOpacitySliderValueChanged(object sender, RangeBaseValueChangedEventArgs args) => AnimatedBackgroundLayer.Opacity = args.NewValue;
+	private void OnBackgroundOpacitySliderValueChanged(object sender, RangeBaseValueChangedEventArgs args)
+	{
+		AnimatedBackgroundLayer.Opacity = args.NewValue;
+		ApplySelectedBackgroundType();
+	}
 
 	private void OnBackgroundTypeComboBoxSelectionChanged()
 	{
-		if (!_isGraphLayoutReady)
+		if (_isGraphLayoutReady)
 		{
-			return;
+			ApplySelectedBackgroundType();
 		}
-		ApplySelectedBackgroundType();
 	}
 
 	private void OnBackgroundPresetComboBoxSelectionChanged()
 	{
-		if (!_isGraphLayoutReady)
+		if (_isGraphLayoutReady)
+		{
+			ApplySelectedTesseractPreset();
+		}
+	}
+
+	// If the opacity is 0, no background must consuming ANY system resources. Only 1 animated background must ever be consuming resources when opacity is bigger than 0.
+	private void ApplySelectedBackgroundType()
+	{
+		bool shouldShowBackground = AnimatedBackgroundLayer.Opacity > 0.0;
+		bool useBlackHoleBackground = shouldShowBackground && BackgroundTypeComboBox.SelectedIndex == 1;
+		BackgroundPresetComboBox.Visibility = useBlackHoleBackground ? Visibility.Collapsed : Visibility.Visible;
+		if (!shouldShowBackground)
+		{
+			StopBlackHoleBackground();
+			RemoveBlackHoleBackground();
+			RemoveAnimatedTesseractBackground();
+			return;
+		}
+		if (useBlackHoleBackground)
+		{
+			RemoveAnimatedTesseractBackground();
+			EnsureBlackHoleBackground();
+			StartBlackHoleBackground();
+			return;
+		}
+		StopBlackHoleBackground();
+		RemoveBlackHoleBackground();
+		EnsureAnimatedTesseractBackground();
+		ApplySelectedTesseractPreset();
+	}
+
+	private void ApplySelectedTesseractPreset() => _animatedTesseractBackground?.ApplyPreset(BackgroundPresetComboBox.SelectedIndex == 1 ? AnimatedTesseractBackgroundPreset.BlueWhite : AnimatedTesseractBackgroundPreset.Green);
+
+	private void EnsureAnimatedTesseractBackground()
+	{
+		if (_animatedTesseractBackground is not null)
 		{
 			return;
 		}
-		AnimatedTesseractBackground.ApplyPreset(BackgroundPresetComboBox.SelectedIndex == 1 ? AnimatedTesseractBackgroundPreset.BlueWhite : AnimatedTesseractBackgroundPreset.Green);
+		AnimatedTesseractBackground animatedTesseractBackground = new()
+		{
+			HorizontalAlignment = HorizontalAlignment.Stretch,
+			VerticalAlignment = VerticalAlignment.Stretch
+		};
+		_animatedTesseractBackground = animatedTesseractBackground;
+		AnimatedBackgroundLayer.Children.Add(animatedTesseractBackground);
 	}
 
-	private void ApplySelectedBackgroundType()
+	private void RemoveAnimatedTesseractBackground()
 	{
-		bool useBlackHoleBackground = BackgroundTypeComboBox.SelectedIndex == 1;
-		AnimatedTesseractBackground.Visibility = useBlackHoleBackground ? Visibility.Collapsed : Visibility.Visible;
-		BlackHoleCanvas.Visibility = useBlackHoleBackground ? Visibility.Visible : Visibility.Collapsed;
-		BackgroundPresetComboBox.Visibility = useBlackHoleBackground ? Visibility.Collapsed : Visibility.Visible;
-		if (useBlackHoleBackground)
+		if (_animatedTesseractBackground is not null)
 		{
-			StartBlackHoleBackground();
-		}
-		else
-		{
-			StopBlackHoleBackground();
+			_ = AnimatedBackgroundLayer.Children.Remove(_animatedTesseractBackground);
+			_animatedTesseractBackground = null;
 		}
 	}
 
-	private void OnBlackHoleRenderTimerTick(object? sender, object e)
+	private void EnsureBlackHoleBackground()
 	{
-		if (BlackHoleCanvas.Visibility == Visibility.Visible)
+		if (_blackHoleCanvas is null)
 		{
-			BlackHoleCanvas.Invalidate();
+			CanvasControl blackHoleCanvas = new()
+			{
+				ClearColor = Colors.Black,
+				HorizontalAlignment = HorizontalAlignment.Stretch,
+				VerticalAlignment = VerticalAlignment.Stretch
+			};
+			blackHoleCanvas.CreateResources += OnBlackHoleCanvasCreateResources;
+			blackHoleCanvas.Draw += OnBlackHoleCanvasDraw;
+			_blackHoleCanvas = blackHoleCanvas;
+			AnimatedBackgroundLayer.Children.Add(blackHoleCanvas);
 		}
 	}
+
+	private void RemoveBlackHoleBackground()
+	{
+		if (_blackHoleCanvas is null)
+		{
+			_blackHoleShaderEffect?.Dispose();
+			_blackHoleShaderEffect = null;
+			_blackHoleShaderBytecode = null;
+			return;
+		}
+		_blackHoleCanvas.CreateResources -= OnBlackHoleCanvasCreateResources;
+		_blackHoleCanvas.Draw -= OnBlackHoleCanvasDraw;
+		_blackHoleCanvas.RemoveFromVisualTree();
+		_ = AnimatedBackgroundLayer.Children.Remove(_blackHoleCanvas);
+		_blackHoleCanvas = null;
+		_blackHoleShaderEffect?.Dispose();
+		_blackHoleShaderEffect = null;
+		_blackHoleShaderBytecode = null;
+	}
+
+	private void OnBlackHoleCanvasCreateResources(CanvasControl sender, CanvasCreateResourcesEventArgs args) => EnsureBlackHoleShaderResources();
+
+	private void OnBlackHoleRenderTimerTick(object? sender, object e) => _blackHoleCanvas?.Invalidate();
 
 	private void StartBlackHoleBackground()
 	{
@@ -528,7 +601,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 		{
 			_blackHoleRenderTimer.Start();
 		}
-		BlackHoleCanvas.Invalidate();
+		_blackHoleCanvas?.Invalidate();
 	}
 
 	private void StopBlackHoleBackground()
@@ -592,9 +665,8 @@ internal sealed partial class HomeLiveGraphsWindow : Window, System.IDisposable
 			_homeTitleAnimationTimer = null;
 		}
 		StopBlackHoleBackground();
-		_blackHoleShaderEffect?.Dispose();
-		_blackHoleShaderEffect = null;
-		BlackHoleCanvas.RemoveFromVisualTree();
+		RemoveBlackHoleBackground();
+		RemoveAnimatedTesseractBackground();
 		CloseCpuUsageCounters();
 		CloseDiskActivityCounters();
 		_gpuUsageTimer.Stop();
@@ -1377,6 +1449,7 @@ internal sealed partial class HomeLiveGraphsWindow
 			grid.RequestedTheme = ElementTheme.Dark;
 		}
 
+		ApplySelectedBackgroundType();
 		InitializeGpuUsageCharts();
 		_ = UpdateGpuDisplayNamesAsync();
 	}
@@ -1642,21 +1715,14 @@ internal sealed partial class HomeLiveGraphsWindow
 		_gpuDxgiAdaptersByLuid[luidKey] = new GpuDxgiAdapterDescriptor(groupKey, displayName, displayIndex);
 	}
 
-	private static string CreateGpuLuidAdapterKey(LUID luid)
-	{
-		return "luid_0x" + luid.HighPart.ToString("X8", CultureInfo.InvariantCulture) + "_0x" + luid.LowPart.ToString("X8", CultureInfo.InvariantCulture);
-	}
+	private static string CreateGpuLuidAdapterKey(LUID luid) =>
+		 "luid_0x" + luid.HighPart.ToString("X8", CultureInfo.InvariantCulture) + "_0x" + luid.LowPart.ToString("X8", CultureInfo.InvariantCulture);
 
-	private static string CreateGpuDxgiAdapterGroupKey(DXGI_ADAPTER_DESC1 adapterDescription)
-	{
-		return "dxgi_" + adapterDescription.VendorId.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.DeviceId.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.SubSysId.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.Revision.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.DedicatedVideoMemory.ToString("X", CultureInfo.InvariantCulture);
-	}
+	private static string CreateGpuDxgiAdapterGroupKey(DXGI_ADAPTER_DESC1 adapterDescription) =>
+		"dxgi_" + adapterDescription.VendorId.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.DeviceId.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.SubSysId.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.Revision.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.DedicatedVideoMemory.ToString("X", CultureInfo.InvariantCulture);
 
-	private unsafe static string GetDxgiAdapterDescription(DXGI_ADAPTER_DESC1 adapterDescription)
-	{
-		char* descriptionCharacters = adapterDescription.Description;
-		return new string(descriptionCharacters).TrimEnd('\0');
-	}
+	private unsafe static string GetDxgiAdapterDescription(DXGI_ADAPTER_DESC1 adapterDescription) =>
+		new string(adapterDescription.Description).TrimEnd('\0');
 
 	private unsafe static void ReleaseComObject(IntPtr comObject)
 	{

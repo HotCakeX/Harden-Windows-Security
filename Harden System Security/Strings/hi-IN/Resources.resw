@@ -7472,4 +7472,250 @@
   <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>दिल दिखाएं</value>
   </data>
+  <data name="SecureVaultNavigationViewItem.Content" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट</value>
+</data>
+<data name="SecureVaultNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट आपकी संवेदनशील सामग्री के लिए निजी डिजिटल तिजोरी है, जो एक एकल एन्क्रिप्टेड स्थान प्रदान करती है जहाँ आपके कोड सुरक्षित, सुव्यवस्थित और आवश्यकता पड़ने पर तुरंत तैयार रहते हैं।</value>
+</data>
+<data name="SecureVaultNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट आपकी संवेदनशील सामग्री के लिए निजी डिजिटल तिजोरी है, जो एक एकल एन्क्रिप्टेड स्थान प्रदान करती है जहाँ आपके कोड सुरक्षित, सुव्यवस्थित और आवश्यकता पड़ने पर तुरंत तैयार रहते हैं।</value>
+</data>
+<data name="SecureVaultPasteTotpTextBlock.Text" xml:space="preserve">
+  <value>TOTP पाठ पेस्ट करें</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.Content" xml:space="preserve">
+  <value>मैन्युअल रूप से दर्ज करें</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>पूर्ण URI पेस्ट मोड और मैन्युअल सीक्रेट प्रविष्टि मोड के बीच स्विच करें</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>पूर्ण URI पेस्ट मोड और मैन्युअल सीक्रेट प्रविष्टि मोड के बीच स्विच करें</value>
+</data>
+<data name="SecureVaultVaultActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>वॉल्ट की मुख्य कार्रवाइयों तक पहुँचें।</value>
+</data>
+<data name="SecureVaultVaultActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>वॉल्ट की मुख्य कार्रवाइयों तक पहुँचें।</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>वॉल्ट लॉक करें</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट को लॉक करें और मेमोरी से सभी सीक्रेट हटा दें।</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट को लॉक करें और मेमोरी से सभी सीक्रेट हटा दें।</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>वर्तमान वॉल्ट हटाएँ</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>वर्तमान वॉल्ट और इसके सभी सीक्रेट तथा टोकन हटाएँ। यह कार्रवाई पूर्ववत नहीं की जा सकती।</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>वर्तमान वॉल्ट और इसके सभी सीक्रेट तथा टोकन हटाएँ। यह कार्रवाई पूर्ववत नहीं की जा सकती।</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Windows दिनांक और समय सेटिंग्स खोलें</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>समय सिंक करने और यह सुनिश्चित करने के लिए कि सिस्टम समय सही है, Windows दिनांक और समय सेटिंग्स खोलें।</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>समय सिंक करने और यह सुनिश्चित करने के लिए कि सिस्टम समय सही है, Windows दिनांक और समय सेटिंग्स खोलें।</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.Text" xml:space="preserve">
+  <value>वॉल्ट का स्थान</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट का स्थान देखें और आवश्यकता होने पर बदलें।</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट का स्थान देखें और आवश्यकता होने पर बदलें।</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.Text" xml:space="preserve">
+  <value>वॉल्ट का पासवर्ड बदलें</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>वर्तमान वॉल्ट पासवर्ड को नए पासवर्ड में बदलें</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>वर्तमान वॉल्ट पासवर्ड को नए पासवर्ड में बदलें</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.Text" xml:space="preserve">
+  <value>1 मिनट बाद स्वतः लॉक</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>1 मिनट की निष्क्रियता के बाद सुरक्षित वॉल्ट को स्वतः लॉक करें।</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>1 मिनट की निष्क्रियता के बाद सुरक्षित वॉल्ट को स्वतः लॉक करें।</value>
+</data>
+<data name="SecureVaultPasteInputTextBox.PlaceholderText" xml:space="preserve">
+  <value>वॉल्ट अनलॉक करें, फिर यहाँ otpauth://totp/... पाठ पेस्ट करें। एक से अधिक प्रविष्टियाँ समर्थित हैं।</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.Header" xml:space="preserve">
+  <value>सीक्रेट</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.PlaceholderText" xml:space="preserve">
+  <value>उदाहरण: MFDS55GFDGdCCNDQMBLN</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.Header" xml:space="preserve">
+  <value>वेबसाइट</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.PlaceholderText" xml:space="preserve">
+  <value>उदाहरण: bing.com</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.Header" xml:space="preserve">
+  <value>खाता या ईमेल</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.PlaceholderText" xml:space="preserve">
+  <value>वैकल्पिक</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.Header" xml:space="preserve">
+  <value>जारीकर्ता</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.PlaceholderText" xml:space="preserve">
+  <value>वैकल्पिक। वेबसाइट का नाम उपयोग करने के लिए इसे खाली छोड़ दें।</value>
+</data>
+<data name="SecureVaultAddTokenButton.Content" xml:space="preserve">
+  <value>टोकन जोड़ें</value>
+</data>
+<data name="SecureVaultAddTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट में एक नया टोकन जोड़ें।</value>
+</data>
+<data name="SecureVaultAddTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट में एक नया टोकन जोड़ें।</value>
+</data>
+<data name="SecureVaultTokenSearchBox.PlaceholderText" xml:space="preserve">
+  <value>टोकन खोजें</value>
+</data>
+<data name="SecureVaultTokenActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>टोकन क्रियाएँ</value>
+</data>
+<data name="SecureVaultTokenActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>टोकन क्रियाएँ</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>सभी साफ़ करें</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट में मौजूद सभी टोकन साफ़ करें।</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>सुरक्षित वॉल्ट में मौजूद सभी टोकन साफ़ करें।</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>सभी जोड़ें</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>इनपुट पाठ में मिलने वाले सभी टोकन जोड़ें</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>इनपुट पाठ में मिलने वाले सभी टोकन जोड़ें</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.Text" xml:space="preserve">
+  <value>टोकन जोड़ें</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>टोकन जोड़ें</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>टोकन जोड़ें</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>टोकन नोट्स दिखाएँ</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>टोकन नोट्स दिखाएँ</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>टोकन नोट्स जोड़ें या संपादित करें</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>टोकन नोट्स जोड़ें या संपादित करें</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.Content" xml:space="preserve">
+  <value>हटाएँ</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>टोकन को सुरक्षित वॉल्ट से हटाएँ।</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>टोकन को सुरक्षित वॉल्ट से हटाएँ।</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>नया वॉल्ट पासवर्ड</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>नए पोर्टेबल वॉल्ट के लिए पासवर्ड बनाएँ</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>नए पोर्टेबल वॉल्ट के लिए पासवर्ड बनाएँ</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>नए पोर्टेबल वॉल्ट के लिए पासवर्ड बनाएँ</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>नए वॉल्ट पासवर्ड की पुष्टि करें</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>वही नया पासवर्ड फिर से दर्ज करें</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>वही नया पासवर्ड फिर से दर्ज करें</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>वही नया पासवर्ड फिर से दर्ज करें</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.Content" xml:space="preserve">
+  <value>नया वॉल्ट बनाएँ</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>नया वॉल्ट बनाएँ</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>नया वॉल्ट बनाएँ</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.Content" xml:space="preserve">
+  <value>वॉल्ट आयात करें</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>ऐप में मौजूदा वॉल्ट आयात करें।</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>ऐप में मौजूदा वॉल्ट आयात करें।</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.Header" xml:space="preserve">
+  <value>वॉल्ट पासवर्ड</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>इस पोर्टेबल वॉल्ट के लिए पासवर्ड दर्ज करें</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>इस पोर्टेबल वॉल्ट के लिए पासवर्ड दर्ज करें</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>इस पोर्टेबल वॉल्ट के लिए पासवर्ड दर्ज करें</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.Content" xml:space="preserve">
+  <value>पासवर्ड से अनलॉक करें</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>पासवर्ड से अनलॉक करें</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>पासवर्ड से अनलॉक करें</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.Content" xml:space="preserve">
+  <value>वर्तमान वॉल्ट हटाएँ</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>वर्तमान वॉल्ट और उसके अंदर की सभी चीज़ें हटाएँ।</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>वर्तमान वॉल्ट और उसके अंदर की सभी चीज़ें हटाएँ।</value>
+</data>
 </root>

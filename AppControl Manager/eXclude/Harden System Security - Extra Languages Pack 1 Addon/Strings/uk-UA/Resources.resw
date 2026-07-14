@@ -7472,4 +7472,250 @@
   <data name="ShowHeartsButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Показати серця</value>
   </data>
+  <data name="SecureVaultNavigationViewItem.Content" xml:space="preserve">
+  <value>Захищене сховище</value>
+</data>
+<data name="SecureVaultNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Захищене сховище - це ваш приватний цифровий сейф для чутливих матеріалів, який надає єдиний зашифрований простір, де ваші коди залишаються захищеними, упорядкованими та миттєво доступними, коли вони вам потрібні.</value>
+</data>
+<data name="SecureVaultNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Захищене сховище - це ваш приватний цифровий сейф для чутливих матеріалів, який надає єдиний зашифрований простір, де ваші коди залишаються захищеними, упорядкованими та миттєво доступними, коли вони вам потрібні.</value>
+</data>
+<data name="SecureVaultPasteTotpTextBlock.Text" xml:space="preserve">
+  <value>Вставити текст TOTP</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.Content" xml:space="preserve">
+  <value>Ввести вручну</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Перемикання між режимом вставлення повного URI та режимом ручного введення секрету</value>
+</data>
+<data name="SecureVaultManualEntryToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Перемикання між режимом вставлення повного URI та режимом ручного введення секрету</value>
+</data>
+<data name="SecureVaultVaultActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Доступ до основних дій сховища.</value>
+</data>
+<data name="SecureVaultVaultActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Доступ до основних дій сховища.</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Заблокувати сховище</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Заблокуйте захищене сховище та видаліть усі секрети з пам’яті.</value>
+</data>
+<data name="SecureVaultLockVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Заблокуйте захищене сховище та видаліть усі секрети з пам’яті.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Видалити поточне сховище</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Видаліть поточне сховище та всі його секрети й токени. Цю дію неможливо скасувати.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Видаліть поточне сховище та всі його секрети й токени. Цю дію неможливо скасувати.</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Відкрити параметри дати й часу Windows</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Відкрийте параметри дати й часу Windows, щоб синхронізувати час і переконатися, що системний час правильний.</value>
+</data>
+<data name="SecureVaultOpenWindowsDateAndTimeSettingsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Відкрийте параметри дати й часу Windows, щоб синхронізувати час і переконатися, що системний час правильний.</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Розташування сховища</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Перегляньте розташування Захищеного сховища та змініть його за потреби.</value>
+</data>
+<data name="SecureVaultVaultLocationMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Перегляньте розташування Захищеного сховища та змініть його за потреби.</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Змінити пароль сховища</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Змініть поточний пароль сховища на новий</value>
+</data>
+<data name="SecureVaultChangeVaultPasswordMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Змініть поточний пароль сховища на новий</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Автоблокування через 1 хвилину</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Автоматично блокувати захищене сховище після 1 хвилини бездіяльності.</value>
+</data>
+<data name="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Автоматично блокувати захищене сховище після 1 хвилини бездіяльності.</value>
+</data>
+<data name="SecureVaultPasteInputTextBox.PlaceholderText" xml:space="preserve">
+  <value>Розблокуйте сховище, а потім вставте тут текст otpauth://totp/... Підтримуються кілька записів.</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.Header" xml:space="preserve">
+  <value>Секрет</value>
+</data>
+<data name="SecureVaultManualSecretTextBox.PlaceholderText" xml:space="preserve">
+  <value>Приклад: MFDS55GFDGdCCNDQMBLN</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.Header" xml:space="preserve">
+  <value>Вебсайт</value>
+</data>
+<data name="SecureVaultManualWebsiteTextBox.PlaceholderText" xml:space="preserve">
+  <value>Приклад: bing.com</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.Header" xml:space="preserve">
+  <value>Обліковий запис або електронна пошта</value>
+</data>
+<data name="SecureVaultManualAccountTextBox.PlaceholderText" xml:space="preserve">
+  <value>Необов’язково</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.Header" xml:space="preserve">
+  <value>Видавець</value>
+</data>
+<data name="SecureVaultManualIssuerTextBox.PlaceholderText" xml:space="preserve">
+  <value>Необов’язково. Залиште порожнім, щоб використовувати назву вебсайту.</value>
+</data>
+<data name="SecureVaultAddTokenButton.Content" xml:space="preserve">
+  <value>Додати токен</value>
+</data>
+<data name="SecureVaultAddTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Додайте новий токен до захищеного сховища.</value>
+</data>
+<data name="SecureVaultAddTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Додайте новий токен до захищеного сховища.</value>
+</data>
+<data name="SecureVaultTokenSearchBox.PlaceholderText" xml:space="preserve">
+  <value>Знайти токени</value>
+</data>
+<data name="SecureVaultTokenActionsButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Дії з токеном</value>
+</data>
+<data name="SecureVaultTokenActionsButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Дії з токеном</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Очистити все</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Очистити всі токени, що існують у захищеному сховищі.</value>
+</data>
+<data name="SecureVaultClearAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Очистити всі токени, що існують у захищеному сховищі.</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Додати все</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Додати всі токени, які можна знайти у вхідному тексті</value>
+</data>
+<data name="SecureVaultAddAllTokensMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Додати всі токени, які можна знайти у вхідному тексті</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.Text" xml:space="preserve">
+  <value>Додати токен</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Додати токен</value>
+</data>
+<data name="SecureVaultAddTokenMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Додати токен</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Показати примітки токена</value>
+</data>
+<data name="SecureVaultShowTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Показати примітки токена</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Додати або змінити примітки токена</value>
+</data>
+<data name="SecureVaultEditTotpTokenNotesButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Додати або змінити примітки токена</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.Content" xml:space="preserve">
+  <value>Видалити</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Видаліть токен із захищеного сховища.</value>
+</data>
+<data name="SecureVaultRemoveTotpTokenButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Видаліть токен із захищеного сховища.</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>Новий пароль сховища</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>Створіть пароль для нового портативного сховища</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Створіть пароль для нового портативного сховища</value>
+</data>
+<data name="SecureVaultNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Створіть пароль для нового портативного сховища</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.Header" xml:space="preserve">
+  <value>Підтвердьте новий пароль сховища</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>Введіть той самий новий пароль ще раз</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Введіть той самий новий пароль ще раз</value>
+</data>
+<data name="SecureVaultConfirmNewVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Введіть той самий новий пароль ще раз</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.Content" xml:space="preserve">
+  <value>Створити нове сховище</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Створити нове сховище</value>
+</data>
+<data name="SecureVaultCreateNewVaultButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Створити нове сховище</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.Content" xml:space="preserve">
+  <value>Імпортувати сховище</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Імпортуйте наявне сховище в програму.</value>
+</data>
+<data name="SecureVaultImportVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Імпортуйте наявне сховище в програму.</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.Header" xml:space="preserve">
+  <value>Пароль сховища</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.PlaceholderText" xml:space="preserve">
+  <value>Введіть пароль для цього портативного сховища</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Введіть пароль для цього портативного сховища</value>
+</data>
+<data name="SecureVaultUnlockVaultPasswordBox.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Введіть пароль для цього портативного сховища</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.Content" xml:space="preserve">
+  <value>Розблокувати за допомогою пароля</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Розблокувати за допомогою пароля</value>
+</data>
+<data name="SecureVaultUnlockWithPasswordButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Розблокувати за допомогою пароля</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.Content" xml:space="preserve">
+  <value>Видалити поточне сховище</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.ToolTipService.ToolTip" xml:space="preserve">
+  <value>Видалити поточне сховище та все, що в ньому є.</value>
+</data>
+<data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
+  <value>Видалити поточне сховище та все, що в ньому є.</value>
+</data>
 </root>

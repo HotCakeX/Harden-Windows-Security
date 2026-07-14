@@ -28,137 +28,51 @@ namespace HardenSystemSecurity.ViewModels;
 internal static class ViewModelProvider
 {
 	// View Models \\
-	private static readonly Lazy<ProtectVM> _protectVM = new(() =>
-		new ProtectVM(), false);
-
-	private static readonly Lazy<MainWindowVM> _mainWindowVM = new(() =>
-		new MainWindowVM(), false);
-
-	private static readonly Lazy<NavigationService> _navigationService = new(() =>
-		new NavigationService(MainWindowVM), false);
-
-	private static readonly Lazy<SettingsVM> _settingsVM = new(() =>
-		new SettingsVM(), false);
-
-	private static readonly Lazy<LogsVM> _logsVM = new(() =>
-		new LogsVM(), false);
-
-	private static readonly Lazy<UpdateVM> _updateVM = new(() =>
-		new UpdateVM(), false);
-
-	private static readonly Lazy<GroupPolicyEditorVM> _groupPolicyEditorVM = new(() =>
-		new GroupPolicyEditorVM(), false);
-
-	private static readonly Lazy<MicrosoftDefenderVM> _microsoftDefenderVM = new(() =>
-		new MicrosoftDefenderVM(), false);
-
-	private static readonly Lazy<ASRVM> _asrVM = new(() =>
-		new ASRVM(), false);
-
-	private static readonly Lazy<OptionalWindowsFeaturesVM> _optionalWindowsFeaturesVM = new(() =>
-		new OptionalWindowsFeaturesVM(), false);
-
-	private static readonly Lazy<WindowsUpdateVM> _windowsUpdateVM = new(() =>
-		new WindowsUpdateVM(), false);
-
-	private static readonly Lazy<DeviceGuardVM> _deviceGuardVM = new(() =>
-		new DeviceGuardVM(), false);
-
-	private static readonly Lazy<EdgeVM> _edgeVM = new(() =>
-		new EdgeVM(), false);
-
-	private static readonly Lazy<WindowsFirewallVM> _windowsFirewallVM = new(() =>
-		new WindowsFirewallVM(), false);
-
-	private static readonly Lazy<UACVM> _uacVM = new(() =>
-		new UACVM(), false);
-
-	private static readonly Lazy<TLSVM> _tLSVM = new(() =>
-		new TLSVM(), false);
-
-	private static readonly Lazy<LockScreenVM> _lockScreenVM = new(() =>
-		new LockScreenVM(), false);
-
-	private static readonly Lazy<MiscellaneousConfigsVM> _miscellaneousConfigsVM = new(() =>
-		new MiscellaneousConfigsVM(), false);
-
-	private static readonly Lazy<WindowsNetworkingVM> _windowsNetworkingVM = new(() =>
-		new WindowsNetworkingVM(), false);
-
-	private static readonly Lazy<NonAdminVM> _nonAdminVM = new(() =>
-		new NonAdminVM(), false);
-
-	private static readonly Lazy<BitLockerVM> _bitLockerVM = new(() =>
-		new BitLockerVM(), false);
-
-	private static readonly Lazy<CertificateCheckingVM> _certificateCheckingVM = new(() =>
-		new CertificateCheckingVM(), false);
-
-	private static readonly Lazy<CountryIPBlockingVM> _countryIPBlockingVM = new(() =>
-		new CountryIPBlockingVM(), false);
-
-	private static readonly Lazy<FileReputationVM> _fileReputationVM = new(() =>
-		new FileReputationVM(), false);
-
-	private static readonly Lazy<InstalledAppsManagementVM> _installedAppsManagementVM = new(() =>
-		new InstalledAppsManagementVM(), false);
-
-	private static readonly Lazy<WinGetManagementVM> _WinGetManagementVM = new(() =>
-		new WinGetManagementVM(), false);
-
-	private static readonly Lazy<MicrosoftSecurityBaselineVM> _microsoftSecurityBaselineVM = new(() =>
-		new MicrosoftSecurityBaselineVM(), false);
-
-	private static readonly Lazy<Microsoft365AppsSecurityBaselineVM> _microsoft365AppsSecurityBaselineVM = new(() =>
-		new Microsoft365AppsSecurityBaselineVM(), false);
-
-	private static readonly Lazy<MicrosoftBaseLinesOverridesVM> _microsoftBaseLinesOverridesVM = new(() =>
-		new MicrosoftBaseLinesOverridesVM(), false);
-
-	private static readonly Lazy<AuditPoliciesVM> _auditPoliciesVM = new(() =>
-		new AuditPoliciesVM(), false);
-
-	private static readonly Lazy<HomeVM> _homeVM = new(() => new HomeVM(), false);
-
-	private static readonly Lazy<CryptographicBillOfMaterialsVM> _cryptographicBillOfMaterialsVM = new(() =>
-		new CryptographicBillOfMaterialsVM(), false);
-
-	private static readonly Lazy<IntuneVM> _intuneVM = new(() => new IntuneVM(), false);
-
-	private static readonly Lazy<IntuneDeploymentDetailsVM> _intuneDeploymentDetailsVM = new(() =>
-		new IntuneDeploymentDetailsVM(), false);
-
-	private static readonly Lazy<CSPVM> _cspVM = new(() => new CSPVM(), false);
-
-	private static readonly Lazy<DuplicatePhotoFinderVM> _duplicateImageFinderVM = new(() =>
-		new DuplicatePhotoFinderVM(), false);
-
-	private static readonly Lazy<EXIFManagerVM> _eXIFManagerVM = new(() =>
-		new EXIFManagerVM(), false);
-
-	private static readonly Lazy<DownloadManagerVM> _downloadManagerVM = new(() =>
-		new DownloadManagerVM(), false);
-
-	private static readonly Lazy<ServiceManagerVM> _serviceManagerVM = new(() =>
-		new ServiceManagerVM(), false);
-
-	private static readonly Lazy<SystemShutdownInfoDialogVM> _systemShutdownInfoDialogVM = new(() =>
-		new SystemShutdownInfoDialogVM(), false);
-
-	private static readonly Lazy<BootableDriveMakerVM> _bootableDriveMakerVM = new(() =>
-		new BootableDriveMakerVM(), false);
-
-	private static readonly Lazy<ExploitMitigationsVM> _exploitMitigationsVM = new(() =>
-		new ExploitMitigationsVM(), false);
-
-	private static readonly Lazy<SandboxMakerVM> _sandboxMakerVM = new(() =>
-		new SandboxMakerVM(), false);
-
-	private static readonly Lazy<SettingsBackupRestoreVM> _settingsBackupRestore = new(() =>
-		new SettingsBackupRestoreVM(), false);
-
-	private static readonly Lazy<ViewExportedFunctionsVM> _viewExportedFunctionsVM = new(() =>
-		new ViewExportedFunctionsVM(), false);
+	private static readonly Lazy<ProtectVM> _protectVM = new(() => new(), false);
+	private static readonly Lazy<MainWindowVM> _mainWindowVM = new(() => new(), false);
+	private static readonly Lazy<NavigationService> _navigationService = new(() => new(MainWindowVM), false);
+	private static readonly Lazy<SettingsVM> _settingsVM = new(() => new(), false);
+	private static readonly Lazy<LogsVM> _logsVM = new(() => new(), false);
+	private static readonly Lazy<UpdateVM> _updateVM = new(() => new(), false);
+	private static readonly Lazy<GroupPolicyEditorVM> _groupPolicyEditorVM = new(() => new(), false);
+	private static readonly Lazy<MicrosoftDefenderVM> _microsoftDefenderVM = new(() => new(), false);
+	private static readonly Lazy<ASRVM> _asrVM = new(() => new(), false);
+	private static readonly Lazy<OptionalWindowsFeaturesVM> _optionalWindowsFeaturesVM = new(() => new(), false);
+	private static readonly Lazy<WindowsUpdateVM> _windowsUpdateVM = new(() => new(), false);
+	private static readonly Lazy<DeviceGuardVM> _deviceGuardVM = new(() => new(), false);
+	private static readonly Lazy<EdgeVM> _edgeVM = new(() => new(), false);
+	private static readonly Lazy<WindowsFirewallVM> _windowsFirewallVM = new(() => new(), false);
+	private static readonly Lazy<UACVM> _uacVM = new(() => new(), false);
+	private static readonly Lazy<TLSVM> _tLSVM = new(() => new(), false);
+	private static readonly Lazy<LockScreenVM> _lockScreenVM = new(() => new(), false);
+	private static readonly Lazy<MiscellaneousConfigsVM> _miscellaneousConfigsVM = new(() => new(), false);
+	private static readonly Lazy<WindowsNetworkingVM> _windowsNetworkingVM = new(() => new(), false);
+	private static readonly Lazy<NonAdminVM> _nonAdminVM = new(() => new(), false);
+	private static readonly Lazy<BitLockerVM> _bitLockerVM = new(() => new(), false);
+	private static readonly Lazy<CertificateCheckingVM> _certificateCheckingVM = new(() => new(), false);
+	private static readonly Lazy<CountryIPBlockingVM> _countryIPBlockingVM = new(() => new(), false);
+	private static readonly Lazy<FileReputationVM> _fileReputationVM = new(() => new(), false);
+	private static readonly Lazy<InstalledAppsManagementVM> _installedAppsManagementVM = new(() => new(), false);
+	private static readonly Lazy<WinGetManagementVM> _WinGetManagementVM = new(() => new(), false);
+	private static readonly Lazy<MicrosoftSecurityBaselineVM> _microsoftSecurityBaselineVM = new(() => new(), false);
+	private static readonly Lazy<Microsoft365AppsSecurityBaselineVM> _microsoft365AppsSecurityBaselineVM = new(() => new(), false);
+	private static readonly Lazy<MicrosoftBaseLinesOverridesVM> _microsoftBaseLinesOverridesVM = new(() => new(), false);
+	private static readonly Lazy<AuditPoliciesVM> _auditPoliciesVM = new(() => new(), false);
+	private static readonly Lazy<HomeVM> _homeVM = new(() => new(), false);
+	private static readonly Lazy<CryptographicBillOfMaterialsVM> _cryptographicBillOfMaterialsVM = new(() => new(), false);
+	private static readonly Lazy<IntuneVM> _intuneVM = new(() => new(), false);
+	private static readonly Lazy<IntuneDeploymentDetailsVM> _intuneDeploymentDetailsVM = new(() => new(), false);
+	private static readonly Lazy<CSPVM> _cspVM = new(() => new(), false);
+	private static readonly Lazy<DuplicatePhotoFinderVM> _duplicateImageFinderVM = new(() => new(), false);
+	private static readonly Lazy<EXIFManagerVM> _eXIFManagerVM = new(() => new(), false);
+	private static readonly Lazy<DownloadManagerVM> _downloadManagerVM = new(() => new(), false);
+	private static readonly Lazy<ServiceManagerVM> _serviceManagerVM = new(() => new(), false);
+	private static readonly Lazy<SystemShutdownInfoDialogVM> _systemShutdownInfoDialogVM = new(() => new(), false);
+	private static readonly Lazy<BootableDriveMakerVM> _bootableDriveMakerVM = new(() => new(), false);
+	private static readonly Lazy<ExploitMitigationsVM> _exploitMitigationsVM = new(() => new(), false);
+	private static readonly Lazy<SandboxMakerVM> _sandboxMakerVM = new(() => new(), false);
+	private static readonly Lazy<SettingsBackupRestoreVM> _settingsBackupRestore = new(() => new(), false);
+	private static readonly Lazy<ViewExportedFunctionsVM> _viewExportedFunctionsVM = new(() => new(), false);
 
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;

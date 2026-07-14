@@ -93,6 +93,7 @@ internal sealed partial class Main : ViewModelBase
 		FirewallSentinelPinnedPolicyID = ReadValue(nameof(FirewallSentinelPinnedPolicyID), FirewallSentinelPinnedPolicyID);
 		CacheAuthenticationTokensLocally = ReadValue(nameof(CacheAuthenticationTokensLocally), CacheAuthenticationTokensLocally);
 		CustomSidebarPoliciesLibraryCacheLocation = ReadValue(nameof(CustomSidebarPoliciesLibraryCacheLocation), CustomSidebarPoliciesLibraryCacheLocation);
+		CustomTotpVaultDirectory = ReadValue(nameof(CustomTotpVaultDirectory), CustomTotpVaultDirectory);
 		DownloadManagerDirectory = ReadValue(nameof(DownloadManagerDirectory), DownloadManagerDirectory);
 		WinGetDownloadDirectory = ReadValue(nameof(WinGetDownloadDirectory), WinGetDownloadDirectory);
 		DownloadManagerMaximumSimultaneousDownloads = ReadValue(nameof(DownloadManagerMaximumSimultaneousDownloads), DownloadManagerMaximumSimultaneousDownloads);
@@ -625,6 +626,21 @@ internal sealed partial class Main : ViewModelBase
 			if (SP(ref field, value))
 			{
 				SaveValue(nameof(CustomSidebarPoliciesLibraryCacheLocation), field);
+			}
+		}
+	} = string.Empty;
+
+	/// <summary>
+	/// Optional custom directory for the encrypted TOTP vault. Empty string means the app default local cache location.
+	/// </summary>
+	internal string CustomTotpVaultDirectory
+	{
+		get; set
+		{
+			string normalizedValue = string.IsNullOrWhiteSpace(value) ? string.Empty : value;
+			if (SP(ref field, normalizedValue))
+			{
+				SaveValue(nameof(CustomTotpVaultDirectory), field);
 			}
 		}
 	} = string.Empty;

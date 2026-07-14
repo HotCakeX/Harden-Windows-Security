@@ -567,17 +567,17 @@ internal static class WinGetPackageSearchService
 
 	private static async Task<TResult> AwaitCancellableOperationAsync<TResult>(IAsyncOperation<TResult> operation, CancellationToken cancellationToken)
 	{
-		using CancellationTokenRegistration registration = cancellationToken.Register(static state =>
+		using CancellationTokenRegistration registration = cancellationToken.Register(() =>
 		{
 			try
 			{
-				((IAsyncInfo)state!).Cancel();
+				operation.Cancel();
 			}
 			catch (Exception ex)
 			{
 				Logger.Write(ex);
 			}
-		}, operation);
+		});
 
 		try
 		{

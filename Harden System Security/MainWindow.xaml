@@ -609,6 +609,7 @@
                 <NavigationViewItem x:Name="ExtrasNavigationViewItem" x:Uid="ExtrasNavigationViewItem" Icon="{x:Bind ViewModel.ExtrasIcon, Mode=OneWay}" Tag="Extras" IsExpanded="False">
 
                     <NavigationViewItem.MenuItems>
+                        <NavigationViewItem x:Name="SecureVaultNavigationViewItem" Icon="{x:Bind ViewModel.SecureVaultIcon, Mode=OneWay}" x:Uid="SecureVaultNavigationViewItem" Tag="SecureVault" />
                         <NavigationViewItem x:Name="DuplicatePhotosFinderNavigationViewItem" Icon="{x:Bind ViewModel.DuplicatePhotosFinderIcon, Mode=OneWay}" x:Uid="DuplicatePhotosFinderNavigationViewItem" Tag="DuplicatePhotosFinder" />
                         <NavigationViewItem x:Name="EXIFManagerNavigationViewItem" Icon="{x:Bind ViewModel.EXIFManagerIcon, Mode=OneWay}" x:Uid="EXIFManagerNavigationViewItem" Tag="EXIFManager" />
                         <NavigationViewItem x:Name="DownloadManagerNavigationViewItem" Icon="{x:Bind ViewModel.DownloadManagerIcon, Mode=OneWay}" x:Uid="DownloadManagerNavigationViewItem" Tag="DownloadManager" />

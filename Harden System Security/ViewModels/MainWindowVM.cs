@@ -56,7 +56,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.Extras.EXIFManager),
 		typeof(Pages.Extras.DownloadManager),
 		typeof(Pages.Extras.DownloadManagerSettings),
-		typeof(Pages.SandboxMaker)
+		typeof(Pages.SandboxMaker),
+		typeof(Pages.Extras.SecureVault)
 		];
 
 
@@ -250,88 +251,94 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			pages: [typeof(AppControlManager.Pages.Home)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.CryptographicBillOfMaterials)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.CryptographicBillOfMaterials)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("CBOMNavItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.CryptographicBillOfMaterials)]
+			pages: [typeof(Pages.CryptographicBillOfMaterials)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Intune)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.Intune)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("IntuneNavItem/Content"), Atlas.GetStr("IntuneDeploymentDetailsNavItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.Intune), typeof(AppControlManager.Pages.IntuneDeploymentDetails)]
+			pages: [typeof(Pages.Intune), typeof(AppControlManager.Pages.IntuneDeploymentDetails)]
 		);
 
 		breadCrumbMappingsV2[typeof(AppControlManager.Pages.IntuneDeploymentDetails)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("IntuneNavItem/Content"), Atlas.GetStr("IntuneDeploymentDetailsNavItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.Intune), typeof(AppControlManager.Pages.IntuneDeploymentDetails)]
+			pages: [typeof(Pages.Intune), typeof(AppControlManager.Pages.IntuneDeploymentDetails)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.CSP)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.CSP)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("CSPNavItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.CSP)]
+			pages: [typeof(Pages.CSP)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.DuplicatePhotoFinder)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.Extras.DuplicatePhotoFinder)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("DuplicatePhotosFinderNavigationViewItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.Extras.DuplicatePhotoFinder)]
+			pages: [typeof(Pages.Extras.DuplicatePhotoFinder)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.EXIFManager)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.Extras.EXIFManager)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("EXIFManagerNavigationViewItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.Extras.EXIFManager)]
+			pages: [typeof(Pages.Extras.EXIFManager)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.DownloadManager)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.Extras.DownloadManager)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("DownloadManagerNavigationViewItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.Extras.DownloadManager)]
+			pages: [typeof(Pages.Extras.DownloadManager)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.DownloadManagerSettings)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.Extras.DownloadManagerSettings)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("DownloadManagerNavigationViewItem/Content"), Atlas.GetStr("DownloadManagerSettingsPageTitle")],
-			pages: [typeof(HardenSystemSecurity.Pages.Extras.DownloadManager), typeof(HardenSystemSecurity.Pages.Extras.DownloadManagerSettings)]
+			pages: [typeof(Pages.Extras.DownloadManager), typeof(Pages.Extras.DownloadManagerSettings)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.ServiceManager)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.ServiceManager)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("ServiceManagerNavItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.ServiceManager)]
+			pages: [typeof(Pages.ServiceManager)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.Extras.BootableDriveMaker)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.Extras.BootableDriveMaker)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("BootableDriveMakerNavigationViewItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.Extras.BootableDriveMaker)]
+			pages: [typeof(Pages.Extras.BootableDriveMaker)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.ExploitMitigations)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.ExploitMitigations)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("ExploitMitigationsNavItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.ExploitMitigations)]
+			pages: [typeof(Pages.ExploitMitigations)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.ViewExportedFunctions)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.ViewExportedFunctions)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("ExploitMitigationsNavItem/Content"), Atlas.GetStr("ViewExportedFunctionsButton/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.ExploitMitigations), typeof(HardenSystemSecurity.Pages.ViewExportedFunctions)]
+			pages: [typeof(Pages.ExploitMitigations), typeof(Pages.ViewExportedFunctions)]
 		);
 
-		breadCrumbMappingsV2[typeof(HardenSystemSecurity.Pages.SandboxMaker)] = new PageTitleMap
+		breadCrumbMappingsV2[typeof(Pages.SandboxMaker)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("SandboxMakerNavItem/Content")],
-			pages: [typeof(HardenSystemSecurity.Pages.SandboxMaker)]
+			pages: [typeof(Pages.SandboxMaker)]
 		);
 
 		breadCrumbMappingsV2[typeof(AppControlManager.Pages.SettingsBackupRestore)] = new PageTitleMap
 		(
 			titles: [Atlas.GetStr("SettingsNavItem/Content"), Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header")],
 			pages: [typeof(Pages.Settings), typeof(AppControlManager.Pages.SettingsBackupRestore)]
+		);
+
+		breadCrumbMappingsV2[typeof(Pages.Extras.SecureVault)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("SecureVaultNavigationViewItem/Content")],
+			pages: [typeof(Pages.Extras.SecureVault)]
 		);
 	}
 
@@ -384,7 +391,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "ServiceManager", typeof(Pages.ServiceManager) },
 		{ "BootableDriveMaker", typeof(Pages.Extras.BootableDriveMaker) },
 		{ "ExploitMitigations", typeof(Pages.ExploitMitigations) },
-		{ "SandboxMaker", typeof(Pages.SandboxMaker) }
+		{ "SandboxMaker", typeof(Pages.SandboxMaker) },
+		{ "SecureVault", typeof(Pages.Extras.SecureVault) }
 	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -441,6 +449,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.ViewExportedFunctions)] = Atlas.GetStr("ViewExportedFunctionsButton/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.SandboxMaker)] = Atlas.GetStr("SandboxMakerNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.SettingsBackupRestore)] = Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.SecureVault)] = Atlas.GetStr("SecureVaultNavigationViewItem/Content");
 	}
 
 	/// <summary>
@@ -564,6 +573,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the CSPI navigation item.
 	/// </summary>
 	internal IconElement? CSPIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Secure Vault navigation item.
+	/// </summary>
+	internal IconElement? SecureVaultIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -708,6 +722,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Analytics()
 					};
 
+					SecureVaultIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -22, -22, -22),
+						Source = new Lock()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -835,6 +855,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					SecureVaultIcon = new FontIcon
+					{
+						Glyph = "\uF540",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -860,6 +886,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					SandboxMakerIcon = new FontIcon { Glyph = "\uE990" };
 					ExploitMitigationsIcon = new FontIcon { Glyph = "\uF272" };
 					CSPIcon = new FontIcon { Glyph = "\uE835" };
+					SecureVaultIcon = new FontIcon { Glyph = "\uF540" };
 					break;
 				}
 		}

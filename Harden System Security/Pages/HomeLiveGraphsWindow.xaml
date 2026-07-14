@@ -10,10 +10,7 @@
     Title="Live System Intelligence">
     <Grid Background="#000503" Loaded="{x:Bind OnRootGridLoaded}">
         <!--Animated Backgrounds-->
-        <Grid x:Name="AnimatedBackgroundLayer" IsHitTestVisible="False">
-            <local:AnimatedTesseractBackground x:Name="AnimatedTesseractBackground" />
-            <win2d:CanvasControl x:Name="BlackHoleCanvas" ClearColor="Black" Visibility="Collapsed" CreateResources="{x:Bind EnsureBlackHoleShaderResources}" Draw="{x:Bind OnBlackHoleCanvasDraw}" />
-        </Grid>
+        <Grid x:Name="AnimatedBackgroundLayer" IsHitTestVisible="False" />
         <Border x:Name="HomeTitleBadgeBorder"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"

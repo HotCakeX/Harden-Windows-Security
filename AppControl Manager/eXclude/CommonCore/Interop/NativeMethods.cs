@@ -3641,4 +3641,15 @@ internal static unsafe partial class NativeMethods
 		uint cchUPN,
 		IntPtr pszUPN);
 
+
+	// https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptupdateprotectedstate
+	[LibraryImport("crypt32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CryptProtectMemory(nint pDataIn, uint cbDataIn, uint dwFlags);
+
+
+	[LibraryImport("crypt32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CryptUnprotectMemory(nint pDataIn, uint cbDataIn, uint dwFlags);
+
 }

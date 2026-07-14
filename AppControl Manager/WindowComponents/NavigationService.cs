@@ -80,6 +80,8 @@ internal sealed class NavigationService
 			CollectNavigationItems();
 			NavItemsHaveBeenCollected = true;
 		}
+		// frame.CacheSize is 10 by default when printed here -> "Microsoft.WindowsAppSDK.WinUI" Version="2.2.1"
+		frame.CacheSize = 1;
 	}
 
 #if APP_CONTROL_MANAGER

@@ -64,7 +64,7 @@
         <AssemblyName>HardenSystemSecurity</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>1.0.71.0</FileVersion>
+        <FileVersion>1.0.72.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <AssemblyProduct>HardenSystemSecurity</AssemblyProduct>
         <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
@@ -87,6 +87,11 @@
 
         <!--https://github.com/microsoft/winget-cli/blob/master/samples/MinimalCallers/C%23/WinGet-OutOfProc/C%23_WinGet_OutOfProc.csproj-->
         <MicrosoftManagementDeployment-FactoryLinkage>static</MicrosoftManagementDeployment-FactoryLinkage>
+
+        <!--https://github.com/microsoft/CsWinRT/blob/master/nuget/readme.md#advanced-size-saving-options-->
+        <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
+        <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
+        <CsWinRTLoadComponentsInDefaultALC>true</CsWinRTLoadComponentsInDefaultALC>
     </PropertyGroup>
 
     <ItemGroup>
@@ -240,9 +245,9 @@
 
         <!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.85.2" />
-        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.85.2" />
-        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.85.2" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.86.0" />
+        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.86.0" />
+        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.86.0" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.9" />
         <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.2.1" />
@@ -250,7 +255,7 @@
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.19.1" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4022.49" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4078.44" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />

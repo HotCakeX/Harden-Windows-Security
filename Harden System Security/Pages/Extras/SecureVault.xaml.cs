@@ -64,6 +64,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("SecureVaultNavigationViewItem/ToolTipService/ToolTip");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Secure-Vault");
 
+	private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 	private const string VaultPurpose = "HardenSystemSecurity.TOTP.Vault";
 	private const string VaultEncryptionAlgorithm = "AES-256-GCM";
 	private const string VaultKdfAlgorithm = "PBKDF2-HMAC-SHA3-512";
@@ -86,9 +87,8 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	private const int CryptProtectMemoryBlockSizeInBytes = 16;
 	private const uint CRYPTPROTECTMEMORY_SAME_PROCESS = 0U;
 	private const double LockedContentOpacityValue = 0.10D;
-	private const int DeleteVaultHoldDurationMilliseconds = 5000;
-	private const int ClearAllTokensHoldDurationMilliseconds = 5000;
-	private const int RemoveTokenHoldDurationMilliseconds = 3000;
+	private const int LongVaultHoldDurationMilliseconds = 5000;
+	private const int ShortVaultHoldDurationMilliseconds = 3000;
 	private const double VaultLocationFlyoutWidth = 600D;
 	private const double VaultLocationTextBoxWidth = 500D;
 	private const double DestructiveHoldButtonSize = 144D;
@@ -724,7 +724,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	{
 		try
 		{
-			string? selectedPath = FileDialogHelper.ShowFilePickerDialog("JSON files (*.json)|*.json|All files (*.*)|*.*");
+			string? selectedPath = FileDialogHelper.ShowFilePickerDialog(Atlas.JSONPickerFilter);
 			if (string.IsNullOrWhiteSpace(selectedPath))
 				return;
 			string fullSelectedPath = Path.GetFullPath(selectedPath);
@@ -762,7 +762,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 			ShowDestructiveHoldConfirmationDialog(
 				titleText: "Delete current vault",
 				warningText: "This permanently deletes the entire TOTP vault and every saved token in it. Keep holding the circular button for five seconds to confirm.",
-				holdDurationMilliseconds: DeleteVaultHoldDurationMilliseconds,
+				holdDurationMilliseconds: LongVaultHoldDurationMilliseconds,
 				confirmedAction: DeleteCurrentVaultFilesAfterHoldConfirmation);
 		}
 		catch (Exception ex)
@@ -1344,7 +1344,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		ShowDestructiveHoldConfirmationDialog(
 			titleText: "Clear all tokens",
 			warningText: "This permanently removes every TOTP token from the encrypted vault. Keep holding the circular button for five seconds to confirm.",
-			holdDurationMilliseconds: ClearAllTokensHoldDurationMilliseconds,
+			holdDurationMilliseconds: LongVaultHoldDurationMilliseconds,
 			confirmedAction: ClearAllTokensAfterHoldConfirmation);
 	}
 
@@ -1378,7 +1378,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		ShowDestructiveHoldConfirmationDialog(
 			titleText: "Remove token",
 			warningText: string.Concat("This permanently removes ", displayName, " from the encrypted vault. Keep holding the circular button for three seconds to confirm."),
-			holdDurationMilliseconds: RemoveTokenHoldDurationMilliseconds,
+			holdDurationMilliseconds: ShortVaultHoldDurationMilliseconds,
 			confirmedAction: () => RemoveTotpTokenAfterHoldConfirmation(tokenItem, displayName));
 	}
 
@@ -1783,7 +1783,6 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 
 	private static byte[] DecodeBase32(ReadOnlySpan<char> base32)
 	{
-		const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
 		ReadOnlySpan<char> trimmedBase32 = base32.Trim();
 		if (trimmedBase32.IsEmpty)
 			throw new FormatException("The TOTP secret is empty.");
@@ -1812,7 +1811,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 			for (int index = 0; index < normalizedLength; index++)
 			{
 				char character = normalizedBuffer[index];
-				int value = alphabet.IndexOf(character, StringComparison.Ordinal);
+				int value = Alphabet.IndexOf(character, StringComparison.Ordinal);
 				if (value < 0)
 					throw new FormatException(string.Format(CultureInfo.InvariantCulture, "The TOTP secret contains an invalid Base32 character: {0}", character));
 				buffer = (buffer << 5) | value;
@@ -2689,6 +2688,106 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		internal string DisplayLabel => CreateDisplayLabel(Issuer, AccountName);
 	}
 
+	#region Decrypt and Export implementations
+
+	private void ShowDecryptAndExportConfirmationDialog()
+	{
+		if (!IsVaultUnlocked)
+		{
+			MainInfoBar.WriteWarning("Unlock the vault before decrypting and exporting it.");
+			return;
+		}
+
+		ShowDestructiveHoldConfirmationDialog(
+			titleText: "Decrypt and Export",
+			warningText: "This writes every decrypted TOTP secret and associated data to a plain-text JSON file at the file path you choose. Anyone with access to that file can read the entire vault. Keep holding the circular button for five seconds to confirm.",
+			holdDurationMilliseconds: LongVaultHoldDurationMilliseconds,
+			confirmedAction: DecryptAndExportVaultAfterHoldConfirmation);
+	}
+
+	private void DecryptAndExportVaultAfterHoldConfirmation()
+	{
+		try
+		{
+			DateTimeOffset exportTimeUtc = DateTimeOffset.UtcNow;
+			string exportFileName = string.Concat("tokens.decrypted.", exportTimeUtc.ToString("yyyyMMdd_HHmmss", CultureInfo.InvariantCulture), ".json");
+			string? selectedExportFilePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, exportFileName);
+			if (string.IsNullOrWhiteSpace(selectedExportFilePath))
+				return;
+
+			TotpVaultEnvelope vaultEnvelope = HasVaultFile ? ReadVaultEnvelope() : new(VaultVersion, CreateNewVaultId(), VaultPurpose, VaultEncryptionAlgorithm, VaultKdfAlgorithm, PasswordKdfIterations, string.Empty, string.Empty, string.Empty, string.Empty, []);
+			List<TotpVaultExportToken> exportedTokens = CreateVaultExportTokens();
+			TotpVaultExportPayload exportPayload = new(
+				exportedUtc: exportTimeUtc.ToString("O", CultureInfo.InvariantCulture),
+				encryption: vaultEnvelope.Encryption,
+				kdf: vaultEnvelope.Kdf,
+				kdfIterations: vaultEnvelope.KdfIterations,
+				tokenCount: exportedTokens.Count,
+				tokens: exportedTokens);
+			string exportJson = JsonSerializer.Serialize(exportPayload, TotpVaultExportJsonContext.Default.TotpVaultExportPayload);
+			File.WriteAllText(selectedExportFilePath, exportJson, Encoding.UTF8);
+			MainInfoBar.WriteSuccess(string.Concat("Decrypted vault export saved to: ", selectedExportFilePath));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	private List<TotpVaultExportToken> CreateVaultExportTokens()
+	{
+		List<TotpVaultExportToken> exportedTokens = new(Tokens.Count);
+		foreach (TotpTokenItem tokenItem in CollectionsMarshal.AsSpan(Tokens))
+		{
+			byte[] secretBytes = CreatePinnedByteArray(tokenItem.SecretLength);
+			try
+			{
+				tokenItem.CopySecretBytesTo(secretBytes);
+				exportedTokens.Add(new(
+					displayName: tokenItem.DisplayName,
+					algorithm: tokenItem.Algorithm.ToString(),
+					secret: EncodeBase32(secretBytes.AsSpan(0, tokenItem.SecretLength)),
+					notes: tokenItem.Notes));
+			}
+			finally
+			{
+				CryptographicOperations.ZeroMemory(secretBytes);
+			}
+		}
+
+		return exportedTokens;
+	}
+
+	private static string EncodeBase32(ReadOnlySpan<byte> source)
+	{
+		if (source.IsEmpty)
+			return string.Empty;
+
+		int outputLength = checked(((source.Length * 8) + 4) / 5);
+		StringBuilder builder = new(outputLength);
+		int buffer = 0;
+		int bitsLeft = 0;
+		for (int index = 0; index < source.Length; index++)
+		{
+			buffer = (buffer << 8) | source[index];
+			bitsLeft += 8;
+			while (bitsLeft >= 5)
+			{
+				bitsLeft -= 5;
+				_ = builder.Append(Alphabet[(buffer >> bitsLeft) & 0x1F]);
+			}
+
+			buffer &= (1 << bitsLeft) - 1;
+		}
+
+		if (bitsLeft > 0)
+			_ = builder.Append(Alphabet[(buffer << (5 - bitsLeft)) & 0x1F]);
+
+		return builder.ToString();
+	}
+
+	#endregion
+
 }
 
 internal enum TotpHashAlgorithm
@@ -2838,6 +2937,24 @@ internal sealed partial class TotpTokenItem : ViewModelBase
 	}
 }
 
+internal sealed class TotpVaultExportPayload(string exportedUtc, string encryption, string kdf, int kdfIterations, int tokenCount, List<TotpVaultExportToken> tokens)
+{
+	public string ExportedUtc => exportedUtc;
+	public string Encryption => encryption;
+	public string Kdf => kdf;
+	public int KdfIterations => kdfIterations;
+	public int TokenCount => tokenCount;
+	public List<TotpVaultExportToken> Tokens => tokens;
+}
+
+internal sealed class TotpVaultExportToken(string displayName, string algorithm, string secret, string notes)
+{
+	public string DisplayName => displayName;
+	public string Algorithm => algorithm;
+	public string Secret => secret;
+	public string Notes => notes;
+}
+
 internal sealed class TotpVaultKeyWrap(string kdfSalt, string nonce, string tag, string wrappedVaultKey)
 {
 	public string KdfSalt => kdfSalt;
@@ -2871,3 +2988,7 @@ internal sealed class TotpVaultEnvelope(int version, string vaultId, string purp
 
 [JsonSerializable(typeof(TotpVaultEnvelope))]
 internal sealed partial class TotpButtonJsonContext : JsonSerializerContext;
+
+[JsonSourceGenerationOptions(WriteIndented = true)]
+[JsonSerializable(typeof(TotpVaultExportPayload))]
+internal sealed partial class TotpVaultExportJsonContext : JsonSerializerContext;

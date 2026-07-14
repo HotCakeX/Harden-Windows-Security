@@ -116,6 +116,14 @@
                                     <FontIcon Glyph="&#xE72E;" />
                                 </ToggleMenuFlyoutItem.Icon>
                             </ToggleMenuFlyoutItem>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Decrypt and Export"
+                                            Click="{x:Bind ShowDecryptAndExportConfirmationDialog}"
+                                            IsEnabled="{x:Bind IsVaultUnlocked, Mode=OneWay}">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE8D7;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
                         </MenuFlyout>
                     </Button.Flyout>
                 </Button>

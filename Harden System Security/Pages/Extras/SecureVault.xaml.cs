@@ -384,6 +384,12 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		FocusPrimaryVaultInput(); // Set the focus to the right element
 	}
 
+	private void LockVaultKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	{
+		args.Handled = true;
+		LockVault();
+	}
+
 	private void UnlockWithPassword()
 	{
 		if (!HasVaultFile)

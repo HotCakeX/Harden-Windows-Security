@@ -11,6 +11,11 @@
       FlowDirection="{x:Bind CommonCore:Atlas.Settings.ApplicationGlobalFlowDirection, Mode=OneWay}"
       Unloaded="{x:Bind Unloaded_Handler}"
       Loaded="{x:Bind Loaded_Handler}">
+    <Page.KeyboardAccelerators>
+        <KeyboardAccelerator Key="L"
+                             Modifiers="Control"
+                             Invoked="{x:Bind LockVaultKeyboardAccelerator_Invoked}" />
+    </Page.KeyboardAccelerators>
     <Grid>
         <Grid x:Name="VaultContentPanel"
               Padding="{x:Bind LockedBackgroundContentPadding, Mode=OneWay}"
@@ -70,6 +75,10 @@
                             <MenuFlyoutItem x:Uid="SecureVaultLockVaultMenuFlyoutItem"
                                             Click="{x:Bind LockVault}"
                                             IsEnabled="{x:Bind IsVaultUnlocked, Mode=OneWay}">
+                                <MenuFlyoutItem.KeyboardAccelerators>
+                                    <KeyboardAccelerator Key="L"
+                                                         Modifiers="Control" />
+                                </MenuFlyoutItem.KeyboardAccelerators>
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE72E;" />
                                 </MenuFlyoutItem.Icon>

@@ -7718,4 +7718,22 @@
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>Διαγραφή του τρέχοντος θησαυροφυλακίου και όλων όσων περιέχει.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Αποκρυπτογράφηση και εξαγωγή</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Αποκρυπτογραφήστε και εξαγάγετε ολόκληρο το ασφαλές θησαυροφυλάκιο σε ένα μη προστατευμένο αρχείο.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Αποκρυπτογραφήστε και εξαγάγετε ολόκληρο το ασφαλές θησαυροφυλάκιο σε ένα μη προστατευμένο αρχείο.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>Μετριασμοί απομόνωσης πλευρικών καναλιών</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εφαρμόστε μετριασμούς απομόνωσης πλευρικών καναλιών κατά την εκκίνηση της εφαρμογής, για να βελτιώσετε την ασφάλεια κατά τη χρήση του ασφαλούς θησαυροφυλακίου, με κόστος τη μειωμένη απόδοση.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εφαρμόστε μετριασμούς απομόνωσης πλευρικών καναλιών κατά την εκκίνηση της εφαρμογής, για να βελτιώσετε την ασφάλεια κατά τη χρήση του ασφαλούς θησαυροφυλακίου, με κόστος τη μειωμένη απόδοση.</value>
+  </data>
 </root>

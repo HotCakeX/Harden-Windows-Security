@@ -7718,4 +7718,22 @@
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>നിലവിലെ വോൾട്ടും അതിലുള്ള എല്ലാം ഇല്ലാതാക്കുക.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ഡീക്രിപ്റ്റ് ചെയ്ത് കയറ്റുമതി ചെയ്യുക</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സുരക്ഷിത വോൾട്ട് മുഴുവനും ഡീക്രിപ്റ്റ് ചെയ്ത് സംരക്ഷണമില്ലാത്ത ഒരു ഫയലിലേക്ക് കയറ്റുമതി ചെയ്യുക.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സുരക്ഷിത വോൾട്ട് മുഴുവനും ഡീക്രിപ്റ്റ് ചെയ്ത് സംരക്ഷണമില്ലാത്ത ഒരു ഫയലിലേക്ക് കയറ്റുമതി ചെയ്യുക.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>സൈഡ്-ചാനൽ ഐസൊലേഷൻ ശമനങ്ങൾ</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സുരക്ഷിത വോൾട്ട് ഉപയോഗിക്കുമ്പോൾ സുരക്ഷ മെച്ചപ്പെടുത്തുന്നതിനായി ആപ്ലിക്കേഷൻ ആരംഭിക്കുമ്പോൾ സൈഡ്-ചാനൽ ഐസൊലേഷൻ ശമനങ്ങൾ പ്രയോഗിക്കുക, പ്രകടനം കുറയുന്നതിനുള്ള ചെലവിൽ.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>സുരക്ഷിത വോൾട്ട് ഉപയോഗിക്കുമ്പോൾ സുരക്ഷ മെച്ചപ്പെടുത്തുന്നതിനായി ആപ്ലിക്കേഷൻ ആരംഭിക്കുമ്പോൾ സൈഡ്-ചാനൽ ഐസൊലേഷൻ ശമനങ്ങൾ പ്രയോഗിക്കുക, പ്രകടനം കുറയുന്നതിനുള്ള ചെലവിൽ.</value>
+  </data>
 </root>

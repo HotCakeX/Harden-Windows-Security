@@ -7718,4 +7718,22 @@
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>ลบตู้นิรภัยปัจจุบันและทุกอย่างภายในนั้น</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>ถอดรหัสและส่งออก</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ถอดรหัสและส่งออกตู้นิรภัยที่ปลอดภัยทั้งหมดไปยังไฟล์ที่ไม่มีการป้องกัน.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ถอดรหัสและส่งออกตู้นิรภัยที่ปลอดภัยทั้งหมดไปยังไฟล์ที่ไม่มีการป้องกัน.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>มาตรการบรรเทาการแยกช่องทางข้างเคียง</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ใช้มาตรการบรรเทาการแยกช่องทางข้างเคียงเมื่อเริ่มต้นแอปพลิเคชัน เพื่อเพิ่มความปลอดภัยขณะใช้งานตู้นิรภัยที่ปลอดภัย โดยแลกกับประสิทธิภาพที่ลดลง.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ใช้มาตรการบรรเทาการแยกช่องทางข้างเคียงเมื่อเริ่มต้นแอปพลิเคชัน เพื่อเพิ่มความปลอดภัยขณะใช้งานตู้นิรภัยที่ปลอดภัย โดยแลกกับประสิทธิภาพที่ลดลง.</value>
+  </data>
 </root>

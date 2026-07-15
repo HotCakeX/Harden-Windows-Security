@@ -7718,4 +7718,22 @@ Huella Digital: {3}</value>
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>Eliminar la bóveda actual y todo lo que contiene.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Descifrar y exportar</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Descifra y exporta toda la bóveda segura a un archivo sin protección.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Descifra y exporta toda la bóveda segura a un archivo sin protección.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>Mitigaciones de aislamiento de canal lateral</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Aplica mitigaciones de aislamiento de canal lateral al iniciar la aplicación para mejorar la seguridad al usar la bóveda segura, a costa de un menor rendimiento.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Aplica mitigaciones de aislamiento de canal lateral al iniciar la aplicación para mejorar la seguridad al usar la bóveda segura, a costa de un menor rendimiento.</value>
+  </data>
 </root>

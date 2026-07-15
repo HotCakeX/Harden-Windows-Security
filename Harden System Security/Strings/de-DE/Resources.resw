@@ -7718,4 +7718,22 @@ Fingerabdruck: {3}</value>
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>Den aktuellen Tresor und seinen gesamten Inhalt löschen.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Entschlüsseln und exportieren</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Entschlüsseln und exportieren Sie den gesamten sicheren Tresor in eine ungeschützte Datei.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Entschlüsseln und exportieren Sie den gesamten sicheren Tresor in eine ungeschützte Datei.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>Maßnahmen zur Seitenkanal-Isolation</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wenden Sie beim Anwendungsstart Maßnahmen zur Seitenkanal-Isolation an, um die Sicherheit bei der Nutzung des sicheren Tresors zu verbessern, auf Kosten einer reduzierten Leistung.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wenden Sie beim Anwendungsstart Maßnahmen zur Seitenkanal-Isolation an, um die Sicherheit bei der Nutzung des sicheren Tresors zu verbessern, auf Kosten einer reduzierten Leistung.</value>
+  </data>
 </root>

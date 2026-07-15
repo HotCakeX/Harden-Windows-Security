@@ -7718,4 +7718,22 @@
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>حذف الخزنة الحالية وكل ما بداخلها.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>فك التشفير والتصدير</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فك تشفير المخزن الآمن بالكامل وتصديره إلى ملف غير محمي.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فك تشفير المخزن الآمن بالكامل وتصديره إلى ملف غير محمي.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>تخفيفات عزل القنوات الجانبية</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>طبّق تخفيفات عزل القنوات الجانبية عند بدء تشغيل التطبيق لتحسين الأمان أثناء استخدام المخزن الآمن، وذلك على حساب انخفاض الأداء.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>طبّق تخفيفات عزل القنوات الجانبية عند بدء تشغيل التطبيق لتحسين الأمان أثناء استخدام المخزن الآمن، وذلك على حساب انخفاض الأداء.</value>
+  </data>
 </root>

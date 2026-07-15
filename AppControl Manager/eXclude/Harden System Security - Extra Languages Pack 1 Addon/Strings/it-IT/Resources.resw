@@ -7718,4 +7718,22 @@ Thumbprint: {3}</value>
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>Elimina la cassaforte corrente e tutto ciò che contiene.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Decrittografa ed esporta</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Decrittografa ed esporta l’intero archivio protetto in un file non protetto.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Decrittografa ed esporta l’intero archivio protetto in un file non protetto.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>Mitigazioni di isolamento dei canali laterali</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Applica le mitigazioni di isolamento dei canali laterali all’avvio dell’applicazione per migliorare la sicurezza durante l’utilizzo dell’archivio protetto, a scapito di prestazioni ridotte.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Applica le mitigazioni di isolamento dei canali laterali all’avvio dell’applicazione per migliorare la sicurezza durante l’utilizzo dell’archivio protetto, a scapito di prestazioni ridotte.</value>
+  </data>
 </root>

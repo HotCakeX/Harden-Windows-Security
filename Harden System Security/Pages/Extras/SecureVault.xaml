@@ -109,7 +109,6 @@
                                     <FontIcon Glyph="&#xE8D7;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
-                            <MenuFlyoutSeparator />
                             <ToggleMenuFlyoutItem x:Uid="SecureVaultAutoLockAfterOneMinuteToggleMenuFlyoutItem"
                                                   IsChecked="{x:Bind IsAutoLockAfterOneMinuteEnabled, Mode=TwoWay}">
                                 <ToggleMenuFlyoutItem.Icon>
@@ -117,13 +116,20 @@
                                 </ToggleMenuFlyoutItem.Icon>
                             </ToggleMenuFlyoutItem>
                             <MenuFlyoutSeparator />
-                            <MenuFlyoutItem Text="Decrypt and Export"
+                            <MenuFlyoutItem x:Uid="DecryptAndExportMenuFlyoutItem"
                                             Click="{x:Bind ShowDecryptAndExportConfirmationDialog}"
                                             IsEnabled="{x:Bind IsVaultUnlocked, Mode=OneWay}">
                                 <MenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xE8D7;" />
                                 </MenuFlyoutItem.Icon>
                             </MenuFlyoutItem>
+                            <ToggleMenuFlyoutItem x:Uid="SideChannelIsolationMitigationsFlyoutItem"
+                                                  IsEnabled="{x:Bind IsVaultUnlocked, Mode=OneWay}"
+                                                  IsChecked="{x:Bind CommonCore:Atlas.Settings.ApplySideChannelIsolationMitigationsOnStartup, Mode=TwoWay}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xF259;" />
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
                         </MenuFlyout>
                     </Button.Flyout>
                 </Button>

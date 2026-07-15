@@ -7718,4 +7718,22 @@
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>वर्तमान वॉल्ट और उसके अंदर की सभी चीज़ें हटाएँ।</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>डिक्रिप्ट करें और निर्यात करें</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>पूरी सुरक्षित वॉल्ट को डिक्रिप्ट करके एक असुरक्षित फ़ाइल में निर्यात करें.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>पूरी सुरक्षित वॉल्ट को डिक्रिप्ट करके एक असुरक्षित फ़ाइल में निर्यात करें.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>साइड-चैनल आइसोलेशन मिटिगेशन</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सुरक्षित वॉल्ट का उपयोग करते समय सुरक्षा को बेहतर बनाने के लिए एप्लिकेशन स्टार्टअप पर साइड-चैनल आइसोलेशन मिटिगेशन लागू करें, जिससे प्रदर्शन कम हो सकता है.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सुरक्षित वॉल्ट का उपयोग करते समय सुरक्षा को बेहतर बनाने के लिए एप्लिकेशन स्टार्टअप पर साइड-चैनल आइसोलेशन मिटिगेशन लागू करें, जिससे प्रदर्शन कम हो सकता है.</value>
+  </data>
 </root>

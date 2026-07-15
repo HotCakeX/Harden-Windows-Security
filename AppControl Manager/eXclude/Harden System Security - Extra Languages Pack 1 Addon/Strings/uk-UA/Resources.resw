@@ -7718,4 +7718,22 @@
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>Видалити поточне сховище та все, що в ньому є.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Розшифрувати й експортувати</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Розшифруйте та експортуйте все захищене сховище до незахищеного файлу.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Розшифруйте та експортуйте все захищене сховище до незахищеного файлу.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>Заходи ізоляції побічних каналів</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Застосуйте заходи ізоляції побічних каналів під час запуску програми, щоб підвищити безпеку під час використання захищеного сховища, ціною зниження продуктивності.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Застосуйте заходи ізоляції побічних каналів під час запуску програми, щоб підвищити безпеку під час використання захищеного сховища, ціною зниження продуктивності.</value>
+  </data>
 </root>

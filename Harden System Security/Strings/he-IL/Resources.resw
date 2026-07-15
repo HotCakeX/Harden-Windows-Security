@@ -7718,4 +7718,22 @@
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>מחק את הכספת הנוכחית ואת כל מה שבתוכה.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>פענוח וייצוא</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פענח וייצא את כל הכספת המאובטחת לקובץ שאינו מוגן.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פענח וייצא את כל הכספת המאובטחת לקובץ שאינו מוגן.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>אמצעי הפחתת סיכונים לבידוד ערוצי צד</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>החל אמצעי הפחתת סיכונים לבידוד ערוצי צד בעת הפעלת היישום כדי לשפר את האבטחה בעת השימוש בכספת המאובטחת, במחיר של ירידה בביצועים.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>החל אמצעי הפחתת סיכונים לבידוד ערוצי צד בעת הפעלת היישום כדי לשפר את האבטחה בעת השימוש בכספת המאובטחת, במחיר של ירידה בביצועים.</value>
+  </data>
 </root>

@@ -7718,4 +7718,22 @@ Thumbprint: {3}</value>
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>گاوصندوق فعلی و همه محتوای داخل آن را حذف کنید.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>رمزگشایی و صادر کردن</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>کل خزانه امن را رمزگشایی کرده و به یک فایل محافظت‌نشده صادر کنید.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>کل خزانه امن را رمزگشایی کرده و به یک فایل محافظت‌نشده صادر کنید.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>کاهش‌دهنده‌های جداسازی کانال جانبی</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>برای بهبود امنیت هنگام استفاده از خزانه امن، کاهش‌دهنده‌های جداسازی کانال جانبی را در زمان راه‌اندازی برنامه اعمال کنید، به بهای کاهش عملکرد.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>برای بهبود امنیت هنگام استفاده از خزانه امن، کاهش‌دهنده‌های جداسازی کانال جانبی را در زمان راه‌اندازی برنامه اعمال کنید، به بهای کاهش عملکرد.</value>
+  </data>
 </root>

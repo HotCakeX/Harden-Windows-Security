@@ -7718,4 +7718,22 @@ Odcisk Palca: {3}</value>
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>Usuń bieżący sejf i wszystko, co się w nim znajduje.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Odszyfruj i eksportuj</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Odszyfruj i wyeksportuj cały bezpieczny sejf do niezabezpieczonego pliku.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Odszyfruj i wyeksportuj cały bezpieczny sejf do niezabezpieczonego pliku.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>Środki izolacji kanałów bocznych</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zastosuj środki izolacji kanałów bocznych podczas uruchamiania aplikacji, aby zwiększyć bezpieczeństwo podczas korzystania z bezpiecznego sejfu, kosztem obniżonej wydajności.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Zastosuj środki izolacji kanałów bocznych podczas uruchamiania aplikacji, aby zwiększyć bezpieczeństwo podczas korzystania z bezpiecznego sejfu, kosztem obniżonej wydajności.</value>
+  </data>
 </root>

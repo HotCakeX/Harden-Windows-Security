@@ -7718,4 +7718,22 @@ Thumbprint: {3}</value>
   <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Delete current vault and everything in it.</value>
   </data>
+  <data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Decrypt and Export</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Decrypt and export the entire secure vault to an unprotected file.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Decrypt and export the entire secure vault to an unprotected file.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>Side-channel Isolation Mitigations</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Apply side-channel isolation mitigations at application startup to improve security when using the secure vault, at the cost of reduced performance.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Apply side-channel isolation mitigations at application startup to improve security when using the secure vault, at the cost of reduced performance.</value>
+  </data>
 </root>

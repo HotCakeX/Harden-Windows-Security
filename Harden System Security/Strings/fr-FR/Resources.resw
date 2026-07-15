@@ -7718,4 +7718,22 @@ Empreinte : {3}</value>
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>Supprimer le coffre actuel et tout ce qu’il contient.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Déchiffrer et exporter</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Déchiffrez et exportez l’intégralité du coffre sécurisé vers un fichier non protégé.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Déchiffrez et exportez l’intégralité du coffre sécurisé vers un fichier non protégé.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>Atténuations d’isolation des canaux auxiliaires</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Appliquez les atténuations d’isolation des canaux auxiliaires au démarrage de l’application afin d’améliorer la sécurité lors de l’utilisation du coffre sécurisé, au prix d’une réduction des performances.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Appliquez les atténuations d’isolation des canaux auxiliaires au démarrage de l’application afin d’améliorer la sécurité lors de l’utilisation du coffre sécurisé, au prix d’une réduction des performances.</value>
+  </data>
 </root>

@@ -7718,4 +7718,22 @@ Thumbprint: {3}</value>
 <data name="SecureVaultDeleteCurrentVaultOverlayButton.AutomationProperties.HelpText" xml:space="preserve">
   <value>Hapus brankas saat ini dan semua isinya.</value>
 </data>
+<data name="DecryptAndExportMenuFlyoutItem.Text" xml:space="preserve">
+    <value>Dekripsi dan Ekspor</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Dekripsi dan ekspor seluruh brankas aman ke file yang tidak terlindungi.</value>
+  </data>
+  <data name="DecryptAndExportMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Dekripsi dan ekspor seluruh brankas aman ke file yang tidak terlindungi.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.Text" xml:space="preserve">
+    <value>Mitigasi Isolasi Saluran Samping</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Terapkan mitigasi isolasi saluran samping saat aplikasi dimulai untuk meningkatkan keamanan saat menggunakan brankas aman, dengan konsekuensi penurunan kinerja.</value>
+  </data>
+  <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Terapkan mitigasi isolasi saluran samping saat aplikasi dimulai untuk meningkatkan keamanan saat menggunakan brankas aman, dengan konsekuensi penurunan kinerja.</value>
+  </data>
 </root>

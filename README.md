@@ -468,7 +468,7 @@ This repository uses effective methods that make it easy to verify:
 
 <br>
 
-* <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> Whenever you want to install a program or app, first use the [Microsoft Store](https://apps.microsoft.com/store/apps) or <a href="https://github.com/microsoft/winget-cli">Winget</a>, if the program or app you are looking for isn't available in there, then download it from its official website. *Somebody created a nice web interface for interacting with Winget CLI <a href="https://winstall.app/">here</a>.* Using Winget or Microsoft store provides many benefits:
+* <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> Whenever you want to install a program or app, first use the [Microsoft Store](https://apps.microsoft.com/store/apps) or <a href="https://github.com/microsoft/winget-cli">Winget</a>, if the program or app you are looking for isn't available in there, then download it from its official website. *Consider using the <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/WinGet-Management">WinGet Management Page</a> in the Harden System Security app to manage or install your programs or apps.* Using Winget or Microsoft store provides many benefits:
 
     - Microsoft store UWP apps are secure in nature, digitally signed, in [MSIX format](https://learn.microsoft.com/windows/msix/overview). That means, installing and uninstalling them is guaranteed and there won't be any leftovers after uninstalling.
 

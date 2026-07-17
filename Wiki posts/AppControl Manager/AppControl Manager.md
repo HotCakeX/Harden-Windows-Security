@@ -550,6 +550,50 @@ function Build_ACM {
 
     [string]$MSBuildPath = Find-MSBuild
 
+    function Get-MakePriPath {
+        [System.String]$BasePath = 'C:\Program Files (x86)\Windows Kits\10\bin'
+
+        # Get all subdirectories under the base path
+        [System.String[]]$VersionDirs = [System.IO.Directory]::GetDirectories($BasePath)
+
+        # Initialize the highest version with a minimal version value.
+        [System.Version]$HighestVersion = [System.Version]::New('0.0.0.0')
+        [System.String]$HighestVersionFolder = $null
+
+        # Loop through each directory to find the highest version folder.
+        foreach ($Dir in $VersionDirs) {
+            # Extract the folder name
+            [System.String]$FolderName = [System.IO.Path]::GetFileName($Dir)
+            [System.Version]$CurrentVersion = $null
+
+            # Try parsing the folder name as a Version.
+            if ([System.Version]::TryParse($FolderName, [ref] $CurrentVersion)) {
+                # Compare versions
+                if ($CurrentVersion.CompareTo($HighestVersion) -gt 0) {
+                    $HighestVersion = $CurrentVersion
+                    $HighestVersionFolder = $FolderName
+                }
+            }
+        }
+
+        # If no valid version folder is found
+        if (!$HighestVersionFolder) {
+            throw [System.IO.DirectoryNotFoundException]::New("No valid version directories found in $BasePath")
+        }
+
+        [System.String]$CPUArch = @{AMD64 = 'x64'; ARM64 = 'arm64' }[$Env:PROCESSOR_ARCHITECTURE]
+        if ([System.String]::IsNullOrWhiteSpace($CPUArch)) {
+            throw [System.PlatformNotSupportedException]::New('Only AMD64 and ARM64 architectures are supported.')
+        }
+
+        # Combine the base path, the highest version folder, the architecture folder, and the file name.
+        [System.String]$MakePriPath = [System.IO.Path]::Combine($BasePath, $HighestVersionFolder, $CPUArch, 'makepri.exe')
+
+        return $MakePriPath
+    }
+
+    [string]$MakePriPath = Get-MakePriPath
+
     #region --- Compile C++ projects ---
 
     ### ComManager
@@ -866,6 +910,26 @@ function Build_ACM {
     if ([System.string]::IsNullOrWhiteSpace($MakeAppxPath)) {
         throw [System.IO.FileNotFoundException]::New('Could not find the makeappx.exe')
     }
+
+    #region Resource Package
+    [System.String]$AddonSource = (Resolve-Path -Path '.\eXclude\AppControl Manager - Extra Languages Pack 1 Addon').Path
+    $BasePri = Get-ChildItem '.\bin\x64\Release\*\win-x64\resources.pri'
+    if ($null -eq $BasePri) { throw 'Build or publish AppControl Manager first so its base resources.pri exists under bin.' }
+    [System.String]$Stage = Join-Path $env:TEMP ([guid]::NewGuid())
+    [System.String]$ExtraLanguagesPack1MSIXPathName = 'AppControlManager.ExtraLanguagesPack1.msix'
+    [System.String]$ExtraLanguagesPack1MSIXPath = [System.IO.Path]::Combine($AddonSource, $ExtraLanguagesPack1MSIXPathName)
+    New-Item -ItemType Directory -Path $Stage | Out-Null
+    Copy-Item (Join-Path $AddonSource 'AppxManifest.xml') $Stage
+    Copy-Item (Join-Path $AddonSource 'Assets') $Stage -Recurse
+    . $MakePriPath resourcepack /ProjectRoot (Join-Path $AddonSource 'Strings') /ConfigXml (Join-Path $AddonSource 'priconfig.xml') /IndexFile $BasePri.FullName /OutputFile (Join-Path $Stage 'resources.pri') /Overwrite
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed creating resource package's PRI config via makepri.exe. Exit Code: $LASTEXITCODE") }
+    . $MakeAppxPath pack /d $Stage /p $ExtraLanguagesPack1MSIXPath /nv /o
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed creating resource package's MSIX via makeappx.exe. Exit Code: $LASTEXITCODE") }
+    Remove-Item $Stage -Recurse -Force
+    Write-Host "Successfully created the Resource Package's MSIX at: $ExtraLanguagesPack1MSIXPath"
+    #endregion Resource Package
+
+    [System.IO.File]::Copy($ExtraLanguagesPack1MSIXPath, [System.IO.Path]::Combine($MSIXBundleOutput, $ExtraLanguagesPack1MSIXPathName), $true)
 
     # https://learn.microsoft.com/windows/win32/appxpkg/make-appx-package--makeappx-exe-#to-create-a-package-bundle-using-a-directory-structure
     . $MakeAppxPath bundle /d $MSIXBundleOutput /p $MSIXBundle /o /v

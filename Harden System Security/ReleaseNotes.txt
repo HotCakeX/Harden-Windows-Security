@@ -1,9 +1,1 @@
-* Added a new section to the app under the Extras called Secure Vault: You can use it to securely save and access your TOTP codes and secrets. They are Time-based one-time passwords that you get from websites when you activate 2-factor authentication. The secrets are encrypted and stored locally on your device. Encryption uses the most secure algorithms available. You can also export your secrets to a file and import them back into the app. The app generates the TOTP codes for you and you can copy them to your clipboard to use them when logging in to websites. The secret and sensitive material are encrypted in memory and at rest on disk. Full details on GitHub.
-
-* Fixed an issue in the Winget Management page: if you selected silent installation for an app in a bundle, it would still show the dialog to accept the app's terms. Now if you select silent installation it performs the installation silently as intended.
-
-* Only available for MDM/Intune enrolled devices: Added an Intune check-in control that allows you to start a local Windows MDM sync session, reports the session ID and state, and provides quick access to work or school settings. The control also surfaces app-visible local MDM session details and handles unenrolled or disconnected MDM states. It is added to the top bar for quick access.
-
-* Download Manager now displays the real-time remaining time for each running download to complete based on the live speed.
-
 * Updated dependencies to the latest version.

@@ -3,6 +3,10 @@
 
     <!-- Global -->
     <PropertyGroup>
+        <!--https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#defaultitemexcludes-->
+        <!-- Exclude the following files and folders from compilation, build, search, solution explorer etc. -->
+        <DefaultItemExcludes>$(DefaultItemExcludes);eXclude\**;MSIXOutputX64\**;MSIXOutputARM64\**;MSIXBundleOutput\**;Animated Icon Sources\**;target\**;ReleaseNotes.txt;version.txt;MSIXBundleDownloadURL.txt;*.binlog</DefaultItemExcludes>
+
         <OutputType>WinExe</OutputType>
         <RootNamespace>AppControlManager</RootNamespace>
         <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -208,12 +212,12 @@
 
         <!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.86.0" />
-        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.86.0" />
-        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.86.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.86.1" />
+        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.86.1" />
+        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.86.1" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.10" />
-        <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.2.1" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.0" />
         <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.10" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
@@ -222,8 +226,8 @@
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
-        <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.1.0" />
-        <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.0.15" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.3.5" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.3" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260610101">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -294,53 +298,6 @@
 
     <ItemGroup>
         <Manifest Include="$(ApplicationManifest)" />
-    </ItemGroup>
-
-    <!-- Exclude the following files and folders from compilation, build, search, solution explorer etc. -->
-    <ItemGroup>
-        <Compile Remove="ReleaseNotes.txt" />
-        <Content Remove="ReleaseNotes.txt" />
-        <None Remove="ReleaseNotes.txt" />
-
-        <Compile Remove="version.txt" />
-        <Content Remove="version.txt" />
-        <None Remove="version.txt" />
-
-        <Compile Remove="MSIXBundleDownloadURL.txt" />
-        <Content Remove="MSIXBundleDownloadURL.txt" />
-        <None Remove="MSIXBundleDownloadURL.txt" />
-
-        <Compile Remove="ARM64MSBuildLog.binlog" />
-        <Content Remove="ARM64MSBuildLog.binlog" />
-        <None Remove="ARM64MSBuildLog.binlog" />
-
-        <Compile Remove="X64MSBuildLog.binlog" />
-        <Content Remove="X64MSBuildLog.binlog" />
-        <None Remove="X64MSBuildLog.binlog" />
-
-        <Compile Remove="MSIXOutputX64\**" />
-        <Content Remove="MSIXOutputX64\**" />
-        <None Remove="MSIXOutputX64\**" />
-
-        <Compile Remove="MSIXOutputARM64\**" />
-        <Content Remove="MSIXOutputARM64\**" />
-        <None Remove="MSIXOutputARM64\**" />
-
-        <Compile Remove="MSIXBundleOutput\**" />
-        <Content Remove="MSIXBundleOutput\**" />
-        <None Remove="MSIXBundleOutput\**" />
-
-        <Compile Remove="Animated Icon Sources\**" />
-        <Content Remove="Animated Icon Sources\**" />
-        <None Remove="Animated Icon Sources\**" />
-
-        <Compile Remove="eXclude\**" />
-        <Content Remove="eXclude\**" />
-        <None Remove="eXclude\**" />
-
-        <Compile Remove="target\**" />
-        <Content Remove="target\**" />
-        <None Remove="target\**" />
     </ItemGroup>
 
     <ItemGroup>

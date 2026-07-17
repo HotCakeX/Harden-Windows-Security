@@ -1,3 +1,5 @@
 * Updated dependencies to the latest version.
 
 * Reduced package size.
+
+* Added support for the following languages to the AppControl Manager as an optional on-demand downloadable add-on: Ukrainian, Persian, Italian, Mandarin Chinese, Indonesian and Thai. You can manage it from the Settings page.

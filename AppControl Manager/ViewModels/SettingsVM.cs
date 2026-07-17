@@ -48,7 +48,6 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class SettingsVM : ViewModelBase
 {
-#if HARDEN_SYSTEM_SECURITY
 	private const string UkrainianLanguageToken = "uk";
 	private const string UkrainianLanguageResourceId = "uk-UA";
 	private const string PersianLanguageToken = "fa";
@@ -62,7 +61,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 	private const string ThaiLanguageToken = "th";
 	private const string ThaiLanguageResourceId = "th-TH";
 	private const string LanguageAddonsResourceId = "ExtraLanguagesPack1";
-
 	private static readonly bool ExtraLanguagesPack1Installed = GetLanguageAddonsPackage() is not null;
 	private bool _suppressExtraLanguagesPack1ToggleSwitchToggled;
 
@@ -88,7 +86,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 			SetExtraLanguagesPack1ToggleSwitchIsOn(toggleSwitch, ExtraLanguagesPack1Installed);
 		}
 	}
-#endif
 
 	internal SettingsVM()
 	{
@@ -111,7 +108,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		LanguageOptions.Add(new("മലയാളം", "ms-appx:///Assets/CountryFlags/india-240.png"));
 		LanguageOptions.Add(new("Deutsch", "ms-appx:///Assets/CountryFlags/germany-240.png"));
 		LanguageOptions.Add(new("Français", "ms-appx:///Assets/CountryFlags/france-240.png"));
-#if HARDEN_SYSTEM_SECURITY
+
 		if (ExtraLanguagesPack1Installed)
 		{
 			LanguageOptions.Add(new("Українська", "ms-appx:///Assets/CountryFlags/ukraine-240.png"));
@@ -121,7 +118,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 			LanguageOptions.Add(new("Bahasa Indonesia", "ms-appx:///Assets/CountryFlags/indonesia-240.png"));
 			LanguageOptions.Add(new("ไทย", "ms-appx:///Assets/CountryFlags/thailand-240.png"));
 		}
-#endif
+
 #if APP_CONTROL_MANAGER
 		LanguageOptions.Add(new("日本語", "ms-appx:///Assets/CountryFlags/japan-96.png"));
 #endif
@@ -185,7 +182,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 #if APP_CONTROL_MANAGER
 		languages.Add("ja", 10);
 #endif
-#if HARDEN_SYSTEM_SECURITY
+
 		if (ExtraLanguagesPack1Installed)
 		{
 			languages.Add(UkrainianLanguageToken, 10);
@@ -195,7 +192,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 			languages.Add(IndonesianLanguageToken, 14);
 			languages.Add(ThaiLanguageToken, 15);
 		}
-#endif
 
 		return languages;
 	}
@@ -220,7 +216,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 #if APP_CONTROL_MANAGER
 		languages.Add("ja");
 #endif
-#if HARDEN_SYSTEM_SECURITY
+
 		if (ExtraLanguagesPack1Installed)
 		{
 			languages.Add(UkrainianLanguageToken);
@@ -230,11 +226,10 @@ internal sealed partial class SettingsVM : ViewModelBase
 			languages.Add(IndonesianLanguageToken);
 			languages.Add(ThaiLanguageToken);
 		}
-#endif
+
 		return [.. languages];
 	}
 
-#if HARDEN_SYSTEM_SECURITY
 	private static bool IsLanguageAddonResource(string language) =>
 		string.Equals(language, UkrainianLanguageToken, StringComparison.OrdinalIgnoreCase) ||
 		string.Equals(language, UkrainianLanguageResourceId, StringComparison.OrdinalIgnoreCase) ||
@@ -252,7 +247,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 	private static bool IsUnavailableLanguageAddonResource(string language) => IsLanguageAddonResource(language) && !ExtraLanguagesPack1Installed;
 
 	private static Package? GetLanguageAddonsPackage() => Package.Current.Dependencies.FirstOrDefault(package => string.Equals(package.Id.ResourceId, LanguageAddonsResourceId, StringComparison.OrdinalIgnoreCase));
-#endif
 
 	/// <summary>
 	/// Runs very early at app startup to detect and set the app's language.
@@ -264,7 +258,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 			// If a language has already been assigned then use it.
 			if (!string.IsNullOrEmpty(Atlas.Settings.ApplicationGlobalLanguage))
 			{
-#if HARDEN_SYSTEM_SECURITY
 				// If the language saved in the settings belongs to one of those included in Resource Package, and that resource package is not currently installed, then fall back to en-US
 				if (IsUnavailableLanguageAddonResource(Atlas.Settings.ApplicationGlobalLanguage))
 				{
@@ -272,7 +265,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 					Atlas.Settings.ApplicationGlobalLanguage = "en-US";
 					return;
 				}
-#endif
+
 				// Set the language of the application to the user's preferred language
 				ApplicationLanguages.PrimaryLanguageOverride = Atlas.Settings.ApplicationGlobalLanguage;
 
@@ -290,13 +283,12 @@ internal sealed partial class SettingsVM : ViewModelBase
 				// See if the same exact language is supported by the app.
 				if (SupportedLanguages.ContainsKey(language))
 				{
-#if HARDEN_SYSTEM_SECURITY
 					// Skip if the language was supported but it is in a resource package that is currently not installed.
 					if (IsUnavailableLanguageAddonResource(language))
 					{
 						continue;
 					}
-#endif
+
 					// Set the app's language
 					ApplicationLanguages.PrimaryLanguageOverride = language;
 
@@ -313,13 +305,11 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 					if (SupportedLanguages.ContainsKey(neutralLanguage))
 					{
-#if HARDEN_SYSTEM_SECURITY
 						// If the current system language partially matches one of the languages that exists in the Resource package that is currently not installed then skip it.
 						if (IsUnavailableLanguageAddonResource(neutralLanguage))
 						{
 							continue;
 						}
-#endif
 						// Set the app's language
 						ApplicationLanguages.PrimaryLanguageOverride = neutralLanguage;
 
@@ -351,10 +341,8 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
-#if HARDEN_SYSTEM_SECURITY
-
 	// It doesn't successfully add/remove the resource package when elevated.
-	internal bool ExtraLanguagesPack1ToggleIsEnabled => !Atlas.IsElevated && !LanguageAddonsOperationInProgress;
+	internal bool ExtraLanguagesPack1ToggleIsEnabled => !LanguageAddonsOperationInProgress;
 
 	internal Visibility LanguageAddonsOperationProgressVisibility => LanguageAddonsOperationInProgress ? Visibility.Visible : Visibility.Collapsed;
 
@@ -489,7 +477,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 		MainInfoBar.WriteSuccess("The language add-on was removed. Restart Harden System Security to refresh the available languages.");
 	}
-#endif
 
 	internal int LanguageComboBoxSelectedIndex
 	{

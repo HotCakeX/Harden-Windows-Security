@@ -483,6 +483,7 @@
                             <StackPanel Spacing="8">
                                 <ProgressBar Minimum="0"
                                              Maximum="100"
+                                             Margin="0,5,0,0"
                                              Value="{x:Bind ViewModel.LanguageAddonsOperationProgressValue, Mode=OneWay}"
                                              Visibility="{x:Bind ViewModel.LanguageAddonsOperationProgressVisibility, Mode=OneWay}" />
                                 <ToggleSwitch OnContent="Added"

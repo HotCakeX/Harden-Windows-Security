@@ -32,9 +32,6 @@
                     <RepositionThemeTransition IsStaggeringEnabled="False" />
                 </StackPanel.ChildrenTransitions>
 
-                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
-                           x:Uid="BackupAndRestoreSettingsSectionHeader" />
-
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="BackupAndRestoreSettingsSectionHeader" />
                 <CCToolKit:SettingsCard x:Uid="SettingsBackupRestoreSettingsCard"
                                         IsClickEnabled="True"

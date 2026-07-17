@@ -108,7 +108,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		LanguageOptions.Add(new("മലയാളം", "ms-appx:///Assets/CountryFlags/india-240.png"));
 		LanguageOptions.Add(new("Deutsch", "ms-appx:///Assets/CountryFlags/germany-240.png"));
 		LanguageOptions.Add(new("Français", "ms-appx:///Assets/CountryFlags/france-240.png"));
-
+		LanguageOptions.Add(new("日本語", "ms-appx:///Assets/CountryFlags/japan-96.png"));
 		if (ExtraLanguagesPack1Installed)
 		{
 			LanguageOptions.Add(new("Українська", "ms-appx:///Assets/CountryFlags/ukraine-240.png"));
@@ -118,10 +118,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 			LanguageOptions.Add(new("Bahasa Indonesia", "ms-appx:///Assets/CountryFlags/indonesia-240.png"));
 			LanguageOptions.Add(new("ไทย", "ms-appx:///Assets/CountryFlags/thailand-240.png"));
 		}
-
-#if APP_CONTROL_MANAGER
-		LanguageOptions.Add(new("日本語", "ms-appx:///Assets/CountryFlags/japan-96.png"));
-#endif
 	}
 
 	/// <summary>
@@ -177,22 +173,18 @@ internal sealed partial class SettingsVM : ViewModelBase
 			{ "es", 6 },
 			{ "ml", 7 },
 			{ "de", 8 },
-			{ "fr", 9 }
+			{ "fr", 9 },
+			{ "ja", 10 }
 		};
-#if APP_CONTROL_MANAGER
-		languages.Add("ja", 10);
-#endif
-
 		if (ExtraLanguagesPack1Installed)
 		{
-			languages.Add(UkrainianLanguageToken, 10);
-			languages.Add(PersianLanguageToken, 11);
-			languages.Add(ItalianLanguageToken, 12);
-			languages.Add(MandarinChineseLanguageToken, 13);
-			languages.Add(IndonesianLanguageToken, 14);
-			languages.Add(ThaiLanguageToken, 15);
+			languages.Add(UkrainianLanguageToken, 11);
+			languages.Add(PersianLanguageToken, 12);
+			languages.Add(ItalianLanguageToken, 13);
+			languages.Add(MandarinChineseLanguageToken, 14);
+			languages.Add(IndonesianLanguageToken, 15);
+			languages.Add(ThaiLanguageToken, 16);
 		}
-
 		return languages;
 	}
 
@@ -211,12 +203,9 @@ internal sealed partial class SettingsVM : ViewModelBase
 			"es",
 			"ml",
 			"de",
-			"fr"
+			"fr",
+			"ja"
 		];
-#if APP_CONTROL_MANAGER
-		languages.Add("ja");
-#endif
-
 		if (ExtraLanguagesPack1Installed)
 		{
 			languages.Add(UkrainianLanguageToken);
@@ -226,7 +215,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 			languages.Add(IndonesianLanguageToken);
 			languages.Add(ThaiLanguageToken);
 		}
-
 		return [.. languages];
 	}
 
@@ -885,10 +873,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		CertCommonNames.AddRange(suggestions);
 	}
 
-	internal void EditButton_CertificateCommonName_Click()
-	{
-		_ = UserConfiguration.Set(CertificateCommonName: CertCNsAutoSuggestBoxText);
-	}
+	internal void EditButton_CertificateCommonName_Click() => _ = UserConfiguration.Set(CertificateCommonName: CertCNsAutoSuggestBoxText);
 
 	internal void ClearButton_CertificateCommonName_Click()
 	{
@@ -900,10 +885,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	#region Certificate Path
 
-	internal void EditButton_CertificatePath_Click()
-	{
-		_ = UserConfiguration.Set(CertificatePath: CertificatePathTextBox);
-	}
+	internal void EditButton_CertificatePath_Click() => _ = UserConfiguration.Set(CertificatePath: CertificatePathTextBox);
 
 	internal void ClearButton_CertificatePath_Click()
 	{
@@ -911,10 +893,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		CertificatePathTextBox = null;
 	}
 
-	internal void BrowseButton_CertificatePath_Click()
-	{
-		CertificatePathTextBox = FileDialogHelper.ShowFilePickerDialog(Atlas.CertificatePickerFilter);
-	}
+	internal void BrowseButton_CertificatePath_Click() => CertificatePathTextBox = FileDialogHelper.ShowFilePickerDialog(Atlas.CertificatePickerFilter);
 
 	#endregion
 

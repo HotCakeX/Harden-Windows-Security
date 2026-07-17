@@ -1,0 +1,1009 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            <xsd:complexType>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" />
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:complexType>
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+<data name="PhishingProtectServiceEnabled-MSDefender" xml:space="preserve">
+    <value>高度なフィッシング詐欺対策サービスが有効です。</value>
+</data>
+<data name="NotifyUnsafeApp-MSDefender" xml:space="preserve">
+    <value>高度なフィッシング詐欺対策: 安全でないアプリを通知する</value>
+</data>
+<data name="NotifyPasswordReuse-MSDefender" xml:space="preserve">
+    <value>高度なフィッシング詐欺対策: パスワードの再利用を通知する</value>
+</data>
+<data name="NotifyMalicious-MSDefender" xml:space="preserve">
+    <value>高度なフィッシング詐欺対策: 悪意のあるコンテンツを通知する</value>
+</data>
+<data name="CaptureThreatWindow-MSDefender" xml:space="preserve">
+    <value>高度なフィッシング詐欺対策: 脅威ウィンドウをキャプチャする</value>
+</data>
+<data name="PurgeItemsAfterDelay-MSDefender" xml:space="preserve">
+    <value>一定時間後に項目を消去する</value>
+</data>
+<data name="IOAVMaxSize-MSDefender" xml:space="preserve">
+    <value>スキャン対象とするダウンロード ファイルおよび添付ファイルの最大サイズ</value>
+</data>
+<data name="DisableScanningMappedNetworkDrivesForFullScan-MSDefender" xml:space="preserve">
+    <value>フル スキャン時に割り当てられたネットワーク ドライブをスキャンする</value>
+</data>
+<data name="DisableScanningNetworkFiles-MSDefender" xml:space="preserve">
+    <value>ネットワーク ファイルをスキャンする</value>
+</data>
+<data name="DisableRemovableDriveScanning-MSDefender" xml:space="preserve">
+    <value>リムーバブル ドライブをスキャンする</value>
+</data>
+<data name="DisableReparsePointScanning-MSDefender" xml:space="preserve">
+    <value>再解析ポイントをスキャンする</value>
+</data>
+<data name="ArchiveMaxDepth-MSDefender" xml:space="preserve">
+    <value>アーカイブ ファイルをスキャンする最大の深さ</value>
+</data>
+<data name="UpdateOnStartUp-MSDefender" xml:space="preserve">
+    <value>起動時に最新のウイルスおよびスパイウェアのセキュリティ インテリジェンスを確認する</value>
+</data>
+<data name="AVSignatureDue-MSDefender" xml:space="preserve">
+    <value>ウイルス セキュリティ インテリジェンスが古いと見なされるまでの日数を定義する</value>
+</data>
+<data name="ASSignatureDue-MSDefender" xml:space="preserve">
+    <value>スパイウェア セキュリティ インテリジェンスが古いと見なされるまでの日数を定義する</value>
+</data>
+<data name="DisableBlockAtFirstSeen-MSDefender" xml:space="preserve">
+    <value>Block At First Sight (初回検出時ブロック) 機能を有効にする。</value>
+</data>
+<data name="AllowTelemetry-MSDefender" xml:space="preserve">
+    <value>スマート アプリ コントロールなどに必要なオプションの診断データ</value>
+</data>
+<data name="DisableTelemetryOptInSettingsUx-MSDefender" xml:space="preserve">
+    <value>診断データのオプトイン設定のユーザー インターフェイスを構成する</value>
+</data>
+<data name="5-MSDefender" xml:space="preserve">
+    <value>深刻な脅威レベルの既定のアクション = 削除</value>
+</data>
+<data name="4-MSDefender" xml:space="preserve">
+    <value>高い脅威レベルの既定のアクション = 削除</value>
+</data>
+<data name="2-MSDefender" xml:space="preserve">
+    <value>中程度の脅威レベルの既定のアクション = 検疫</value>
+</data>
+<data name="1-MSDefender" xml:space="preserve">
+    <value>低い脅威レベルの既定のアクション = 検疫</value>
+</data>
+<data name="MeteredConnectionUpdates-MSDefender" xml:space="preserve">
+    <value>従量制課金接続経由での Microsoft Defender ウイルス対策の更新を許可する</value>
+</data>
+<data name="SubmitSamplesConsent-MSDefender" xml:space="preserve">
+    <value>さらなる分析が必要な場合にファイルのサンプルを送信する</value>
+</data>
+<data name="Threats_ThreatSeverityDefaultAction-MSDefender" xml:space="preserve">
+    <value>脅威の重大度に対する既定のアクションを構成する</value>
+</data>
+<data name="EnableControlledFolderAccess-MSDefender" xml:space="preserve">
+    <value>コントロールされたフォルダー アクセスを有効にする</value>
+</data>
+<data name="EnableNetworkProtection-MSDefender" xml:space="preserve">
+    <value>ネットワーク保護を有効にする</value>
+</data>
+<data name="AllowNetworkProtectionOnWinServer-MSDefender" xml:space="preserve">
+    <value>Windows Server でネットワーク保護を有効にする</value>
+</data>
+<data name="TDTFeatureEnabled-MSDefender" xml:space="preserve">
+    <value>Intel TDT (脅威検出テクノロジ) を有効にする。</value>
+</data>
+<data name="MpCloudBlockLevel-MSDefender" xml:space="preserve">
+    <value>クラウド ブロック レベルを最大値の「許容なし」に設定する。</value>
+</data>
+<data name="MpBafsExtendedTimeout-MSDefender" xml:space="preserve">
+    <value>拡張クラウド チェックのタイムアウトを最大値に設定する。</value>
+</data>
+<data name="EnableFileHashComputation-MSDefender" xml:space="preserve">
+    <value>ファイル ハッシュの計算を有効にする。</value>
+</data>
+<data name="DisableAsyncScanOnOpen-MSDefender" xml:space="preserve">
+    <value>Dev Drive のファイル スキャンに関する緩いセキュリティを無効にする。</value>
+</data>
+<data name="OobeEnableRtpAndSigUpdate-MSDefender" xml:space="preserve">
+    <value>OOBE モード中に RTP (リアルタイム保護) と署名の更新を有効にする。</value>
+</data>
+<data name="BruteForceProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>ブルート フォース保護機能を有効にする。</value>
+</data>
+<data name="BruteForceProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>ブルート フォースの積極性レベルを「高」に構成する。</value>
+</data>
+<data name="RemoteEncryptionProtectionConfiguredState-MSDefender" xml:space="preserve">
+    <value>リモート暗号化保護機能を有効にする。</value>
+</data>
+<data name="RemoteEncryptionProtectionAggressiveness-MSDefender" xml:space="preserve">
+    <value>リモート暗号化保護の積極性レベルを「高」に構成する。</value>
+</data>
+<data name="DisableEmailScanning-MSDefender" xml:space="preserve">
+    <value>電子メール スキャンを有効にする。</value>
+</data>
+<data name="DisableCatchupQuickScan-MSDefender" xml:space="preserve">
+    <value>キャッチアップ クイック スキャンを有効にする。</value>
+</data>
+<data name="CheckForSignaturesBeforeRunningScan-MSDefender" xml:space="preserve">
+    <value>スキャンの実行前に署名を確認する。</value>
+</data>
+<data name="SignatureUpdateInterval-MSDefender" xml:space="preserve">
+    <value>セキュリティ インテリジェンスの更新を確認する間隔を長くする。</value>
+</data>
+<data name="SpynetReporting-MSDefender" xml:space="preserve">
+    <value>最新のセキュリティ インテリジェンスを常に入手するために、Microsoft MAPS (SpyNet とも呼ばれます) ネットワークに参加する。</value>
+</data>
+<data name="ExploitGuard_ASR_Rules-ASR" xml:space="preserve">
+    <value>ASR ルールを構成する</value>
+</data>
+  <data name="56a863a9-875e-4185-98a7-b882c64b5ce5-ASR" xml:space="preserve">
+    <value>悪用された脆弱な署名されたドライバーの悪用をブロックする</value>
+  </data>
+  <data name="7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c-ASR" xml:space="preserve">
+    <value>Adobe Reader による子プロセスの作成をブロックする</value>
+  </data>
+  <data name="d4f940ab-401b-4efc-aadc-ad5f3c50688a-ASR" xml:space="preserve">
+    <value>すべての Office アプリケーションによる子プロセスの作成をブロックする</value>
+  </data>
+  <data name="9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2-ASR" xml:space="preserve">
+    <value>Windows ローカル セキュリティ機関サブシステム (lsass.exe) からの資格情報の盗用をブロックする</value>
+  </data>
+  <data name="be9ba2d9-53ea-4cdc-84e5-9b1eeee46550-ASR" xml:space="preserve">
+    <value>メール クライアントと Web メールからの実行可能なコンテンツをブロックする</value>
+  </data>
+  <data name="01443614-cd74-433a-b99e-2ecdc07bfc25-ASR" xml:space="preserve">
+    <value>普及率、経過期間、または信頼リストの条件を満たしていない場合に実行可能ファイルが実行されないようにする</value>
+  </data>
+  <data name="5beb7efe-fd9a-4556-801d-275e5ffc04cc-ASR" xml:space="preserve">
+    <value>難読化された可能性のあるスクリプトの実行をブロックする</value>
+  </data>
+  <data name="d3e037e1-3eb8-44c8-a917-57927947596d-ASR" xml:space="preserve">
+    <value>JavaScript または VBScript による、ダウンロードされた実行可能なコンテンツの起動をブロックする</value>
+  </data>
+  <data name="3b576869-a4ec-4529-8536-b80a7769e899-ASR" xml:space="preserve">
+    <value>Office アプリケーションによる実行可能なコンテンツの作成をブロックする</value>
+  </data>
+  <data name="75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84-ASR" xml:space="preserve">
+    <value>Office アプリケーションによる他のプロセスへのコード挿入をブロックする</value>
+  </data>
+  <data name="26190899-1602-49e8-8b27-eb1d0a1ce869-ASR" xml:space="preserve">
+    <value>Office の通信アプリケーションによる子プロセスの作成をブロックする</value>
+  </data>
+  <data name="e6db77e5-3df2-4cf1-b95a-636979351e5b-ASR" xml:space="preserve">
+    <value>WMI イベント サブスクリプションを介して永続性をブロックする
+* ファイルおよびフォルダーの除外はサポートされていません。</value>
+  </data>
+  <data name="d1e49aac-8f56-4280-b9ba-993a6d77406c-ASR" xml:space="preserve">
+    <value>PSExec コマンドと WMI コマンドから発生するプロセスの作成をブロックする</value>
+  </data>
+  <data name="33ddedf1-c6e0-47cb-833e-de6133960387-ASR" xml:space="preserve">
+    <value>セーフ モードでのコンピューターの再起動をブロックする</value>
+  </data>
+  <data name="b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4-ASR" xml:space="preserve">
+    <value>USB から実行される信頼されていないプロセスまたは署名されていないプロセスをブロックする</value>
+  </data>
+  <data name="c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb-ASR" xml:space="preserve">
+    <value>コピーまたは偽装されたシステム ツールの使用をブロックする</value>
+  </data>
+  <data name="a8f5898e-1dc8-49a9-9878-85004b8a61e6-ASR" xml:space="preserve">
+    <value>サーバーの WebShell 作成をブロックする</value>
+  </data>
+  <data name="92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b-ASR" xml:space="preserve">
+    <value>Office マクロからの Win32 API 呼び出しをブロックする</value>
+  </data>
+  <data name="c1db55ab-c21a-4637-bb3f-a12568109d35-ASR" xml:space="preserve">
+    <value>ランサムウェアに対して高度な保護を使用する</value>
+  </data>
+<data name="DisallowStandardUserPINReset-BitLocker" xml:space="preserve">
+    <value>標準ユーザーによる PIN のリセットを禁止する</value>
+</data>
+<data name="UseAdvancedStartup-BitLocker" xml:space="preserve">
+    <value>起動時に追加の認証を要求できるように OS に許可する</value>
+</data>
+<data name="EnableBDEWithNoTPM-BitLocker" xml:space="preserve">
+    <value>TPM なしでの BitLocker を許可しない</value>
+</data>
+<data name="UseTPM-BitLocker" xml:space="preserve">
+    <value>TPM 単独での使用を許可しない</value>
+</data>
+<data name="UseTPMPIN-BitLocker" xml:space="preserve">
+    <value>起動時に TPM + PIN の使用を許可する。</value>
+</data>
+<data name="UseTPMKey-BitLocker" xml:space="preserve">
+    <value>起動時に TPM + キーの使用を許可する。</value>
+</data>
+<data name="UseTPMKeyPIN-BitLocker" xml:space="preserve">
+    <value>起動時に TPM + スタートアップ キー + PIN の使用を許可する。</value>
+</data>
+<data name="EncryptionMethodWithXtsOs-BitLocker" xml:space="preserve">
+    <value>OS ドライブに適切な暗号化方式 (XTS-AES-256) を構成する</value>
+</data>
+<data name="EncryptionMethodWithXtsFdv-BitLocker" xml:space="preserve">
+    <value>固定データ ドライブに適切な暗号化方式 (XTS-AES-256) を構成する</value>
+</data>
+<data name="EncryptionMethodWithXtsRdv-BitLocker" xml:space="preserve">
+    <value>リムーバブル ドライブに適切な暗号化方式 (XTS-AES-256) を構成する</value>
+</data>
+<data name="UseEnhancedPin-BitLocker" xml:space="preserve">
+    <value>PIN に記号やその他の文字を使用できるようにして、拡張 PIN を使用する。</value>
+</data>
+<data name="OSEncryptionType-BitLocker" xml:space="preserve">
+    <value>OS ドライブに安全なフル ディスク暗号化の種類を構成する</value>
+</data>
+<data name="RDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>リムーバブル ドライブに安全なフル ディスク暗号化の種類を構成する</value>
+</data>
+<data name="RDVDiscoveryVolumeType-BitLocker" xml:space="preserve">
+    <value>以前のバージョンの Windows から、BitLocker で保護されたリムーバブル データ ドライブへのアクセスを防止する</value>
+</data>
+<data name="RDVNoBitLockerToGoReader-BitLocker" xml:space="preserve">
+    <value>FAT でフォーマットされたリムーバブル ドライブは安全でないため、「BitLocker To Go」リーダーをインストールしない。</value>
+</data>
+<data name="MinimumPIN-BitLocker" xml:space="preserve">
+    <value>起動時の最小 PIN 長を構成する。</value>
+</data>
+<data name="ACSettingIndex-BitLocker" xml:space="preserve">
+    <value>スリープ時 (電源接続時) のスタンバイ状態 (S1-S3) を禁止する</value>
+</data>
+<data name="DCSettingIndex-BitLocker" xml:space="preserve">
+    <value>スリープ時 (バッテリー駆動時) のスタンバイ状態 (S1-S3) を禁止する</value>
+</data>
+<data name="ShowHibernateOption-BitLocker" xml:space="preserve">
+    <value>必要に応じてデバイスを休止状態にできるように、OS の電源オプションに休止状態オプションを表示する。</value>
+</data>
+<data name="FDVEncryptionType-BitLocker" xml:space="preserve">
+    <value>固定データ ドライブに安全な暗号化の種類を構成する</value>
+</data>
+<data name="Functions-TLS" xml:space="preserve">
+    <value>適切な TLS 暗号スイートを構成する</value>
+</data>
+<data name="EccCurves-TLS" xml:space="preserve">
+    <value>サービスの ECC 曲線とその順位を構成する。</value>
+</data>
+<data name="DisabledByDefault1-TLS" xml:space="preserve">
+    <value>TLS 1.0 クライアントを無効にする - 既定で無効</value>
+</data>
+<data name="Enabled1-TLS" xml:space="preserve">
+    <value>TLS 1.0 クライアントを無効にする - 有効</value>
+</data>
+<data name="DisabledByDefault2-TLS" xml:space="preserve">
+    <value>TLS 1.0 サーバーを無効にする - 既定で無効</value>
+</data>
+<data name="Enabled2-TLS" xml:space="preserve">
+    <value>TLS 1.0 サーバーを無効にする - 有効</value>
+</data>
+<data name="DisabledByDefault3-TLS" xml:space="preserve">
+    <value>TLS 1.1 クライアントを無効にする - 既定で無効</value>
+</data>
+<data name="Enabled3-TLS" xml:space="preserve">
+    <value>TLS 1.1 クライアントを無効にする - 有効</value>
+</data>
+<data name="DisabledByDefault4-TLS" xml:space="preserve">
+    <value>TLS 1.1 サーバーを無効にする - 既定で無効</value>
+</data>
+<data name="Enabled4-TLS" xml:space="preserve">
+    <value>TLS 1.1 サーバーを無効にする - 有効</value>
+</data>
+<data name="Enabled5-TLS" xml:space="preserve">
+    <value>NULL 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled6-TLS" xml:space="preserve">
+    <value>56/56 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled7-TLS" xml:space="preserve">
+    <value>40/128 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled8-TLS" xml:space="preserve">
+    <value>RC2 56/128 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled9-TLS" xml:space="preserve">
+    <value>RC2 128/128 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled10-TLS" xml:space="preserve">
+    <value>RC4 40/128 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled11-TLS" xml:space="preserve">
+    <value>RC4 56/128 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled12-TLS" xml:space="preserve">
+    <value>RC4 64/128 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled13-TLS" xml:space="preserve">
+    <value>RC4 128/128 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled14-TLS" xml:space="preserve">
+    <value>Triple DES 168 暗号スイートを無効にする</value>
+</data>
+<data name="Enabled15-TLS" xml:space="preserve">
+    <value>MD5 ハッシュ アルゴリズムを無効にする</value>
+</data>
+<data name="Digits-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN に数字を必須にする</value>
+</data>
+<data name="LowercaseLetters-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN に小文字を必須にする</value>
+</data>
+<data name="Expiration-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN の有効期限を設定する</value>
+</data>
+<data name="History-LockScreen" xml:space="preserve">
+    <value>Windows Hello PIN の履歴を保存する</value>
+</data>
+<data name="DontDisplayNetworkSelectionUI-LockScreen" xml:space="preserve">
+    <value>ロック画面にネットワーク選択 UI を表示しない</value>
+</data>
+<data name="HideFastUserSwitching-UAC" xml:space="preserve">
+    <value>ユーザーの簡易切り替えのエントリ ポイントを非表示にする</value>
+</data>
+<data name="EnableVirtualizationBasedSecurity-DeviceGuard" xml:space="preserve">
+    <value>仮想化ベースのセキュリティを有効にする</value>
+</data>
+<data name="RequirePlatformSecurityFeatures-DeviceGuard" xml:space="preserve">
+    <value>プラットフォーム セキュリティ機能を必須にする</value>
+</data>
+<data name="HypervisorEnforcedCodeIntegrity-DeviceGuard" xml:space="preserve">
+    <value>ハイパーバイザーによって強制されるコード整合性 - UEFI ロック</value>
+</data>
+<data name="HVCIMATRequired-DeviceGuard" xml:space="preserve">
+    <value>HVCI MAT (メモリ属性テーブル) を必須にする</value>
+</data>
+<data name="LsaCfgFlags-DeviceGuard" xml:space="preserve">
+    <value>Credential Guard の構成 - UEFI ロック</value>
+</data>
+<data name="ConfigureSystemGuardLaunch-DeviceGuard" xml:space="preserve">
+    <value>ハードウェアのサポートがある場合に System Guard セキュア起動を有効にする</value>
+</data>
+<data name="ConfigureKernelShadowStacksLaunch-DeviceGuard" xml:space="preserve">
+    <value>カーネル シャドウ スタックの起動を構成する</value>
+</data>
+<data name="RunAsPPL-DeviceGuard" xml:space="preserve">
+    <value>UEFI ロックによるローカル セキュリティ機関 (LSA) プロセス保護を有効にする</value>
+</data>
+<data name="MachineIdentityIsolation-DeviceGuard" xml:space="preserve">
+    <value>マシン ID 分離の構成を設定する</value>
+</data>
+<data name="Mandatory-DeviceGuard" xml:space="preserve">
+    <value>VBS とメモリ整合性を必須モードで有効にする</value>
+</data>
+<data name="EnableFirewallDomain-WindowsFirewall" xml:space="preserve">
+    <value>ドメイン プロファイルの Windows ファイアウォールを有効にする</value>
+</data>
+<data name="DefaultOutboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>ドメイン プロファイルの既定の送信アクションを設定する</value>
+</data>
+<data name="DefaultInboundActionDomain-WindowsFirewall" xml:space="preserve">
+    <value>ドメイン プロファイルの既定の受信アクションを設定する</value>
+</data>
+<data name="DisableNotificationsDomain-WindowsFirewall" xml:space="preserve">
+    <value>ドメイン プロファイルの通知を表示する</value>
+</data>
+<data name="LogFilePathDomain-WindowsFirewall" xml:space="preserve">
+    <value>ドメイン プロファイルのログ ファイルのパスを構成する</value>
+</data>
+<data name="LogFileSizeDomain-WindowsFirewall" xml:space="preserve">
+    <value>ドメイン プロファイルのログ ファイルのサイズを構成する</value>
+</data>
+<data name="LogDroppedPacketsDomain-WindowsFirewall" xml:space="preserve">
+    <value>ドメイン プロファイルでブロックされた接続をログに記録する</value>
+</data>
+<data name="LogSuccessfulConnectionsDomain-WindowsFirewall" xml:space="preserve">
+    <value>ドメイン プロファイルで成功した接続をログに記録する</value>
+</data>
+<data name="EnableFirewallPrivate-WindowsFirewall" xml:space="preserve">
+    <value>プライベート プロファイルの Windows ファイアウォールを有効にする</value>
+</data>
+<data name="DisableNotificationsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>プライベート プロファイルの通知を表示する</value>
+</data>
+<data name="LogFileSizePrivate-WindowsFirewall" xml:space="preserve">
+    <value>プライベート プロファイルのログ ファイルのサイズを構成する</value>
+</data>
+<data name="LogDroppedPacketsPrivate-WindowsFirewall" xml:space="preserve">
+    <value>プライベート プロファイルでブロックされた接続をログに記録する</value>
+</data>
+<data name="LogFilePathPrivate-WindowsFirewall" xml:space="preserve">
+    <value>プライベート プロファイルのログ ファイルのパスを構成する</value>
+</data>
+<data name="EnableFirewallPublic-WindowsFirewall" xml:space="preserve">
+    <value>パブリック プロファイルの Windows ファイアウォールを有効にする</value>
+</data>
+<data name="DisableNotificationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>パブリック プロファイルの通知を表示する</value>
+</data>
+<data name="LogFileSizePublic-WindowsFirewall" xml:space="preserve">
+    <value>パブリック プロファイルのログ ファイルのサイズを構成する</value>
+</data>
+<data name="LogDroppedPacketsPublic-WindowsFirewall" xml:space="preserve">
+    <value>パブリック プロファイルでブロックされた接続をログに記録する</value>
+</data>
+<data name="LogFilePathPublic-WindowsFirewall" xml:space="preserve">
+    <value>パブリック プロファイルのログ ファイルのパスを構成する</value>
+</data>
+<data name="PolicyVersion-WindowsFirewall" xml:space="preserve">
+    <value>Windows ファイアウォール ポリシーのバージョンを構成する</value>
+</data>
+<data name="EnableNetbios-WindowsNetworking" xml:space="preserve">
+    <value>NetBIOS を無効にする</value>
+</data>
+<data name="DisableSmartNameResolution-WindowsNetworking" xml:space="preserve">
+    <value>スマート名前解決を無効にする</value>
+</data>
+<data name="EnableMulticast-WindowsNetworking" xml:space="preserve">
+    <value>マルチキャストを無効にする</value>
+</data>
+<data name="DisableHTTPPrinting-WindowsNetworking" xml:space="preserve">
+    <value>HTTP 印刷を無効にする</value>
+</data>
+<data name="DisableWebPnPDownload-WindowsNetworking" xml:space="preserve">
+    <value>Web PnP ダウンロードを無効にする</value>
+</data>
+<data name="EnableLMHOSTS-WindowsNetworking" xml:space="preserve">
+    <value>すべてのネットワーク アダプターで LMHOSTS ルックアップ プロトコルを無効にする</value>
+</data>
+<data name="EnableSMBQUICServer-WindowsNetworking" xml:space="preserve">
+    <value>QUIC 経由の SMB サーバーを有効にする</value>
+</data>
+<data name="EnableSMBQUICClient-WindowsNetworking" xml:space="preserve">
+    <value>QUIC 経由の SMB クライアントを有効にする</value>
+</data>
+<data name="CipherSuiteOrderServer-WindowsNetworking" xml:space="preserve">
+    <value>安全な SMB サーバー暗号スイートの順序を構成する</value>
+</data>
+<data name="CipherSuiteOrderClient-WindowsNetworking" xml:space="preserve">
+    <value>安全な SMB クライアント暗号スイートの順序を構成する</value>
+</data>
+<data name="MinSmb2DialectServer-WindowsNetworking" xml:space="preserve">
+    <value>SMB サーバーの最小バージョンを設定する</value>
+</data>
+<data name="MinSmb2DialectClient-WindowsNetworking" xml:space="preserve">
+    <value>SMB クライアントの最小バージョンを設定する</value>
+</data>
+<data name="BlockNTLM-WindowsNetworking" xml:space="preserve">
+    <value>SMB の NTLM をブロックする</value>
+</data>
+<data name="RequireEncryption-WindowsNetworking" xml:space="preserve">
+    <value>SMB クライアントに暗号化を必須にする</value>
+</data>
+<data name="EnableAuthEpResolution-WindowsNetworking" xml:space="preserve">
+    <value>RPC エンドポイント マッパーのクライアント認証を無効にする</value>
+</data>
+<data name="EncryptData-WindowsNetworking" xml:space="preserve">
+    <value>SMB サーバーの暗号化を有効にする</value>
+</data>
+<data name="ProcessCreationIncludeCmdLine_Enabled-Miscellaneous" xml:space="preserve">
+    <value>プロセス作成イベントにコマンド ラインを含める</value>
+</data>
+<data name="DisableLocation-Miscellaneous" xml:space="preserve">
+    <value>位置情報を無効にする</value>
+</data>
+<data name="DisableLocationScripting-Miscellaneous" xml:space="preserve">
+    <value>位置情報スクリプトを無効にする</value>
+</data>
+<data name="DisableWindowsLocationProvider-Miscellaneous" xml:space="preserve">
+    <value>Windows 位置情報プロバイダーを無効にする</value>
+</data>
+<data name="EnableSvchostMitigationPolicy-Miscellaneous" xml:space="preserve">
+    <value>Svchost の緩和策を有効にする</value>
+</data>
+<data name="DriverLoadPolicyGoodOnly-Miscellaneous" xml:space="preserve">
+    <value>ブート開始ドライバーの初期化ポリシーを「正常なもののみ」に設定する</value>
+</data>
+<data name="EnableFindMyFiles-Miscellaneous" xml:space="preserve">
+    <value>Windows の拡張検索を有効にする</value>
+</data>
+<data name="allowautoupdatesmeteredStable-Miscellaneous" xml:space="preserve">
+    <value>Microsoft Edge (Stable) を従量制課金接続経由で更新するように設定する</value>
+</data>
+<data name="allowautoupdatesmeteredBeta-Miscellaneous" xml:space="preserve">
+    <value>Microsoft Edge (Beta) を従量制課金接続経由で更新するように設定する</value>
+</data>
+<data name="allowautoupdatesmeteredDev-Miscellaneous" xml:space="preserve">
+    <value>Microsoft Edge (Dev) を従量制課金接続経由で更新するように設定する</value>
+</data>
+<data name="EnableCertPaddingCheck-Miscellaneous" xml:space="preserve">
+    <value>WinVerifyTrust 署名検証を実装する パート 1</value>
+</data>
+<data name="EnableCertPaddingCheck2-Miscellaneous" xml:space="preserve">
+    <value>WinVerifyTrust 署名検証を実装する パート 2</value>
+</data>
+<data name="EnableCbacAndArmor-Miscellaneous" xml:space="preserve">
+    <value>DAC と Kerberos アーマリングのために、クレームと複合認証を要求する</value>
+</data>
+<data name="WindowsProtectedPrintGroupPolicyState-Miscellaneous" xml:space="preserve">
+    <value>Windows 保護印刷を有効にする</value>
+</data>
+<data name="LongPathsEnabled-Miscellaneous" xml:space="preserve">
+    <value>長いパスのサポートを有効にする</value>
+</data>
+<data name="AllowOnlineTips-Miscellaneous" xml:space="preserve">
+    <value>オンライン ヒントを無効にする。</value>
+</data>
+<data name="AllowFindMyDevice-Miscellaneous" xml:space="preserve">
+    <value>デバイスの検索機能を無効にする。</value>
+</data>
+<data name="AllowSpeechModelUpdate-Miscellaneous" xml:space="preserve">
+    <value>音声データの自動更新を無効にする。</value>
+</data>
+<data name="DisabledByGroupPolicy-Miscellaneous" xml:space="preserve">
+    <value>広告 ID をオフにして、アプリがアプリ間のエクスペリエンスに ID を使用できないようにする。</value>
+</data>
+<data name="DisableSoftLanding-Miscellaneous" xml:space="preserve">
+    <value>Windows の使用時にヒントと提案を取得する機能をオフにする。</value>
+</data>
+<data name="DisableCloudOptimizedContent-Miscellaneous" xml:space="preserve">
+    <value>すべての Windows エクスペリエンスでクラウド最適化コンテンツをオフにする。</value>
+</data>
+<data name="DoNotShowFeedbackNotifications-Miscellaneous" xml:space="preserve">
+    <value>フィードバックの通知を表示しない。</value>
+</data>
+<data name="AutoDownloadAndUpdateMapData-Miscellaneous" xml:space="preserve">
+    <value>地図データの自動ダウンロードと更新をオフにする。</value>
+</data>
+<data name="AllowMessageSync-Miscellaneous" xml:space="preserve">
+    <value>携帯回線のテキスト メッセージに対するメッセージ サービスのクラウド同期を無効にする。</value>
+</data>
+<data name="EnableFontProviders-Miscellaneous" xml:space="preserve">
+    <value>Windows によるフォント カタログのダウンロードをブロックする。</value>
+</data>
+<data name="EnableCdp-Miscellaneous" xml:space="preserve">
+    <value>「このデバイスでのエクスペリエンスの継続」機能を無効にする。</value>
+</data>
+<data name="EnableAppUriHandlers-Miscellaneous" xml:space="preserve">
+    <value>アプリ URI ハンドラーによる Web からアプリへのリンクのサポートを無効にする。</value>
+</data>
+<data name="DisableWebSearch-Miscellaneous" xml:space="preserve">
+    <value>検索で Web を検索したり Web の結果を表示したりしない。</value>
+</data>
+<data name="ConnectedSearchUseWeb-Miscellaneous" xml:space="preserve">
+    <value>Web 検索を許可しない。</value>
+</data>
+<data name="AllowAutoWindowsUpdateDownloadOverMeteredNetwork-WindowsUpdate" xml:space="preserve">
+    <value>従量制課金接続経由で更新プログラムが自動的にダウンロードされることを許可する</value>
+</data>
+<data name="AllowTemporaryEnterpriseFeatureControl-WindowsUpdate" xml:space="preserve">
+    <value>サービシングを通じて導入され、既定でオフになっている機能を有効にする</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>機能更新プログラムがデバイスに自動的にインストールされるまでの日数を指定する</value>
+</data>
+<data name="ConfigureDeadlineNoAutoRebootForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>品質更新プログラムがデバイスに自動的にインストールされるまでの日数を指定する</value>
+</data>
+<data name="ConfigureDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>品質更新プログラムがデバイスに自動的にインストールされるまでの日数</value>
+</data>
+<data name="ConfigureDeadlineGracePeriod-WindowsUpdate" xml:space="preserve">
+    <value>品質更新プログラムがデバイスに自動的にインストールされるまでの猶予期間の日数</value>
+</data>
+<data name="ConfigureDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>機能更新プログラムがデバイスに自動的にインストールされるまでの日数</value>
+</data>
+<data name="ConfigureDeadlineGracePeriodForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>機能更新プログラムがデバイスに自動的にインストールされるまでの猶予期間の日数</value>
+</data>
+<data name="NoAutoUpdate-WindowsUpdate" xml:space="preserve">
+    <value>セキュリティ更新プログラムやその他の重要なダウンロードを Windows Update から受信するようにコンピューターを設定する</value>
+</data>
+<data name="AUOptions-WindowsUpdate" xml:space="preserve">
+    <value>更新プログラムを自動的にダウンロードし、メンテナンス日にインストールする</value>
+</data>
+<data name="AutomaticMaintenanceEnabled-WindowsUpdate" xml:space="preserve">
+    <value>自動メンテナンス中に更新プログラムをインストールする</value>
+</data>
+<data name="ScheduledInstallDay-WindowsUpdate" xml:space="preserve">
+    <value>スケジュールされたインストール日を毎日に設定する</value>
+</data>
+<data name="ScheduledInstallTime-WindowsUpdate" xml:space="preserve">
+    <value>スケジュールされたインストール時刻を任意の時刻に設定する</value>
+</data>
+<data name="AllowMUUpdateService-WindowsUpdate" xml:space="preserve">
+    <value>他の Microsoft 製品の更新プログラムをインストールする</value>
+</data>
+<data name="RestartNotificationsAllowed2-WindowsUpdate" xml:space="preserve">
+    <value>Windows Update の再起動通知を有効にする</value>
+</data>
+<data name="RemoveScheduleForWeek-WindowsUpdate" xml:space="preserve">
+    <value>特定の週にのみ更新プログラムをインストールするスケジュールを削除する。</value>
+</data>
+<data name="SetComplianceDeadlineForFeatureUpdates-WindowsUpdate" xml:space="preserve">
+    <value>機能更新プログラムのコンプライアンス期限を設定する。</value>
+</data>
+<data name="SetComplianceDeadlineForQualityUpdates-WindowsUpdate" xml:space="preserve">
+    <value>品質更新プログラムのコンプライアンス期限を設定する。</value>
+</data>
+<data name="BlockThirdPartyCookies-Edge" xml:space="preserve">
+    <value>サードパーティ Cookie をブロックする</value>
+</data>
+<data name="DnsOverHttpsMode-Edge" xml:space="preserve">
+    <value>DNS over HTTPS モードをシステムの DoH 設定を使用するように設定する</value>
+</data>
+<data name="EncryptedClientHelloEnabled-Edge" xml:space="preserve">
+    <value>Encrypted Client Hello を有効にする</value>
+</data>
+<data name="BasicAuthOverHttpEnabled-Edge" xml:space="preserve">
+    <value>HTTP の Basic 認証をブロックする</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControl-Edge" xml:space="preserve">
+    <value>ポリシーの使用後も Edge が新機能を受け取れるようにする</value>
+</data>
+<data name="AudioSandboxEnabled-Edge" xml:space="preserve">
+    <value>オーディオ プロセスをサンドボックス化して実行するように強制する</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSetting-Edge" xml:space="preserve">
+    <value>追加のオペレーティング システム地域設定の共有を「しない」に設定することを推奨する</value>
+</data>
+<data name="1-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA を無効にする - (CBC - SHA1)</value>
+</data>
+<data name="2-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA を無効にする - (CBC - SHA1)</value>
+</data>
+<data name="3-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_CBC_SHA を無効にする - (PFS なし - CBC - SHA1)</value>
+</data>
+<data name="4-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_CBC_SHA を無効にする - (PFS なし - CBC - SHA1)</value>
+</data>
+<data name="5-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_GCM_SHA256 を無効にする - (PFS なし)</value>
+</data>
+<data name="6-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_GCM_SHA384 を無効にする - (PFS なし)</value>
+</data>
+<data name="ExtensionManifestV2Availability-Edge" xml:space="preserve">
+    <value>Manifest V2 拡張機能のサポートを決して無効にしない</value>
+</data>
+<data name="DefaultWebUsbGuardSetting-Edge" xml:space="preserve">
+    <value>ローカルの USB 接続デバイスへのアクセスを Web サイトが要求できないようにする</value>
+</data>
+<data name="DefaultWindowManagementSetting-Edge" xml:space="preserve">
+    <value>既定ですべてのサイトでウィンドウ管理の許可を拒否する</value>
+</data>
+<data name="DynamicCodeSettings-Edge" xml:space="preserve">
+    <value>ブラウザー プロセスによる動的コードの作成を防止する</value>
+</data>
+<data name="HideFileExt-NonAdmin" xml:space="preserve">
+    <value>エクスプローラーでファイル拡張子を表示する</value>
+</data>
+<data name="Hidden-NonAdmin" xml:space="preserve">
+    <value>エクスプローラーで隠しファイルを表示する</value>
+</data>
+<data name="HttpAcceptLanguageOptOut-NonAdmin" xml:space="preserve">
+    <value>Web サイトによるローカルの言語一覧へのアクセスを無効にする</value>
+</data>
+<data name="SafeSearchMode-NonAdmin" xml:space="preserve">
+    <value>Windows 検索でセーフ サーチをオフにする</value>
+</data>
+<data name="EnableClipboardHistory-NonAdmin" xml:space="preserve">
+    <value>クリップボードの履歴を有効にする</value>
+</data>
+<data name="EnableHwkbTextPrediction-NonAdmin" xml:space="preserve">
+    <value>物理キーボードでの入力時に文字候補を表示する機能をオンにする</value>
+</data>
+<data name="MultilingualEnabled-NonAdmin" xml:space="preserve">
+    <value>多言語の文字候補をオンにする</value>
+</data>
+<data name="Flags-NonAdmin" xml:space="preserve">
+    <value>Shift キーを 5 回続けて押す固定キーのショートカットをオフにする</value>
+</data>
+<data name="NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK-NonAdmin" xml:space="preserve">
+    <value>ロック画面にリマインダーや着信 VoIP 通話を表示する機能を無効にする</value>
+</data>
+<data name="LocalAccountTokenFilterPolicy-OptionalOverrides" xml:space="preserve">
+    <value>ネットワーク ログオン時にローカル アカウントへ UAC 制限を適用する</value>
+</data>
+<data name="RDVDenyCrossOrg-OptionalOverrides" xml:space="preserve">
+    <value>他の組織で作成された BitLocker 暗号化ドライブを OS が使用できるようにする。</value>
+</data>
+<data name="DisableWindowsConsumerFeatures-OptionalOverrides" xml:space="preserve">
+    <value>消費者がデバイスと Microsoft アカウントを最大限に活用できるように支援するエクスペリエンスをオフにしない。</value>
+</data>
+<data name="AllowGameDVR-OptionalOverrides" xml:space="preserve">
+    <value>ゲーム DVR 機能の使用を許可する。</value>
+</data>
+<data name="NC_ShowSharedAccessUI-OptionalOverrides" xml:space="preserve">
+    <value>ローカル管理者向けにインターネット接続共有 (ICS) のユーザー インターフェイスを有効にする。</value>
+</data>
+<data name="Enabled-OptionalOverrides" xml:space="preserve">
+    <value>ユーザーが Sudo 機能を使用できるようにする。</value>
+</data>
+<data name="HideExclusionsFromLocalAdmins-OptionalOverrides" xml:space="preserve">
+    <value>Microsoft Defender の除外項目をローカル管理者から隠さない。</value>
+</data>
+<data name="fDisableCdm-OptionalOverrides" xml:space="preserve">
+    <value>リモート デスクトップ セッションおよび Hyper-V でのドライブの割り当てを許可する</value>
+</data>
+<data name="fDisableClip-OptionalOverrides" xml:space="preserve">
+    <value>リモート デスクトップ セッションおよび Hyper-V でのクリップボードの共有を許可する</value>
+</data>
+<data name="PolicyVersionOverride-OptionalOverrides" xml:space="preserve">
+    <value>Windows ファイアウォール ポリシーのバージョンを構成する</value>
+</data>
+<data name="DisableNotificationsPrivateOverride-OptionalOverrides" xml:space="preserve">
+    <value>プライベート プロファイルの Windows ファイアウォールで通知を無効にしない</value>
+</data>
+<data name="AllowLocalPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>グループ ポリシーで定義されたもののみを適用するのではなく、Windows ファイアウォールの詳細設定セクションで定義された Windows ファイアウォール ポリシーを使用できるようにする。</value>
+</data>
+<data name="AllowLocalIPsecPolicyMerge-OptionalOverrides" xml:space="preserve">
+    <value>グループ ポリシーで定義されたもののみを適用するのではなく、Windows ファイアウォールの詳細設定セクションで定義された Windows ファイアウォール IPSec ポリシーを使用できるようにする。</value>
+</data>
+<data name="DisableNotificationsPublicOverride-OptionalOverrides" xml:space="preserve">
+    <value>パブリック プロファイルの Windows ファイアウォールで通知を無効にしない</value>
+</data>
+<data name="RDVDenyWriteAccess-OptionalOverrides" xml:space="preserve">
+    <value>BitLocker で暗号化されていないリムーバブル ドライブへの書き込みを OS に許可する</value>
+</data>
+<data name="BlockThirdPartyCookiesRecommended-Edge" xml:space="preserve">
+    <value>サードパーティ Cookie をブロックすることを推奨する</value>
+</data>
+<data name="DnsOverHttpsModeEdge-Edge" xml:space="preserve">
+    <value>Edge がシステムの DNS over HTTPS を使用するように設定する。これにより MDAG も適切に動作するようになる</value>
+</data>
+<data name="EncryptedClientHelloEnabledEdge-Edge" xml:space="preserve">
+    <value>Encrypted Client Hello を有効にする</value>
+</data>
+<data name="BasicAuthOverHttpEnabledEdge-Edge" xml:space="preserve">
+    <value>HTTP の Basic 認証をブロックする</value>
+</data>
+<data name="ExperimentationAndConfigurationServiceControlEdge-Edge" xml:space="preserve">
+    <value>Edge カテゴリ保護を使用しているデバイスが、通常のデバイスと同様に新機能や実験的機能を受け取れるようにする</value>
+</data>
+<data name="AudioSandboxEnabledEdge-Edge" xml:space="preserve">
+    <value>オーディオ プロセスをサンドボックス化して実行するように強制する</value>
+</data>
+<data name="DefaultShareAdditionalOSRegionSettingEdge-Edge" xml:space="preserve">
+    <value>追加のオペレーティング システム地域設定の共有を「しない」に設定することを推奨する。</value>
+</data>
+<data name="TLSCipherSuiteDenyList1-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA を無効にする - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList2-Edge" xml:space="preserve">
+    <value>TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA を無効にする - (CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList3-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_CBC_SHA を無効にする - (PFS なし - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList4-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_CBC_SHA を無効にする - (PFS なし - CBC - SHA1)</value>
+</data>
+<data name="TLSCipherSuiteDenyList5-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_128_GCM_SHA256 を無効にする - (PFS なし)</value>
+</data>
+<data name="TLSCipherSuiteDenyList6-Edge" xml:space="preserve">
+    <value>TLS_RSA_WITH_AES_256_GCM_SHA384 を無効にする - (PFS なし)</value>
+</data>
+<data name="DefaultWebUsbGuardSettingEdge-Edge" xml:space="preserve">
+    <value>ローカルの USB 接続デバイスへのアクセスを Web サイトが要求できないようにする</value>
+</data>
+<data name="DefaultWindowManagementSettingEdge-Edge" xml:space="preserve">
+    <value>既定ですべてのサイトでウィンドウ管理の許可を拒否する</value>
+</data>
+<data name="DisableNULL-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: NULL</value>
+</data>
+<data name="DisableDES56-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: DES 56 ビット</value>
+</data>
+<data name="DisableRC240-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: RC2 40 ビット</value>
+</data>
+<data name="DisableRC256-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: RC2 56 ビット</value>
+</data>
+<data name="DisableRC2128-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: RC2 128 ビット</value>
+</data>
+<data name="DisableRC440-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: RC4 40 ビット</value>
+</data>
+<data name="DisableRC456-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: RC4 56 ビット</value>
+</data>
+<data name="DisableRC464-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: RC4 64 ビット</value>
+</data>
+<data name="DisableRC4128-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: RC4 128 ビット</value>
+</data>
+<data name="DisableTripleDES-TLS" xml:space="preserve">
+    <value>Schannel の脆弱な暗号を無効にする: 3DES 168 ビット (Triple DES 168)</value>
+</data>
+<data name="DisableMD5-TLS" xml:space="preserve">
+    <value>SChannel の MD5 ハッシュ アルゴリズムを無効にする。</value>
+</data>
+<data name="BattleNetCipher-TLS" xml:space="preserve">
+    <value>Battle Net ゲーム クライアントとの互換性を確保するために、安全性の低い暗号「TLS_RSA_WITH_AES_256_CBC_SHA」の使用を許可する。</value>
+</data>
+  <data name="SAC-MSDefender" xml:space="preserve">
+    <value>スマート アプリ コントロールをオンにする。スマート アプリ コントロールが正しく機能するために必要な、オプションの診断データも有効にしてください。</value>
+  </data>
+    <data name="InactivityTimeoutSecs-LockScreen" xml:space="preserve">
+    <value>コンピューターの非アクティブ状態の制限ポリシーを設定し、120 秒間操作がないとデバイスが自動的にロックされるようにする。</value>
+  </data>
+      <data name="DisableCAD-LockScreen" xml:space="preserve">
+    <value>資格情報を入力する前に、ロック画面で CTRL+ALT+DEL キーの組み合わせを必須とする対話型ログオン ポリシーを設定する。これにより、パスワードなどのユーザー資格情報を平文でキャプチャするために偽のロック画面を利用する特定の攻撃を緩和できる。</value>
+  </data>
+      <data name="MaxDevicePasswordFailedAttempts-LockScreen" xml:space="preserve">
+    <value>BitLocker で暗号化されたデバイスが 5 回のログイン失敗後にロックされるように、コンピューター アカウントのロックアウトしきい値に関する対話型ログオン ポリシーを設定する。再度ログインするには、OS ドライブの BitLocker 回復キーの入力が必要になる。</value>
+  </data>
+      <data name="DontDisplayLockedUserId-LockScreen" xml:space="preserve">
+    <value>セッションがロックされているときにユーザー情報を表示しないように、対話型ログオン ポリシーを設定する。</value>
+  </data>
+      <data name="DontDisplayUserName-LockScreen" xml:space="preserve">
+    <value>ロック画面にユーザー名を表示しないように、対話型ログオン ポリシーを設定する。</value>
+  </data>
+      <data name="DontDisplayLastUserName-LockScreen" xml:space="preserve">
+    <value>ロック画面に前回サインインの詳細を表示しないように、対話型ログオン ポリシーを設定する。</value>
+  </data>
+  <data name="ConsentPromptBehaviorAdmin-UAC" xml:space="preserve">
+    <value>管理者承認モードでの管理者に対する昇格プロンプトの動作を設定する: セキュリティで保護されたデスクトップで同意を求める</value>
+  </data>
+    <data name="ConsentPromptBehaviorUser-UAC" xml:space="preserve">
+    <value>標準ユーザーに対する昇格プロンプトの動作を設定する: セキュリティで保護されたデスクトップで資格情報を求める</value>
+  </data>
+    <data name="ValidateAdminCodeSignatures-UAC" xml:space="preserve">
+    <value>署名され検証された実行可能ファイルのみを昇格するようにシステムを構成する。署名されていない、または自己署名証明書で署名されたプログラムは、管理者として実行できなくなる。</value>
+  </data>
+    <data name="ConsentPromptBehaviorEnhancedAdmin-UAC" xml:space="preserve">
+    <value>拡張特権保護モードでの管理者に対する昇格プロンプトの動作を設定する: セキュリティで保護されたデスクトップで資格情報を求める</value>
+  </data>
+    <data name="TypeOfAdminApprovalMode-UAC" xml:space="preserve">
+    <value>管理者保護: 管理者承認モードの種類を、拡張特権保護を備えた管理者承認モードに設定する</value>
+  </data>
+  <data name="AllowedExactPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>リモートからアクセス可能なレジストリ パスを削除する。</value>
+</data>
+  <data name="AllowedPathsMachine-WindowsNetworking" xml:space="preserve">
+    <value>リモートからアクセス可能なレジストリ パスとサブパスを削除する。</value>
+</data>
+  <data name="RestrictReceivingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>すべてのアカウントに対して受信 NTLM 接続を拒否する。</value>
+</data>
+  <data name="RestrictSendingNTLMTraffic-WindowsNetworking" xml:space="preserve">
+    <value>送信 NTLM 接続を拒否する。</value>
+</data>
+<data name="ForceKeyProtection-Miscellaneous" xml:space="preserve">
+    <value>コンピューターに保存されているユーザー キーに強力なキー保護を強制する。コンピューターにインストールした証明書の秘密キーを安全に保存でき、署名操作などで秘密キーにアクセスする際に同じ資格情報が要求されるようになる。</value>
+</data>
+<data name="LockoutBadCount-LockScreen" xml:space="preserve">
+    <value>サインイン失敗の許容回数を 5 回に設定する。このカテゴリの他のポリシーと組み合わせることで、5 回サインインに失敗するたびに、次の 5 回の試行を行うまでに丸 1 日が経過する必要があることを意味する。そうでない場合は BitLocker が作動し、システムが再起動して 48 桁の BitLocker コードの入力が必要になる。このポリシーはブルート フォース攻撃を大幅に防止する。</value>
+</data>
+<data name="ResetLockoutCount-LockScreen" xml:space="preserve">
+    <value>アカウントのロックアウト期間を 1440 分 (1 日) に設定する。このカテゴリの他のポリシーと組み合わせることで、5 回サインインに失敗するたびに、次の 5 回の試行を行うまでに丸 1 日が経過する必要があることを意味する。そうでない場合は BitLocker が作動し、システムが再起動して 48 桁の BitLocker コードの入力が必要になる。</value>
+</data>
+<data name="LockoutDuration-LockScreen" xml:space="preserve">
+    <value>アカウント ロックアウト カウンターのリセットを 1440 分 (1 日) に設定する。</value>
+</data>
+<data name="DisableTLS10ClientPart1-TLS" xml:space="preserve">
+    <value>TLS v1 クライアントを無効にする - パート 1</value>
+</data>
+<data name="DisableTLS10ClientPart2-TLS" xml:space="preserve">
+    <value>TLS v1 クライアントを無効にする - パート 2</value>
+</data>
+<data name="DisableTLS10ServerPart1-TLS" xml:space="preserve">
+    <value>TLS v1 サーバーを無効にする - パート 1</value>
+</data>
+<data name="DisableTLS10ServerPart2-TLS" xml:space="preserve">
+    <value>TLS v1 サーバーを無効にする - パート 2</value>
+</data>
+<data name="DisableTLS11ClientPart1-TLS" xml:space="preserve">
+    <value>TLS v1.1 クライアントを無効にする - パート 1</value>
+</data>
+<data name="DisableTLS11ClientPart2-TLS" xml:space="preserve">
+    <value>TLS v1.1 クライアントを無効にする - パート 2</value>
+</data>
+<data name="DisableTLS11ServerPart1-TLS" xml:space="preserve">
+    <value>TLS v1.1 サーバーを無効にする - パート 1</value>
+</data>
+<data name="DisableTLS11ServerPart2-TLS" xml:space="preserve">
+    <value>TLS v1.1 サーバーを無効にする - パート 2</value>
+</data>
+<data name="CreateCustomEventViewerViews-Miscellaneous" xml:space="preserve">
+    <value>重要なセキュリティ イベントに簡単にアクセスできるように、Windows イベント ビューアーにカスタム ビューを作成する。</value>
+</data>
+<data name="SecureSSHMACs-Miscellaneous" xml:space="preserve">
+    <value>安全な MAC (メッセージ認証コード) を使用するように SSH クライアントの構成を設定する。</value>
+</data>
+<data name="EnableOtherLogonLogOffAudit-Miscellaneous" xml:space="preserve">
+    <value>ロック画面のロックとロック解除の監査と追跡を有効にする。</value>
+</data>
+<data name="ACConnectivityInStandby_BitLocker" xml:space="preserve">
+    <value>接続モダン スタンバイ中のネットワーク接続を許可する (電源接続時のみ)</value>
+</data>
+<data name="Remediation_BNB_BFP_BruteForceProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>ブルート フォース保護によって IP アドレスがブロックされる最大時間を、可能な限り最大の値に設定する。この時間が経過すると、ブロックされていた IP アドレスはサインインしてセッションを開始できるようになる。</value>
+</data>
+<data name="Remediation_BNB_BFP_RemoteEncryptionProtection_MaxBlockTime-MSDefender" xml:space="preserve">
+    <value>リモート暗号化保護によって IP アドレスがブロックされる最大時間を、可能な限り最大の値に設定する。この時間が経過すると、ブロックされていた IP アドレスは接続を開始できるようになる。</value>
+</data>
+<data name="Root_PUAProtection-MSDefender" xml:space="preserve">
+    <value>望ましくない可能性のあるアプリケーションの検出を有効にする。これらは他の脅威と共に Microsoft Defender の履歴に表示される。</value>
+</data>
+<data name="mDNSInboundBlocking-WindowsFirewall" xml:space="preserve">
+    <value>mDNS UDP-In ファイアウォール ルールを無効にする。コーヒー ショップなどの公共の場でのセキュリティを強化するが、パブリック プロファイルに依存する Miracast の画面共有や、プライベート プロファイルが選択されていないホーム ネットワークを妨げる可能性がある。</value>
+</data>
+<data name="SetAllNetworkLocationsPublic-WindowsFirewall" xml:space="preserve">
+    <value>すべての接続のネットワークの場所をパブリックに設定する。パブリック ネットワークは、他のネットワーク デバイスへの信頼が低いことを意味する。</value>
+</data>
+<data name="DriverLoadPolicyGoodAndUnknown-Miscellaneous" xml:space="preserve">
+    <value>ブート開始ドライバーの初期化ポリシーを「正常および不明」に設定する</value>
+</data>
+<data name="SeDenyRemoteInteractiveLogonRight-OptionalOverrides" xml:space="preserve">
+    <value>リモート デスクトップ サービスを介したサインインを許可する。これにより、リモート デスクトップ (RDP) をローカルで使用してコンピューターにサインインできるようになる。</value>
+</data>
+<data name="DisplayLNKFileExtension-Miscellaneous" xml:space="preserve">
+    <value>エクスプローラーでショートカット (.lnk) ファイルのファイル拡張子を表示する。攻撃者は、悪意のあるペイロードを無害な文書に見せかけるために、ショートカットが既定で拡張子を隠している状態を頻繁に利用する。拡張子を表示することで、実際のファイルの種類を確認し、実行前に偽装されたショートカットを識別できる。</value>
+</data>
+<data name="DisplayURLFileExtension-Miscellaneous" xml:space="preserve">
+    <value>エクスプローラーで (.url) ファイルのファイル拡張子を表示する。インターネット ショートカットが正当なファイルになりすますのを防ぐ。これにより、攻撃者が隠された拡張子を使用してフィッシング リンクや悪意のあるリダイレクトを安全な文書に見せかけるというセキュリティ リスクを緩和する。</value>
+</data>
+<data name="DisplayPIFFileExtension-Miscellaneous" xml:space="preserve">
+    <value>エクスプローラーで (.pif) ファイルのファイル拡張子を表示する。プログラム情報ファイル (PIF) は .exe ファイルと同様に機能し、攻撃者がなじみの薄いファイルの種類の背後にマルウェアを隠すために頻繁に使用される。</value>
+</data>
+<data name="AMSIFeatureBits-Miscellaneous" xml:space="preserve">
+    <value>すべてのサードパーティ製マルウェア対策プロバイダーに対して Authenticode コード署名の要件を厳格に適用するように、マルウェア対策スキャン インターフェイス (AMSI) を構成する。</value>
+</data>
+<data name="DisableWebClientService-Miscellaneous" xml:space="preserve">
+    <value>WebClient サービスを無効にすると、攻撃者が WebDAV を悪用し、悪意のあるリンクを介して NTLM 資格情報やその他の機密データを傍受したり盗んだりするのを防止できる。</value>
+</data>
+<data name="SetWinPowerShellExecutionToRestricted-Miscellaneous" xml:space="preserve">
+    <value>Windows PowerShell の実行ポリシーを Restricted に設定し、個々のコマンドは許可されるが、スクリプトの実行は許可されないようにする。</value>
+</data>
+  <data name="EnhanceSecurityMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge の拡張セキュリティ モードは、Just-In-Time (JIT) JavaScript コンパイルを無効にし、ブラウザーに対する追加のオペレーティング システム保護を有効にすることで、メモリ関連の脆弱性を緩和する。</value>
+  </data>
+<data name="DefaultLocalFontsSetting-Edge" xml:space="preserve">
+    <value>Web サイトがローカルにインストールされているフォントに関する情報へアクセスするのを防止する。</value>
+</data>
+<data name="BrowserCodeIntegritySetting-Edge" xml:space="preserve">
+    <value>Microsoft Edge のブラウザー コード整合性は、Microsoft が署名したバイナリのみが Edge プロセスに読み込まれることを保証し、ブラウザーのセキュリティを強化する。</value>
+</data>
+<data name="RestrictCoreSharingOnRenderer-HardcoreMode-Edge" xml:space="preserve">
+    <value>レンダラー プロセスの CPU コア共有を制限する。レンダラー プロセスを専用の CPU コアに分離し、他のプロセスが同じコアにスケジュールされないようにすることで、サイド チャネルによるプロセス間メモリ攻撃の緩和に役立つ。</value>
+</data>
+<data name="RendererAppContainerEnabled-HardcoreMode-Edge" xml:space="preserve">
+    <value>セキュリティ上の利点を高めるために、レンダラー プロセスを App Container で起動する。</value>
+</data>
+<data name="PreferSlowKexAlgorithms-HardcoreMode-Edge" xml:space="preserve">
+    <value>Microsoft Edge は、TLS 1.3 および QUIC 接続に対して、Commercial National Security Algorithm Suite 2.0 (CNSA 2.0) で必要とされるアルゴリズムを優先する。</value>
+</data>
+<data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
+    <value>Commercial National Security Algorithm Suite バージョン 1.0 および 2.0 (CNSA 1.0 および 2.0) への準拠に必要な暗号を優先するように Microsoft Edge を構成する。TLS 1.3 および QUIC にのみ影響する。</value>
+</data>
+</root>

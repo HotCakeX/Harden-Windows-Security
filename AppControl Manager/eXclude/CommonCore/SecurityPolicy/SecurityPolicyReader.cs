@@ -1055,7 +1055,7 @@ internal static class SecurityPolicyReader
 		IntPtr domainHandle = IntPtr.Zero;
 		IntPtr userHandle = IntPtr.Zero;
 
-		// We will query current general info to preserve FullNam.
+		// We will query current general info to preserve FullName.
 		IntPtr generalInfoBuffer = IntPtr.Zero;
 
 		IntPtr nameInfoBuffer = IntPtr.Zero;

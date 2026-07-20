@@ -182,7 +182,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
-	// Pre‑computed property getters for high performance.
+	// Pre-computed property getters for high performance.
 	// Used for column sorting and column copying (single cell and entire row), for all ListViews that display FileCertificateInfoCol data type
 	private static readonly FrozenDictionary<string, (string Label, Func<FileCertificateInfoCol, object?> Getter)> FileCertificateInfoColPropertyMappings
 		= new Dictionary<string, (string Label, Func<FileCertificateInfoCol, object?> Getter)>
@@ -356,9 +356,8 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// The main method that performs data collection task
+	/// The main method that performs the data collection task.
 	/// </summary>
-	/// <param name="file"></param>
 	/// <returns></returns>
 	private async Task Fetch()
 	{

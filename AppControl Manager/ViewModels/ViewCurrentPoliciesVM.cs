@@ -631,7 +631,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
-	// Pre‑computed property getters for high performance.
+	// Pre-computed property getters for high performance.
 	// Used for column sorting and column copying (single cell and entire row), for all ListViews that display CiPolicyInfo data type
 	internal static readonly FrozenDictionary<string, (string Label, Func<CiPolicyInfo, object?> Getter)> CiPolicyInfoPropertyMappings
 		= new Dictionary<string, (string Label, Func<CiPolicyInfo, object?> Getter)>

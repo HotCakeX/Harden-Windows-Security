@@ -84,7 +84,6 @@ internal sealed partial class OpacityMaskView : ContentControl
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="OpacityMaskView"/> class.
-	/// Creates a new instance of the <see cref="OpacityMaskView"/> class.
 	/// </summary>
 	internal OpacityMaskView()
 	{

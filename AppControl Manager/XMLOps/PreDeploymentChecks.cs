@@ -45,7 +45,7 @@ internal static partial class PreDeploymentChecks
 
 	/// <summary>
 	/// Throws an error if the system has a deployed Signed policy with the same PolicyID as the PolicyID of the PolicyObj that is provided to the method.
-	/// We use it to make sure we don't deploy and Unsigned policy to the local system while there is already a Signed policy with the same PolicyID already deployed.
+	/// We use it to make sure we don't deploy an Unsigned policy to the local system while there is already a Signed policy with the same PolicyID deployed.
 	/// </summary>
 	/// <param name="policyObj"></param>
 	internal static void CheckForSignatureConflict(SiPolicy.SiPolicy policyObj)

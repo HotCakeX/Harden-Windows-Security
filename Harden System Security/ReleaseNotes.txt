@@ -1,1 +1,9 @@
 * Updated dependencies to the latest version.
+
+* Added Japanese language support to the Harden System Security app.
+
+* Language packs can now be added/removed when running as admin (elevated) in the settings page.
+
+* Improved the package installer by supporting the complete publisher identity such as CN, O, OU, L, S, and C in the package manifest. It also now supports CNs with commas.
+
+* Made various performance improvements to the Harden System Security app.

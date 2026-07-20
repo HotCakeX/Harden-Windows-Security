@@ -39,7 +39,7 @@ internal sealed partial class SystemShutdownInfoDialogVM : ViewModelBase
 		ColumnManager.CalculateColumnWidths(ShutDownInfoSource);
 	}
 
-	internal async void GenerateData()
+	internal void GenerateData()
 	{
 		try
 		{

@@ -2764,26 +2764,29 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 			return string.Empty;
 
 		int outputLength = checked(((source.Length * 8) + 4) / 5);
-		StringBuilder builder = new(outputLength);
-		int buffer = 0;
-		int bitsLeft = 0;
-		for (int index = 0; index < source.Length; index++)
-		{
-			buffer = (buffer << 8) | source[index];
-			bitsLeft += 8;
-			while (bitsLeft >= 5)
+		return string.Create(
+			outputLength,
+			source,
+			static (destination, input) =>
 			{
-				bitsLeft -= 5;
-				_ = builder.Append(Alphabet[(buffer >> bitsLeft) & 0x1F]);
-			}
+				int buffer = 0;
+				int bitsLeft = 0;
+				int outputOffset = 0;
+				for (int index = 0; index < input.Length; index++)
+				{
+					buffer = (buffer << 8) | input[index];
+					bitsLeft += 8;
+					while (bitsLeft >= 5)
+					{
+						bitsLeft -= 5;
+						destination[outputOffset++] = Alphabet[(buffer >> bitsLeft) & 0x1F];
+					}
+					buffer &= (1 << bitsLeft) - 1;
+				}
 
-			buffer &= (1 << bitsLeft) - 1;
-		}
-
-		if (bitsLeft > 0)
-			_ = builder.Append(Alphabet[(buffer << (5 - bitsLeft)) & 0x1F]);
-
-		return builder.ToString();
+				if (bitsLeft > 0)
+					destination[outputOffset] = Alphabet[(buffer << (5 - bitsLeft)) & 0x1F];
+			});
 	}
 
 	#endregion

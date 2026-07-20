@@ -71,20 +71,20 @@ internal static unsafe partial class NativeMethods
 			out int lastError);
 
 #if DEBUG
-	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop")]
 #endif
 	internal static partial void free_string(nint s);
 
 #if DEBUG
-	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop")]
 #endif
 	internal static partial void free_string_array(StringArrayForFileDialogHelper arr);
 
@@ -102,11 +102,11 @@ internal static unsafe partial class NativeMethods
 			int options);
 
 #if DEBUG
-	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 #endif
 #if !DEBUG
-	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
+	[LibraryImport("rust_interop")]
 #endif
 	internal static partial int update_taskbar_progress(
 			nint hwnd,

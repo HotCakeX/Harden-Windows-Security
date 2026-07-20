@@ -226,7 +226,7 @@ internal static class AppControlSimulation
 						// Increment the processed file count safely
 						_ = Interlocked.Increment(ref processedFilesCount);
 
-						// Check see if the file's hash exists in the XML file regardless of whether it's signed or not
+						// Check to see if the file's hash exists in the XML file regardless of whether it's signed or not
 						// This is because App Control policies sometimes have hash rules for signed files too
 						// So here we prioritize being authorized by file hash over being authorized by Signature
 

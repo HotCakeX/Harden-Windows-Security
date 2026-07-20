@@ -176,7 +176,7 @@ internal sealed class FileIdentity
 	internal bool? HasWHQLSigner { get; set; }
 
 	// Determines whether the file is signed by ECC algorithm or not
-	// AppControl does not support ECC Signed files yet
+	// AppControl does not support ECC Signed files yet.
 	[JsonInclude]
 	internal bool? IsECCSigned { get; set; }
 

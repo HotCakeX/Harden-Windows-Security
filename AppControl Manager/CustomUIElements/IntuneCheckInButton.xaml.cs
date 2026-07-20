@@ -196,16 +196,10 @@ internal sealed partial class IntuneCheckInButton : UserControl, INPCImplant
 
 			IAsyncAction startAction = mdmSession.StartAsync();
 			double runningProgressValue = SessionStartedProgressValue;
-			string previousStateText = string.Empty;
 
 			while (startAction.Status is AsyncStatus.Started)
 			{
 				string stateText = GetMdmSessionStateText(mdmSession);
-
-				if (!string.Equals(previousStateText, stateText, StringComparison.OrdinalIgnoreCase))
-				{
-					previousStateText = stateText;
-				}
 
 				progress.Report(new IntuneCheckInProgress(
 					runningProgressValue,

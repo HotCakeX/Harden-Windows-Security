@@ -20,7 +20,7 @@ using CommonCore.IntelGathering;
 namespace AppControlManager.XMLOps;
 
 /// <summary>
-/// Used to create FileName rule for a file.
+/// Used to create a FileName rule for a file.
 /// </summary>
 internal sealed class FileNameRuleCreator(
 	Version? fileVersion,

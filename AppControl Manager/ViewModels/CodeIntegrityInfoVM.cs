@@ -69,7 +69,7 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 			// Get the Application Control Status
 			await Task.Run(async () =>
 			{
-				string result = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, command) ?? throw new InvalidOperationException($"No output were returned from {Atlas.ComManagerProcessPath}");
+				string result = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, command);
 				List<Dictionary<string, object?>> deserializedData = ComJsonDeserializer.DeserializeInstances(result);
 				Dictionary<string, object?>? processedData = deserializedData.FirstOrDefault();
 				if (processedData is not null)

@@ -141,7 +141,7 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 		{
 			ElementsAreEnabled = false;
 
-			if (string.IsNullOrWhiteSpace(SelectedPolicyPath) && !File.Exists(SelectedPolicyPath))
+			if (!File.Exists(SelectedPolicyPath))
 			{
 				SelectedPolicyPath = null;
 				MainInfoBar.WriteWarning(Atlas.GetStr("SelectAppControlPolicyFirstMessage"));
@@ -151,16 +151,13 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 			MainInfoBar.WriteInfo(Atlas.GetStr("Validating"), Atlas.GetStr("CurrentStatusInfoBar/Title"));
 
 			double CIPSize = 0;
-			bool IsValid = false;
 
 			await Task.Run(() =>
 			{
 				// Throws if the policy is invalid.
 				CiPolicyTest.TestCiPolicy(SelectedPolicyPath);
 
-				IsValid = true;
-
-				if (IsValid && Level2Test)
+				if (Level2Test)
 				{
 					SiPolicy.SiPolicy temp = SiPolicy.CustomDeserialization.DeserializeSiPolicy(SelectedPolicyPath, null);
 
@@ -180,30 +177,23 @@ internal sealed partial class ValidatePolicyVM : ViewModelBase
 				}
 			});
 
-			if (IsValid)
-			{
-				string msg = Atlas.GetStr("IsValid") + SelectedPolicyPath;
+			string msg = Atlas.GetStr("IsValid") + SelectedPolicyPath;
 
-				if (Level4Test)
+			if (Level4Test)
+			{
+				msg += $"\n{Atlas.GetStr("CIPFileSize")}: {CIPSize} KB";
+
+				if (CIPSize < 350)
 				{
-					msg += $"\n{Atlas.GetStr("CIPFileSize")}: {CIPSize} KB";
-
-					if (CIPSize < 350)
-					{
-						msg += $"\n{Atlas.GetStr("SuitableForIntuneDeployment")}";
-					}
-					else
-					{
-						msg += $"\n{Atlas.GetStr("ReduceSizeForIntuneDeployment")}";
-					}
+					msg += $"\n{Atlas.GetStr("SuitableForIntuneDeployment")}";
 				}
+				else
+				{
+					msg += $"\n{Atlas.GetStr("ReduceSizeForIntuneDeployment")}";
+				}
+			}
 
-				MainInfoBar.WriteSuccess(msg, Atlas.GetStr("Valid"));
-			}
-			else
-			{
-				MainInfoBar.WriteWarning(Atlas.GetStr("IsNotValid") + SelectedPolicyPath, Atlas.GetStr("Invalid"));
-			}
+			MainInfoBar.WriteSuccess(msg, Atlas.GetStr("Valid"));
 		}
 		catch (Exception ex)
 		{

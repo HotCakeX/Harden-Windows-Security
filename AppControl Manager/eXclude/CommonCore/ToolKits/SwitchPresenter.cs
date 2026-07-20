@@ -89,7 +89,7 @@ public partial class Case : DependencyObject
 }
 
 /// <summary>
-/// An collection of <see cref="Case"/> to help with XAML interop.
+/// A collection of <see cref="Case"/> to help with XAML interop.
 /// </summary>
 public partial class CaseCollection : DependencyObjectCollection
 {

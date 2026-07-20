@@ -86,7 +86,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 	/// <summary>
 	/// Only for properties that are nullable texts.
-	/// This plays type writing audio if Sound is enabled in the app settings.
+	/// This plays typewriter audio if Sound is enabled in the app settings.
 	/// </summary>
 	/// <param name="field"></param>
 	/// <param name="newValue"></param>

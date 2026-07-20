@@ -771,7 +771,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	// When the button to get the user configurations on the settings card is pressed
 	internal void GetConfigurationButton()
 	{
-		UserConfiguration userConfig = UserConfiguration.Get();
+		UserConfiguration userConfig = UserConfiguration.ReadUserConfiguration();
 
 		CertCNsAutoSuggestBoxText = userConfig.CertificateCommonName ?? string.Empty;
 		CertificatePathTextBox = userConfig.CertificatePath ?? string.Empty;

@@ -92,7 +92,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 				if (MainPolicy.FilePath is not null)
 				{
-					// Save the merge results to the user selected's main policy path, if provided.
+					// Save the merge results to the user-selected main policy path, if provided.
 					Management.SavePolicyToFile(MainPolicy.PolicyObj, MainPolicy.FilePath);
 				}
 
@@ -103,7 +103,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 					PreDeploymentChecks.CheckForSignatureConflict(MainPolicy.PolicyObj);
 
-					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+					// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 					if (SupplementalForSelf.IsEligible(MainPolicy.PolicyObj))
 						SupplementalForSelf.Deploy(MainPolicy.PolicyObj.PolicyID);
 

@@ -39,7 +39,7 @@ internal static class LocalFilesScan
 	/// </summary>
 	/// <param name="files">File paths to scan</param>
 	/// <param name="scalability">How many parallel tasks to use during the scan</param>
-	/// <param name="progressReporter">A callback method that will run to display the scan progress in real time and updates the value of its associated ProgressRing UI element.</param>
+	/// <param name="progressReporter">A callback method that will run to display the scan progress in real time and update the value of its associated ProgressRing UI element.</param>
 	/// <returns></returns>
 	internal static IEnumerable<FileIdentity> Scan(
 		(IEnumerable<string>, int) files,
@@ -268,7 +268,7 @@ internal static class LocalFilesScan
 											// We don't want to find an ECC signed certificate and then overwrite the property's value and set it to false by the next non-ECC signed certificate
 											if (!IsECCSigned)
 											{
-												// Check see if the file is ECC-Signed
+												// Check to see if the file is ECC-Signed
 												currentFileIdentity.IsECCSigned = string.Equals(package.LeafCertificate.Certificate?.PublicKey?.EncodedKeyValue.Oid?.Value, ECCOID, StringComparison.OrdinalIgnoreCase);
 
 												if (currentFileIdentity.IsECCSigned == true)
@@ -314,7 +314,7 @@ internal static class LocalFilesScan
 											// We don't want to find an ECC signed certificate and then overwrite the property's value and set it to false by the next non-ECC signed certificate
 											if (!IsECCSigned)
 											{
-												// Check see if the file is ECC-Signed
+												// Check to see if the file is ECC-Signed
 												currentFileIdentity.IsECCSigned = string.Equals(package.RootCertificate.Certificate?.PublicKey?.EncodedKeyValue.Oid?.Value, ECCOID, StringComparison.OrdinalIgnoreCase);
 
 												if (currentFileIdentity.IsECCSigned == true)

@@ -47,7 +47,7 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 
 	#region Neon Border Animation Logic
 
-	// The intended design is to have a border around each profile area so that on hover, the border starts from the bottom left corner and finished at top right corner.
+	// The intended design is to have a border around each profile area so that on hover, the border starts from the bottom left corner and finishes at top right corner.
 	// It has neon like style.
 	// Only 1 neon animated border must be visible at a time.
 

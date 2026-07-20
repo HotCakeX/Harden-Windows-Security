@@ -268,7 +268,7 @@
                                     <CCToolKit:SettingsCard.HeaderIcon>
                                         <FontIcon Glyph="&#xEC5A;"/>
                                     </CCToolKit:SettingsCard.HeaderIcon>
-                                    <TextBox Text="{x:Bind ViewModel.AppIDTagTouse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    <TextBox Text="{x:Bind ViewModel.AppIDTagToUse, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
                                 </CCToolKit:SettingsCard>
 

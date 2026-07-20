@@ -200,7 +200,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 
 					PreDeploymentChecks.CheckForSignatureConflict(SelectedPolicy.PolicyObj);
 
-					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+					// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 					if (SupplementalForSelf.IsEligible(SelectedPolicy.PolicyObj))
 						SupplementalForSelf.Deploy(SelectedPolicy.PolicyObj.PolicyID);
 
@@ -426,7 +426,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// <summary>
 	/// Used by any code from the app to use the functionalities in this VM.
 	/// </summary>
-	/// <param name="filePath"></param>
+	/// <param name="policy"></param>
 	/// <returns></returns>
 	internal async Task OpenInConfigurePolicyRuleOptions(SiPolicy.PolicyFileRepresent? policy)
 	{

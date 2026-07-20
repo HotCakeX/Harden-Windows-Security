@@ -24,13 +24,11 @@ namespace CommonCore.GroupPolicy;
 /// <summary>
 /// GroupPolicyObject wrapper.
 /// Extension GUIDs and their friendlier names can be found here: Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\GPExtensions\{GUID}
-///
 /// </summary>
 internal sealed partial class GroupPolicyObject : IDisposable
 {
 	private readonly IntPtr _gpoPointer;
 	private readonly bool _shouldUninitializeCom; // Track if we should uninitialize COM on disposal
-	private readonly bool _createdInSTAThread; // Track if COM object was created in a dedicated STA thread
 	private bool _disposed;
 
 	private static readonly Guid CLSID_GroupPolicyObject = new("EA502722-A23D-11d1-A7D3-0000F87571E3");
@@ -41,8 +39,8 @@ internal sealed partial class GroupPolicyObject : IDisposable
 	/// </summary>
 	/// <param name="clsid">The class ID of the Group Policy Object</param>
 	/// <param name="iid">The interface ID to request</param>
-	/// <returns>Pointer to the created COM object and flag indicating if created in dedicated STA thread</returns>
-	private static (IntPtr gpoPointer, bool createdInSTAThread) CreateGroupPolicyObjectInSTA(Guid clsid, Guid iid)
+	/// <returns>Pointer to the created COM object</returns>
+	private static IntPtr CreateGroupPolicyObjectInSTA(Guid clsid, Guid iid)
 	{
 		// Check current apartment state
 		if (Thread.CurrentThread.GetApartmentState() == ApartmentState.STA)
@@ -60,14 +58,14 @@ internal sealed partial class GroupPolicyObject : IDisposable
 				string errorMessage = hr switch
 				{
 					unchecked((int)0x80004002) => "E_NOINTERFACE",
-					unchecked((int)0x80040111) => "CLASS_E_CLASSNOTAVAILABLE:.",
+					unchecked((int)0x80040111) => "CLASS_E_CLASSNOTAVAILABLE.",
 					unchecked((int)0x80040154) => "REGDB_E_CLASSNOTREG: Group Policy class not registered.",
 					_ => string.Format(Atlas.GetStr("FailedToCreateGroupPolicyObjectError"), hr)
 				};
 				throw new InvalidOperationException(errorMessage);
 			}
 
-			return (gpoPointer, false);
+			return gpoPointer;
 		}
 		else
 		{
@@ -98,7 +96,7 @@ internal sealed partial class GroupPolicyObject : IDisposable
 						string errorMessage = hr switch
 						{
 							unchecked((int)0x80004002) => "E_NOINTERFACE",
-							unchecked((int)0x80040111) => "CLASS_E_CLASSNOTAVAILABLE:.",
+							unchecked((int)0x80040111) => "CLASS_E_CLASSNOTAVAILABLE.",
 							unchecked((int)0x80040154) => "REGDB_E_CLASSNOTREG: Group Policy class not registered.",
 							_ => string.Format(Atlas.GetStr("FailedToCreateGroupPolicyObjectError"), hr)
 						};
@@ -131,7 +129,7 @@ internal sealed partial class GroupPolicyObject : IDisposable
 				throw new InvalidOperationException(Atlas.GetStr("FailedToCreateGroupPolicyObjectNullPointerError"));
 			}
 
-			return (resultPointer, true);
+			return resultPointer;
 		}
 	}
 
@@ -153,7 +151,7 @@ internal sealed partial class GroupPolicyObject : IDisposable
 		}
 		else if (hr == CSEMgr.S_FALSE)
 		{
-			// COM is already initialized in same mode, don't uninitialize
+			// COM is already initialized in the same mode, don't uninitialize
 			shouldUninitialize = false;
 		}
 		else
@@ -167,7 +165,7 @@ internal sealed partial class GroupPolicyObject : IDisposable
 		try
 		{
 			// Create the GroupPolicyObject COM instance, handling apartment issues
-			(_gpoPointer, _createdInSTAThread) = CreateGroupPolicyObjectInSTA(CLSID_GroupPolicyObject, IID_IGroupPolicyObject);
+			_gpoPointer = CreateGroupPolicyObjectInSTA(CLSID_GroupPolicyObject, IID_IGroupPolicyObject);
 		}
 		catch
 		{
@@ -232,7 +230,6 @@ internal sealed partial class GroupPolicyObject : IDisposable
 
 	private void ThrowIfDisposed() => ObjectDisposedException.ThrowIf(_disposed, nameof(GroupPolicyObject));
 
-
 	public void Dispose()
 	{
 		if (!_disposed)
@@ -253,7 +250,6 @@ internal sealed partial class GroupPolicyObject : IDisposable
 		}
 	}
 }
-
 
 internal static class CSEMgr
 {
@@ -312,7 +308,6 @@ internal static class CSEMgr
 	/// </summary>
 	internal static void RegisterCSEGuids()
 	{
-
 		using GroupPolicyObject gpo = new();
 
 		try
@@ -325,11 +320,9 @@ internal static class CSEMgr
 			}
 
 			// Register machine CSE GUIDs
-			// Logger.Write("Registering Machine CSE GUIDs:");
 			RegisterExtensionGuids(gpo, RequiredMachineExtensionsInOrder, true);
 
 			// Register user CSE GUIDs
-			// Logger.Write("Registering User CSE GUIDs:");
 			RegisterExtensionGuids(gpo, RequiredUserExtensionsInOrder, false);
 
 			Thread.Sleep(1000);
@@ -355,8 +348,6 @@ internal static class CSEMgr
 		{
 			Guid extensionGuid = extensionGuids[i];
 
-			//	Logger.Write($"  [{i + 1}/{extensionGuids.Count}] Registering {configurationType} CSE GUID: {extensionGuid:B}");
-
 			try
 			{
 				// 1st param: isMachine (true for machine extensions, false for user extensions)
@@ -373,8 +364,6 @@ internal static class CSEMgr
 				{
 					throw new InvalidOperationException(string.Format(Atlas.GetStr("FailedToRegisterCSEGUIDError"), configurationType, extensionGuid, result));
 				}
-
-				// Logger.Write($"Successfully registered {configurationType} CSE GUID: {extensionGuid:B}");
 			}
 			catch (COMException ex)
 			{
@@ -383,5 +372,4 @@ internal static class CSEMgr
 			}
 		}
 	}
-
 }

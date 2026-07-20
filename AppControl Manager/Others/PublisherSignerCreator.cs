@@ -21,7 +21,7 @@ using CommonCore.IntelGathering;
 namespace AppControlManager.Others;
 
 /// <summary>
-/// Used to create Publisher signer rule for a file
+/// Used to create a Publisher signer rule for a file
 /// </summary>
 /// <param name="certificateDetails"></param>
 /// <param name="fileName"></param>

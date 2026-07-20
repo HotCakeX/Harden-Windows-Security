@@ -594,7 +594,7 @@ internal static partial class ISOManager
 					Logger.Write($"Copying contents (excluding 'sources') to BOOT partition ({bootPartitionPath})");
 					copiedBytes = CopyToBootPartitionWithProgress(physicalPath, bootPartitionPath, totalBytesToCopy, copiedBytes, progress);
 
-					Logger.Write($"Copying boot.wim to BOOT partition's 'sources' folder");
+					Logger.Write("Copying boot.wim to BOOT partition's 'sources' folder");
 					_ = CopyBootWimWithProgress(physicalPath, bootPartitionPath, totalBytesToCopy, copiedBytes, progress);
 
 					// Explicitly report 100% completion to account for any minor precision loss or skipped empty items.
@@ -1234,7 +1234,7 @@ internal static partial class ISOManager
 						Logger.Write($"Copying contents (excluding 'sources') to BOOT partition ({bootPartitionPath})");
 						copiedBytes = CopyToBootPartitionWithProgress(physicalPath, bootPartitionPath, totalBytesToCopy, copiedBytes, progress);
 
-						Logger.Write($"Copying boot.wim to BOOT partition's 'sources' folder");
+						Logger.Write("Copying boot.wim to BOOT partition's 'sources' folder");
 						_ = CopyBootWimWithProgress(physicalPath, bootPartitionPath, totalBytesToCopy, copiedBytes, progress);
 
 						// Explicitly report 100% completion to account for any minor precision loss or skipped empty items.
@@ -1463,7 +1463,7 @@ internal static partial class ISOManager
 		foreach (FileInfo file in files)
 		{
 			string targetFilePath = Path.Join(destinationDir, file.Name);
-			currentCopiedBytes = CopyFileWithProgress(file.FullName, targetFilePath, file.Length, totalBytesToCopy, currentCopiedBytes, progress);
+			currentCopiedBytes = CopyFileWithProgress(file.FullName, targetFilePath, totalBytesToCopy, currentCopiedBytes, progress);
 		}
 
 		foreach (DirectoryInfo subDir in directories)
@@ -1491,7 +1491,7 @@ internal static partial class ISOManager
 		foreach (FileInfo file in files)
 		{
 			string targetFilePath = Path.Join(destinationDir, file.Name);
-			currentCopiedBytes = CopyFileWithProgress(file.FullName, targetFilePath, file.Length, totalBytesToCopy, currentCopiedBytes, progress);
+			currentCopiedBytes = CopyFileWithProgress(file.FullName, targetFilePath, totalBytesToCopy, currentCopiedBytes, progress);
 		}
 
 		foreach (DirectoryInfo subDir in directories)
@@ -1523,7 +1523,7 @@ internal static partial class ISOManager
 		if (File.Exists(sourceBootWimPath))
 		{
 			FileInfo fileInfo = new(sourceBootWimPath);
-			currentCopiedBytes = CopyFileWithProgress(sourceBootWimPath, destBootWimPath, fileInfo.Length, totalBytesToCopy, currentCopiedBytes, progress);
+			currentCopiedBytes = CopyFileWithProgress(sourceBootWimPath, destBootWimPath, totalBytesToCopy, currentCopiedBytes, progress);
 			Logger.Write($"Successfully copied boot.wim to {destBootWimPath}");
 		}
 		else
@@ -1534,7 +1534,7 @@ internal static partial class ISOManager
 		return currentCopiedBytes;
 	}
 
-	private static long CopyFileWithProgress(string source, string destination, long fileSize, long totalBytesToCopy, long currentCopiedBytes, IProgress<double> progress)
+	private static long CopyFileWithProgress(string source, string destination, long totalBytesToCopy, long currentCopiedBytes, IProgress<double> progress)
 	{
 		byte[] buffer = new byte[81920];
 		using FileStream fs = new(source, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -1807,7 +1807,7 @@ internal static partial class ISOManager
 				0,
 				ref deviceNumber,
 				size,
-				out uint bytesReturned,
+				out _,
 				IntPtr.Zero);
 
 			if (success)

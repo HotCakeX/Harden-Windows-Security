@@ -167,10 +167,7 @@ internal static partial class DriveLetterMapper
 		}
 		finally
 		{
-			if (volumeHandle != NativeMethods.INVALID_HANDLE_VALUE)
-			{
-				_ = NativeMethods.FindVolumeClose(volumeHandle);
-			}
+			_ = NativeMethods.FindVolumeClose(volumeHandle);
 		}
 
 		// Return the list of drive mappings

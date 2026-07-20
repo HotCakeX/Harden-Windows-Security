@@ -1103,12 +1103,7 @@ internal static class AuthRootProcessor
 			value = BigInteger.Negate(value);
 		}
 		byte[] bigEndian = value.ToByteArray(isUnsigned: true, isBigEndian: true);
-		StringBuilder sb = new(bigEndian.Length * 2);
-		for (int i = 0; i < bigEndian.Length; i++)
-		{
-			_ = sb.Append(bigEndian[i].ToString("x2", CultureInfo.InvariantCulture));
-		}
-		return sb.ToString();
+		return Convert.ToHexStringLower(bigEndian);
 	}
 
 	/// <summary>

@@ -702,8 +702,6 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 		private readonly Dictionary<string, PolicyPreviewSource> _fileRuleById = new(StringComparer.OrdinalIgnoreCase);
 		private readonly Dictionary<string, PolicyPreviewSource> _signerById = new(StringComparer.OrdinalIgnoreCase);
 
-		internal int TotalElements => Ekus.Count + AllFileRules.Count + Signers.Count + CiSigners.Count + UpdatePolicySigners.Count + SupplementalPolicySigners.Count + SigningScenarios.Count + Settings.Count + Macros.Count + AppSettings.Count + AppIdTags.Count;
-
 		internal static PolicyCatalog Create(SiPolicy.SiPolicy policy)
 		{
 			PolicyCatalog catalog = new();
@@ -1048,7 +1046,7 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 		if (!string.IsNullOrEmpty(packageFamilyName)) return $"{kind}: PFN {packageFamilyName}";
 		if (!string.IsNullOrEmpty(filePath)) return $"{kind}: {filePath}";
 		if (!string.IsNullOrEmpty(hash)) return $"{kind}: Hash {hash}";
-		return $"{kind}: {"(none)"}";
+		return $"{kind}: (none)";
 	}
 
 	private static string ReadableSigner(Signer signer)

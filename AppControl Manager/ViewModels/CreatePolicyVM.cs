@@ -320,9 +320,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			}
 			#endregion
 
-			_policyPathSignedAndReputable = await Task.Run(async () =>
-			{
-				return await BasePolicyCreator.BuildSignedAndReputable(
+			_policyPathSignedAndReputable = await BasePolicyCreator.BuildSignedAndReputable(
 				IsAudit: SignedAndReputableAudit,
 				LogSize: logSize,
 				deploy: SignedAndReputableCreateAndDeploy,
@@ -333,7 +331,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				PolicyIDToUse: null,
 				DeployMicrosoftRecommendedBlockRules: !SignedAndReputableNoBlockRules
 				);
-			});
 
 			// Assign the created policy to the Sidebar
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathSignedAndReputable);

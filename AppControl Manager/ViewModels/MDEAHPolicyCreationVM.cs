@@ -574,7 +574,7 @@ DeviceEvents
 			// Analyze the data
 			await AnalysisResults.PrepareAnalysis(AllFileIdentities);
 
-			// If the app settings requires auto switch, do it here.
+			// If the app settings require auto switch, do it here.
 			if (Atlas.Settings.AutoSwitchToAnalysisPageAfterDataRetrieval)
 			{
 				// Navigate to the analysis page
@@ -727,7 +727,7 @@ DeviceEvents
 								{
 									PreDeploymentChecks.CheckForSignatureConflict(PolicyToAddLogsTo.PolicyObj);
 
-									// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+									// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 									if (SupplementalForSelf.IsEligible(PolicyToAddLogsTo.PolicyObj))
 										SupplementalForSelf.Deploy(PolicyToAddLogsTo.PolicyObj.PolicyID);
 
@@ -782,7 +782,7 @@ DeviceEvents
 								{
 									PreDeploymentChecks.CheckForSignatureConflict(policyObj);
 
-									// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+									// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 									if (SupplementalForSelf.IsEligible(policyObj))
 										SupplementalForSelf.Deploy(policyObj.PolicyID);
 
@@ -840,7 +840,7 @@ DeviceEvents
 								{
 									PreDeploymentChecks.CheckForSignatureConflict(policyObj);
 
-									// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+									// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 									if (SupplementalForSelf.IsEligible(policyObj))
 										SupplementalForSelf.Deploy(policyObj.PolicyID);
 
@@ -988,7 +988,7 @@ DeviceEvents
 				// Analyze the data
 				await AnalysisResults.PrepareAnalysis(AllFileIdentities);
 
-				// If the app settings requires auto switch, do it here.
+				// If the app settings require auto switch, do it here.
 				if (Atlas.Settings.AutoSwitchToAnalysisPageAfterDataRetrieval)
 				{
 					// Navigate to the analysis page
@@ -1009,7 +1009,7 @@ DeviceEvents
 	}
 
 	/// <summary>
-	/// CTRL + C shortcuts event handler
+	/// CTRL + C shortcut event handler
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>

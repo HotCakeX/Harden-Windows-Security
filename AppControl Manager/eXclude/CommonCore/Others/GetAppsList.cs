@@ -275,7 +275,7 @@ internal static class GetAppsList
 					Windows.ApplicationModel.PackageStatus packageStatus = item.Status;
 					PackageId packageId = item.Id;
 
-					// Try get the logo string
+					// Try to get the logo string
 					string? logoStr = item.Logo?.ToString();
 
 					// Validate that the logo string is a valid absolute URI and check size requirements

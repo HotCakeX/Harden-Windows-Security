@@ -26,9 +26,8 @@ namespace AppControlManager.SiPolicyIntel;
 
 internal static class CertificatePresence
 {
-
 	/// <summary>
-	/// Takes in a policy object and certificate .cer file path and ensures the certificate's details is added to the policy as UpdatePolicySigner
+	/// Takes in a policy object and certificate .cer file path and ensures the certificate's details are added to the policy as UpdatePolicySigner
 	/// It also checks to see whether user selected certificate matches the user selected certificate common name.
 	/// The reason we don't need to check signature of the deployed signed cip files in the EFI partition is because
 	/// The user-selected XML policy's ID is already checked against the deployed signed policies and that provides the necessary signing details in the XML.
@@ -114,7 +113,6 @@ internal static class CertificatePresence
 		return false;
 	}
 
-
 	/// <summary>
 	/// Gets the path to a .cer certificate file and a certificate common name
 	/// Makes sure the common name belongs to the certificate file
@@ -146,5 +144,4 @@ internal static class CertificatePresence
 
 		return true;
 	}
-
 }

@@ -17,12 +17,14 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 #if APP_CONTROL_MANAGER
 using AppControlManager.Main;
 #endif
+
 namespace CommonCore.Others;
 
 internal static class CertificateGenerator
@@ -46,7 +48,7 @@ internal static class CertificateGenerator
 			Atlas.GetStr("AppControlCertCheckExistingMessage"),
 			CommonName));
 
-		// Check see if there are any certificates in the personal store of User certificates with the selected Common Name
+		// Check to see if there are any certificates in the personal store of User certificates with the selected Common Name
 		List<X509Certificate2> possibleExistingCerts = GetCertificatesFromPersonalStore(CommonName);
 
 		if (possibleExistingCerts.Count > 0)
@@ -63,12 +65,16 @@ internal static class CertificateGenerator
 			{
 				store.Remove(cert);
 			}
-
 			store.Close();
 		}
 
+		// Build the distinguished name structurally so delimiter characters in the CN remain intact.
+		X500DistinguishedNameBuilder distinguishedNameBuilder = new();
+		distinguishedNameBuilder.AddCommonName(CommonName);
+		X500DistinguishedName distinguishedName = distinguishedNameBuilder.Build();
+
 		X509Certificate2 generatedCertificate = GenerateSelfSignedCertificate(
-			subjectName: CommonName,
+			distinguishedName: distinguishedName,
 			validityInYears: validity,
 			keySize: keySize,
 			hashAlgorithm: hashAlgorithm,
@@ -90,7 +96,6 @@ internal static class CertificateGenerator
 		return generatedCertificate;
 	}
 
-
 	// Enum representing the applicable certificate stores
 	internal enum CertificateStoreLocation
 	{
@@ -98,8 +103,14 @@ internal static class CertificateGenerator
 		Machine
 	}
 
+	/// <summary>
+	/// Generates a self-signed certificate for an already constructed X.500 distinguished name.
+	/// Callers are responsible for choosing whether the subject represents a raw common name or a complete publisher identity.
+	/// Raw common name example: Contoso, Inc.
+	/// Complete publisher identity example: CN=Contoso Software, O = Contoso Corporation, C=US
+	/// </summary>
 	internal static X509Certificate2 GenerateSelfSignedCertificate(
-		string subjectName,
+		X500DistinguishedName distinguishedName,
 		int validityInYears,
 		int keySize,
 		HashAlgorithmName hashAlgorithm,
@@ -111,12 +122,6 @@ internal static class CertificateGenerator
 		string? pfxExportFilePath = null,
 		string? pfxPassword = null)
 	{
-		// Check if the subject name already starts with "CN="
-		// If it does, use it as-is; otherwise, prepend "CN="
-		X500DistinguishedName distinguishedName = subjectName.StartsWith("CN=", StringComparison.OrdinalIgnoreCase)
-			? new(subjectName)
-			: new($"CN={subjectName}");
-
 		using RSA rsa = RSA.Create(keySize);
 
 		CertificateRequest request = new(distinguishedName, rsa, hashAlgorithm, RSASignaturePadding.Pkcs1);
@@ -131,7 +136,6 @@ internal static class CertificateGenerator
 				X509KeyUsageFlags.DigitalSignature,
 				true));
 
-
 		// Add subject key identifier
 		// Its raw data which is a byte array will always start with 4, 20
 		// 4: This indicates the ASN.1 type is an OCTET STRING.
@@ -141,7 +145,6 @@ internal static class CertificateGenerator
 		// adds "[1]Application Certificate Policy:Policy Identifier=Code Signing" as the value for Application Policies extension. The certificate made in CA role in Windows Server (using Code Signing template) also adds this extension.
 		request.CertificateExtensions.Add(
 			new X509SubjectKeyIdentifierExtension(request.PublicKey, false));
-
 
 		// Add enhanced key usage
 		// Code Signing
@@ -162,13 +165,11 @@ internal static class CertificateGenerator
 		X509Extension appPoliciesExtension = new(appPoliciesOid, appPoliciesValue, false);
 		request.CertificateExtensions.Add(appPoliciesExtension);
 
-
 		DateTimeOffset notBefore = DateTimeOffset.UtcNow;
 		DateTimeOffset notAfter = notBefore.AddYears(validityInYears);
 
 		// Generate the certificate
 		using X509Certificate2 cert = request.CreateSelfSigned(notBefore, notAfter);
-
 
 		// Export the certificate for .PFX file as Byte Array
 		ReadOnlySpan<byte> certData = cert.Export(X509ContentType.Pfx, pfxPassword);
@@ -219,7 +220,6 @@ internal static class CertificateGenerator
 		return generatedCert;
 	}
 
-
 	/// <summary>
 	/// Stores a certificate in a specified certificate store location, optionally including only the public key.
 	/// </summary>
@@ -248,7 +248,6 @@ internal static class CertificateGenerator
 		store.Add(cert);
 		store.Close();
 	}
-
 
 	/// <summary>
 	/// Searches through all the relevant certificate stores for any certificate with a given Subject Common Name
@@ -290,7 +289,7 @@ internal static class CertificateGenerator
 			// Loop through the certificates in the store and find the one with the matching CN
 			foreach (X509Certificate2 cert in store.Certificates)
 			{
-				if (cert.SubjectName.Name.Contains($"CN={subjectName}", StringComparison.OrdinalIgnoreCase))
+				if (CertificateCommonNameMatches(cert, subjectName))
 				{
 					// Certificate found with the matching CN, so delete it
 					store.Remove(cert);
@@ -300,11 +299,18 @@ internal static class CertificateGenerator
 						storeName));
 				}
 			}
-
 			store.Close();
 		}
 	}
 
+	/// <summary>
+	/// Determines whether a certificate subject common name exactly matches the supplied value.
+	/// </summary>
+	private static bool CertificateCommonNameMatches(X509Certificate2 cert, string subjectName) =>
+		string.Equals(
+			cert.GetNameInfo(X509NameType.SimpleName, false),
+			subjectName,
+			StringComparison.OrdinalIgnoreCase);
 
 	internal static List<X509Certificate2> GetCertificatesFromPersonalStore(string subjectName)
 	{
@@ -316,16 +322,14 @@ internal static class CertificateGenerator
 		// Loop through certificates in the "My" store
 		foreach (X509Certificate2 cert in store.Certificates)
 		{
-			if (cert.SubjectName.Name.Contains($"CN={subjectName}", StringComparison.OrdinalIgnoreCase))
+			if (CertificateCommonNameMatches(cert, subjectName))
 			{
 				// Add certificate to the list if it matches the CN
 				matchingCertificates.Add(cert);
 			}
 		}
-
 		store.Close();
 
 		return matchingCertificates;
 	}
-
 }

@@ -171,7 +171,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// Downloads the latest Microsoft Recommended Block rules from Microsoft's GitHub repository
 	/// And creates a valid Code Integrity XML policy file from it.
 	/// </summary>
-	/// <returns>the the Microsoft recommended driver block rules base policy</returns>
+	/// <returns>The Microsoft recommended driver block rules base policy</returns>
 	internal static PolicyFileRepresent GetDriversBlockRules()
 	{
 		// Download the zip file
@@ -302,7 +302,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 
 	/// <summary>
 	/// Creates and configures a DefaultWindows policy based on various parameters.
-	/// options.
 	/// </summary>
 	/// <param name="IsAudit">Indicates whether the policy should operate in audit mode, affecting logging behavior.</param>
 	/// <param name="LogSize">Sets the size limit for the event log if audit mode is enabled.</param>

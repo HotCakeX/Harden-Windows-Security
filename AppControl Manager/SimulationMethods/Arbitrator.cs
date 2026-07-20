@@ -140,7 +140,7 @@ internal static class Arbitrator
 							}
 
 							// Capture the details of the WHQL signers, aka Intermediate certificate(s) of the signer package that had WHQL EKU
-							// In case there are more than 1 intermediate certificates in the chain, add all of them to the HashSets
+							// In case there are more than 1 intermediate certificate in the chain, add all of them to the HashSets
 							// regardless of whether they have Opus data or not because we'll use these data for the WHQL level too and that level doesn't require Opus data match
 
 							if (chainPackage.IntermediateCertificates is not null)
@@ -158,7 +158,7 @@ internal static class Arbitrator
 							}
 						}
 
-						// Flag indicating if the Opus data of the current signer matched with one of the file's leaf certificates Opus data
+						// Flag indicating if the Opus data of the current signer matched with one of the file's leaf certificates' Opus data
 						// Making it eligible for WHQLFilePublisher and WHQLPublisher levels
 						// if true, CertOemID of the signer matches the EKU Opus data of the file (This should belong to the leaf certificate of the file as it's the one with EKUs)
 						bool OpusMatch = signer.CertOemID is not null && Current_Chain_Opus.Contains(signer.CertOemID);
@@ -192,7 +192,7 @@ internal static class Arbitrator
 										}
 									}
 
-									// Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
+									// Loop over all of the candidate file attributes (if they exist) to find a match with the file's extended info
 									foreach (ExFileInfo FileAttrib in CollectionsMarshal.AsSpan(CandidateFileAttrib))
 									{
 										if (
@@ -406,7 +406,7 @@ internal static class Arbitrator
 									}
 								}
 
-								// Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
+								// Loop over all of the candidate file attributes (if they exist) to find a match with the file's extended info
 								foreach (ExFileInfo FileAttrib in CollectionsMarshal.AsSpan(CandidateFileAttrib))
 								{
 									if (
@@ -617,7 +617,7 @@ internal static class Arbitrator
 							}
 						}
 
-						// Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
+						// Loop over all of the candidate file attributes (if they exist) to find a match with the file's extended info
 						foreach (ExFileInfo FileAttrib in CollectionsMarshal.AsSpan(CandidateFileAttrib))
 						{
 							if (

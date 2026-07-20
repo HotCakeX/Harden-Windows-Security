@@ -65,7 +65,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 	}
 
 	/// <summary>
-	/// CTRL + C shortcuts event handler
+	/// CTRL + C shortcut event handler
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>

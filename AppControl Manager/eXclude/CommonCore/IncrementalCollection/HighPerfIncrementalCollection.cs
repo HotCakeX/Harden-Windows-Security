@@ -214,7 +214,7 @@ internal sealed partial class HighPerfIncrementalCollection<TDataType>(List<TDat
 	/// </summary>
 	private async Task<LoadMoreItemsResult> LoadAdditionalItemsAsync()
 	{
-		uint loadedItemCount = 0;
+		uint loadedItemCount;
 
 		// Serialize with any other load/refresh/reload work.
 		await LoadingMeowTex.WaitAsync();

@@ -274,8 +274,6 @@ internal sealed partial class BackdropMicaBrush : XamlCompositionBrushBase
 
 				brush = micaEffectBrush;
 				CompositionBrush = brush;
-
-				return;
 			}
 			catch (Exception ex)
 			{

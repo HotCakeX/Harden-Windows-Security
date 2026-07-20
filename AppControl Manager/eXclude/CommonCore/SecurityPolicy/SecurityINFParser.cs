@@ -168,16 +168,9 @@ internal static class SecurityINFParser
 		valueName = pathParts[^1];
 
 		// Everything in between (excluding the first and last parts) forms the key name
-		if (pathParts.Length == 2)
-		{
-			keyName = "";
-		}
-		else
-		{
-			string[] keyParts = new string[pathParts.Length - 2];
-			Array.Copy(pathParts, 1, keyParts, 0, pathParts.Length - 2);
-			keyName = string.Join("\\", keyParts);
-		}
+		string[] keyParts = new string[pathParts.Length - 2];
+		Array.Copy(pathParts, 1, keyParts, 0, pathParts.Length - 2);
+		keyName = string.Join("\\", keyParts);
 
 		return true;
 	}
@@ -430,22 +423,6 @@ internal static class SecurityINFParser
 				}
 
 				// Odd length > 1 is ambiguous => fallback
-				return Encoding.UTF8.GetBytes(binaryString);
-			}
-
-			// Decimal single token (0..255)
-			bool allDigits = true;
-			for (int i = 0; i < token.Length && allDigits; i++)
-			{
-				char ch = token[i];
-				allDigits = ch >= '0' && ch <= '9';
-			}
-			if (allDigits)
-			{
-				if (byte.TryParse(token, NumberStyles.Integer, CultureInfo.InvariantCulture, out byte b))
-				{
-					return [b];
-				}
 				return Encoding.UTF8.GetBytes(binaryString);
 			}
 

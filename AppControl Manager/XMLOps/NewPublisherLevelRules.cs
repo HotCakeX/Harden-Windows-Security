@@ -27,8 +27,8 @@ namespace AppControlManager.XMLOps;
 internal static class NewPublisherLevelRules
 {
 	/// <summary>
-	/// Creates new Allow Publisher level rules in the SiPolicy object
-	/// Each rules includes the Signers, AllowedSigners, and CiSigners(depending on kernel/user mode)
+	/// Creates a new Allow Publisher level rule in the SiPolicy object
+	/// Each rule includes the Signers, AllowedSigners, and CiSigners (depending on kernel/user mode)
 	/// </summary>
 	/// <param name="policyObj"></param>
 	/// <param name="publisherSigners">The PublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method</param>
@@ -93,8 +93,8 @@ internal static class NewPublisherLevelRules
 	}
 
 	/// <summary>
-	/// Creates new Deny Publisher level rules in the SiPolicy object
-	/// Each rules includes the Signers, DeniedSigners, and CiSigners(depending on kernel/user mode)
+	/// Creates a new Deny Publisher level rule in the SiPolicy object
+	/// Each rule includes the Signers, DeniedSigners, and CiSigners (depending on kernel/user mode)
 	/// </summary>
 	/// <param name="policyObj"></param>
 	/// <param name="publisherSigners">The PublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method</param>
@@ -176,5 +176,4 @@ internal static class NewPublisherLevelRules
 		}
 		return scenario;
 	}
-
 }

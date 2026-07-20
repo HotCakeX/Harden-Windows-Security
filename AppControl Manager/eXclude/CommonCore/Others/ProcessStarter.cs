@@ -25,7 +25,7 @@ internal static class ProcessStarter
 	/// <summary>
 	/// Executes an executable with arguments
 	/// </summary>
-	/// <param name="command">The name of full path of the executable to run.</param>
+	/// <param name="command">The name or full path of the executable to run.</param>
 	/// <param name="arguments">Optional arguments.</param>
 	/// <exception cref="InvalidOperationException"></exception>
 	/// <returns>The string output of the command</returns>

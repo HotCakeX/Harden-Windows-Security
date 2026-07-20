@@ -45,7 +45,7 @@ internal sealed partial class Shimmer : UserControl
 	/// </summary>
 	private static readonly DependencyProperty DurationProperty = DependencyProperty.Register(
 	   nameof(Duration),
-	   typeof(object),
+	   typeof(TimeSpan),
 	   typeof(Shimmer),
 	   new PropertyMetadata(defaultValue: TimeSpan.FromMilliseconds(1600), PropertyChanged));
 

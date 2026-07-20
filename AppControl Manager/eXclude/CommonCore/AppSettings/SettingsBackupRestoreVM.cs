@@ -98,7 +98,7 @@ internal sealed partial class SettingsBackupRestoreVM : ViewModelBase
 
 			byte[] jsonPayload = await File.ReadAllBytesAsync(selectedFile);
 			SettingsImportResult importResult = SettingsBackupRestoreSerializer.Import(jsonPayload, Atlas.Settings);
-			await ApplyImportedSettingsAsync();
+			ApplyImportedSettings();
 			RefreshDisplayedSettings();
 
 			string successMessage = string.Format(CultureInfo.CurrentCulture, Atlas.GetStr("SuccessfullyImportedSettingsFromJsonMessage"), SettingsItems.Count, selectedFile);
@@ -118,7 +118,7 @@ internal sealed partial class SettingsBackupRestoreVM : ViewModelBase
 		}
 	}
 
-	internal async void ResetToDefaultsAsync()
+	internal void ResetToDefaultsAsync()
 	{
 		try
 		{
@@ -127,7 +127,7 @@ internal sealed partial class SettingsBackupRestoreVM : ViewModelBase
 			Main defaultSettings = Main.CreateDefaultSettingsSnapshot();
 			byte[] jsonPayload = SettingsBackupRestoreSerializer.Export(defaultSettings);
 			_ = SettingsBackupRestoreSerializer.Import(jsonPayload, Atlas.Settings);
-			await ApplyImportedSettingsAsync();
+			ApplyImportedSettings();
 			RefreshDisplayedSettings();
 
 			MainInfoBar.WriteSuccess(string.Format(CultureInfo.CurrentCulture, Atlas.GetStr("SuccessfullyResetSettingsToDefaultsMessage"), SettingsItems.Count));
@@ -138,7 +138,7 @@ internal sealed partial class SettingsBackupRestoreVM : ViewModelBase
 		}
 	}
 
-	private static async Task ApplyImportedSettingsAsync()
+	private static void ApplyImportedSettings()
 	{
 		ElementSoundPlayer.State = Atlas.Settings.SoundSetting ? ElementSoundPlayerState.On : ElementSoundPlayerState.Off;
 		ElementSoundPlayer.SpatialAudioMode = Atlas.Settings.SoundSetting ? ElementSpatialAudioMode.On : ElementSpatialAudioMode.Off;

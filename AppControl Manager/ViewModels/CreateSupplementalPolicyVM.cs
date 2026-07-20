@@ -701,11 +701,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	#region Certificates scan
 
-	internal Visibility CertificatesInfoBarActionButtonVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
+	internal Visibility CertificatesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal readonly InfoBarSettings CertificatesBasedInfoBar = new();
 
@@ -720,17 +716,17 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	private SiPolicy.PolicyFileRepresent? _FinalCertificatesSupplementalPolicy;
 
 	/// <summary>
-	/// Selected Certificate File Paths
+	/// Selected Certificate File Paths.
 	/// </summary>
 	internal readonly UniqueStringObservableCollection CertificatesBasedCertFilePaths = [];
 
 	/// <summary>
-	/// Selected Base policy path
+	/// Selected Base policy path.
 	/// </summary>
 	internal SiPolicy.PolicyFileRepresent? CertificatesBasedBasePolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// Selected Supplemental policy name,
+	/// Selected Supplemental policy name.
 	/// </summary>
 	internal string? CertificatesBasedSupplementalPolicyName { get; set => SPT(ref field, value); }
 

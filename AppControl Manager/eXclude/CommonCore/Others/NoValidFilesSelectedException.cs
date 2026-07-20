@@ -18,7 +18,7 @@
 namespace CommonCore.Others;
 
 /// <summary>
-/// a class to throw a custom exception when the no valid files were found for scanning or performing other relevant tasks in the application.
+/// A class used to throw a custom exception when no valid files are found for scanning or performing other relevant tasks in the application.
 /// </summary>
 internal sealed class NoValidFilesSelectedException : Exception
 {
@@ -34,8 +34,7 @@ internal sealed class NoValidFilesSelectedException : Exception
 	/// Initializes a new instance of the NoValidFilesSelectedException class with a specified error message.
 	/// </summary>
 	/// <param name="message">The error message that describes the reason for the exception.</param>
-	internal NoValidFilesSelectedException(string message)
-		: base(message)
+	internal NoValidFilesSelectedException(string message) : base(message)
 	{
 	}
 
@@ -60,4 +59,3 @@ internal sealed class NoValidFilesSelectedException : Exception
 	{
 	}
 }
-

@@ -801,7 +801,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	#endregion
 
 	/// <summary>
-	/// Local event handler that are assigned to the sidebar button.
+	/// Local event handler that is assigned to the sidebar button.
 	/// </summary>
 	internal void LightUp1(object? param)
 	{
@@ -1230,7 +1230,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	internal void ClearSelectedDirectoriesButton_Click() => selectedDirectoriesToScan.Clear();
 
 	/// <summary>
-	/// CTRL + C shortcuts event handler
+	/// CTRL + C shortcut event handler
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
@@ -1241,7 +1241,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// CTRL + C shortcuts event handler
+	/// CTRL + C shortcut event handler
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>

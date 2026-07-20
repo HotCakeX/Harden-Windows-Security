@@ -15,7 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Formats.Asn1;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 
 namespace CommonCore;
 
@@ -24,9 +26,15 @@ internal static class LLPackageReader
 	/// <summary>
 	/// Contains details about an app package.
 	/// </summary>
-	internal sealed class PackageDetails(string certCN, HashAlgorithmName hashAlgorithm, string packageFamilyName, string version)
+	internal sealed class PackageDetails(string certCN, X500DistinguishedName publisherDistinguishedName, HashAlgorithmName hashAlgorithm, string packageFamilyName, string version)
 	{
+		// CertCN is for display, certificate lookup, friendly names, and AppControl Manager package detection.
 		internal string CertCN => certCN;
+
+		// The complete manifest Publisher must be retained because an MSIX signing certificate subject
+		// must include every publisher attribute, not only the Common Name.
+		internal X500DistinguishedName PublisherDistinguishedName => publisherDistinguishedName;
+
 		internal HashAlgorithmName HashAlgorithm => hashAlgorithm;
 		internal string PackageFamilyName => packageFamilyName;
 		internal string Version => version;
@@ -78,6 +86,7 @@ internal static class LLPackageReader
 
 		// Output values
 		string certificateCN = string.Empty;
+		X500DistinguishedName? publisherDistinguishedName = null;
 		HashAlgorithmName hashingAlgo = HashAlgorithmName.SHA256;
 		string packageFamilyName = string.Empty;
 		string version = string.Empty;
@@ -135,7 +144,9 @@ internal static class LLPackageReader
 				try
 				{
 					string publisherDn = new((char*)pPublisherDn);
-					certificateCN = ParseCommonName(publisherDn);
+					// Preserve the complete Publisher identity for certificate generation such as CN, O, OU, L, S, and C.
+					publisherDistinguishedName = new(publisherDn);
+					certificateCN = ParseCommonName(publisherDistinguishedName);
 				}
 				finally
 				{
@@ -220,6 +231,7 @@ internal static class LLPackageReader
 
 			return new PackageDetails(
 				certCN: certificateCN,
+				publisherDistinguishedName: publisherDistinguishedName ?? throw new InvalidOperationException("Package Publisher was not initialized."),
 				hashAlgorithm: hashingAlgo,
 				packageFamilyName: packageFamilyName,
 				version: version);
@@ -252,6 +264,7 @@ internal static class LLPackageReader
 
 		// Output values
 		string certificateCN = string.Empty;
+		X500DistinguishedName? publisherDistinguishedName = null;
 		HashAlgorithmName hashingAlgo = HashAlgorithmName.SHA256;
 		string packageFamilyName = string.Empty;
 		string version = string.Empty;
@@ -311,7 +324,9 @@ internal static class LLPackageReader
 				try
 				{
 					string publisherDn = new((char*)pPublisherDn);
-					certificateCN = ParseCommonName(publisherDn);
+					// Preserve the complete Publisher identity for certificate generation such as CN, O, OU, L, S, and C.
+					publisherDistinguishedName = new(publisherDn);
+					certificateCN = ParseCommonName(publisherDistinguishedName);
 				}
 				finally
 				{
@@ -396,6 +411,7 @@ internal static class LLPackageReader
 
 			return new PackageDetails(
 				certCN: certificateCN,
+				publisherDistinguishedName: publisherDistinguishedName ?? throw new InvalidOperationException("Package Publisher was not initialized."),
 				hashAlgorithm: hashingAlgo,
 				packageFamilyName: packageFamilyName,
 				version: version);
@@ -422,18 +438,47 @@ internal static class LLPackageReader
 		}
 	}
 
-	private static string ParseCommonName(string dn)
+	private static string ParseCommonName(X500DistinguishedName distinguishedName)
 	{
-		if (string.IsNullOrWhiteSpace(dn))
-			throw new ArgumentException("Distinguished Name is null or empty.", nameof(dn));
+		// Read the encoded X.500 structure, preserving commas and other escaped delimiter characters inside the CN value.
+		AsnReader distinguishedNameReader = new(distinguishedName.RawData, AsnEncodingRules.DER);
+		AsnReader relativeDistinguishedNamesReader = distinguishedNameReader.ReadSequence();
+		distinguishedNameReader.ThrowIfNotEmpty();
 
-		string[] parts = dn.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-
-		foreach (string p in parts)
+		while (relativeDistinguishedNamesReader.HasData)
 		{
-			if (p.StartsWith("CN=", StringComparison.OrdinalIgnoreCase))
+			AsnReader relativeDistinguishedNameReader = relativeDistinguishedNamesReader.ReadSetOf();
+
+			while (relativeDistinguishedNameReader.HasData)
 			{
-				return p[3..].Trim('"');
+				AsnReader attributeReader = relativeDistinguishedNameReader.ReadSequence();
+				string attributeOid = attributeReader.ReadObjectIdentifier();
+
+				if (string.Equals(attributeOid, "2.5.4.3", StringComparison.OrdinalIgnoreCase))
+				{
+					Asn1Tag valueTag = attributeReader.PeekTag();
+					if (valueTag.TagClass is not TagClass.Universal)
+					{
+						throw new InvalidOperationException("Common Name (CN) uses an unsupported ASN.1 tag class.");
+					}
+
+					UniversalTagNumber stringType = (UniversalTagNumber)valueTag.TagValue;
+					string commonName = stringType switch
+					{
+						UniversalTagNumber.BMPString or
+						UniversalTagNumber.PrintableString or
+						UniversalTagNumber.TeletexString or
+						UniversalTagNumber.UniversalString or
+						UniversalTagNumber.UTF8String => attributeReader.ReadCharacterString(stringType),
+						_ => throw new InvalidOperationException($"Common Name (CN) uses unsupported ASN.1 string type '{stringType}'.")
+					};
+
+					attributeReader.ThrowIfNotEmpty();
+					return commonName;
+				}
+
+				_ = attributeReader.ReadEncodedValue();
+				attributeReader.ThrowIfNotEmpty();
 			}
 		}
 

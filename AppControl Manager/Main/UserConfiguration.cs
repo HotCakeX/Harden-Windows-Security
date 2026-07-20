@@ -74,8 +74,7 @@ internal sealed partial class UserConfiguration(
 	string? CertificatePath = null,
 	Guid? StrictKernelPolicyGUID = null,
 	bool? AutoUpdateCheck = null,
-	Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes = null
-)
+	Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes = null)
 	{
 		// Validate certificateCommonName
 		if (!string.IsNullOrWhiteSpace(CertificateCommonName))
@@ -113,12 +112,6 @@ internal sealed partial class UserConfiguration(
 	}
 
 	/// <summary>
-	/// Gets the current user configuration settings from the JSON file and return them
-	/// </summary>
-	/// <returns></returns>
-	internal static UserConfiguration Get() => ReadUserConfiguration();
-
-	/// <summary>
 	/// Removes the user configurations from the JSON file one by one using the provided parameters
 	/// </summary>
 	/// <param name="CertificateCommonName"></param>
@@ -131,8 +124,7 @@ internal sealed partial class UserConfiguration(
 	bool CertificatePath = false,
 	bool StrictKernelPolicyGUID = false,
 	bool AutoUpdateCheck = false,
-	bool SignedPolicyStage1RemovalTimes = false
-	)
+	bool SignedPolicyStage1RemovalTimes = false)
 	{
 		// Read the current configuration
 		UserConfiguration currentConfig = ReadUserConfiguration();
@@ -150,7 +142,10 @@ internal sealed partial class UserConfiguration(
 		Logger.Write(Atlas.GetStr("SpecifiedPropertiesRemovedAndSetToNullMessage"));
 	}
 
-	private static UserConfiguration ReadUserConfiguration()
+	/// <summary>
+	/// Gets the current user configuration settings from the JSON file and return them
+	/// </summary>
+	internal static UserConfiguration ReadUserConfiguration()
 	{
 		try
 		{
@@ -319,7 +314,6 @@ internal sealed partial class UserConfiguration(
 	/// Removes a key-value pair from the SignedPolicyStage1RemovalTimes dictionary by key.
 	/// </summary>
 	/// <param name="key">The key to remove.</param>
-	/// <returns>True if the key was successfully removed; false if the key was not found.</returns>
 	internal static void RemoveSignedPolicyStage1RemovalTime(string key)
 	{
 		// Get the current user configuration
@@ -345,5 +339,4 @@ internal sealed partial class UserConfiguration(
 				key));
 		}
 	}
-
 }

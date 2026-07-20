@@ -521,7 +521,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			// Analyze the data
 			await AnalysisResults.PrepareAnalysis(AllFileIdentities);
 
-			// If the app settings requires auto switch, do it here.
+			// If the app settings require auto switch, do it here.
 			if (Atlas.Settings.AutoSwitchToAnalysisPageAfterDataRetrieval)
 			{
 				await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Analysis.EventLogs), null);
@@ -660,7 +660,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								{
 									PreDeploymentChecks.CheckForSignatureConflict(PolicyToAddLogsTo.PolicyObj);
 
-									// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+									// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 									if (SupplementalForSelf.IsEligible(PolicyToAddLogsTo.PolicyObj))
 										SupplementalForSelf.Deploy(PolicyToAddLogsTo.PolicyObj.PolicyID);
 
@@ -712,7 +712,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								{
 									PreDeploymentChecks.CheckForSignatureConflict(policyObj);
 
-									// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+									// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 									if (SupplementalForSelf.IsEligible(policyObj))
 										SupplementalForSelf.Deploy(policyObj.PolicyID);
 
@@ -767,7 +767,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								{
 									PreDeploymentChecks.CheckForSignatureConflict(policyObj);
 
-									// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+									// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 									if (SupplementalForSelf.IsEligible(policyObj))
 										SupplementalForSelf.Deploy(policyObj.PolicyID);
 
@@ -810,7 +810,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// CTRL + C shortcuts event handler
+	/// CTRL + C shortcut event handler
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>

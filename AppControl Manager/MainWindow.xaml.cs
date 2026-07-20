@@ -66,11 +66,7 @@ namespace HardenSystemSecurity;
 /// MainWindow is a sealed class that represents the main application window, managing navigation, UI elements, and
 /// event handling.
 /// </summary>
-#if HARDEN_SYSTEM_SECURITY
 internal sealed partial class MainWindow : Window, INPCImplant
-#else
-internal sealed partial class MainWindow : Window, INPCImplant
-#endif
 {
 	#region IPropertyChangeHost Implementation
 	public event PropertyChangedEventHandler? PropertyChanged;
@@ -1752,7 +1748,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 					PreDeploymentChecks.CheckForSignatureConflict(policyContext.PolicyObj);
 
-					// If a base policy is being deployed, ensure it's supplemental policy for AppControl Manager also gets deployed
+					// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 					if (SupplementalForSelf.IsEligible(policyContext.PolicyObj))
 						SupplementalForSelf.Deploy(policyContext.PolicyObj.PolicyID);
 

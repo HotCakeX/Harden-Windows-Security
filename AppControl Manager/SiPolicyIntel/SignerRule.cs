@@ -21,7 +21,7 @@ using CommonCore.IntelGathering;
 namespace AppControlManager.SiPolicyIntel;
 
 /// <summary>
-/// For Levels: Publisher, LeafCertificate, PcaCertificate, RootCertificate,
+/// For Levels: Publisher, LeafCertificate, PcaCertificate, RootCertificate.
 /// </summary>
 internal sealed class SignerRule(
 	Signer signerElement,

@@ -32,7 +32,7 @@ internal sealed partial class EventLogUtility : ViewModelBase, IDisposable
 {
 	internal EventLogUtility() =>
 		// Kick off the registry monitor
-		// (this will also read the initial MaxSize into)
+		// (this will also read the initial MaxSize into MaxSizeMB)
 		EventLogMaxSizeWatcher();
 
 	private readonly Lock _syncRoot = new();

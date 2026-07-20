@@ -30,7 +30,7 @@ namespace HardenSystemSecurity.CustomUIElements;
 #endif
 
 /// <summary>
-/// Manage's App Window's border.
+/// Manages the App Window's border.
 /// </summary>
 internal static class AppWindowBorderCustomization
 {

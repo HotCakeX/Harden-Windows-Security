@@ -50,7 +50,7 @@ internal static partial class Merger
 	/// The result will be saved in the first policy and there will be no duplicate data.
 	/// The first policy's data that are non-collections will be maintained.
 	/// Only the data that are collections will be merged.
-	/// No date is lost in the merge process.
+	/// No data is lost in the merge process.
 	/// </summary>
 	/// <param name="mainPolicy"></param>
 	/// <param name="otherPolicies"></param>

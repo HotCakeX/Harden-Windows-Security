@@ -18,7 +18,7 @@
 namespace CommonCore.GroupPolicy;
 
 /// <summary>
-/// The main categories for protection. The JSON files for each category must match this enum member names.
+/// The main categories for protection. The JSON files for each category must match these enum member names.
 /// </summary>
 internal enum Categories : uint
 {

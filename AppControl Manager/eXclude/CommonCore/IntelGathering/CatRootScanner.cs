@@ -30,8 +30,8 @@ internal static class CatRootScanner
 	/// <summary>
 	/// Scans the CatRoot directory for security catalogs.
 	/// </summary>
-	/// <param name="paths">Directories to scan for .cat files. if not provided, "C:\Windows\System32\CatRoot" will be used.</param>
-	/// <param name="scalability">How many concurrent threads will be used to scan the files in parallel. If not provided, 4 will be used.</param>
+	/// <param name="paths">Directories to scan for .cat files. If not provided, "C:\Windows\System32\CatRoot" will be used.</param>
+	/// <param name="scalability">How many concurrent threads will be used to scan the files in parallel.</param>
 	/// <returns>A dictionary where each key is a hash and each value is the .Cat file path where the hash was found in.</returns>
 	internal static ConcurrentDictionary<string, string> Scan(List<string>? paths, ushort scalability)
 	{

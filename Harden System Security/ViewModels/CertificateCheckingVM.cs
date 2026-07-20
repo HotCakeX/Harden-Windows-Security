@@ -159,13 +159,25 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		if (CurrentCtlHeader?.DigestAlgorithmParameters is null || CurrentCtlHeader.DigestAlgorithmParameters.Length == 0)
 			return Atlas.GetStr("NoCertificateHash");
 
-		StringBuilder sb = new(CurrentCtlHeader.DigestAlgorithmParameters.Length * 3);
-		for (int i = 0; i < CurrentCtlHeader.DigestAlgorithmParameters.Length; i++)
-		{
-			if (i > 0) _ = sb.Append(' ');
-			_ = sb.Append(CurrentCtlHeader.DigestAlgorithmParameters.Span[i].ToString("X2", CultureInfo.InvariantCulture));
-		}
-		return sb.ToString();
+		return string.Create(
+			(CurrentCtlHeader.DigestAlgorithmParameters.Length * 3) - 1,
+			CurrentCtlHeader.DigestAlgorithmParameters,
+			static (destination, parameters) =>
+			{
+				const string Hex = "0123456789ABCDEF";
+				ReadOnlySpan<byte> bytes = parameters.Span;
+				int position = 0;
+				for (int i = 0; i < bytes.Length; i++)
+				{
+					if (i > 0)
+					{
+						destination[position++] = ' ';
+					}
+					byte value = bytes[i];
+					destination[position++] = Hex[value >> 4];
+					destination[position++] = Hex[value & 0x0F];
+				}
+			});
 	}
 
 	#endregion

@@ -48,7 +48,7 @@ internal static class DataDump
 			_ = content.AppendLine("┌─ REPORT INFORMATION");
 			_ = content.AppendLine($"│  Generated (Local): {DateTime.Now:yyyy-MM-dd HH:mm:ss} ({TimeZoneInfo.Local.DisplayName})");
 			_ = content.AppendLine($"│  Generated (UTC): {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}");
-			_ = content.AppendLine($"│  Report Format Version: 1.0");
+			_ = content.AppendLine("│  Report Format Version: 1.0");
 			_ = content.AppendLine("└─");
 			_ = content.AppendLine();
 
@@ -113,7 +113,7 @@ internal static class DataDump
 			// System Access Section
 			_ = content.AppendLine("┌─ SYSTEM ACCESS POLICIES");
 			_ = content.AppendLine("│");
-			_ = content.AppendLine($"│  Password Policies:");
+			_ = content.AppendLine("│  Password Policies:");
 			_ = content.AppendLine($"│    • Minimum Password Age: {FormatValue(systemAccess.MinimumPasswordAge)} days");
 			_ = content.AppendLine($"│    • Maximum Password Age: {FormatValue(systemAccess.MaximumPasswordAge)} days");
 			_ = content.AppendLine($"│    • Minimum Password Length: {FormatValue(systemAccess.MinimumPasswordLength)} characters");
@@ -121,15 +121,15 @@ internal static class DataDump
 			_ = content.AppendLine($"│    • Password History Size: {FormatValue(systemAccess.PasswordHistorySize)} passwords");
 			_ = content.AppendLine($"│    • Clear Text Password: {FormatBooleanValue(systemAccess.ClearTextPassword)}");
 			_ = content.AppendLine("│");
-			_ = content.AppendLine($"│  Account Lockout Policies:");
+			_ = content.AppendLine("│  Account Lockout Policies:");
 			_ = content.AppendLine($"│    • Lockout Bad Count: {FormatValue(systemAccess.LockoutBadCount)} attempts");
 			_ = content.AppendLine($"│    • Reset Lockout Count: {FormatValue(systemAccess.ResetLockoutCount)} minutes");
 			_ = content.AppendLine($"│    • Lockout Duration: {FormatValue(systemAccess.LockoutDuration)} minutes");
 			_ = content.AppendLine($"│    • Allow Administrator Lockout: {FormatBooleanValue(systemAccess.AllowAdministratorLockout)}");
 			_ = content.AppendLine("│");
-			_ = content.AppendLine($"│  Account Settings:");
+			_ = content.AppendLine("│  Account Settings:");
 			_ = content.AppendLine($"│    • Require Logon to Change Password: {FormatBooleanValue(systemAccess.RequireLogonToChangePassword)}");
-			_ = content.AppendLine($"│    • Force Logoff When Hour Expire: {FormatBooleanValue(systemAccess.ForceLogoffWhenHourExpire)}");
+			_ = content.AppendLine($"│    • Force Logoff When Logon Hours Expire: {FormatBooleanValue(systemAccess.ForceLogoffWhenHourExpire)}");
 			_ = content.AppendLine($"│    • Enable Admin Account: {FormatBooleanValue(systemAccess.EnableAdminAccount)}");
 			_ = content.AppendLine($"│    • Enable Guest Account: {FormatBooleanValue(systemAccess.EnableGuestAccount)}");
 			_ = content.AppendLine($"│    • New Administrator Name: {FormatStringValue(systemAccess.NewAdministratorName)}");
@@ -161,7 +161,7 @@ internal static class DataDump
 					}
 					else
 					{
-						_ = content.AppendLine($"│    • (No assignments)");
+						_ = content.AppendLine("│    • (No assignments)");
 					}
 					_ = content.AppendLine("│");
 				}
@@ -438,54 +438,8 @@ internal static class DataDump
 		};
 	}
 
-	private static string FormatAuditValue(object? value)
-	{
-		if (value == null) return "Not configured";
-
-		return value.ToString() switch
-		{
-			"0" => "No auditing",
-			"1" => "Success",
-			"2" => "Failure",
-			"3" => "Success and Failure",
-			_ => value.ToString() ?? "Unknown"
-		};
-	}
-
-	private static string FormatPrivilegeName(string privilegeName)
-	{
-		// Convert technical privilege names to more readable format
-		return privilegeName.Replace("Se", "").Replace("Privilege", " Privilege")
+	// Convert technical privilege names to more readable format
+	private static string FormatPrivilegeName(string privilegeName) =>
+		 privilegeName.Replace("Se", "").Replace("Privilege", " Privilege")
 			.Replace("Right", " Right").Trim();
-	}
-
-	private static string FormatRegistryValue(object? value, string? type)
-	{
-		if (value == null) return "(null)";
-
-		return type?.ToLowerInvariant() switch
-		{
-			"reg_dword" => $"{value} (0x{Convert.ToInt32(value):X8})",
-			"reg_binary" => value.ToString()?.Length > 50 ?
-				$"{value.ToString()?[..50]}... ({value.ToString()?.Length} chars)" :
-				value.ToString() ?? "(empty)",
-			"reg_multi_sz" => value.ToString()?.Contains('\0') == true ?
-				$"[{string.Join(", ", value.ToString()?.Split('\0', StringSplitOptions.RemoveEmptyEntries) ?? [])}]" :
-				value.ToString() ?? "(empty)",
-			_ => value.ToString() ?? "(empty)"
-		};
-	}
-
-	private static string GetRegistryKeyPath(string fullPath)
-	{
-		int lastBackslash = fullPath.LastIndexOf('\\');
-		return lastBackslash > 0 ? fullPath[..lastBackslash] : fullPath;
-	}
-
-	private static string GetRegistryValueName(string fullPath)
-	{
-		int lastBackslash = fullPath.LastIndexOf('\\');
-		return lastBackslash > 0 && lastBackslash < fullPath.Length - 1 ?
-			fullPath[(lastBackslash + 1)..] : fullPath;
-	}
 }

@@ -27,7 +27,7 @@ using Windows.UI;
 namespace AppControlManager.CustomUIElements;
 
 /// <summary>
-/// This button displays its inner Flyout when it's RightTapped (e.g., Right-clicked) or Holding on it with touch.
+/// This button displays its inner Flyout when it is right-tapped or held using touch.
 /// When the bound ObservedData indicates "has content", it shows a green glow and changes its text to "Selected" (localized).
 /// </summary>
 internal sealed partial class ButtonV2 : Button
@@ -191,7 +191,7 @@ internal sealed partial class SplitButtonV2 : SplitButton
 			flyout.ShowAt(instance);
 		}
 
-		((SplitButtonV2)d).UpdateAppearance();
+		instance.UpdateAppearance();
 	}
 
 	internal SplitButtonV2()

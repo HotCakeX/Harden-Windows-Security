@@ -275,7 +275,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Extracts the data from the user selected policy XML file and puts them in the UI elements such as the ListViews
+	/// Extracts the data from the user-selected policy XML file and puts them in the UI elements such as the ListViews
 	/// </summary>
 	internal async void ProcessData()
 	{
@@ -477,7 +477,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				#region FileAttribs processing
 
 				// a list of file attributes in the <FileRules> node
-				List<FileAttrib> fileAttribs = fileRulesNode.OfType<FileAttrib>().ToList() ?? [];
+				List<FileAttrib> fileAttribs = fileRulesNode.OfType<FileAttrib>().ToList();
 
 				FileAttributesCount = $"• File Attributes count: {fileAttribs.Count}";
 
@@ -1322,7 +1322,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 				   );
 
 				// Save the policy to the XML file path
-				// If it remains null here, it means we either don't have permission to write to that directory or file path didn't exist.
+				// If it remains null here, it means we either don't have permission to write to that directory or the file path didn't exist.
 				// Either way it is fine because the policy will be saved to the Policies Library.
 				if (XMLFilePathToSaveTheChangesTo is not null)
 				{
@@ -1545,7 +1545,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Used by various methods internally to open a created/modified policy in the Policy Editor
 	/// </summary>
-	/// <param name="policyFile">the path to the policy file to open in the Policy Editor</param>
+	/// <param name="policy">The policy representation to open in the Policy Editor.</param>
 	internal async Task OpenInPolicyEditor(SiPolicy.PolicyFileRepresent? policy)
 	{
 		try
@@ -1692,7 +1692,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	internal string? NewAppIDTagValue { get; set => SPT(ref field, value); }
 
 	/// <summary>
-	/// Adds a new App ID Tag to the collection with the key and value that user entered in the text boxes.
+	/// Adds a new App ID Tag to the collection with the key and value that the user entered in the text boxes.
 	/// </summary>
 	internal void AddNewAppIDTag()
 	{

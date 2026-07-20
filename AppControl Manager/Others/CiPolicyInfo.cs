@@ -132,7 +132,7 @@ internal sealed class CiPolicyInfo(
 	/// Indicates if this is a Managed Installer policy from Intune
 	/// </summary>
 	[JsonIgnore]
-	internal bool IsManagedInstaller { get; init; } = false;
+	internal bool IsManagedInstaller { get; init; }
 
 	/// <summary>
 	/// Serializes the given <see cref="CiPolicyInfo"/> instance to a JSON string using source-generated JSON.

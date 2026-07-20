@@ -321,9 +321,5 @@ internal sealed partial class Segmented : ListViewBase
 			panel.Orientation = Orientation;
 			panel.HorizontalAlignment = HorizontalAlignment;
 		}
-		else
-		{
-			// Fallback: try to find it in visual tree if needed, or wait for Loaded
-		}
 	}
 }

@@ -224,6 +224,7 @@ The Harden System Security fully supports the following languages.
 * <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/poland.svg?raw=true" width="25" alt="Country flag"> Polish
 * <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/icons8-germany.svg?raw=true" width="25" alt="Country flag"> German
 * <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/france.svg?raw=true" width="25" alt="Country flag"> French
+* <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/japan.svg?raw=true" width="25" alt="Country flag"> Japanese
 * <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/ukraine.svg?raw=true" width="25" alt="Country flag"> Ukrainian
 * <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/iran.svg?raw=true" width="25" alt="Country flag"> Persian
 * <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Country%20Flags/thailand.svg?raw=true" width="25" alt="Country flag"> Thai

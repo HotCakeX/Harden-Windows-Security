@@ -121,7 +121,7 @@ internal static partial class DetailsRetrieval
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static unsafe SystemCodeIntegrityInfo Get()
 	{
-		// Creating the structure and set Length
+		// Creating the structure and setting Length
 		SYSTEM_CODEINTEGRITY_INFORMATION sci;
 		sci.Length = (uint)sizeof(SYSTEM_CODEINTEGRITY_INFORMATION);
 		sci.CodeIntegrityOptions = 0;

@@ -18,7 +18,7 @@
 
 /*
 
-The code in this file is MODIFIED version of the MIT licensed code in the following repository: https://github.com/CommunityToolkit/Windows
+The code in this file is a MODIFIED version of the MIT licensed code in the following repository: https://github.com/CommunityToolkit/Windows
 Taken from this URL: https://github.com/CommunityToolkit/Windows/blob/main/components/Behaviors/src/Headers/StickyHeaderBehavior.cs
 
 It's removed the "ScrollViewer_GotFocus" from the base class to prevent scroll positions from changing when clicking on the header which is an unwanted behavior.

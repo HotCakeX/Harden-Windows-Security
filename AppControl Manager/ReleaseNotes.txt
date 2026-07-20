@@ -1,5 +1,5 @@
 * Updated dependencies to the latest version.
 
-* Reduced package size.
+* Improved the package installer by supporting the complete publisher identity (aka Distinguished Name) such as CN, O, OU, L, S, and C in the package manifest. It also now supports CNs with commas.
 
-* Added support for the following languages to the AppControl Manager as an optional on-demand downloadable add-on: Ukrainian, Persian, Italian, Mandarin Chinese, Indonesian and Thai. You can manage it from the Settings page.
+* You can now generate code signing certificates that have compound common names such as "Contoso, Inc." or "Contoso, Inc., Ltd.".

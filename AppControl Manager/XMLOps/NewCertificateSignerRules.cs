@@ -28,7 +28,7 @@ internal static class NewCertificateSignerRules
 	/// <summary>
 	/// Creates new Signer rules for Certificates in the SiPolicy object
 	/// The level is Pca/Root/Leaf certificate, meaning there is no certificate publisher mentioned
-	/// Only Certificate TBS and its name is used.
+	/// Only Certificate TBS and its name are used.
 	/// </summary>
 	/// <param name="policyObj"></param>
 	/// <param name="signerData"></param>
@@ -37,7 +37,7 @@ internal static class NewCertificateSignerRules
 	{
 		if (signerData.Count is 0)
 		{
-			Logger.Write($"no Certificate rules detected to create allow rules for.");
+			Logger.Write("no Certificate rules detected to create allow rules for.");
 			return policyObj;
 		}
 

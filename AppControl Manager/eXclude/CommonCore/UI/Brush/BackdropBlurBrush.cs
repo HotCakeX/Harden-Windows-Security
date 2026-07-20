@@ -220,8 +220,6 @@ internal sealed partial class BackdropBlurBrush : XamlCompositionBrushBase
 
 				brush = effectBrush;
 				CompositionBrush = brush;
-
-				return;
 			}
 			catch (Exception ex)
 			{

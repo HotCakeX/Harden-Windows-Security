@@ -219,10 +219,8 @@ internal static class SecurityPolicyWriter
 						{
 							throw new InvalidOperationException($"Could not remove privilege {privilegeName} from SID {sidToRemove}. Status: 0x{removeStatus:X8}");
 						}
-						else
-						{
-							Logger.Write($"Removed privilege {privilegeName} from SID {sidToRemove}");
-						}
+
+						Logger.Write($"Removed privilege {privilegeName} from SID {sidToRemove}");
 					}
 					finally
 					{
@@ -245,10 +243,8 @@ internal static class SecurityPolicyWriter
 						{
 							throw new InvalidOperationException($"Failed to add privilege {privilegeName} to SID {sidToAdd}. Status: 0x{addStatus:X8}");
 						}
-						else
-						{
-							Logger.Write($"Added privilege {privilegeName} to SID {sidToAdd}");
-						}
+
+						Logger.Write($"Added privilege {privilegeName} to SID {sidToAdd}");
 					}
 					finally
 					{
@@ -608,7 +604,7 @@ internal static class SecurityPolicyWriter
 				};
 				*(USER_MODALS_INFO_3*)newBuffer = newInfo;
 
-				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
+				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out _);
 				if (setResult != SecurityPolicyReader.NERR_Success)
 				{
 					throw new InvalidOperationException("Failed to set user modals information. Error code: " + setResult);
@@ -663,7 +659,7 @@ internal static class SecurityPolicyWriter
 				};
 				*(USER_MODALS_INFO_3*)newBuffer = newInfo;
 
-				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
+				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out _);
 				if (setResult != SecurityPolicyReader.NERR_Success)
 				{
 					throw new InvalidOperationException("Failed to set user modals information. Error code: " + setResult);
@@ -717,7 +713,7 @@ internal static class SecurityPolicyWriter
 				};
 				*(USER_MODALS_INFO_3*)newBuffer = newInfo;
 
-				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out uint parmErr);
+				uint setResult = NativeMethods.NetUserModalsSet(null, 3, newBuffer, out _);
 				if (setResult != SecurityPolicyReader.NERR_Success)
 				{
 					throw new InvalidOperationException("Failed to set user modals information. Error code: " + setResult);

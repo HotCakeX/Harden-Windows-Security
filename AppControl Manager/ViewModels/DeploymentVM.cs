@@ -138,7 +138,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// <summary>
 	/// Event handler to clear the list of XML files that are only converted to CIP files
 	/// </summary>
-	internal void BrowseForXMLPolicesButton_Flyout_Clear_Click() => XMLFilesToConvertToCIP.Clear();
+	internal void BrowseForXMLPoliciesButton_Flyout_Clear_Click() => XMLFilesToConvertToCIP.Clear();
 
 	/// <summary>
 	/// Event handler for browse button - policy files to deploy unsigned.
@@ -215,7 +215,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// <summary>
 	/// Event handler for the button to convert XML files to CIP binary files
 	/// </summary>
-	internal void BrowseForXMLPolicesButton_Click()
+	internal void BrowseForXMLPoliciesButton_Click()
 	{
 		List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.XMLFilePickerFilter);
 
@@ -639,7 +639,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 			MainInfoBar.IsClosable = false;
 			MainProgressBarVisibility = Visibility.Visible;
 
-			await Task.Run(async () =>
+			await Task.Run(() =>
 			{
 				foreach (string file in XMLFilesToConvertToCIP)
 				{

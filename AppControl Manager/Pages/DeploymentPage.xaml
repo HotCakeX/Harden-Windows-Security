@@ -453,7 +453,7 @@
                                 <customUI:ButtonV2 x:Uid="FileBrowseButton"
                                                    ObservedData="{x:Bind ViewModel.XMLFilesToConvertToCIP.Count, Mode=OneWay}"
                                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                                   Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Click}">
+                                                   Click="{x:Bind ViewModel.BrowseForXMLPoliciesButton_Click}">
 
                                     <customUI:ButtonV2.Flyout>
                                         <Flyout>
@@ -461,7 +461,7 @@
                                             <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
                                                 <Button x:Uid="ClearButton"
-                                                        Click="{x:Bind ViewModel.BrowseForXMLPolicesButton_Flyout_Clear_Click}">
+                                                        Click="{x:Bind ViewModel.BrowseForXMLPoliciesButton_Flyout_Clear_Click}">
                                                     <Button.ContentTemplate>
                                                         <DataTemplate x:DataType="x:String">
                                                             <StackPanel Orientation="Horizontal" Spacing="8">

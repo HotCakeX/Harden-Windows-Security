@@ -74,7 +74,7 @@ del ""%~f0""
 	}
 
 	/// <summary>
-	/// Removes the SnapBack guarantee scheduled task and the related .bat file
+	/// Removes the SnapBack guarantee scheduled task and the related .cmd file
 	/// </summary>
 	internal static void Remove()
 	{

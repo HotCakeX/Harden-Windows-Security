@@ -32,7 +32,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>
-	/// To save the generated certificate's thumb print
+	/// To save the generated certificate's thumbprint
 	/// </summary>
 	internal string? generatedCertThumbPrint { get; set => SP(ref field, value); }
 
@@ -80,6 +80,10 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 		{ HashAlgorithm.SHA3_512, HashAlgorithmName.SHA3_512 }
 	};
 
+	/// <summary>
+	/// Raw certificate Common Name entered by the user. This value is not textual X.500 syntax and must not include a CN= prefix.
+	/// Delimiter characters such as commas are automatically encoded as part of the Common Name by CertificateGenerator.
+	/// </summary>
 	internal string? CommonName { get; set => SPT(ref field, value); }
 	internal string? Password { get; set => SPT(ref field, value); }
 	internal string KeySizeComboBoxSelectedItem { get; set => SP(ref field, value); } = "4096";
@@ -208,7 +212,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 	{
 		if (string.IsNullOrWhiteSpace(SigningCertificateCNToUseForSigning))
 		{
-			UserConfiguration configuration = UserConfiguration.Get();
+			UserConfiguration configuration = UserConfiguration.ReadUserConfiguration();
 			SigningCertificateCNToUseForSigning = configuration.CertificateCommonName;
 		}
 	}

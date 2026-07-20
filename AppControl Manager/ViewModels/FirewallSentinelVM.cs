@@ -137,7 +137,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// The App ID Tag to use for the deployed policy.
 	/// </summary>
-	internal string? AppIDTagTouse { get; set => SPT(ref field, value); } = "AppControlManagerTag";
+	internal string? AppIDTagToUse { get; set => SPT(ref field, value); } = "AppControlManagerTag";
 
 	/// <summary>
 	/// Name of the main firewall rule created for App ID Tagging.
@@ -541,7 +541,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	private async Task SetFirewall(int mode, object sender)
 	{
-		if (string.IsNullOrWhiteSpace(AppIDTagTouse))
+		if (string.IsNullOrWhiteSpace(AppIDTagToUse))
 		{
 			throw new InvalidOperationException("You need to enter an AppID Tag to use for the deployed policy.");
 		}
@@ -643,7 +643,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 				// Add the AppID Tagging policy for outbound rules
 				// Allows App Control policies to authorize user-mode executables that carry our tag
-				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "{AppIDTagFirewallRuleName}" outbound allow "{AppIDTagFirewallRuleDescription}" --appid "{AppIDTagTouse}" """));
+				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "{AppIDTagFirewallRuleName}" outbound allow "{AppIDTagFirewallRuleDescription}" --appid "{AppIDTagToUse}" """));
 
 				// Add System to outbound allow rule
 				// Required because AppID Tags only apply to User-Mode executables and System is kernel-mode and doesn't apply to it.
@@ -652,7 +652,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 				// Add Svchost.exe outbound allow rule
 				// Without this, installation from the Microsoft Store for apps that require service installation, such as Harden System Security, fail.
-				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "Allow Svhost process" outbound allow "Allows Service Host Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "%SystemRoot%\system32\svchost.exe" """));
+				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "Allow Svchost process" outbound allow "Allows Service Host Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "%SystemRoot%\system32\svchost.exe" """));
 
 				#region Group Policies
 
@@ -704,7 +704,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				// Convert it to AppIDTagging policy
 
 				Dictionary<string, string> tags = [];
-				tags[AppIDTagTouse] = "True";
+				tags[AppIDTagToUse] = "True";
 
 				policy.PolicyObj = AppIDTagging.Convert(policy.PolicyObj);
 				policy.PolicyObj = AppIDTagging.AddTags(policy.PolicyObj, tags);

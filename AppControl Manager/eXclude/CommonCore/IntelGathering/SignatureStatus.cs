@@ -17,7 +17,7 @@
 
 namespace CommonCore.IntelGathering;
 
-internal enum SignatureStatus : int
+internal enum SignatureStatus
 {
 	IsSigned = 0,
 	IsUnsigned

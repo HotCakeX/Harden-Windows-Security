@@ -39,7 +39,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	internal string? XMLPolicyPath { get; private set; }
 
 	// To track whether verification is running so it won't happen again
-	// Enabling/Disabling Verification button causes the Primary button to not have its theme properly for some reason
+	// Enabling/Disabling the Verification button causes the Primary button to not have its theme properly for some reason
 	private bool VerificationRunning;
 
 	// To store the selectable Certificate common names
@@ -62,7 +62,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 		policyIDBeingRemoved = idBeingRemoved;
 
 		// Get the user configurations
-		UserConfiguration currentUserConfigs = UserConfiguration.Get();
+		UserConfiguration currentUserConfigs = UserConfiguration.ReadUserConfiguration();
 
 		// Fill in the text boxes based on the current user configs
 		CertFilePathTextBox.Text = currentUserConfigs.CertificatePath;
@@ -77,9 +77,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	/// Event handler for when the Verify button is loaded.
 	/// Sets the focus on the Verify button when the Content Dialog opens.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void VerifyButton_Loaded(object sender, RoutedEventArgs e)
+	private void VerifyButton_Loaded()
 	{
 		try
 		{
@@ -149,7 +147,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	}
 
 	/// <summary>
-	/// Start suggesting when tap or mouse click happens
+	/// Start suggesting when a tap or mouse click happens.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
@@ -185,16 +183,13 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	{
 		// Hide the dialog box
 		Hide();
-
 		await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Settings), null);
 	}
 
 	/// <summary>
 	/// Event handler for the primary button click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+	private void OnPrimaryButtonClick()
 	{
 		// Grab the details from the text boxes in the UI and assign them to the local variables
 		// So that the method that calls this content dialog can access them
@@ -307,7 +302,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 			#region Verify the XML policy path - If Provided
 
-			// It's okay to be empty, we don't need it but if user provides it then we'll perform the checks.
+			// It's okay for it to be empty. We don't need it, but if the user provides it, then we'll perform the checks.
 			if (!string.IsNullOrWhiteSpace(XMLPolicyFileTextBox.Text))
 			{
 
@@ -357,7 +352,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 					return;
 				}
 
-				// Verify the certificate's detail is available in the XML policy as UpdatePolicySigner
+				// Verify that the certificate's details are available in the XML policy as an UpdatePolicySigner
 
 				bool certIsUpdatePolicySigner = false;
 
@@ -460,7 +455,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	}
 
 	/// <summary>
-	/// Event handler for browse for certificate .cer file button
+	/// Event handler for the button used to browse for a .cer certificate file.
 	/// </summary>
 	private void CertFileBrowseButton_Click()
 	{

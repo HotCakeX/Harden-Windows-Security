@@ -54,18 +54,17 @@ internal static class SignerAndHashBuilder
 	/// If the file is missing the Issuer TBS hash, then the Publisher certificate will be used for both Publisher and Issuer details (TBS and Name)
 	/// This will essentially create the Signers based on LeafCertificate Level.
 	///
-	/// The New-NewFilePublisherLevelRules class and NewPublisherLevelRules class both are able to create rules based on different signer App Control levels.
+	/// The NewFilePublisherLevelRules class and NewPublisherLevelRules class both are able to create rules based on different signer App Control levels.
 	///
 	/// The other way around, where Publisher TBS hash is missing but Issuer TBS is present, would create a PCACertificate level Signer, but that is not implemented yet.
-	/// Its use case is not clear yet and there haven't been any files with that condition yet. <summary>
+	/// Its use case is not clear yet and there haven't been any files with that condition yet.
 	/// </summary>
 	/// <param name="data">The Data to be processed. These are the logs selected by the user and contain both signed and unsigned data.</param>
 	/// <param name="level">Auto, FilePublisher, Publisher, Hash</param>
-	/// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g when sandboxing-like behavior using Macros and AppIDs are used.</param>
+	/// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g., when sandboxing-like behavior using Macros and AppIDs are used.</param>
 	/// <param name="folderPaths"></param>
 	/// <param name="customFileRulePatterns"></param>
 	/// <param name="packageFamilyNames"></param>
-	/// </summary>
 	/// <returns></returns>
 	internal static FileBasedInfoPackage BuildSignerAndHashObjects(
 	List<FileIdentity>? data = null,
@@ -590,7 +589,7 @@ internal static class SignerAndHashBuilder
 		foreach (string item in customPatternBasedFileRules)
 		{
 			// FilePath rules can only be used for User-Mode files only
-			// Using whatever user entered as is.
+			// Using whatever the user entered as is.
 			filePaths.Add(new FilePathCreator(
 				item,
 				"0.0.0.0", // Minimum version of all files allowed by path

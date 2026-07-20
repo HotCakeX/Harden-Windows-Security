@@ -274,31 +274,26 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="filePath">The path to the log file.</param>
 	/// <returns>A function that creates a data provider for the file.</returns>
-	private static Func<Task<IFileDataProvider>> CreateDataProviderFactory(string filePath)
-	{
-		return async () =>
+	private static Func<Task<IFileDataProvider>> CreateDataProviderFactory(string filePath) =>
+		() => Task.Run<IFileDataProvider>(() =>
 		{
-			return await Task.Run<IFileDataProvider>(() =>
+			try
 			{
-				try
-				{
-					// Check if this is the currently active log file being written to
-					bool isActiveLogFile = string.Equals(filePath, Logger.LogFileName, StringComparison.OrdinalIgnoreCase);
+				// Check if this is the currently active log file being written to
+				bool isActiveLogFile = string.Equals(filePath, Logger.LogFileName, StringComparison.OrdinalIgnoreCase);
 
-					return isActiveLogFile
-						// Use stream-based provider for the active log file
-						? new StreamBasedFileDataProvider(filePath)
-						// Use memory-mapped provider for inactive log files
-						: new MemoryMappedFileDataProvider(filePath);
-				}
-				catch (Exception ex)
-				{
-					Logger.Write(ex);
-					return new EmptyFileDataProvider();
-				}
-			});
-		};
-	}
+				return isActiveLogFile
+					// Use stream-based provider for the active log file
+					? new StreamBasedFileDataProvider(filePath)
+					// Use memory-mapped provider for inactive log files
+					: new MemoryMappedFileDataProvider(filePath);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+				return new EmptyFileDataProvider();
+			}
+		});
 
 	/// <summary>
 	/// Runs every time the selected log file changes on the ComboBox.

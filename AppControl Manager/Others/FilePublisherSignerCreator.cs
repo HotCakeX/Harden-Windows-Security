@@ -21,7 +21,7 @@ using CommonCore.IntelGathering;
 namespace AppControlManager.Others;
 
 /// <summary>
-/// Used to create FilePublisher rule for a file.
+/// Used to create a FilePublisher rule for a file.
 /// </summary>
 /// <param name="certificateDetails"></param>
 /// <param name="fileVersion"></param>

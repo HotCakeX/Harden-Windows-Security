@@ -24,7 +24,7 @@ internal static class CiPolicyHandler
 {
 	/// <summary>
 	/// Removes the entire SupplementalPolicySigners block
-	/// and any Signer in Signers node that have the same ID as the SignerIds of the SupplementalPolicySigner(s) in <SupplementalPolicySigners>...</SupplementalPolicySigners> node
+	/// and any Signer in the Signers node that has the same ID as the SignerIds of the SupplementalPolicySigner(s) in <SupplementalPolicySigners>...</SupplementalPolicySigners> node
 	/// from a SiPolicy object.
 	/// </summary>
 	/// <param name="policyObj">The policy object to act on</param>

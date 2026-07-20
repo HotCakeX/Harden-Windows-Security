@@ -2481,7 +2481,6 @@ internal sealed partial class HomeLiveGraphsWindow
 	private const int WifiWlanMaxNameLength = 256;
 
 	internal readonly ObservableCollection<WifiProfileRow> WifiProfilesItems = new();
-	private readonly StringBuilder _wifiProfilesDetailsBuilder = new(32_768);
 	private bool _wifiProfilesLoaded;
 	private bool _wifiProfilesRetrievalInProgress;
 
@@ -2694,9 +2693,6 @@ internal sealed partial class HomeLiveGraphsWindow
 	private unsafe List<WifiProfileRow> GetSavedWifiProfiles()
 	{
 		List<WifiProfileRow> rows = new(64);
-		StringBuilder builder = _wifiProfilesDetailsBuilder;
-		_ = builder.Clear();
-
 		uint openResult = NativeMethods.WlanOpenHandle(WifiWlanClientVersionLonghorn, IntPtr.Zero, out uint negotiatedVersion, out nint clientHandle);
 		if (openResult != WifiWlanErrorSuccess || clientHandle == IntPtr.Zero)
 		{

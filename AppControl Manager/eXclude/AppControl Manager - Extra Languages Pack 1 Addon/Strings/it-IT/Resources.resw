@@ -2893,9 +2893,6 @@ NOTA: questa opzione viene sempre applicata se un qualsiasi criterio UMCI di App
   <data name="Invalid" xml:space="preserve">
     <value>Non valido</value>
   </data>
-  <data name="IsNotValid" xml:space="preserve">
-    <value>Il file di criterio selezionato non ha superato le convalide.</value>
-  </data>
   <data name="CIPFileSize" xml:space="preserve">
     <value>Le dimensioni del file binario CIP sono</value>
   </data>

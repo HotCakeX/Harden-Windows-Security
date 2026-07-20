@@ -146,7 +146,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 						ProgressBarIsIndeterminate = false;
 
-						// Send an Async get request to the url and specify to stop reading after headers are received for better efficiently
+						// Send an Async get request to the url and specify to stop reading after headers are received for better efficiency
 						using (HttpResponseMessage response = await SecHttpClient.Instance.GetAsync(onlineDownloadURL, HttpCompletionOption.ResponseHeadersRead))
 						{
 							// Ensure that the response is successful (status code 2xx); otherwise, throw an exception
@@ -290,7 +290,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 			if (!string.IsNullOrWhiteSpace(ASROutput))
 			{
 				// Deserialize the JSON string
-				string[]? ASROutputArrayCleaned = JsonSerializer.Deserialize(ASROutput, MSDefenderJsonContext.Default.StringArray) as string[];
+				string[]? ASROutputArrayCleaned = JsonSerializer.Deserialize(ASROutput, MSDefenderJsonContext.Default.StringArray);
 
 				// If there were ASR rules exceptions
 				if (ASROutputArrayCleaned is not null && ASROutputArrayCleaned.Length > 0)
@@ -441,14 +441,14 @@ internal sealed partial class UpdateVM : ViewModelBase
 				// Determine whether this is the AppControl Manager app package provided in GitHub releases that the user is trying to install
 				isNonStoreACM = string.Equals(packageDits.CertCN, CertCommonName, StringComparison.Ordinal);
 
-				infoBar.WriteInfo($"Package details retrieved. Package Publisher: '{packageDits.CertCN}', Package Hashing Algorithm: '{packageDits.HashAlgorithm}'.");
+				infoBar.WriteInfo($"Package details retrieved. Package Publisher: '{packageDits.CertCN}', Package Family Name: '{packageDits.PackageFamilyName}', Package Version: '{packageDits.Version}', Package Hashing Algorithm: '{packageDits.HashAlgorithm}'.");
 
 				// Remove any certificates with the specified common name that may already exist on the system form previous attempts
 				CertificateGenerator.DeleteCertificateByCN(packageDits.CertCN);
 
-				// Generate a new certificate
+				// Generate a certificate whose complete subject matches the manifest Publisher.
 				using X509Certificate2 generatedCert = CertificateGenerator.GenerateSelfSignedCertificate(
-				subjectName: packageDits.CertCN,
+				distinguishedName: packageDits.PublisherDistinguishedName,
 				validityInYears: 100,
 				keySize: 4096,
 				hashAlgorithm: packageDits.HashAlgorithm,

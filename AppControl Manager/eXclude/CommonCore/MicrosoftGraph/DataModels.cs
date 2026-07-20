@@ -728,18 +728,12 @@ internal sealed partial class AuthenticatedAccounts(
 			&& Environment == other.Environment;
 	}
 
-	public override int GetHashCode()
-	{
-		unchecked
-		{
-			return HashCode.Combine(
+	public override int GetHashCode() => HashCode.Combine(
 				StringComparer.OrdinalIgnoreCase.GetHashCode(AccountIdentifier),
 				StringComparer.OrdinalIgnoreCase.GetHashCode(Username),
 				StringComparer.OrdinalIgnoreCase.GetHashCode(TenantID),
 				StringComparer.OrdinalIgnoreCase.GetHashCode(Permissions),
 				Environment);
-		}
-	}
 
 	public static bool operator ==(AuthenticatedAccounts? left, AuthenticatedAccounts? right)
 	{

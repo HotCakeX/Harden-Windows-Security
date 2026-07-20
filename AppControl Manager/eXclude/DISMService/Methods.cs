@@ -117,8 +117,7 @@ internal static class Methods
 		}
 		finally
 		{
-			if (featureInfoPtr != IntPtr.Zero)
-				_ = NativeMethods.DismDelete(featureInfoPtr);
+			_ = NativeMethods.DismDelete(featureInfoPtr);
 		}
 
 		IntPtr sourcePathsPtr = IntPtr.Zero;
@@ -165,12 +164,9 @@ internal static class Methods
 				Logger.Write($"Feature '{featureName}' is not available on this system (0x{hr:X8}); skipping enable.", LogTypeIntel.Information);
 				return OperationExecutionState.Succeeded;
 			}
-			else
-			{
-				// Error code: 0xC004000D | this is for when we try to enable a feature that requires other dependencies to be enabled/installed first.
-				Logger.Write($"Failed to enable feature: {featureName}. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
-				return OperationExecutionState.Failed;
-			}
+			// Error code: 0xC004000D | this is for when we try to enable a feature that requires other dependencies to be enabled/installed first.
+			Logger.Write($"Failed to enable feature: {featureName}. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
+			return OperationExecutionState.Failed;
 		}
 		finally
 		{
@@ -223,11 +219,8 @@ internal static class Methods
 				Logger.Write($"Feature '{featureName}' is not available on this system (0x{hr:X8}); skipping disable.", LogTypeIntel.Information);
 				return OperationExecutionState.Succeeded;
 			}
-			else
-			{
-				Logger.Write($"Failed to disable feature (payload removal requested): {featureName}. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
-				return OperationExecutionState.Failed;
-			}
+			Logger.Write($"Failed to disable feature (payload removal requested): {featureName}. Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
+			return OperationExecutionState.Failed;
 		}
 		finally
 		{
@@ -315,14 +308,12 @@ internal static class Methods
 				catch (Exception ex)
 				{
 					Logger.Write($"Error reading feature {i + 1}: {ex.Message}", LogTypeIntel.Error);
-					continue;
 				}
 			}
 		}
 		finally
 		{
-			if (featureList != IntPtr.Zero)
-				_ = NativeMethods.DismDelete(featureList);
+			_ = NativeMethods.DismDelete(featureList);
 		}
 	}
 
@@ -371,11 +362,8 @@ internal static class Methods
 				Logger.Write($"Capability '{capabilityName}' is not available on this system (0x{hr:X8}); skipping remove.", LogTypeIntel.Information);
 				return OperationExecutionState.Succeeded;
 			}
-			else
-			{
-				Logger.Write($"Failed to remove capability: {capabilityName}, Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
-				return OperationExecutionState.Failed;
-			}
+			Logger.Write($"Failed to remove capability: {capabilityName}, Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
+			return OperationExecutionState.Failed;
 		}
 		finally
 		{
@@ -403,7 +391,7 @@ internal static class Methods
 				sourcePathCount = (uint)sourcePaths.Length;
 				stringPtrs = new IntPtr[sourcePathCount];
 
-				// Allocating memory for each string and copy it
+				// Allocating memory for each string and copying it
 				for (int i = 0; i < sourcePathCount; i++)
 				{
 					stringPtrs[i] = Marshal.StringToHGlobalUni(sourcePaths[i]);
@@ -436,11 +424,8 @@ internal static class Methods
 				Logger.Write($"Capability '{capabilityName}' is not available on this system (0x{hr:X8}); skipping add.", LogTypeIntel.Information);
 				return OperationExecutionState.Succeeded;
 			}
-			else
-			{
-				Logger.Write($"Failed to add capability: {capabilityName}, Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
-				return OperationExecutionState.Failed;
-			}
+			Logger.Write($"Failed to add capability: {capabilityName}, Error code: 0x{hr:X8}, HR: {hr}", LogTypeIntel.Error);
+			return OperationExecutionState.Failed;
 		}
 		finally
 		{
@@ -605,14 +590,12 @@ internal static class Methods
 				}
 				finally
 				{
-					if (featureInfoPtr != IntPtr.Zero)
-						_ = NativeMethods.DismDelete(featureInfoPtr);
+					_ = NativeMethods.DismDelete(featureInfoPtr);
 				}
 			}
 			catch (Exception ex)
 			{
 				Logger.Write($"Error retrieving feature '{featureName}': {ex.Message}", LogTypeIntel.Error);
-				continue;
 			}
 		}
 
@@ -663,14 +646,12 @@ internal static class Methods
 				}
 				finally
 				{
-					if (capabilityInfoPtr != IntPtr.Zero)
-						_ = NativeMethods.DismDelete(capabilityInfoPtr);
+					_ = NativeMethods.DismDelete(capabilityInfoPtr);
 				}
 			}
 			catch (Exception ex)
 			{
 				Logger.Write($"Error retrieving capability '{capabilityName}': {ex.Message}", LogTypeIntel.Error);
-				continue;
 			}
 		}
 
@@ -702,7 +683,7 @@ internal static class Methods
 			// We get 3010 here too if we added/removed a capability/feature in the session
 			if (dismCloseSessionHR == 3010)
 			{
-				Logger.Write($"Successfully closed the DISM session but reboot is required to finish applying the changed performed in the session.", LogTypeIntel.Information);
+				Logger.Write("Successfully closed the DISM session but reboot is required to finish applying the changes performed in the session.", LogTypeIntel.Information);
 			}
 			else if (dismCloseSessionHR != 0)
 			{

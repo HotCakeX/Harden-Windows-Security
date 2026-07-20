@@ -23,11 +23,6 @@ internal static partial class CIManager
 {
 	internal static unsafe void Add(ReadOnlySpan<byte> bytes)
 	{
-		// ManageCI's upsert takes a 32-bit size
-		if ((ulong)bytes.Length > uint.MaxValue)
-		{
-			throw new InvalidOperationException($"Policy is too large: {bytes.Length} bytes");
-		}
 
 		// Pinning the managed byte[] to obtain a stable unmanaged pointer for native calls.
 		fixed (byte* pBytes = bytes)

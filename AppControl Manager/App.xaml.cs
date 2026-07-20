@@ -43,8 +43,6 @@ namespace AppControlManager;
 /// </summary>
 public sealed partial class App : Application
 {
-	private static ProcessSideChannelIsolationResult SideChannelIsolationStartupResult;
-
 	/// <summary>
 	/// Tracks whether the cleanup logics have been run.
 	/// </summary>
@@ -63,6 +61,8 @@ public sealed partial class App : Application
 	internal App()
 	{
 		InitializeComponent();
+
+		ProcessSideChannelIsolationResult SideChannelIsolationStartupResult = default;
 
 		// Capture the dispatcher queue as early as possible.
 		Atlas.AppDispatcher = DispatcherQueue.GetForCurrentThread();

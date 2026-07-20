@@ -38,7 +38,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	internal string? CertificateCommonName { get; private set; }
 
 	// To track whether verification is running so it won't happen again
-	// Enabling/Disabling Verification button causes the Primary button to not have its theme properly for some reason
+	// Enabling/Disabling the Verification button causes the Primary button to not have its theme properly for some reason
 	private bool VerificationRunning;
 
 	// To store the selectable Certificate common names
@@ -57,7 +57,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		FetchLatestCertificateCNs();
 
 		// Get the user configurations
-		UserConfiguration currentUserConfigs = UserConfiguration.Get();
+		UserConfiguration currentUserConfigs = UserConfiguration.ReadUserConfiguration();
 
 		// Fill in the text boxes based on the current user configs
 		CertFilePathTextBox.Text = currentUserConfigs.CertificatePath;
@@ -72,9 +72,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	/// Event handler for when the Verify button is loaded.
 	/// Sets the focus on the Verify button when the Content Dialog opens.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private void VerifyButton_Loaded(object sender, RoutedEventArgs e)
+	private void VerifyButton_Loaded()
 	{
 		try
 		{
@@ -96,7 +94,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 						if (!focusResult.Succeeded)
 						{
 							await Task.Delay(100);
-							_ = FocusManager.TryFocusAsync(VerifyButton, FocusState.Programmatic).GetAwaiter().GetResult();
+							_ = await FocusManager.TryFocusAsync(VerifyButton, FocusState.Programmatic);
 						}
 					}
 					catch (Exception ex)
@@ -144,7 +142,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	}
 
 	/// <summary>
-	/// Start suggesting when tap or mouse click happens
+	/// Start suggesting when a tap or mouse click happens.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
@@ -176,22 +174,17 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	/// <summary>
 	/// Event handler for the button that navigates to the Settings page
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
-	private async void OpenAppSettingsButton_Click(object sender, RoutedEventArgs e)
+	private async void OpenAppSettingsButton_Click()
 	{
 		// Hide the dialog box
 		Hide();
-
 		await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Settings), null);
 	}
 
 	/// <summary>
 	/// Event handler for the primary button click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+	private void OnPrimaryButtonClick()
 	{
 		// Fill in the text boxes based on the current user configs
 		CertificatePath = CertFilePathTextBox.Text;
@@ -283,13 +276,13 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 				return;
 			}
 
-			if (!CertCommonNames.Contains(CertificateCommonNameAutoSuggestBox.Text))
+			if (!CertCommonNames.Contains(CertificateCommonNameAutoSuggestBox.Text, StringComparer.OrdinalIgnoreCase))
 			{
 				ShowTeachingTip(Atlas.GetStr("CertificateCommonNameNotFoundMessage"));
 				return;
 			}
 
-			#region Verify the certificate's detail is available in the XML policy as UpdatePolicySigner
+			#region Verify that the certificate's details are available in the XML policy as an UpdatePolicySigner
 
 			string certCN = CertificateCommonNameAutoSuggestBox.Text;
 			string certPath = CertFilePathTextBox.Text;
@@ -353,7 +346,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	}
 
 	/// <summary>
-	/// Event handler for browse for certificate .cer file button
+	/// Event handler for the button used to browse for a .cer certificate file.
 	/// </summary>
 	private void CertFileBrowseButton_Click()
 	{

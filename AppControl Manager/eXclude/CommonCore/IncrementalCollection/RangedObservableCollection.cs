@@ -25,7 +25,7 @@ namespace CommonCore.IncrementalCollection;
 
 internal sealed class RangedObservableCollection<T> : ObservableCollection<T>
 {
-	internal RangedObservableCollection() : base() { }
+	internal RangedObservableCollection() { }
 	internal RangedObservableCollection(IEnumerable<T> collection) : base(collection) { }
 
 	/// <summary>
@@ -79,7 +79,7 @@ internal sealed class RangedObservableCollection<T> : ObservableCollection<T>
 			OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
 
 			// Tell the view to Reload everything because the changes are too complex or numerous to list individually.
-			// This is used for Sort and Search, both of workflows normally first Clear the collection and then use AddRange.
+			// This is used for Sort and Search, both workflows normally first clear the collection and then use AddRange.
 			OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
 		}
 	}

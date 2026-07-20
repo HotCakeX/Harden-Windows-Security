@@ -25,8 +25,8 @@ namespace AppControlManager.XMLOps;
 internal static class NewFileNameLevelRules
 {
 	/// <summary>
-	/// Creates new Allow FileName level rules in the SiPolicy object
-	/// Each rules includes the Allow element in the "FileRules" section,
+	/// Creates a new Allow FileName level rule in the SiPolicy object
+	/// Each rule includes the Allow element in the "FileRules" section,
 	/// And a corresponding "FileRuleRef" in the "FileRulesRef" section.
 	/// </summary>
 	/// <param name="policyObj"></param>

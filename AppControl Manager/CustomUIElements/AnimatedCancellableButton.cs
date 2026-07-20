@@ -43,7 +43,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 	private Storyboard _fadeInStoryboard = new();
 	private DoubleAnimation _fadeOutAnimation = new();
 	private DoubleAnimation _fadeInAnimation = new();
-	private Storyboard _shadowAnimationStoryboard = new();
 	private AttachedCardShadow? _attachedShadow;
 	private bool _isShadowAnimationRunning;
 	private bool _hasShadowApplied;
@@ -552,7 +551,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 	{
 		try
 		{
-			_shadowAnimationStoryboard = new();
 
 			_shadowTimer = new()
 			{
@@ -736,19 +734,14 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 			}
 			else
 			{
-				if (!string.IsNullOrEmpty(ExternalButtonIcon))
-				{
-					Content = CreateButtonContent(!string.IsNullOrEmpty(ExternalButtonContent)
+				Content = !string.IsNullOrEmpty(ExternalButtonIcon)
+					? CreateButtonContent(!string.IsNullOrEmpty(ExternalButtonContent)
 									   ? ExternalButtonContent
-									   : !string.IsNullOrEmpty(ExternalOriginalText) ? ExternalOriginalText : ButtonDefaultText
-									   , ExternalButtonIcon); ;
-				}
-				else
-				{
-					Content = !string.IsNullOrEmpty(ExternalButtonContent)
-									   ? ExternalButtonContent
-									   : !string.IsNullOrEmpty(ExternalOriginalText) ? ExternalOriginalText : ButtonDefaultText;
-				}
+									   : !string.IsNullOrEmpty(ExternalOriginalText) ? ExternalOriginalText : ButtonDefaultText,
+									   ExternalButtonIcon)
+					: !string.IsNullOrEmpty(ExternalButtonContent)
+								? ExternalButtonContent
+								: !string.IsNullOrEmpty(ExternalOriginalText) ? ExternalOriginalText : ButtonDefaultText;
 
 				UpdateButtonStyle(false);
 			}
@@ -1092,19 +1085,14 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 			}
 			else
 			{
-				if (!string.IsNullOrEmpty(ExternalButtonIcon))
-				{
-					Content = CreateButtonContent(!string.IsNullOrEmpty(ExternalButtonContent)
+				Content = !string.IsNullOrEmpty(ExternalButtonIcon)
+					? CreateButtonContent(!string.IsNullOrEmpty(ExternalButtonContent)
 									   ? ExternalButtonContent
 									   : !string.IsNullOrEmpty(ExternalOriginalText) ? ExternalOriginalText : ButtonDefaultText,
-									   ExternalButtonIcon); ;
-				}
-				else
-				{
-					Content = !string.IsNullOrEmpty(ExternalButtonContent)
+									   ExternalButtonIcon)
+					: !string.IsNullOrEmpty(ExternalButtonContent)
 								? ExternalButtonContent
 								: !string.IsNullOrEmpty(ExternalOriginalText) ? ExternalOriginalText : ButtonDefaultText;
-				}
 
 				UpdateButtonStyle(false);
 			}
@@ -1206,7 +1194,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 				_hasShadowApplied = false;
 			}
 
-			_shadowAnimationStoryboard?.Children.Clear();
 
 			if (_shadowTimer is not null)
 			{

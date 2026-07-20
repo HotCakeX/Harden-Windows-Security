@@ -95,7 +95,7 @@ internal sealed partial class SettingsExpander : Control
 
 		if (_itemsControl != null)
 		{
-			// Update it's source based on our current items properties.
+			// Update its source based on our current items properties.
 			OnItemsConnectedPropertyChanged(this, null!); // Can't get it to accept type here? (DependencyPropertyChangedEventArgs)EventArgs.Empty
 		}
 	}

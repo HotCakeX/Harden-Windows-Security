@@ -200,7 +200,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
-	// Pre‑computed property getters for high performance.
+	// Pre-computed property getters for high performance.
 	// Used for column sorting and column copying (single cell and entire row), for all ListViews that display SimulationOutput data type
 	private static readonly FrozenDictionary<string, (string Label, Func<SimulationOutput, object?> Getter)> SimulationOutputPropertyMappings
 		= new Dictionary<string, (string Label, Func<SimulationOutput, object?> Getter)>
@@ -340,8 +340,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 		{
 			error = true;
 			MainInfoBar.WriteWarning(ex.Message);
-
-			return;
 		}
 		catch (Exception ex)
 		{

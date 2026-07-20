@@ -95,7 +95,7 @@ internal static partial class Atlas
 	// The namespace of the App Control policies
 	internal const string SiPolicyNamespace = "urn:schemas-microsoft-com:sipolicy";
 
-	// When the the list of installed packaged apps is retrieved, this URI is used whenever an installed app doesn't have a valid URI logo path
+	// When the list of installed packaged apps is retrieved, this URI is used whenever an installed app doesn't have a valid URI logo path
 	internal const string FallBackAppLogoURI = "ms-appx:///Assets/Others/AppWithoutIconPlaceHolder.png";
 
 	// Path to the ComManager program in the App directory

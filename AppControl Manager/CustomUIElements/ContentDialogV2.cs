@@ -47,7 +47,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	private const double ShadowOpacity = 0.5;
 	private const double ShadowBlurRadius = 25.0;
 	private const double ShadowCornerRadius = 14.0;
-	// Use Windows accent color for shadow color to match the border color, if not found then use Hot Pink as fallback
+	// Use the Windows accent color for the shadow to match the border color. If it is not found, use Hot Pink as a fallback.
 	private static readonly Color ShadowColor = Application.Current.Resources["SystemAccentColor"] is Color accentColor ? accentColor : Colors.HotPink;
 
 	// Static pre-allocated objects for performance
@@ -1572,10 +1572,10 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	}
 
 	/// <summary>
-	/// During stress testing content dialog by opening and closing it in quick succession, an error could be thrown.
+	/// During stress testing a content dialog by opening and closing it in quick succession, an error could be thrown.
 	/// WinUI ContentDialog has a built-in restriction: "Only a single ContentDialog can be open at any time."
-	/// by rapidly opening and closing dialogs, the previous dialog might not be fully closed yet when we try to open a new one,
-	/// causing COM exception.
+	/// When dialogs are rapidly opened and closed, the previous dialog might not be fully closed yet when we try to open a new one,
+	/// causing a COM exception.
 	/// The error occurs at base.ShowAsync() which calls the underlying WinUI ContentDialog.ShowAsync() method.
 	///	That's why we Hide/Close and then dispose of the previous ContentDialogV2 before showing a new one.
 	/// </summary>
@@ -1595,8 +1595,8 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	}
 
 	/// <summary>
-	/// Without this event handler, when the ContentDialog resizes either by us or due to content size inside of it changes,
-	/// It would get an ugly opaque shadow thingy around it.
+	/// Without this event handler, when the ContentDialog is resized either by us or by changes to its content size,
+	/// it would get an ugly opaque shadow thingy around it.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
@@ -1671,42 +1671,11 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 					CurrentlyOpenContentDialog = null;
 				}
 
-				try
-				{
-					// Clear visual tree references
-					_shadowContainer = null;
-				}
-				catch (Exception ex)
-				{
-					Logger.Write(ex);
-				}
-
-				try
-				{
-					_dialogContainer = null;
-				}
-				catch (Exception ex)
-				{
-					Logger.Write(ex);
-				}
-
-				try
-				{
-					_mainGrid = null;
-				}
-				catch (Exception ex)
-				{
-					Logger.Write(ex);
-				}
-
-				try
-				{
-					_originalBackgroundBorder = null;
-				}
-				catch (Exception ex)
-				{
-					Logger.Write(ex);
-				}
+				// Clear visual tree references
+				_shadowContainer = null;
+				_dialogContainer = null;
+				_mainGrid = null;
+				_originalBackgroundBorder = null;
 
 				_disposed = true;
 			}

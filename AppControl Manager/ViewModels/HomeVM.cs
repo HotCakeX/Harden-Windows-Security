@@ -1354,23 +1354,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 		string cachePart = largestCacheBytes > 0UL ? FormatCache(largestCacheBytes) : "Cache N/A";
 
-		StringBuilder sb = new(96);
-		_ = sb.Append(brand);
-		_ = sb.Append(" - ");
-		_ = sb.Append(physicalCores.ToString(CultureInfo.InvariantCulture));
-		_ = sb.Append(" Core / ");
-		_ = sb.Append(logicalThreads.ToString(CultureInfo.InvariantCulture));
-		_ = sb.Append(" Thread - ");
-		_ = sb.Append(archText);
-		_ = sb.Append(" - ");
-		_ = sb.Append(baseClock);
-		_ = sb.Append(" - ");
-		_ = sb.Append(cachePart);
-		_ = sb.Append(" - ");
-		_ = sb.Append(packageCount.ToString(CultureInfo.InvariantCulture));
-		_ = sb.Append(" Socket");
-
-		return sb.ToString();
+		return string.Create(
+			CultureInfo.InvariantCulture,
+			$"{brand} - {physicalCores} Core / {logicalThreads} Thread - {archText} - {baseClock} - {cachePart} - {packageCount} Socket");
 	}
 
 	/// <summary>

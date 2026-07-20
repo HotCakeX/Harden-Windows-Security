@@ -27,7 +27,7 @@ namespace AppControlManager.CustomUIElements;
 /// A SettingsCard that:
 ///  - On RightTapped or Holding (on the card), shows its inner Button.Flyout at the button.
 ///  - On RightTapped (on the Button), shows its Flyout at the button.
-/// It has special use case, for when the setting card hosts a ButtonV2 used for browsing for files/folders.
+/// It has a special use case, for when the setting card hosts a ButtonV2 used for browsing for files/folders.
 ///  Flyout opening is delegated to ButtonV2's own logic.
 /// </summary>
 internal sealed partial class SettingsCardV3 : SettingsCardV2
@@ -40,7 +40,7 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
-		// Since OnLoaded event fires every time we navigate to the page where this element is located or during theme change etc.
+		// Since the OnLoaded event fires every time we navigate to the page where this element is located or during theme change etc.
 		// We need to immediately unsubscribe from it so we only hook the event handlers once.
 		Loaded -= OnLoaded;
 

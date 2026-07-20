@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AppControlManager.Others;
@@ -37,17 +36,6 @@ namespace AppControlManager;
 
 public sealed partial class App : Application
 {
-	private static string? _activationAction;
-	private static string? _activationFilePath;
-	private static bool _activationIsFileActivation;
-
-	// Determines whether the session must prompt for UAC to elevate or not
-	private static bool requireAdminPrivilege;
-
-	// For navigation restoration passed via command line
-	private static string? _cliNavTag;
-
-	private static Type? PageTypeToNavTo;
 	private static bool _appNotificationManagerRegistered;
 
 	/// <summary>
@@ -72,6 +60,144 @@ public sealed partial class App : Application
 		*/
 
 		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
+
+		string? _activationAction = null;
+		string? _activationFilePath = null;
+		bool _activationIsFileActivation = false;
+
+		// Determines whether the session must prompt for UAC to elevate or not
+		bool requireAdminPrivilege = false;
+
+		// For navigation restoration passed via command line
+		string? _cliNavTag = null;
+
+		Type? PageTypeToNavTo = null;
+
+		/// <summary>
+		/// Builds the argument string to pass to the elevated instance so that it can re-create the original launch intent without persisting anything.
+		/// File activation is converted into a PolicyEditor action since the app only supports handling .CIP/XML files from File explorer at the moment.
+		/// If in the future more file types are supported we can detect type based on file extension and implement different behaviors.
+		/// </summary>
+		string? BuildRelaunchArguments()
+		{
+			List<string> parts = new(capacity: 2);
+
+			if (!string.IsNullOrWhiteSpace(_activationAction))
+			{
+				parts.Add($"--action={_activationAction}");
+			}
+			else if (_activationIsFileActivation && !string.IsNullOrWhiteSpace(_activationFilePath))
+			{
+				parts.Add("--action=PolicyEditor");
+			}
+
+			if (!string.IsNullOrWhiteSpace(_activationFilePath))
+			{
+				// Properly quote the file path for command line parsing (double embedded quotes if any).
+				string safePath = _activationFilePath.Replace("\"", "\"\"");
+				parts.Add($"--file=\"{safePath}\"");
+			}
+
+			if (parts.Count == 0)
+			{
+				return null;
+			}
+
+			return string.Join(' ', parts);
+		}
+
+		void ParseArgs(string[]? ArgsLines, string? ArgLine)
+		{
+			string? actionArg = null;
+			string? fileArg = null;
+			string? navTagArg = null;
+
+			// Look for our two keys
+			if (!string.IsNullOrWhiteSpace(ArgLine))
+			{
+				Match match = Regex1().Match(ArgLine);
+
+				if (match.Success)
+				{
+					if (match.Groups[1].Success)
+					{
+						actionArg = match.Groups[1].Value.Trim();
+					}
+
+					if (match.Groups[2].Success)
+					{
+						fileArg = match.Groups[2].Value;
+					}
+				}
+			}
+			else if (ArgsLines is not null)
+			{
+				actionArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--action=", StringComparison.OrdinalIgnoreCase));
+				fileArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
+				navTagArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--navtag=", StringComparison.OrdinalIgnoreCase));
+			}
+
+			// Action is mandatory
+			if (actionArg is not null)
+			{
+				// Extract the action
+				string action = actionArg["--action=".Length..].Trim();
+
+				if (!string.IsNullOrWhiteSpace(action))
+				{
+					Logger.Write($"Parsed Action: {action}");
+					_activationAction = action;
+				}
+
+				// File is optional
+				if (fileArg is not null)
+				{
+					string filePath = fileArg["--file=".Length..].Trim('"');
+
+					if (!string.IsNullOrWhiteSpace(filePath))
+					{
+						Logger.Write($"Parsed File: {filePath}");
+						_activationFilePath = filePath;
+
+						// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+						requireAdminPrivilege = string.Equals(Path.GetExtension(filePath), ".xml", StringComparison.OrdinalIgnoreCase)
+							? !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true)
+							: // If the file extension is not XML then it's not something we write back to so it's ok if we just have read access to the file.
+							!FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: false);
+					}
+				}
+
+				// Elevation policy for action-only operations
+				if (!Atlas.IsElevated &&
+					(string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMAuditPolicy), StringComparison.OrdinalIgnoreCase) ||
+					 string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMBlockPolicy), StringComparison.OrdinalIgnoreCase)))
+				{
+					requireAdminPrivilege = true;
+				}
+			}
+
+			// Parse navigation restoration arguments
+			if (navTagArg is not null)
+			{
+				string rawTag = navTagArg["--navtag=".Length..].Trim();
+				if (!string.IsNullOrWhiteSpace(rawTag))
+				{
+					_cliNavTag = rawTag;
+					if (!ViewModelProvider.NavigationService.mainWindowVM.NavigationPageToItemContentMap.TryGetValue(_cliNavTag, out PageTypeToNavTo))
+					{
+						Logger.Write($"{rawTag} is not a valid page tag.");
+					}
+					else
+					{
+						// If the page requires elevation, we must ask for it.
+						if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
+						{
+							requireAdminPrivilege = true;
+						}
+					}
+				}
+			}
+		}
 
 		string[] possibleArgs = Environment.GetCommandLineArgs();
 		bool launchToUpdatePageFromNotification = false;
@@ -345,14 +471,7 @@ public sealed partial class App : Application
 		// Navigation restoration path or user asking for specific page to launch.
 		else if (PageTypeToNavTo is not null)
 		{
-			try
-			{
-				await ViewModelProvider.NavigationService.Navigate(PageTypeToNavTo, null);
-			}
-			finally
-			{
-				PageTypeToNavTo = null;
-			}
+			await ViewModelProvider.NavigationService.Navigate(PageTypeToNavTo, null);
 		}
 		else
 		{
@@ -455,139 +574,4 @@ public sealed partial class App : Application
 	/// <returns></returns>
 	[GeneratedRegex(@"^appcontrol-manager:\s*(--action=[^\s]+)(?:\s+(--file=(?:""[^""]*""|[^\s]+)))?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
 	private static partial Regex Regex1();
-
-	/// <summary>
-	/// Builds the argument string to pass to the elevated instance so that it can re-create the original launch intent without persisting anything.
-	/// File activation is converted into a PolicyEditor action since the app only supports handling .CIP/XML files from File explorer at the moment.
-	/// If in the future more file types are supported we can detect type based on file extension and implement different behaviors.
-	/// </summary>
-	private static string? BuildRelaunchArguments()
-	{
-		List<string> parts = [];
-
-		if (!string.IsNullOrWhiteSpace(_activationAction))
-		{
-			parts.Add($"--action={_activationAction}");
-		}
-		else if (_activationIsFileActivation && !string.IsNullOrWhiteSpace(_activationFilePath))
-		{
-			parts.Add("--action=PolicyEditor");
-		}
-
-		if (!string.IsNullOrWhiteSpace(_activationFilePath))
-		{
-			// Properly quote the file path for command line parsing (double embedded quotes if any).
-			string safePath = _activationFilePath.Replace("\"", "\"\"");
-			parts.Add($"--file=\"{safePath}\"");
-		}
-
-		if (parts.Count == 0)
-		{
-			return null;
-		}
-
-		StringBuilder builder = new();
-		for (int i = 0; i < parts.Count; i++)
-		{
-			if (i > 0)
-			{
-				_ = builder.Append(' ');
-			}
-			_ = builder.Append(parts[i]);
-		}
-		return builder.ToString();
-	}
-
-	private static void ParseArgs(string[]? ArgsLines, string? ArgLine)
-	{
-		string? actionArg = null;
-		string? fileArg = null;
-		string? navTagArg = null;
-
-		// Look for our two keys
-		if (!string.IsNullOrWhiteSpace(ArgLine))
-		{
-			Match match = Regex1().Match(ArgLine);
-
-			if (match.Success)
-			{
-				if (match.Groups[1].Success)
-				{
-					actionArg = match.Groups[1].Value.Trim();
-				}
-
-				if (match.Groups[2].Success)
-				{
-					fileArg = match.Groups[2].Value;
-				}
-			}
-		}
-		else if (ArgsLines is not null)
-		{
-			actionArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--action=", StringComparison.OrdinalIgnoreCase));
-			fileArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
-			navTagArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--navtag=", StringComparison.OrdinalIgnoreCase));
-		}
-
-		// Action is mandatory
-		if (actionArg is not null)
-		{
-			// Extract the action
-			string action = actionArg["--action=".Length..].Trim();
-
-			if (!string.IsNullOrWhiteSpace(action))
-			{
-				Logger.Write($"Parsed Action: {action}");
-				_activationAction = action;
-			}
-
-			// File is optional
-			if (fileArg is not null)
-			{
-				string filePath = fileArg["--file=".Length..].Trim('"');
-
-				if (!string.IsNullOrWhiteSpace(filePath))
-				{
-					Logger.Write($"Parsed File: {filePath}");
-					_activationFilePath = filePath;
-
-					// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-					requireAdminPrivilege = string.Equals(Path.GetExtension(filePath), ".xml", StringComparison.OrdinalIgnoreCase)
-						? !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true)
-						: // If the file extension is not XML then it's not something we write back to so it's ok if we just have read access to the file.
-						!FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: false);
-				}
-			}
-
-			// Elevation policy for action-only operations
-			if (!Atlas.IsElevated &&
-				(string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMAuditPolicy), StringComparison.OrdinalIgnoreCase) ||
-				 string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.DeployRMMBlockPolicy), StringComparison.OrdinalIgnoreCase)))
-			{
-				requireAdminPrivilege = true;
-			}
-		}
-
-		// Parse navigation restoration arguments
-		if (navTagArg is not null)
-		{
-			string rawTag = navTagArg["--navtag=".Length..].Trim();
-			if (!string.IsNullOrWhiteSpace(rawTag))
-			{
-				_cliNavTag = rawTag;
-				if (!ViewModelProvider.NavigationService.mainWindowVM.NavigationPageToItemContentMap.TryGetValue(_cliNavTag, out PageTypeToNavTo))
-				{
-					Logger.Write($"{rawTag} is not a valid page tag.");
-				}
-				else
-				{
-					// If the page requires elevation, we must ask for it.
-					if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
-					{
-						requireAdminPrivilege = true;
-					}
-				}
-			}
-		}
-	}
 }

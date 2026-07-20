@@ -571,7 +571,6 @@ public sealed partial class App : Application
 			catch (Exception ex)
 			{
 				Logger.Write(ex);
-
 				// Continue doing the normal navigation if there was a problem
 				await InitialNav();
 			}

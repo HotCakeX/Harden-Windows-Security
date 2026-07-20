@@ -230,7 +230,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 			}
 			else
 			{
-				MainInfoBar.WriteSuccess($"Scan complete. You can review the results now.");
+				MainInfoBar.WriteSuccess("Scan complete. You can review the results now.");
 			}
 		}
 		catch (Exception ex)

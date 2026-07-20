@@ -170,7 +170,7 @@ internal static partial class ServiceStarter
 
 		try
 		{
-			bool ok = NativeMethods.QueryServiceStatusEx(serviceHandle, NativeMethods.SC_STATUS_PROCESS_INFO, buffer, (uint)size, out uint bytesNeeded);
+			bool ok = NativeMethods.QueryServiceStatusEx(serviceHandle, NativeMethods.SC_STATUS_PROCESS_INFO, buffer, (uint)size, out _);
 			if (!ok)
 			{
 				int error = Marshal.GetLastPInvokeError();

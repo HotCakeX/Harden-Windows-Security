@@ -383,11 +383,7 @@ internal sealed partial class HomeLiveLineGraph : Grid
 
 	private static LinearGradientBrush CreateAreaFillBrush(Color color, double fillOpacity)
 	{
-		LinearGradientBrush fillBrush = new()
-		{
-			StartPoint = new Point(0.0, 0.0),
-			EndPoint = new Point(0.0, 1.0)
-		};
+		LinearGradientBrush fillBrush = new();
 		fillBrush.GradientStops.Add(new GradientStop());
 		fillBrush.GradientStops.Add(new GradientStop());
 		fillBrush.GradientStops.Add(new GradientStop());

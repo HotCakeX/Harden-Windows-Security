@@ -31,11 +31,11 @@ internal sealed class CryptoAlgorithm
 	[JsonInclude]
 	internal string AlgorithmType { get; set; } = string.Empty;
 	[JsonInclude]
-	internal bool IsOpenable { get; set; } = false;
+	internal bool IsOpenable { get; set; }
 	[JsonInclude]
-	internal bool IsPostQuantum { get; set; } = false;
+	internal bool IsPostQuantum { get; set; }
 	[JsonInclude]
-	internal bool SupportsKeyGeneration { get; set; } = false;
+	internal bool SupportsKeyGeneration { get; set; }
 	[JsonInclude]
 	internal List<string> SupportedParameterSets { get; set; } = [];
 }

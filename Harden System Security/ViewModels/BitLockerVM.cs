@@ -742,7 +742,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			else
 			{
 				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
-				return;
 			}
 		}
 		catch (Exception ex)
@@ -860,7 +859,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			else
 			{
 				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
-				return;
 			}
 		}
 		catch (Exception ex)
@@ -971,7 +969,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 			else
 			{
 				MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
-				return;
 			}
 		}
 		catch (Exception ex)

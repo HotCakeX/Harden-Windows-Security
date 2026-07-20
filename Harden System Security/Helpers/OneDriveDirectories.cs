@@ -25,7 +25,7 @@ internal static class OneDriveDirectories
 {
 	/// <summary>
 	/// Retrieves the paths to all OneDrive directories on the system.
-	/// These paths are under each user directory, they can start with OneDrive such as "OneDrive", "OneDrive Personal", "OneDrive Business" etc.
+	/// These paths are under each user directory. They can start with OneDrive, such as "OneDrive", "OneDrive Personal", "OneDrive Business", etc.
 	/// </summary>
 	/// <returns></returns>
 	internal static List<string> Get()
@@ -36,7 +36,7 @@ internal static class OneDriveDirectories
 		// Join system drive with "Users" to get the path to the Users directory
 		string usersPath = Path.Join(Atlas.SystemDrive, "Users");
 
-		// catch to prevent unnecessary exception
+		// Check to prevent an unnecessary exception
 		if (!Directory.Exists(usersPath))
 			return [];
 
@@ -59,18 +59,16 @@ internal static class OneDriveDirectories
 				catch (UnauthorizedAccessException)
 				{
 					// If access is denied to a directory, skip it
-					continue;
 				}
 				catch (DirectoryNotFoundException)
 				{
 					// If a directory is not found (e.g., it was deleted), skip it
-					continue;
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			Logger.Write($"An error occurred: {ex.Message}", LogTypeIntel.Error);
+			Logger.Write(ex);
 		}
 
 		return directoriesList;

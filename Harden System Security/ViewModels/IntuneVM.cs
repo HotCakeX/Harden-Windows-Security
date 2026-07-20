@@ -173,7 +173,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	}
 
 	/// <summary>
-	/// When online features are enabled, this method will enable the relevant buttons and performs extra necessary actions
+	/// When online features are enabled, this method will enable the relevant buttons and perform extra necessary actions
 	/// </summary>
 	private void UpdateButtonsStates(bool on)
 	{

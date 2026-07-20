@@ -70,7 +70,7 @@ internal sealed partial class HeaderCarousel : UserControl
 
 	internal HeaderCarousel() => InitializeComponent();
 
-	private void UserControl_Loaded(object sender, RoutedEventArgs e)
+	private void UserControl_Loaded()
 	{
 		ResetAndShuffle();
 		SelectNextTile();
@@ -96,7 +96,7 @@ internal sealed partial class HeaderCarousel : UserControl
 		}
 	}
 
-	private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+	private void UserControl_Unloaded()
 	{
 		selectionTimer.Tick -= SelectionTimer_Tick;
 		deselectionTimer.Tick -= DeselectionTimer_Tick;
@@ -157,7 +157,6 @@ internal sealed partial class HeaderCarousel : UserControl
 	{
 		_ = (selectedTile?.IsSelected = false);
 		selectedTile = null;
-
 		deselectionTimer.Stop();
 	}
 

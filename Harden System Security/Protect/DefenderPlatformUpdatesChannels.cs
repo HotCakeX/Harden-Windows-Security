@@ -20,7 +20,7 @@ namespace HardenSystemSecurity.Protect;
 /// <summary>
 /// Update channels to number mappings for Microsoft Defender PlatformUpdatesChannel and EngineUpdatesChannel.
 /// </summary>
-internal enum DefenderPlatformUpdatesChannels : int
+internal enum DefenderPlatformUpdatesChannels
 {
 	NotConfigured = 0,
 	Beta = 2,

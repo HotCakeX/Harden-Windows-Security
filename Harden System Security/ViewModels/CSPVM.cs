@@ -850,7 +850,7 @@ internal sealed partial class CSPVM : ViewModelBase
 					IntPtr freeResult = NativeMethods.LocalFree(resultPtr);
 					if (freeResult != IntPtr.Zero)
 					{
-						Logger.Write($"Failed to free memory allocated for LocalFree.");
+						Logger.Write("Failed to free memory allocated for LocalFree.");
 					}
 				}
 			}

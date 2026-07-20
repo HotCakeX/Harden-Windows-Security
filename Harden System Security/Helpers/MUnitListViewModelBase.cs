@@ -31,7 +31,7 @@ internal abstract partial class MUnitListViewModelBase : ViewModelBase, IMUnitLi
 	/// <summary>
 	/// The main InfoBar.
 	/// </summary>
-	public required InfoBarSettings MainInfoBar { get; init; } // Set in the Ctor of the VM class the inherits from this class.
+	public required InfoBarSettings MainInfoBar { get; init; } // Set in the Ctor of the VM class that inherits from this class.
 
 	public Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -66,17 +66,17 @@ internal abstract partial class MUnitListViewModelBase : ViewModelBase, IMUnitLi
 	/// <summary>
 	/// Initialization details for the Apply All button
 	/// </summary>
-	public required AnimatedCancellableButtonInitializer ApplyAllCancellableButton { get; init; } // Set in the Ctor of the VM class the inherits from this class.
+	public required AnimatedCancellableButtonInitializer ApplyAllCancellableButton { get; init; } // Set in the Ctor of the VM class that inherits from this class.
 
 	/// <summary>
 	/// Initialization details for the Remove All button
 	/// </summary>
-	public required AnimatedCancellableButtonInitializer RemoveAllCancellableButton { get; init; } // Set in the Ctor of the VM class the inherits from this class.
+	public required AnimatedCancellableButtonInitializer RemoveAllCancellableButton { get; init; } // Set in the Ctor of the VM class that inherits from this class.
 
 	/// <summary>
 	/// Initialization details for the Verify All button
 	/// </summary>
-	public required AnimatedCancellableButtonInitializer VerifyAllCancellableButton { get; init; } // Set in the Ctor of the VM class the inherits from this class.
+	public required AnimatedCancellableButtonInitializer VerifyAllCancellableButton { get; init; } // Set in the Ctor of the VM class that inherits from this class.
 
 	/// <summary>
 	/// Total number of items loaded (all MUnits)

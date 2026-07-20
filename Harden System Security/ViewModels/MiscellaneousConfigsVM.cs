@@ -345,7 +345,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 										IntPtr statusBuffer = Marshal.AllocHGlobal(statusSize);
 										try
 										{
-											if (NativeMethods.QueryServiceStatusEx(hService, NativeMethods.SC_STATUS_PROCESS_INFO, statusBuffer, (uint)statusSize, out uint bytesNeeded))
+											if (NativeMethods.QueryServiceStatusEx(hService, NativeMethods.SC_STATUS_PROCESS_INFO, statusBuffer, (uint)statusSize, out _))
 											{
 												SERVICE_STATUS_PROCESS processStatus = *(SERVICE_STATUS_PROCESS*)statusBuffer;
 
@@ -563,7 +563,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 		public void Apply()
 		{
 			// When we disable running scripts on the system which sets the execution policy to Restricted,
-			// We need to delete the "ExecutionPolicy" in the following subkey since GP Editor's changes also causes a "**del." entry to be created in the POL file to delete the same subkey/entry.
+			// We need to delete the "ExecutionPolicy" in the following subkey since GP Editor's changes also cause a "**del." entry to be created in the POL file to delete the same subkey/entry.
 			// So here we just delete it once from the POL file which triggers the reg key deletion too.
 			RegistryPolicyEntry item = new(
 				source: Source.GroupPolicy,

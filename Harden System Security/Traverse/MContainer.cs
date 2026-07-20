@@ -32,7 +32,6 @@ namespace HardenSystemSecurity.Traverse;
 /// Base type that provides a concrete Score property and a strongly-typed Items list.
 /// </summary>
 /// <typeparam name="TItem"></typeparam>
-/// <param name="score"></param>
 /// <param name="items"></param>
 internal abstract class CategoryBase<TItem>(List<TItem> items)
 {
@@ -80,7 +79,7 @@ internal sealed class NonAdminCommands(List<MUnit> items) : CategoryBase<MUnit>(
 internal sealed class MSFTSecBaselines_OptionalOverrides(List<MUnit> items) : CategoryBase<MUnit>(items);
 
 /// <summary>
-/// The main data type used for import/exports of JSON Traverse data.
+/// The main data type used for import/export of JSON Traverse data.
 /// </summary>
 internal sealed class MContainer(
 	int total,
@@ -293,7 +292,7 @@ internal sealed partial class MContainerJsonContext : JsonSerializerContext
 			filePath += ".json";
 		}
 
-		// Make sure the folder that user selected to save the report to exists
+		// Make sure the folder that the user selected to save the report to exists
 		string? directory = Path.GetDirectoryName(filePath);
 		if (!string.IsNullOrEmpty(directory))
 		{

@@ -1522,7 +1522,6 @@ internal static partial class ISOManager
 		// Copy boot.wim from ISO to the BOOT partition
 		if (File.Exists(sourceBootWimPath))
 		{
-			FileInfo fileInfo = new(sourceBootWimPath);
 			currentCopiedBytes = CopyFileWithProgress(sourceBootWimPath, destBootWimPath, totalBytesToCopy, currentCopiedBytes, progress);
 			Logger.Write($"Successfully copied boot.wim to {destBootWimPath}");
 		}

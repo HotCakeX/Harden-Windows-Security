@@ -22,7 +22,7 @@ namespace HardenSystemSecurity.Protect;
 
 /// <summary>
 /// Represents a single desired WMI value with its declared type.
-/// If any of these values match the result of a WMI call then the security measure must be considered value/true/applied.
+/// If any of these values match the result of a WMI call then the security measure must be considered valid/true/applied.
 /// </summary>
 internal sealed class WmiDesiredValue(
 	string value,

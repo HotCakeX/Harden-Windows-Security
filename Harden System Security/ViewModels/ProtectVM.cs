@@ -188,7 +188,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		List<MUnit> filteredResults = AllDeviceIntentMUnitsPreview.Where(m =>
 			(m.Name is not null && m.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(m.SubCategoryName is not null && m.SubCategoryName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			((m.Category.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ?? false) ||
+			m.Category.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			(m.URL is not null && m.URL.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
 		).ToList();
 
@@ -277,8 +277,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 				.OrderBy(CategoryProcessorFactory.GetExecutionPriority)
 				.ToList();
 
-			int totalCategoriesProcessed = 0;
-
 			MainInfoBar.WriteInfo($"Applying {AllDeviceIntentMUnitsPreview.Count} security measures for selected device intent...");
 
 			// Process each category with cancellation support
@@ -296,11 +294,9 @@ internal sealed partial class ProtectVM : ViewModelBase
 					selectedSubCategories: null,
 					selectedIntent: SelectedDeviceIntent.Intent,
 					cancellationToken: ApplyIntentsCancellableButton.Cts?.Token);
-
-				totalCategoriesProcessed++;
 			}
 
-			MainInfoBar.WriteSuccess($"Successfully applied security measures for {totalCategoriesProcessed} categories.");
+			MainInfoBar.WriteSuccess($"Successfully applied security measures for {categories.Count} categories.");
 		}
 		catch (OperationCanceledException)
 		{
@@ -1601,7 +1597,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 	private void DisplayVerificationPopup()
 	{
-		// Differ showing the popup to when the page is loaded to make sure user will see it.
+		// Defer showing the popup until the page is loaded to make sure the user sees it.
 		if (VerificationResultsPopUp is null)
 		{
 			VerificationPopupIsPending = true;

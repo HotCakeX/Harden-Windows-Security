@@ -1047,16 +1047,15 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 
 	private void UpdateDiskActivityLabels()
 	{
-		double minimum = 0.0;
 		double maximum = 0.0;
 		bool hasValue = false;
-		UpdateMinMax(_diskReadMegabytesPerSecondSamples, ref minimum, ref maximum, ref hasValue);
-		UpdateMinMax(_diskWriteMegabytesPerSecondSamples, ref minimum, ref maximum, ref hasValue);
+		UpdateMaximum(_diskReadMegabytesPerSecondSamples, ref maximum, ref hasValue);
+		UpdateMaximum(_diskWriteMegabytesPerSecondSamples, ref maximum, ref hasValue);
 		DiskActivityMinLabelTextBlock.Text = "0 MB/s";
 		DiskActivityMaxLabelTextBlock.Text = hasValue ? maximum.ToString("0.##", CultureInfo.InvariantCulture) + " MB/s" : "0 MB/s";
 	}
 
-	private static void UpdateMinMax(List<double> samples, ref double minimum, ref double maximum, ref bool hasValue)
+	private static void UpdateMaximum(List<double> samples, ref double maximum, ref bool hasValue)
 	{
 		for (int index = 0; index < samples.Count; index++)
 		{
@@ -1064,13 +1063,8 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			if (!hasValue)
 			{
 				hasValue = true;
-				minimum = value;
 				maximum = value;
 				continue;
-			}
-			if (value < minimum)
-			{
-				minimum = value;
 			}
 			if (value > maximum)
 			{
@@ -2486,14 +2480,14 @@ internal sealed partial class HomeLiveGraphsWindow
 
 	private enum SelectorBarCurrentItem
 	{
-		NetworkOpennes,
+		NetworkOpenness,
 		PhysicalOrientation,
 		Compass,
 		LightSensor,
 		WifiProfilesDiagnostics
 	}
 
-	// Used to determine which SelectorBar tab is currently user viewing.
+	// Used to determine which SelectorBar tab the user is currently viewing.
 	// Only set by the "OnDiagnosticsSelectorBarSelectionChanged" method.
 	private SelectorBarCurrentItem _SelectorBarSelectedItem;
 
@@ -2501,7 +2495,7 @@ internal sealed partial class HomeLiveGraphsWindow
 	{
 		if (sender.SelectedItem == NetworkOpennessSelectorBarItem)
 		{
-			_SelectorBarSelectedItem = SelectorBarCurrentItem.NetworkOpennes;
+			_SelectorBarSelectedItem = SelectorBarCurrentItem.NetworkOpenness;
 
 			NetworkOpennessDiagnosticsGrid.Visibility = Visibility.Visible;
 			WifiProfilesDiagnosticsGrid.Visibility = Visibility.Collapsed;
@@ -2620,9 +2614,9 @@ internal sealed partial class HomeLiveGraphsWindow
 		{
 			List<WifiProfileRow> rows = await Task.Run(GetSavedWifiProfiles);
 
-			foreach (WifiProfileRow itme in CollectionsMarshal.AsSpan(rows))
+			foreach (WifiProfileRow item in CollectionsMarshal.AsSpan(rows))
 			{
-				WifiProfilesItems.Add(itme);
+				WifiProfilesItems.Add(item);
 			}
 
 			_wifiProfilesLoaded = true;
@@ -3190,7 +3184,7 @@ internal sealed partial class HomeLiveGraphsWindow
 				}
 
 			// Things that don't have real-time updates
-			case SelectorBarCurrentItem.NetworkOpennes:
+			case SelectorBarCurrentItem.NetworkOpenness:
 			case SelectorBarCurrentItem.WifiProfilesDiagnostics:
 			default:
 				break;

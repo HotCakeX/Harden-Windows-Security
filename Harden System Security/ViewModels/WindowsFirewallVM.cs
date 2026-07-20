@@ -322,7 +322,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// <summary>
 	/// Event handler for the UI button to select files.
 	/// </summary>
-	internal async void SelectFiles()
+	internal void SelectFiles()
 	{
 		try
 		{
@@ -330,12 +330,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			List<string> selectedFiles = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.ExecutablesPickerFilter);
 
-			if (selectedFiles.Count > 0)
+			foreach (string item in CollectionsMarshal.AsSpan(selectedFiles))
 			{
-				foreach (string item in CollectionsMarshal.AsSpan(selectedFiles))
-				{
-					SelectedFiles.Add(item);
-				}
+				SelectedFiles.Add(item);
 			}
 		}
 		catch (Exception ex)

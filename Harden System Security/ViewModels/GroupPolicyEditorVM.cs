@@ -877,22 +877,12 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Event handler for the UI process button,
+	/// Event handler for the UI process button.
 	/// </summary>
-	internal async void ProcessSelectedFile()
-	{
-		try
-		{
-			await ProcessSelectedFilePrivate();
-		}
-		catch (Exception ex)
-		{
-			MainInfoBar.WriteError(ex);
-		}
-	}
+	internal async void ProcessSelectedFile() => await ProcessSelectedFilePrivate();
 
 	/// <summary>
-	/// Parses the selected policy file and displays it data in the ListView.
+	/// Parses the selected policy file and displays its data in the ListView.
 	/// </summary>
 	private async Task ProcessSelectedFilePrivate()
 	{
@@ -985,16 +975,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal async void GetEffectivePolicies_Click()
 	{
-		try
-		{
-			SelectedFile = RegistryPolicyParser.LocalPolicyMachineFilePath;
-
-			await ProcessSelectedFilePrivate();
-		}
-		catch (Exception ex)
-		{
-			MainInfoBar.WriteError(ex);
-		}
+		SelectedFile = RegistryPolicyParser.LocalPolicyMachineFilePath;
+		await ProcessSelectedFilePrivate();
 	}
 
 	/// <summary>
@@ -1002,16 +984,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// </summary>
 	internal async void GetEffectiveUserPolicies_Click()
 	{
-		try
-		{
-			SelectedFile = RegistryPolicyParser.LocalPolicyUserFilePath;
-
-			await ProcessSelectedFilePrivate();
-		}
-		catch (Exception ex)
-		{
-			MainInfoBar.WriteError(ex);
-		}
+		SelectedFile = RegistryPolicyParser.LocalPolicyUserFilePath;
+		await ProcessSelectedFilePrivate();
 	}
 
 	/// <summary>
@@ -1396,18 +1370,12 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	{
 		if (filePath is null)
 			return;
-		try
-		{
-			SelectedFile = filePath;
 
-			await ViewModelProvider.NavigationService.Navigate(typeof(Pages.GroupPolicyEditor));
+		SelectedFile = filePath;
 
-			await ProcessSelectedFilePrivate();
-		}
-		catch (Exception ex)
-		{
-			MainInfoBar.WriteError(ex);
-		}
+		await ViewModelProvider.NavigationService.Navigate(typeof(Pages.GroupPolicyEditor));
+
+		await ProcessSelectedFilePrivate();
 	}
 
 	[GeneratedRegex("^[0-9A-Fa-f]*$")]

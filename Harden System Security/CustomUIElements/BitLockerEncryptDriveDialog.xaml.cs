@@ -118,6 +118,7 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 
 	internal bool AllowDowngradeOSDriveEncryptionLevel { get; set => this.SP(ref field, value); }
 
+	/// <summary>
 	/// Event handler for the refresh button of removable drives.
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
@@ -161,16 +162,6 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 		{
 			ElementsAreEnabled = true;
 		}
-	}
-
-	/// <summary>
-	/// Event handler for the primary button click
-	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
-	private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-	{
-
 	}
 
 	#region IPropertyChangeHost Implementation

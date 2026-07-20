@@ -86,7 +86,7 @@ internal static class MUnitCatalog
 	/// <summary>
 	/// Must be called before the first call to <see cref="GetPageFromQuery"/> (i.e., before the catalog is built).
 	/// Must NOT be called more than once. Currently called only once from the Main Window VM's ctor.
-	/// MainWindowVM is constructor in ViewModelProvider: NavigationService's lazy factory calls new NavigationService(MainWindowVM).
+	/// MainWindowVM is constructed in ViewModelProvider: NavigationService's lazy factory calls new NavigationService(MainWindowVM).
 	/// That access to MainWindowVM forces its creation if it hasn't been initialized.
 	/// </summary>
 	internal static void RegisterExtraPage(Type pageType, string localizedTitle) =>

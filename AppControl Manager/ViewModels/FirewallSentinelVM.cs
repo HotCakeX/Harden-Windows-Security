@@ -648,11 +648,11 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				// Add System to outbound allow rule
 				// Required because AppID Tags only apply to User-Mode executables and System is kernel-mode and doesn't apply to it.
 				// Without this, things such as ping commands don't work.
-				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "Allow SYSTEM process" outbound allow "Allows System Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "System" """));
+				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, """firewallprogram "Allow SYSTEM process" outbound allow "Allows System Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "System" """));
 
 				// Add Svchost.exe outbound allow rule
 				// Without this, installation from the Microsoft Store for apps that require service installation, such as Harden System Security, fail.
-				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $"""firewallprogram "Allow Svchost process" outbound allow "Allows Service Host Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "%SystemRoot%\system32\svchost.exe" """));
+				Logger.Write(ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, """firewallprogram "Allow Svchost process" outbound allow "Allows Service Host Process for outbound communications. Created by the AppControl Manager for App ID Tagging." --program "%SystemRoot%\system32\svchost.exe" """));
 
 				#region Group Policies
 

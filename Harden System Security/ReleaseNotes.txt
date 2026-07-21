@@ -1,1 +1,3 @@
 * Improved the System Mitigations editing experience. Selecting Modify now automatically retrieves the latest system mitigation settings before opening the editor, ensuring that the displayed configuration is current. Manual refresh remains available through the Refresh button.
+
+* The active badge on the taskbar icon is now displayed for long-running Winget operations.

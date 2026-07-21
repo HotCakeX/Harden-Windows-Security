@@ -1007,6 +1007,9 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 		if (bulkSourceActionCancellationTokenSource is not null)
 			await bulkSourceActionCancellationTokenSource.CancelAsync();
+
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 		using CancellationTokenSource cancellationTokenSource = new();
 		bulkSourceActionCancellationTokenSource = cancellationTokenSource;
 		CancellationToken cancellationToken = cancellationTokenSource.Token;
@@ -1356,6 +1359,8 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 			return;
 		}
 
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 		CancelCurrentSearch();
 		CancellationTokenSource cancellationTokenSource = new();
 		searchCancellationTokenSource = cancellationTokenSource;
@@ -1439,6 +1444,9 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 			return;
 		}
 		cancellationToken.ThrowIfCancellationRequested();
+
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 		// Default font installs must stay per-user when unelevated because WinGet font manifests are scope-flexible.
 		packageInstallScope = packageInstallScope is PackageInstallScope.Any && !Atlas.IsElevated && (string.Equals(packageSearchResult.Source, WinGetPackageSearchService.WinGetFontSourceName, StringComparison.OrdinalIgnoreCase) || string.Equals(packageSearchResult.InstallerType, "Font", StringComparison.OrdinalIgnoreCase) || string.Equals(packageSearchResult.InstallerNestedType, "Font", StringComparison.OrdinalIgnoreCase)) ? PackageInstallScope.User : packageInstallScope;
 		bool force = packageSearchResult.IsInstalled && !packageSearchResult.IsUpdateAvailable;
@@ -2099,6 +2107,8 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 	private async Task LoadInstalledProgramsAsync()
 	{
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 		CancelInstalledQuery();
 		CancellationTokenSource cancellationTokenSource = new();
 		installedCancellationTokenSource = cancellationTokenSource;
@@ -2274,6 +2284,8 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		}
 		cancellationToken.ThrowIfCancellationRequested();
 
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
 		bool sourcesUIElementsWereEnabled = SourcesUIElementsAreEnabled;
 		if (sourcesUIElementsWereEnabled)
 		{
@@ -2340,6 +2352,8 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		{
 			return;
 		}
+
+		using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 		bool sourcesUIElementsWereEnabled = SourcesUIElementsAreEnabled;
 		if (sourcesUIElementsWereEnabled)

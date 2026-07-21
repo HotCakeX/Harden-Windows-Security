@@ -23,7 +23,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using HardenSystemSecurity.BitLocker;
-using Microsoft.UI.Xaml.Controls;
 
 namespace HardenSystemSecurity.CustomUIElements;
 

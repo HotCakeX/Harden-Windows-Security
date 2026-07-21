@@ -7,3 +7,5 @@
 * Improved the package installer by supporting the complete publisher identity such as CN, O, OU, L, S, and C in the package manifest. It also now supports CNs with commas.
 
 * Made various performance improvements to the Harden System Security app.
+
+* Available updates for installed programs now appear correctly for all source types in the Winget Management page. Also improved the messages displayed when the user tries to repair an installed program that does not support repairing.

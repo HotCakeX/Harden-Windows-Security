@@ -20,7 +20,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 

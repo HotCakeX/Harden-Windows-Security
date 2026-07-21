@@ -50,8 +50,13 @@ internal static class WinGetPackageSearchService
 	private const string DefaultPackageCatalogType = "Microsoft.PreIndexed.Package";
 	internal const string MicrosoftStoreSourceName = "msstore";
 	internal const string WinGetFontSourceName = "winget-font";
-	// WinGet can return this no applicable repairer HRESULT with RepairError status instead of NoApplicableRepairer status.
-	private const string NoApplicableRepairerExtendedErrorCode = "0x8A15007C";
+
+	// WinGet can return these no applicable repairer HRESULTs with RepairError status instead of NoApplicableRepairer status.
+	private const int PackageResourcesInUseHResult = -2147009278; // 0x80073D02
+	private const int NoManifestFoundHResult = -1978335209; // 0x8A150017
+	private const int NoRepairInformationHResult = -1978335111; // 0x8A150079
+	private const int RepairNotSupportedHResult = -1978335108;  // 0x8A15007C
+
 	// WinGet can return this HRESULT when no installer matches the current device, source, or package metadata.
 	private const string NoApplicableInstallerExtendedErrorCode = "0x8A150010";
 
@@ -203,8 +208,9 @@ internal static class WinGetPackageSearchService
 	internal static async Task<List<WinGetPackageSearchResult>> GetInstalledProgramsAsync(CancellationToken cancellationToken)
 	{
 		PackageManager packageManager = new();
-		PackageCatalogReference installedCatalogReference = packageManager.GetLocalPackageCatalog(LocalPackageCatalog.InstalledPackages);
-		PackageCatalog catalog = await ConnectCatalogAsync(installedCatalogReference, cancellationToken);
+		// Query installed packages through a remote-backed local composite so WinGet can correlate installed entries with available versions.
+		// If we don't do this, we cannot detect available updates in the "Installed Programs" section.
+		PackageCatalog catalog = await ConnectSearchCatalogAsync(packageManager, cancellationToken, CompositeSearchBehavior.LocalCatalogs);
 		FindPackagesResult findResult = await FindInstalledPackagesAsync(catalog, cancellationToken);
 
 		if (findResult.Status is not FindPackagesResultStatus.Ok)
@@ -216,7 +222,7 @@ internal static class WinGetPackageSearchService
 		for (int index = 0; index < findResult.Matches.Count; index++)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
-			// Items returned by the local installed catalog are known installed even when WinGet cannot report a concrete version.
+			// Items returned by a local-catalog query are known installed even when WinGet cannot report a concrete version.
 			results.Add(CreateSearchResult(findResult.Matches[index], findResult.WasLimitExceeded, true));
 		}
 
@@ -327,8 +333,13 @@ internal static class WinGetPackageSearchService
 		PackageManager packageManager = new();
 		// Preserve the original source only when it still resolves to a configured package catalog. Local, stale, or removed source names must not block refresh.
 		string sourceName = GetPackageRefreshSourceName(packageSearchResult);
-		PackageCatalog catalog = await ConnectPackageRefreshCatalogAsync(packageManager, sourceName, cancellationToken);
-		return await FindFirstPackageByIdResultAsync(catalog, packageSearchResult.Id, sourceName, false, "WinGet FindPackages failed", cancellationToken);
+		bool isKnownInstalled = packageSearchResult.IsKnownInstalled;
+		// Installed-program results must be refreshed through an installed composite so both installed and available versions remain correlated.
+		// If we don't do this, after updating an instaleld package to a new version in the "Installed Programs" section, its "Installed: " will be "unavailable".
+		PackageCatalog catalog = isKnownInstalled
+			? await ConnectInstalledPackageCatalogAsync(packageManager, sourceName, cancellationToken)
+			: await ConnectPackageRefreshCatalogAsync(packageManager, sourceName, cancellationToken);
+		return await FindFirstPackageByIdResultAsync(catalog, packageSearchResult.Id, sourceName, isKnownInstalled, "WinGet FindPackages failed", cancellationToken);
 	}
 
 	private static async Task<WinGetPackageSearchResult?> FindFirstPackageByIdResultAsync(PackageCatalog catalog, string packageId, string sourceName, bool isKnownInstalled, string failureMessage, CancellationToken cancellationToken)
@@ -815,8 +826,11 @@ internal static class WinGetPackageSearchService
 	internal static bool IsNoApplicableDownloadInstallerResult(DownloadResult downloadResult) => downloadResult.Status is DownloadResultStatus.NoApplicableInstallers || string.Equals(GetExtendedErrorCode(downloadResult), NoApplicableInstallerExtendedErrorCode, StringComparison.OrdinalIgnoreCase);
 	internal static string GetNoApplicableDownloadInstallerMessage() => "WinGet could not find a downloadable installer for this package on the current device. This can happen when the installed app is not available from a configured WinGet source, or when no installer matches the current architecture, scope, locale, OS version, or installer type.";
 
-	internal static string GetRepairResultError(RepairResult repairResult) => string.Format(CultureInfo.InvariantCulture, "WinGet repair returned status {0}. Extended error: {1}. Repairer error: {2}.", repairResult.Status, GetExtendedErrorCode(repairResult), repairResult.RepairerErrorCode);
-	internal static bool IsNoApplicableRepairerResult(RepairResult repairResult) => repairResult.Status is RepairResultStatus.NoApplicableRepairer || string.Equals(GetExtendedErrorCode(repairResult), NoApplicableRepairerExtendedErrorCode, StringComparison.OrdinalIgnoreCase);
+	internal static string GetRepairResultError(RepairResult repairResult) => repairResult.ExtendedErrorCode?.HResult == PackageResourcesInUseHResult ?
+		"The package could not be repaired because files or resources it needs to modify are currently in use. Close the application and any programs using it, then try again." :
+		string.Format(CultureInfo.InvariantCulture, "WinGet repair returned status {0}. Extended error: {1}. Repairer error: {2}.", repairResult.Status, GetExtendedErrorCode(repairResult.ExtendedErrorCode), repairResult.RepairerErrorCode);
+
+	internal static bool IsNoApplicableRepairerResult(RepairResult repairResult) => repairResult.Status == RepairResultStatus.NoApplicableRepairer || repairResult.ExtendedErrorCode?.HResult == NoManifestFoundHResult || repairResult.ExtendedErrorCode?.HResult == NoRepairInformationHResult || repairResult.ExtendedErrorCode?.HResult == RepairNotSupportedHResult;
 
 	internal static string GetAddSourceResultError(AddPackageCatalogResult addResult) => string.Format(CultureInfo.InvariantCulture, "WinGet source add returned status {0}. Extended error: {1}.", addResult.Status, GetExtendedErrorCode(addResult));
 
@@ -842,19 +856,6 @@ internal static class WinGetPackageSearchService
 		try
 		{
 			return $"0x{downloadResult.ExtendedErrorCode.HResult:X8}";
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			return UnknownExtendedErrorCode;
-		}
-	}
-
-	private static string GetExtendedErrorCode(RepairResult repairResult)
-	{
-		try
-		{
-			return $"0x{repairResult.ExtendedErrorCode.HResult:X8}";
 		}
 		catch (Exception ex)
 		{

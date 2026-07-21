@@ -1,11 +1,1 @@
-* Updated dependencies to the latest version.
-
-* Added Japanese language support to the Harden System Security app.
-
-* Language packs can now be added/removed when running as admin (elevated) in the settings page.
-
-* Improved the package installer by supporting the complete publisher identity such as CN, O, OU, L, S, and C in the package manifest. It also now supports CNs with commas.
-
-* Made various performance improvements to the Harden System Security app.
-
-* Available updates for installed programs now appear correctly for all source types in the Winget Management page. Also improved the messages displayed when the user tries to repair an installed program that does not support repairing.
+* Improved the System Mitigations editing experience. Selecting Modify now automatically retrieves the latest system mitigation settings before opening the editor, ensuring that the displayed configuration is current. Manual refresh remains available through the Refresh button.

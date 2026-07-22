@@ -55,6 +55,21 @@
                     </ToggleButton.ContentTemplate>
                 </ToggleButton>
 
+                <ToggleButton IsChecked="{x:Bind ViewModel.IncludeCertificatesWithInvalidChains, Mode=TwoWay}"
+                              Content="Include Invalid Chains"
+                              VerticalAlignment="Center"
+                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                              ToolTipService.ToolTip="Include certificates when Windows cannot build a complete, valid system-trusted chain.">
+                    <ToggleButton.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE730;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ToggleButton.ContentTemplate>
+                </ToggleButton>
+
                 <Button x:Uid="StartAnalysisButton"
                         VerticalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
@@ -289,7 +304,7 @@
                              RegistryKey="CertificateChecking_NonStlCerts"
                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                              ItemsSource="{x:Bind ViewModel.NonStlCertificates, Mode=OneWay}"
-                             SelectionMode="Single">
+                             SelectionMode="Extended">
 
             <customUI:ListViewV2.Header>
 
@@ -346,7 +361,7 @@
 
                                 <MenuFlyoutItem x:Uid="DeleteCertMenuFlyoutItem" Click="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.DeleteSelectedCertificate_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.DeleteSelectedCertificate_Click}"/>
+                                        <KeyboardAccelerator Key="Delete" Invoked="{x:Bind VMs:ViewModelProvider.CertificateCheckingVM.DeleteSelectedCertificate_Invoked}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" />

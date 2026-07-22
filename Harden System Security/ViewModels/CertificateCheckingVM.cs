@@ -75,6 +75,11 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	internal bool IncludeExpiredCertificates { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
+	/// Toggle to include certificates for which Windows cannot build a complete, valid system-trusted chain.
+	/// </summary>
+	internal bool IncludeCertificatesWithInvalidChains { get; set => SP(ref field, value); } = true;
+
+	/// <summary>
 	/// Collection of certificates that don't chain to STL roots
 	/// </summary>
 	internal readonly RangedObservableCollection<NonStlRootCert> NonStlCertificates = [];
@@ -348,60 +353,96 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 	#region Delete Certificate
 
+	internal async void DeleteSelectedCertificate_Invoked(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender, Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+	{
+		if (!ElementsAreEnabled) return;
+		args.Handled = true;
+		await DeleteSelectedCertificate();
+	}
+
+	internal async void DeleteSelectedCertificate_Click() => await DeleteSelectedCertificate();
+
 	/// <summary>
-	/// Deletes the selected certificate from the certificate store
+	/// Deletes the selected certificate(s) from the certificate store
 	/// </summary>
-	internal async void DeleteSelectedCertificate_Click()
+	private async Task DeleteSelectedCertificate()
 	{
 		try
 		{
 			ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.CertificateChecking_NonStlCerts);
 			if (lv is null) return;
 
-			if (lv.SelectedItem is not NonStlRootCert selectedCert)
+			// Collect the selected certificates from the ListView
+			List<NonStlRootCert> selectedCertificates = new(lv.SelectedItems.Count);
+			foreach (object selectedItem in lv.SelectedItems)
+			{
+				if (selectedItem is NonStlRootCert selectedCertificate)
+				{
+					selectedCertificates.Add(selectedCertificate);
+				}
+			}
+
+			if (selectedCertificates.Count == 0)
 			{
 				MainInfoBar.WriteWarning(Atlas.GetStr("MainInfoBarDeleteCertificateSelectMessage"));
 				return;
 			}
 
-			// Show confirmation dialog
-			using AppControlManager.CustomUIElements.ContentDialogV2 confirmDialog = new()
-			{
-				Title = Atlas.GetStr("DeleteCertificateDialogTitle"),
-				Content = string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("DeleteCertificateDialogContent"), selectedCert.Subject, selectedCert.StoreLocationString, selectedCert.StoreNameString, selectedCert.LeafThumbprintSha1),
-				PrimaryButtonText = Atlas.GetStr("DeleteCertificateDialogPrimaryButton"),
-				SecondaryButtonText = Atlas.GetStr("Cancel"),
-				DefaultButton = ContentDialogButton.Secondary
-			};
+			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
 
-			ContentDialogResult result = await confirmDialog.ShowAsync();
-			if (result != ContentDialogResult.Primary)
+			foreach (NonStlRootCert selectedCertificate in selectedCertificates)
 			{
-				return;
+				// Parse store location
+				if (!Enum.TryParse(selectedCertificate.StoreLocationString, out StoreLocation storeLocation))
+				{
+					MainInfoBar.WriteWarning(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("InvalidStoreLocationWarning"), selectedCertificate.StoreLocationString));
+					continue;
+				}
+
+				// Show confirmation dialog
+				using AppControlManager.CustomUIElements.ContentDialogV2 confirmDialog = new()
+				{
+					Title = Atlas.GetStr("DeleteCertificateDialogTitle"),
+					Content = string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("DeleteCertificateDialogContent"), selectedCertificate.Subject, selectedCertificate.StoreLocationString, selectedCertificate.StoreNameString, selectedCertificate.LeafThumbprintSha1),
+					PrimaryButtonText = Atlas.GetStr("DeleteCertificateDialogPrimaryButton"),
+					SecondaryButtonText = Atlas.GetStr("Cancel"),
+					DefaultButton = ContentDialogButton.Secondary
+				};
+
+				ContentDialogResult result = await confirmDialog.ShowAsync();
+				if (result != ContentDialogResult.Primary)
+				{
+					continue;
+				}
+
+				// Delete the certificate from the store
+				bool deletionResult = await DeleteCertificateFromStore(
+						selectedCertificate.LeafThumbprintSha1,
+						selectedCertificate.StoreNameString,
+						storeLocation);
+
+				// Remove from both collections only if the deletion was successful
+				if (deletionResult)
+				{
+					_ = AllNonStlCertificates.Remove(selectedCertificate);
+					_ = NonStlCertificates.Remove(selectedCertificate);
+
+					MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("CertificateDeletedSuccessMessage"), selectedCertificate.StoreLocationString, selectedCertificate.StoreNameString));
+				}
 			}
 
-			// Parse store location
-			if (!Enum.TryParse(selectedCert.StoreLocationString, out StoreLocation storeLocation))
-			{
-				MainInfoBar.WriteWarning(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("InvalidStoreLocationWarning"), selectedCert.StoreLocationString));
-				return;
-			}
-
-			// Delete the certificate from the store
-			await DeleteCertificateFromStore(selectedCert.LeafThumbprintSha1, selectedCert.StoreNameString, storeLocation);
-
-			// Remove from both collections
-			_ = AllNonStlCertificates.Remove(selectedCert);
-			_ = NonStlCertificates.Remove(selectedCert);
-
-			// Recalculate column widths
+			// Recalculate the column widths at the end.
 			CalculateColumnWidths();
-
-			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("CertificateDeletedSuccessMessage"), selectedCert.StoreLocationString, selectedCert.StoreNameString));
 		}
 		catch (Exception ex)
 		{
 			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -412,9 +453,9 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// <param name="storeName">Certificate store name</param>
 	/// <param name="storeLocation">Certificate store location</param>
 	/// <returns></returns>
-	private async Task DeleteCertificateFromStore(string thumbprint, string storeName, StoreLocation storeLocation)
+	private async Task<bool> DeleteCertificateFromStore(string thumbprint, string storeName, StoreLocation storeLocation)
 	{
-		await Task.Run(async () =>
+		return await Task.Run(() =>
 		{
 			using X509Store store = new(storeName, storeLocation);
 			store.Open(OpenFlags.OpenExistingOnly | OpenFlags.IncludeArchived | OpenFlags.MaxAllowed);
@@ -425,11 +466,12 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			if (certificates.Count == 0)
 			{
 				MainInfoBar.WriteWarning(Atlas.GetStr("CertificateNotFoundInStoreWarning"));
-				return;
+				return false;
 			}
 
 			// Remove the certificate from the store
 			store.Remove(certificates[0]);
+			return true;
 		});
 	}
 
@@ -494,7 +536,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 				// Find certificates whose root is not in the STL
 				List<NonStlRootCert> nonStlRootCerts =
-					AuthRootProcessor.FindCertificatesNotChainingToStlRoots(stlRootSha256, IncludeExpiredCertificates);
+					AuthRootProcessor.FindCertificatesNotChainingToStlRoots(stlRootSha256, IncludeExpiredCertificates, IncludeCertificatesWithInvalidChains);
 
 				// Update UI on the UI thread
 				await Atlas.AppDispatcher.EnqueueAsync(() =>
@@ -627,9 +669,17 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 							}
 						}
 
-						// Get root certificate information
-						X509Certificate2? rootCert = TryGetChainRoot(leaf);
-						string rootSubject = rootCert is null ? Atlas.GetStr("NoRootCertificate") : rootCert.Subject;
+						// Apply the same chain validation options used by the certificate analysis workflow.
+						X509Certificate2? rootCert = AuthRootProcessor.TryGetChainRoot(
+							leaf,
+							IncludeExpiredCertificates,
+							IncludeCertificatesWithInvalidChains);
+						if (rootCert is null)
+						{
+							continue;
+						}
+
+						string rootSubject = rootCert.Subject;
 						string rootSha256Hex = ComputeCertSha256Hex(rootCert);
 
 						NonStlRootCert item = new(
@@ -655,46 +705,6 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Attempts to build a chain and return the last element (root). Returns null if no chain elements were built.
-	/// Uses system trust; allows unknown/expired to still materialize a chain.
-	/// </summary>
-	private static X509Certificate2? TryGetChainRoot(X509Certificate2 cert)
-	{
-		using X509Chain chain = new()
-		{
-			ChainPolicy =
-			{
-				RevocationMode = X509RevocationMode.NoCheck,
-				RevocationFlag = X509RevocationFlag.ExcludeRoot,
-				VerificationFlags = X509VerificationFlags.IgnoreNotTimeValid | X509VerificationFlags.AllowUnknownCertificateAuthority
-			}
-		};
-		chain.ChainPolicy.TrustMode = X509ChainTrustMode.System;
-
-		try
-		{
-			_ = chain.Build(cert);
-		}
-		catch
-		{
-			// Ignore build exceptions; we only care about any ChainElements captured.
-		}
-
-		if (chain.ChainElements.Count > 0)
-		{
-			return chain.ChainElements[^1].Certificate;
-		}
-
-		// Treat a self-issued leaf as its own root if subject == issuer.
-		if (IsSelfIssued(cert))
-		{
-			return cert;
-		}
-
-		return null;
-	}
-
-	/// <summary>
 	/// Computes uppercase hex SHA256 of the certificate's raw data. Returns empty string if cert is null.
 	/// </summary>
 	private static string ComputeCertSha256Hex(X509Certificate2? cert)
@@ -705,16 +715,6 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		}
 		byte[] hash = System.Security.Cryptography.SHA256.HashData(cert.RawData);
 		return Convert.ToHexString(hash);
-	}
-
-	/// <summary>
-	/// Lightweight self-issued check based on Subject/Issuer string equality.
-	/// </summary>
-	private static bool IsSelfIssued(X509Certificate2 cert)
-	{
-		string subject = cert.Subject ?? string.Empty;
-		string issuer = cert.Issuer ?? string.Empty;
-		return subject.Equals(issuer, StringComparison.OrdinalIgnoreCase);
 	}
 
 	/// <summary>

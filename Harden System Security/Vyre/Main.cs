@@ -1136,9 +1136,14 @@ internal static class AuthRootProcessor
 	/// Enumerate certificates across CurrentUser and LocalMachine stores and return those whose chain root
 	/// is NOT present in the provided STL root SHA256 set.
 	/// includeExpired: when false, only time-valid (now within NotBefore..NotAfter) leaf certificates are considered.
+	/// includeCertificatesWithInvalidChains: when true, also includes certificates whose chains are partial,
+	/// terminate at an unknown authority, or otherwise fail normal system trust validation.
 	/// Note: includeExpired=false also excludes "not yet valid" certificates.
 	/// </summary>
-	internal static List<NonStlRootCert> FindCertificatesNotChainingToStlRoots(HashSet<string> stlRootSha256Hex, bool includeExpired)
+	internal static List<NonStlRootCert> FindCertificatesNotChainingToStlRoots(
+		HashSet<string> stlRootSha256Hex,
+		bool includeExpired,
+		bool includeCertificatesWithInvalidChains)
 	{
 		List<NonStlRootCert> results = [];
 		Dictionary<string, string> rootSha256CacheByRootSha1 = new(StringComparer.OrdinalIgnoreCase);
@@ -1181,11 +1186,16 @@ internal static class AuthRootProcessor
 							}
 						}
 
-						// Determine the chain root and its SHA256.
-						X509Certificate2? rootCert = TryGetChainRoot(leaf);
-						string rootSubject = rootCert is null ? "(no root)" : rootCert.Subject;
+						// When includeCertificatesWithInvalidChains is false, only compare certificates whose complete chain validates under the system trust policy.
+						// The optional broader mode also returns the terminal element from partial or otherwise invalid chains.
+						X509Certificate2? rootCert = TryGetChainRoot(leaf, includeExpired, includeCertificatesWithInvalidChains);
+						if (rootCert is null)
+						{
+							continue;
+						}
 
-						string rootSha1 = rootCert is null ? "(none)" : (rootCert.Thumbprint ?? "(none)");
+						string rootSubject = rootCert.Subject;
+						string rootSha1 = rootCert.Thumbprint ?? "(none)";
 						string rootSha256Hex;
 
 						if (!rootSha256CacheByRootSha1.TryGetValue(rootSha1, out rootSha256Hex!))
@@ -1221,29 +1231,49 @@ internal static class AuthRootProcessor
 	}
 
 	/// <summary>
-	/// Attempts to build a chain and return the last element (root). Returns null if no chain elements were built.
-	/// Uses system trust; allows unknown/expired to still materialize a chain.
+	/// Builds a chain using system trust and returns its terminal certificate.
+	/// When includeCertificatesWithInvalidChains is false, returns null when the chain does not validate.
+	/// When it is true, permits unknown authorities and partial chains, and falls back to a self-issued
+	/// certificate when no chain elements are available.
 	/// </summary>
-	private static X509Certificate2? TryGetChainRoot(X509Certificate2 cert)
+	internal static X509Certificate2? TryGetChainRoot(
+		X509Certificate2 cert,
+		bool includeExpired,
+		bool includeCertificatesWithInvalidChains)
 	{
+		X509VerificationFlags verificationFlags = includeExpired
+			? X509VerificationFlags.IgnoreNotTimeValid
+			: X509VerificationFlags.NoFlag;
+
+		if (includeCertificatesWithInvalidChains)
+		{
+			verificationFlags |= X509VerificationFlags.AllowUnknownCertificateAuthority;
+		}
+
 		using X509Chain chain = new()
 		{
 			ChainPolicy =
 			{
 				RevocationMode = X509RevocationMode.NoCheck,
 				RevocationFlag = X509RevocationFlag.ExcludeRoot,
-				VerificationFlags = X509VerificationFlags.IgnoreNotTimeValid | X509VerificationFlags.AllowUnknownCertificateAuthority
+				VerificationFlags = verificationFlags
 			}
 		};
 		chain.ChainPolicy.TrustMode = X509ChainTrustMode.System;
 
+		bool chainIsValid;
 		try
 		{
-			_ = chain.Build(cert);
+			chainIsValid = chain.Build(cert);
 		}
-		catch
+		catch (CryptographicException)
 		{
-			// Ignore build exceptions; we only care about any ChainElements captured.
+			return includeCertificatesWithInvalidChains && IsSelfIssued(cert) ? cert : null;
+		}
+
+		if (!chainIsValid && !includeCertificatesWithInvalidChains)
+		{
+			return null;
 		}
 
 		if (chain.ChainElements.Count > 0)
@@ -1251,13 +1281,18 @@ internal static class AuthRootProcessor
 			return chain.ChainElements[^1].Certificate;
 		}
 
-		// As a fallback, treat a self-issued leaf as its own root if subject==issuer.
-		if (IsSelfIssued(cert))
-		{
-			return cert;
-		}
+		return includeCertificatesWithInvalidChains && IsSelfIssued(cert) ? cert : null;
+	}
 
-		return null;
+	/// <summary>
+	/// Checks whether a certificate is self-issued based on Subject and Issuer name equality.
+	/// This is used only by the optional invalid-chain inclusion mode.
+	/// </summary>
+	private static bool IsSelfIssued(X509Certificate2 cert)
+	{
+		string subject = cert.Subject ?? string.Empty;
+		string issuer = cert.Issuer ?? string.Empty;
+		return subject.Equals(issuer, StringComparison.OrdinalIgnoreCase);
 	}
 
 	/// <summary>
@@ -1271,16 +1306,6 @@ internal static class AuthRootProcessor
 		}
 		byte[] hash = SHA256.HashData(cert.RawData);
 		return Convert.ToHexString(hash);
-	}
-
-	/// <summary>
-	/// Lightweight self-issued check based on Subject/Issuer string equality.
-	/// </summary>
-	private static bool IsSelfIssued(X509Certificate2 cert)
-	{
-		string subject = cert.Subject ?? string.Empty;
-		string issuer = cert.Issuer ?? string.Empty;
-		return subject.Equals(issuer, StringComparison.OrdinalIgnoreCase);
 	}
 }
 

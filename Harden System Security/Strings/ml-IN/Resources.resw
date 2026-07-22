@@ -2602,9 +2602,6 @@
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>സർട്ടിഫിക്കറ്റ് റിട്രീവൽ പൂർത്തിയായി. മൊത്തം {0} സർട്ടിഫിക്കറ്റുകൾ കണ്ടെത്തി.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(റൂട്ട് ഇല്ല)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(ഒന്നുമില്ല)</value>
 </data>

@@ -2599,9 +2599,6 @@
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>Отримання сертифікатів завершено. Знайдено загалом {0} сертифікатів.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(немає кореня)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(немає)</value>
 </data>

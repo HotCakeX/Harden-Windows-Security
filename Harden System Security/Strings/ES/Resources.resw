@@ -2602,9 +2602,6 @@ Huella Digital: {3}</value>
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>Recuperación de certificados completada. Se encontraron {0} certificados en total.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(sin raíz)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(ninguno)</value>
 </data>

@@ -2599,9 +2599,6 @@ Thumbprint: {3}</value>
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>Penangkapan sertifikat selesai. Ditemukan {0} total sertifikat.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(tidak ada akar)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(tidak ada)</value>
 </data>

@@ -2599,9 +2599,6 @@ Thumbprint: {3}</value>
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>Certificate retrieval completed. Found {0} total certificates.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(no root)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(none)</value>
 </data>

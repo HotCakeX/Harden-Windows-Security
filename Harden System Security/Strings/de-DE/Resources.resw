@@ -2599,9 +2599,6 @@ Fingerabdruck: {3}</value>
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>Abrufen der Zertifikate abgeschlossen. Insgesamt {0} Zertifikate gefunden.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(kein Stamm)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(keiner)</value>
 </data>

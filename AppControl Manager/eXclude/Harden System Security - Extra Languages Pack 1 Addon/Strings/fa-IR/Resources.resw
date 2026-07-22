@@ -2599,9 +2599,6 @@ Thumbprint: {3}</value>
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>بازیابی گواهی کامل شد. در مجموع {0} گواهی یافت شد.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(بدون ریشه)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(هیچ‌کدام)</value>
 </data>

@@ -2599,9 +2599,6 @@
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>אחזור התעודות הושלם. נמצאו {0} תעודות בסך הכול.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(ללא שורש)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(אין)</value>
 </data>

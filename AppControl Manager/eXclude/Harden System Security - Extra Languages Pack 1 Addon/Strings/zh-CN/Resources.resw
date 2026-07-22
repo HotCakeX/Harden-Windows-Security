@@ -2599,9 +2599,6 @@
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>证书检索完成。共找到 {0} 个证书。</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(无根)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(无)</value>
 </data>

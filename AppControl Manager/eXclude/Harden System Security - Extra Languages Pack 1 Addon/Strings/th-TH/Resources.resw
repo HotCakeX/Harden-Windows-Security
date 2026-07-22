@@ -2599,9 +2599,6 @@
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>การดึงใบรับรองเสร็จสิ้น พบใบรับรองทั้งหมด {0} รายการ</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(ไม่มีราก)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(ไม่มี)</value>
 </data>

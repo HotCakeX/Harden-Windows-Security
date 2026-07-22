@@ -2602,9 +2602,6 @@ Odcisk Palca: {3}</value>
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>Pobieranie certyfikatów zakończone. Znaleziono łącznie {0} certyfikatów.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(brak korzenia)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(brak)</value>
 </data>

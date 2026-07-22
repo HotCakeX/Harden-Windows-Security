@@ -2602,9 +2602,6 @@
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>اكتمل استرداد الشهادات. تم العثور على {0} شهادة إجمالي.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(لا يوجد جذر)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(لا يوجد)</value>
 </data>

@@ -2602,9 +2602,6 @@
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>Η ανάκτηση πιστοποιητικών ολοκληρώθηκε. Βρέθηκαν {0} συνολικά πιστοποιητικά.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(χωρίς ρίζα)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(κανένα)</value>
 </data>

@@ -2599,9 +2599,6 @@ Empreinte : {3}</value>
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>Récupération des certificats terminée. {0} certificats trouvés au total.</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(pas de racine)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(aucun)</value>
 </data>

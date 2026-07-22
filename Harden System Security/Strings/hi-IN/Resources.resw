@@ -2602,9 +2602,6 @@
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>प्रमाणपत्र प्राप्ति पूरी हुई। कुल {0} प्रमाणपत्र मिले।</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(कोई मूल नहीं)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(कोई नहीं)</value>
 </data>

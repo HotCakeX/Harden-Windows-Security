@@ -2599,9 +2599,6 @@
 <data name="CertificateRetrievalCompletedMessage" xml:space="preserve">
   <value>証明書の取得が完了しました。合計 {0} 個の証明書が見つかりました。</value>
 </data>
-<data name="NoRootCertificate" xml:space="preserve">
-  <value>(ルートなし)</value>
-</data>
 <data name="NoCertificateHash" xml:space="preserve">
   <value>(なし)</value>
 </data>

@@ -318,7 +318,7 @@
                         <CCToolKit:GridSplitter Grid.Column="5" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[28], Mode=OneWay}" />
                         <CCToolKit:GridSplitter Grid.Column="6" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[29], Mode=OneWay}" />
                         <CCToolKit:GridSplitter Grid.Column="7" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
-                        <CCToolKit:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[30], Mode=OneWay}" />
+                        <CCToolKit:GridSplitter Grid.Column="8" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[31], Mode=OneWay}" />
                         <CCToolKit:GridSplitter Grid.Column="9" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[32], Mode=OneWay}" />
                         <CCToolKit:GridSplitter Grid.Column="10" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[33], Mode=OneWay}" />
                         <CCToolKit:GridSplitter Grid.Column="11" Visibility="{x:Bind ViewModel.ColumnManager.ColumnVisibilities[34], Mode=OneWay}" />

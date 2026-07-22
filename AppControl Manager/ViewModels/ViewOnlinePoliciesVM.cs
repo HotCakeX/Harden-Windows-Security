@@ -174,8 +174,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 										Atlas.GetStr("ErrorParsingRuleOptionMessage"),
 										item2,
 										ex.Message));
-
-									continue;
 								}
 							}
 

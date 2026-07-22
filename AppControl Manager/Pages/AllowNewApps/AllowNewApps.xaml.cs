@@ -41,7 +41,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 		// Navigate to the AllowNewAppsStart page when the window is loaded
 		_ = ContentFrame.Navigate(typeof(AllowNewAppsStart));
 
-		// Set the "LocalFiles" item as selected in the NavigationView
+		// Set the "Start" item as selected in the NavigationView
 		AllowNewAppsNavigation.SelectedItem = AllowNewAppsNavigation.MenuItems.OfType<NavigationViewItem>()
 			.First(item => string.Equals(item.Tag.ToString(), "Start", StringComparison.OrdinalIgnoreCase));
 	}

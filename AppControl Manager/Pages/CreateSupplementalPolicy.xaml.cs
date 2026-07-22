@@ -169,15 +169,11 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 
 	#endregion
 
-	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
-	{
+	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e) =>
 		AnimateShadowBlur((FrameworkElement)sender, 20.0f);
-	}
 
-	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
-	{
+	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e) =>
 		AnimateShadowBlur((FrameworkElement)sender, 10.0f);
-	}
 
 	private void AnimateShadowBlur(FrameworkElement element, float toBlurRadius)
 	{

@@ -54,22 +54,18 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal IReadOnlyList<double> AppRamChartSamples => _appRamChartSamples;
 	internal IReadOnlyList<double> CpuTemperatureChartSamples => _cpuTemperatureChartSamples;
 	internal IReadOnlyList<double> StorageTemperatureChartSamples => _storageTemperatureChartSamples;
-	// Tracks how many times the animated heart icon was pressed.
-	internal int HeartIconClickCount { get; set => SP(ref field, value); }
-
 
 	/// <summary>
 	/// Event handler for when the home page is loaded.
 	/// We do not auto-start the heavy edge pulse storyboard, instead we rasterize and pulse in code.
 	/// Glitch storyboards are short, single-run bursts and are triggered by the page every N seconds.
 	/// </summary>
-	/// <param name="sender"></param>
-	internal void OnHomePageLoaded(object sender)
+	internal async Task OnHomePageLoaded()
 	{
 		_isHomePageTelemetryActive = true;
 
 		// Let these finish without waiting for them.
-		_ = Task.Run(() =>
+		await Task.Run(() =>
 		{
 			try
 			{
@@ -148,11 +144,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				Logger.Write(ex);
 			}
-
-		});
-
-		_ = Task.Run(() =>
-		{
 
 			try
 			{
@@ -882,7 +873,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	{
 		if (_isHomePageTelemetryActive || _isLiveGraphsTelemetryActive)
 		{
-			OnPropertyChanged(propertyName);
+			_ = Atlas.AppDispatcher.TryEnqueue(() => OnPropertyChanged(propertyName));
 		}
 	}
 
@@ -1823,8 +1814,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// Handler for the GPU button click event.
 	/// Opens a dialog to allow the user to see detailed GPU information.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal async void OnGpuClick()
 	{
 		try
@@ -1926,8 +1915,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// Handler for the Activation button click event.
 	/// Opens a dialog to allow the user to see detailed Windows Activation information.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal async void OnActivationInfoClick()
 	{
 		try

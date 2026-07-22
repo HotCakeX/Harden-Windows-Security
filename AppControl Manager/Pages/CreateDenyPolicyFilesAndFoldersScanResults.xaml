@@ -109,23 +109,19 @@
             </Expander.Header>
 
             <Expander.Content>
-
-                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
-
-                    <Button Click="{x:Bind ViewModel.ExportFilesAndFoldersToJsonButton_Click}"
-                            x:Uid="ExportToJSONButton">
-                        <Button.ContentTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <FontIcon Glyph="&#xE96A;" FontSize="16"/>
-                                    <TextBlock Text="{x:Bind}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </Button.ContentTemplate>
-                    </Button>
-
-                </CCToolKit:WrapPanel>
-
+                <Button Click="{x:Bind ViewModel.ExportFilesAndFoldersToJsonButton_Click}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        x:Uid="ExportToJSONButton">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE96A;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
             </Expander.Content>
         </Expander>
 

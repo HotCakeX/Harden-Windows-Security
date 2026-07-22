@@ -25,10 +25,6 @@ namespace HardenSystemSecurity.Pages;
 namespace AppControlManager.Pages;
 #endif
 
-/// <summary>
-/// UpdatePage manages the update process for the AppControl Manager, including checking for updates, downloading
-/// packages, and signing them.
-/// </summary>
 internal sealed partial class UpdatePage : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private ViewModels.UpdateVM ViewModel => ViewModels.ViewModelProvider.UpdateVM;

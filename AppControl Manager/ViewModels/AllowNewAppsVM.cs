@@ -618,13 +618,10 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	{
 		List<string> selectedFolders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
 
-		if (selectedFolders.Count > 0)
+		// Add each folder to the HashSet of the selected directories
+		foreach (string folder in CollectionsMarshal.AsSpan(selectedFolders))
 		{
-			// Add each folder to the HashSet of the selected directories
-			foreach (string folder in CollectionsMarshal.AsSpan(selectedFolders))
-			{
-				selectedDirectoriesToScan.Add(folder);
-			}
+			selectedDirectoriesToScan.Add(folder);
 		}
 	}
 
@@ -1048,9 +1045,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					{
 						Step2InfoBar.WriteInfo(string.Format(Atlas.GetStr("ScanningNFilesFoundInSelectedDirectories"), DetectedFilesInSelectedDirectories.Item2));
 
-						// Set the progress ring to no longer be indeterminate since file scan will take control of its value
-						Step2ProgressRingIsIndeterminate = false;
-
 						// Scan all of the detected files from the user selected directories
 						IEnumerable<FileIdentity> LocalFilesResults = LocalFilesScan.Scan(
 							DetectedFilesInSelectedDirectories,
@@ -1185,9 +1179,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			// Disable the data grids access
 			EventLogsMenuItemState = false;
 			LocalFilesMenuItemState = false;
-
-			// Reset the UI inputs back to their default states
-			DeployPolicy = true;
 
 			// Run the main reset tasks on a different thread
 			await Task.Run(() =>

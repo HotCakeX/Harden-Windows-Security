@@ -65,15 +65,11 @@ internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, Co
 
 	#endregion
 
-	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e)
-	{
+	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e) =>
 		AnimateShadowBlur((FrameworkElement)sender, 20.0f);
-	}
 
-	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e)
-	{
+	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e) =>
 		AnimateShadowBlur((FrameworkElement)sender, 10.0f);
-	}
 
 	private void AnimateShadowBlur(FrameworkElement element, float toBlurRadius)
 	{

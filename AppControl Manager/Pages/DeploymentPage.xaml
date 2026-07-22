@@ -190,16 +190,13 @@
                                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                         Click="{x:Bind ViewModel.DeployUnsignedXMLButton_Click}">
                                     <Button.Content>
-                                        <StackPanel Orientation="Horizontal">
-                                            <StackPanel Orientation="Horizontal"
-                                                        VerticalAlignment="Center"
-                                                        HorizontalAlignment="Center">
-                                                <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
-                                                <TextBlock x:Uid="DeployTextBlock"/>
-                                            </StackPanel>
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center">
+                                            <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
+                                            <TextBlock x:Uid="DeployTextBlock"/>
                                         </StackPanel>
                                     </Button.Content>
-
                                 </Button>
 
                             </CCToolKit:WrapPanel>
@@ -232,10 +229,10 @@
 
                             <!-- Local Mode Indicator -->
                             <StackPanel Orientation="Horizontal"
-                                         Spacing="8"
-                                         Margin="0,0,0,10"
-                                         HorizontalAlignment="Right"
-                                         Visibility="{x:Bind ViewModel.LocalModeIndicatorVisibility, Mode=OneWay}">
+                                        Spacing="8"
+                                        Margin="0,0,0,10"
+                                        HorizontalAlignment="Right"
+                                        Visibility="{x:Bind ViewModel.LocalModeIndicatorVisibility, Mode=OneWay}">
                                 <FontIcon Glyph="&#xE770;" FontSize="14" Foreground="Orange"/>
                                 <TextBlock Text="Local Deployment" Foreground="Orange" FontWeight="SemiBold" FontSize="12" VerticalAlignment="Center"/>
                             </StackPanel>
@@ -298,14 +295,11 @@
                                         HorizontalContentAlignment="Center"
                                         Click="{x:Bind ViewModel.DeploySignedXMLButton_Click}">
                                     <Button.Content>
-                                        <StackPanel Orientation="Horizontal">
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                <FontIcon Glyph="{x:Bind ViewModel.DeploySignedXMLButtonFontIcon, Mode=OneWay}" Margin="0,0,8,0" />
-                                                <TextBlock Text="{x:Bind ViewModel.DeploySignedXMLButtonContentTextBlock, Mode=OneWay}"/>
-                                            </StackPanel>
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                            <FontIcon Glyph="{x:Bind ViewModel.DeploySignedXMLButtonFontIcon, Mode=OneWay}" Margin="0,0,8,0" />
+                                            <TextBlock Text="{x:Bind ViewModel.DeploySignedXMLButtonContentTextBlock, Mode=OneWay}"/>
                                         </StackPanel>
                                     </Button.Content>
-
                                 </Button>
 
                             </CCToolKit:WrapPanel>
@@ -408,18 +402,13 @@
                                         HorizontalContentAlignment="Center"
                                         Click="{x:Bind ViewModel.DeployCIPButton_Click}">
                                     <Button.Content>
-                                        <StackPanel Orientation="Horizontal">
-
-                                            <StackPanel Orientation="Horizontal"
-                                                        VerticalAlignment="Center"
-                                                        HorizontalAlignment="Center">
-                                                <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
-                                                <TextBlock x:Uid="DeployTextBlock"/>
-                                            </StackPanel>
-
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center">
+                                            <FontIcon Glyph="&#xE8B6;" Margin="0,0,8,0" />
+                                            <TextBlock x:Uid="DeployTextBlock"/>
                                         </StackPanel>
                                     </Button.Content>
-
                                 </Button>
 
                             </CCToolKit:WrapPanel>
@@ -491,18 +480,13 @@
                                         HorizontalContentAlignment="Center"
                                         Click="{x:Bind ViewModel.ConvertXMLToCIPButton_Click}">
                                     <Button.Content>
-                                        <StackPanel Orientation="Horizontal">
-
-                                            <StackPanel Orientation="Horizontal"
-                                                        VerticalAlignment="Center"
-                                                        HorizontalAlignment="Center">
-                                                <FontIcon Glyph="&#xE8B1;" Margin="0,0,8,0" />
-                                                <TextBlock x:Uid="ConvertTextBlock"/>
-                                            </StackPanel>
-
+                                        <StackPanel Orientation="Horizontal"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center">
+                                            <FontIcon Glyph="&#xE8B1;" Margin="0,0,8,0" />
+                                            <TextBlock x:Uid="ConvertTextBlock"/>
                                         </StackPanel>
                                     </Button.Content>
-
                                 </Button>
 
                             </CCToolKit:WrapPanel>

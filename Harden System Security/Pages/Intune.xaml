@@ -39,20 +39,17 @@
                             VerticalAlignment="Center">
 
                         <!-- Selected Groups chip -->
-                        <Border>
-                            <StackPanel Orientation="Horizontal"
-                                Spacing="6"
-                                VerticalAlignment="Center">
-                                <FontIcon Glyph="&#xE8A9;"
-                                          Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
-                                <TextBlock VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="6"
+                                    VerticalAlignment="Center">
+                            <FontIcon Glyph="&#xE8A9;"
+                                      Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            <TextBlock VerticalAlignment="Center">
                                 <Run x:Uid="SelectedGroups" />
                                 <Run Text="{x:Bind ViewModel.SelectedIntuneGroupsCount, Mode=OneWay}"
-                                    FontWeight="SemiBold" />
-                                </TextBlock>
-                            </StackPanel>
-                        </Border>
-
+                                     FontWeight="SemiBold" />
+                            </TextBlock>
+                        </StackPanel>
                     </Button>
 
                     <!-- Retrieve Policies -->
@@ -129,26 +126,21 @@
             </Expander.Header>
 
             <Expander.Content>
-
-                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
-
-                    <!-- Delete selected policy -->
-                    <Button x:Uid="DeleteSelectedPolicyButton"
-                            VerticalAlignment="Center"
-                            IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                            Click="{x:Bind ViewModel.DeleteSelectedPolicy_Click}">
-                        <Button.ContentTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <FontIcon Glyph="&#xE74D;" FontSize="16"/>
-                                    <TextBlock Text="{x:Bind}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </Button.ContentTemplate>
-                    </Button>
-
-                </CCToolKit:WrapPanel>
-
+                <!-- Delete selected policy -->
+                <Button x:Uid="DeleteSelectedPolicyButton"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.DeleteSelectedPolicy_Click}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
             </Expander.Content>
         </Expander>
 

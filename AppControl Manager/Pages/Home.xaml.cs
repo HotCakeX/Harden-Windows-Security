@@ -178,7 +178,7 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 		DataContext = ViewModel;
 	}
 
-	private void OnInitialLoaded(object sender, RoutedEventArgs e)
+	private async void OnInitialLoaded()
 	{
 		// One-time draws on load
 		_needsBackgroundRedrawOnce = true;
@@ -196,7 +196,7 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 		_bgNextTwinkleTime = _animationStopwatch.Elapsed.TotalSeconds + 7.5 + _random.NextDouble() * 1.5;
 
 		// Run the code that needs to run in ViewModel class when page is loaded.
-		ViewModel.OnHomePageLoaded(sender);
+		await ViewModel.OnHomePageLoaded();
 	}
 
 	private void AttachRenderHook()

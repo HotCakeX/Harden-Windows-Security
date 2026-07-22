@@ -48,23 +48,13 @@
                       SelectionMode="None">
                 <!-- ListView Headers -->
                 <ListView.Header>
-                    <Grid ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Margin="0,10,0,10" x:Uid="EffectiveCodeIntegrityFeaturesListViewHeaderTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" />
-                    </Grid>
+                    <TextBlock Margin="0,10,0,10" x:Uid="EffectiveCodeIntegrityFeaturesListViewHeaderTextBlock" Style="{ThemeResource TitleTextBlockStyle}" HorizontalAlignment="Center" />
                 </ListView.Header>
 
                 <!-- DataTemplate for each CodeIntegrityOption -->
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="intelgathering:CodeIntegrityOption">
-                        <Grid Padding="16,12" ColumnSpacing="16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <TextBox IsReadOnly="True" TextWrapping="Wrap" Text="{x:Bind Description}" Margin="0,0,0,10" />
-                        </Grid>
+                        <TextBox IsReadOnly="True" TextWrapping="Wrap" Text="{x:Bind Description}" Margin="0,0,0,20" />
                     </DataTemplate>
                 </ListView.ItemTemplate>
 

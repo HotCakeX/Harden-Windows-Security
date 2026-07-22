@@ -234,13 +234,12 @@ internal sealed partial class AnalysisCategory : ViewModelBase
 		{
 			double h = item.Count / maxVal * maxHeightPx;
 			double pct = Math.Round(item.Count / total * 100, 1);
-			ColumnBars.Add(new ColumnBarData(height: h, maxHeight: maxHeightPx, label: item.DisplayName, toolTip: $"{item.DisplayName}: {item.Count}", fill: item.ColorBrush, percentageText: $"{pct}%"));
+			ColumnBars.Add(new ColumnBarData(height: h, toolTip: $"{item.DisplayName}: {item.Count}", fill: item.ColorBrush, percentageText: $"{pct}%"));
 		}
 	}
 }
 
 internal sealed class PieSliceData(string pathData, SolidColorBrush fill, string toolTip, string percentageText, double labelX, double labelY, double centerX, double centerY, double hoverOffsetX, double hoverOffsetY)
-
 {
 	internal string PathData => pathData;
 	internal SolidColorBrush Fill => fill;
@@ -254,34 +253,12 @@ internal sealed class PieSliceData(string pathData, SolidColorBrush fill, string
 	internal double HoverOffsetY => hoverOffsetY;
 }
 
-internal sealed class ColumnBarData(double height, double maxHeight, SolidColorBrush fill, string toolTip, string label, string percentageText)
+internal sealed class ColumnBarData(double height, SolidColorBrush fill, string toolTip, string percentageText)
 {
 	internal double Height => height;
-	internal double MaxHeight => maxHeight;
 	internal SolidColorBrush Fill => fill;
 	internal string Tooltip => toolTip;
-	internal string Label => label;
 	internal string PercentageText => percentageText;
-}
-
-internal sealed class LinePointData(double x, double y, SolidColorBrush fill, string dateText, string countText)
-{
-	internal double X => x;
-	internal double Y => y;
-	internal SolidColorBrush Fill => fill;
-	internal string DateText => dateText;
-	internal string CountText => countText;
-}
-
-internal readonly struct AxisLabel(string text, double offset)
-{
-	internal string Text => text;
-	internal double Offset => offset;
-}
-
-internal readonly struct ChartGridLine(double offset)
-{
-	internal double Offset => offset;
 }
 
 internal enum AnalysisTimeRangeKind
@@ -303,6 +280,7 @@ internal sealed class TimeRangeFilterOption(string displayName, AnalysisTimeRang
 	internal AnalysisTimeRangeKind Kind => kind;
 	public override string ToString() => DisplayName;
 }
+
 internal sealed class AnalysisCustomTimeRangeChangedEventArgs(DateTime? startTime, DateTime? endTime, bool isActive) : EventArgs
 {
 	internal DateTime? StartTime => startTime;
@@ -402,26 +380,8 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		}
 	}
 
-	// Path.Data cannot bind to an empty string because WinUI must convert the value to Geometry.
-	// A zero-length path keeps empty charts blank while still providing valid geometry.
-	private const string EmptyLineChartPathData = "M 0,0 L 0,0";
-
 	// Chart Properties
 	internal List<PieSliceData> Chart_PieSlices { get; set => SP(ref field, value); } = [];
-
-	// Blocked Line Chart Properties
-	internal List<LinePointData> BlockedChart_LinePoints { get; set => SP(ref field, value); } = [];
-	internal string BlockedChart_LinePathData { get; set => SP(ref field, value); } = EmptyLineChartPathData;
-	internal List<AxisLabel> BlockedChart_YAxisLabels { get; set => SP(ref field, value); } = [];
-	internal List<AxisLabel> BlockedChart_XAxisLabels { get; set => SP(ref field, value); } = [];
-	internal List<ChartGridLine> BlockedChart_YGridLines { get; set => SP(ref field, value); } = [];
-
-	// Allowed Line Chart Properties
-	internal List<LinePointData> AllowedChart_LinePoints { get; set => SP(ref field, value); } = [];
-	internal string AllowedChart_LinePathData { get; set => SP(ref field, value); } = EmptyLineChartPathData;
-	internal List<AxisLabel> AllowedChart_YAxisLabels { get; set => SP(ref field, value); } = [];
-	internal List<AxisLabel> AllowedChart_XAxisLabels { get; set => SP(ref field, value); } = [];
-	internal List<ChartGridLine> AllowedChart_YGridLines { get; set => SP(ref field, value); } = [];
 
 	// Raw event trend inputs for InteractiveLineChart. The chart performs adaptive aggregation for the current zoom range and hover summaries.
 	internal List<InteractiveLineChartPoint> BlockedTrendPoints { get; set => SP(ref field, value); } = [];
@@ -754,8 +714,6 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 			await Atlas.AppDispatcher.EnqueueAsync(() =>
 			{
 				GeneratePieChartData(totalAllowedCount, totalBlockedCount);
-				GenerateLineChartData(blockedTimeFrames, isAllowed: false);
-				GenerateLineChartData(allowedTimeFrames, isAllowed: true);
 
 				if (Analysis_SelectedTimeRange is not null && Analysis_SelectedTimeRange.Kind == AnalysisTimeRangeKind.Custom)
 				{
@@ -903,129 +861,6 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		Chart_PieSlices = slices;
 	}
 
-	private void GenerateLineChartData(Dictionary<string, int> timeFrames, bool isAllowed)
-	{
-		if (timeFrames.Count == 0)
-		{
-			if (isAllowed)
-			{
-				AllowedChart_LinePoints = [];
-				AllowedChart_LinePathData = EmptyLineChartPathData;
-				AllowedChart_YAxisLabels = [];
-				AllowedChart_XAxisLabels = [];
-				AllowedChart_YGridLines = [];
-			}
-			else
-			{
-				BlockedChart_LinePoints = [];
-				BlockedChart_LinePathData = EmptyLineChartPathData;
-				BlockedChart_YAxisLabels = [];
-				BlockedChart_XAxisLabels = [];
-				BlockedChart_YGridLines = [];
-			}
-			return;
-		}
-
-		// Sort chronological
-		List<KeyValuePair<string, int>> sorted = timeFrames.OrderBy(x => DateTime.Parse(x.Key)).ToList();
-		double maxVal = sorted.Max(x => x.Value);
-		if (maxVal == 0) maxVal = 1;
-
-		double canvasWidth = 800;
-		// Leaving top and bottom padding so points don't clip at borders (e.g. 10px each)
-		double renderHeight = 230;
-		double yPadding = 10;
-
-		// 40px padding on left and right ensures 70px wide labels centered on the final point never clip out of bounds
-		double xPadding = 40;
-		double renderWidth = canvasWidth - (xPadding * 2);
-
-		List<LinePointData> points = [];
-		StringBuilder pathBuilder = new();
-
-		double xStep = sorted.Count > 1 ? renderWidth / (sorted.Count - 1) : renderWidth / 2;
-		Color accent = isAllowed ? Colors.LimeGreen : Colors.OrangeRed;
-		SolidColorBrush brush = new(accent);
-
-		for (int i = 0; i < sorted.Count; i++)
-		{
-			double x = xPadding + (i * xStep);
-			// Invert Y because Canvas Y grows downwards. We apply padding to prevent clipping.
-			double y = yPadding + renderHeight - (sorted[i].Value / maxVal * renderHeight);
-
-			string formattedDate = DateTime.TryParse(sorted[i].Key, out DateTime parsedDate)
-				? parsedDate.ToString("MM/dd HH:mm")
-				: sorted[i].Key;
-
-			points.Add(new LinePointData
-			(
-				x: x,
-				y: y,
-				dateText: formattedDate,
-				countText: sorted[i].Value.ToString(),
-				fill: brush
-			));
-
-			_ = i == 0 ? pathBuilder.Append($"M {x:0.00},{y:0.00} ") : pathBuilder.Append($"L {x:0.00},{y:0.00} ");
-		}
-
-		// Generate Y-Axis Labels & Grid Lines matching the padded height
-		int yIntervals = 5;
-		List<AxisLabel> yLabels = [];
-		List<ChartGridLine> yGridLines = [];
-		for (int i = 0; i <= yIntervals; i++)
-		{
-			double val = maxVal - (maxVal / yIntervals * i);
-			double offset = yPadding + renderHeight / yIntervals * i;
-			yLabels.Add(new AxisLabel(text: val.ToString("0.#"), offset: offset));
-			yGridLines.Add(new ChartGridLine(offset: offset));
-		}
-
-		// Generate accurate X-Axis Labels (Horizontally aligned, up to 6 items to prevent overlaps on 800px width)
-		List<AxisLabel> xLabels = [];
-		int maxXLabels = 6;
-		int step = Math.Max(1, (int)Math.Ceiling((double)sorted.Count / maxXLabels));
-
-		for (int i = 0; i < sorted.Count; i += step)
-		{
-			double x = xPadding + (i * xStep);
-			string formattedDate = DateTime.TryParse(sorted[i].Key, out DateTime parsedDate)
-				? parsedDate.ToString("MM/dd HH:mm")
-				: sorted[i].Key;
-			xLabels.Add(new AxisLabel(text: formattedDate, offset: x));
-		}
-
-		// Ensure the absolute last point is labeled if the step skipped it, and it isn't too close to the previous label
-		if (sorted.Count > 1 && (sorted.Count - 1) % step != 0)
-		{
-			double lastX = xPadding + ((sorted.Count - 1) * xStep);
-			if (lastX - xLabels.Last().Offset > 100) // Ensure at least 100px space for the new string
-			{
-				string formattedDate = DateTime.TryParse(sorted.Last().Key, out DateTime parsedDate)
-					? parsedDate.ToString("MM/dd HH:mm")
-					: sorted.Last().Key;
-				xLabels.Add(new AxisLabel(text: formattedDate, offset: lastX));
-			}
-		}
-
-		if (isAllowed)
-		{
-			AllowedChart_LinePoints = points;
-			AllowedChart_LinePathData = pathBuilder.ToString();
-			AllowedChart_YAxisLabels = yLabels;
-			AllowedChart_YGridLines = yGridLines;
-			AllowedChart_XAxisLabels = xLabels;
-		}
-		else
-		{
-			BlockedChart_LinePoints = points;
-			BlockedChart_LinePathData = pathBuilder.ToString();
-			BlockedChart_YAxisLabels = yLabels;
-			BlockedChart_YGridLines = yGridLines;
-			BlockedChart_XAxisLabels = xLabels;
-		}
-	}
-
 	/// <summary>
 	/// Builds full-range trend chart points while the analysis cards and data grid use the custom range.
 	/// This prevents the chart from getting stuck in the selected range after navigation or zoom reset.
@@ -1157,7 +992,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 			Color accentColor = (Color)Application.Current.Resources["SystemAccentColor"];
 			string accentHex = $"#{accentColor.R:X2}{accentColor.G:X2}{accentColor.B:X2}";
 
-			if (chartType == "Pie")
+			if (string.Equals(chartType, "Pie", StringComparison.OrdinalIgnoreCase))
 			{
 				StringBuilder sb = new();
 
@@ -1189,50 +1024,6 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 				_ = sb.AppendLine("</svg>");
 				svgContent = sb.ToString();
 				defaultFileName = "Distribution_Overview.svg";
-			}
-			else if (string.Equals(chartType, "BlockedLine", StringComparison.OrdinalIgnoreCase) || string.Equals(chartType, "AllowedLine", StringComparison.OrdinalIgnoreCase))
-			{
-				bool isAllowed = string.Equals(chartType, "AllowedLine", StringComparison.OrdinalIgnoreCase);
-				List<LinePointData> points = isAllowed ? AllowedChart_LinePoints : BlockedChart_LinePoints;
-				string pathData = isAllowed ? AllowedChart_LinePathData : BlockedChart_LinePathData;
-				List<AxisLabel> yLabels = isAllowed ? AllowedChart_YAxisLabels : BlockedChart_YAxisLabels;
-				List<AxisLabel> xLabels = isAllowed ? AllowedChart_XAxisLabels : BlockedChart_XAxisLabels;
-				List<ChartGridLine> gridLines = isAllowed ? AllowedChart_YGridLines : BlockedChart_YGridLines;
-				string strokeColor = isAllowed ? "#32CD32" : "#FF4500";
-				string chartTitle = isAllowed ? Atlas.GetStr("AllowedOrAuditedEventsTrend/Text") : Atlas.GetStr("BlockedEventsTrend/Text");
-
-				StringBuilder sb = new();
-
-				// Shifting the viewBox up (-40) to make room for the title
-				_ = sb.AppendLine("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 -40 860 320\">");
-				_ = sb.AppendLine("<style>");
-				_ = sb.AppendLine(".text { font-family: 'Segoe UI', sans-serif; font-size: 11px; fill: #A0A0A0; }");
-				_ = sb.AppendLine(".title { font-family: 'Segoe UI', sans-serif; font-size: 16px; font-weight: bold; text-anchor: middle; }");
-				_ = sb.AppendLine("</style>");
-
-				// Chart Title
-				_ = sb.AppendLine($"<text x=\"430\" y=\"-15\" class=\"title\" fill=\"{strokeColor}\">{chartTitle}</text>");
-
-				foreach (ChartGridLine line in CollectionsMarshal.AsSpan(gridLines))
-				{
-					_ = sb.AppendLine($"<line x1=\"60\" x2=\"860\" y1=\"{line.Offset}\" y2=\"{line.Offset}\" stroke=\"#404040\" stroke-width=\"1\" stroke-dasharray=\"4 4\" />");
-				}
-				foreach (AxisLabel lbl in CollectionsMarshal.AsSpan(yLabels))
-				{
-					_ = sb.AppendLine($"<text x=\"50\" y=\"{lbl.Offset + 4}\" class=\"text\" text-anchor=\"end\">{lbl.Text}</text>");
-				}
-				foreach (AxisLabel lbl in CollectionsMarshal.AsSpan(xLabels))
-				{
-					_ = sb.AppendLine($"<text x=\"{lbl.Offset + 60}\" y=\"265\" class=\"text\" text-anchor=\"middle\">{lbl.Text}</text>");
-				}
-				_ = sb.AppendLine($"<path d=\"{pathData}\" fill=\"none\" stroke=\"{strokeColor}\" stroke-width=\"3\" stroke-linejoin=\"round\" transform=\"translate(60, 0)\" />");
-				foreach (LinePointData pt in CollectionsMarshal.AsSpan(points))
-				{
-					_ = sb.AppendLine($"<circle cx=\"{pt.X + 60}\" cy=\"{pt.Y}\" r=\"7\" fill=\"{strokeColor}\" stroke=\"#1C1C1C\" stroke-width=\"2\" />");
-				}
-				_ = sb.AppendLine("</svg>");
-				svgContent = sb.ToString();
-				defaultFileName = isAllowed ? "Allowed_Events_Trend.svg" : "Blocked_Events_Trend.svg";
 			}
 
 			if (!string.IsNullOrWhiteSpace(svgContent))
@@ -1444,5 +1235,4 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		}
 		return null;
 	}
-
 }

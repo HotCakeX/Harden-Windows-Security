@@ -97,18 +97,15 @@
         <Grid x:Name="ContentLayer"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch">
-
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <customUI:HeaderCarousel Margin="0,0,0,-12" />
 
             <!-- Overview-style sections -->
-            <ScrollViewer Grid.Row="2">
+            <ScrollViewer Grid.Row="1">
                 <Grid Margin="8">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>

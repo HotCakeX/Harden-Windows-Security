@@ -502,7 +502,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		}
 	}
 
-	// If the opacity is 0, no background must consuming ANY system resources. Only 1 animated background must ever be consuming resources when opacity is bigger than 0.
+	// If the opacity is 0, no background must consume ANY system resources. Only 1 animated background must ever be consuming resources when opacity is bigger than 0.
 	private void ApplySelectedBackgroundType()
 	{
 		bool shouldShowBackground = AnimatedBackgroundLayer.Opacity > 0.0;

@@ -453,132 +453,129 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				#endregion
 
 				// If there are policies to be removed
-				if (policiesToRemove.Count > 0)
+				foreach (CiPolicyInfo policy in policiesToRemove)
 				{
-					foreach (CiPolicyInfo policy in policiesToRemove)
+					// Remove the policy directly from the system if it's unsigned or supplemental
+					if (!policy.IsSignedPolicy || !string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
 					{
-						// Remove the policy directly from the system if it's unsigned or supplemental
-						if (!policy.IsSignedPolicy || !string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase))
+						await Task.Run(() =>
 						{
-							await Task.Run(() =>
+							CiToolHelper.RemovePolicy(policy.PolicyID);
+						});
+					}
+
+					// At this point the policy is definitely a Signed Base policy
+					else
+					{
+						// If the EnabledUnsignedSystemIntegrityPolicy policy rule option exists
+						// Which means 1st stage already happened
+						if (policy.PolicyOptions is not null && policy.PolicyOptionsDisplay.Contains("Enabled:Unsigned System Integrity Policy", StringComparison.OrdinalIgnoreCase))
+						{
+							// And if system was rebooted once after performing the 1st removal stage
+							if (VerifyRemovalEligibility(policy.PolicyID))
 							{
 								CiToolHelper.RemovePolicy(policy.PolicyID);
-							});
+
+								// Remove the PolicyID from the SignedPolicyStage1RemovalTimes dictionary
+								UserConfiguration.RemoveSignedPolicyStage1RemovalTime(policy.PolicyID);
+							}
+							else
+							{
+								// Create and display a ContentDialog
+								using ContentDialogV2 dialog = new()
+								{
+									Title = Atlas.GetStr("WarningTitle"),
+									Content = Atlas.GetStr("RestartRequired") + policy.FriendlyName + "' " + Atlas.GetStr("RestartRequiredEnd") + policy.PolicyID + "' you must restart your system.",
+									PrimaryButtonText = Atlas.GetStr("Understand"),
+								};
+
+								// Show the dialog and wait for user response
+								_ = await dialog.ShowAsync();
+
+								// Exit the method, nothing more can be done about the selected policy
+								return;
+							}
 						}
 
-						// At this point the policy is definitely a Signed Base policy
+						// Treat it as a new signed policy removal
 						else
 						{
-							// If the EnabledUnsignedSystemIntegrityPolicy policy rule option exists
-							// Which means 1st stage already happened
-							if (policy.PolicyOptions is not null && policy.PolicyOptionsDisplay.Contains("Enabled:Unsigned System Integrity Policy", StringComparison.OrdinalIgnoreCase))
-							{
-								// And if system was rebooted once after performing the 1st removal stage
-								if (VerifyRemovalEligibility(policy.PolicyID))
-								{
-									CiToolHelper.RemovePolicy(policy.PolicyID);
+							#region Signing Details acquisition
 
-									// Remove the PolicyID from the SignedPolicyStage1RemovalTimes dictionary
-									UserConfiguration.RemoveSignedPolicyStage1RemovalTime(policy.PolicyID);
+							string CertCN;
+							string CertPath;
+							string? XMLPolicyPath;
+
+							// Instantiate the Content Dialog
+							using (SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID))
+							{
+								// Show the dialog and await its result
+								ContentDialogResult result = await customDialog.ShowAsync();
+
+								// Ensure primary button was selected
+								if (result is ContentDialogResult.Primary)
+								{
+									CertPath = customDialog.CertificatePath!;
+									CertCN = customDialog.CertificateCommonName!;
+									XMLPolicyPath = customDialog.XMLPolicyPath;
+
+									// Sometimes the content dialog lingers on or re-appears so making sure it hides
+									customDialog.Hide();
 								}
 								else
 								{
-									// Create and display a ContentDialog
-									using ContentDialogV2 dialog = new()
-									{
-										Title = Atlas.GetStr("WarningTitle"),
-										Content = Atlas.GetStr("RestartRequired") + policy.FriendlyName + "' " + Atlas.GetStr("RestartRequiredEnd") + policy.PolicyID + "' you must restart your system.",
-										PrimaryButtonText = Atlas.GetStr("Understand"),
-									};
-
-									// Show the dialog and wait for user response
-									_ = await dialog.ShowAsync();
-
-									// Exit the method, nothing more can be done about the selected policy
 									return;
 								}
 							}
+							#endregion
 
-							// Treat it as a new signed policy removal
+							// The policy object we're removing
+							SiPolicy.SiPolicy? policyObj = null;
+
+							// If policy file was provided by the dialog/user then use it
+							if (!string.IsNullOrEmpty(XMLPolicyPath))
+							{
+								// Initialize the user-selected policy file
+								policyObj = Management.Initialize(XMLPolicyPath, null);
+							}
+							// If not then find the corresponding CIP file and use that instead
 							else
 							{
-								#region Signing Details acquisition
+								string? cipFilePathToDecode = GetLocalCIPFile(policy) ?? throw new InvalidOperationException("Could not find the CIP path of the Signed policy you're trying to remove on the system.");
 
-								string CertCN;
-								string CertPath;
-								string? XMLPolicyPath;
+								policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(cipFilePathToDecode);
 
-								// Instantiate the Content Dialog
-								using (SigningDetailsDialogForRemoval customDialog = new(currentlyDeployedBasePolicyIDs, policy.PolicyID))
+								if (!CertificatePresence.InferCertificatePresence(policyObj, CertPath, CertCN, PolicyFileRepresentKind.CIP))
 								{
-									// Show the dialog and await its result
-									ContentDialogResult result = await customDialog.ShowAsync();
-
-									// Ensure primary button was selected
-									if (result is ContentDialogResult.Primary)
-									{
-										CertPath = customDialog.CertificatePath!;
-										CertCN = customDialog.CertificateCommonName!;
-										XMLPolicyPath = customDialog.XMLPolicyPath;
-
-										// Sometimes the content dialog lingers on or re-appears so making sure it hides
-										customDialog.Hide();
-									}
-									else
-									{
-										return;
-									}
+									throw new InvalidOperationException("The selected certificate is not for the signed policy you're trying to remove. Please select the correct certificate file and common name.");
 								}
-								#endregion
-
-								// The policy object we're removing
-								SiPolicy.SiPolicy? policyObj = null;
-
-								// If policy file was provided by the dialog/user then use it
-								if (!string.IsNullOrEmpty(XMLPolicyPath))
-								{
-									// Initialize the user-selected policy file
-									policyObj = Management.Initialize(XMLPolicyPath, null);
-								}
-								// If not then find the corresponding CIP file and use that instead
-								else
-								{
-									string? cipFilePathToDecode = GetLocalCIPFile(policy) ?? throw new InvalidOperationException("Could not find the CIP path of the Signed policy you're trying to remove on the system.");
-
-									policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(cipFilePathToDecode);
-
-									if (!CertificatePresence.InferCertificatePresence(policyObj, CertPath, CertCN, PolicyFileRepresentKind.CIP))
-									{
-										throw new InvalidOperationException("The selected certificate is not for the signed policy you're trying to remove. Please select the correct certificate file and common name.");
-									}
-								}
-
-								// Add the unsigned policy rule option to the policy
-								policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
-
-								// Making sure SupplementalPolicySigners do not exist in the XML policy
-								policyObj = CiPolicyHandler.RemoveSupplementalSigners(policyObj);
-
-								// Save the modified policy back to the user-selected policy file path - If provided
-								if (!string.IsNullOrEmpty(XMLPolicyPath))
-								{
-									Management.SavePolicyToFile(policyObj, XMLPolicyPath);
-								}
-
-								// Convert policy object to CIP
-								byte[] cipContent = Management.ConvertXMLToBinary(policyObj);
-
-								// Sign the CIP
-								cipContent = CommonCore.Signing.Main.SignCIP(cipContent, CertCN);
-
-								// Deploy the signed CIP file
-								CiToolHelper.UpdatePolicy(cipContent);
-
-								// The time of first stage of the signed policy removal
-								// Since policy object has the full ID, in upper case with curly brackets,
-								// We need to normalize them to match what the CiPolicyInfo class uses
-								UserConfiguration.AddSignedPolicyStage1RemovalTime(policyObj.PolicyID.Trim('{', '}').ToLowerInvariant(), DateTime.UtcNow);
 							}
+
+							// Add the unsigned policy rule option to the policy
+							policyObj = CiRuleOptions.Set(policyObj: policyObj, rulesToAdd: [OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+
+							// Making sure SupplementalPolicySigners do not exist in the XML policy
+							policyObj = CiPolicyHandler.RemoveSupplementalSigners(policyObj);
+
+							// Save the modified policy back to the user-selected policy file path - If provided
+							if (!string.IsNullOrEmpty(XMLPolicyPath))
+							{
+								Management.SavePolicyToFile(policyObj, XMLPolicyPath);
+							}
+
+							// Convert policy object to CIP
+							byte[] cipContent = Management.ConvertXMLToBinary(policyObj);
+
+							// Sign the CIP
+							cipContent = CommonCore.Signing.Main.SignCIP(cipContent, CertCN);
+
+							// Deploy the signed CIP file
+							CiToolHelper.UpdatePolicy(cipContent);
+
+							// The time of first stage of the signed policy removal
+							// Since policy object has the full ID, in upper case with curly brackets,
+							// We need to normalize them to match what the CiPolicyInfo class uses
+							UserConfiguration.AddSignedPolicyStage1RemovalTime(policyObj.PolicyID.Trim('{', '}').ToLowerInvariant(), DateTime.UtcNow);
 						}
 					}
 				}

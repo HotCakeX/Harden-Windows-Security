@@ -575,7 +575,9 @@
                 </CCToolKit:SettingsExpander>
 
                 <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" Margin="0,8,0,0">
-                    <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose">
+                    <HyperlinkButton x:Uid="SendFeedbackHyperLinkButton"
+                                     NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose"
+                                     ToolTipService.ToolTip="GitHub">
                         <HyperlinkButton.ContentTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
@@ -586,7 +588,9 @@
                         </HyperlinkButton.ContentTemplate>
                     </HyperlinkButton>
 
-                    <HyperlinkButton x:Uid="Icons8WebsiteHyperLinkButton" NavigateUri="https://icons8.com">
+                    <HyperlinkButton x:Uid="Icons8WebsiteHyperLinkButton"
+                                     NavigateUri="https://icons8.com"
+                                     ToolTipService.ToolTip="Disclaimer: Icons8 graphics used in this open-source app are only licensed to this app. Extracting, copying, or reusing these graphic assets is strictly prohibited without a valid Icons8 license. If you would like to include the graphics in your own projects, you will need to obtain the appropriate license directly from Icons8.">
                         <HyperlinkButton.ContentTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
@@ -597,7 +601,9 @@
                         </HyperlinkButton.ContentTemplate>
                     </HyperlinkButton>
 
-                    <HyperlinkButton x:Uid="SourceCodeHyperLinkButton" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security">
+                    <HyperlinkButton x:Uid="SourceCodeHyperLinkButton"
+                                     NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden%20System%20Security"
+                                     ToolTipService.ToolTip="GitHub">
                         <HyperlinkButton.ContentTemplate>
                             <DataTemplate x:DataType="x:String">
                                 <StackPanel Orientation="Horizontal" Spacing="8">

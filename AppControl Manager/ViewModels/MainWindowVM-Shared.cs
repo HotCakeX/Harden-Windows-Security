@@ -31,6 +31,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Settings;
 using Windows.Foundation;
 using Windows.Graphics;
 using WinRT;
@@ -384,9 +385,15 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 		try
 		{
+			// These are defined in the CsProj file. This seems to be an appropriate place to log their status since they are performance related optimizations.
+			Logger.Write("XAML optimization status:");
+			Logger.Write($"- IconNoGridOptimization is: {XamlOptionalChanges.IsChangeEnabled(XamlChangeId.IconNoGridOptimization)}");
+			Logger.Write($"- OptimizeApplyStyles is: {XamlOptionalChanges.IsChangeEnabled(XamlChangeId.OptimizeApplyStyles)}");
+			Logger.Write($"- DefaultStyleOptimizations is: {XamlOptionalChanges.IsChangeEnabled(XamlChangeId.DefaultStyleOptimizations)}");
+			Logger.Write($"- DeferContextFlyoutInit is: {XamlOptionalChanges.IsChangeEnabled(XamlChangeId.DeferContextFlyoutInit)}");
+
 			await Task.Run(() =>
 			{
-
 				// Baseline memory snapshot before forcing GC/compaction.
 				long beforeHeapBytes = GC.GetGCMemoryInfo().HeapSizeBytes;
 				long beforeManagedBytes = GC.GetTotalMemory(false);

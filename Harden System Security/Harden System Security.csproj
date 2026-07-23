@@ -99,6 +99,11 @@
         <!-- https://github.com/microsoft/CsWinRT/blob/master/nuget/readme.md#customizing -->
         <!-- Max level of warnings to be displayed to catch any possible problem. -->
         <CsWinRTAotWarningLevel>3</CsWinRTAotWarningLevel>
+
+        <!-- https://github.com/microsoft/WindowsAppSDK/discussions/6629 -->
+        <!-- https://github.com/microsoft/microsoft-ui-xaml/pull/11206 -->
+        <!-- https://github.com/microsoft/microsoft-ui-xaml/blob/main/dxaml/xcp/tools/XCPTypesAutoGen/XamlOM/Model/Microsoft.UI.Xaml.Settings.cs -->
+        <EnabledXamlOptionalChanges>IconNoGridOptimization,OptimizeApplyStyles,DefaultStyleOptimizations,DeferContextFlyoutInit</EnabledXamlOptionalChanges>
     </PropertyGroup>
 
     <ItemGroup>

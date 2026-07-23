@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
@@ -111,6 +112,7 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
 		// Attempt to retrieve the property mapping using the Tag as the key.
@@ -125,6 +127,9 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 	/// Copies the associated query text to the clipboard and plays an animation
 	/// that changes the button's text from "Copy" to "Copied" and then back.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
+	[DynamicWindowsRuntimeCast(typeof(TextBlock))]
 	private void CopyButton_Click(object sender, RoutedEventArgs e)
 	{
 		Button copyButton = (Button)sender;

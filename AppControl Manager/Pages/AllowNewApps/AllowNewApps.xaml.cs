@@ -21,6 +21,7 @@ using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
@@ -86,6 +87,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 	/// </summary>
 	/// <param name="sender">Represents the navigation menu that triggered the selection change event.</param>
 	/// <param name="args">Contains information about the selection change, including the newly selected item.</param>
+	[DynamicWindowsRuntimeCast(typeof(NavigationViewItem))]
 	private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
 	{
 		// Check if the item is selected

@@ -20,6 +20,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -134,6 +135,7 @@ internal sealed partial class ListViewV3 : ListView
 	/// <summary>
 	/// Walks up the visual tree to find the first ScrollView ancestor *after* the ListView's own inner ScrollViewer
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(ScrollView))]
 	private ScrollView? FindParentScrollView()
 	{
 		// Start from the inner ScrollViewer if we have it, otherwise from 'this'

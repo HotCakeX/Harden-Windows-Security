@@ -30,6 +30,7 @@ using CommonCore.IntelGathering;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -880,6 +881,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Saves the changes made to the policy file.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void SaveChanges(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try

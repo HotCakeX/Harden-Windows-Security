@@ -21,6 +21,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
@@ -40,6 +41,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
 		// Attempt to retrieve the property mapping using the Tag as the key.
@@ -49,6 +51,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key && ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))

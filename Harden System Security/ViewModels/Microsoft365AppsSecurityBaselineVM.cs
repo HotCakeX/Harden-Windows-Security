@@ -27,6 +27,7 @@ using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.Traverse;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -232,6 +233,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -612,6 +614,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender">MenuFlyoutItem whose Tag corresponds to the property key.</param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyVerificationResultProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;

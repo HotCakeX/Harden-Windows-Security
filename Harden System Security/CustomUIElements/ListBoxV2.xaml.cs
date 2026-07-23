@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -50,6 +51,7 @@ internal sealed partial class ListBoxV2 : UserControl
 
 	public SelectionMode SelectionMode
 	{
+		[DynamicWindowsRuntimeCast(typeof(SelectionMode))]
 		get => (SelectionMode)GetValue(SelectionModeProperty); set => SetValue(SelectionModeProperty, value);
 	}
 
@@ -58,6 +60,7 @@ internal sealed partial class ListBoxV2 : UserControl
 	/// <summary>
 	/// Click handler for the delete button. Removes the item from the bound collection.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void DeleteItem_Click(object sender, RoutedEventArgs e)
 	{
 		string? path = ((Button)sender).Tag as string;

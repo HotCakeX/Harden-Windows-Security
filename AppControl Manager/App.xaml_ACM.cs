@@ -29,6 +29,7 @@ using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.BadgeNotifications;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
+using WinRT;
 
 namespace AppControlManager;
 
@@ -42,6 +43,7 @@ public sealed partial class App : Application
 	/// Invoked when the application is launched.
 	/// </summary>
 	/// <param name="args">Details about the launch request and process.</param>
+	[DynamicWindowsRuntimeCast(typeof(ProtocolActivatedEventArgs))]
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 	{
 		// Register the Jump List tasks
@@ -496,6 +498,7 @@ public sealed partial class App : Application
 		AppUpdate.CheckAtStartup();
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(AppNotificationActivatedEventArgs))]
 	private static bool IsUpdateNotificationActivation(AppActivationArguments? activationArguments)
 	{
 		if (activationArguments is null)

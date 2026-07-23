@@ -22,6 +22,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
@@ -65,9 +66,11 @@ internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, Co
 
 	#endregion
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e) =>
 		AnimateShadowBlur((FrameworkElement)sender, 20.0f);
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e) =>
 		AnimateShadowBlur((FrameworkElement)sender, 10.0f);
 

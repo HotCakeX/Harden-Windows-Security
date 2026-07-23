@@ -47,6 +47,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -99,6 +100,7 @@ public static class StickyHeaderBehaviorV2
 
 	private static StickyHeaderState? GetState(DependencyObject element) => (StickyHeaderState?)element.GetValue(StateProperty);
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static void OnIsEnabledChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
 		if (d is not FrameworkElement element)

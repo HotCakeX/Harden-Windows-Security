@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 #if HARDEN_SYSTEM_SECURITY
 namespace HardenSystemSecurity.ViewModels;
@@ -547,6 +548,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal void ListView_Loaded(object sender, RoutedEventArgs e) => LogListView = (ListView)sender;
 
 }

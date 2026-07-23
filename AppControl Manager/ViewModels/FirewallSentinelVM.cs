@@ -36,6 +36,7 @@ using CommonCore.SecurityPolicy;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -539,6 +540,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	private async Task SetFirewall(int mode, object sender)
 	{
 		if (string.IsNullOrWhiteSpace(AppIDTagToUse))
@@ -1001,6 +1003,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Main button's event handler for files and folders rules creation.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreateFilesAndFoldersSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		FilesAndFoldersInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -1185,6 +1188,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Main Button - Creates the Certificates-based Supplemental policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreateCertificatesSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		bool errorsOccurred = false;
@@ -1325,6 +1329,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Event handler for the main button - to create Supplemental pattern based File path policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 

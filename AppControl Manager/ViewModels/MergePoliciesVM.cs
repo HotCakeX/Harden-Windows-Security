@@ -22,6 +22,7 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -49,6 +50,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the main Merge button
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void MergeButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 
@@ -243,6 +245,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the button to convert the selected policies to AppIDTagging type.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void ConvertToAppIDTagging(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try
@@ -365,6 +368,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void RemoveSigningScenario(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try

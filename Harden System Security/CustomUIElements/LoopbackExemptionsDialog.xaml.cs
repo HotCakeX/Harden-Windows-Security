@@ -23,6 +23,7 @@ using System.Linq;
 using AppControlManager.CustomUIElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.CustomUIElements;
 
@@ -168,6 +169,7 @@ internal sealed partial class LoopbackExemptionsDialog : ContentDialogV2, INPCIm
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private void EntryActionButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is not Button button || button.DataContext is not AppContainerLoopbackEntry entry || !entry.CanModify)

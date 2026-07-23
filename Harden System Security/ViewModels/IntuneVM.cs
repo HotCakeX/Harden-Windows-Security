@@ -25,6 +25,7 @@ using AppControlManager.ViewModels;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -412,6 +413,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is not MenuFlyoutItem mfi || mfi.Tag is not string key)

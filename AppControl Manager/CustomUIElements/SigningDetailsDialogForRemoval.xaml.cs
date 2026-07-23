@@ -26,6 +26,7 @@ using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -151,6 +152,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(AutoSuggestBox))]
 	private void CertificateCommonNameAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
 	{
 		// Set the filtered items as suggestions in the AutoSuggestBox
@@ -234,6 +236,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	/// <summary>
 	/// Event handler for the Verify button
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private async void VerifyButton_Click()
 	{
 		if (VerificationRunning)

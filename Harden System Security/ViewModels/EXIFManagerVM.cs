@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -85,6 +86,7 @@ internal sealed partial class EXIFManagerVM : ViewModelBase
 	/// <summary>
 	/// Event handler for Drop
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	internal async void Grid_Drop(object sender, DragEventArgs e)
 	{
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -304,6 +306,7 @@ internal sealed partial class EXIFManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void RemoveCategory_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button btn && btn.Tag is MetadataCategory category)

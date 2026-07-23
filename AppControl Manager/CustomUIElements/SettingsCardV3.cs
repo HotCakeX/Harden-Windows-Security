@@ -20,6 +20,7 @@ using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -38,6 +39,8 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 		// Wait until Content is applied
 		Loaded += OnLoaded;
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
+	[DynamicWindowsRuntimeCast(typeof(Panel))]
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
 		// Since the OnLoaded event fires every time we navigate to the page where this element is located or during theme change etc.

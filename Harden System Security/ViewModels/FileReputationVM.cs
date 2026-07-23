@@ -21,6 +21,7 @@ using HardenSystemSecurity.Helpers;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -75,6 +76,7 @@ internal sealed partial class FileReputationVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	internal async void OnDrop(object sender, DragEventArgs e)
 	{
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))

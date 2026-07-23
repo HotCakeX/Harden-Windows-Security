@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Markup;
+using WinRT;
 
 namespace CommonCore.ToolKits;
 
@@ -79,6 +80,8 @@ internal sealed partial class SettingsExpander : Control
 		DetachCornerRadiusPropertyChangedCallback();
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
+	[DynamicWindowsRuntimeCast(typeof(ItemsControl))]
 	protected override void OnApplyTemplate()
 	{
 		DetachExpanderEvents();
@@ -243,6 +246,7 @@ internal partial class SettingsExpander
 	/// </summary>
 	public DataTemplate? ItemTemplate
 	{
+		[DynamicWindowsRuntimeCast(typeof(DataTemplate))]
 		get => (DataTemplate?)GetValue(ItemTemplateProperty); set => SetValue(ItemTemplateProperty, value);
 	}
 
@@ -257,6 +261,7 @@ internal partial class SettingsExpander
 	/// </summary>
 	public StyleSelector ItemContainerStyleSelector
 	{
+		[DynamicWindowsRuntimeCast(typeof(StyleSelector))]
 		get => (StyleSelector)GetValue(ItemContainerStyleSelectorProperty); set => SetValue(ItemContainerStyleSelectorProperty, value);
 	}
 
@@ -279,6 +284,7 @@ internal partial class SettingsExpander
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void ApplyItemContainerStylesToStaticItems(object datasource)
 	{
 		if (ItemContainerStyleSelector is null || datasource is not IEnumerable items)
@@ -388,6 +394,7 @@ internal partial class SettingsExpander
 	/// </summary>
 	public IconElement HeaderIcon
 	{
+		[DynamicWindowsRuntimeCast(typeof(IconElement))]
 		get => (IconElement)GetValue(HeaderIconProperty);
 		set => SetValue(HeaderIconProperty, value);
 	}
@@ -406,6 +413,7 @@ internal partial class SettingsExpander
 	/// </summary>
 	public UIElement ItemsHeader
 	{
+		[DynamicWindowsRuntimeCast(typeof(UIElement))]
 		get => (UIElement)GetValue(ItemsHeaderProperty);
 		set => SetValue(ItemsHeaderProperty, value);
 	}
@@ -415,6 +423,7 @@ internal partial class SettingsExpander
 	/// </summary>
 	public UIElement ItemsFooter
 	{
+		[DynamicWindowsRuntimeCast(typeof(UIElement))]
 		get => (UIElement)GetValue(ItemsFooterProperty);
 		set => SetValue(ItemsFooterProperty, value);
 	}
@@ -597,6 +606,7 @@ internal sealed partial class SettingsExpanderInnerExpander : Expander
 		DetachIsExpandedPropertyChangedCallback();
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(ToggleButton))]
 	protected override void OnApplyTemplate()
 	{
 		DetachHeaderEvents();

@@ -29,6 +29,7 @@ using CommonCore.DISM;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -585,6 +586,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Event handler for the global Icons Style change event
 	/// </summary>
 	/// <param name="style"></param>
+	[DynamicWindowsRuntimeCast(typeof(Brush))]
 	internal void OnIconsStylesChanged(string? style)
 	{
 		if (MainWindow.RootGridPub is null) throw new InvalidOperationException("RootGrid is null");

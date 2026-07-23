@@ -29,6 +29,7 @@ using CommonCore.ToolKits;
 using HardenSystemSecurity.Vyre;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -289,6 +290,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			{ "RootSha256", (Atlas.GetStr("RootSha256Header/Text"), cert => cert.RootSha256Hex) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -333,6 +335,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyCertificateProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;

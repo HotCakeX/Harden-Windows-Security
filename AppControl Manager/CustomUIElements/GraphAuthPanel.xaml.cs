@@ -31,6 +31,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Foundation;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -107,6 +108,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 	/// <summary>
 	/// Gets the account associated with an action button inside an account card template.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static AuthenticatedAccounts? GetAccountFromSender(object sender) => sender is FrameworkElement frameworkElement ? frameworkElement.DataContext as AuthenticatedAccounts : null;
 
 	/// <summary>
@@ -149,6 +151,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(CanvasControl))]
 	private static void CollectWin2DCanvasControls(DependencyObject parent, List<CanvasControl> canvasControls)
 	{
 		int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
@@ -169,6 +172,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 	/// <summary>
 	/// Starts the hover animation for the visible metadata card and its matching gradient shadow.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void AccountMetadataArea_PointerEntered(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is FrameworkElement visualMetadataCard)
@@ -180,6 +184,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 	/// <summary>
 	/// Restores the visible metadata card whose hover state ended and hides its matching gradient shadow.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void AccountMetadataArea_PointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is FrameworkElement visualMetadataCard)
@@ -205,6 +210,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 	/// <summary>
 	/// Applies centered scale and upward translation to a metadata card or its matching shadow canvas.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(CompositeTransform))]
 	private static void AnimateMetadataAreaCompositeTransform(FrameworkElement element, bool isPointerOver)
 	{
 		element.RenderTransformOrigin = new Point(0.5d, 0.5d);
@@ -376,6 +382,9 @@ internal sealed partial class GraphAuthPanel : UserControl
 	/// <summary>
 	/// Gets the sibling Win2D canvas that shares the metadata layout wrapper's Grid position.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Border))]
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
+	[DynamicWindowsRuntimeCast(typeof(CanvasControl))]
 	private static CanvasControl? GetMetadataAreaGradientShadowCanvas(FrameworkElement visualMetadataCard)
 	{
 		if (visualMetadataCard.Parent is not Border metadataLayoutWrapper || metadataLayoutWrapper.Parent is not Grid metadataGrid)
@@ -408,6 +417,8 @@ internal sealed partial class GraphAuthPanel : UserControl
 
 	internal static void AccountActionMenuFlyoutItem_PointerExited(object sender, PointerRoutedEventArgs args) => SetAccountActionMenuFlyoutItemAnimatedIconState(sender, "Normal");
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	[DynamicWindowsRuntimeCast(typeof(AnimatedIcon))]
 	private static void SetAccountActionMenuFlyoutItemAnimatedIconState(object sender, string state)
 	{
 		if (sender is MenuFlyoutItem menuFlyoutItem && menuFlyoutItem.Icon is AnimatedIcon animatedIcon)

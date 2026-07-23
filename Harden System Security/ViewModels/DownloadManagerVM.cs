@@ -51,6 +51,7 @@ using Windows.Media.Core;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -1365,6 +1366,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(ListViewBase))]
 	internal void DownloadItemsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		if (sender is not ListViewBase listView)
@@ -1682,6 +1684,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 	internal async void OpenSettingsPageAsync() => await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Extras.DownloadManagerSettings), null);
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal async void DownloadManagerPresetsSectionHeader_Loaded(object sender, RoutedEventArgs e)
 	{
 		if (sender is FrameworkElement element)
@@ -4519,6 +4522,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		return true;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void PreviewSurface_PointerEntered(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is FrameworkElement { Tag: DownloadManagerItem item } && item.CanHoverPlayVideoPreview)
@@ -4528,6 +4532,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		AnimatePreviewSurface(sender as FrameworkElement, scale: 1.03, translateY: -2D);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void PreviewSurface_PointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is FrameworkElement { Tag: DownloadManagerItem item } && item.IsVideoPreviewHoverActive)
@@ -4537,6 +4542,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		AnimatePreviewSurface(sender as FrameworkElement, scale: 1D, translateY: 0D);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(CompositeTransform))]
 	private static void AnimatePreviewSurface(FrameworkElement? previewSurface, double scale, double translateY)
 	{
 		if (previewSurface is null)
@@ -4576,6 +4582,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		return animation;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MediaPlayerElement))]
 	internal static void HoverPreviewPlayer_Loaded(object sender, RoutedEventArgs e)
 	{
 		if (sender is MediaPlayerElement mediaPlayerElement && mediaPlayerElement.MediaPlayer is not null)

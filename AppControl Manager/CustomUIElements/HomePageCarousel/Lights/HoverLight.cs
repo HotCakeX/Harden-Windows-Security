@@ -51,6 +51,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements.HomePageCarousel.Lights;
 
@@ -99,6 +100,8 @@ internal sealed partial class HoverLight : XamlLight
 		AddTargetElement(GetId(), targetElement);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
+	[DynamicWindowsRuntimeCast(typeof(SpotLight))]
 	private void TargetElement_PointerMoved(object sender, PointerRoutedEventArgs e)
 	{
 		if (CompositionLight != null)

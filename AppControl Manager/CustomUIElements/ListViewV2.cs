@@ -18,6 +18,7 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -69,6 +70,7 @@ internal sealed partial class ListViewV2 : ListView
 		Unloaded += OnUnloaded;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	private async void OnListViewV2SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		try
@@ -126,6 +128,7 @@ internal sealed partial class ListViewV2 : ListView
 	// keep the current selection and just show the context menu for that selection.
 	// - If we right-click on an unselected item, clear the previous selection and select only that item.
 	// P.S: We skip the next two SelectionChanged events to avoid unintended smooth scrolling due to programmatic changes.
+	[DynamicWindowsRuntimeCast(typeof(ListViewItem))]
 	private void OnListViewV2ItemRightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
 		// Don't proceed further if the sender is not a ListViewItem or if the ListView is in None or Single selection mode because then SelectedItems property is readonly and we get COM error if we attempt to clear it.

@@ -29,6 +29,7 @@ using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -875,6 +876,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	/// </summary>
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button &&
@@ -915,6 +917,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyExclusionProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -1437,6 +1440,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	/// Removes a single exclusion based on its source type.
 	/// Triggered by the per-row context menu "Remove" item.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal async void RemoveExclusion_Click(object sender, RoutedEventArgs e)
 	{
 		try

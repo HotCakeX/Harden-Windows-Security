@@ -212,6 +212,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			{ "PublicKeyLength",   (Atlas.GetStr("PublicKeyLengthHeader/Text") + ": ",   fc => fc.PublicKeyLength) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
+	[WinRT.DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -257,6 +258,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[WinRT.DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -765,6 +767,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[WinRT.DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	internal async void OnDrop(object sender, DragEventArgs e)
 	{
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))

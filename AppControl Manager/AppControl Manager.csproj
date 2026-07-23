@@ -25,7 +25,7 @@
         By installing it ourselves as a NuGet package, we guarantee we use the latest and most up to date version, especially the preview versions.
         If we don't install it as NuGet package ourselves, WinAppSDK's CsWinRT will be used during compilation.
         -->
-        <WindowsSdkPackageVersion>10.0.26100.84</WindowsSdkPackageVersion>
+        <WindowsSdkPackageVersion>10.0.26100.87</WindowsSdkPackageVersion>
 
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -92,10 +92,14 @@
 
         <Configurations>Debug;Release</Configurations>
 
-        <!--https://github.com/microsoft/CsWinRT/blob/master/nuget/readme.md#advanced-size-saving-options-->
+        <!-- https://github.com/microsoft/CsWinRT/blob/master/nuget/readme.md#advanced-size-saving-options -->
         <CsWinRTUseExceptionResourceKeys>true</CsWinRTUseExceptionResourceKeys>
         <CsWinRTEnableDynamicObjectsSupport>false</CsWinRTEnableDynamicObjectsSupport>
         <CsWinRTLoadComponentsInDefaultALC>true</CsWinRTLoadComponentsInDefaultALC>
+
+        <!-- https://github.com/microsoft/CsWinRT/blob/master/nuget/readme.md#customizing -->
+        <!-- Max level of warnings to be displayed to catch any possible problem. -->
+        <CsWinRTAotWarningLevel>3</CsWinRTAotWarningLevel>
     </PropertyGroup>
 
     <!--
@@ -215,13 +219,13 @@
         <PackageReference Include="Microsoft.Identity.Client" Version="4.86.1" />
         <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.86.1" />
         <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.86.1" />
-        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.0-prerelease.251115.2" />
+        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.10" />
         <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.2" />
         <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.10" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
-        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.20.0" />
+        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.21.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4078.44" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2270" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />

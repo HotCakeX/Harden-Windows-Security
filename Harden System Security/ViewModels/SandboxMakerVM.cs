@@ -29,6 +29,7 @@ using System.Xml.Linq;
 using AppControlManager.CustomUIElements;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -254,6 +255,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void LaunchSavedSandbox_Click(object sender, RoutedEventArgs e)
 	{
 		if ((sender as FrameworkElement)?.Tag is not WindowsSandboxSavedDefinition definition)
@@ -274,6 +276,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void OpenSavedSandboxFileLocation_Click(object sender, RoutedEventArgs e)
 	{
 		if ((sender as FrameworkElement)?.Tag is not WindowsSandboxSavedDefinition definition)
@@ -291,6 +294,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal async void DeleteSavedSandbox_Click(object sender, RoutedEventArgs e)
 	{
 		if ((sender as FrameworkElement)?.Tag is not WindowsSandboxSavedDefinition definition)
@@ -392,6 +396,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void LoadSavedSandboxIntoEditor_Click(object sender, RoutedEventArgs e)
 	{
 		if ((sender as FrameworkElement)?.Tag is not WindowsSandboxSavedDefinition definition)

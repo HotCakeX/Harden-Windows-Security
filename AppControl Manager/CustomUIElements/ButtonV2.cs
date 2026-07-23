@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -92,6 +93,7 @@ internal sealed partial class ButtonV2 : Button
 	/// If a Flyout is attached to this Button and it isn't open, shows it.
 	/// Returns true if there was a Flyout to show, false otherwise.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Flyout))]
 	internal bool TryShowFlyout()
 	{
 		// First check if button has a ContextFlyout (intended for right-click/Tap+Hold actions)
@@ -177,11 +179,9 @@ internal sealed partial class SplitButtonV2 : SplitButton
 	/// <summary>
 	/// Bound to either a string (non-empty => selected) or a numeric count (int/long > 0 => selected).
 	/// </summary>
-	public object? ObservedData
-	{
-		get => GetValue(ObservedDataProperty); set => SetValue(ObservedDataProperty, value);
-	}
+	public object? ObservedData { get => GetValue(ObservedDataProperty); set => SetValue(ObservedDataProperty, value); }
 
+	[DynamicWindowsRuntimeCast(typeof(Flyout))]
 	private static void OnObservedDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
 		SplitButtonV2 instance = (SplitButtonV2)d;
@@ -229,6 +229,7 @@ internal sealed partial class SplitButtonV2 : SplitButton
 	/// If a Flyout is attached to this Button and it isn't open, shows it.
 	/// Returns true if there was a Flyout to show, false otherwise.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Flyout))]
 	internal bool TryShowFlyout()
 	{
 		// First check if button has a ContextFlyout (intended for right-click/Tap+Hold actions)

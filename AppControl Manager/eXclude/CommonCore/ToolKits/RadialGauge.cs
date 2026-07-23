@@ -33,6 +33,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using Windows.Foundation;
 using Windows.UI;
+using WinRT;
 
 namespace CommonCore.ToolKits;
 
@@ -336,6 +337,7 @@ internal sealed partial class RadialGauge : UserControl
 
 	public Brush ScaleBrush
 	{
+		[DynamicWindowsRuntimeCast(typeof(Brush))]
 		get => (Brush)GetValue(ScaleBrushProperty);
 		set => SetValue(ScaleBrushProperty, value);
 	}

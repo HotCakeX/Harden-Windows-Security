@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Storage;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -141,6 +142,8 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 	internal void Grid_DragOver(object sender, DragEventArgs e) => e.AcceptedOperation = DataPackageOperation.Copy;
 
 	// Event handler for Drop
+	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
+	[DynamicWindowsRuntimeCast(typeof(StorageFolder))]
 	internal async void Grid_Drop(object sender, DragEventArgs e)
 	{
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -246,6 +249,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 	}
 
 	// Deletes a single image.
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void DeleteFile_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is not Button btn || btn.Tag is not DuplicateFile file) return;
@@ -253,6 +257,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 	}
 
 	// Deletes the Original image (with confirmation)
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal async void DeleteOriginalFile_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is not MenuFlyoutItem menuItem || menuItem.Tag is not DuplicateGroup group) return;
@@ -369,6 +374,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void DeleteAllDuplicatesInGroup_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is not Button btn || btn.Tag is not DuplicateGroup group) return;
@@ -762,6 +768,7 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 	/// Opens a full-size preview of the image in a ContentDialogV2.
 	/// Includes Zoom controls, Open Location, and Delete button (if applicable, meaning the Original pic shouldn't have the delete option. Only duplicate photos should have delete option.).
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void OpenImagePreview(object sender, RoutedEventArgs e)
 	{
 		if (sender is not Button btn) return;

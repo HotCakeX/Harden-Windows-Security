@@ -31,6 +31,7 @@ using Microsoft.UI.Xaml.Data;
 using Windows.Foundation;
 using Windows.Management.Deployment;
 using Windows.System;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -250,6 +251,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(ListViewBase))]
 	internal void MainListView_Loaded(object sender, RoutedEventArgs e)
 	{
 		UIListView = sender as ListViewBase;
@@ -622,6 +624,8 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// <summary>
 	/// Gets the packaged app represented by a context-menu item.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static PackagedAppView? GetPackagedAppFromMenuFlyoutSender(object sender)
 	{
 		if (sender is not MenuFlyoutItem menuItem)
@@ -649,6 +653,8 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
 	/// <param name="e">Event arguments</param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal async void UninstallSingleApp_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -1204,6 +1210,8 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
 	/// <param name="e">Event arguments</param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal async void OpenAppLocation_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -1268,6 +1276,8 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
 	/// <param name="e">Event arguments</param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal async void CopyAppDetails_Click(object sender, RoutedEventArgs e)
 	{
 		try

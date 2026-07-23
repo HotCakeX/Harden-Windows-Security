@@ -30,6 +30,7 @@ using AppControlManager.XMLOps;
 using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -222,6 +223,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 			{ "FilePath",                              (Atlas.GetStr("FilePathHeader/Text") + ": ",                            so => so.FilePath) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -265,6 +267,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -503,6 +506,7 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	internal async void DenySelectedItemsInPolicy(object sender, RoutedEventArgs e) => await AddSelectedItemsToPolicy(SiPolicyIntel.Authorization.Deny, sender);
 
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	private async Task AddSelectedItemsToPolicy(SiPolicyIntel.Authorization authorization, object sender)
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);

@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
+using WinRT;
 
 namespace CommonCore.ToolKits;
 
@@ -76,6 +77,7 @@ internal sealed partial class Shimmer : UserControl
 	private bool _initialized;
 	private bool _animationStarted;
 
+	[DynamicWindowsRuntimeCast(typeof(Brush))]
 	internal Shimmer()
 	{
 		// Initialize the content visuals

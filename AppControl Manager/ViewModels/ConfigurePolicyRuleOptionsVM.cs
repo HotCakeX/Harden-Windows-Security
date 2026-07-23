@@ -23,6 +23,7 @@ using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -157,6 +158,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// <summary>
 	/// Event handler for when the Apply button is pressed
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void ApplyTheChangesButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try
@@ -221,6 +223,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the Set button click in the PolicyTemplate section
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void SetPolicyTemplate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try

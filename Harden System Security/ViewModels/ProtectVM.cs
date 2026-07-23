@@ -28,6 +28,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media.Imaging;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -206,6 +207,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void DeleteDeviceIntentPreviewItem_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -223,6 +225,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void DeleteDeviceIntentPreviewItem_SwipeInvoked(SwipeItem sender, SwipeItemInvokedEventArgs args)
 	{
 		// Resolve the bound item (MUnit) from the SwipeControl that raised the event
@@ -735,6 +738,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal void ProtectionCategoriesListView_Loaded(object sender, RoutedEventArgs e)
 	{
 		if (IsAdding) return;

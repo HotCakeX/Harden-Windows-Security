@@ -27,6 +27,7 @@ using CommonCore.ToolKits;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.Others;
 
@@ -143,6 +144,7 @@ internal sealed partial class ListViewIncrementalController(
 	/// <summary>
 	/// Re-run after navigation (ListView Loaded event). Retries hook until ListView + ScrollViewer are registered.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal void ListView_Loaded(object sender, RoutedEventArgs e)
 	{
 		// Get the ListView instance from the Loaded event's sender.
@@ -457,6 +459,7 @@ internal sealed partial class ListViewIncrementalController(
 	/// Measures header text plus a slice of visible (and look-ahead) rows to compute the best-fit width per column.
 	/// Applies only when the proposed width differs from current by a threshold to avoid layout churn.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(ItemsStackPanel))]
 	internal void RecalculateVisibleColumnWidths()
 	{
 		// 1. If AutoResize is Disabled:
@@ -826,6 +829,7 @@ internal sealed partial class ListViewIncrementalController(
 
 	#endregion
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
 		string key = (string)((MenuFlyoutItem)sender).Tag;

@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Storage.Streams;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.Pages.Analysis;
 
@@ -49,6 +50,8 @@ internal static class AnalysisPagePdfExporter
 	private const CompressionLevel PdfCompressionLevel = CompressionLevel.Optimal;
 	private const string SRgbIccProfileBase64 = "AAACTGxjbXMEQAAAbW50clJHQiBYWVogB+oABgAVABEAAAAcYWNzcEFQUEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPbWAAEAAAAA0y1sY21zAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALZGVzYwAAAQgAAAA2Y3BydAAAAUAAAABMd3RwdAAAAYwAAAAUY2hhZAAAAaAAAAAsclhZWgAAAcwAAAAUYlhZWgAAAeAAAAAUZ1hZWgAAAfQAAAAUclRSQwAAAggAAAAgZ1RSQwAAAggAAAAgYlRSQwAAAggAAAAgY2hybQAAAigAAAAkbWx1YwAAAAAAAAABAAAADGVuVVMAAAAaAAAAHABzAFIARwBCACAAYgB1AGkAbAB0AC0AaQBuAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAADAAAAAcAE4AbwAgAGMAbwBwAHkAcgBpAGcAaAB0ACwAIAB1AHMAZQAgAGYAcgBlAGUAbAB5WFlaIAAAAAAAAPbWAAEAAAAA0y1zZjMyAAAAAAABDEIAAAXe///zJQAAB5MAAP2Q///7of///aIAAAPcAADAblhZWiAAAAAAAABvoAAAOPUAAAOQWFlaIAAAAAAAACSfAAAPhAAAtsNYWVogAAAAAAAAYpcAALeHAAAY2XBhcmEAAAAAAAMAAAACZmYAAPKnAAANWQAAE9AAAApbY2hybQAAAAAAAwAAAACj1wAAVHsAAEzNAACZmgAAJmYAAA9c";
 
+	[DynamicWindowsRuntimeCast(typeof(SolidColorBrush))]
+	[DynamicWindowsRuntimeCast(typeof(StackPanel))]
 	internal static async Task ExportAsync(FrameworkElement contentElement, string defaultFileName)
 	{
 		string? savePath = FileDialogHelper.ShowSaveFileDialog("PDF Document (*.pdf)|*.pdf", defaultFileName);
@@ -81,6 +84,8 @@ internal static class AnalysisPagePdfExporter
 		await outputStream.WriteAsync(pdfStream.GetBuffer().AsMemory(0, checked((int)pdfStream.Length)));
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Panel))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static async Task<List<CapturedImage>> CaptureExportImagesAsync(FrameworkElement contentElement, Color backgroundColor)
 	{
 		List<CapturedImage> images = [];

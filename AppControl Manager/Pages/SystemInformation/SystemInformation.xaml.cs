@@ -18,6 +18,7 @@
 using System.Linq;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
@@ -52,6 +53,7 @@ internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeade
 	}
 
 	// Event handler for the navigation menu
+	[DynamicWindowsRuntimeCast(typeof(NavigationViewItem))]
 	private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
 	{
 		// Check if the item is selected and it's enabled (because when running unelevated, some pages are unavailable)

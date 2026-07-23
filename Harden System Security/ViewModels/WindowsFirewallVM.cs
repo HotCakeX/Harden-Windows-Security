@@ -30,6 +30,7 @@ using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -653,6 +654,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// <summary>
 	/// Column sorting handler for the Firewall rules ListView header buttons.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button &&
@@ -691,6 +693,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// <summary>
 	/// Copy a single property of the current selection.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyFirewallRuleProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;

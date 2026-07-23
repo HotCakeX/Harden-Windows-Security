@@ -31,6 +31,7 @@ using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.BadgeNotifications;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
+using WinRT;
 
 namespace HardenSystemSecurity;
 
@@ -630,6 +631,7 @@ public sealed partial class App : Application
 		AppUpdate.CheckAtStartup();
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(AppNotificationActivatedEventArgs))]
 	private static bool IsUpdateNotificationActivation(AppActivationArguments? activationArguments)
 	{
 		if (activationArguments is null)

@@ -28,6 +28,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
@@ -97,6 +98,7 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void Card_Loaded(object sender, RoutedEventArgs e)
 	{
 		// Find the parent grid (the main card)
@@ -127,6 +129,7 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void Card_PointerEntered(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is Grid parentCard && _neonVisualsMap.TryGetValue(parentCard, out NeonBorderVisuals? visuals))
@@ -149,6 +152,7 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void Card_PointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is Grid parentCard && _neonVisualsMap.TryGetValue(parentCard, out NeonBorderVisuals? visuals))
@@ -167,6 +171,8 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 	/// Prevents the pointer event from bubbling up to the Expander when clicking strictly within the card area.
 	/// This prevents the Expander from collapsing/expanding when selecting a profile.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(DependencyObject))]
+	[DynamicWindowsRuntimeCast(typeof(ButtonBase))]
 	private void Card_PointerPressed(object sender, PointerRoutedEventArgs e)
 	{
 		if (e.OriginalSource is DependencyObject current)

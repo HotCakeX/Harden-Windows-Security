@@ -87,7 +87,7 @@
             <Expander.Content>
                 <Button Click="{x:Bind ViewModel.ExportStrictKernelModeToJsonButton_Click}"
                         HorizontalAlignment="Center"
-                        VerticalAlignment="Center" 
+                        VerticalAlignment="Center"
                         x:Uid="ExportToJSONButton">
                     <Button.ContentTemplate>
                         <DataTemplate x:DataType="x:String">

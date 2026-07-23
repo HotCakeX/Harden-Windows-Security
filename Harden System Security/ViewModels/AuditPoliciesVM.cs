@@ -27,6 +27,7 @@ using CommonCore.SecurityPolicy;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -174,6 +175,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 			{ "SubcategoryGuid",         (Atlas.GetStr("SubcategoryGUIDHeader/Text"),    ape => ape.SubcategoryGuid) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -218,6 +220,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -367,6 +370,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	/// <summary>
 	/// Applies an individual audit policy change.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void ApplyIndividualChange_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is AuditPolicyInfo auditPolicy)

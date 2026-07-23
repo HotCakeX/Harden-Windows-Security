@@ -22,6 +22,7 @@ using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Automation.Provider;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -42,6 +43,12 @@ internal partial class SettingsCardV2 : SettingsCard
 		IsActionIconVisible = false;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(ToggleSwitch))]
+	[DynamicWindowsRuntimeCast(typeof(ComboBox))]
+	[DynamicWindowsRuntimeCast(typeof(CheckBox))]
+	[DynamicWindowsRuntimeCast(typeof(Button))]
+	[DynamicWindowsRuntimeCast(typeof(UserControl))]
+	[DynamicWindowsRuntimeCast(typeof(Panel))]
 	private void OnSettingsCardClick(object sender, RoutedEventArgs e)
 	{
 		switch (Content)

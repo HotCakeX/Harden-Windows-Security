@@ -25,6 +25,7 @@ using AppControlManager.SiPolicy;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -309,6 +310,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -476,6 +478,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
 		string key = (string)((MenuFlyoutItem)sender).Tag;
@@ -503,6 +506,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// <summary>
 	/// Opens the assignments dialog for the context-clicked policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void ViewAssignmentsFromContext_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem item && item.DataContext is CiPolicyInfo policy)

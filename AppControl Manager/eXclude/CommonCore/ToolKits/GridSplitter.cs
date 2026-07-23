@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
 using Windows.System;
+using WinRT;
 
 namespace CommonCore.ToolKits;
 
@@ -133,6 +134,7 @@ internal abstract class SizerBase : UserControl
 
 	protected virtual void OnLoaded(RoutedEventArgs e) { }
 
+	[DynamicWindowsRuntimeCast(typeof(Brush))]
 	private void SizerBase_Loaded(object sender, RoutedEventArgs e)
 	{
 		// Set Default Foreground if not provided. It's important to be set in OnLoaded.
@@ -243,6 +245,7 @@ internal abstract class SizerBase : UserControl
 
 	public Orientation Orientation
 	{
+		[DynamicWindowsRuntimeCast(typeof(Orientation))]
 		get => (Orientation)GetValue(OrientationProperty);
 		set => SetValue(OrientationProperty, value);
 	}
@@ -264,6 +267,7 @@ internal abstract class SizerBase : UserControl
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Brush))]
 	private void UpdateVisualState()
 	{
 		if (_rootGrid == null || _thumb == null) return;
@@ -368,6 +372,7 @@ internal sealed partial class GridSplitter : SizerBase
 		_resizeBehavior = GetResizeBehavior();
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	protected override void OnDragStarting()
 	{
 		// Re-calculate state on drag start

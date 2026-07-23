@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -70,6 +71,7 @@ internal sealed partial class MenuFlyoutV2 : MenuFlyout
 		AssignEventHandlers(Items);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutSubItem))]
 	private void AssignEventHandlers(IList<MenuFlyoutItemBase> items)
 	{
 		foreach (MenuFlyoutItemBase menuItem in items)

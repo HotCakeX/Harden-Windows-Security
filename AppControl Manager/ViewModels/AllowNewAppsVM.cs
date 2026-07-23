@@ -36,6 +36,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -471,6 +472,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the Create Policy button - Step 3
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreatePolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try
@@ -1242,6 +1244,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		args.Handled = true;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click_LocalFiles(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -1261,6 +1264,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click_EventLogs(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)

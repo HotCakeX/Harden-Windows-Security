@@ -27,6 +27,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -295,6 +296,7 @@ internal sealed partial class TemporalPolarChart : UserControl, INPCImplant
 
 	private void ChartCanvas_SizeChanged() => RenderChart();
 
+	[DynamicWindowsRuntimeCast(typeof(ComboBox))]
 	private void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		if (sender is ComboBox comboBox && comboBox.SelectedItem is TemporalPolarChartModeOption option)

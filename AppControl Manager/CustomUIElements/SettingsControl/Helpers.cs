@@ -25,6 +25,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.UI.Xaml;
+using WinRT;
 
 namespace CommonCore.ToolKits;
 
@@ -35,6 +36,7 @@ internal static class ResourceDictionaryExtensions
 	/// </summary>
 	/// <param name="destination">ResourceDictionary to copy values to.</param>
 	/// <param name="source">ResourceDictionary to copy values from.</param>
+	[DynamicWindowsRuntimeCast(typeof(ResourceDictionary))]
 	internal static void CopyFrom(this ResourceDictionary destination, ResourceDictionary source)
 	{
 		if (source.Source != null)
@@ -94,6 +96,7 @@ internal static partial class StyleExtensions
 	/// <summary>
 	/// Get a ResourceDictionary from a Style.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(ResourceDictionary))]
 	public static ResourceDictionary GetResources(Style obj) => (ResourceDictionary)obj.GetValue(ResourcesProperty);
 
 	/// <summary>
@@ -106,6 +109,8 @@ internal static partial class StyleExtensions
 	/// </summary>
 	public static readonly DependencyProperty ResourcesProperty = DependencyProperty.RegisterAttached("Resources", typeof(ResourceDictionary), typeof(StyleExtensions), new PropertyMetadata(null, ResourcesChanged));
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
+	[DynamicWindowsRuntimeCast(typeof(ResourceDictionary))]
 	private static void ResourcesChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
 	{
 		if (sender is not FrameworkElement frameworkElement)

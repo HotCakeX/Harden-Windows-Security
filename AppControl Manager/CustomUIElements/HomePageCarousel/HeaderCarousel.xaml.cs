@@ -54,6 +54,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Foundation;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements.HomePageCarousel;
 
@@ -190,6 +191,8 @@ internal sealed partial class HeaderCarousel : UserControl
 		return numbers[currentIndex++];
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(BitmapImage))]
+	[DynamicWindowsRuntimeCast(typeof(LinearGradientBrush))]
 	private void SetTileVisuals()
 	{
 		if (selectedTile != null)
@@ -272,6 +275,7 @@ internal sealed partial class HeaderCarousel : UserControl
 	}
 
 	// Trigger the single-run glitch storyboard if present
+	[DynamicWindowsRuntimeCast(typeof(Storyboard))]
 	private void OnGlitchTimerTick(object? sender, object e)
 	{
 		Storyboard storyboard = (Storyboard)Resources["CarouselGlitchStoryboard"];

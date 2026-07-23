@@ -50,6 +50,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements.HomePageCarousel;
 
@@ -98,10 +99,14 @@ internal sealed partial class OpacityMaskView : ContentControl
 	/// </summary>
 	public UIElement? OpacityMask
 	{
+		[DynamicWindowsRuntimeCast(typeof(UIElement))]
 		get => (UIElement?)GetValue(OpacityMaskProperty);
 		set => SetValue(OpacityMaskProperty, value);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
+	[DynamicWindowsRuntimeCast(typeof(ContentPresenter))]
+	[DynamicWindowsRuntimeCast(typeof(Border))]
 	protected override void OnApplyTemplate()
 	{
 		base.OnApplyTemplate();
@@ -151,6 +156,7 @@ internal sealed partial class OpacityMaskView : ContentControl
 		return brush;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	private static void OnOpacityMaskChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
 		OpacityMaskView self = (OpacityMaskView)d;

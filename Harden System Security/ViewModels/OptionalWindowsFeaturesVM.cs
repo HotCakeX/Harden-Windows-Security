@@ -33,6 +33,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -1762,6 +1763,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(ListViewBase))]
 	internal void MainListView_Loaded(object sender, RoutedEventArgs e)
 	{
 		UIListView = sender as ListViewBase;
@@ -2747,6 +2749,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Event handler for "Select" vendor menu items (sender.Tag must be the vendor string)
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void SelectVendor_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem? mi = sender as MenuFlyoutItem;
@@ -2759,6 +2762,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Event handler for "Unselect" vendor menu items (sender.Tag must be the vendor string)
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void UnselectVendor_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem? mi = sender as MenuFlyoutItem;

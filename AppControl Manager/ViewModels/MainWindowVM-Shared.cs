@@ -33,6 +33,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics;
+using WinRT;
 
 #if HARDEN_SYSTEM_SECURITY
 namespace HardenSystemSecurity.ViewModels;
@@ -301,7 +302,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		Atlas.Settings.BackDropBackground = selection.ToString();
 	}
 
-
 	internal const double HeaderThresholdWidth = 1300;
 
 	/// <summary>
@@ -456,7 +456,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	internal Visibility HeaderFlyoutVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	// Style used by Breadcrumb items
-	internal Style? BreadcrumbItemStyle { get; set => SP(ref field, value); } = (Style)Application.Current.Resources["SubtitleTextBlockStyle"];
+	[DynamicWindowsRuntimeCast(typeof(Style))]
+	private static Style? GetDefaultBreadcrumbItemStyle() => (Style)Application.Current.Resources["SubtitleTextBlockStyle"];
+	internal Style? BreadcrumbItemStyle { get; set => SP(ref field, value); } = GetDefaultBreadcrumbItemStyle();
 
 	// Whether the current page supplies a header, aka implements the IPageHeaderProvider interface.
 	internal bool HasPageHeader { get; set => SP(ref field, value); }

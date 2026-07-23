@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -419,6 +420,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// <summary>
 	/// Event handler for the button that deploys the user-selected policy files Signed.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void DeploySignedXMLButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		if (FilesForSignedDeployment.Count is 0)

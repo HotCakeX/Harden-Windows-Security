@@ -35,6 +35,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -333,6 +334,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// Main button's event handler for files and folders Supplemental policy creation
 	/// </summary>
 	internal async void CreateFilesAndFoldersSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) => await CreateFilesAndFoldersSupplementalPolicyButton_Internal(sender);
+
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	private async Task CreateFilesAndFoldersSupplementalPolicyButton_Internal(object? sender)
 	{
 		_FinalFilesAndFoldersSupplementalPolicy = null;
@@ -637,6 +640,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void FileAndFoldersHeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -816,6 +820,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Main Button - Creates the Certificates-based Supplemental policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreateCertificatesSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		bool errorsOccurred = false;
@@ -1047,6 +1052,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Event handler for the main button - to create Supplemental ISG based policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreateISGSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 
@@ -1403,6 +1409,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Event handler for the create button
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void StrictKernelModeCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		StrictKernelModeInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -1986,6 +1993,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Main button's event handler - Create Supplemental policy based on PFNs
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreatePFNSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		PFNInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -2190,6 +2198,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
 	/// <param name="e">Event arguments</param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void CopyAppDetails_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -2238,6 +2248,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
 	/// <param name="e">Event arguments</param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal async void OpenAppLocation_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -2380,6 +2392,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// Event handler for the main button - to create Supplemental pattern based File path policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreateCustomPatternBasedFileRuleSupplementalPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 

@@ -22,6 +22,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
@@ -51,6 +52,7 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 		DataContext = ViewModel;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(GridViewItem))]
 	private void HashGridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)
 	{
 		if (args.ItemContainer is GridViewItem container)
@@ -62,6 +64,10 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(GridViewItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
+	[DynamicWindowsRuntimeCast(typeof(PlaneProjection))]
+	[DynamicWindowsRuntimeCast(typeof(CompositeTransform))]
 	private void CardContainer_PointerEntered(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is GridViewItem container)
@@ -86,6 +92,10 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(GridViewItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
+	[DynamicWindowsRuntimeCast(typeof(PlaneProjection))]
+	[DynamicWindowsRuntimeCast(typeof(CompositeTransform))]
 	private void CardContainer_PointerMoved(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is GridViewItem container)
@@ -167,6 +177,9 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(GridViewItem))]
+	[DynamicWindowsRuntimeCast(typeof(PlaneProjection))]
+	[DynamicWindowsRuntimeCast(typeof(CompositeTransform))]
 	private void CardContainer_PointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is GridViewItem container && container.Projection is PlaneProjection projection && container.RenderTransform is CompositeTransform transform)
@@ -223,6 +236,7 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(GridViewItem))]
 	private void HashGrid_ItemClick(object sender, ItemClickEventArgs e)
 	{
 		if (e.ClickedItem is not HashCardItem clickedItem)

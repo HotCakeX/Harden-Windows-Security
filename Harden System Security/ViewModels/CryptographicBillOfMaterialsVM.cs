@@ -26,6 +26,7 @@ using CommonCore.ToolKits;
 using HardenSystemSecurity.Arcane;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -146,6 +147,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		CryptoAlgorithms.AddRange(filtered);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void CA_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -180,6 +182,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	/// <summary>
 	/// Copy single property for CryptoAlgorithms
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyCryptoAlgorithmProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -311,6 +314,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		CngCurves.AddRange(filtered);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void CNG_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -345,6 +349,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	/// <summary>
 	/// Copy single property for CNG Curves
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyCngCurveProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -470,6 +475,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		SslProviderCurves.AddRange(filtered);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void SSL_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button &&
@@ -503,6 +509,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	/// <summary>
 	/// Copy single property for SSL Provider Curves
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopySslProviderCurveProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -664,6 +671,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		TlsCipherSuites.AddRange(filtered);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void TLS_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button &&
@@ -697,6 +705,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	/// <summary>
 	/// Copy single property for TLS Cipher Suites
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyTlsCipherSuiteProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -840,6 +849,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 		RegisteredProviders.AddRange(filtered);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void REG_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button &&
@@ -873,6 +883,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	/// <summary>
 	/// Copy single property for Registered Providers
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyRegisteredProviderProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;

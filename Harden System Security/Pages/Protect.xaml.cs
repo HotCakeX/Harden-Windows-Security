@@ -20,6 +20,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
+using WinRT;
 
 namespace HardenSystemSecurity.Pages;
 
@@ -39,8 +40,10 @@ internal sealed partial class Protect : Page, CommonCore.UI.IPageHeaderProvider
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ProtectPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect");
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnBorderPointerEntered(object sender, PointerRoutedEventArgs e) => AnimateShadowBlur((FrameworkElement)sender, 20.0f);
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e) => AnimateShadowBlur((FrameworkElement)sender, 10.0f);
 
 	private void AnimateShadowBlur(FrameworkElement element, float toBlurRadius)

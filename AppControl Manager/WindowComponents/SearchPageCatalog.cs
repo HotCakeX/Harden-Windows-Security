@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.WindowComponents;
 
@@ -41,6 +42,11 @@ internal static class SearchPageCatalog
 	/// </summary>
 	/// <param name="query">The query string used to identify matching page types.</param>
 	/// <returns>A list of up to 8 matching UnifiedSearchBarResult instances.</returns>
+	[DynamicWindowsRuntimeCast(typeof(BitmapIcon))]
+	[DynamicWindowsRuntimeCast(typeof(FontIcon))]
+	[DynamicWindowsRuntimeCast(typeof(SymbolIcon))]
+	[DynamicWindowsRuntimeCast(typeof(PathIcon))]
+	[DynamicWindowsRuntimeCast(typeof(AnimatedIcon))]
 	internal static List<UnifiedSearchBarResult> GetPageFromQuery(string? query)
 	{
 		if (string.IsNullOrWhiteSpace(query))

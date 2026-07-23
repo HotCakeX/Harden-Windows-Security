@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Foundation;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -305,6 +306,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 	internal EasingFunctionBase EasingFunction
 	{
+		[DynamicWindowsRuntimeCast(typeof(EasingFunctionBase))]
 		get => (EasingFunctionBase)GetValue(EasingFunctionProperty);
 		set => SetValue(EasingFunctionProperty, value);
 	}
@@ -1581,6 +1583,17 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	/// Clone an easing function to create independent instances.
 	/// This prevents sharing easing function instances between animations.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(CubicEase))]
+	[DynamicWindowsRuntimeCast(typeof(QuadraticEase))]
+	[DynamicWindowsRuntimeCast(typeof(QuarticEase))]
+	[DynamicWindowsRuntimeCast(typeof(QuinticEase))]
+	[DynamicWindowsRuntimeCast(typeof(SineEase))]
+	[DynamicWindowsRuntimeCast(typeof(BackEase))]
+	[DynamicWindowsRuntimeCast(typeof(BounceEase))]
+	[DynamicWindowsRuntimeCast(typeof(CircleEase))]
+	[DynamicWindowsRuntimeCast(typeof(ElasticEase))]
+	[DynamicWindowsRuntimeCast(typeof(ExponentialEase))]
+	[DynamicWindowsRuntimeCast(typeof(PowerEase))]
 	private static EasingFunctionBase? CloneEasingFunction(EasingFunctionBase? original)
 	{
 		if (original == null) return null;
@@ -1846,6 +1859,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	/// <summary>
 	/// Enables text selection on the internal TextBlock named "Message".
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(TextBlock))]
 	private void EnableMessageTextSelection()
 	{
 		// Skip if already done for current template, or if control is disposing/unloading.
@@ -1876,6 +1890,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	/// <param name="parent">Root element to begin search.</param>
 	/// <param name="controlName">Name of the child control to locate.</param>
 	/// <returns>The matching DependencyObject or null.</returns>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static DependencyObject? TryFindChildByName(DependencyObject parent, string controlName)
 	{
 		if (parent == null)

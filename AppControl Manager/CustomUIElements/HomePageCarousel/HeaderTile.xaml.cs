@@ -52,6 +52,7 @@ using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements.HomePageCarousel;
 
@@ -65,6 +66,7 @@ internal sealed partial class HeaderTile : Button
 
 	public ImageSource ImageUrl
 	{
+		[DynamicWindowsRuntimeCast(typeof(ImageSource))]
 		get => (ImageSource)GetValue(ImageUrlProperty);
 		set => SetValue(ImageUrlProperty, value);
 	}
@@ -121,6 +123,7 @@ internal sealed partial class HeaderTile : Button
 		DefaultStyleKey = typeof(HeaderTile);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(StackPanel))]
 	protected override void OnApplyTemplate()
 	{
 		base.OnApplyTemplate();

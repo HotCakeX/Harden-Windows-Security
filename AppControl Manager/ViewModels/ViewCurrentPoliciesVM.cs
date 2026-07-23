@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -646,6 +647,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			{ "PolicyOptions",   (Atlas.GetStr("PolicyOptionsLabel"),   ci => ci.PolicyOptionsDisplay) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -776,6 +778,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;

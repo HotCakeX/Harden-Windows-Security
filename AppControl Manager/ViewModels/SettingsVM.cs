@@ -30,6 +30,7 @@ using Microsoft.Windows.AppNotifications;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using System.Linq;
 using Windows.ApplicationModel.Core;
+using WinRT;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity.WindowComponents;
@@ -78,6 +79,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(ToggleSwitch))]
 	internal void ExtraLanguagesPack1ToggleSwitch_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		if (sender is ToggleSwitch toggleSwitch)
@@ -348,6 +350,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(ToggleSwitch))]
 	internal async void ManageExtraLanguagesPack1(object sender, RoutedEventArgs e)
 	{
 		if (_suppressExtraLanguagesPack1ToggleSwitchToggled)
@@ -560,6 +563,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(ToggleSwitch))]
 	internal void FlowDirectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
 	{
 		MainWindowVM.SetCaptionButtonsFlowDirection(((ToggleSwitch)sender).IsOn ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
@@ -573,6 +577,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	}
 
 	// Only Dark theme looks good when Acrylic Thin or custom backdrop brushes are used.
+	[DynamicWindowsRuntimeCast(typeof(ComboBox))]
 	internal void AppThemeSetting_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		int x = ((ComboBox)sender).SelectedIndex;
@@ -611,6 +616,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	}
 
 	// To set the Color Picker's color to the one currently in use in App Settings.
+	[DynamicWindowsRuntimeCast(typeof(ColorPicker))]
 	internal void AcrylicThinTintColorPicker_Loaded(object sender, RoutedEventArgs e)
 	{
 		if (RGBHEX.ToRGB(Atlas.Settings.AcrylicThinTintColor, out byte R, out byte G, out byte B))
@@ -651,6 +657,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	}
 
 	// To set the Color Picker's color to the one currently in use in App Settings.
+	[DynamicWindowsRuntimeCast(typeof(ColorPicker))]
 	internal void BackdropMicaBrushTintColorPicker_Loaded(object sender, RoutedEventArgs e)
 	{
 		if (RGBHEX.ToRGB(Atlas.Settings.BackdropMicaBrushTintColor, out byte R, out byte G, out byte B))
@@ -707,6 +714,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	}
 
 	// To set the Color Picker's color to the one currently in use in App Settings.
+	[DynamicWindowsRuntimeCast(typeof(ColorPicker))]
 	internal void BackdropBlurBrushTintColorPicker_Loaded(object sender, RoutedEventArgs e)
 	{
 		if (RGBHEX.ToRGB(Atlas.Settings.BackdropBlurBrushTintColor, out byte R, out byte G, out byte B))

@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -1696,6 +1697,7 @@ internal sealed partial class InteractiveLineChart : UserControl, INPCImplant
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(TextBlock))]
 	private bool ElementContainsVisibleTooltipContent(DependencyObject element)
 	{
 		if (element is TextBlock textBlock && TextMatchesVisibleTooltipContent(textBlock.Text))

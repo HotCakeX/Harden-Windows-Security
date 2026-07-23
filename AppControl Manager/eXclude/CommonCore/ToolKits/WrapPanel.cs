@@ -28,6 +28,7 @@ using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Windows.Foundation;
+using WinRT;
 
 #pragma warning disable CA1515
 
@@ -101,6 +102,7 @@ public sealed partial class WrapPanel : Panel
 	/// </summary>
 	public Orientation Orientation
 	{
+		[DynamicWindowsRuntimeCast(typeof(Orientation))]
 		get => (Orientation)GetValue(OrientationProperty);
 		set => SetValue(OrientationProperty, value);
 	}

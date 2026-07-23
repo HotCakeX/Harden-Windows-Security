@@ -24,6 +24,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -322,6 +323,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 		_ => state.ToString()
 	};
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private void HeaderSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)

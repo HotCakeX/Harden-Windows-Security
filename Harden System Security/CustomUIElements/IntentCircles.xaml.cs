@@ -28,6 +28,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Shapes;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -407,6 +408,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		element.PointerCaptureLost -= Item_PointerCaptureLost;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void Item_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 	{
 		if (_isDisposed) return;
@@ -417,6 +419,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void Item_PointerExited(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 	{
 		if (_isDisposed) return;
@@ -427,6 +430,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void Item_PointerPressed(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 	{
 		if (_isDisposed) return;
@@ -438,6 +442,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void Item_PointerReleased(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 	{
 		if (_isDisposed) return;
@@ -449,6 +454,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void Item_PointerCanceled(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 	{
 		if (_isDisposed) return;
@@ -459,6 +465,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void Item_PointerCaptureLost(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 	{
 		if (_isDisposed) return;

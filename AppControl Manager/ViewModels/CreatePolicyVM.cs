@@ -25,6 +25,7 @@ using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -72,6 +73,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying AllowMicrosoft policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void AllowMicrosoftCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try
@@ -185,6 +187,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying DefaultWindows policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void DefaultWindowsCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		DefaultWindowsInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -296,6 +299,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying SignedAndReputable policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void SignedAndReputableCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		SignedAndReputableInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -379,6 +383,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended driver block rules policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void RecommendedDriverBlockRulesCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		RecommendedDriverBlockRulesSettingsIsExpanded = true;
@@ -479,6 +484,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler for creating/deploying Microsoft recommended user-mode block rules policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void RecommendedUserModeBlockRulesCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try
@@ -551,6 +557,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// Event handler to prepare the system for Strict Kernel-mode policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void StrictKernelModePolicyCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		try
@@ -621,7 +628,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// </summary>
 	internal async void RMMBlockingPolicyCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) => await RMMBlockingPolicyCreateButton_Private(sender);
 
-
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	private async Task RMMBlockingPolicyCreateButton_Private(object? sender)
 	{
 		try
@@ -734,6 +741,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal async void DownloadsDefenseMeasurePolicyCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) =>
 		await DownloadsDefenseMeasurePolicyCreateButton_Private(sender);
 
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	private async Task DownloadsDefenseMeasurePolicyCreateButton_Private(object? sender)
 	{
 		try
@@ -806,6 +814,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal async void DangerousScriptHostsBlockingPolicyCreateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) =>
 		await DangerousScriptHostsBlockingPolicyCreateButton_Private(sender);
 
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	private async Task DangerousScriptHostsBlockingPolicyCreateButton_Private(object? sender)
 	{
 		try
@@ -902,6 +911,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void AppManifestsPolicyCreateButton_Click(object sender, RoutedEventArgs e)
 	{
 		try

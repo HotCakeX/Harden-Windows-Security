@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
+using WinRT;
 
 namespace CommonCore.Others;
 
@@ -163,6 +164,7 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// Walks the VisualTree under 'element' and returns the first ScrollViewer it finds.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(ScrollViewer))]
 	internal static ScrollViewer? FindScrollViewer(this DependencyObject element)
 	{
 		if (element is ScrollViewer sv)
@@ -440,6 +442,8 @@ internal static partial class ListViewHelper
 	/// <param name="disableAnimation">Controls whether the scrolling action should be animated or occur instantly.</param>
 	/// <param name="scrollIfVisible">Determines if the scrolling should occur even if the item is already visible.</param>
 	/// <returns>Returns a Task representing the asynchronous operation of scrolling the item into view.</returns>
+	[DynamicWindowsRuntimeCast(typeof(SelectorItem))]
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal static async Task SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(ListView listView, ScrollViewer listViewScrollViewer, int index, bool disableAnimation = false, bool scrollIfVisible = true)
 	{
 

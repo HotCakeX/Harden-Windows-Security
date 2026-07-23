@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -36,7 +37,9 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 	private static readonly Color TransparentColor = Color.FromArgb(0, 0, 0, 0);
 
 	// Static cached button styles
+	[DynamicWindowsRuntimeCast(typeof(Style))]
 	private static readonly Style DefaultButtonStyle = (Style)Application.Current.Resources["DefaultButtonStyle"];
+	[DynamicWindowsRuntimeCast(typeof(Style))]
 	private static readonly Style AccentButtonStyle = (Style)Application.Current.Resources["AccentButtonStyle"];
 
 	private Storyboard _fadeOutStoryboard = new();

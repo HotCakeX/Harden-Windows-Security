@@ -25,6 +25,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.UI;
+using WinRT;
 
 #pragma warning disable CA5394
 
@@ -39,6 +40,7 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 #endif
 
 	// This is necessary so that the carousel content wouldn't be visible briefly after navigating to another page by clicking on one of the carousel tiles.
+	[DynamicWindowsRuntimeCast(typeof(Panel))]
 	protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
 	{
 		// Brute-force Teardown ensures the old page cannot render a single more frame during navigation.

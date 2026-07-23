@@ -33,6 +33,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -186,6 +187,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	internal GridLength ColumnWidth17 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth18 { get; set => SP(ref field, value); }
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void FileAndFoldersHeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -223,6 +225,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Main button's event handler for files and folders Deny policy creation
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreateFilesAndFoldersDenyPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		FilesAndFoldersSettingsExpanderIsExpanded = true;
@@ -692,6 +695,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Main button's event handler - Create Deny policy based on PFNs
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreatePFNDenyPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 		PFNBasedSettingsExpanderIsExpanded = true;
@@ -884,6 +888,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
 	/// <param name="e">Event arguments</param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void CopyAppDetails_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -932,6 +938,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="sender">The MenuFlyoutItem that was clicked</param>
 	/// <param name="e">Event arguments</param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal async void OpenAppLocation_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -1029,6 +1037,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Event handler for the main button - to create Deny pattern based File path policy
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void CreateCustomPatternBasedFileRuleDenyPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{
 

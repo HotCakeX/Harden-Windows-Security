@@ -459,6 +459,7 @@ internal sealed class NavigationService
 	/// Get all NavigationViewItem items in the MainNavigation, that includes MenuItems + any nested MenuItems + FooterMenuItems.
 	/// Only needs to run once.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(NavigationViewItem))]
 	private void CollectNavigationItems()
 	{
 		if (MainNavigation is null) return;

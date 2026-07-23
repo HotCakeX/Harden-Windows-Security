@@ -30,6 +30,7 @@ using CommonCore.IncrementalCollection;
 using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -184,6 +185,7 @@ internal sealed partial class ViewExportedFunctionsVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button &&

@@ -35,6 +35,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.Analysis;
 
@@ -982,6 +983,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	/// <summary>
 	/// Generates and prompts the user to download an SVG rendering of the specified chart.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void ExportChart_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button btn && btn.Tag is string chartType)
@@ -1049,6 +1051,8 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	/// <summary>
 	/// Opens the popup with an animated popout effect when hovering over the item.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void AnalysisItem_PointerEntered(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is Grid containerGrid)
@@ -1083,6 +1087,8 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	/// Manages the state when leaving the base grid.
 	/// If the pointer moved over the popup, we intentionally ignore the closing command.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void AnalysisItem_PointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is Grid containerGrid)
@@ -1115,6 +1121,8 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	/// <summary>
 	/// Safely closes the popup only when the cursor actually leaves the boundaries of the Popup itself.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
+	[DynamicWindowsRuntimeCast(typeof(Popup))]
 	internal void PopupBorder_PointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is FrameworkElement popupBorder && popupBorder.Tag is Popup popup)
@@ -1139,6 +1147,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	/// <summary>
 	/// Handles the click event for the small Copy button inside the popup item.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void CopyItemText_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button btn && btn.Tag is string textToCopy)
@@ -1150,6 +1159,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	/// <summary>
 	/// Handles click event for palette buttons to apply a specific palette scheme.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void PaletteButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button btn && btn.Tag is ColorPalette palette)
@@ -1161,6 +1171,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	/// <summary>
 	/// Smooth composition animation for hovering into a Pie Slice
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void PieSlice_PointerEntered(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is FrameworkElement element && element.Tag is PieSliceData data)
@@ -1188,6 +1199,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	/// <summary>
 	/// Smooth composition animation returning the Pie Slice back to idle state.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void PieSlice_PointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is FrameworkElement element && element.Tag is PieSliceData)

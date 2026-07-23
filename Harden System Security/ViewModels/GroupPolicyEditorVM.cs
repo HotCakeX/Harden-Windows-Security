@@ -33,6 +33,7 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -200,6 +201,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			{ "Size",           (Atlas.GetStr("SizeHeader/Text") + ": ",           rpe => rpe.Size) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button &&
@@ -243,6 +245,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;

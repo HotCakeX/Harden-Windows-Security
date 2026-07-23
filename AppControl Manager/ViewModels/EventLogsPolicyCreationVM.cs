@@ -820,6 +820,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		args.Handled = true;
 	}
 
+	[WinRT.DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)

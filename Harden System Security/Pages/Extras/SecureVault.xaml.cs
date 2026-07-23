@@ -41,6 +41,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
+using WinRT;
 
 namespace HardenSystemSecurity.Pages.Extras;
 
@@ -265,8 +266,10 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 			: DefaultTokenStorageFolder;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Style))]
 	private Style? GetStyleOrNull(string key) => Resources.TryGetValue(key, out object styleResource) && styleResource is Style typedStyle ? typedStyle : null;
 
+	[DynamicWindowsRuntimeCast(typeof(Style))]
 	private static Style? GetStyleOrNull(ResourceDictionary resources, string key) => resources.TryGetValue(key, out object styleResource) && styleResource is Style typedStyle ? typedStyle : null;
 
 	private static bool TryHandleEnterKey(KeyRoutedEventArgs args, Action action)
@@ -1358,6 +1361,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		MainInfoBar.WriteSuccess("All TOTP tokens were removed from the encrypted vault.");
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private void CopyTotpCode_Click(object sender, RoutedEventArgs args)
 	{
 		if (sender is not Button button || button.Tag is not TotpTokenItem tokenItem || string.IsNullOrWhiteSpace(tokenItem.Code))
@@ -1366,6 +1370,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		MainInfoBar.WriteSuccess(string.Concat("Copied code for ", tokenItem.DisplayName, "."));
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private void RemoveTotpToken_Click(object sender, RoutedEventArgs args)
 	{
 		if (!IsVaultUnlocked || sender is not Button button || button.Tag is not TotpTokenItem tokenItem)
@@ -1394,6 +1399,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		MainInfoBar.WriteSuccess(string.Concat("Removed ", displayName, "."));
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private async void ShowTotpTokenNotes_Click(object sender, RoutedEventArgs args)
 	{
 		if (sender is not Button button || button.Tag is not TotpTokenItem tokenItem || string.IsNullOrWhiteSpace(tokenItem.Notes))
@@ -1402,6 +1408,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		await ShowTokenNotePreviewDialog(tokenItem);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private async void EditTotpTokenNotes_Click(object sender, RoutedEventArgs args)
 	{
 		if (!IsVaultUnlocked || sender is not Button button || button.Tag is not TotpTokenItem tokenItem || !Tokens.Contains(tokenItem))

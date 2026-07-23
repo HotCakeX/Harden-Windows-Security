@@ -27,6 +27,7 @@ using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -269,6 +270,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal async void MainListView_Loaded(object sender, RoutedEventArgs e)
 	{
 		while (IsAdding)
@@ -345,6 +347,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// <summary>
 	/// Sort header button click handler.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -380,6 +383,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// <summary>
 	/// Copies a single property (column) of the currently selected row.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopySinglePropertyMenuItem_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is not MenuFlyoutItem mfi || mfi.Tag is not string key)

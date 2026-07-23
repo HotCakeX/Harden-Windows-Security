@@ -26,6 +26,7 @@ using AppControlManager.ViewModels;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using WinRT;
 
 namespace AppControlManager.Pages;
 
@@ -129,6 +130,7 @@ internal sealed partial class PolicyAssignmentsDialog : ContentDialogV2, INotify
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private async void DeleteAssignment_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.DataContext is PolicyAssignmentDisplay assignment)

@@ -28,6 +28,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -393,6 +394,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		return query.ToList();
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(SelectorBar))]
 	internal void SelectorBar_Loaded(object sender, RoutedEventArgs e)
 	{
 		// Default select the "Configuration Details" tab when the UI loads
@@ -409,6 +411,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(SelectorBar))]
 	private void SelectorBar_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
 	{
 		// Forces the SelectorBar to update visually when the ListView recycles the container
@@ -431,6 +434,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void BrowseService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem button && button.Tag is ServiceItemViewModel svm)
@@ -463,6 +467,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void OpenInRegistry_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem button && button.Tag is ServiceItemViewModel svm)
@@ -494,6 +499,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal async void SearchService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem button && button.Tag is ServiceItemViewModel svm)
@@ -503,6 +509,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void SecurityService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem button && button.Tag is ServiceItemViewModel svm)
@@ -513,6 +520,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void FileSecurity_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is ServiceItemViewModel svm)
@@ -1229,6 +1237,9 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 		return string.Compare(left.Item.ServiceName, right.Item.ServiceName, StringComparison.OrdinalIgnoreCase);
 	}
+
+	[DynamicWindowsRuntimeCast(typeof(Button))]
+	[DynamicWindowsRuntimeCast(typeof(FontIcon))]
 	internal async void CopyItem_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is not null)
@@ -1361,6 +1372,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		finally { _ = NativeMethods.CloseServiceHandle(scManager); }
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void SaveStartType_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is ServiceItemViewModel svm)
@@ -1428,6 +1440,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void SaveServiceType_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is ServiceItemViewModel svm)
@@ -1486,6 +1499,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void SaveErrorControl_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is ServiceItemViewModel svm)
@@ -1510,6 +1524,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void SaveLaunchProtected_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is ServiceItemViewModel svm)
@@ -1613,6 +1628,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		finally { _ = NativeMethods.CloseServiceHandle(scManager); }
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal async void DeleteService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem item && item.Tag is ServiceItemViewModel svm)
@@ -1710,30 +1726,35 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		_ = Atlas.AppDispatcher.TryEnqueue(LoadServices_Click);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal async void StartService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem item && item.Tag is ServiceItemViewModel svm)
 			await Task.Run(() => { if (ChangeServiceState(svm, 0)) RefreshList(); });
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal async void StopService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem item && item.Tag is ServiceItemViewModel svm)
 			await Task.Run(() => { if (ChangeServiceState(svm, NativeMethods.SERVICE_CONTROL_STOP)) RefreshList(); });
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal async void PauseService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem item && item.Tag is ServiceItemViewModel svm)
 			await Task.Run(() => { if (ChangeServiceState(svm, NativeMethods.SERVICE_CONTROL_PAUSE)) RefreshList(); });
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal async void ResumeService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem item && item.Tag is ServiceItemViewModel svm)
 			await Task.Run(() => { if (ChangeServiceState(svm, NativeMethods.SERVICE_CONTROL_CONTINUE)) RefreshList(); });
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal async void RestartService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem item && item.Tag is ServiceItemViewModel svm)
@@ -1752,6 +1773,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void LoadServicesButton_Loaded(object sender, RoutedEventArgs e)
 	{
 		// Set the focus to the LoadServices button when the page loads and if the services haven't been retrieved yet.
@@ -1759,6 +1781,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 			_ = await FocusManager.TryFocusAsync((Button)sender, FocusState.Keyboard);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void DisableAndStopRecommendedService_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is RecommendedService service)

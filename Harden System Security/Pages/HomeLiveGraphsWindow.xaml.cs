@@ -47,6 +47,7 @@ using Windows.Devices.Sensors;
 using Windows.Foundation;
 using Windows.Graphics;
 using Windows.UI;
+using WinRT;
 
 #pragma warning disable CA5394 // Random usage here is OK.
 
@@ -305,6 +306,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		UpdateHomeTitlePulseRing(HomeTitlePulseRingThreeEllipse, elapsedSeconds, 4.54);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(CompositeTransform))]
 	private static void UpdateHomeTitlePulseRing(Ellipse pulseRing, double elapsedSeconds, double phaseOffsetSeconds)
 	{
 		const double pulseDurationSeconds = 6.8;
@@ -1435,6 +1437,7 @@ internal sealed partial class HomeLiveGraphsWindow
 		internal int DisplayIndex => displayIndex;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void OnRootGridLoaded(object sender, RoutedEventArgs e)
 	{
 		// The window is created to be used in Dark mode.

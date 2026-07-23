@@ -46,6 +46,7 @@ using Microsoft.Win32;
 using Microsoft.UI.Content;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Windows.Storage;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
@@ -260,6 +261,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	private void MaximizeWindow_Click() => overlappedPresenter.Maximize();
 
+	[DynamicWindowsRuntimeCast(typeof(ToggleMenuFlyoutItem))]
 	private void ToggleWindowAlwaysOnTop_Click(object sender, RoutedEventArgs args)
 	{
 		if (sender is not ToggleMenuFlyoutItem toggleMenuFlyoutItem)
@@ -461,6 +463,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
+	[DynamicWindowsRuntimeCast(typeof(Style))]
 	internal void MainWindow_SizeChanged(AppWindow sender, AppWindowChangedEventArgs args)
 	{
 		if (args.DidSizeChange)
@@ -1302,6 +1305,8 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// 2. Manually applies the active visual state (Border + Elevation).
 	/// 3. Sets a lock (_ignoreScrollUpdates) so the scroll logic doesn't override this selection immediately.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void OnAnimatedItemClicked(object sender, RoutedEventArgs e)
 	{
 		Button button = (Button)sender;
@@ -1345,6 +1350,8 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// Handles automatic selection of the center item during scrolling.
 	/// respects the _ignoreScrollUpdates lock to prevent overriding explicit clicks.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(SwipeControl))]
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void Animated_ScrollViewer_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
 	{
 		// If the user just clicked an item, ignore scroll updates for a short time
@@ -1398,6 +1405,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Applies visual styles (Gradient Border + Elevation) to the target Grid.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Border))]
 	private void UpdateActiveSidebarItemVisuals(Grid newGrid)
 	{
 		// 1. Reset the previously selected item if it's different
@@ -1433,6 +1441,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Resets the visual state of a sidebar item to its default (inactive) state.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Border))]
 	private static void ResetSidebarItemVisuals(Grid grid)
 	{
 		// Reset Elevation
@@ -1449,6 +1458,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnAnimatedItemGotFocus(object sender, RoutedEventArgs e)
 	{
 		// When the clicked item has been received, bring it to the middle of the viewport.
@@ -1464,6 +1474,9 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="args"></param>
+	[DynamicWindowsRuntimeCast(typeof(Control))]
+	[DynamicWindowsRuntimeCast(typeof(SwipeControl))]
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void OnElementPrepared(ItemsRepeater sender, ItemsRepeaterElementPreparedEventArgs args)
 	{
 		// Cache Height and Margin for optimization
@@ -1527,6 +1540,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// Triggers the transfer icon animation from any source UIElement to the SidebarButton.
 	/// </summary>
 	/// <param name="sourceElement">The element starting the animation.</param>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void TriggerTransferIconAnimation(UIElement? sourceElement)
 	{
 		if (sourceElement == null || AnimationOverlay == null || SidebarButton == null || TransferIcon == null)
@@ -2112,6 +2126,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	private async void OnSidebarDrop(object sender, DragEventArgs e)
 	{
 		try

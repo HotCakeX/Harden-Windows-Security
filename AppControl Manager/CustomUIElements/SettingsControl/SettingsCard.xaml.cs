@@ -29,6 +29,7 @@ using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
+using WinRT;
 
 namespace CommonCore.ToolKits;
 
@@ -105,6 +106,7 @@ internal partial class SettingsCard : ButtonBase
 	/// </summary>
 	public SettingsCard() => DefaultStyleKey = typeof(SettingsCard);
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	protected override void OnApplyTemplate()
 	{
 		DetachRootGridSizeChanged();
@@ -141,6 +143,7 @@ internal partial class SettingsCard : ButtonBase
 	}
 
 	// We automatically set the AutomationProperties.Name of the Content if not configured.
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	private void SetAccessibleContentName()
 	{
 		if (Header is string headerString && !string.IsNullOrEmpty(headerString))
@@ -284,6 +287,7 @@ internal partial class SettingsCard : ButtonBase
 		CheckHeaderIconState();
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(BitmapIcon))]
 	private void CheckHeaderIconState()
 	{
 		// The Disabled visual state will only set the right Foreground brush, but for images we need to lower the opacity so it looks disabled.
@@ -294,6 +298,7 @@ internal partial class SettingsCard : ButtonBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnActionIconChanged()
 	{
 		if (GetTemplateChild(ActionIconPresenterHolder) is FrameworkElement actionIconPresenter)
@@ -302,6 +307,7 @@ internal partial class SettingsCard : ButtonBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnHeaderIconChanged()
 	{
 		if (GetTemplateChild(HeaderIconPresenterHolder) is FrameworkElement headerIconPresenter)
@@ -312,6 +318,7 @@ internal partial class SettingsCard : ButtonBase
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnDescriptionChanged()
 	{
 		if (GetTemplateChild(DescriptionPresenter) is FrameworkElement descriptionPresenter)
@@ -324,6 +331,7 @@ internal partial class SettingsCard : ButtonBase
 		UpdateContentSpacingState(GetContentAlignmentStateName());
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnHeaderChanged()
 	{
 		if (GetTemplateChild(HeaderPresenter) is FrameworkElement headerPresenter)
@@ -423,6 +431,7 @@ internal partial class SettingsCard : ButtonBase
 		_ = VisualStateManager.GoToState(this, NoContentSpacingState, true);
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(VisualStateGroup))]
 	private VisualStateGroup? GetRootGridVisualStateGroup(string groupName)
 	{
 		if (_rootGrid is null)
@@ -442,6 +451,7 @@ internal partial class SettingsCard : ButtonBase
 		return null;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private FrameworkElement? GetFocusedElement() => XamlRoot != null
 			? FocusManager.GetFocusedElement(XamlRoot) as FrameworkElement
 			: FocusManager.GetFocusedElement() as FrameworkElement;
@@ -533,6 +543,7 @@ internal partial class SettingsCard : ButtonBase
 	/// <summary>
 	/// The backing <see cref="DependencyProperty"/> for the <see cref="HeaderIcon"/> property.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(IconElement))]
 	public static readonly DependencyProperty HeaderIconProperty = DependencyProperty.Register(
 		nameof(HeaderIcon),
 		typeof(IconElement),
@@ -609,6 +620,7 @@ internal partial class SettingsCard : ButtonBase
 	/// </summary>
 	public IconElement HeaderIcon
 	{
+		[DynamicWindowsRuntimeCast(typeof(IconElement))]
 		get => (IconElement)GetValue(HeaderIconProperty);
 		set => SetValue(HeaderIconProperty, value);
 	}
@@ -618,6 +630,7 @@ internal partial class SettingsCard : ButtonBase
 	/// </summary>
 	public IconElement ActionIcon
 	{
+		[DynamicWindowsRuntimeCast(typeof(IconElement))]
 		get => (IconElement)GetValue(ActionIconProperty);
 		set => SetValue(ActionIconProperty, value);
 	}

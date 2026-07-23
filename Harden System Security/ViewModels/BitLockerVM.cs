@@ -33,6 +33,7 @@ using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -378,6 +379,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// </summary>
 	private ListViewHelper.SortState SortState { get; set; } = new();
 
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is Button button && button.Tag is string key)
@@ -419,6 +421,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyVolumeProperty_Click(object sender, RoutedEventArgs e)
 	{
 		MenuFlyoutItem menuItem = (MenuFlyoutItem)sender;
@@ -438,6 +441,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void CopyKeyProtector_Click(object sender, RoutedEventArgs e)
 	{
 		try
@@ -562,6 +566,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// <summary>
 	/// Event handler to remove a Key Protector from a BitLocker volume.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal async void RemoveKeyProtector_Click(object sender, RoutedEventArgs e)
 	{
 		try

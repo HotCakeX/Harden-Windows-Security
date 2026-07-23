@@ -58,6 +58,7 @@ using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.Graphics.Effects;
 using Windows.UI;
+using WinRT;
 
 #pragma warning disable CA1062, CA1515, CA1724, CA1716, CA2227
 
@@ -1131,6 +1132,7 @@ public static class Effects
 	public static readonly DependencyProperty ShadowProperty =
 		DependencyProperty.RegisterAttached("Shadow", typeof(AttachedShadowBase), typeof(Effects), new PropertyMetadata(null, OnShadowChanged));
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static void OnShadowChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
 		if (d is not FrameworkElement element)
@@ -1494,6 +1496,7 @@ public sealed class PipelineVisualFactory : PipelineVisualFactoryBase
 		typeof(PipelineVisualFactory),
 		new PropertyMetadata(null));
 
+	[DynamicWindowsRuntimeCast(typeof(SpriteVisual))]
 	public override async ValueTask<Visual> GetAttachedVisualAsync(UIElement element)
 	{
 		SpriteVisual visual = (SpriteVisual)await base.GetAttachedVisualAsync(element);
@@ -1648,6 +1651,7 @@ public static class UIElementExtensions
 	/// </summary>
 	/// <param name="d">The target object the property was changed for.</param>
 	/// <param name="e">The <see cref="DependencyPropertyChangedEventArgs"/> instance for the current event.</param>
+	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	private static async void OnVisualFactoryPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
 		UIElement element = (UIElement)d;

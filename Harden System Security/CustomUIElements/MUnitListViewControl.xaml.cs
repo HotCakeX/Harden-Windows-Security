@@ -32,6 +32,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.UI;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -182,6 +183,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <summary>
 	/// Configures the ItemsStackPanel with the current AppSettings value
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(ItemsStackPanel))]
 	private void ConfigureItemsStackPanel()
 	{
 		if (MainListView.ItemsPanelRoot is ItemsStackPanel itemsStackPanel)
@@ -1246,6 +1248,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// Checks for a pending navigation target in the global NavigationService state.
 	/// If one exists and belongs to the current data set, scrolls to and highlights it.
 	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(ListViewItem))]
 	private async void CheckForPendingNavigationHighlight()
 	{
 		if (_isDisposed) return;
@@ -1316,6 +1319,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	// Using HighlightColor for the "Pulse"
 	private static readonly Color HighlightColor = Color.FromArgb(255, 138, 43, 226); // Violet
 
+	[DynamicWindowsRuntimeCast(typeof(SolidColorBrush))]
 	private void StartHighlightAnimation(Border target)
 	{
 		StopHighlightAnimation();

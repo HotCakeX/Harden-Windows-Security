@@ -26,6 +26,7 @@ using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
+using WinRT;
 
 namespace AppControlManager.CustomUIElements;
 
@@ -146,6 +147,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(AutoSuggestBox))]
 	private void CertificateCommonNameAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
 	{
 		// Set the filtered items as suggestions in the AutoSuggestBox

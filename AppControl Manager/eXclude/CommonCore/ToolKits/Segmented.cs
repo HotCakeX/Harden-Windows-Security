@@ -30,6 +30,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Markup;
 using Windows.System;
+using WinRT;
 
 namespace CommonCore.ToolKits;
 
@@ -53,6 +54,7 @@ internal sealed partial class EqualPanel : Panel
 
 	public Orientation Orientation
 	{
+		[DynamicWindowsRuntimeCast(typeof(Orientation))]
 		get => (Orientation)GetValue(OrientationProperty);
 		set => SetValue(OrientationProperty, value);
 	}
@@ -165,7 +167,7 @@ internal sealed partial class SegmentedItem : ListViewItem
 	}
 
 	private static readonly DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(IconElement), typeof(SegmentedItem), new PropertyMetadata(null, (d, e) => ((SegmentedItem)d).UpdateVisualStates()));
-	public IconElement Icon { get => (IconElement)GetValue(IconProperty); set => SetValue(IconProperty, value); }
+	public IconElement Icon { [DynamicWindowsRuntimeCast(typeof(IconElement))] get => (IconElement)GetValue(IconProperty); set => SetValue(IconProperty, value); }
 
 	internal SegmentedItem()
 	{
@@ -224,7 +226,7 @@ internal sealed partial class Segmented : ListViewBase
 	private bool _hasLoaded;
 
 	private static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(Segmented), new PropertyMetadata(Orientation.Horizontal, (d, e) => ((Segmented)d).OnOrientationChanged()));
-	public Orientation Orientation { get => (Orientation)GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
+	public Orientation Orientation { [DynamicWindowsRuntimeCast(typeof(Orientation))] get => (Orientation)GetValue(OrientationProperty); set => SetValue(OrientationProperty, value); }
 
 	internal Segmented()
 	{

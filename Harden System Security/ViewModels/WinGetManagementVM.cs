@@ -33,6 +33,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Windows.Foundation;
 using Windows.System;
+using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
@@ -427,10 +428,13 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 	internal async void ExportInstalledProgramsToJson_Click() => await ExportPackagesToJsonAsync("Installed programs", InstalledPrograms, "Harden System Security WinGet Installed Programs.json");
 
+	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal void SearchResultsListView_SelectionChanged(object sender, SelectionChangedEventArgs args) => SelectedSearchResultsCount = sender is ListView listView ? listView.SelectedItems.Count : 0;
 
+	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal void InstalledProgramsListView_SelectionChanged(object sender, SelectionChangedEventArgs args) => SelectedInstalledProgramsCount = sender is ListView listView ? listView.SelectedItems.Count : 0;
 
+	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal void SourcesListView_SelectionChanged(object sender, SelectionChangedEventArgs args) => SelectedSourcesCount = sender is ListView listView ? listView.SelectedItems.Count : 0;
 
 
@@ -578,6 +582,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 	internal async void UpdateSource(WinGetSourceInfo sourceInfo) => await UpdateSourceAsync(sourceInfo);
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void CopyPackageDetail_Click(object sender, RoutedEventArgs args)
 	{
 		if (sender is not FrameworkElement frameworkElement || frameworkElement.Tag is not string detailValue || string.IsNullOrWhiteSpace(detailValue))
@@ -783,6 +788,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 	private string GetSelectedPackageSearchSourceName() => SelectedPackageSearchSourceValue is 0 || SelectedPackageSearchSourceValue >= PackageSearchSourceOptions.Count ? string.Empty : PackageSearchSourceOptions[SelectedPackageSearchSourceValue];
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static bool TryGetPackageSearchResult(object sender, [NotNullWhen(true)] out WinGetPackageSearchResult? packageSearchResult)
 	{
 		packageSearchResult = sender is FrameworkElement frameworkElement
@@ -791,6 +797,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		return packageSearchResult is not null;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static bool TryGetSourceInfo(object sender, [NotNullWhen(true)] out WinGetSourceInfo? sourceInfo)
 	{
 		sourceInfo = sender is FrameworkElement frameworkElement ? frameworkElement.DataContext as WinGetSourceInfo : null;
@@ -1109,6 +1116,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 			async (packageSearchResult, cancellationToken) => await UninstallPackageAsync(packageSearchResult, packageUninstallMode, packageUninstallScope, true, true, cancellationToken));
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static bool TryGetBundlePackage(object sender, [NotNullWhen(true)] out WinGetPackageBundlePackage? bundlePackage)
 	{
 		bundlePackage = sender is FrameworkElement frameworkElement ? frameworkElement.Tag as WinGetPackageBundlePackage : null;

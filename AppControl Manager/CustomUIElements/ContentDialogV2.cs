@@ -23,6 +23,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Windows.Foundation;
 using Windows.UI;
+using WinRT;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity;
@@ -81,6 +82,8 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	private readonly TypedEventHandler<ContentDialog, ContentDialogOpenedEventArgs>? _openedHandler;
 	private readonly TypedEventHandler<ContentDialog, ContentDialogClosingEventArgs>? _closingHandler;
 
+	[DynamicWindowsRuntimeCast(typeof(Brush))]
+	[DynamicWindowsRuntimeCast(typeof(Style))]
 	internal ContentDialogV2()
 	{
 		try
@@ -644,6 +647,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	}
 
 	// Method for handling content presenter parent scenario
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static bool HandleContentPresenterParentStatic(Border backgroundBorder, ContentPresenter contentPresenter, Border dialogContainer, Grid mainGrid)
 	{
 		try
@@ -1231,6 +1235,12 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Border))]
+	[DynamicWindowsRuntimeCast(typeof(ContentPresenter))]
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
+	[DynamicWindowsRuntimeCast(typeof(StackPanel))]
+	[DynamicWindowsRuntimeCast(typeof(Canvas))]
+	[DynamicWindowsRuntimeCast(typeof(Panel))]
 	private void ApplyShadowToDialog()
 	{
 		try

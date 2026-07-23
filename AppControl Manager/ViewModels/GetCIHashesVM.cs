@@ -23,6 +23,7 @@ using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -66,6 +67,7 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
+	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	internal async void OnDrop(object sender, DragEventArgs e)
 	{
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))

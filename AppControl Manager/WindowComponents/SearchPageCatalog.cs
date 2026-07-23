@@ -55,7 +55,7 @@ internal static class SearchPageCatalog
 		_pagesListFromSearch.Clear();
 
 		// Normalize the query
-		ReadOnlySpan<char> needle = query.Trim().AsSpan();
+		ReadOnlySpan<char> needle = query.AsSpan().Trim();
 
 		// Iterate over the search map defined in MainWindowVM
 		foreach (KeyValuePair<string, Type> entry in ViewModelProvider.MainWindowVM.NavigationPageToItemContentMapForSearch)

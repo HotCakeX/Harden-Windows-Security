@@ -423,7 +423,7 @@
                                                 HorizontalAlignment="Right"
                                                 FontSize="8"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="{x:Bind ViewModel.HomeChartEndSecondsLabel, Mode=OneWay}"/>
+                                                Text="0 Seconds"/>
                                 </Grid>
 
                                 <Grid Margin="10,8,10,0">
@@ -516,7 +516,7 @@
                                                 HorizontalAlignment="Right"
                                                 FontSize="8"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="{x:Bind ViewModel.HomeChartEndSecondsLabel, Mode=OneWay}"/>
+                                                Text="0 Seconds"/>
                                 </Grid>
 
                                 <Grid Margin="10,8,10,0">
@@ -776,7 +776,7 @@
                                                 HorizontalAlignment="Right"
                                                 FontSize="8"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="{x:Bind ViewModel.HomeChartEndSecondsLabel, Mode=OneWay}"/>
+                                                Text="0 Seconds"/>
                                 </Grid>
 
                                 <Grid Margin="10,8,10,0">

@@ -189,8 +189,8 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting");
 }
 
-internal sealed class MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
+internal sealed class MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage(string queryTitle, string query)
 {
-	internal string? QueryTitle { get; init; }
-	internal string? Query { get; init; }
+	internal string QueryTitle => queryTitle;
+	internal string Query => query;
 }

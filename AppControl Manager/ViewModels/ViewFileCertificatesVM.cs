@@ -579,7 +579,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			tBSHash: CertificateHelper.GetTBSCertificate(cert),
 			oIDs: string.Join(", ", cert.Extensions
 					.Select(ext =>
-						ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext?.Oid?.Value)
+						ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext.Oid?.Value)
 					.Where(oid => !string.IsNullOrWhiteSpace(oid))),
 			version: det.Version,
 			hasPrivateKey: det.HasPrivateKey,

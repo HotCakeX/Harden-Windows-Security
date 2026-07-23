@@ -787,7 +787,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Note: Keeping it transparent would probably not be good for accessibility.
 	/// Changing it during runtime is not possible without trigger a theme change: Light/Dark.
-	/// Application.RequestedTheme is read-only, so we us RootGrid which is the origin of all other elements.
+	/// Application.RequestedTheme is read-only, so we use RootGrid which is the origin of all other elements.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>

@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:CC="using:CommonCore"
     DefaultButton="Close"
     IsEnabled="{x:Bind AreElementsEnabled, Mode=OneWay}"
     x:Uid="CustomPoliciesLibraryCacheLocationManagerDialog">
@@ -32,13 +33,13 @@
                          TextWrapping="Wrap"
                          MaxWidth="350"
                          IsReadOnly="True"
-                         Text="{x:Bind AppSettings.CustomSidebarPoliciesLibraryCacheLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{x:Bind CC:Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          VerticalAlignment="Center" />
 
                 <CCToolKit:WrapPanel Orientation="Horizontal"
-                                    HorizontalAlignment="Center"
-                                    HorizontalSpacing="10"
-                                    VerticalSpacing="10">
+                                     HorizontalAlignment="Center"
+                                     HorizontalSpacing="10"
+                                     VerticalSpacing="10">
 
                     <Button x:Uid="BrowseAndSetCustomPoliciesLibraryCacheButton"
                             IsEnabled="{x:Bind AreElementsEnabled, Mode=OneWay}"

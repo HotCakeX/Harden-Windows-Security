@@ -95,7 +95,7 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(SampleIDProperty, value);
 	}
 
-	private static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(HeaderTile), new PropertyMetadata(defaultValue: false, (d, e) => ((HeaderTile)d).IsSelectedChanged((bool)e.OldValue, (bool)e.NewValue)));
+	private static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(HeaderTile), new PropertyMetadata(defaultValue: false, (d, e) => ((HeaderTile)d).IsSelectedChanged()));
 
 	public bool IsSelected
 	{
@@ -141,7 +141,7 @@ internal sealed partial class HeaderTile : Button
 		}
 	}
 
-	private void IsSelectedChanged(bool oldValue, bool newValue)
+	private void IsSelectedChanged()
 	{
 		if (_textPanel == null)
 		{

@@ -447,8 +447,6 @@ internal sealed partial class GridSplitter : SizerBase
 		}
 		else
 		{
-			if (!IsValidColumnWidth(_cachedCurrentColumn, currentChange) || !IsValidColumnWidth(_cachedSiblingColumn, siblingChange)) return false;
-
 			foreach (ColumnDefinition? col in _cachedResizable.ColumnDefinitions)
 			{
 				if (col == _cachedCurrentColumn) _ = SetColumnWidth(_cachedCurrentColumn, currentChange, GridUnitType.Star);
@@ -480,8 +478,6 @@ internal sealed partial class GridSplitter : SizerBase
 		}
 		else
 		{
-			if (!IsValidRowHeight(_cachedCurrentRow, currentChange) || !IsValidRowHeight(_cachedSiblingRow, siblingChange)) return false;
-
 			foreach (RowDefinition? row in _cachedResizable.RowDefinitions)
 			{
 				if (row == _cachedCurrentRow) _ = SetRowHeight(_cachedCurrentRow, currentChange, GridUnitType.Star);

@@ -7,3 +7,5 @@
 * You can now select multiple certificates in the Certificate Checking page to delete them from your system. Previously you had to do this one by one. The confirmation message is still displayed for every certificate before deletion.
 
 * You can now filter non-Microsoft-rooted certificates in the Certificate checking page based on chain build success status. This makes the result completely match the SigCheck tool's results from SysInternals, offering a more familiar results while also having options to expand the scope of the scan.
+
+* Improved the app and UI performance.

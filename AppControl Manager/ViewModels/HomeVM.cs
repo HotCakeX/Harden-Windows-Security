@@ -46,7 +46,6 @@ namespace AppControlManager.ViewModels;
 // 1. The Home page must not be consuming any resources (polling, timers, animations and such) when user navigates away from it.
 // 2. The Live System Intelligence window must not be consuming any resources(polling, timers, animations and such) when it is closed.
 // 3. If Live System Intelligence window is open but user has navigated away from the Home page, the graphs must continue to be updated correctly in the Live System Intelligence window, however, if that window gets closed as well while user is on another page in the main window, everything related to Home page and the Live System Intelligence window must be disposed so they don't consume any resources.
-
 internal sealed partial class HomeVM : ViewModelBase, IDisposable
 {
 	// Win2D chart sample snapshots used by the Home page compact charts.
@@ -54,6 +53,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal IReadOnlyList<double> AppRamChartSamples => _appRamChartSamples;
 	internal IReadOnlyList<double> CpuTemperatureChartSamples => _cpuTemperatureChartSamples;
 	internal IReadOnlyList<double> StorageTemperatureChartSamples => _storageTemperatureChartSamples;
+
+	// Default text to display while details are loading early at app startup.
+	private const string DefaultText = "Loading...";
 
 	/// <summary>
 	/// Event handler for when the home page is loaded.
@@ -111,16 +113,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				// Initialize and start the internet speed updater that fires every 2 second.
 				InitializeInternetSpeedUpdater();
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
-
-			try
-			{
-				// Refresh the Windows Defender feed info asynchronously (fire-and-forget)
-				_ = RefreshDefenderFeedAsync();
 			}
 			catch (Exception ex)
 			{
@@ -193,32 +185,11 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 				UsbDeviceCountText = "USB Info Unavailable";
 			}
 
-			try
-			{
-				OsInfoText = GetOsDetailsString();
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
+			OsInfoText = GetOsDetailsString();
 
-			try
-			{
-				ComputerNameText = Environment.MachineName;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
+			ComputerNameText = Environment.MachineName;
 
-			try
-			{
-				SystemInfoText = GetSystemModelInfoString();
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
+			SystemInfoText = GetSystemModelInfoString();
 
 			try
 			{
@@ -260,8 +231,10 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 				Logger.Write(ex);
 				ActivationStatusSummaryText = "Activation info unavailable";
 			}
-
 		});
+
+		// Refresh the Windows Defender feed info
+		await RefreshDefenderFeedAsync();
 	}
 
 	/// <summary>
@@ -296,26 +269,26 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 #endif
 
 	// TextBlock sources bound to the UI for the info tiles.
-	internal string? SystemTimeText { get; private set => SP(ref field, value); }
-	internal string? UserKindText { get; private set => SP(ref field, value); }
-	internal string? UptimeText { get; private set => SP(ref field, value); }
-	internal string? BiosBootTimeText { get; private set => SP(ref field, value); }
-	internal string? SystemRamText { get; set => SP(ref field, value); }
-	internal string? AppRamText { get; private set => SP(ref field, value); }
-	internal string? DiskSizeText { get; set => SP(ref field, value); }
-	internal string? DiskTemperatureText { get; private set => SP(ref field, value); } = "N/A";
-	internal string? UsbDeviceCountText { get; private set => SP(ref field, value); }
-	internal string? InternetSpeedText { get; private set => SP(ref field, value); }
-	internal string? InternetTotalText { get; private set => SP(ref field, value); } = "Total: 0.0 GB ↓ / 0.0 GB ↑";
-	internal string? CpuTemperatureText { get; private set => SP(ref field, value); } = "N/A";
-	internal string? OpenPortsText { get; private set => SP(ref field, value); } = "TCP: 0 / UDP: 0";
-	internal string? PowerPlanText { get; private set => SP(ref field, value); }
-	internal string? OsInfoText { get; private set => SP(ref field, value); }
-	internal string? CpuDetailsText { get; set => SP(ref field, value); }
-	internal string? GpuNamesText { get; set => SP(ref field, value); }
-	internal string? ComputerNameText { get; set => SP(ref field, value); }
-	internal string? SystemInfoText { get; set => SP(ref field, value); }
-	internal string? ActivationStatusSummaryText { get; private set => SP(ref field, value); } = "Checking...";
+	internal string SystemTimeText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string UserKindText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string UptimeText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string BiosBootTimeText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string SystemRamText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string AppRamText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string DiskSizeText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string DiskTemperatureText { get; private set => SP(ref field, value); } = "N/A";
+	internal string UsbDeviceCountText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string InternetSpeedText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string InternetTotalText { get; private set => SP(ref field, value); } = "Total: 0.0 GB ↓ / 0.0 GB ↑";
+	internal string CpuTemperatureText { get; private set => SP(ref field, value); } = "N/A";
+	internal string OpenPortsText { get; private set => SP(ref field, value); } = "TCP: 0 / UDP: 0";
+	internal string PowerPlanText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string OsInfoText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string CpuDetailsText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string GpuNamesText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string ComputerNameText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string SystemInfoText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string ActivationStatusSummaryText { get; private set => SP(ref field, value); } = DefaultText;
 
 #if HARDEN_SYSTEM_SECURITY
 	internal bool IsLiveGraphsWindowOpen
@@ -382,7 +355,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal string StorageTemperatureChartMinLabel { get; private set => SP(ref field, value); } = "0";
 	internal string StorageTemperatureChartMaxLabel { get; private set => SP(ref field, value); } = "0";
 	internal string HomeChartStartSecondsLabel { get; } = $"{HomeChartTimeWindowSeconds} Seconds";
-	internal string HomeChartEndSecondsLabel { get; } = "0 Seconds";
 
 	/// <summary>
 	/// Timer first used as one-shot to align to next minute, then switched to repeating every minute.
@@ -1181,10 +1153,10 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 	#region Defender Feed Fields
 
-	internal string? EngineVersionText { get; private set => SP(ref field, value); } = "Antimalware engine version: Unavailable";
-	internal string? SignatureVersionText { get; private set => SP(ref field, value); } = "Antivirus definition version: Unavailable";
-	internal string? PlatformVersionText { get; private set => SP(ref field, value); } = "Platform version: Unavailable";
-	internal string? SignatureUpdateDateText { get; private set => SP(ref field, value); } = "Definition update time: Unavailable";
+	internal string EngineVersionText { get; private set => SP(ref field, value); } = "Antimalware engine version: Unavailable";
+	internal string SignatureVersionText { get; private set => SP(ref field, value); } = "Antivirus definition version: Unavailable";
+	internal string PlatformVersionText { get; private set => SP(ref field, value); } = "Platform version: Unavailable";
+	internal string SignatureUpdateDateText { get; private set => SP(ref field, value); } = "Definition update time: Unavailable";
 
 	private static readonly Uri OnlineMSDefenderStatusURL = new("https://definitionupdates.microsoft.com/packages?action=info");
 

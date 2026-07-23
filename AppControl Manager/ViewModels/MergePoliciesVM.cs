@@ -77,7 +77,7 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 
 			await Task.Run(async () =>
 			{
-				List<SiPolicy.SiPolicy> otherPolicyObjs = [];
+				List<SiPolicy.SiPolicy> otherPolicyObjs = new(OtherPolicies.Count);
 
 				foreach (PolicyFileRepresent item in OtherPolicies)
 				{

@@ -861,21 +861,15 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	{
 		await Task.Run(() =>
 		{
-			EventLogSession session = new();
-			try
+			using EventLogSession session = new();
+
+			if (log is 0)
 			{
-				if (log is 0)
-				{
-					session.ClearLog("Microsoft-Windows-CodeIntegrity/Operational");
-				}
-				else if (log is 1)
-				{
-					session.ClearLog("Microsoft-Windows-AppLocker/MSI and Script");
-				}
+				session.ClearLog("Microsoft-Windows-CodeIntegrity/Operational");
 			}
-			finally
+			else if (log is 1)
 			{
-				session.Dispose();
+				session.ClearLog("Microsoft-Windows-AppLocker/MSI and Script");
 			}
 		});
 	}

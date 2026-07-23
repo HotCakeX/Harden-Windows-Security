@@ -539,17 +539,7 @@ internal static class AnalysisPagePdfExporter
 	{
 		byte[] sourceBytes = Encoding.UTF8.GetBytes(metadata.Title + "|" + metadata.Author + "|" + metadata.Subject + "|" + metadata.Keywords + "|" + metadata.PdfDate + "|" + xrefOffset.ToString(CultureInfo.InvariantCulture) + "|" + objectCount.ToString(CultureInfo.InvariantCulture));
 		byte[] hashBytes = SHA256.HashData(sourceBytes);
-		return ToHex(hashBytes.AsSpan(0, 16));
-	}
-
-	private static string ToHex(ReadOnlySpan<byte> bytes)
-	{
-		StringBuilder builder = new(bytes.Length * 2);
-		for (int index = 0; index < bytes.Length; index++)
-		{
-			_ = builder.Append(bytes[index].ToString("X2", CultureInfo.InvariantCulture));
-		}
-		return builder.ToString();
+		return Convert.ToHexString(hashBytes.AsSpan(0, 16));
 	}
 
 	private static string EscapeXml(string value) => value.Replace("&", "&amp;", StringComparison.Ordinal).Replace("<", "&lt;", StringComparison.Ordinal).Replace(">", "&gt;", StringComparison.Ordinal).Replace("\"", "&quot;", StringComparison.Ordinal).Replace("'", "&apos;", StringComparison.Ordinal);

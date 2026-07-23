@@ -1612,7 +1612,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					kernelModeDriversList.Add(Path.Join(directory, "bootres.dll.mui"));
 				}
 
-				string sys32Dir = new(Path.Join(Atlas.SystemDrive, "Windows", "System32"));
+				string sys32Dir = Path.Join(Atlas.SystemDrive, "Windows", "System32");
 
 				(IEnumerable<string>, int) filesOutput = FileUtility.GetFilesFast(new[] { sys32Dir }, null, [".dll", ".sys"]);
 

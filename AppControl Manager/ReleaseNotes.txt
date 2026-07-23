@@ -1,1 +1,3 @@
 * Updated dependencies to the latest version.
+
+* Improved the app and UI performance.

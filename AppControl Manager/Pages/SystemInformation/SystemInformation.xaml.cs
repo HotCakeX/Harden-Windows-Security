@@ -24,8 +24,6 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeaderProvider
 {
-	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
-
 	internal SystemInformation()
 	{
 		InitializeComponent();

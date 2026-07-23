@@ -137,7 +137,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	{
 		if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
 		{
-			string query = sender.Text.ToLowerInvariant();
+			string query = sender.Text;
 
 			// Filter menu items based on the search query
 			List<string> suggestions = new(CertCommonNames.Where(name => name.Contains(query, StringComparison.OrdinalIgnoreCase)));

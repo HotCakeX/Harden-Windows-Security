@@ -23,8 +23,6 @@ namespace AppControlManager.CustomUIElements;
 
 internal sealed partial class CustomPoliciesLibraryCacheLocationManagerDialog : ContentDialogV2, INPCImplant
 {
-	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
-
 	internal CustomPoliciesLibraryCacheLocationManagerDialog() => InitializeComponent();
 
 	private async void BrowseAndSetCustomCacheDirectory()
@@ -37,7 +35,7 @@ internal sealed partial class CustomPoliciesLibraryCacheLocationManagerDialog : 
 
 			if (!string.IsNullOrEmpty(directory))
 			{
-				AppSettings.CustomSidebarPoliciesLibraryCacheLocation = directory;
+				Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation = directory;
 
 				await ViewModelProvider.MainWindowVM.SetSidebarPoliciesLibraryCacheLocationToCustom();
 
@@ -59,7 +57,7 @@ internal sealed partial class CustomPoliciesLibraryCacheLocationManagerDialog : 
 			await ViewModelProvider.MainWindowVM.SetSidebarPoliciesLibraryCacheLocationToDefault();
 
 			// Clear the user-defined custom path after it was used to copy files to the default location
-			AppSettings.CustomSidebarPoliciesLibraryCacheLocation = string.Empty;
+			Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation = string.Empty;
 
 			await ViewModelProvider.MainWindowVM.InitialPoliciesLibrarySetup();
 		}
@@ -69,7 +67,7 @@ internal sealed partial class CustomPoliciesLibraryCacheLocationManagerDialog : 
 		}
 	}
 
-	private async void Open() => await ViewModelBase.OpenFileInDefaultFileHandler(AppSettings.CustomSidebarPoliciesLibraryCacheLocation);
+	private async void Open() => await ViewModelBase.OpenFileInDefaultFileHandler(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation);
 
 	private bool AreElementsEnabled
 	{

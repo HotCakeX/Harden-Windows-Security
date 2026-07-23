@@ -243,30 +243,30 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	internal readonly List<MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage> AdvancedHuntingQueries = [
 
 		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query",
-			Query = """
+		(
+			queryTitle: "Default Query",
+			query: """
 DeviceEvents
 | where ActionType startswith "AppControlCodeIntegrity"
    or ActionType startswith "AppControlCIScriptBlocked"
    or ActionType startswith "AppControlCIScriptAudited"
 """
-		},
+		),
 		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query with Device name filter",
-			Query = """
+		(
+			queryTitle: "Default Query with Device name filter",
+			query: """
 DeviceEvents
 | where (ActionType startswith "AppControlCodeIntegrity"
     or ActionType startswith "AppControlCIScriptBlocked"
     or ActionType startswith "AppControlCIScriptAudited")
     and DeviceName == "deviceName"
 """
-		},
+		),
 		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query with Device name and Time filter",
-			Query = """
+		(
+			queryTitle: "Default Query with Device name and Time filter",
+			query: """
 DeviceEvents
 | where Timestamp >= ago(1h)
 
@@ -275,22 +275,19 @@ DeviceEvents
     or ActionType startswith "AppControlCIScriptAudited")
     and DeviceName == "deviceName"
 """
-		},
-
+		),
 		new MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage
-		{
-			QueryTitle = "Default Query with Device name and Policy name filter",
-			Query = """
+		(
+			queryTitle: "Default Query with Device name and Policy name filter",
+			query: """
 DeviceEvents
 | where (ActionType startswith "AppControlCodeIntegrity"
     or ActionType startswith "AppControlCIScriptBlocked"
     or ActionType startswith "AppControlCIScriptAudited")
     and DeviceName == "deviceName" | where parse_json(AdditionalFields)["PolicyName"] == 'NameOfThePolicy'
 """
-		}
-
+		)
 		];
-
 
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.

@@ -368,9 +368,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// </summary>
 	internal async void RemovePolicy_Click()
 	{
-
-		List<CiPolicyInfo> policiesToRemove = [];
-
 		try
 		{
 			// Disable the remove button while the selected policy is being processed
@@ -428,6 +425,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 					}
 				}
+
+				List<CiPolicyInfo> policiesToRemove = [];
 
 				// Add the policy to the removal list
 				policiesToRemove.Add(ListViewSelectedPolicy);

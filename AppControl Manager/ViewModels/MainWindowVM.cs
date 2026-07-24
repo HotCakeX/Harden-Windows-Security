@@ -232,6 +232,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		typeof(Pages.SystemInformation),
 		typeof(Pages.Analysis.EventLogs),
 		typeof(Pages.Analysis.MDEAdvancedHunting),
+		typeof(Pages.SettingsBackupRestore)
 		];
 
 

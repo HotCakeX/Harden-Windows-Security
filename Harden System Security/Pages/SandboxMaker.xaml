@@ -66,7 +66,8 @@
                                  TextWrapping="Wrap" />
 
                         <TextBox MaxWidth="400"
-                                 Header="Sandbox storage location"
+                                 Header="Sandbox Storage Location"
+                                 VerticalAlignment="Center"
                                  Text="{x:Bind ViewModel.SandboxStorageDirectory, Mode=OneWay}"
                                  IsReadOnly="True"
                                  TextWrapping="Wrap" />
@@ -82,7 +83,7 @@
                             </Button>
 
                             <Button Click="{x:Bind ViewModel.RestoreDefaultSandboxStorageDirectory_Click}"
-                                IsEnabled="{x:Bind ViewModel.IsUsingCustomSandboxStorageDirectory, Mode=OneWay}">
+                                    IsEnabled="{x:Bind ViewModel.IsUsingCustomSandboxStorageDirectory, Mode=OneWay}">
                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                     <FontIcon Glyph="&#xE777;" FontSize="16" />
                                     <TextBlock Text="Restore default" />

@@ -4573,9 +4573,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>Falló la creación de la asignación de archivo (CreateFileMapping) para el archivo {0} con error {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>CreateFileMappingAlreadyExists para el archivo {0} con error {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>Falló la asignación de la vista del archivo (MapViewOfFile) para el archivo {0} con error {1}</value>
 </data>

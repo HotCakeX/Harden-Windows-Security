@@ -424,7 +424,7 @@ internal static unsafe partial class NativeMethods
 		uint flProtect,
 		uint dwMaximumSizeHigh,
 		uint dwMaximumSizeLow,
-		string lpName);
+		string? lpName);
 
 
 	/// <summary>

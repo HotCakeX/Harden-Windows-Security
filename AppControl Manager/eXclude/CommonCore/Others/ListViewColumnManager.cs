@@ -30,7 +30,7 @@ namespace CommonCore.Others;
 /// All UI operations already explicitly run on the UI thread.
 /// </summary>
 /// <typeparam name="T">The type of the data items in the ListView.</typeparam>
-internal sealed partial class ListViewColumnManager<T> : INotifyPropertyChanged
+internal sealed partial class ListViewColumnManager<T>
 {
 	internal ListViewColumnManager(ColumnDefinition[] definitions)
 	{
@@ -290,10 +290,6 @@ internal sealed partial class ListViewColumnManager<T> : INotifyPropertyChanged
 			}
 		}
 	}
-
-	public event PropertyChangedEventHandler? PropertyChanged;
-	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) =>
-		PropertyChanged?.Invoke(this, new(propertyName));
 }
 
 // Helper class for column selection UI

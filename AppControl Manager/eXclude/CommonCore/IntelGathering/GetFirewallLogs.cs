@@ -70,9 +70,8 @@ internal static class GetFirewallLogs
 	/// </summary>
 	/// <param name="resolveDestinationAddresses">Determines whether to synchronously resolve destination IP addresses to domains.</param>
 	/// <returns></returns>
-	internal static async Task<List<FirewallEvent>> GetBlockedPackets(bool resolveDestinationAddresses)
-	{
-		return await Task.Run(() =>
+	internal static Task<List<FirewallEvent>> GetBlockedPackets(bool resolveDestinationAddresses) =>
+		Task.Run(() =>
 		{
 			List<FirewallEvent> results = [];
 
@@ -95,12 +94,10 @@ internal static class GetFirewallLogs
 			}
 
 			// Sort descending by time
-			results.Sort((x, y) => Nullable.Compare(y.TimeCreated, x.TimeCreated));
+			results.Sort(static (x, y) => Nullable.Compare(y.TimeCreated, x.TimeCreated));
 
 			return results;
-
 		});
-	}
 
 	/// <summary>
 	/// Starts real-time monitoring of firewall blocked events.
@@ -172,7 +169,7 @@ internal static class GetFirewallLogs
 		if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
 		{
 			Span<byte> bytes = stackalloc byte[4];
-			if (ip.TryWriteBytes(bytes, out int bytesWritten))
+			if (ip.TryWriteBytes(bytes, out _))
 			{
 				byte b0 = bytes[0];
 				byte b1 = bytes[1];
@@ -216,7 +213,7 @@ internal static class GetFirewallLogs
 			}
 
 			Span<byte> bytes = stackalloc byte[16];
-			if (ip.TryWriteBytes(bytes, out int bytesWritten))
+			if (ip.TryWriteBytes(bytes, out _))
 			{
 				byte b0 = bytes[0];
 

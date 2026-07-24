@@ -4573,9 +4573,6 @@ CATATAN: Opsi ini selalu ditegakkan jika ada kebijakan App Control UMCI yang men
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>CreateFileMappingFailed untuk file {0} dengan kesalahan {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>CreateFileMappingAlreadyExists untuk file {0} dengan kesalahan {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>MapViewOfFileFailed untuk file {0} dengan kesalahan {1}</value>
 </data>

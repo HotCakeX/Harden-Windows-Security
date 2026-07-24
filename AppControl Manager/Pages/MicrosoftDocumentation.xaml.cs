@@ -23,8 +23,6 @@ namespace AppControlManager.Pages;
 
 internal sealed partial class MicrosoftDocumentation : Page
 {
-	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
-
 	internal MicrosoftDocumentation()
 	{
 		InitializeComponent();
@@ -58,7 +56,7 @@ internal sealed partial class MicrosoftDocumentation : Page
 	private void HomeButton_Click() => MicrosoftDocumentationWebView2.Source = URLToUse;
 
 	// Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used
-	private void WebView2_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+	private void WebView2_NavigationCompleted()
 	{
 		// The following checks are required to prevent any errors when intentionally spam navigating between pages and elements extremely fast
 		try

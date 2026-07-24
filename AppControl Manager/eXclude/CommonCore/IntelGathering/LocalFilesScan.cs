@@ -30,7 +30,6 @@ namespace CommonCore.IntelGathering;
 
 internal static class LocalFilesScan
 {
-
 	internal const string WHQLOid = "1.3.6.1.4.1.311.10.3.5";
 	internal const string ECCOID = "1.2.840.10045.2.1";
 
@@ -114,7 +113,6 @@ internal static class LocalFilesScan
 
 						try
 						{
-
 							#region Gather File information
 
 							// Get the Code integrity hashes of the file
@@ -399,7 +397,6 @@ internal static class LocalFilesScan
 		}
 	}
 
-
 	/// <summary>
 	/// Gets the EKU OIDs of the leaf certificates of all of the signers of a signed file, the ones that App Control policy uses for EKU-based authorization.
 	/// Only the leaf certificates have EKUs, others such as root or intermediate have KUs only.
@@ -441,7 +438,6 @@ internal static class LocalFilesScan
 		}
 		return output;
 	}
-
 
 	/// <summary>
 	/// Determines whether a file has WHQL signer among all of its signers

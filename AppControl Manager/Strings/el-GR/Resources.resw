@@ -4573,9 +4573,6 @@
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>Η CreateFileMappingFailed για το αρχείο {0} απέτυχε με σφάλμα {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>Η CreateFileMappingAlreadyExists για το αρχείο {0} με σφάλμα {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>Η MapViewOfFileFailed για το αρχείο {0} απέτυχε με σφάλμα {1}</value>
 </data>

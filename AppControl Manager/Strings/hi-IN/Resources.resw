@@ -4573,9 +4573,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>फ़ाइल {0} के लिए फ़ाइल मैपिंग बनाने में विफलता, त्रुटि {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>फ़ाइल {0} के लिए फ़ाइल मैपिंग पहले से मौजूद है, त्रुटि {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>फ़ाइल {0} के लिए फ़ाइल का मैप व्यू बनाने में विफलता, त्रुटि {1}</value>
 </data>

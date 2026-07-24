@@ -28,8 +28,6 @@ namespace HardenSystemSecurity.Pages;
 
 internal sealed partial class GitHubDocumentation : Page
 {
-	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
-
 	internal GitHubDocumentation()
 	{
 		InitializeComponent();
@@ -76,9 +74,8 @@ internal sealed partial class GitHubDocumentation : Page
 	private void HomeButton_Click() => GitHubDocumentationWebView2.Source = URLToUse;
 
 	// Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used
-	private void WebView2_NavigationCompleted(object sender, CoreWebView2NavigationCompletedEventArgs e)
+	private void WebView2_NavigationCompleted()
 	{
-
 		// The following checks are required to prevent any errors when intentionally spam navigating between pages and elements extremely fast
 		try
 		{

@@ -344,26 +344,19 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	private static void OpenInFileExplorerCore(ListView? lv)
 	{
 		if (lv is null) return;
+
 		string? fileToOpen = null;
 
-		FileIdentity? attempt1 = lv.SelectedItem as FileIdentity;
-
-		if (attempt1 is not null)
+		if (lv.SelectedItem is FileIdentity attempt1)
 		{
 			fileToOpen = attempt1.FilePath;
 		}
 		else
 		{
 			IList<object> attempt2 = lv.SelectedItems;
-
-			if (attempt2.Count > 0)
+			if (attempt2.Count > 0 && attempt2[0] is FileIdentity attempt3)
 			{
-				FileIdentity? attempt3 = attempt2[0] as FileIdentity;
-
-				if (attempt3 is not null)
-				{
-					fileToOpen = attempt3.FilePath;
-				}
+				fileToOpen = attempt3.FilePath;
 			}
 		}
 
@@ -448,11 +441,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// </summary>
 	internal static void DisposeExplicitOptInDescendants(FrameworkElement root)
 	{
-		if (root == null)
-		{
-			return;
-		}
-
 		Queue<DependencyObject> queue = new();
 		queue.Enqueue(root);
 

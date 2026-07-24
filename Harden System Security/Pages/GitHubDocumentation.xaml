@@ -4,7 +4,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    FlowDirection="{x:Bind AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+    xmlns:CommonCore="using:CommonCore"
+    FlowDirection="{x:Bind CommonCore:Atlas.Settings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
         <Grid.RowDefinitions>

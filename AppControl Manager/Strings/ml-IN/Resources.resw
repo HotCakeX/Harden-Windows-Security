@@ -4573,9 +4573,6 @@
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>{0} ഫയലിനായുള്ള CreateFileMappingFailed {1} പിശകോടെ പരാജയപ്പെട്ടു</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>{0} ഫയലിനായുള്ള CreateFileMappingAlreadyExists {1} പിശകോടെ നിലവിലുണ്ട്</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>{0} ഫയലിനായുള്ള MapViewOfFileFailed {1} പിശകോടെ പരാജയപ്പെട്ടു</value>
 </data>

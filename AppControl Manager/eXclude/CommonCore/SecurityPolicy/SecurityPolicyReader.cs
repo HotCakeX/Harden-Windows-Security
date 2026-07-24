@@ -142,7 +142,7 @@ internal static class SecurityPolicyReader
 
 	/// <summary>
 	/// All of the items in the [Privilege Rights] section of the secedit export.
-	/// They must be update as needed if/when OS updates add/remove any of them.
+	/// They must be updated as needed if/when OS updates add/remove any of them.
 	/// </summary>
 	private static readonly string[] privilegeNames =
 	[
@@ -216,7 +216,7 @@ internal static class SecurityPolicyReader
 			{
 				LSA_UNICODE_STRING userRight = new(privilege);
 				uint status = NativeMethods.LsaEnumerateAccountsWithUserRight(policyHandle, ref userRight, out nint enumBuffer, out int countReturned);
-				List<string> sidList = [];
+				List<string> sidList = new(countReturned);
 
 				if (status == STATUS_SUCCESS && enumBuffer != IntPtr.Zero && countReturned > 0)
 				{

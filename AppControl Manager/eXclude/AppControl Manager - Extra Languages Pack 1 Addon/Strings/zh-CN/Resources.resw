@@ -4573,9 +4573,6 @@
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>CreateFileMappingFailed，文件 {0}，错误 {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>CreateFileMappingAlreadyExists，文件 {0}，错误 {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>MapViewOfFileFailed，文件 {0}，错误 {1}</value>
 </data>

@@ -4573,9 +4573,6 @@
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>CreateFileMappingFailed pour le fichier {0} avec l'erreur {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>CreateFileMappingAlreadyExists pour le fichier {0} avec l'erreur {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>MapViewOfFileFailed pour le fichier {0} avec l'erreur {1}</value>
 </data>

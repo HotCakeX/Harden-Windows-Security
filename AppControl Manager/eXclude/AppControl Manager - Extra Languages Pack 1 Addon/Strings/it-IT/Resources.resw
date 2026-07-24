@@ -4573,9 +4573,6 @@ NOTA: questa opzione viene sempre applicata se un qualsiasi criterio UMCI di App
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>CreateFileMappingFailed per il file {0} con errore {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>CreateFileMappingAlreadyExists per il file {0} con errore {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>MapViewOfFileFailed per il file {0} con errore {1}</value>
 </data>

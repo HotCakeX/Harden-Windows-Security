@@ -4573,9 +4573,6 @@
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>CreateFileMappingFailed برای فایل {0} با خطای {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>CreateFileMappingAlreadyExists برای فایل {0} با خطای {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>MapViewOfFileFailed برای فایل {0} با خطای {1}</value>
 </data>

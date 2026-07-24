@@ -393,10 +393,7 @@ internal unsafe static partial class WindowsUpdateManager
 
 			for (int index = 0; index < count; index++)
 			{
-				string bundledUpdateTitle = collection.UseDispatchItem(index, bundledUpdate =>
-				{
-					return bundledUpdate.GetString("Title");
-				});
+				string bundledUpdateTitle = collection.UseDispatchItem(index, bundledUpdate => bundledUpdate.GetString("Title"));
 
 				values.Add(bundledUpdateTitle);
 			}
@@ -1396,7 +1393,7 @@ internal sealed partial class WindowsUpdateItem(
 	internal List<WindowsUpdateLink> HandlerIdLinks => field ??= CreateLinksFromDelimitedText(HandlerId);
 	internal Visibility HandlerIdLinksVisibility => HandlerIdLinks.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 	internal Visibility HandlerIdTextVisibility => HandlerIdLinks.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
-	internal List<WindowsUpdateLink> MoreInfoUrlLinks { get => field ??= CreateLinksFromDelimitedText(MoreInfoUrls); private set; }
+	internal List<WindowsUpdateLink> MoreInfoUrlLinks => field ??= CreateLinksFromDelimitedText(MoreInfoUrls);
 	internal Visibility MoreInfoUrlLinksVisibility => MoreInfoUrlLinks.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 	internal Visibility MoreInfoUrlsTextVisibility => MoreInfoUrlLinks.Count > 0 ? Visibility.Collapsed : Visibility.Visible;
 
@@ -1734,7 +1731,7 @@ internal static class WindowsUpdateDisplayFormatter
 			chars.Add(current);
 		}
 
-		return new string(chars.ToArray());
+		return new string(CollectionsMarshal.AsSpan(chars));
 	}
 
 	internal static bool IsEmptyDisplayValue(string value) =>

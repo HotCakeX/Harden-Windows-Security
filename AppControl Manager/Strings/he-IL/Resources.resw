@@ -4573,9 +4573,6 @@
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>יצירת מיפוי קובץ נכשלה עבור הקובץ {0} עם שגיאה {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>מיפוי קובץ כבר קיים עבור הקובץ {0} עם שגיאה {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>מיפוי תצוגת קובץ נכשל עבור הקובץ {0} עם שגיאה {1}</value>
 </data>

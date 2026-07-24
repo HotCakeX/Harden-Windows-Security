@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -97,11 +98,13 @@ internal static class DataDump
 			_ = content.AppendLine("└─");
 			_ = content.AppendLine();
 
+			using Process process = Process.GetCurrentProcess();
+
 			// Security Context Information
 			_ = content.AppendLine("┌─ SECURITY CONTEXT");
 			_ = content.AppendLine($"│  Current Process ID: {Environment.ProcessId}");
-			_ = content.AppendLine($"│  Process Name: {System.Diagnostics.Process.GetCurrentProcess().ProcessName}");
-			_ = content.AppendLine($"│  Process Start Time: {System.Diagnostics.Process.GetCurrentProcess().StartTime:yyyy-MM-dd HH:mm:ss}");
+			_ = content.AppendLine($"│  Process Name: {process.ProcessName}");
+			_ = content.AppendLine($"│  Process Start Time: {process.StartTime:yyyy-MM-dd HH:mm:ss}");
 			_ = content.AppendLine($"│  Elevated Process: {IsElevated()}");
 			_ = content.AppendLine($"│  UAC Enabled: {IsUacEnabled()}");
 			_ = content.AppendLine($"│  Current Culture: {CultureInfo.CurrentCulture.Name}");

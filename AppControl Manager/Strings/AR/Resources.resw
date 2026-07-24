@@ -4573,9 +4573,6 @@
 <data name="CreateFileMappingFailedMessage" xml:space="preserve">
   <value>فشل CreateFileMapping للملف {0} مع الخطأ {1}</value>
 </data>
-<data name="CreateFileMappingAlreadyExistsMessage" xml:space="preserve">
-  <value>CreateFileMappingAlreadyExists للملف {0} مع الخطأ {1}</value>
-</data>
 <data name="MapViewOfFileFailedMessage" xml:space="preserve">
   <value>فشل MapViewOfFile للملف {0} مع الخطأ {1}</value>
 </data>

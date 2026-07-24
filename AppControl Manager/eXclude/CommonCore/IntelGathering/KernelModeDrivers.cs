@@ -59,7 +59,6 @@ internal static class KernelModeDrivers
 		internal uint FirstThunk;
 	}
 
-
 	private static IntPtr OpenFile(string path, out int error)
 	{
 		error = 0;
@@ -270,7 +269,6 @@ internal static class KernelModeDrivers
 		return Encoding.ASCII.GetString(imageBytes[offset..end]);
 	}
 
-
 	internal static KernelUserVerdict CheckKernelUserModeStatus(string filePath)
 	{
 		// To store the import names - Pre-allocate with an average capacity for better performance
@@ -299,7 +297,6 @@ internal static class KernelModeDrivers
 				imports: importNames
 			);
 		}
-
 
 		try
 		{
@@ -386,43 +383,24 @@ internal static class KernelModeDrivers
 				);
 			}
 
-			// Generate a new GUID and convert it to a string to ensure a unique name for the file mapping
-			string localPointerName = Guid.CreateVersion7().ToString();
-
-			// Create a file mapping object, associating the file with a memory region.
+			// Create an unnamed, read-only file mapping object for direct use by this process.
 			// - fileHandle: File handle to map.
 			// - IntPtr.Zero: No security attributes specified.
-			// - 2U: Map as read-write (PAGE_READWRITE).
-			// - lpFileSizeHigh, fileSize: High and low 32-bit file size for large files.
-			// - localPointerName: Unique name derived from the GUID to prevent name collisions in the global namespace.
+			// - 2U: PAGE_READONLY.
+			// - localPointerFileSizeHigh, fileSize: High and low 32-bit mapping size.
+			// - null: Create an unnamed mapping object.
 			fileMappingHandle = NativeMethods.CreateFileMappingW(fileHandle,
 				IntPtr.Zero,
 				2U,
 				localPointerFileSizeHigh,
 				fileSize,
-				localPointerName
+				null
 				);
-
-			int fileMappingHandleError = Marshal.GetLastPInvokeError();
 
 			if (fileMappingHandle == IntPtr.Zero)
 			{
+				int fileMappingHandleError = Marshal.GetLastPInvokeError();
 				Logger.Write(string.Format(Atlas.GetStr("CreateFileMappingFailedMessage"), filePath, fileMappingHandleError));
-
-				return new KernelUserVerdict
-				(
-					verdict: Verdict,
-					isPE: isPE,
-					hasSIP: hasSIP,
-					imports: importNames
-				);
-
-			}
-
-			// https://learn.microsoft.com/windows/win32/debug/system-error-codes--0-499-
-			if (fileMappingHandleError == 183)
-			{
-				Logger.Write(string.Format(Atlas.GetStr("CreateFileMappingAlreadyExistsMessage"), filePath, fileMappingHandleError));
 
 				return new KernelUserVerdict
 				(
@@ -435,7 +413,7 @@ internal static class KernelModeDrivers
 
 			// Map a view of the file into the process's address space using the file mapping handle.
 			// - fileMappingHandle: Handle to the file mapping object created earlier.
-			// - 4U: Map the view with read-only access (PAGE_READONLY).
+			// - 4U: Map the view with read-only access (FILE_MAP_READ).
 			// - 0U, 0U: Offsets within the file to map the view from (start at the beginning of the file).
 			// - IntPtr.Zero: Specifies the desired view size; passing IntPtr.Zero means the entire file is mapped.
 			fileMappingView = NativeMethods.MapViewOfFile(fileMappingHandle,

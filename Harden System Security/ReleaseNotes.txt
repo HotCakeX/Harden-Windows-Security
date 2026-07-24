@@ -9,3 +9,5 @@
 * You can now filter non-Microsoft-rooted certificates in the Certificate checking page based on chain build success status. This makes the result completely match the SigCheck tool's results from SysInternals, offering a more familiar results while also having options to expand the scope of the scan.
 
 * Improved the app and UI performance.
+
+* You can now choose where the Windows Sandboxes that you create in the Sandbox Maker page are saved to using the newly added UI controls. Completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1184

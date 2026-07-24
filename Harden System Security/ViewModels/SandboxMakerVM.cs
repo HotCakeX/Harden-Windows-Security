@@ -43,11 +43,15 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 
 	private static readonly Encoding Utf8WithoutBom = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
-	private static readonly string SandboxConfigurationDirectory =
-		Directory.CreateDirectory(Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, SandboxStorageFolderName)).FullName;
+	private static string SandboxConfigurationDirectory
+	{
+		get => Directory.CreateDirectory(
+		string.IsNullOrWhiteSpace(Atlas.Settings.CustomSandboxStorageDirectory)
+			? field
+			: Atlas.Settings.CustomSandboxStorageDirectory).FullName;
+	} = Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalCachePath, SandboxStorageFolderName);
 
-	private static readonly string DefinitionsFilePath = Path.Join(SandboxConfigurationDirectory, DefinitionsFileName);
-
+	private static string DefinitionsFilePath => Path.Join(SandboxConfigurationDirectory, DefinitionsFileName);
 
 	internal static readonly List<WindowsSandboxTimeZoneOption> TimeZoneOptions =
 	[
@@ -118,6 +122,8 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 	} = "My Sandbox";
 
 	internal string SandboxConfigurationPath => string.IsNullOrWhiteSpace(SandboxName) ? string.Empty : GetSandboxConfigurationPath(SandboxName);
+	internal string SandboxStorageDirectory => SandboxConfigurationDirectory;
+	internal bool IsUsingCustomSandboxStorageDirectory => !string.IsNullOrWhiteSpace(Atlas.Settings.CustomSandboxStorageDirectory);
 
 	internal WindowsSandboxTimeZoneOption SelectedTimeZone { get; set => SP(ref field, value); } = TimeZoneOptions[0];
 	internal WindowsSandboxProgramOption? SelectedProgramExecutable { get; set => SP(ref field, value); }
@@ -196,6 +202,51 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		}
 
 		return value;
+	}
+
+	internal void BrowseSandboxStorageDirectory_Click()
+	{
+		try
+		{
+			string? selectedFolderPath = FileDialogHelper.ShowDirectoryPickerDialog();
+			if (string.IsNullOrWhiteSpace(selectedFolderPath))
+			{
+				return;
+			}
+
+			string normalizedFolderPath = Path.GetFullPath(selectedFolderPath);
+			_ = Directory.CreateDirectory(normalizedFolderPath);
+			Atlas.Settings.CustomSandboxStorageDirectory = normalizedFolderPath;
+			ReloadSandboxStorageLocation();
+			MainInfoBar.WriteSuccess($"Sandbox storage location changed to {normalizedFolderPath}");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	internal void RestoreDefaultSandboxStorageDirectory_Click()
+	{
+		try
+		{
+			Atlas.Settings.CustomSandboxStorageDirectory = string.Empty;
+			ReloadSandboxStorageLocation();
+			MainInfoBar.WriteSuccess($"Sandbox storage location restored to {SandboxConfigurationDirectory}");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	private void ReloadSandboxStorageLocation()
+	{
+		OnPropertyChanged(nameof(SandboxStorageDirectory));
+		OnPropertyChanged(nameof(SandboxConfigurationPath));
+		OnPropertyChanged(nameof(IsUsingCustomSandboxStorageDirectory));
+		SavedSandboxes.Clear();
+		LoadSavedSandboxes();
 	}
 
 	internal void BrowseProgramFolder_Click()

@@ -96,6 +96,7 @@ internal sealed partial class Main : ViewModelBase
 		CustomTotpVaultDirectory = ReadValue(nameof(CustomTotpVaultDirectory), CustomTotpVaultDirectory);
 		DownloadManagerDirectory = ReadValue(nameof(DownloadManagerDirectory), DownloadManagerDirectory);
 		WinGetDownloadDirectory = ReadValue(nameof(WinGetDownloadDirectory), WinGetDownloadDirectory);
+		CustomSandboxStorageDirectory = ReadValue(nameof(CustomSandboxStorageDirectory), CustomSandboxStorageDirectory);
 		DownloadManagerMaximumSimultaneousDownloads = ReadValue(nameof(DownloadManagerMaximumSimultaneousDownloads), DownloadManagerMaximumSimultaneousDownloads);
 		DownloadManagerParallelConnectionsPerDownload = ReadValue(nameof(DownloadManagerParallelConnectionsPerDownload), DownloadManagerParallelConnectionsPerDownload);
 		DownloadManagerSlowPresetKilobytesPerSecond = ReadValue(nameof(DownloadManagerSlowPresetKilobytesPerSecond), DownloadManagerSlowPresetKilobytesPerSecond);
@@ -669,6 +670,21 @@ internal sealed partial class Main : ViewModelBase
 			if (SP(ref field, value))
 			{
 				SaveValue(nameof(WinGetDownloadDirectory), field);
+			}
+		}
+	} = string.Empty;
+
+	/// <summary>
+	/// Optional custom directory for Sandbox Maker files. Empty string means the app default local cache location.
+	/// </summary>
+	internal string CustomSandboxStorageDirectory
+	{
+		get; set
+		{
+			string normalizedValue = string.IsNullOrWhiteSpace(value) ? string.Empty : value;
+			if (SP(ref field, normalizedValue))
+			{
+				SaveValue(nameof(CustomSandboxStorageDirectory), field);
 			}
 		}
 	} = string.Empty;

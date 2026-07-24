@@ -32,7 +32,7 @@ namespace CommonCore.ToolKits;
 internal static class ResourceDictionaryExtensions
 {
 	/// <summary>
-	/// Copies  the <see cref="ResourceDictionary"/> provided as a parameter into the calling dictionary, includes overwriting the source location, theme dictionaries, and merged dictionaries.
+	/// Copies the <see cref="ResourceDictionary"/> provided as a parameter into the calling dictionary, includes overwriting the source location, theme dictionaries, and merged dictionaries.
 	/// </summary>
 	/// <param name="destination">ResourceDictionary to copy values to.</param>
 	/// <param name="source">ResourceDictionary to copy values from.</param>

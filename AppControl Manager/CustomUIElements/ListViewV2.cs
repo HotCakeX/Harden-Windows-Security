@@ -167,7 +167,7 @@ internal sealed partial class ListViewV2 : ListView
 	}
 
 	/// <summary>
-	/// Whenever we navigate away from a page that contains the ListView, this even will be fired.
+	/// Whenever we navigate away from a page that contains the ListView, this event will be fired.
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>

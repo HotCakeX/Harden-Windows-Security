@@ -107,7 +107,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 		}
 	}
 
-	private unsafe void LoadTcp4Ports(List<OpenPortItem> ports, Dictionary<uint, string> processCache)
+	private static unsafe void LoadTcp4Ports(List<OpenPortItem> ports, Dictionary<uint, string> processCache)
 	{
 		int size = 0;
 		uint result = NativeMethods.GetExtendedTcpTable(IntPtr.Zero, ref size, true, NativeMethods.AF_INET, NativeMethods.TCP_TABLE_OWNER_PID_ALL, 0);
@@ -147,7 +147,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 		}
 	}
 
-	private unsafe void LoadTcp6Ports(List<OpenPortItem> ports, Dictionary<uint, string> processCache)
+	private static unsafe void LoadTcp6Ports(List<OpenPortItem> ports, Dictionary<uint, string> processCache)
 	{
 		int size = 0;
 		uint result = NativeMethods.GetExtendedTcpTable(IntPtr.Zero, ref size, true, NativeMethods.AF_INET6, NativeMethods.TCP_TABLE_OWNER_PID_ALL, 0);
@@ -195,7 +195,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 		}
 	}
 
-	private unsafe void LoadUdp4Ports(List<OpenPortItem> ports, Dictionary<uint, string> processCache)
+	private static unsafe void LoadUdp4Ports(List<OpenPortItem> ports, Dictionary<uint, string> processCache)
 	{
 		int size = 0;
 		uint result = NativeMethods.GetExtendedUdpTable(IntPtr.Zero, ref size, true, NativeMethods.AF_INET, NativeMethods.UDP_TABLE_OWNER_PID, 0);
@@ -231,7 +231,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 		}
 	}
 
-	private unsafe void LoadUdp6Ports(List<OpenPortItem> ports, Dictionary<uint, string> processCache)
+	private static unsafe void LoadUdp6Ports(List<OpenPortItem> ports, Dictionary<uint, string> processCache)
 	{
 		int size = 0;
 		uint result = NativeMethods.GetExtendedUdpTable(IntPtr.Zero, ref size, true, NativeMethods.AF_INET6, NativeMethods.UDP_TABLE_OWNER_PID, 0);

@@ -234,7 +234,7 @@ internal sealed class NavigationService
 						.FirstOrDefault(kv => Equals(kv.Value, nextNavPageType));
 
 					// Build navigation argument to restore this page after elevation.
-					string? navArg = $"--navtag={taggedEntry.Key}";
+					string navArg = $"--navtag={taggedEntry.Key}";
 
 					// Relaunch elevated with the navigation argument
 					if (Relaunch.RelaunchAppElevated(Atlas.AUMID, navArg))
@@ -467,7 +467,7 @@ internal sealed class NavigationService
 		List<NavigationViewItem> allItems = new(capacity: 23);
 
 		// Recursively collects NavigationViewItems
-		void CollectItems(NavigationViewItem item)
+		static void CollectItems(NavigationViewItem item, List<NavigationViewItem> allItems)
 		{
 			allItems.Add(item);
 
@@ -475,7 +475,7 @@ internal sealed class NavigationService
 			{
 				if (child is NavigationViewItem childItem)
 				{
-					CollectItems(childItem);
+					CollectItems(childItem, allItems);
 				}
 			}
 		}
@@ -485,7 +485,7 @@ internal sealed class NavigationService
 		{
 			if (item is NavigationViewItem navItem)
 			{
-				CollectItems(navItem);
+				CollectItems(navItem, allItems);
 			}
 		}
 
@@ -494,7 +494,7 @@ internal sealed class NavigationService
 		{
 			if (item is NavigationViewItem navItem)
 			{
-				CollectItems(navItem);
+				CollectItems(navItem, allItems);
 			}
 		}
 

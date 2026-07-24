@@ -362,7 +362,7 @@ internal static partial class ListViewHelper
 		IList<object> items,
 		FrozenDictionary<string, (string Label, Func<TElement, object?> Getter)> propertyMappings)
 	{
-		if (items is null || items.Count is 0)
+		if (items.Count is 0)
 			return;
 
 		StringBuilder sb = new();
@@ -479,7 +479,7 @@ internal static partial class ListViewHelper
 
 		index = (index < 0) ? (index + listView.Items.Count) : index;
 
-		bool isVirtualizing = default;
+		bool isVirtualizing = false;
 		double previousXOffset = default;
 		double previousYOffset = default;
 
@@ -494,15 +494,15 @@ internal static partial class ListViewHelper
 			previousXOffset = listViewScrollViewer.HorizontalOffset;
 			previousYOffset = listViewScrollViewer.VerticalOffset;
 
-			TaskCompletionSource<object?> tcs = new();
+			TaskCompletionSource tcs = new();
 
-			void ViewChanged(object? _, ScrollViewerViewChangedEventArgs __) => tcs.TrySetResult(result: default);
+			void ViewChanged(object? _, ScrollViewerViewChangedEventArgs __) => tcs.TrySetResult();
 
 			try
 			{
 				listViewScrollViewer.ViewChanged += ViewChanged;
 				listView.ScrollIntoView(listView.Items[index], ScrollIntoViewAlignment.Leading);
-				_ = await tcs.Task;
+				await tcs.Task;
 			}
 			finally
 			{
@@ -588,7 +588,7 @@ internal static partial class ListViewHelper
 			return;
 		}
 
-		TaskCompletionSource<object?> tcs = new();
+		TaskCompletionSource tcs = new();
 
 		void ViewChanged(object? _, ScrollViewerViewChangedEventArgs e)
 		{
@@ -597,14 +597,14 @@ internal static partial class ListViewHelper
 				return;
 			}
 
-			_ = tcs.TrySetResult(result: default);
+			_ = tcs.TrySetResult();
 		}
 
 		try
 		{
 			scrollViewer.ViewChanged += ViewChanged;
 			_ = scrollViewer.ChangeView(horizontalOffset, verticalOffset, zoomFactor, disableAnimation);
-			_ = await tcs.Task;
+			await tcs.Task;
 		}
 		finally
 		{

@@ -883,7 +883,7 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 			for (int s = 0; s < sectorCount; s++)
 			{
 				double center = theta0 + s * (Math.PI / 3.0);
-				double dAng = Math.Abs(NormalizeAngle(ang - center));
+				double dAng = NormalizeAngle(ang - center);
 				if (dAng < best)
 				{
 					best = (float)dAng;

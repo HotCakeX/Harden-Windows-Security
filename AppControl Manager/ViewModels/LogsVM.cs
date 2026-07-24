@@ -441,7 +441,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 				return;
 			}
 
-			StringBuilder stringBuilder = new();
+			StringBuilder stringBuilder = new(LogListView.SelectedItems.Count);
 
 			// Iterate through selected items and build the text to copy
 			for (int i = 0; i < LogListView.SelectedItems.Count; i++)

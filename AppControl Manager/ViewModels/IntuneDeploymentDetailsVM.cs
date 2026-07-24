@@ -308,9 +308,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	{
 		try
 		{
-
-			DateTime now = DateTime.Now;
-			string formattedDateTime = now.ToString("yyyy-MM-dd_HH-mm-ss");
+			string formattedDateTime = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
 			string fileName = $"AppControlManager_IntuneGroupsData_Export_{formattedDateTime}.json";
 
 			string? savePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, fileName);
@@ -324,12 +322,10 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 				savePath += ".json";
 			}
 
-			List<IntuneGroupItemListView> dataToExport = [];
-
 			await Task.Run(() =>
 			{
 				// Export the currently filtered view
-				dataToExport = GroupNamesCollection.ToList();
+				List<IntuneGroupItemListView> dataToExport = GroupNamesCollection.ToList();
 
 				string jsonString = JsonSerializer.Serialize(
 					dataToExport,
@@ -489,7 +485,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 				return;
 			}
 
-			string displayName = nameBox.Text?.Trim() ?? string.Empty;
+			string displayName = nameBox.Text.Trim();
 			if (string.IsNullOrWhiteSpace(displayName))
 			{
 				return;

@@ -20,7 +20,7 @@ namespace CommonCore.Interop;
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/winmsg/about-messages-and-message-queues
 /// </summary>
-internal enum WinMsg : int
+internal enum WinMsg
 {
 	WM_USER = 0x0400,
 	WM_APP = 0x8000,

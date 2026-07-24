@@ -839,171 +839,12 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		}
 	}
 
-	// Method for handling grid parent scenario
-	private static bool HandleGridParentStatic(Border backgroundBorder, Border dialogContainer, Grid mainGrid)
+	// Method for handling parent scenarios that use the same content-transfer behavior
+	private static bool HandleSimpleParentStatic(Border backgroundBorder, Border dialogContainer, Grid mainGrid)
 	{
 		try
 		{
-			// Handle Grid parent scenario
-			UIElement? originalContent = backgroundBorder.Child;
-
-			// Remove the original background
-			try
-			{
-				backgroundBorder.Child = null;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-				// Continue with other operations even if one fails
-			}
-
-			// Clear the background from the original element to avoid double borders
-			ClearBorderProperties(backgroundBorder);
-
-			// Put the original content into our dialog container
-			try
-			{
-				dialogContainer.Child = originalContent;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-
-			}
-
-			// Add our main grid to the background element
-			try
-			{
-				backgroundBorder.Child = mainGrid;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-				return false;
-			}
-
-			return true;
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			return false;
-		}
-	}
-
-	// Method for handling stack panel parent scenario
-	private static bool HandleStackPanelParentStatic(Border backgroundBorder, Border dialogContainer, Grid mainGrid)
-	{
-		try
-		{
-			// Handle StackPanel parent scenario
-			UIElement? originalContent = backgroundBorder.Child;
-
-			// Remove the original background
-			try
-			{
-				backgroundBorder.Child = null;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-				// Continue with other operations even if one fails
-			}
-
-			// Clear the background from the original element to avoid double borders
-			ClearBorderProperties(backgroundBorder);
-
-			// Put the original content into our dialog container
-			try
-			{
-				dialogContainer.Child = originalContent;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-
-			}
-
-			// Add our main grid to the background element
-			try
-			{
-				backgroundBorder.Child = mainGrid;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-				return false;
-			}
-
-			return true;
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			return false;
-		}
-	}
-
-	// Method for handling canvas parent scenario
-	private static bool HandleCanvasParentStatic(Border backgroundBorder, Border dialogContainer, Grid mainGrid)
-	{
-		try
-		{
-			// Handle Canvas parent scenario
-			UIElement? originalContent = backgroundBorder.Child;
-
-			// Remove the original background
-			try
-			{
-				backgroundBorder.Child = null;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-				// Continue with other operations even if one fails
-			}
-
-			// Clear the background from the original element to avoid double borders
-			ClearBorderProperties(backgroundBorder);
-
-			// Put the original content into our dialog container
-			try
-			{
-				dialogContainer.Child = originalContent;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-
-			}
-
-			// Add our main grid to the background element
-			try
-			{
-				backgroundBorder.Child = mainGrid;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-				return false;
-			}
-
-			return true;
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			return false;
-		}
-	}
-
-	// Method for handling generic parent scenario
-	private static bool HandleGenericParentStatic(Border backgroundBorder, Border dialogContainer, Grid mainGrid)
-	{
-		try
-		{
-			// Generic parent handling
+			// Handle the shared parent scenario
 			UIElement? originalContent = backgroundBorder.Child;
 
 			// Remove the original background
@@ -1325,11 +1166,11 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 								{
 									ContentPresenter contentPresenter => HandleContentPresenterParentStatic(backgroundBorder, contentPresenter, _dialogContainer, _mainGrid),
 									Border parentBorder => HandleBorderParentStatic(backgroundBorder, parentBorder, _dialogContainer, _mainGrid),
-									Grid => HandleGridParentStatic(backgroundBorder, _dialogContainer, _mainGrid),
-									StackPanel => HandleStackPanelParentStatic(backgroundBorder, _dialogContainer, _mainGrid),
-									Canvas => HandleCanvasParentStatic(backgroundBorder, _dialogContainer, _mainGrid),
+									Grid => HandleSimpleParentStatic(backgroundBorder, _dialogContainer, _mainGrid),
+									StackPanel => HandleSimpleParentStatic(backgroundBorder, _dialogContainer, _mainGrid),
+									Canvas => HandleSimpleParentStatic(backgroundBorder, _dialogContainer, _mainGrid),
 									Panel => HandlePanelParentStatic(backgroundBorder, _dialogContainer, _mainGrid),
-									_ => HandleGenericParentStatic(backgroundBorder, _dialogContainer, _mainGrid)
+									_ => HandleSimpleParentStatic(backgroundBorder, _dialogContainer, _mainGrid)
 								};
 							}
 							catch (Exception parentEx)
@@ -1338,7 +1179,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 								// Try generic handling as fallback
 								try
 								{
-									handlingSuccessful = HandleGenericParentStatic(backgroundBorder, _dialogContainer, _mainGrid);
+									handlingSuccessful = HandleSimpleParentStatic(backgroundBorder, _dialogContainer, _mainGrid);
 								}
 								catch (Exception genericEx)
 								{
@@ -1701,18 +1542,6 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			{
 				Logger.Write(innerEx);
 			}
-		}
-	}
-
-	~ContentDialogV2()
-	{
-		try
-		{
-			Dispose(false);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
 		}
 	}
 }

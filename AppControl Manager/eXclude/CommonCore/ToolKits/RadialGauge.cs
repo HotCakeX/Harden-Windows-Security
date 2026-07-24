@@ -74,6 +74,8 @@ internal sealed partial class RadialGauge : UserControl
 	// Composition (for Ticks)
 	private Compositor? _compositor;
 	private ContainerVisual? _ticksContainer;
+	private CompositionColorBrush? _tickBrush;
+	private CompositionRoundedRectangleGeometry? _roundedTickGeometry;
 
 	// Internal State
 	private double _normalizedMinAngle;
@@ -391,7 +393,7 @@ internal sealed partial class RadialGauge : UserControl
 	{
 		if (d is RadialGauge gauge)
 		{
-			gauge._labelTextBlock.Text = gauge.Unit ?? string.Empty;
+			gauge._labelTextBlock.Text = gauge.Unit;
 		}
 	}
 
@@ -405,17 +407,14 @@ internal sealed partial class RadialGauge : UserControl
 
 	private void OnUnloaded(object sender, RoutedEventArgs e)
 	{
-		if (_ticksContainer != null)
-		{
-			_ticksContainer.Children.RemoveAll();
-			_ticksContainer.Dispose();
-			_ticksContainer = null;
-			_compositor = null;
-		}
+		_ticksContainer?.Children.RemoveAll();
+		DisposeTickResources();
+		_ticksContainer?.Dispose();
+		_ticksContainer = null;
+		_compositor = null;
 	}
 
 	private void OnActualThemeChanged(FrameworkElement sender, object args) => UpdateThemeColors();
-
 
 	private void UpdateThemeColors()
 	{
@@ -450,11 +449,20 @@ internal sealed partial class RadialGauge : UserControl
 		ElementCompositionPreview.SetElementChildVisual(_rootGrid, _ticksContainer);
 	}
 
+	private void DisposeTickResources()
+	{
+		_tickBrush?.Dispose();
+		_tickBrush = null;
+		_roundedTickGeometry?.Dispose();
+		_roundedTickGeometry = null;
+	}
+
 	private void UpdateTicks()
 	{
 		if (_compositor == null || _ticksContainer == null) return;
 
 		_ticksContainer.Children.RemoveAll();
+		DisposeTickResources();
 
 		if (TickSpacing <= 0 || TickWidth <= 0) return; // don't draw if invisible
 
@@ -462,15 +470,15 @@ internal sealed partial class RadialGauge : UserControl
 		Color tickColor = Colors.Gray;
 		if (ActualTheme == ElementTheme.Dark) tickColor = Colors.LightGray;
 
-		CompositionColorBrush tickBrush = _compositor.CreateColorBrush(tickColor);
+		_tickBrush = _compositor.CreateColorBrush(tickColor);
 
 		float tickW = (float)TickWidth;
 		float tickL = (float)TickLength;
 		float tickCorner = tickW / 2.0f;
 
-		CompositionRoundedRectangleGeometry roundedTickGeometry = _compositor.CreateRoundedRectangleGeometry();
-		roundedTickGeometry.Size = new Vector2(tickW, tickL);
-		roundedTickGeometry.CornerRadius = new Vector2(tickCorner, tickCorner);
+		_roundedTickGeometry = _compositor.CreateRoundedRectangleGeometry();
+		_roundedTickGeometry.Size = new Vector2(tickW, tickL);
+		_roundedTickGeometry.CornerRadius = new Vector2(tickCorner, tickCorner);
 
 		double range = Maximum - Minimum;
 		if (range <= 0) return;
@@ -480,8 +488,8 @@ internal sealed partial class RadialGauge : UserControl
 			// Avoid floating point overshoot
 			if (v > Maximum + 0.001) break;
 
-			CompositionSpriteShape tickShape = _compositor.CreateSpriteShape(roundedTickGeometry);
-			tickShape.FillBrush = tickBrush;
+			CompositionSpriteShape tickShape = _compositor.CreateSpriteShape(_roundedTickGeometry);
+			tickShape.FillBrush = _tickBrush;
 
 			// Position:
 			// 1. Center at top center of shape
@@ -618,11 +626,11 @@ internal sealed partial class RadialGauge : UserControl
 		double availH = _innerCenterGrid.ActualHeight;
 		if (availH > 0)
 		{
-			_fillRect.Height = Math.Max(0, Math.Min(1, pct)) * availH;
+			_fillRect.Height = Math.Clamp(pct, 0, 1) * availH;
 		}
 	}
 
-	private Geometry BuildArcGeometry(double startAngle, double endAngle, double radius)
+	private static Geometry BuildArcGeometry(double startAngle, double endAngle, double radius)
 	{
 		// Normalize for full circle check
 		if (Math.Abs(endAngle - startAngle - 360.0) < 0.0001)
@@ -655,7 +663,7 @@ internal sealed partial class RadialGauge : UserControl
 		return pg;
 	}
 
-	private Path CreateSegmentPath(Color startColor, Color endColor, bool isSolid = false)
+	private static Path CreateSegmentPath(Color startColor, Color endColor, bool isSolid = false)
 	{
 		Brush brush;
 		if (isSolid)
@@ -722,7 +730,7 @@ internal sealed partial class RadialGauge : UserControl
 			   + _normalizedMinAngle;
 	}
 
-	private Point ScalePoint(double angle, double radius)
+	private static Point ScalePoint(double angle, double radius)
 	{
 		double rad = angle * Degrees2Radians;
 		return new Point(
@@ -733,8 +741,7 @@ internal sealed partial class RadialGauge : UserControl
 	private static double Mod(double number, double divider)
 	{
 		double result = number % divider;
-		result = result < 0 ? result + divider : result;
-		return result;
+		return result < 0 ? result + divider : result;
 	}
 
 	private void OnPointerPressed(object sender, PointerRoutedEventArgs e)

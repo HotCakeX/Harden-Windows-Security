@@ -25,7 +25,7 @@ namespace CommonCore.Interop;
 
 /// <summary>
 /// `GetLastSystemError` is basically a direct call of `GetLastError` or read of `errno`
-/// where-as `SetLastError=true` adds marshalling logic which calls `GetLastSystemError` and then caches it via `SetLastPInvokeError`
+/// whereas `SetLastError=true` adds marshalling logic which calls `GetLastSystemError` and then caches it via `SetLastPInvokeError`
 /// that way it is preserved and no other call can overwrite it unless someone explicitly calls `SetLastPInvokeError` (which the next p/invoke labeled `SetLastError=true` would do).
 ///
 /// Do not use "SetLastError = true" unless you need to get the last error via "Marshal.GetLastPInvokeError".

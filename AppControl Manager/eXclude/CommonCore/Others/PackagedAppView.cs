@@ -349,7 +349,7 @@ internal sealed partial class PackagedAppView(
 		LoopbackExemptionStatus,
 		AppContainerSid);
 
-	private static string BuildSearchText(params string?[] values) =>
+	private static string BuildSearchText(params string[] values) =>
 		string.Join('\n', values.Where(static value => !string.IsNullOrWhiteSpace(value)));
 
 	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -368,11 +368,7 @@ internal sealed class PackagedAppViewIdentityComparer : IEqualityComparer<Packag
 		return string.Equals(x.StableIdentity, y.StableIdentity, StringComparison.OrdinalIgnoreCase);
 	}
 
-	public int GetHashCode(PackagedAppView? obj)
-	{
-		if (obj is null) return 0;
-		return StringComparer.OrdinalIgnoreCase.GetHashCode(obj.StableIdentity);
-	}
+	public int GetHashCode(PackagedAppView obj) => StringComparer.OrdinalIgnoreCase.GetHashCode(obj.StableIdentity);
 }
 
 [JsonSourceGenerationOptions(

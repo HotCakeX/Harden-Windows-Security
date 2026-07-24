@@ -214,6 +214,7 @@ internal sealed partial class ListViewIncrementalController(
 		{
 			_searchDebounceTimer = Atlas.AppDispatcher.CreateTimer();
 			_searchDebounceTimer.IsRepeating = false;
+			_searchDebounceTimer.Interval = TimeSpan.FromMilliseconds(120); // small, responsive debounce
 			_searchDebounceTimer.Tick += (s, e) =>
 			{
 				s.Stop();
@@ -223,7 +224,6 @@ internal sealed partial class ListViewIncrementalController(
 
 		// Update the pending term and (re)start debounce
 		_pendingSearchTerm = searchText;
-		_searchDebounceTimer.Interval = TimeSpan.FromMilliseconds(120); // small, responsive debounce
 		_searchDebounceTimer.Start();
 	}
 
@@ -780,11 +780,10 @@ internal sealed partial class ListViewIncrementalController(
 		// Always keep the FULL dataset sorted in place so that when filters are cleared
 		// the unfiltered view is already in the desired order.
 		List<TElement> fullySorted = await Task.Run(() =>
-		{
-			return sortState.IsDescending
+			 sortState.IsDescending
 				? originalList.OrderByDescending(keySelector).ToList()
-				: originalList.OrderBy(keySelector).ToList();
-		});
+				: originalList.OrderBy(keySelector).ToList()
+		);
 
 		// Replace contents of originalList so any incremental source sharing this list sees new ordering.
 		// Using the collection to update the backing list under its internal semaphore.
@@ -798,11 +797,10 @@ internal sealed partial class ListViewIncrementalController(
 			// Sort the current filtered view shown in the observable collection.
 			List<TElement> currentView = observableCollection.ToList();
 			List<TElement> sortedView = await Task.Run(() =>
-			{
-				return sortState.IsDescending
+				 sortState.IsDescending
 					? currentView.OrderByDescending(keySelector).ToList()
-					: currentView.OrderBy(keySelector).ToList();
-			});
+					: currentView.OrderBy(keySelector).ToList()
+			);
 
 			// High-performance bulk replace
 			await observableCollection.BulkReplaceAsync(sortedView);

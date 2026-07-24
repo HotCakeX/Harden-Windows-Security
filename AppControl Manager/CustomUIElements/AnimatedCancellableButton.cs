@@ -51,7 +51,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 	private bool _hasShadowApplied;
 	private DispatcherTimer? _shadowTimer;
 	private bool _shadowIncreasing = true;
-	private double _currentBlurRadius = 8.0;
+	private double _currentBlurRadius = MIN_BLUR_RADIUS;
 	private const double MIN_BLUR_RADIUS = 8.0;
 	private const double MAX_BLUR_RADIUS = 30.0;
 	private const double BLUR_STEP = 1.0;
@@ -478,7 +478,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		}
 	}
 
-	private AttachedCardShadow? CreateShadow() => new()
+	private AttachedCardShadow CreateShadow() => new()
 	{
 		Color = GetCurrentShadowColor(),
 		Offset = ZeroOffsetString,
@@ -554,7 +554,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 	{
 		try
 		{
-
 			_shadowTimer = new()
 			{
 				Interval = FiftyMsTimeSpan
@@ -573,6 +572,7 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 			{
 				Interval = FiftyMsTimeSpan
 			};
+
 			_shadowTimer.Tick += ShadowTimer_Tick;
 			_currentColorIndex = 0;
 			_nextColorIndex = 1;

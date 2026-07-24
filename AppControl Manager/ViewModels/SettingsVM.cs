@@ -492,7 +492,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// <summary>
 	/// Language Selection ComboBox ItemsSource
 	/// </summary>
-	internal readonly List<LanguageOption> LanguageOptions = [];
+	internal readonly List<LanguageOption> LanguageOptions = new(11);
 
 	internal static readonly Dictionary<string, int> AppThemes = new(StringComparer.OrdinalIgnoreCase)
 	{

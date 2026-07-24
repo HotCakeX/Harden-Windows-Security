@@ -544,12 +544,8 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			CleanupAnimations();
 
 			// Stop and detach timer to eliminate handler references
-			if (_closeButtonTimer != null)
-			{
-				// unsubscribe to avoid retaining this via delegate
-				_closeButtonTimer.Tick -= CloseButtonTimer_Tick;
-				_closeButtonTimer.Stop();
-			}
+			_closeButtonTimer.Tick -= CloseButtonTimer_Tick;
+			_closeButtonTimer.Stop();
 
 			// Cancel all pending DispatcherQueue operations
 			CancelAllPendingDispatcherOperations();
@@ -1195,7 +1191,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		};
 
 		// Apply easing function if enabled
-		if (UseEasing && EasingFunction != null)
+		if (UseEasing)
 		{
 			opacityAnimation.EasingFunction = CreateShowEasingFunction();
 		}
@@ -1265,7 +1261,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			BeginTime = beginTime
 		};
 
-		if (UseEasing && EasingFunction != null)
+		if (UseEasing)
 		{
 			slideAnimation.EasingFunction = CreateShowEasingFunction();
 		}
@@ -1300,7 +1296,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		};
 
 		// Apply easing functions if enabled
-		if (UseEasing && EasingFunction != null)
+		if (UseEasing)
 		{
 			EasingFunctionBase? showEasing = CreateShowEasingFunction();
 			scaleXAnimation.EasingFunction = showEasing;
@@ -1340,7 +1336,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			BeginTime = AnimationDelay
 		};
 
-		if (UseEasing && EasingFunction != null)
+		if (UseEasing)
 		{
 			opacityAnimation.EasingFunction = CreateHideEasingFunction();
 		}
@@ -1410,7 +1406,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			BeginTime = beginTime
 		};
 
-		if (UseEasing && EasingFunction != null)
+		if (UseEasing)
 		{
 			slideAnimation.EasingFunction = CreateHideEasingFunction();
 		}
@@ -1442,7 +1438,7 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			BeginTime = beginTime
 		};
 
-		if (UseEasing && EasingFunction != null)
+		if (UseEasing)
 		{
 			EasingFunctionBase? hideEasing = CreateHideEasingFunction();
 			scaleXAnimation.EasingFunction = hideEasing;
@@ -1893,11 +1889,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private static DependencyObject? TryFindChildByName(DependencyObject parent, string controlName)
 	{
-		if (parent == null)
-		{
-			return null;
-		}
-
 		int childCount = VisualTreeHelper.GetChildrenCount(parent);
 		for (int i = 0; i < childCount; i++)
 		{

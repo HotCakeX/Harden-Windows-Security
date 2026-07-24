@@ -442,7 +442,7 @@ internal partial class SettingsCard : ButtonBase
 		IEnumerable visualStateGroups = VisualStateManager.GetVisualStateGroups(_rootGrid);
 		foreach (object visualStateGroupObject in visualStateGroups)
 		{
-			if (visualStateGroupObject is VisualStateGroup visualStateGroup && visualStateGroup.Name == groupName)
+			if (visualStateGroupObject is VisualStateGroup visualStateGroup && string.Equals(visualStateGroup.Name, groupName, StringComparison.OrdinalIgnoreCase))
 			{
 				return visualStateGroup;
 			}
@@ -456,7 +456,7 @@ internal partial class SettingsCard : ButtonBase
 			? FocusManager.GetFocusedElement(XamlRoot) as FrameworkElement
 			: FocusManager.GetFocusedElement() as FrameworkElement;
 
-	private static bool IsNullOrEmptyString(object obj)
+	private static bool IsNullOrEmptyString(object? obj)
 	{
 		if (obj == null)
 		{
@@ -498,8 +498,6 @@ internal partial class SettingsCard : ButtonBase
 			{
 				if (enumerator.MoveNext())
 				{
-					_ = enumerator.Current;
-
 					// Found an item, not empty
 					return false;
 				}

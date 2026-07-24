@@ -443,7 +443,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 				infoBar.WriteInfo($"Package details retrieved. Package Publisher: '{packageDits.CertCN}', Package Family Name: '{packageDits.PackageFamilyName}', Package Version: '{packageDits.Version}', Package Hashing Algorithm: '{packageDits.HashAlgorithm}'.");
 
-				// Remove any certificates with the specified common name that may already exist on the system form previous attempts
+				// Remove any certificates with the specified common name that may already exist on the system from previous attempts
 				CertificateGenerator.DeleteCertificateByCN(packageDits.CertCN);
 
 				// Generate a certificate whose complete subject matches the manifest Publisher.

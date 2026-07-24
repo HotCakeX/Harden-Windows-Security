@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
 using AppControlManager.Main;
@@ -68,6 +69,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal bool AllowMicrosoftEnableScriptEnforcement { get; set => SP(ref field, value); } = true;
 	internal bool AllowMicrosoftTestMode { get; set => SP(ref field, value); }
 	internal bool AllowMicrosoftCreateAndDeploy { get; set => SP(ref field, value); }
+	internal readonly FilePathWildcardRulesSettings AllowMicrosoftFilePathWildcardRules = new();
 	internal bool AllowMicrosoftNoBlockRules { get; set => SP(ref field, value); }
 
 	/// <summary>
@@ -99,6 +101,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			}
 			#endregion
 
+			List<string>? filePathWildcardRules = AllowMicrosoftFilePathWildcardRules.GetRules();
+
 			// Run background work using captured values
 			_policyPathAllowMicrosoft = await Task.Run(() =>
 			{
@@ -112,7 +116,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				deployAppControlSupplementalPolicy: AllowMicrosoftCreateAndDeploy,
 				PolicyIDToUse: null,
 				DeployMicrosoftRecommendedBlockRules: !AllowMicrosoftNoBlockRules,
-				IsAppIDTagging: AllowMicrosoftAppIDTaggingToggle
+				IsAppIDTagging: AllowMicrosoftAppIDTaggingToggle,
+				FilePathWildcardRules: filePathWildcardRules
 				);
 			});
 
@@ -182,6 +187,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal bool DefaultWindowsEnableScriptEnforcement { get; set => SP(ref field, value); } = true;
 	internal bool DefaultWindowsTestMode { get; set => SP(ref field, value); }
 	internal bool DefaultWindowsCreateAndDeploy { get; set => SP(ref field, value); }
+	internal readonly FilePathWildcardRulesSettings DefaultWindowsFilePathWildcardRules = new();
 	internal bool DefaultWindowsNoBlockRules { get; set => SP(ref field, value); }
 
 	/// <summary>
@@ -212,6 +218,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			}
 			#endregion
 
+			List<string>? filePathWildcardRules = DefaultWindowsFilePathWildcardRules.GetRules();
+
 			// Run background work using captured values
 			_policyPathDefaultWindows = await Task.Run(() =>
 			{
@@ -225,7 +233,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				deployAppControlSupplementalPolicy: DefaultWindowsCreateAndDeploy,
 				PolicyIDToUse: null,
 				DeployMicrosoftRecommendedBlockRules: !DefaultWindowsNoBlockRules,
-				IsAppIDTagging: DefaultWindowsAppIDTaggingToggle
+				IsAppIDTagging: DefaultWindowsAppIDTaggingToggle,
+				FilePathWildcardRules: filePathWildcardRules
 				);
 			});
 
@@ -294,6 +303,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	internal bool SignedAndReputableEnableScriptEnforcement { get; set => SP(ref field, value); } = true;
 	internal bool SignedAndReputableTestMode { get; set => SP(ref field, value); }
 	internal bool SignedAndReputableCreateAndDeploy { get; set => SP(ref field, value); }
+	internal readonly FilePathWildcardRulesSettings SignedAndReputableFilePathWildcardRules = new();
 	internal bool SignedAndReputableNoBlockRules { get; set => SP(ref field, value); }
 
 	/// <summary>
@@ -324,6 +334,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 			}
 			#endregion
 
+			List<string>? filePathWildcardRules = SignedAndReputableFilePathWildcardRules.GetRules();
+
 			_policyPathSignedAndReputable = await BasePolicyCreator.BuildSignedAndReputable(
 				IsAudit: SignedAndReputableAudit,
 				LogSize: logSize,
@@ -333,7 +345,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				TestMode: SignedAndReputableTestMode,
 				deployAppControlSupplementalPolicy: SignedAndReputableCreateAndDeploy,
 				PolicyIDToUse: null,
-				DeployMicrosoftRecommendedBlockRules: !SignedAndReputableNoBlockRules
+				DeployMicrosoftRecommendedBlockRules: !SignedAndReputableNoBlockRules,
+				FilePathWildcardRules: filePathWildcardRules
 				);
 
 			// Assign the created policy to the Sidebar
@@ -1002,4 +1015,46 @@ internal sealed class AppManifestItem(string name, string description, string pa
 	internal string Name => name;
 	internal string Description => description;
 	internal string Path => path;
+}
+
+internal sealed partial class FilePathWildcardRulesSettings : ViewModelBase
+{
+	internal FilePathWildcardRulesSettings() => Rules =
+		[
+			@"C:\Program Files\*",
+			@"C:\Program Files (x86)\*",
+			@"C:\Windows\*",
+			@"C:\ProgramData\*"
+		];
+
+	internal bool IsEnabled { get; set => SP(ref field, value); }
+	internal string? NewRule { get; set => SP(ref field, value); }
+	internal string? SelectedRule { get; set => SP(ref field, value); }
+	internal ObservableCollection<string> Rules { get; }
+	internal void AddRule()
+	{
+		if (string.IsNullOrWhiteSpace(NewRule))
+		{
+			return;
+		}
+		foreach (string rule in Rules)
+		{
+			if (string.Equals(rule, NewRule, StringComparison.OrdinalIgnoreCase))
+			{
+				NewRule = null;
+				return;
+			}
+		}
+		Rules.Add(NewRule);
+		NewRule = null;
+	}
+	internal void RemoveSelectedRule()
+	{
+		if (SelectedRule is not null)
+		{
+			_ = Rules.Remove(SelectedRule);
+			SelectedRule = null;
+		}
+	}
+	internal List<string>? GetRules() => IsEnabled ? [.. Rules] : null;
 }

@@ -675,7 +675,8 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 						deployAppControlSupplementalPolicy: false,
 						PolicyIDToUse: null,
 						DeployMicrosoftRecommendedBlockRules: false,
-						IsAppIDTagging: false // Don't need it to add tags for us because we are going to modify the policy here
+						IsAppIDTagging: false, // Don't need it to add tags for us because we are going to modify the policy here
+						FilePathWildcardRules: null
 					),
 					1 => BasePolicyCreator.BuildAllowMSFT(
 						IsAudit: false,
@@ -687,7 +688,8 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 						deployAppControlSupplementalPolicy: false,
 						PolicyIDToUse: null,
 						DeployMicrosoftRecommendedBlockRules: false,
-						IsAppIDTagging: false
+						IsAppIDTagging: false,
+						FilePathWildcardRules: null
 					),
 					2 => await BasePolicyCreator.BuildSignedAndReputable(
 						IsAudit: false,
@@ -698,7 +700,8 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 						TestMode: false,
 						deployAppControlSupplementalPolicy: false,
 						PolicyIDToUse: null,
-						DeployMicrosoftRecommendedBlockRules: false
+						DeployMicrosoftRecommendedBlockRules: false,
+						FilePathWildcardRules: null
 					),
 					_ => throw new ArgumentOutOfRangeException(nameof(mode), mode, "Unexpected mode value")
 				};

@@ -279,7 +279,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							deployAppControlSupplementalPolicy: false,
 							PolicyIDToUse: policyID,
 							DeployMicrosoftRecommendedBlockRules: false,
-							IsAppIDTagging: false
+							IsAppIDTagging: false,
+							FilePathWildcardRules: null
 							);
 
 							break;
@@ -296,7 +297,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							deployAppControlSupplementalPolicy: false,
 							PolicyIDToUse: policyID,
 							DeployMicrosoftRecommendedBlockRules: false,
-							IsAppIDTagging: false
+							IsAppIDTagging: false,
+							FilePathWildcardRules: null
 							);
 
 							break;
@@ -312,7 +314,8 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							TestMode: false,
 							deployAppControlSupplementalPolicy: false,
 							PolicyIDToUse: policyID,
-							DeployMicrosoftRecommendedBlockRules: false
+							DeployMicrosoftRecommendedBlockRules: false,
+							FilePathWildcardRules: null
 							);
 
 							break;

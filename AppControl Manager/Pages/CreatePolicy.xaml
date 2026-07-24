@@ -6,6 +6,62 @@
       xmlns:CCToolKit="using:CommonCore.ToolKits"
       xmlns:viewmodels="using:AppControlManager.ViewModels"
       FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+    <Page.Resources>
+        <DataTemplate x:Key="FilePathWildcardRulesTemplate"
+                      x:DataType="viewmodels:FilePathWildcardRulesSettings">
+            <Grid Width="420" RowSpacing="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ToggleSwitch Grid.Row="0"
+                              OffContent="Don't add any rules"
+                              OnContent="Add these rules"
+                              IsOn="{x:Bind IsEnabled, Mode=TwoWay}" />
+                <Grid Grid.Row="1" ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Text="{x:Bind NewRule, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             PlaceholderText="C:\Path\*"
+                             IsEnabled="{x:Bind IsEnabled, Mode=OneWay}" />
+                    <Button Grid.Column="1"
+                            Content="Add"
+                            IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+                            Click="{x:Bind AddRule}" />
+                </Grid>
+                <Grid Grid.Row="2" ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <ListView ItemsSource="{x:Bind Rules, Mode=OneWay}"
+                              SelectedItem="{x:Bind SelectedRule, Mode=TwoWay}"
+                              MaxHeight="120"
+                              SelectionMode="Single"
+                              IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+                              ScrollViewer.VerticalScrollBarVisibility="Visible"
+                              ScrollViewer.IsVerticalRailEnabled="True"
+                              ScrollViewer.VerticalScrollMode="Enabled">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Height" Value="40" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                    <Button Grid.Column="1"
+                            VerticalAlignment="Top"
+                            ToolTipService.ToolTip="Remove selected rule"
+                            IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+                            Click="{x:Bind RemoveSelectedRule}">
+                        <FontIcon Glyph="&#xE74D;" />
+                    </Button>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
     <ScrollViewer>
         <StackPanel HorizontalAlignment="Stretch" Spacing="{StaticResource SettingsCardSpacing}">
             <StackPanel.ChildrenTransitions>
@@ -103,6 +159,12 @@
                                       x:Uid="ToggleSwitchGeneral"
                                       IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
+                    <CCToolKit:SettingsCard Header="File and Folder path allow rules"
+                                            Description="Optionally add user-mode wildcard path rules to this base policy."
+                                            IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}">
+                        <ContentControl Content="{x:Bind ViewModel.AllowMicrosoftFilePathWildcardRules, Mode=OneWay}"
+                                        ContentTemplate="{StaticResource FilePathWildcardRulesTemplate}" />
+                    </CCToolKit:SettingsCard>
                     <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
                         <ToggleSwitch IsOn="{x:Bind ViewModel.AllowMicrosoftNoBlockRules, Mode=TwoWay}"
                                       x:Uid="ToggleSwitchGeneral"
@@ -201,6 +263,12 @@
                                       x:Uid="ToggleSwitchGeneral"
                                       IsOn="{x:Bind ViewModel.DefaultWindowsTestMode, Mode=TwoWay}" />
                     </customUI:SettingsCardV2>
+                    <CCToolKit:SettingsCard Header="File and Folder path allow rules"
+                                            Description="Optionally add user-mode wildcard path rules to this base policy."
+                                            IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}">
+                        <ContentControl Content="{x:Bind ViewModel.DefaultWindowsFilePathWildcardRules, Mode=OneWay}"
+                                        ContentTemplate="{StaticResource FilePathWildcardRulesTemplate}" />
+                    </CCToolKit:SettingsCard>
                     <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
                         <ToggleSwitch IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}"
                                       x:Uid="ToggleSwitchGeneral"
@@ -294,6 +362,12 @@
                                       x:Uid="ToggleSwitchGeneral"
                                       IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
+                    <CCToolKit:SettingsCard Header="File and Folder path allow rules"
+                                            Description="Optionally add user-mode wildcard path rules to this base policy."
+                                            IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}">
+                        <ContentControl Content="{x:Bind ViewModel.SignedAndReputableFilePathWildcardRules, Mode=OneWay}"
+                                        ContentTemplate="{StaticResource FilePathWildcardRulesTemplate}" />
+                    </CCToolKit:SettingsCard>
                     <customUI:SettingsCardV2 x:Uid="NoMSRecommendedBlockRules">
                         <ToggleSwitch IsOn="{x:Bind ViewModel.SignedAndReputableNoBlockRules, Mode=TwoWay}"
                                       x:Uid="ToggleSwitchGeneral"

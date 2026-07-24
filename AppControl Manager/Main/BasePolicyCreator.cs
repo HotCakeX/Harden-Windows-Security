@@ -30,6 +30,7 @@ using System.Xml;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
+using CommonCore.IntelGathering;
 
 namespace AppControlManager.Main;
 
@@ -217,7 +218,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to deploy recommended block rules if no policy ID is provided.</param>
 	/// <param name="IsAppIDTagging">Whether the created policy is an App ID Tagging type.</param>
 	/// <returns>Returns the created policy</returns>
-	internal static PolicyFileRepresent BuildAllowMSFT(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules, bool IsAppIDTagging)
+	internal static PolicyFileRepresent BuildAllowMSFT(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules, bool IsAppIDTagging, List<string>? FilePathWildcardRules)
 	{
 		string policyName;
 
@@ -279,6 +280,8 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			ScriptEnforcement: EnableScriptEnforcement,
 			TestMode: TestMode);
 
+		policyObj = AddFilePathWildcardRules(policyObj, FilePathWildcardRules);
+
 		// Convert it to AppIDTagging policy if it was requested
 		if (IsAppIDTagging)
 		{
@@ -314,7 +317,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Indicates whether to retrieve and deploy Microsoft recommended block rules.</param>
 	/// <param name="IsAppIDTagging">Whether the created policy is an App ID Tagging type.</param>
 	/// <returns>Returns the created Default Windows base policy</returns>
-	internal static PolicyFileRepresent BuildDefaultWindows(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules, bool IsAppIDTagging)
+	internal static PolicyFileRepresent BuildDefaultWindows(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules, bool IsAppIDTagging, List<string>? FilePathWildcardRules)
 	{
 		string policyName;
 
@@ -374,6 +377,8 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			RequireEVSigners: RequireEVSigners,
 			ScriptEnforcement: EnableScriptEnforcement,
 			TestMode: TestMode);
+
+		policyObj = AddFilePathWildcardRules(policyObj, FilePathWildcardRules);
 
 		// Convert it to AppIDTagging policy if it was requested
 		if (IsAppIDTagging)
@@ -528,7 +533,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <param name="PolicyIDToUse">Allows the use of a specific ID if provided, overriding the generated one for both PolicyID and BasePolicyID.</param>
 	/// <param name="DeployMicrosoftRecommendedBlockRules">Specifies whether to retrieve and deploy Microsoft recommended block rules.</param>
 	/// <returns>Returns the signed and reputable base policy</returns>
-	internal static async Task<PolicyFileRepresent> BuildSignedAndReputable(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules)
+	internal static async Task<PolicyFileRepresent> BuildSignedAndReputable(bool IsAudit, double? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool deployAppControlSupplementalPolicy, string? PolicyIDToUse, bool DeployMicrosoftRecommendedBlockRules, List<string>? FilePathWildcardRules)
 	{
 		string policyName;
 
@@ -580,6 +585,8 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 
 		policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"), PolicyIDToUse);
 
+		policyObj = AddFilePathWildcardRules(policyObj, FilePathWildcardRules);
+
 		if (deploy)
 		{
 			await ConfigureISGServices.Configure();
@@ -591,6 +598,22 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		}
 
 		return new(policyObj);
+	}
+
+	/// <summary>
+	/// File path rule creation pipeline to add the selected wildcard rules to base policies.
+	/// </summary>
+	private static SiPolicy.SiPolicy AddFilePathWildcardRules(SiPolicy.SiPolicy policyObj, List<string>? filePathWildcardRules)
+	{
+		if (filePathWildcardRules is null || filePathWildcardRules.Count is 0)
+		{
+			return policyObj;
+		}
+		HashSet<string> uniqueRules = new(filePathWildcardRules, StringComparer.OrdinalIgnoreCase);
+		FileBasedInfoPackage dataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(
+			level: ScanLevels.CustomFileRulePattern,
+			customFileRulePatterns: uniqueRules);
+		return NewFilePathRules.CreateAllow(policyObj, dataPackage.FilePaths);
 	}
 
 	/// <summary>

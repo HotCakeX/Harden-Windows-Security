@@ -1131,7 +1131,7 @@ internal static class GetEventLogsData
 		// Find the matching DriveMapping for the device path prefix
 		foreach (DriveLetterMapper.DriveMapping mapping in CollectionsMarshal.AsSpan(DriveLettersGlobalRootFix))
 		{
-			if (mapping.DevicePath is not null && path.AsSpan().StartsWith(mapping.DevicePath, StringComparison.OrdinalIgnoreCase))
+			if (path.AsSpan().StartsWith(mapping.DevicePath, StringComparison.OrdinalIgnoreCase))
 			{
 				// Replace the device path with the corresponding drive letter by concatenation
 				return string.Concat(mapping.DriveLetter, path.AsSpan(mapping.DevicePath.Length));

@@ -753,13 +753,7 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// <summary>
 	/// Returns a pseudo-random integer in [0, maxExclusive).
 	/// </summary>
-	private static int GetRandomNumber(int maxExclusive)
-	{
-		if (maxExclusive <= 0)
-			return 0;
-
-		return RandomNumberGenerator.GetInt32(maxExclusive);
-	}
+	private static int GetRandomNumber(int maxExclusive) => maxExclusive <= 0 ? 0 : RandomNumberGenerator.GetInt32(maxExclusive);
 
 	#endregion
 }

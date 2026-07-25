@@ -572,7 +572,7 @@ internal sealed class SiPolicy(
 	internal PolicyType PolicyType { get; set; } = policyType;
 }
 
-internal enum PolicyType : int
+internal enum PolicyType
 {
 	BasePolicy = 0,
 	SupplementalPolicy,

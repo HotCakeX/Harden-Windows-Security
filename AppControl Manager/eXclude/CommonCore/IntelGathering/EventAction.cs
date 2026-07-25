@@ -20,7 +20,7 @@ namespace CommonCore.IntelGathering;
 /// <summary>
 /// Defines the action type of Code Integrity and AppLocker event logs.
 /// </summary>
-internal enum EventAction : int
+internal enum EventAction
 {
 	Audit = 0,
 	Block

@@ -81,7 +81,7 @@ internal static class Manager
 	/// <param name="package">The policy entry describing hive, key and value.</param>
 	/// <returns>
 	/// Stringified registry value (for REG_SZ, REG_DWORD, etc.),
-	/// Base64 for binary, or joined strings for multi‑sz; null if not present.
+	/// Base64 for binary, or joined strings for multi-sz; null if not present.
 	/// </returns>
 	internal static string? ReadRegistry(RegistryPolicyEntry package)
 	{
@@ -228,9 +228,9 @@ internal static class Manager
 	/// <returns>Dictionary with policies as keys and verification results as values</returns>
 	internal static Dictionary<RegistryPolicyEntry, bool> VerifyPoliciesInSystem(List<RegistryPolicyEntry> policies)
 	{
-		Dictionary<RegistryPolicyEntry, bool> verificationResults = [];
+		Dictionary<RegistryPolicyEntry, bool> verificationResults = new(policies.Count);
 
-		foreach (RegistryPolicyEntry policy in policies)
+		foreach (RegistryPolicyEntry policy in CollectionsMarshal.AsSpan(policies))
 		{
 			try
 			{
@@ -450,7 +450,7 @@ internal static class Manager
 						{
 							return Convert.ToBase64String(Array.Empty<byte>());
 						}
-						return Convert.ToBase64String(rom.ToArray());
+						return Convert.ToBase64String(rom.Span);
 					}
 					if (parsed is byte[] bytes)
 					{
@@ -462,7 +462,7 @@ internal static class Manager
 			case RegistryValueType.REG_MULTI_SZ:
 				{
 					if (parsed is not string[] arr) return null;
-					return string.Join(";", arr);
+					return string.Join(Separator, arr);
 				}
 
 			case RegistryValueType.REG_FULL_RESOURCE_DESCRIPTOR:

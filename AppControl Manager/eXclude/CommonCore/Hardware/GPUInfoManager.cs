@@ -131,7 +131,7 @@ internal static class GPUInfoManager
 	/// <returns></returns>
 	private static string GetGpuDeduplicationKey(GpuInfo gpu)
 	{
-		string pnpDeviceId = gpu.PnpDeviceId.Trim().ToUpperInvariant();
+		string pnpDeviceId = gpu.PnpDeviceId.Trim();
 		if (!string.IsNullOrWhiteSpace(pnpDeviceId) && !string.Equals(pnpDeviceId, "UNKNOWN", StringComparison.OrdinalIgnoreCase))
 		{
 			return string.Create(CultureInfo.InvariantCulture, $"pnp:{pnpDeviceId}");
@@ -142,9 +142,9 @@ internal static class GPUInfoManager
 			return string.Create(CultureInfo.InvariantCulture, $"pci:{gpu.VendorId:X4}:{gpu.DeviceId:X4}");
 		}
 
-		string normalizedName = gpu.Name.Trim().ToUpperInvariant();
-		string normalizedManufacturer = gpu.Manufacturer.Trim().ToUpperInvariant();
-		string normalizedDriverVersion = gpu.DriverVersion.Trim().ToUpperInvariant();
+		string normalizedName = gpu.Name.Trim();
+		string normalizedManufacturer = gpu.Manufacturer.Trim();
+		string normalizedDriverVersion = gpu.DriverVersion.Trim();
 
 		if (!string.IsNullOrWhiteSpace(normalizedName) || !string.IsNullOrWhiteSpace(normalizedManufacturer) || !string.IsNullOrWhiteSpace(normalizedDriverVersion))
 		{

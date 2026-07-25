@@ -44,7 +44,6 @@ internal static partial class DetailsRetrieval
 		internal uint CodeIntegrityOptions;
 	}
 
-
 	/// <summary>
 	/// Define a dictionary to map option flags to their corresponding descriptions
 	/// </summary>
@@ -93,10 +92,9 @@ internal static partial class DetailsRetrieval
 			Atlas.GetStr("CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED")) }
 	}.ToFrozenDictionary();
 
-
 	private static List<CodeIntegrityOption> GetCodeIntegrityDetails(uint options)
 	{
-		List<CodeIntegrityOption> details = [];
+		List<CodeIntegrityOption> details = new(codeIntegrityFlags.Count);
 
 		// Loop through the dictionary and check if each flag is set in the options
 		foreach (KeyValuePair<uint, (string Name, string Description)> flag in codeIntegrityFlags)
@@ -152,12 +150,10 @@ internal static partial class DetailsRetrieval
 			// Read back the updated structure directly
 			sci = *(SYSTEM_CODEINTEGRITY_INFORMATION*)buffer;
 
-			SystemCodeIntegrityInfo output = new(
+			return new(
 				codeIntegrityOptions: sci.CodeIntegrityOptions,
 				codeIntegrityDetails: GetCodeIntegrityDetails(sci.CodeIntegrityOptions)
 			);
-
-			return output;
 		}
 		finally
 		{

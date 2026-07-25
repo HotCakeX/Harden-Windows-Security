@@ -57,10 +57,7 @@ internal static class RegistryPolicyParser
 				int delay = baseDelayMs * (int)Math.Pow(2, attempt - 1);
 
 				// Some jitter to prevent thundering herd
-				using RandomNumberGenerator rng = RandomNumberGenerator.Create();
-				byte[] randomBytes = new byte[4];
-				rng.GetBytes(randomBytes);
-				int jitter = Math.Abs(BitConverter.ToInt32(randomBytes, 0)) % (delay / 4);
+				int jitter = RandomNumberGenerator.GetInt32(delay / 4);
 				int totalDelay = delay + jitter;
 
 				Logger.Write($"File sharing violation on attempt {attempt}/{maxRetries + 1}. Retrying in {totalDelay}ms. Error: {ex.Message}");
@@ -245,11 +242,11 @@ internal static class RegistryPolicyParser
 	internal static void WriteFile(string filePath, RegistryPolicyFile policyFile)
 	{
 		_ = ExecuteWithRetry(() =>
-	   {
-		   using FileStream fileStream = new(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
-		   WriteStream(fileStream, policyFile);
-		   return true;
-	   });
+		{
+			using FileStream fileStream = new(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
+			WriteStream(fileStream, policyFile);
+			return true;
+		});
 	}
 
 	private static void WriteStream(Stream stream, RegistryPolicyFile policyFile)

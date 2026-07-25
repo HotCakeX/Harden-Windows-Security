@@ -37,7 +37,7 @@ internal static class GetCertificateDetails
 	internal static List<ChainPackage> Get(List<AllFileSigners> completeSignatureResult)
 	{
 		// A list to hold the final result of the method
-		List<ChainPackage> finalObject = [];
+		List<ChainPackage> finalObject = new(completeSignatureResult.Count);
 
 		// Loop over each signer of the file, in case the file has multiple separate signers
 		for (int i = 0; i < completeSignatureResult.Count; i++)
@@ -47,7 +47,7 @@ internal static class GetCertificateDetails
 			SignedCms currentSignedCms = completeSignatureResult[i].Signer;
 
 			// Get the number of certificates in the current chain
-			uint certificatesInChainCount = (uint)currentChain.ChainElements.Count;
+			int certificatesInChainCount = currentChain.ChainElements.Count;
 
 			switch (certificatesInChainCount)
 			{

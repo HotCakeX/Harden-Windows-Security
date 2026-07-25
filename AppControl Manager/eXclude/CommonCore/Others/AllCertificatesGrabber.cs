@@ -85,11 +85,9 @@ internal static class AllCertificatesGrabber
 					if (wtd.pSignatureSettings != IntPtr.Zero)
 					{
 						WINTRUST_SIGNATURE_SETTINGS* signatureSettings = (WINTRUST_SIGNATURE_SETTINGS*)wtd.pSignatureSettings;
-						if (signatureSettings != null)
-						{
-							// Reading SecondarySignersCount directly from unmanaged struct
-							maxSigners = signatureSettings->SecondarySignersCount;
-						}
+
+						// Reading SecondarySignersCount directly from unmanaged struct
+						maxSigners = signatureSettings->SecondarySignersCount;
 					}
 				}
 

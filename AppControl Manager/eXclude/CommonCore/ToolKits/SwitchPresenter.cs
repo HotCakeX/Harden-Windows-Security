@@ -114,7 +114,7 @@ internal static partial class SwitchHelpers
 	/// <returns>The discovered value, the default value, or <c>null</c></returns>
 	internal static Case? EvaluateCases(this CaseCollection switchCases, object value, Type targetType)
 	{
-		if (switchCases == null || switchCases.Count == 0)
+		if (switchCases.Count == 0)
 		{
 			// If we have no cases, then we can't match anything.
 			return null;
@@ -206,9 +206,7 @@ internal static partial class SwitchHelpers
 				return result;
 			}
 
-			static object ThrowExceptionForKeyNotFound() => throw new InvalidOperationException("The requested enum value was not present in the provided type.");
-
-			return ThrowExceptionForKeyNotFound();
+			throw new InvalidOperationException("The requested enum value was not present in the provided type.");
 		}
 		else
 		{

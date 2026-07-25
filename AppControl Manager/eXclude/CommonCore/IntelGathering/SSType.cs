@@ -20,7 +20,7 @@ namespace CommonCore.IntelGathering;
 /// <summary>
 /// Defines the signing Scenario the SiPolicy elements belong to and for all App Control policies.
 /// </summary>
-internal enum SSType : int
+internal enum SSType
 {
 	KernelMode = 0,
 	UserMode = 1

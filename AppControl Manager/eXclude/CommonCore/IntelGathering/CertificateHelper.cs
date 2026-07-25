@@ -167,8 +167,7 @@ internal static class CertificateHelper
 		};
 
 		// Convert the hash to a hex string.
-		string hexStringOutput = Convert.ToHexString(hash);
-		return hexStringOutput;
+		return Convert.ToHexString(hash);
 	}
 
 	/// <summary>
@@ -202,7 +201,7 @@ internal static class CertificateHelper
 		// and for this example it is 10 (0A in hexadecimal)
 		numArray[0] = 6;
 
-		// Create an AsnReader object with the default encoding rules
+		// Create an AsnReader object.
 		// This is a class that can read the ASN.1 BER, CER, and DER data formats
 		// BER (Basic Encoding Rules) is the most flexible and widely used encoding rule
 		// CER (Canonical Encoding Rules) is a subset of BER that ensures a unique encoding
@@ -214,9 +213,7 @@ internal static class CertificateHelper
 		// This is a method of the AsnReader class that returns the OID as a string
 		// The first two numbers are derived from the first byte of the encoded data
 		// The rest of the numbers are derived from the subsequent bytes using a base 128 (variable-length) system
-		string oid = asnReader.ReadObjectIdentifier();
-
 		// Return the OID value as string
-		return oid;
+		return asnReader.ReadObjectIdentifier();
 	}
 }

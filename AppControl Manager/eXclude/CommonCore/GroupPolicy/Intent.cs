@@ -22,7 +22,7 @@ namespace CommonCore.GroupPolicy;
 /// This enumeration is used to apply policies and configurations based on usage intent.
 /// It is IMPORTANT for the order of this to remain static and if changed, the values in the IntentCircles class must also change, as well as those in the JSON files etc.
 /// </summary>
-internal enum Intent : int
+internal enum Intent
 {
 	Development = 0,
 	Gaming = 1,

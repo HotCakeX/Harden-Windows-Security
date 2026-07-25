@@ -30,8 +30,7 @@ internal sealed class ExFileInfo(
 	internal string? OriginalFileName => originalFileName;
 
 	/// <summary>
-	/// Represents the internal name of an entity, which can be null. It is a string property that can be accessed and
-	/// modified.
+	/// Represents the internal name of an entity, which can be null.
 	/// </summary>
 	internal string? InternalName => internalName;
 

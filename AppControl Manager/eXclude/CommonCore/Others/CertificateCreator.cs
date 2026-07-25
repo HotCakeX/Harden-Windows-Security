@@ -64,7 +64,6 @@ internal static class CertificateGenerator
 			{
 				store.Remove(cert);
 			}
-			store.Close();
 		}
 
 		// Build the distinguished name structurally so delimiter characters in the CN remain intact.
@@ -113,7 +112,7 @@ internal static class CertificateGenerator
 		int validityInYears,
 		int keySize,
 		HashAlgorithmName hashAlgorithm,
-		CertificateStoreLocation? storeLocation,
+		CertificateStoreLocation storeLocation,
 		bool UserProtectedPrivateKey,
 		bool ExportablePrivateKey,
 		string? cerExportFilePath = null,
@@ -210,11 +209,8 @@ internal static class CertificateGenerator
 			File.WriteAllBytes(pfxExportFilePath, certData);
 		}
 
-		if (storeLocation is not null)
-		{
-			// Store the certificate in the specified certificate store
-			StoreCertificateInStore(generatedCert, storeLocation, false);
-		}
+		// Store the certificate in the specified certificate store
+		StoreCertificateInStore(generatedCert, storeLocation, false);
 
 		return generatedCert;
 	}
@@ -225,12 +221,11 @@ internal static class CertificateGenerator
 	/// <param name="cert">The certificate to be stored in the designated certificate store.</param>
 	/// <param name="storeLocation">Indicates whether the certificate should be stored for the current user or the local machine.</param>
 	/// <param name="publicKeyOnly">Determines if only the public key of the certificate should be stored.</param>
-	internal static void StoreCertificateInStore(X509Certificate2 cert, CertificateStoreLocation? storeLocation, bool publicKeyOnly)
+	internal static void StoreCertificateInStore(X509Certificate2 cert, CertificateStoreLocation storeLocation, bool publicKeyOnly)
 	{
 		// Choose the store based on the user selection
 		StoreName storeName = storeLocation == CertificateStoreLocation.User ? StoreName.My : StoreName.Root;
 		StoreLocation location = storeLocation == CertificateStoreLocation.User ? StoreLocation.CurrentUser : StoreLocation.LocalMachine;
-
 
 		if (publicKeyOnly)
 		{
@@ -245,7 +240,6 @@ internal static class CertificateGenerator
 		using X509Store store = new(storeName, location);
 		store.Open(OpenFlags.ReadWrite);
 		store.Add(cert);
-		store.Close();
 	}
 
 	/// <summary>
@@ -298,7 +292,6 @@ internal static class CertificateGenerator
 						storeName));
 				}
 			}
-			store.Close();
 		}
 	}
 
@@ -327,8 +320,6 @@ internal static class CertificateGenerator
 				matchingCertificates.Add(cert);
 			}
 		}
-		store.Close();
-
 		return matchingCertificates;
 	}
 }

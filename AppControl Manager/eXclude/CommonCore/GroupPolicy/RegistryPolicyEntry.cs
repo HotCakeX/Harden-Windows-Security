@@ -189,12 +189,7 @@ internal sealed class RegistryPolicyEntry(
 		};
 	}
 
-	internal static string[] ParseMultiString(ReadOnlySpan<byte> data)
-	{
-		string unicodeString = Encoding.Unicode.GetString(data);
-		string[] strings = unicodeString.Split('\0', StringSplitOptions.RemoveEmptyEntries);
-		return strings;
-	}
+	internal static string[] ParseMultiString(ReadOnlySpan<byte> data) => Encoding.Unicode.GetString(data).Split('\0', StringSplitOptions.RemoveEmptyEntries);
 
 	/// <summary>
 	/// Saves a list of RegistryPolicyEntry to a JSON file.

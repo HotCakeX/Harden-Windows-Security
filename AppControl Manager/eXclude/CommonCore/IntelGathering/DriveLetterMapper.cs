@@ -29,11 +29,11 @@ internal static partial class DriveLetterMapper
 	/// <param name="driveLetter">Property to store drive letter</param>
 	/// <param name="volumeName">Property to store volume name</param>
 	/// <param name="devicePath">Property to store device path</param>
-	internal sealed class DriveMapping(string? driveLetter, string? volumeName, string? devicePath)
+	internal sealed class DriveMapping(string? driveLetter, string volumeName, string devicePath)
 	{
 		internal string? DriveLetter => driveLetter;
-		internal string? DevicePath => devicePath;
-		internal string? VolumeName => volumeName;
+		internal string VolumeName => volumeName;
+		internal string DevicePath => devicePath;
 	}
 
 	/// <summary>
@@ -111,7 +111,6 @@ internal static partial class DriveLetterMapper
 
 		try
 		{
-
 			// Loop through all the volumes
 			do
 			{

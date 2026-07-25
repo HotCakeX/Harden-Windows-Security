@@ -437,7 +437,7 @@ internal sealed class Windows10CustomConfiguration(
 /// <summary>
 /// Different methods for the sign in process
 /// </summary>
-internal enum SignInMethods : int
+internal enum SignInMethods
 {
 	WebAccountManager = 0,
 	WebBrowser = 1

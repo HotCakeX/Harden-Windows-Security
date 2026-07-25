@@ -122,7 +122,7 @@ internal sealed partial class AuditPolicyInfo(
 		get => (int)AuditingInformation;
 		set
 		{
-			uint newValue = (uint)Math.Max(0, Math.Min(3, value));
+			uint newValue = (uint)Math.Clamp(value, 0, 3);
 			AuditingInformation = newValue;
 		}
 	}
@@ -813,8 +813,6 @@ internal static class AuditPolicyManager
 				}
 				finally
 				{
-					// Free the string allocated by the API
-					// Marshal.FreeHGlobal(namePtr);
 					// Must be freed via AuditFree per documentation, not FreeHGlobal: https://learn.microsoft.com/windows/win32/api/ntsecapi/nf-ntsecapi-auditlookupsubcategorynamew#parameters
 					NativeMethods.AuditFree(namePtr);
 				}
@@ -850,8 +848,6 @@ internal static class AuditPolicyManager
 				}
 				finally
 				{
-					// Free the string allocated by the API
-					// Marshal.FreeHGlobal(namePtr);
 					// Must be freed via AuditFree per documentation, not FreeHGlobal: https://learn.microsoft.com/windows/win32/api/ntsecapi/nf-ntsecapi-auditlookupsubcategorynamew#parameters
 					NativeMethods.AuditFree(namePtr);
 				}

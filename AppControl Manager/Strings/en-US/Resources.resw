@@ -6783,7 +6783,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Only allows the programs and apps that come by default with the Windows operating system to be able to access the Internet. All signed and default Windows processes can access the Internet while third-party programs will be blocked.</value>
   </data>
   <data name="AllowMicrosoftFirewallSentinelProfileDescription.Text" xml:space="preserve">
-    <value>Extends the Default Windows profile to permit network connectivity for applications signed with Microsoft's code‑signing certificates. This profile grants access to built‑in Windows components and Microsoft‑signed software while excluding unsigned or non‑Microsoft third‑party applications from Internet access.</value>
+    <value>Extends the Default Windows profile to permit network connectivity for applications signed with Microsoft's code-signing certificates. This profile grants access to built-in Windows components and Microsoft-signed software while excluding unsigned or non-Microsoft third-party applications from Internet access.</value>
   </data>
   <data name="SignedAndReputableFirewallSentinelProfileDescription.Text" xml:space="preserve">
     <value>Extends the Allow Microsoft profile by permitting everything it allows, and additionally allowing all reputable, signed applications based on Intelligent Security Cloud verdicts. This provides the broadest firewall coverage.</value>

@@ -587,7 +587,7 @@ internal static partial class CIManager
 		internal static partial int ManageCI_ParsePolicy(void* policyBytes, int policySize, out Guid policyId, out Guid basePolicyId, out void* friendlyNamePtr);
 
 		/// <summary>
-		/// Non‑prefixed ParsePolicy export (ordinal 19)
+		/// Non-prefixed ParsePolicy export (ordinal 19)
 		/// Produces a SiPolicyView* to mine the management "this" pointer.
 		/// </summary>
 		[LibraryImport("ManageCI")]

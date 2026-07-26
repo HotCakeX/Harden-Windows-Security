@@ -2045,7 +2045,6 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows-hardware/manufacture/desktop/dism/dismshutdown-function
 	/// </summary>
-	/// <returns></returns>
 	[LibraryImport("DismApi.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int DismShutdown();
@@ -2626,7 +2625,6 @@ internal static unsafe partial class NativeMethods
 	/// <param name="fGPO"></param>
 	/// <param name="wszFilePath"></param>
 	/// <param name="fSomeInfoLost"></param>
-	/// <returns></returns>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
 	internal static partial uint FWExportPolicy(
@@ -2644,7 +2642,6 @@ internal static unsafe partial class NativeMethods
 	/// <param name="fGPO"></param>
 	/// <param name="wszFilePath"></param>
 	/// <param name="fSomeInfoLost"></param>
-	/// <returns></returns>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
 	internal static partial uint FWImportPolicy(
@@ -2659,7 +2656,6 @@ internal static unsafe partial class NativeMethods
 	/// It does not touch or overwrite the Firewall rules defined in the Group Policy.
 	/// </summary>
 	/// <param name="wszMachineOrGPO"></param>
-	/// <returns></returns>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
 	internal static partial uint FWRestoreDefaults(string? wszMachineOrGPO);
@@ -2683,7 +2679,6 @@ internal static unsafe partial class NativeMethods
 	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-fasp/2959ec3a-df7c-4da9-b118-385b62312067
 	/// </summary>
 	/// <param name="hPolicy"></param>
-	/// <returns></returns>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll")]
 	internal static partial uint FWClosePolicyStore(nint hPolicy);
@@ -2695,7 +2690,6 @@ internal static unsafe partial class NativeMethods
 	/// Deletion is instant.
 	/// </summary>
 	/// <param name="hPolicy"></param>
-	/// <returns></returns>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll")]
 	internal static partial uint FWDeleteAllFirewallRules(nint hPolicy);

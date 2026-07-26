@@ -27,7 +27,7 @@ namespace CommonCore.IntelGathering;
 internal sealed class FileIdentity
 {
 	#region String representations of Enums for UI display purposes and to avoid calling ToString on actual enum properties when we need the string. Improves performance and lowers allocations. Tested with benchmarks on .NET 10.1
-	// Their order mUST match the order of the enum definitions.
+	// Their order MUST match the order of the enum definitions.
 
 	private static readonly string[] SignatureStatusString =
 	[
@@ -182,7 +182,7 @@ internal sealed class FileIdentity
 
 	// Computed property to gather all OPUSInfo from FileSignerInfos and save them in a comma-separated string for displaying purposes only.
 	[JsonInclude]
-	internal string? Opus => string.Join(", ", FileSignerInfos.Where(signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo)).Select(x => x.OPUSInfo));
+	internal string Opus => string.Join(", ", FileSignerInfos.Where(signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo)).Select(x => x.OPUSInfo));
 
 	/// <summary>
 	/// Determines whether the specified object is equal to the current object.
@@ -247,7 +247,7 @@ internal sealed class FileIdentity
 		hash.Add(EventID);
 		hash.Add(TimeCreated);
 		hash.Add(ComputerName, StringComparer.OrdinalIgnoreCase);
-		hash.Add(PolicyGUID);
+		hash.Add(PolicyGUID, StringComparer.OrdinalIgnoreCase);
 		hash.Add(UserWriteable);
 		hash.Add(ProcessName, StringComparer.OrdinalIgnoreCase);
 		hash.Add(RequestedSigningLevel, StringComparer.OrdinalIgnoreCase);

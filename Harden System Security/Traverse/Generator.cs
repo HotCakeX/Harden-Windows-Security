@@ -31,7 +31,6 @@ internal static class Generator
 	/// </summary>
 	/// <param name="viewModel"></param>
 	/// <param name="cancellationToken"></param>
-	/// <returns></returns>
 	internal static async Task<(int Score, List<MUnit> Items)> VerifyAndSnapshotMUnitCategoryAsync(
 		IMUnitListViewModel viewModel,
 		CancellationToken cancellationToken)
@@ -56,7 +55,6 @@ internal static class Generator
 	/// <summary>
 	/// The MAIN method that generates the complete system report.
 	/// </summary>
-	/// <returns></returns>
 	internal static async Task GenerateTraverseData(string filePath)
 	{
 		if (Logger.CliRequested)
@@ -221,7 +219,6 @@ internal static class Generator
 	/// <summary>
 	/// Returns an appropriate name for the file that contains the <see cref="MContainer"/>.
 	/// </summary>
-	/// <returns></returns>
 	internal static string GetFileName() => $"HardenSystemSecurity-Report-{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.json";
 
 }

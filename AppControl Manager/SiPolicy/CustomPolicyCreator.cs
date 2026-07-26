@@ -22,7 +22,6 @@ internal static class CustomPolicyCreator
 	/// <summary>
 	/// Creates an empty <see cref="SiPolicy"/> with minimal settings, serving as a vessel for new rules.
 	/// </summary>
-	/// <returns></returns>
 	internal static SiPolicy CreateEmpty() => new(
 			versionEx: "1.0.0.0",
 			platformID: "{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}",

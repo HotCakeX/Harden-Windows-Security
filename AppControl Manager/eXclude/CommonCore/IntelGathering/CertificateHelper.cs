@@ -24,13 +24,11 @@ namespace CommonCore.IntelGathering;
 
 internal static class CertificateHelper
 {
-
 	// Provider and algorithm constants.
 	private const uint PROV_RSA_FULL = 1;
 	private const uint CRYPT_VERIFYCONTEXT = 0xF0000000;
 	private const uint CALG_MD2 = 0x8001;
 	private const uint HP_HASHVAL = 0x2;
-
 
 	/// <summary>
 	/// Computes the MD2 hash of the given data using CryptoAPI.
@@ -113,12 +111,10 @@ internal static class CertificateHelper
 		}
 	}
 
-
 	/// <summary>
 	/// Calculates the TBS value of a certificate
 	/// </summary>
 	/// <param name="cert"></param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static string GetTBSCertificate(X509Certificate2 cert)
 	{
@@ -175,7 +171,6 @@ internal static class CertificateHelper
 	/// Used for converting hexadecimal values found in the EKU sections of the App Control policies to their respective OIDs.
 	/// </summary>
 	/// <param name="hex"></param>
-	/// <returns></returns>
 	/// <exception cref="ArgumentException"></exception>
 	internal static string ConvertHexToOID(string hex)
 	{

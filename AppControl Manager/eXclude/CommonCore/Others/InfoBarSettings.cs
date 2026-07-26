@@ -133,7 +133,6 @@ internal sealed partial class InfoBarSettings : ViewModelBase
 	/// Make sure all compound strings end with ": " which form the first part of a message.
 	/// </summary>
 	/// <param name="str"></param>
-	/// <returns></returns>
 	private static string CreateProperString(string str) => str.TrimEnd(CharsToTrim) + ": ";
 
 }

@@ -606,7 +606,7 @@ internal unsafe static class ServiceManagement
 	private static string NormalizeServicePath(string rawPath)
 	{
 		string path = rawPath.Trim();
-		if (string.IsNullOrWhiteSpace(path)) return string.Empty;
+		if (path.Length == 0) return string.Empty;
 
 		if (path.StartsWith('"'))
 		{

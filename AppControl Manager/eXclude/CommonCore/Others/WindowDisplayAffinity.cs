@@ -54,9 +54,6 @@ internal static class WindowDisplayAffinity
 	/// </summary>
 	/// <param name="windowHandle">Handle to the window</param>
 	/// <param name="affinity">The display affinity to set</param>
-	/// <returns></returns>
-	/// <exception cref="ArgumentException">Thrown when windowHandle is IntPtr.Zero</exception>
-	/// <exception cref="Win32Exception">Thrown when the Windows API call fails</exception>
 	internal static void SetWindowDisplayAffinity(IntPtr windowHandle, DisplayAffinity affinity)
 	{
 		if (windowHandle == IntPtr.Zero)

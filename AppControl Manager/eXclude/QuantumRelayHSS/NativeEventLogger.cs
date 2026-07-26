@@ -131,7 +131,7 @@ internal static class NativeEventLogger
 				_ = NativeMethods.RegSetValueExW(hKey, "TypesSupported", 0, 4 /* REG_DWORD */, typesSupported, (uint)typesSupported.Length);
 
 				// EventMessageFile = %SystemRoot%\System32\EventCreate.exe (expandable string)
-				string emf = "%SystemRoot%\\System32\\EventCreate.exe";
+				const string emf = "%SystemRoot%\\System32\\EventCreate.exe";
 				byte[] emfBytes = Encoding.Unicode.GetBytes(emf + "\0"); // include terminating null
 				_ = NativeMethods.RegSetValueExW(hKey, "EventMessageFile", 0, 2 /* REG_EXPAND_SZ */, emfBytes, (uint)emfBytes.Length);
 			}

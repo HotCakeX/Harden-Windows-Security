@@ -67,7 +67,6 @@ internal sealed partial class UserConfiguration(
 	/// <param name="StrictKernelPolicyGUID"></param>
 	/// <param name="AutoUpdateCheck"></param>
 	/// <param name="SignedPolicyStage1RemovalTimes"></param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static UserConfiguration Set(
 	string? CertificateCommonName = null,
@@ -187,7 +186,6 @@ internal sealed partial class UserConfiguration(
 	/// Parses the JSON string and returns a UserConfiguration object
 	/// </summary>
 	/// <param name="json"></param>
-	/// <returns></returns>
 	private static UserConfiguration ParseJson(string json)
 	{
 		using JsonDocument doc = JsonDocument.Parse(json);

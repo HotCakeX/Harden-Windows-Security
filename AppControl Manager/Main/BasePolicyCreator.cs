@@ -69,7 +69,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <summary>
 	/// Used to supply extra information regarding Microsoft recommended driver block rules
 	/// </summary>
-	/// <returns></returns>
 	internal static DateTime? DriversBlockListInfoGathering()
 	{
 		try
@@ -665,7 +664,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// </summary>
 	/// <param name="IsAudit"></param>
 	/// <param name="deploy"></param>
-	/// <returns></returns>
 	internal static PolicyFileRepresent BuildRMMBlocking(bool IsAudit, bool deploy)
 	{
 		const string fileName = "Blocking RMMs - Remote Monitor and Management";
@@ -775,7 +773,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// </summary>
 	/// <param name="IsAudit"></param>
 	/// <param name="deploy"></param>
-	/// <returns></returns>
 	internal static PolicyFileRepresent BuildDangerousScriptBlockingPolicy(bool IsAudit, bool deploy)
 	{
 		const string fileName = "Dangerous-Script-Hosts-Blocking";

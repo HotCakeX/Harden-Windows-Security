@@ -300,7 +300,6 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	/// Returns a cached easing function for the specified compositor; disposes/recreates if compositor changed.
 	/// </summary>
 	/// <param name="compositor"></param>
-	/// <returns></returns>
 	private CubicBezierEasingFunction GetOrCreateHoverEase(Compositor compositor)
 	{
 		// If not created yet, or compositor changed (e.g., control recreated), (re)create the easing.

@@ -45,8 +45,7 @@ internal static class ComJsonDeserializer
 			throw new ArgumentNullException(nameof(json), "JSON input is null or whitespace.");
 		}
 		using JsonDocument doc = JsonDocument.Parse(json);
-		JsonElement root = doc.RootElement;
-		return ConvertElement(root);
+		return ConvertElement(doc.RootElement);
 	}
 
 	/// <summary>

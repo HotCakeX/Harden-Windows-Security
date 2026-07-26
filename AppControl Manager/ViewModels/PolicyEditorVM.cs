@@ -754,7 +754,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// Accepts a path to an XML or CIP file and then returns a <see cref="PolicyFileRepresent"/> made from it.
 	/// </summary>
 	/// <param name="filePath"></param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static SiPolicy.PolicyFileRepresent ParseFilePathAsPolicyRepresent(string filePath)
 	{

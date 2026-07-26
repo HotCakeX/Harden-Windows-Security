@@ -455,7 +455,6 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// <param name="thumbprint">Certificate thumbprint (SHA1)</param>
 	/// <param name="storeName">Certificate store name</param>
 	/// <param name="storeLocation">Certificate store location</param>
-	/// <returns></returns>
 	private async Task<bool> DeleteCertificateFromStore(string thumbprint, string storeName, StoreLocation storeLocation)
 	{
 		return await Task.Run(() =>

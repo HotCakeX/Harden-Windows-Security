@@ -78,7 +78,6 @@ internal static class ProcessStarter
 	/// </summary>
 	/// <param name="command">The name or full path of the executable to run.</param>
 	/// <param name="arguments">Optional arguments.</param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException">Thrown immediately upon receiving any Error line.</exception>
 	internal static void RunCommandInRealTime(InfoBarSettings infoBar, string command, string? arguments = null)
 	{

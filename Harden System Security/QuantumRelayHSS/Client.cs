@@ -126,7 +126,7 @@ internal static class Client
 
 				case ResponseType.Error:
 					{
-						int exitCode = CommonCore.QuantumRelay.Helpers.ReadInt32(reader);
+						int exitCode = reader.ReadInt32();
 						string errorDetails = CommonCore.QuantumRelay.Helpers.ReadString(reader);
 						throw new InvalidOperationException($"ExitCode={exitCode}: {errorDetails}");
 					}

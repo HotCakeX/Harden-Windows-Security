@@ -30,7 +30,6 @@ internal static class SecurityPolicyWriter
 	/// This method configures the [Privilege Rights] section equivalent.
 	/// </summary>
 	/// <param name="privilegeRights">Dictionary where key is privilege name and value is array of SIDs/account names</param>
-	/// <returns></returns>
 	internal unsafe static void SetPrivilegeRights(Dictionary<string, string[]> privilegeRights)
 	{
 		if (privilegeRights.Count == 0)
@@ -100,7 +99,6 @@ internal static class SecurityPolicyWriter
 	/// <param name="policyHandle">Handle to the LSA policy</param>
 	/// <param name="privilegeName">Name of the privilege (e.g., "SeServiceLogonRight")</param>
 	/// <param name="accountSidsOrNames">Array of SIDs or account names to assign the privilege to</param>
-	/// <returns></returns>
 	private unsafe static void SetSinglePrivilegeRight(nint policyHandle, string privilegeName, string[] accountSidsOrNames)
 	{
 		LSA_UNICODE_STRING userRight = new(privilegeName);
@@ -322,7 +320,6 @@ internal static class SecurityPolicyWriter
 	/// </summary>
 	/// <param name="minimumPasswordAge"></param>
 	/// <param name="maximumPasswordAge"></param>
-	/// <returns></returns>
 	internal unsafe static void SetPasswordAge(int minimumPasswordAge, int maximumPasswordAge)
 	{
 		// Get current settings first
@@ -388,7 +385,6 @@ internal static class SecurityPolicyWriter
 	/// Sets the minimum password length for the [System Access] section.
 	/// </summary>
 	/// <param name="minimumPasswordLength"></param>
-	/// <returns></returns>
 	internal unsafe static void SetMinimumPasswordLength(int minimumPasswordLength)
 	{
 		// Get current settings first
@@ -573,7 +569,6 @@ internal static class SecurityPolicyWriter
 	/// Sets the lockoutBadCount individually. Use SetLockoutPolicy for setting 3 policies at the same time.
 	/// </summary>
 	/// <param name="lockoutBadCount"></param>
-	/// <returns></returns>
 	internal unsafe static void SetLockoutBadCount(int lockoutBadCount)
 	{
 		// Get current settings first
@@ -625,7 +620,6 @@ internal static class SecurityPolicyWriter
 	/// Sets the resetLockoutCount individually. Use SetLockoutPolicy for setting 3 policies at the same time.
 	/// </summary>
 	/// <param name="resetLockoutCount"></param>
-	/// <returns></returns>
 	internal unsafe static void SetResetLockoutCount(int resetLockoutCount)
 	{
 		// Get current settings first
@@ -680,7 +674,6 @@ internal static class SecurityPolicyWriter
 	/// Sets the lockoutDuration individually. Use SetLockoutPolicy for setting 3 policies at the same time.
 	/// </summary>
 	/// <param name="lockoutDuration"></param>
-	/// <returns></returns>
 	internal unsafe static void SetLockoutDuration(int lockoutDuration)
 	{
 		// Get current settings first

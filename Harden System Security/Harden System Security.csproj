@@ -472,4 +472,120 @@
         </Content>
     </ItemGroup>
 
+    <!-- Build DISMService only when its executable is missing from this project directory. -->
+    <Target Name="EnsureDISMServiceExecutable"
+            BeforeTargets="PrepareForBuild"
+            Condition="!Exists('$(MSBuildProjectDirectory)\DISMService.exe')">
+        <PropertyGroup>
+            <!-- Resolve all paths from this project so the target is independent of the current working directory. -->
+            <_DISMServiceProject>$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\DISMService\DISMService.csproj</_DISMServiceProject>
+
+            <!-- Map the active Harden System Security architecture to its DISMService RID, publish profile and output. -->
+            <_DISMServiceRuntimeIdentifier Condition="'$(Platform)' == 'x64'">win-x64</_DISMServiceRuntimeIdentifier>
+            <_DISMServiceRuntimeIdentifier Condition="'$(Platform)' == 'arm64'">win-arm64</_DISMServiceRuntimeIdentifier>
+            <_DISMServicePublishProfile>$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\$(_DISMServiceRuntimeIdentifier).pubxml</_DISMServicePublishProfile>
+            <_DISMServicePublishDirectory Condition="'$(Platform)' == 'x64'">$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\DISMService\OutputX64</_DISMServicePublishDirectory>
+            <_DISMServicePublishDirectory Condition="'$(Platform)' == 'arm64'">$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\DISMService\OutputARM64</_DISMServicePublishDirectory>
+            <_DISMServicePublishedExecutable>$(_DISMServicePublishDirectory)\DISMService.exe</_DISMServicePublishedExecutable>
+        </PropertyGroup>
+
+        <!-- Fail early if the active project platform is not one of the two supported architectures. -->
+        <Error Condition="'$(_DISMServiceRuntimeIdentifier)' == ''"
+               Text="DISMService supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
+        <Error Condition="!Exists('$(_DISMServiceProject)')"
+               Text="The DISMService project was not found at '$(_DISMServiceProject)'." />
+        <Error Condition="!Exists('$(_DISMServicePublishProfile)')"
+               Text="The DISMService publish profile was not found at '$(_DISMServicePublishProfile)'." />
+
+        <!-- Restore, clean, build and publish only the architecture selected for the current app build. -->
+        <Exec Command="dotnet restore &quot;$(_DISMServiceProject)&quot; -r $(_DISMServiceRuntimeIdentifier)"
+              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet clean &quot;$(_DISMServiceProject)&quot; --configuration Release"
+              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet build &quot;$(_DISMServiceProject)&quot; --configuration Release --verbosity minimal /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_DISMServiceRuntimeIdentifier)"
+              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet msbuild &quot;$(_DISMServiceProject)&quot; /p:Configuration=Release /restore /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_DISMServiceRuntimeIdentifier) /p:PublishProfile=&quot;$(_DISMServicePublishProfile)&quot; /t:Publish -v:minimal"
+              WorkingDirectory="$(MSBuildProjectDirectory)" />
+
+        <!-- Place the native executable in the app project root for its existing Content item. -->
+        <Error Condition="!Exists('$(_DISMServicePublishedExecutable)')"
+               Text="DISMService was published, but '$(_DISMServicePublishedExecutable)' was not produced." />
+        <Copy SourceFiles="$(_DISMServicePublishedExecutable)"
+              DestinationFiles="$(MSBuildProjectDirectory)\DISMService.exe" />
+    </Target>
+
+    <!-- Build QuantumRelayHSS only when its executable is missing from this project directory. -->
+    <Target Name="EnsureQuantumRelayHSSExecutable"
+            BeforeTargets="PrepareForBuild"
+            Condition="!Exists('$(MSBuildProjectDirectory)\QuantumRelayHSS.exe')">
+        <PropertyGroup>
+            <!-- Resolve all paths from this project so the target is independent of the current working directory. -->
+            <_QuantumRelayHSSProject>$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj</_QuantumRelayHSSProject>
+
+            <!-- Map the active Harden System Security architecture to its QuantumRelayHSS RID, publish profile and output. -->
+            <_QuantumRelayHSSRuntimeIdentifier Condition="'$(Platform)' == 'x64'">win-x64</_QuantumRelayHSSRuntimeIdentifier>
+            <_QuantumRelayHSSRuntimeIdentifier Condition="'$(Platform)' == 'arm64'">win-arm64</_QuantumRelayHSSRuntimeIdentifier>
+            <_QuantumRelayHSSPublishProfile>$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\QuantumRelayHSS\Properties\PublishProfiles\$(_QuantumRelayHSSRuntimeIdentifier).pubxml</_QuantumRelayHSSPublishProfile>
+            <_QuantumRelayHSSPublishDirectory Condition="'$(Platform)' == 'x64'">$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\QuantumRelayHSS\OutputX64</_QuantumRelayHSSPublishDirectory>
+            <_QuantumRelayHSSPublishDirectory Condition="'$(Platform)' == 'arm64'">$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\QuantumRelayHSS\OutputARM64</_QuantumRelayHSSPublishDirectory>
+            <_QuantumRelayHSSPublishedExecutable>$(_QuantumRelayHSSPublishDirectory)\QuantumRelayHSS.exe</_QuantumRelayHSSPublishedExecutable>
+        </PropertyGroup>
+
+        <!-- Fail early if the active project platform is not one of the two supported architectures. -->
+        <Error Condition="'$(_QuantumRelayHSSRuntimeIdentifier)' == ''"
+               Text="QuantumRelayHSS supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
+        <Error Condition="!Exists('$(_QuantumRelayHSSProject)')"
+               Text="The QuantumRelayHSS project was not found at '$(_QuantumRelayHSSProject)'." />
+        <Error Condition="!Exists('$(_QuantumRelayHSSPublishProfile)')"
+               Text="The QuantumRelayHSS publish profile was not found at '$(_QuantumRelayHSSPublishProfile)'." />
+
+        <!-- Restore, clean, build and publish only the architecture selected for the current app build. -->
+        <Exec Command="dotnet restore &quot;$(_QuantumRelayHSSProject)&quot; -r $(_QuantumRelayHSSRuntimeIdentifier)"
+              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet clean &quot;$(_QuantumRelayHSSProject)&quot; --configuration Release"
+              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet build &quot;$(_QuantumRelayHSSProject)&quot; --configuration Release --verbosity minimal /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_QuantumRelayHSSRuntimeIdentifier)"
+              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet msbuild &quot;$(_QuantumRelayHSSProject)&quot; /p:Configuration=Release /restore /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_QuantumRelayHSSRuntimeIdentifier) /p:PublishProfile=&quot;$(_QuantumRelayHSSPublishProfile)&quot; /t:Publish -v:minimal"
+              WorkingDirectory="$(MSBuildProjectDirectory)" />
+
+        <!-- Place the service executable in the app project root for its existing Content item. -->
+        <Error Condition="!Exists('$(_QuantumRelayHSSPublishedExecutable)')"
+               Text="QuantumRelayHSS was published, but '$(_QuantumRelayHSSPublishedExecutable)' was not produced." />
+        <Copy SourceFiles="$(_QuantumRelayHSSPublishedExecutable)"
+              DestinationFiles="$(MSBuildProjectDirectory)\QuantumRelayHSS.exe" />
+    </Target>
+
+    <!-- Build ComManager only when its executable is missing from the CppInterop directory. -->
+    <Target Name="EnsureComManagerExecutable"
+            BeforeTargets="PrepareForBuild"
+            Condition="!Exists('$(MSBuildProjectDirectory)\CppInterop\ComManager.exe')">
+        <PropertyGroup>
+
+            <!-- Resolve all paths from this project so the target is independent of the current working directory. -->
+            <_ComManagerSolution>$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\ComManager\ComManager.slnx</_ComManagerSolution>
+
+            <!-- Map the active Harden System Security architecture to its ComManager build output. -->
+            <_ComManagerOutputDirectory Condition="'$(Platform)' == 'x64'">$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\ComManager\x64\Release</_ComManagerOutputDirectory>
+            <_ComManagerOutputDirectory Condition="'$(Platform)' == 'arm64'">$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\ComManager\ARM64\Release</_ComManagerOutputDirectory>
+            <_ComManagerPublishedExecutable>$(_ComManagerOutputDirectory)\ComManager.exe</_ComManagerPublishedExecutable>
+        </PropertyGroup>
+
+        <!-- Fail early if the active project platform is not one of the two supported architectures. -->
+        <Error Condition="'$(_ComManagerOutputDirectory)' == ''"
+               Text="ComManager supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
+        <Error Condition="!Exists('$(_ComManagerSolution)')"
+               Text="The ComManager solution was not found at '$(_ComManagerSolution)'." />
+
+        <!-- Clean and rebuild only the architecture selected for the current app build. -->
+        <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(_ComManagerSolution)&quot; /p:Configuration=Release /p:Platform=$(Platform) /target:&quot;Clean;Rebuild&quot;"
+              WorkingDirectory="$(MSBuildProjectDirectory)" />
+
+        <!-- Place the native executable in CppInterop for its existing Content item. -->
+        <Error Condition="!Exists('$(_ComManagerPublishedExecutable)')"
+               Text="ComManager was rebuilt, but '$(_ComManagerPublishedExecutable)' was not produced." />
+        <Copy SourceFiles="$(_ComManagerPublishedExecutable)"
+              DestinationFiles="$(MSBuildProjectDirectory)\CppInterop\ComManager.exe" />
+    </Target>
+
 </Project>

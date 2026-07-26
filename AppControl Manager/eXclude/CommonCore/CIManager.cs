@@ -574,7 +574,6 @@ internal static partial class CIManager
 		/// <param name="managementThis"></param>
 		/// <param name="policyBytes"></param>
 		/// <param name="size"></param>
-		/// <returns></returns>
 		[LibraryImport("ManageCI")]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial int ManageCI_BeginUpsertCIPolicy(void* managementThis, void* policyBytes, uint size);

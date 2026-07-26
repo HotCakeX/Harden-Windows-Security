@@ -30,7 +30,6 @@ internal static class GPUInfoManager
 	/// <summary>
 	/// Retrieves a list of all GPUs in the system.
 	/// </summary>
-	/// <returns></returns>
 	internal static unsafe List<GpuInfo> GetSystemGPUs()
 	{
 		lock (GPUsListLock)
@@ -115,7 +114,6 @@ internal static class GPUInfoManager
 	/// Safely marshal strings from IntPtr
 	/// </summary>
 	/// <param name="ptr"></param>
-	/// <returns></returns>
 	private static string MarshalStringFromPtr(IntPtr ptr)
 	{
 		if (ptr == IntPtr.Zero)
@@ -128,7 +126,6 @@ internal static class GPUInfoManager
 	/// Builds a stable deduplication key for GPU entries returned by the native library.
 	/// </summary>
 	/// <param name="gpu"></param>
-	/// <returns></returns>
 	private static string GetGpuDeduplicationKey(GpuInfo gpu)
 	{
 		string pnpDeviceId = gpu.PnpDeviceId.Trim();
@@ -157,7 +154,6 @@ internal static class GPUInfoManager
 	/// <summary>
 	/// Checks if the system only has 1 GPU and it's Intel.
 	/// </summary>
-	/// <returns></returns>
 	internal static bool HasOnlyIntelGPU()
 	{
 		if (GetSystemGPUs() is not [GpuInfo singleGpu])

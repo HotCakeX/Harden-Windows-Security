@@ -39,7 +39,6 @@ internal static class LocalFilesScan
 	/// <param name="files">File paths to scan</param>
 	/// <param name="scalability">How many parallel tasks to use during the scan</param>
 	/// <param name="progressReporter">A callback method that will run to display the scan progress in real time and update the value of its associated ProgressRing UI element.</param>
-	/// <returns></returns>
 	internal static IEnumerable<FileIdentity> Scan(
 		(IEnumerable<string>, int) files,
 		ushort scalability,
@@ -402,7 +401,6 @@ internal static class LocalFilesScan
 	/// Only the leaf certificates have EKUs, others such as root or intermediate have KUs only.
 	/// </summary>
 	/// <param name="fileSigners"></param>
-	/// <returns></returns>
 	internal static List<string> GetOIDs(List<AllFileSigners> fileSigners)
 	{
 		List<string> output = [];
@@ -443,7 +441,6 @@ internal static class LocalFilesScan
 	/// Determines whether a file has WHQL signer among all of its signers
 	/// </summary>
 	/// <param name="Collection"></param>
-	/// <returns></returns>
 	private static bool DetermineWHQL(X509ExtensionCollection Collection)
 	{
 		foreach (X509Extension ext in Collection)

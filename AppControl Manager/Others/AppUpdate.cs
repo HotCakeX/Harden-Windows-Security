@@ -43,8 +43,6 @@ internal static class AppUpdate
 	/// </summary>
 	internal static event EventHandler<UpdateAvailableEventArgs>? UpdateAvailable;
 
-	private static StoreContext? _StoreContext;
-
 	internal const string UpdateNotificationActionKey = "action";
 	internal const string UpdateNotificationActionValue = "OpenUpdatePage";
 
@@ -119,10 +117,9 @@ internal static class AppUpdate
 	/// <summary>
 	/// Checks for update based on the Store Context.
 	/// </summary>
-	/// <returns></returns>
 	internal static async Task<UpdateCheckResponse> CheckStore()
 	{
-		_StoreContext = StoreContext.GetDefault();
+		StoreContext _StoreContext = StoreContext.GetDefault();
 
 		// Initialize the dialog using wrapper function for IInitializeWithWindow
 		WinRT.Interop.InitializeWithWindow.Initialize(_StoreContext, Atlas.hWnd);

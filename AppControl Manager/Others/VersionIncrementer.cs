@@ -23,7 +23,6 @@ internal static class VersionIncrementer
 	/// This can recursively increment an input version by one, and is aware of the max limit
 	/// </summary>
 	/// <param name="version"></param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static Version AddVersion(Version version)
 	{

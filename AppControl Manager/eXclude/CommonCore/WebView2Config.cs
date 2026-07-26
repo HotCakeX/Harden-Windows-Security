@@ -72,16 +72,14 @@ internal static class WebView2Config
 			return;
 
 		// https://learn.microsoft.com/dotnet/api/microsoft.web.webview2.core.corewebview2environment.getprocessinfos
-		IReadOnlyList<CoreWebView2ProcessInfo> processInfos;
-
-		processInfos = CoreWebView2Instance.Value.GetProcessInfos();
+		IReadOnlyList<CoreWebView2ProcessInfo> processInfos = CoreWebView2Instance.Value.GetProcessInfos();
 
 		foreach (CoreWebView2ProcessInfo item in processInfos)
 		{
 			try
 			{
 				// GetProcessById can throw if the process already exited, aka process with the specified ID is not running.
-				Process proc = Process.GetProcessById(item.ProcessId);
+				using Process proc = Process.GetProcessById(item.ProcessId);
 
 				try
 				{
@@ -101,10 +99,7 @@ internal static class WebView2Config
 		}
 
 		// Delete the entire WebView2's unique directory once all WebView2 processes have been terminated.
-		if (Directory.Exists(WebView2Dir))
-		{
-			TryDeleteDirectoryWithRetries(WebView2Dir, 10, 500);
-		}
+		TryDeleteDirectoryWithRetries(WebView2Dir, 10, 500);
 	}
 
 	/// <summary>
@@ -159,10 +154,8 @@ internal static class WebView2Config
 
 			DirectoryInfo root = new(directoryPath);
 
-			FileInfo[] files = root.GetFiles("*", SearchOption.AllDirectories);
-			for (int i = 0; i < files.Length; i++)
+			foreach (FileInfo file in root.EnumerateFiles("*", SearchOption.AllDirectories))
 			{
-				FileInfo file = files[i];
 				try
 				{
 					file.Attributes = FileAttributes.Normal;
@@ -170,10 +163,8 @@ internal static class WebView2Config
 				catch { } // Ignore per-file failures.
 			}
 
-			DirectoryInfo[] dirs = root.GetDirectories("*", SearchOption.AllDirectories);
-			for (int i = 0; i < dirs.Length; i++)
+			foreach (DirectoryInfo dir in root.EnumerateDirectories("*", SearchOption.AllDirectories))
 			{
-				DirectoryInfo dir = dirs[i];
 				try
 				{
 					dir.Attributes = FileAttributes.Normal;
@@ -201,7 +192,6 @@ internal static class WebView2Config
 	///	- Enables InPrivate mode.
 	///	- Disables browser extensions.
 	/// </summary>
-	/// <returns></returns>
 	internal static async Task ConfigureWebView2(WebView2 webView, Uri initialSource)
 	{
 		try

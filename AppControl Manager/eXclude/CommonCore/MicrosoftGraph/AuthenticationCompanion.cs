@@ -448,13 +448,8 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 
 	public void Dispose()
 	{
-		try
-		{
-			// Unsubscribe from the event to avoid leaks.
-			AuthenticatedAccounts.CollectionChanged -= AuthenticatedAccounts_CollectionChanged;
-		}
-		catch { }
-
+		// Unsubscribe from the event to avoid leaks.
+		AuthenticatedAccounts.CollectionChanged -= AuthenticatedAccounts_CollectionChanged;
 		CancelAndDisposeCts();
 	}
 

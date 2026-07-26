@@ -205,6 +205,5 @@ internal static partial class GetExtendedFileAttrib
 	/// Check if a string is null or whitespace and return null if it is
 	/// </summary>
 	/// <param name="value"></param>
-	/// <returns></returns>
 	private static string? CheckAndSetNull(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
 }

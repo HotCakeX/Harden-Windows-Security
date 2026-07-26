@@ -47,9 +47,8 @@ internal static class AdmxAdmlParser
 			return; // Nothing to do
 		}
 
-		// Collect only entries that actually need resolution to avoid unnecessary parsing work
-		HashSet<string> neededCompositeKeys = new(StringComparer.OrdinalIgnoreCase);
-		HashSet<string> neededKeyOnly = new(StringComparer.OrdinalIgnoreCase);
+		// Check whether any entry actually needs resolution before parsing policy files.
+		bool hasResolvableCandidate = false;
 
 		foreach (RegistryPolicyEntry entry in CollectionsMarshal.AsSpan(entries))
 		{
@@ -64,18 +63,11 @@ internal static class AdmxAdmlParser
 				continue; // Invalid / unusable key
 			}
 
-			string valueName = string.IsNullOrWhiteSpace(entry.ValueName) ? string.Empty : entry.ValueName.Trim();
-
-			if (valueName.Length == 0)
-			{
-				_ = neededKeyOnly.Add(normalizedKey); // Track key-only lookup
-			}
-
-			string composite = ComposeCompositeKey(normalizedKey, valueName);
-			_ = neededCompositeKeys.Add(composite); // Track key+value lookup
+			hasResolvableCandidate = true;
+			break;
 		}
 
-		if (neededCompositeKeys.Count == 0 && neededKeyOnly.Count == 0)
+		if (!hasResolvableCandidate)
 		{
 			return; // No entries need resolving
 		}
@@ -294,10 +286,7 @@ internal static class AdmxAdmlParser
 		}
 		else
 		{
-			if (!keyOnlyIndex.ContainsKey(normalizedKey))
-			{
-				keyOnlyIndex[normalizedKey] = friendly;
-			}
+			_ = keyOnlyIndex.TryAdd(normalizedKey, friendly);
 		}
 
 		for (int i = 0; i < elementValueNames.Count; i++)
@@ -318,10 +307,7 @@ internal static class AdmxAdmlParser
 		string friendly)
 	{
 		string composite = ComposeCompositeKey(normalizedKey, valueName);
-		if (!policyIndex.ContainsKey(composite))
-		{
-			policyIndex[composite] = friendly;
-		}
+		_ = policyIndex.TryAdd(composite, friendly);
 	}
 
 	// Resolve $(string.id) patterns
@@ -355,7 +341,7 @@ internal static class AdmxAdmlParser
 		"USER\\"
 	];
 
-	// Normalize registry key: remove hive, unify slashes, lowercase
+	// Normalize registry key: remove hive and unify slashes
 	private static string NormalizeRegistryKey(string keyPath)
 	{
 		if (string.IsNullOrWhiteSpace(keyPath))
@@ -375,15 +361,13 @@ internal static class AdmxAdmlParser
 			}
 		}
 
-		normalized = normalized.TrimStart('\\');
-
-		return normalized.ToLowerInvariant();
+		return normalized.TrimStart('\\');
 	}
 
 	// Build composite key used in dictionaries
 	private static string ComposeCompositeKey(string normalizedKey, string valueName)
 	{
 		string vn = string.IsNullOrWhiteSpace(valueName) ? string.Empty : valueName.Trim();
-		return normalizedKey + "|" + vn.ToLowerInvariant();
+		return normalizedKey + "|" + vn;
 	}
 }

@@ -574,7 +574,6 @@ public sealed partial class App : Application
 	/// Group 1 = action (enum token)
 	/// Group 2 (optional) = file path.
 	/// </summary>
-	/// <returns></returns>
 	[GeneratedRegex(@"^appcontrol-manager:\s*(--action=[^\s]+)(?:\s+(--file=(?:""[^""]*""|[^\s]+)))?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
 	private static partial Regex Regex1();
 }

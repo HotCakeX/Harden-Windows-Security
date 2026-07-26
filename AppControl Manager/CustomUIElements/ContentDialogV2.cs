@@ -1430,7 +1430,6 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	/// The error occurs at base.ShowAsync() which calls the underlying WinUI ContentDialog.ShowAsync() method.
 	///	That's why we Hide/Close and then dispose of the previous ContentDialogV2 before showing a new one.
 	/// </summary>
-	/// <returns></returns>
 	internal new IAsyncOperation<ContentDialogResult> ShowAsync()
 	{
 		// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the error

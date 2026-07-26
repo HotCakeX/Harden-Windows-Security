@@ -38,6 +38,5 @@ internal sealed partial class SubCategoryDefinition(
 	/// Used by XAML Compiled Binding.
 	/// </summary>
 	/// <param name="value"></param>
-	/// <returns></returns>
 	internal static Visibility HasTip(string? value) => string.IsNullOrEmpty(value) ? Visibility.Collapsed : Visibility.Visible;
 }

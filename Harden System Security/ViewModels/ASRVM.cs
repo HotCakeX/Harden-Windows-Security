@@ -664,7 +664,6 @@ internal sealed partial class ASRVM : ViewModelBase
 	/// <summary>
 	/// Used for <see cref="Traverse.MContainer"/> data retrieval.
 	/// </summary>
-	/// <returns></returns>
 	internal async Task<Traverse.AttackSurfaceReductionRules> GetTraverseData()
 	{
 		await RetrieveLatest_Internal();

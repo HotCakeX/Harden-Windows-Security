@@ -391,7 +391,6 @@ internal static class Manager
 	/// - REG_MULTI_SZ: semicolon-separated
 	/// </summary>
 	/// <param name="entry"></param>
-	/// <returns></returns>
 	internal static string? BuildRegValueFromParsedValue(RegistryPolicyEntry entry)
 	{
 		object? parsed = entry.ParsedValue;

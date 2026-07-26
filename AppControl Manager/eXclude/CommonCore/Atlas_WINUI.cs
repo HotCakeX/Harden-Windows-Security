@@ -32,13 +32,12 @@ internal static partial class Atlas
 
 #if HARDEN_SYSTEM_SECURITY
 
-	internal static Windows.ApplicationModel.Resources.ResourceLoader SecurityMeasuresRizzLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse("SecurityMeasures");
+	internal readonly static Windows.ApplicationModel.Resources.ResourceLoader SecurityMeasuresRizzLoader = Windows.ApplicationModel.Resources.ResourceLoader.GetForViewIndependentUse("SecurityMeasures");
 
 	/// <summary>
 	/// This method is responsible for retrieving localized strings from the SecurityMeasures for Security measures' friendly name field based on a key.
 	/// </summary>
 	/// <param name="key"></param>
-	/// <returns></returns>
 	internal static string GetSecurityStr(string key)
 	{
 		try
@@ -57,7 +56,6 @@ internal static partial class Atlas
 	/// This method is responsible for retrieving localized strings from the resource files based on a key.
 	/// </summary>
 	/// <param name="key"></param>
-	/// <returns></returns>
 	internal static string GetStr(string key)
 	{
 		try

@@ -206,7 +206,6 @@ internal sealed class RegistryPolicyEntry(
 	/// Reads a JSON file containing the RegistryPolicyEntry data.
 	/// </summary>
 	/// <param name="path"></param>
-	/// <returns></returns>
 	/// <exception cref="FileNotFoundException"></exception>
 	internal static List<RegistryPolicyEntry> Load(string path)
 	{
@@ -224,7 +223,6 @@ internal sealed class RegistryPolicyEntry(
 	/// Reads a JSON file containing the RegistryPolicyEntry data and resolves the resource keys from the JSON.
 	/// </summary>
 	/// <param name="path"></param>
-	/// <returns></returns>
 	/// <exception cref="FileNotFoundException"></exception>
 	internal static List<RegistryPolicyEntry> LoadWithFriendlyNameKeyResolve(string path)
 	{

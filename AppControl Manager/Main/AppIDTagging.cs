@@ -68,7 +68,6 @@ internal static class AppIDTagging
 	/// Converts any App Control policy to AppIDTagging policy.
 	/// </summary>
 	/// <param name="siPolicy"></param>
-	/// <returns></returns>
 	internal static SiPolicy.SiPolicy Convert(SiPolicy.SiPolicy siPolicy)
 	{
 		// Remove all kernel-mode stuff
@@ -106,7 +105,6 @@ internal static class AppIDTagging
 	/// </summary>
 	/// <param name="siPolicy"></param>
 	/// <param name="tags"></param>
-	/// <returns></returns>
 	internal static SiPolicy.SiPolicy AddTags(SiPolicy.SiPolicy siPolicy, Dictionary<string, string> tags)
 	{
 		// Ensure UMCI Scenario exists

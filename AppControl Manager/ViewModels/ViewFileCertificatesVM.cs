@@ -279,7 +279,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// Get the certificates of the .CIP files
 	/// </summary>
 	/// <param name="file"></param>
-	/// <returns></returns>
 	private async Task<List<FileCertificateInfoCol>> FetchForCIP(string file)
 	{
 		List<FileCertificateInfoCol> output = [];
@@ -333,7 +332,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// Fetch for the .cer files
 	/// </summary>
 	/// <param name="file"></param>
-	/// <returns></returns>
 	private async Task<List<FileCertificateInfoCol>> FetchForCER(string file)
 	{
 		List<FileCertificateInfoCol> output = [];
@@ -360,7 +358,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// The main method that performs the data collection task.
 	/// </summary>
-	/// <returns></returns>
 	private async Task Fetch()
 	{
 		if (string.IsNullOrWhiteSpace(selectedFile))
@@ -793,7 +790,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// Used by any code from the app to use the functionalities in this VM.
 	/// </summary>
 	/// <param name="filePath"></param>
-	/// <returns></returns>
 	internal async Task OpenInViewFileCertificatesVM(string? filePath)
 	{
 		try
@@ -815,7 +811,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// Retrieves detailed fields from an X509Certificate2 object.
 	/// </summary>
 	/// <param name="cert"></param>
-	/// <returns></returns>
 	private static (int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) ExtractDetailedFields(X509Certificate2 cert)
 	{
 		int? version = cert?.Version;

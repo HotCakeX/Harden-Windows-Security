@@ -24,15 +24,14 @@ internal static class Helpers
 {
 	internal static void WriteString(BinaryWriter writer, string? value)
 	{
-		string safe = value ?? string.Empty;
-		byte[] bytes = Encoding.UTF8.GetBytes(safe);
+		byte[] bytes = Encoding.UTF8.GetBytes(value ?? string.Empty);
 		writer.Write(bytes.Length);
 		writer.Write(bytes);
 	}
 
 	internal static string ReadString(BinaryReader reader)
 	{
-		int length = ReadInt32(reader);
+		int length = reader.ReadInt32();
 		if (length < 0)
 		{
 			return string.Empty;
@@ -51,23 +50,5 @@ internal static class Helpers
 		}
 
 		return Encoding.UTF8.GetString(buffer);
-	}
-
-	internal static int ReadInt32(BinaryReader reader)
-	{
-		byte[] buffer = new byte[4];
-		int offset = 0;
-		while (offset < 4)
-		{
-			int n = reader.BaseStream.Read(buffer, offset, 4 - offset);
-			if (n <= 0)
-			{
-				throw new IOException("Unexpected end of stream while reading Int32.");
-			}
-			offset += n;
-		}
-
-		// BinaryReader uses little-endian by default.
-		return BitConverter.ToInt32(buffer, 0);
 	}
 }

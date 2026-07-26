@@ -93,7 +93,6 @@ internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFile
 	/// Helper method to generate the identifier string.
 	/// </summary>
 	/// <param name="policy"></param>
-	/// <returns></returns>
 	private static string GetIdentifier(SiPolicy policy) => PolicySettingsManager.GetPolicyName(policy) ?? policy.PolicyID;
 
 	/// <summary>
@@ -121,7 +120,6 @@ internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFile
 	/// <summary>
 	/// This is required so ListBox can show the string representation directly for displaying purposes.
 	/// </summary>
-	/// <returns></returns>
 	public override string ToString() => PolicyIdentifier;
 
 	/// <summary>

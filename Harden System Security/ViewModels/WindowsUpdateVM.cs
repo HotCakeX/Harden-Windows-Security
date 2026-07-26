@@ -154,7 +154,6 @@ internal sealed partial class WindowsUpdateVM : MUnitListViewModelBase
 	/// </summary>
 	/// <param name="selectedItems">Selected ListView items.</param>
 	/// <param name="isHidden">Desired hidden state.</param>
-	/// <returns></returns>
 	internal async Task SetSelectedUpdatesHiddenState(IList<object> selectedItems, bool isHidden)
 	{
 		List<WindowsUpdateItem> selectedUpdates = GetSelectedUpdateItems(selectedItems);
@@ -220,7 +219,6 @@ internal sealed partial class WindowsUpdateVM : MUnitListViewModelBase
 	/// Exports selected updates to JSON. If no updates are selected, exports all loaded updates.
 	/// </summary>
 	/// <param name="selectedItems">Selected ListView items.</param>
-	/// <returns></returns>
 	internal async Task ExportUpdatesToJson(IList<object> selectedItems)
 	{
 		List<WindowsUpdateItem> selectedUpdates = GetSelectedUpdateItems(selectedItems);

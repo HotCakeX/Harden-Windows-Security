@@ -27,7 +27,6 @@ internal static class OneDriveDirectories
 	/// Retrieves the paths to all OneDrive directories on the system.
 	/// These paths are under each user directory. They can start with OneDrive, such as "OneDrive", "OneDrive Personal", "OneDrive Business", etc.
 	/// </summary>
-	/// <returns></returns>
 	internal static List<string> Get()
 	{
 		// List to store the OneDrive directories found

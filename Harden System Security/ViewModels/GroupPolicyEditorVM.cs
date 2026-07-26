@@ -1368,7 +1368,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// Method used to open the Group Policy Editor with the selected policy file.
 	/// </summary>
 	/// <param name="filePath"></param>
-	/// <returns></returns>
 	internal async Task OpenInGroupPolicyEditor(string? filePath)
 	{
 		if (filePath is null)

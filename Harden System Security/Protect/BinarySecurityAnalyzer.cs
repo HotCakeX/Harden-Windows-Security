@@ -162,7 +162,6 @@ internal static class BinarySecurityAnalyzer
 	/// <summary>
 	/// Searches for executables in GitHub desktop and returns paths of files not compatible with the ASLR Exploit Protection.
 	/// </summary>
-	/// <returns></returns>
 	private static List<string> FindIncompatibleGitHubDesktopExes()
 	{
 		string basePath = Path.Join(Atlas.SystemDrive, "Users", Environment.UserName, "AppData", "Local", "GitHubDesktop");
@@ -205,7 +204,6 @@ internal static class BinarySecurityAnalyzer
 	/// <summary>
 	/// This method searches for .exe files in the specified path for Standalone Git program and returns a list file paths incompatible with the ASLR Exploit Protection.
 	/// </summary>
-	/// <returns></returns>
 	private static List<string> FindIncompatibleGitExes()
 	{
 		string basePath = Path.Join(Atlas.SystemDrive, "Program Files", "Git");
@@ -247,7 +245,6 @@ internal static class BinarySecurityAnalyzer
 	/// Searches for executables in MSYS2/MinGW installation directories and returns paths of files not compatible with the ASLR Exploit Protection.
 	/// MSYS2 ships its own Git and many other executables (compilers, shells, utilities) that may not have ASLR support in their PE headers.
 	/// </summary>
-	/// <returns></returns>
 	private static List<string> FindIncompatibleMSYS2Exes()
 	{
 		// Default MSYS2 installation paths

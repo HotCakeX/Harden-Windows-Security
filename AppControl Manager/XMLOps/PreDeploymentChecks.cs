@@ -28,7 +28,6 @@ internal static partial class PreDeploymentChecks
 	/// Takes an <see cref="SiPolicy.SiPolicy"/> and checks whether it has an allow all rule.
 	/// </summary>
 	/// <param name="policyObj"></param>
-	/// <returns></returns>
 	internal static bool CheckForAllowAll(SiPolicy.SiPolicy policyObj)
 	{
 		// Check if the policy contains any FileRules

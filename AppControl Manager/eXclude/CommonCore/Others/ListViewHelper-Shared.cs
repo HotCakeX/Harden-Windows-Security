@@ -143,7 +143,6 @@ internal static partial class ListViewHelper
 	/// Used to retrieve the ListView from the cache.
 	/// </summary>
 	/// <param name="key">the key used for retrieval.</param>
-	/// <returns></returns>
 	internal static ListView? GetListViewFromCache(ListViewsRegistry key)
 	{
 		_ = ListViewsCache.TryGetValue(key, out ListView? listView);
@@ -154,7 +153,6 @@ internal static partial class ListViewHelper
 	/// Used to retrieve a ScrollViewer from the cache.
 	/// </summary>
 	/// <param name="key">the key used for retrieval.</param>
-	/// <returns></returns>
 	internal static ScrollViewer? GetScrollViewerFromCache(ListViewsRegistry key)
 	{
 		_ = ListViewsScrollViewerCache.TryGetValue(key, out ScrollViewer? scrollViewer);
@@ -221,7 +219,6 @@ internal static partial class ListViewHelper
 	/// Used by Incremental Collections to measure column cell widths without adding the InitValueAdded padding.
 	/// </summary>
 	/// <param name="text"></param>
-	/// <returns></returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static double MeasureTextEx(string? text)
 	{
@@ -235,7 +232,6 @@ internal static partial class ListViewHelper
 	/// </summary>
 	/// <param name="text"></param>
 	/// <param name="maxWidth"></param>
-	/// <returns></returns>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static double MeasureText(string? text, double maxWidth)
 	{

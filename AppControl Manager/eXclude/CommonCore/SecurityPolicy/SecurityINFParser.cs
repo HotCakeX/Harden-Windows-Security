@@ -380,8 +380,7 @@ internal static class SecurityINFParser
 
 			// Single token (no commas)
 			string token = s;
-			bool hasHexPrefix = token.StartsWith("0x", StringComparison.OrdinalIgnoreCase);
-			if (hasHexPrefix)
+			if (token.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
 			{
 				token = token[2..];
 			}
@@ -474,7 +473,6 @@ internal static class SecurityINFParser
 	{
 		// Join with single NULs and add final double NUL
 		string joined = items.Length == 0 ? string.Empty : string.Join("\0", items);
-		string withDoubleNull = string.Concat(joined, "\0\0");
-		return Encoding.Unicode.GetBytes(withDoubleNull);
+		return Encoding.Unicode.GetBytes(string.Concat(joined, "\0\0"));
 	}
 }

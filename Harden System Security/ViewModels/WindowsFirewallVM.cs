@@ -802,7 +802,6 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// Helper to Export Firewall rules from different stores.
 	/// </summary>
 	/// <param name="isGpo">If true, exports GPO-defined rules. If false, exports local Firewall rules.</param>
-	/// <returns></returns>
 	private async Task ExportFirewallRules(bool isGpo)
 	{
 		try
@@ -850,7 +849,6 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// Imports firewall rules to different stores.
 	/// </summary>
 	/// <param name="isGpo"></param>
-	/// <returns></returns>
 	private async Task ImportFirewallRules(bool isGpo)
 	{
 		try

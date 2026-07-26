@@ -46,7 +46,6 @@ internal static class GetEventLogsData
 	/// <summary>
 	/// Retrieves the Code Integrity events from the local and EVTX files
 	/// </summary>
-	/// <returns></returns>
 	private static HashSet<FileIdentity> CodeIntegrityEventsRetriever(string? EvtxFilePath = null, CancellationToken? cToken = null)
 	{
 
@@ -1125,7 +1124,6 @@ internal static class GetEventLogsData
 	/// Replaces global root NT paths to the normal paths
 	/// </summary>
 	/// <param name="path"></param>
-	/// <returns></returns>
 	internal static string ResolvePath(string path)
 	{
 		// Find the matching DriveMapping for the device path prefix
@@ -1149,7 +1147,6 @@ internal static class GetEventLogsData
 	/// <summary>
 	/// Gets Code Integrity and AppLocker event logs Asynchronously
 	/// </summary>
-	/// <returns></returns>
 	internal static async Task<HashSet<FileIdentity>> GetAppControlEvents(string? CodeIntegrityEvtxFilePath = null, string? AppLockerEvtxFilePath = null, int EventsToCapture = 0, CancellationToken? cToken = null)
 	{
 		using IDisposable taskTracker = TaskTracking.RegisterOperation();

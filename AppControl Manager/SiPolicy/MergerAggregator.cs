@@ -30,7 +30,6 @@ internal static partial class Merger
 	/// It de-duplicates them using a custom HashSet.
 	/// </summary>
 	/// <param name="siPolicies"></param>
-	/// <returns></returns>
 	private static HashSet<AllowRule> CollectAllowRules(List<SiPolicy> siPolicies)
 	{
 		// HashSet to store the unique Allow rules
@@ -116,7 +115,6 @@ internal static partial class Merger
 	/// It de-duplicates them using a custom HashSet.
 	/// </summary>
 	/// <param name="siPolicies"></param>
-	/// <returns></returns>
 	private static HashSet<DenyRule> CollectDenyRules(List<SiPolicy> siPolicies)
 	{
 		// HashSet to store the unique Deny rules
@@ -195,7 +193,6 @@ internal static partial class Merger
 	/// It de-duplicates them using a custom HashSet.
 	/// </summary>
 	/// <param name="siPolicies"></param>
-	/// <returns></returns>
 	private static HashSet<FileRuleRule> CollectFileRules(List<SiPolicy> siPolicies)
 	{
 		// HashSet to store the unique FileRule rules
@@ -273,7 +270,6 @@ internal static partial class Merger
 	/// Each signer is complete and has all of the elements that can be used in the policy file independently.
 	/// </summary>
 	/// <param name="siPolicies"></param>
-	/// <returns></returns>
 	private static SignerCollection CollectSignerRules(List<SiPolicy> siPolicies)
 	{
 		// The output with HashSets to store unique data

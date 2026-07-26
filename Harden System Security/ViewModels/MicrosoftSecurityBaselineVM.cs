@@ -613,7 +613,6 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// Used for <see cref="Traverse.MContainer"/> data retrieval.
 	/// </summary>
-	/// <returns></returns>
 	internal async Task<Traverse.MicrosoftSecurityBaseline> GetTraverseData()
 	{
 		// Always get fresh data, otherwise the data may be stale if user just applied the security measures and other categories override the data in the Security Baseline categories.

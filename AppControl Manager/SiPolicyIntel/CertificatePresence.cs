@@ -36,7 +36,6 @@ internal static class CertificatePresence
 	/// <param name="certificatePath"></param>
 	/// <param name="certCN"></param>
 	/// <param name="kind">The source of the policyObject and where it was created from.</param>
-	/// <returns></returns>
 	internal static bool InferCertificatePresence(SiPolicy.SiPolicy policyObject, string certificatePath, string certCN, SiPolicy.PolicyFileRepresentKind kind)
 	{
 		// Create a certificate object from the .cer file
@@ -119,7 +118,6 @@ internal static class CertificatePresence
 	/// </summary>
 	/// <param name="certificatePath"></param>
 	/// <param name="certCN"></param>
-	/// <returns></returns>
 	internal static bool VerifyCertAndCNMatch(string certificatePath, string certCN)
 	{
 		// Create a certificate object from the .cer file

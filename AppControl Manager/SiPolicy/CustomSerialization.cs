@@ -881,7 +881,6 @@ internal static class CustomSerialization
 	/// <param name="parent"></param>
 	/// <param name="name"></param>
 	/// <param name="value"></param>
-	/// <returns></returns>
 	private static bool AppendTextElement(XmlDocument doc, XmlElement parent, string name, string? value)
 	{
 		if (!string.IsNullOrEmpty(value))
@@ -903,7 +902,6 @@ internal static class CustomSerialization
 	/// <param name="name"></param>
 	/// <param name="attribute"></param>
 	/// <param name="value"></param>
-	/// <returns></returns>
 	private static bool AppendAttributeElement(XmlDocument doc, XmlElement parent, string name, string attribute, string? value)
 	{
 		if (!string.IsNullOrEmpty(value))

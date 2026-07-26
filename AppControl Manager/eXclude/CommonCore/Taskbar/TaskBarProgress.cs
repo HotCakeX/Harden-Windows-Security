@@ -27,7 +27,6 @@ internal static class TaskBarProgress
 	/// <param name="hwnd">Window handle</param>
 	/// <param name="completed">Amount of work completed</param>
 	/// <param name="total">Total amount of work</param>
-	/// <exception cref="COMException">Thrown when the operation fails</exception>
 	internal static void UpdateTaskbarProgress(IntPtr hwnd, ulong completed, ulong total)
 	{
 		int result = NativeMethods.update_taskbar_progress(hwnd, completed, total, out int lastError);

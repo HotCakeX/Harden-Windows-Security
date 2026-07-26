@@ -31,7 +31,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// CodeIntegrity and AppLocker logs are considered separately in each group of EtwActivityId.
 	/// </summary>
 	/// <param name="data"></param>
-	/// <returns></returns>
 	internal static HashSet<FileIdentity> Retrieve(List<MDEAdvancedHuntingData> data)
 	{
 
@@ -403,7 +402,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// Method to safely set FileVersion from a nullable string
 	/// </summary>
 	/// <param name="versionString"></param>
-	/// <returns></returns>
 	private static Version? SetFileVersion(string? versionString)
 	{
 		_ = Version.TryParse(versionString, out Version? version);
@@ -414,7 +412,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// Method to safely get an integer value from string
 	/// </summary>
 	/// <param name="data"></param>
-	/// <returns></returns>
 	private static int? GetIntValue(string? data) =>
 		 int.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
 

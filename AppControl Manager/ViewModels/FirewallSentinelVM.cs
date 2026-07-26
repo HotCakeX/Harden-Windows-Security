@@ -537,7 +537,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="mode"></param>
 	/// <param name="sender"></param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	[DynamicWindowsRuntimeCast(typeof(UIElement))]
@@ -1561,7 +1560,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// </summary>
 	/// <param name="x"></param>
 	/// <param name="term"></param>
-	/// <returns></returns>
 	private static bool IsPacketMatchingFilter(FirewallEvent x, string term)
 	{
 		return (x.Application != null && x.Application.Contains(term, StringComparison.OrdinalIgnoreCase)) ||

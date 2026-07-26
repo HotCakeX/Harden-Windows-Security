@@ -29,7 +29,6 @@ internal static class Management
 	/// </summary>
 	/// <param name="xmlFilePath"></param>
 	/// <param name="XmlObj"></param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static SiPolicy Initialize(string? xmlFilePath, XmlDocument? XmlObj) =>
 		 CustomDeserialization.DeserializeSiPolicy(xmlFilePath, XmlObj);

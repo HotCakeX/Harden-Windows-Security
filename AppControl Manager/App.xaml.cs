@@ -127,7 +127,7 @@ public sealed partial class App : Application
 		}
 
 		// Subscribing to ProcessExit because Window_Closed doesn't run when "Application.Current.Exit();" is used.
-		AppDomain.CurrentDomain.ProcessExit += (s, e) => AppCleanUp();
+		AppDomain.CurrentDomain.ProcessExit += static (_, _) => AppCleanUp();
 	}
 
 	/*
@@ -154,7 +154,7 @@ public sealed partial class App : Application
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	private async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
+	private static async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
 	{
 		// Log the unobserved task exception details.
 		Logger.Write(e.Exception);
@@ -179,7 +179,7 @@ public sealed partial class App : Application
 	/// <summary>
 	/// Event handler for unhandled exceptions.
 	/// </summary>
-	private async void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+	private static async void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
 	{
 		Logger.Write(e.Exception);
 
@@ -191,7 +191,7 @@ public sealed partial class App : Application
 		await ShowErrorDialogAsync(e.Exception);
 	}
 
-	private async void App_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
+	private static async void App_UnhandledException(object sender, System.UnhandledExceptionEventArgs e)
 	{
 		Exception ex = (Exception)e.ExceptionObject;
 
@@ -204,7 +204,7 @@ public sealed partial class App : Application
 	/// <summary>
 	/// Event handler for when the window is closed.
 	/// </summary>
-	private void Window_Closed(object sender, WindowEventArgs e) => AppCleanUp();
+	private static void Window_Closed(object sender, WindowEventArgs e) => AppCleanUp();
 
 	/// <summary>
 	/// Logics to run when the app is being closed.
@@ -255,7 +255,7 @@ public sealed partial class App : Application
 	/// <summary>
 	/// Displays a ContentDialog with the error message.
 	/// </summary>
-	private async Task ShowErrorDialogAsync(Exception ex)
+	private static async Task ShowErrorDialogAsync(Exception ex)
 	{
 		if (MainWindow is not null)
 		{
@@ -289,5 +289,4 @@ public sealed partial class App : Application
 			}
 		}
 	}
-
 }

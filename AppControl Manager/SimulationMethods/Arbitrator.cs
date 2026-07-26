@@ -31,7 +31,6 @@ internal static class Arbitrator
 	/// The method that compares the signer information from the App Control policy XML file with the certificate details of the signed file
 	/// </summary>
 	/// <param name="simulationInput">The SimulationInput object that contains the necessary information for the simulation</param>
-	/// <returns></returns>
 	internal static SimulationOutput Compare(SimulationInput simulationInput)
 	{
 		// Get the extended file attributes

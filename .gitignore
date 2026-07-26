@@ -40,3 +40,9 @@
 
 # Temp Files
 *.[tT][mM][pP]
+
+# Exes
+Harden System Security/DISMService.exe
+Harden System Security/QuantumRelayHSS.exe
+Harden System Security/CppInterop/ComManager.exe
+AppControl Manager/CppInterop/ComManager.exe

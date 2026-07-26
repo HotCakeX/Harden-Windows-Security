@@ -27,7 +27,6 @@ internal static class PolicySettingsManager
 	/// Gets the policy name.
 	/// </summary>
 	/// <param name="PolicyObj"></param>
-	/// <returns></returns>
 	internal static string? GetPolicyName(SiPolicy.SiPolicy PolicyObj)
 	{
 		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObj.Settings))
@@ -93,7 +92,6 @@ internal static class PolicySettingsManager
 	/// Gets the PolicyInfo.
 	/// </summary>
 	/// <param name="PolicyObj"></param>
-	/// <returns></returns>
 	internal static string? GetPolicyIDInfo(SiPolicy.SiPolicy PolicyObj)
 	{
 		foreach (Setting item in CollectionsMarshal.AsSpan(PolicyObj.Settings))
@@ -159,7 +157,6 @@ internal static class PolicySettingsManager
 	/// Gets all of the policy settings and return a custom class of them for Policy Editor.
 	/// </summary>
 	/// <param name="policySettings"></param>
-	/// <returns></returns>
 	internal static List<AppControlManager.PolicyEditor.PolicySettings> GetPolicySettings(List<Setting>? policySettings)
 	{
 		List<AppControlManager.PolicyEditor.PolicySettings> output = [];
@@ -229,8 +226,6 @@ internal static class PolicySettingsManager
 	/// <summary>
 	/// Returns unique List<Setting>.
 	/// </summary>
-	/// <param name="Objects"></param>
-	/// <returns></returns>
 	internal static List<Setting> ConvertPolicyEditorSettingToSiPolicySetting(
 		IEnumerable<AppControlManager.PolicyEditor.PolicySettings> Objects,
 		string policyName,

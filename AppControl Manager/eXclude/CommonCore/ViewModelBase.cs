@@ -91,7 +91,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <param name="field"></param>
 	/// <param name="newValue"></param>
 	/// <param name="propertyName"></param>
-	/// <returns></returns>
 	internal protected bool SPT(ref string? field, string? newValue, [CallerMemberName] string? propertyName = null)
 	{
 		if (string.Equals(field, newValue, StringComparison.Ordinal))

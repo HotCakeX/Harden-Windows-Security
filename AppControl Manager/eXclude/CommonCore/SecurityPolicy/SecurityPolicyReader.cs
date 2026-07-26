@@ -189,7 +189,6 @@ internal static class SecurityPolicyReader
 	/// <summary>
 	/// Gets the information for the [Privilege Rights] section.
 	/// </summary>
-	/// <returns></returns>
 	internal unsafe static Dictionary<string, string[]> GetPrivilegeRights()
 	{
 		Dictionary<string, string[]> privilegeRights = new(StringComparer.Ordinal);
@@ -258,7 +257,6 @@ internal static class SecurityPolicyReader
 	/// <summary>
 	/// Reads the [System Access] policies.
 	/// </summary>
-	/// <returns></returns>
 	internal unsafe static SystemAccessInfo GetSystemAccess()
 	{
 		SystemAccessInfo systemAccess = new();
@@ -474,7 +472,6 @@ internal static class SecurityPolicyReader
 	/// To get account name by RID using SAM APIs
 	/// </summary>
 	/// <param name="rid"></param>
-	/// <returns></returns>
 	private static unsafe string GetAccountNameByRid(uint rid)
 	{
 		try
@@ -576,7 +573,6 @@ internal static class SecurityPolicyReader
 	/// <summary>
 	/// Opens the LSA Policy handle.
 	/// </summary>
-	/// <returns></returns>
 	private unsafe static IntPtr OpenPolicy()
 	{
 		LSA_OBJECT_ATTRIBUTES objectAttributes = new()
@@ -633,7 +629,6 @@ internal static class SecurityPolicyReader
 	/// 1 if DACL includes an ACCESS_ALLOWED ACE for the Anonymous SID whose AccessMask is exactly POLICY_LOOKUP_NAMES.
 	/// otherwise 0.
 	/// </summary>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static int LsaAnonymousNameLookupGetValue()
 	{
@@ -870,7 +865,6 @@ internal static class SecurityPolicyReader
 	/// <summary>
 	/// Returns managed Anonymous SID.
 	/// </summary>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	private static SecurityIdentifier GetAnonymousSidManaged()
 	{

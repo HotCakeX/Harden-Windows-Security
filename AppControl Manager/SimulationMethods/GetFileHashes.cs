@@ -28,7 +28,6 @@ internal static partial class GetFileHashes
 	/// The method is intentionally not made to handle Allow all rules since checking for their existence happens in the main method in Simulation.
 	/// </summary>
 	/// <param name="policyObj"></param>
-	/// <returns></returns>
 	internal static HashSet<string> Get(SiPolicy.SiPolicy policyObj)
 	{
 		// Create an empty HashSet to store the output

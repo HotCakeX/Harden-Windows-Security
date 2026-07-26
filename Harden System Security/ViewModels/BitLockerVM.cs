@@ -73,7 +73,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// Ensures the correct policies are in place in order to use enhanced security features of BitLocker.
 	/// </summary>
 	/// <param name="cancellationToken"></param>
-	/// <returns></returns>
 	private async Task ApplyAllBitLockerSecurityMeasuresAsync(CancellationToken? cancellationToken = null)
 	{
 		bool errorsOccurred = false;

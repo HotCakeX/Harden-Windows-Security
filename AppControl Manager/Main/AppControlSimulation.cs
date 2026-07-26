@@ -46,7 +46,6 @@ internal static class AppControlSimulation
 	/// <param name="filePaths"></param>
 	/// <param name="policyObj"></param>
 	/// <param name="noCatalogScanning"></param>
-	/// <returns></returns>
 	internal static bool Invoke(List<string>? filePaths, SiPolicy.SiPolicy policyObj, bool noCatalogScanning)
 	{
 		// Call the main method to get the verdicts
@@ -70,7 +69,6 @@ internal static class AppControlSimulation
 	/// <param name="catRootPath"></param>
 	/// <param name="threadsCount"> The number of concurrent threads used to run the simulation </param>
 	/// <param name="progressReporter"></param>
-	/// <returns></returns>
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>

@@ -253,7 +253,6 @@ internal static class GetAppsList
 	/// <summary>
 	/// Gets the list of all installed Packaged Apps
 	/// </summary>
-	/// <returns></returns>
 	private static async Task<List<PackagedAppView>> Get(object? VVMRef = null)
 	{
 		return await Task.Run(() =>

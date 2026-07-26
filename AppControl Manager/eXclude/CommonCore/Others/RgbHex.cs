@@ -25,7 +25,6 @@ internal static class RGBHEX
 	/// <param name="r"></param>
 	/// <param name="g"></param>
 	/// <param name="b"></param>
-	/// <returns></returns>
 	internal static string ToHex(byte r, byte g, byte b)
 	{
 		// Fast, uppercase by default, no '#'

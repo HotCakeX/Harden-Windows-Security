@@ -26,7 +26,6 @@ internal static class Helper
 	/// Find a certificate via its common name.
 	/// </summary>
 	/// <param name="subjectNameFragment"></param>
-	/// <returns></returns>
 	internal static X509Certificate2? FindCertificateBySubjectName(string subjectNameFragment)
 	{
 		if (string.IsNullOrWhiteSpace(subjectNameFragment))

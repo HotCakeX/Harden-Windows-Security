@@ -257,7 +257,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// Fetches the assignments for the selected policy
 	/// </summary>
 	/// <param name="policy"></param>
-	/// <returns></returns>
 	internal async Task<List<PolicyAssignmentDisplay>> GetPolicyAssignments(CiPolicyInfo policy)
 	{
 		try

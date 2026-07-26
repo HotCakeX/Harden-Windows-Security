@@ -310,7 +310,6 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// <summary>
 	/// Helper method to get selected policy rule options from the UI checkboxes.
 	/// </summary>
-	/// <returns></returns>
 	private List<OptionType> GetSelectedPolicyRuleOptions()
 	{
 		List<OptionType> selectedRules = [];
@@ -430,7 +429,6 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// Used by any code from the app to use the functionalities in this VM.
 	/// </summary>
 	/// <param name="policy"></param>
-	/// <returns></returns>
 	internal async Task OpenInConfigurePolicyRuleOptions(SiPolicy.PolicyFileRepresent? policy)
 	{
 		try

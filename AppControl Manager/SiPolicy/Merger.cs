@@ -733,7 +733,6 @@ internal static partial class Merger
 	/// </summary>
 	/// <param name="signerX"></param>
 	/// <param name="signerY"></param>
-	/// <returns></returns>
 	internal static bool IsSignerRuleMatch(Signer signerX, Signer signerY)
 	{
 		return string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
@@ -895,7 +894,6 @@ internal static partial class Merger
 	/// </summary>
 	/// <param name="a"></param>
 	/// <param name="b"></param>
-	/// <returns></returns>
 	private static bool BothAreWhitespaceOrEqual(string? a, string? b)
 	{
 		bool isAEmpty = a is not null && string.IsNullOrWhiteSpace(a);

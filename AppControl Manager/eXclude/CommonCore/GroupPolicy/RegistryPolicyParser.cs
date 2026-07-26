@@ -93,7 +93,6 @@ internal static class RegistryPolicyParser
 	/// Parses a .POL file from the specified file path.
 	/// </summary>
 	/// <param name="filePath"></param>
-	/// <returns></returns>
 	/// <exception cref="FileNotFoundException"></exception>
 	internal static RegistryPolicyFile ParseFile(string filePath)
 	{

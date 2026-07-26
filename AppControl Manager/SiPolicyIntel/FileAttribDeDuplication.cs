@@ -335,7 +335,6 @@ internal static class FileAttribDeDuplication
 	/// Compares two version strings using the System.Version class.
 	/// Returns -1 if v1 is lower than v2, 1 if v1 is higher than v2, or 0 if they are equal or unparsable.
 	/// </summary>
-	/// <returns></returns>
 	private static int CompareVersions(string v1, string v2)
 	{
 		if (Version.TryParse(v1, out Version? version1) && Version.TryParse(v2, out Version? version2))

@@ -69,7 +69,6 @@ internal static class GetFirewallLogs
 	/// Retrieves blocked packet events.
 	/// </summary>
 	/// <param name="resolveDestinationAddresses">Determines whether to synchronously resolve destination IP addresses to domains.</param>
-	/// <returns></returns>
 	internal static Task<List<FirewallEvent>> GetBlockedPackets(bool resolveDestinationAddresses) =>
 		Task.Run(() =>
 		{
@@ -232,7 +231,6 @@ internal static class GetFirewallLogs
 	/// Synchronously resolves an IP address to a domain name using Cloudflare's direct 1.1.1.1 or Google's direct 8.8.8.8 DoH API.
 	/// </summary>
 	/// <param name="ipAddress">The IP address to resolve.</param>
-	/// <returns></returns>
 	private static string ResolveIpAddress(string ipAddress)
 	{
 		if (ResolvedAddressCache.TryGetValue(ipAddress, out string? cachedHostName))
@@ -353,7 +351,6 @@ internal static class GetFirewallLogs
 	/// </summary>
 	/// <param name="eventRecord"></param>
 	/// <param name="resolveDestinationAddresses">Determines whether to synchronously resolve destination IP addresses to domains.</param>
-	/// <returns></returns>
 	private static FirewallEvent? ParseFirewallEvent(EventRecord eventRecord, bool resolveDestinationAddresses)
 	{
 		string xmlString = eventRecord.ToXml();

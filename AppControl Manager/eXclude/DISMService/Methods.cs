@@ -661,7 +661,6 @@ internal static class Methods
 	/// <summary>
 	/// Gets all of the capabilities and features and returns them in a list.
 	/// </summary>
-	/// <returns></returns>
 	internal static List<DISMOutput> GetAllAvailableResults()
 	{
 		List<DISMOutput> Output = [];
@@ -707,7 +706,6 @@ internal static class Methods
 	/// Checks whether a feature or capability is enabled or disabled
 	/// </summary>
 	/// <param name="obj"></param>
-	/// <returns></returns>
 	internal static bool IsEnabled(DISMOutput? obj)
 	{
 		if (obj is null)

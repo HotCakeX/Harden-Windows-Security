@@ -601,7 +601,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// If returns true, the signed policy can be removed
 	/// </summary>
 	/// <param name="policyID"></param>
-	/// <returns></returns>
 	private static bool VerifyRemovalEligibility(string policyID)
 	{
 		// When system was last reboot
@@ -829,7 +828,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// Finds the local CIP file path of a given policy, if it exists on the system.
 	/// </summary>
 	/// <param name="policyInfoObj"></param>
-	/// <returns></returns>
 	internal static string? GetLocalCIPFile(CiPolicyInfo? policyInfoObj)
 	{
 		string? output = null;

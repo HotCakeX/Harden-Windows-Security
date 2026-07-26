@@ -65,7 +65,6 @@ internal static class SignerAndHashBuilder
 	/// <param name="folderPaths"></param>
 	/// <param name="customFileRulePatterns"></param>
 	/// <param name="packageFamilyNames"></param>
-	/// <returns></returns>
 	internal static FileBasedInfoPackage BuildSignerAndHashObjects(
 	List<FileIdentity>? data = null,
 	IReadOnlyCollection<string>? folderPaths = null,

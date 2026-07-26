@@ -630,7 +630,6 @@ internal static class AuditPolicyManager
 	/// Sets multiple audit policies on the system
 	/// </summary>
 	/// <param name="auditPolicies">Array of audit policy information structures</param>
-	/// <returns></returns>
 	internal static void SetAuditPolicies(AUDIT_POLICY_INFORMATION[] auditPolicies)
 	{
 		// Ensure privileges

@@ -33,7 +33,6 @@ internal static class GetCertificateDetails
 	///
 	/// </summary>
 	/// <param name="completeSignatureResult"></param>
-	/// <returns></returns>
 	internal static List<ChainPackage> Get(List<AllFileSigners> completeSignatureResult)
 	{
 		// A list to hold the final result of the method

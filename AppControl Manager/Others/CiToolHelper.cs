@@ -79,7 +79,6 @@ internal static class CiToolHelper
 	/// <param name="SystemPolicies">Will include System policies in the output</param>
 	/// <param name="BasePolicies">Will include Base policies in the output</param>
 	/// <param name="SupplementalPolicies">Will include Supplemental policies in the output</param>
-	/// <returns></returns>
 	/// <exception cref="Exception"></exception>
 	internal static List<CiPolicyInfo> GetPolicies(bool SystemPolicies = false, bool BasePolicies = false, bool SupplementalPolicies = false)
 	{

@@ -38,8 +38,6 @@ internal enum LogTypeIntel
 
 internal static class Logger
 {
-	private static string LogsDirectory = null!;
-	private static string AppName = null!;
 
 #pragma warning disable CS0649
 	/// <summary>
@@ -55,21 +53,18 @@ internal static class Logger
 	/// <param name="appName"></param>
 	internal static void Configure(string logsDirectory, string appName)
 	{
-		LogsDirectory = logsDirectory;
-		AppName = appName;
-
 		// Create the Logs directory if it doesn't exist, won't do anything if it exists
-		_ = Directory.CreateDirectory(LogsDirectory);
+		_ = Directory.CreateDirectory(logsDirectory);
 
 		// Check the size of the directory and clear it if it exceeds 1000 MB
 		// To ensure the logs directory doesn't get too big
-		if (GetDirectorySize(LogsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
+		if (GetDirectorySize(logsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
 		{
 			// Empty the directory while retaining the most recent file
-			EmptyDirectory(LogsDirectory);
+			EmptyDirectory(logsDirectory);
 		}
 
-		LogFileName = Path.Join(LogsDirectory, $"{AppName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+		LogFileName = Path.Join(logsDirectory, $"{appName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
 
 		FileStream? fileStream = null;
 
@@ -181,7 +176,7 @@ internal static class Logger
 		FileInfo[] files = new DirectoryInfo(directoryPath).GetFiles();
 
 		// Sort files by last write time in descending order
-		Array.Sort(files, (x, y) => y.LastWriteTime.CompareTo(x.LastWriteTime));
+		Array.Sort(files, static (x, y) => y.LastWriteTime.CompareTo(x.LastWriteTime));
 
 		// Retain the most recent file, delete others
 		// Start from 1 to skip the most recent file

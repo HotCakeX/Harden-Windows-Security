@@ -626,7 +626,6 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// <summary>
 	/// Creates 50 random groups (M365 + Security) for testing purposes.
 	/// </summary>
-	/// <returns></returns>
 	internal async void CreateRandomGroups()
 	{
 		if (TargetAccount is null)

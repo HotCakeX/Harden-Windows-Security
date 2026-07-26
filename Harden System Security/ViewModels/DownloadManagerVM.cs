@@ -3178,7 +3178,6 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	/// class-based style properties are inlined onto the matching SVG elements before loading the preview, so the preview now keeps its intended colors.
 	/// </summary>
 	/// <param name="svgMarkup"></param>
-	/// <returns></returns>
 	private static string NormalizeSvgMarkupForSvgImageSource(string svgMarkup)
 	{
 		if (string.IsNullOrWhiteSpace(svgMarkup) || !svgMarkup.Contains("<style", StringComparison.OrdinalIgnoreCase))

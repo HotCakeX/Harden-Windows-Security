@@ -114,7 +114,6 @@ internal static class SupplementalForSelf
 	/// Checks whether an App Control policy is eligible to have the AppControlManager supplemental policy
 	/// </summary>
 	/// <param name="policyObj"></param>
-	/// <returns></returns>
 	internal static bool IsEligible(SiPolicy.SiPolicy policyObj)
 	{
 		// Don't need to deploy it for the recommended block rules since they are only explicit Deny mode policies

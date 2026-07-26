@@ -1554,7 +1554,6 @@ internal sealed partial class MUnit(
 	/// Used to normalize the subcategory name for display purposes.
 	/// </summary>
 	/// <param name="subCategory"></param>
-	/// <returns></returns>
 	private static string SubCategoryToDisplayString(SubCategories? subCategory)
 	{
 		if (subCategory is null)

@@ -30,7 +30,6 @@ internal static partial class ServiceStarter
 	/// <param name="serviceName"></param>
 	/// <param name="timeout"></param>
 	/// <param name="cancellationToken"></param>
-	/// <returns></returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="Win32Exception"></exception>
 	internal static async Task StartServiceAsync(string serviceName, TimeSpan timeout, CancellationToken cancellationToken = default)

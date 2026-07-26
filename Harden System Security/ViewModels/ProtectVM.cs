@@ -764,7 +764,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// Generates Protection categories based on the selected preset.
 	/// </summary>
 	/// <param name="Preset"></param>
-	/// <returns></returns>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	private List<ProtectionCategoryListViewItem> GenerateCategories(int Preset)
 	{

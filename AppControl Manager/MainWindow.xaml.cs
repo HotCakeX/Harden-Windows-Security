@@ -1894,7 +1894,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// Opens a policy from the Sidebar's Library in the Policy Editor.
 	/// </summary>
 	/// <param name="policyContext"></param>
-	/// <returns></returns>
 	private static async Task ExecuteOpenInPolicyEditor(PolicyFileRepresent policyContext)
 	{
 		try

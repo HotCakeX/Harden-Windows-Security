@@ -115,7 +115,6 @@ internal static partial class DetailsRetrieval
 	/// <summary>
 	/// Gets the system code integrity information
 	/// </summary>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static unsafe SystemCodeIntegrityInfo Get()
 	{

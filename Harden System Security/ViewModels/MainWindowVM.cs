@@ -1265,7 +1265,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Called by the UI's event handler and when the app is started via CLI/ScheduledTask
 	/// </summary>
-	/// <returns></returns>
 	internal async Task CheckForAllAppUpdates_Internal()
 	{
 		try

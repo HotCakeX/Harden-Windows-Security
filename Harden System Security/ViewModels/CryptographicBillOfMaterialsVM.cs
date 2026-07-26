@@ -967,7 +967,6 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	/// <summary>
 	/// Used for <see cref="Traverse.MContainer"/> data retrieval.
 	/// </summary>
-	/// <returns></returns>
 	internal async Task<CbomDocument> GetTraverseData()
 	{
 		try

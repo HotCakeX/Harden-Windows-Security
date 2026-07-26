@@ -34,7 +34,6 @@ internal static partial class CryptoAPI
 	/// <param name="dwType"></param>
 	/// <param name="pvTypePara"></param>
 	/// <param name="isIssuer"></param>
-	/// <returns></returns>
 	internal static string GetNameString(IntPtr pCertContext, int dwType, string? pvTypePara, bool isIssuer)
 	{
 		// Allocate a buffer for the name string

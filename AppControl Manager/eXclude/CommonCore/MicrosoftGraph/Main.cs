@@ -87,7 +87,6 @@ internal static class Main
 	/// <summary>
 	/// Helper method for WithParentActivityOrWindow that returns the window handle.
 	/// </summary>
-	/// <returns></returns>
 	private static nint GetWindowHandle() => Atlas.hWnd;
 
 	#endregion
@@ -315,7 +314,6 @@ internal static class Main
 	/// Performs an Advanced Hunting query using Microsoft Defender for Endpoint
 	/// Accepts a device name as an optional parameter for filtering
 	/// </summary>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<string?> RunMDEAdvancedHuntingQuery(string? deviceName, AuthenticatedAccounts? account)
 	{
@@ -392,7 +390,6 @@ DeviceEvents
 	/// <summary>
 	/// Fetches the M365/Entra ID groups.
 	/// </summary>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<List<IntuneGroupItemListView>> FetchGroups(AuthenticatedAccounts account)
 	{
@@ -476,7 +473,6 @@ DeviceEvents
 	/// <summary>
 	/// Signs into a tenant
 	/// </summary>
-	/// <returns></returns>
 	internal static async Task<(bool, AuthenticatedAccounts?)> SignIn(
 	AuthenticationContext context,
 	SignInMethods signInMethod,
@@ -576,7 +572,6 @@ DeviceEvents
 	/// <summary>
 	/// Signs out the user
 	/// </summary>
-	/// <returns></returns>
 	internal static async Task SignOut(AuthenticatedAccounts account)
 	{
 		// Make sure we select the exact same instance used for token creation
@@ -600,7 +595,6 @@ DeviceEvents
 	/// <param name="policyName">The name of the policy to upload.</param>
 	/// <param name="descriptionText">A descriptive text for the policy we are uploading.</param>
 	/// <param name="policyBytes">The actual policy's bytes that will be uploaded.</param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task UploadPolicyToIntune(AuthenticatedAccounts account, byte[] policyBytes, SiPolicy policyObj, List<string> groupIds, string? policyName, string descriptionText)
 	{
@@ -711,7 +705,6 @@ DeviceEvents
 	/// <param name="policyID"></param>
 	/// <param name="policyName"></param>
 	/// <param name="descriptionText"></param>
-	/// <returns></returns>
 	private static async Task<string?> CreateCustomIntunePolicy(string accessToken, string policyData, string? policyName, string policyID, string descriptionText, AzureCloudInstance environment)
 	{
 
@@ -865,7 +858,6 @@ DeviceEvents
 	/// <summary>
 	/// Retrieves the custom policies available in Intune
 	/// </summary>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<DeviceConfigurationPoliciesResponse?> RetrieveDeviceConfigurations(AuthenticatedAccounts account)
 	{
@@ -1022,7 +1014,6 @@ DeviceEvents
 	/// If true, creates a Microsoft 365 (Unified) group.
 	/// If false, creates a Security group.
 	/// </param>
-	/// <returns></returns>
 	/// <exception cref="ArgumentException">Thrown if displayName is null or empty.</exception>
 	/// <exception cref="InvalidOperationException">Thrown if Graph returns a failure.</exception>
 	internal static async Task CreateGroup(
@@ -1115,7 +1106,6 @@ DeviceEvents
 	/// </summary>
 	/// <param name="account">Authenticated account context.</param>
 	/// <param name="groupId">Target group ID.</param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task DeleteGroup(AuthenticatedAccounts? account, string groupId)
 	{
@@ -1159,7 +1149,6 @@ DeviceEvents
 	/// Get all of the non-Custom-OMAURI policies.
 	/// </summary>
 	/// <param name="account"></param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<List<DeviceManagementConfigurationPolicy>> RetrieveConfigurationPolicies(AuthenticatedAccounts account)
 	{
@@ -1224,7 +1213,6 @@ DeviceEvents
 	/// </summary>
 	/// <param name="account"></param>
 	/// <param name="jsonFilePath"></param>
-	/// <returns></returns>
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<string?> CreateConfigurationPolicyFromJson(AuthenticatedAccounts account, string jsonFilePath)
@@ -1390,7 +1378,6 @@ DeviceEvents
 	/// Retrieves Device Health Scripts (for Managed Installer policies).
 	/// </summary>
 	/// <param name="account"></param>
-	/// <returns></returns>
 	internal static async Task<List<DeviceHealthScript>> RetrieveDeviceHealthScripts(AuthenticatedAccounts account)
 	{
 		List<DeviceHealthScript> allScripts = [];

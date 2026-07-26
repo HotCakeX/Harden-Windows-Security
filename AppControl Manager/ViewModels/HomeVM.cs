@@ -696,7 +696,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Returns the System Uptime in a formatted string.
 	/// </summary>
-	/// <returns></returns>
 	private static string GetSystemUptimeString()
 	{
 		// Monotonic uptime since system start; unaffected by manual clock changes.
@@ -717,7 +716,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// Returns the BIOS Boot Time (POST duration) as a formatted string.
 	/// Reads from the registry key that Windows populates during boot.
 	/// </summary>
-	/// <returns></returns>
 	private static string GetBiosBootTimeString()
 	{
 		try
@@ -738,7 +736,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Gets the available RAM on the system.
 	/// </summary>
-	/// <returns></returns>
 	private static string GetAvailablePhysicalMemoryBytes()
 	{
 		bool ok = NativeMethods.GetPhysicallyInstalledSystemMemory(out ulong totalKilobytes);
@@ -1584,7 +1581,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Retrieves OS details such as Name, Edition, Display Version, and Build Number.
 	/// </summary>
-	/// <returns></returns>
 	private static string GetOsDetailsString()
 	{
 		try
@@ -1674,7 +1670,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Retrieves a formatted string of available GPU names.
 	/// </summary>
-	/// <returns></returns>
 	private static string GetGpuNamesString()
 	{
 		List<GpuInfo> gpus = GPUInfoManager.GetSystemGPUs();
@@ -2632,7 +2627,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		/// <summary>
 		/// Get the subscription details.
 		/// </summary>
-		/// <returns></returns>
 		private static unsafe (bool, bool, string?, string?) GetSubscriptionStatus()
 		{
 			bool EditionSupportsSubscription = false;

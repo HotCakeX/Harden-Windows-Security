@@ -16,7 +16,6 @@
 //
 
 using System.Buffers;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.MemoryMappedFiles;
@@ -36,11 +35,6 @@ internal static class CiFileHash
 	private static readonly ArrayPool<byte> BufferPool = ArrayPool<byte>.Shared;
 
 	/// <summary>
-	/// Cache for PE hash ranges
-	/// </summary>
-	private static readonly ConcurrentDictionary<string, (List<(long Start, long Length)> Ranges, long FileSize, DateTime LastWriteTime)> HashRangesCache = new(StringComparer.OrdinalIgnoreCase);
-
-	/// <summary>
 	/// 0=SHA384, 1=SHA512, 2=SHA3-256, 3=SHA3-384, 4=SHA3-512
 	/// </summary>
 	private static readonly string[] HashAlgorithmsManual = ["SHA384", "SHA512", "SHA3-256", "SHA3-384", "SHA3-512"];
@@ -55,7 +49,6 @@ internal static class CiFileHash
 	/// Needs to remain as fast as possible since it's called in tight loops.
 	/// </summary>
 	/// <param name="filePath"></param>
-	/// <returns></returns>
 	internal static CodeIntegrityHashes GetCiFileHashes(string filePath)
 	{
 		using FileStream fileStream = File.OpenRead(filePath);
@@ -80,32 +73,24 @@ internal static class CiFileHash
 	/// <returns>CodeIntegrityHashesV2 object that contains all kinds of hashes.</returns>
 	internal static CodeIntegrityHashesV2 GetCiFileHashesV2(string filePath)
 	{
-		try
-		{
-			(string?, string?) FlatHashResults = GetFlatHash(filePath);
+		(string?, string?) FlatHashResults = GetFlatHash(filePath);
 
-			// Get all authenticode hashes in one operation for better performance
-			string?[] authenticodeHashes = GetAllAuthenticodeHashes(filePath);
+		// Get all authenticode hashes in one operation for better performance
+		string?[] authenticodeHashes = GetAllAuthenticodeHashes(filePath);
 
-			return new CodeIntegrityHashesV2(
-				GetPageHash("SHA1", filePath),
-				GetPageHash("SHA256", filePath),
-				authenticodeHashes[0], // SHA1
-				authenticodeHashes[1], // SHA256
-				authenticodeHashes[2], // SHA384
-				authenticodeHashes[3], // SHA512
-				authenticodeHashes[4], // SHA3-256
-				authenticodeHashes[5], // SHA3-384
-				authenticodeHashes[6], // SHA3-512
-				FlatHashResults.Item1,
-				FlatHashResults.Item2
-			);
-		}
-		finally
-		{
-			// Remove the file's hash ranges from cache
-			_ = HashRangesCache.TryRemove(filePath, out _);
-		}
+		return new CodeIntegrityHashesV2(
+			GetPageHash("SHA1", filePath),
+			GetPageHash("SHA256", filePath),
+			authenticodeHashes[0], // SHA1
+			authenticodeHashes[1], // SHA256
+			authenticodeHashes[2], // SHA384
+			authenticodeHashes[3], // SHA512
+			authenticodeHashes[4], // SHA3-256
+			authenticodeHashes[5], // SHA3-384
+			authenticodeHashes[6], // SHA3-512
+			FlatHashResults.Item1,
+			FlatHashResults.Item2
+		);
 	}
 
 	private static string?[] GetAllAuthenticodeHashes(string filePath)
@@ -211,7 +196,7 @@ internal static class CiFileHash
 			using MemoryMappedViewAccessor accessor = mmf.CreateViewAccessor(0, 0, MemoryMappedFileAccess.Read);
 
 			// Parse PE structure to get ranges to hash
-			var hashRanges = GetAuthenticodeHashRangesFromMemoryMappedCached(filePath, accessor, fileStream.Length);
+			List<(long Start, long Length)> hashRanges = GetAuthenticodeHashRangesFromMemoryMapped(accessor, fileStream.Length);
 
 			byte* basePointer = null;
 			accessor.SafeMemoryMappedViewHandle.AcquirePointer(ref basePointer);
@@ -311,7 +296,6 @@ internal static class CiFileHash
 	/// <param name="filePath">The path of the file, used for logging messages of errors only.</param>
 	/// <param name="fileStreamHandle">Used to hash the file.</param>
 	/// <param name="hashAlgorithm">The hashing algorithm to use.</param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	private static unsafe string? GetAuthenticodeHashLegacy(string filePath, nint fileStreamHandle, string hashAlgorithm)
 	{
@@ -379,37 +363,6 @@ internal static class CiFileHash
 			if (contextHandle != nint.Zero)
 				_ = NativeMethods.CryptCATAdminReleaseContext(contextHandle, 0);
 		}
-	}
-
-	private static List<(long Start, long Length)> GetAuthenticodeHashRangesFromMemoryMappedCached(string filePath, MemoryMappedViewAccessor accessor, long fileLength)
-	{
-		// Get file info for cache validation
-		FileInfo fileInfo = new(filePath);
-		DateTime lastWriteTime = fileInfo.LastWriteTime;
-
-		// Check cache first
-		if (HashRangesCache.TryGetValue(filePath, out var cachedData))
-		{
-			// Validate cache entry (file size and last write time must match)
-			if (cachedData.FileSize == fileLength && cachedData.LastWriteTime == lastWriteTime)
-			{
-				// Return cached ranges
-				return cachedData.Ranges;
-			}
-			else
-			{
-				// Remove stale cache entry
-				_ = HashRangesCache.TryRemove(filePath, out _);
-			}
-		}
-
-		// Compute ranges since not in cache or cache is stale
-		var ranges = GetAuthenticodeHashRangesFromMemoryMapped(accessor, fileLength);
-
-		// Cache the result
-		_ = HashRangesCache.TryAdd(filePath, (ranges, fileLength, lastWriteTime));
-
-		return ranges;
 	}
 
 	private static List<(long Start, long Length)> GetAuthenticodeHashRangesFromMemoryMapped(MemoryMappedViewAccessor accessor, long fileLength)
@@ -490,7 +443,6 @@ internal static class CiFileHash
 	/// <param name="hObject"></param>
 	/// <param name="propertyName"></param>
 	/// <param name="value"></param>
-	/// <returns></returns>
 	private static bool BCryptGetProperty(IntPtr hObject, string propertyName, out uint value)
 	{
 		value = 0;
@@ -516,13 +468,10 @@ internal static class CiFileHash
 	/// </summary>
 	/// <param name="algName"></param>
 	/// <param name="fileName"></param>
-	/// <returns></returns>
 	private static unsafe string? GetPageHash(string algName, string fileName)
 	{
 		// initialize the buffer pointer to zero
 		IntPtr buffer = IntPtr.Zero;
-		// initialize the buffer size to zero
-		int bufferSize = 0;
 
 		try
 		{
@@ -531,7 +480,7 @@ internal static class CiFileHash
 				algName,
 				fileName,
 				buffer,
-				bufferSize);
+				0);
 
 			if (firstPageHash1 == 0)
 				return null;
@@ -563,7 +512,6 @@ internal static class CiFileHash
 	/// Calculates Flat file hashes.
 	/// </summary>
 	/// <param name="fileName"></param>
-	/// <returns></returns>
 	/// <exception cref="InvalidOperationException"></exception>
 	private static unsafe (string?, string?) GetFlatHash(string fileName)
 	{

@@ -26,9 +26,7 @@ namespace AppControlManager.XMLOps;
 internal static class SignerAndHashBuilder
 {
 	// Get all of the drive letters on the system
-	private static readonly List<DriveLetterMapper.DriveMapping> Drives = DriveLetterMapper.GetGlobalRootDrives();
-	private static readonly IEnumerable<string?> DriveLetters = Drives.Select(x => x.DriveLetter);
-
+	private static readonly HashSet<string?> DriveLetters = DriveLetterMapper.GetGlobalRootDrives().Select(x => x.DriveLetter).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Creates Signer and Hash objects from the input data
@@ -36,7 +34,7 @@ internal static class SignerAndHashBuilder
 	/// Types created for Signed Data: FilePublisher, Publisher
 	/// Types created for Unsigned Data: Hash
 	///
-	/// Behavior when the level is set to "Auto" or "FilePublisher":
+	/// Behavior when the level is set to "FilePublisher":
 	/// FilePublisher Signers are created for files that have the necessary details for a FilePublisher rule
 	/// Publisher Signers are created for files that don't have the necessary details for a FilePublisher rule
 	/// Hashes are created for the unsigned data
@@ -60,7 +58,7 @@ internal static class SignerAndHashBuilder
 	/// Its use case is not clear yet and there haven't been any files with that condition yet.
 	/// </summary>
 	/// <param name="data">The Data to be processed. These are the logs selected by the user and contain both signed and unsigned data.</param>
-	/// <param name="level">Auto, FilePublisher, Publisher, Hash</param>
+	/// <param name="level"><see cref="ScanLevels"/></param>
 	/// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g., when sandboxing-like behavior using Macros and AppIDs are used.</param>
 	/// <param name="folderPaths"></param>
 	/// <param name="customFileRulePatterns"></param>
@@ -157,7 +155,7 @@ internal static class SignerAndHashBuilder
 					if (data is not null)
 					{
 
-						// Detect and separate FilePublisher, Publisher and Hash (Unsigned) data if the level is Auto or FilePublisher
+						// Detect and separate FilePublisher, Publisher and Hash (Unsigned) data if the level is FilePublisher
 
 						Logger.Write(Atlas.GetStr("BuildSignerFilePublisherLevelsMessage"));
 
@@ -370,7 +368,6 @@ internal static class SignerAndHashBuilder
 			// Loop through each correlated event and process the certificate details
 			foreach (FileSignerInfo corDataValue in signedData.FileSignerInfos)
 			{
-
 				// We only need WHQL Signers
 				if (corDataValue.IsWHQL != true) continue;
 
@@ -380,7 +377,7 @@ internal static class SignerAndHashBuilder
 				// For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
 
 				// currentCorData to store the current SignerInfo/Correlated
-				WHQLCertificateDetailsCreator? currentCorData;
+				WHQLCertificateDetailsCreator currentCorData;
 
 				if (string.IsNullOrWhiteSpace(corDataValue.OPUSInfo))
 					throw new InvalidOperationException("Cannot create WHQL signer with empty CertOEMID!");
@@ -437,14 +434,13 @@ internal static class SignerAndHashBuilder
 			// Loop through each correlated event and process the certificate details
 			foreach (FileSignerInfo corDataValue in signedData.FileSignerInfos)
 			{
-
 				// If the file doesn't have Issuer TBS hash (aka Intermediate certificate hash), use the leaf cert's TBS hash and CN instead (aka publisher TBS hash)
 				// This is according to the ConfigCI's workflow when encountering specific files
 				// MDE doesn't generate Issuer TBS hash for some files
 				// For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
 
 				// currentCorData to store the current SignerInfo/Correlated
-				CertificateDetailsCreator? currentCorData;
+				CertificateDetailsCreator currentCorData;
 
 				if (string.IsNullOrWhiteSpace(corDataValue.IssuerTBSHash) && !string.IsNullOrWhiteSpace(corDataValue.PublisherTBSHash))
 				{
@@ -481,7 +477,6 @@ internal static class SignerAndHashBuilder
 
 		foreach (FileIdentity signedData in CollectionsMarshal.AsSpan(signedPublisherData))
 		{
-
 			// Create a new PublisherSignerCreator object
 			PublisherSignerCreator currentPublisherSigner = new(
 				fileName: signedData.FilePath,
@@ -494,13 +489,12 @@ internal static class SignerAndHashBuilder
 			// Process each correlated event
 			foreach (FileSignerInfo corDataValue in signedData.FileSignerInfos)
 			{
-
 				string? issuerTBSHash = corDataValue.IssuerTBSHash;
 				string? issuerName = corDataValue.IssuerName;
 				string? publisherTBSHash = corDataValue.PublisherTBSHash;
 				string? publisherName = corDataValue.PublisherName;
 
-				CertificateDetailsCreator? currentCorData;
+				CertificateDetailsCreator currentCorData;
 
 				if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
 				{
@@ -572,7 +566,7 @@ internal static class SignerAndHashBuilder
 		foreach (string item in wildCardFilePathData)
 		{
 			// Create wildcard path - If user selected a root of a drive then do not add the extra backslash otherwise we'd create an invalid path such as "D:\\*" in the policy
-			string wildcardPath = DriveLetters.Any(x => string.Equals(x, item[..^1], StringComparison.OrdinalIgnoreCase)) ? item + "*" : item + @"\" + "*";
+			string wildcardPath = DriveLetters.Contains(item[..^1]) ? item + "*" : item + @"\" + "*";
 
 			// FilePath rules can only be used for User-Mode files only
 			// Plus we wouldn't know if the folder contains user-mode or kernel-mode files

@@ -72,7 +72,6 @@ public sealed partial class App : Application
 
 		// For navigation restoration passed via command line
 		string? _cliNavTag = null;
-
 		Type? PageTypeToNavTo = null;
 
 		/// <summary>
@@ -118,14 +117,12 @@ public sealed partial class App : Application
 			if (!string.IsNullOrWhiteSpace(ArgLine))
 			{
 				Match match = Regex1().Match(ArgLine);
-
 				if (match.Success)
 				{
 					if (match.Groups[1].Success)
 					{
 						actionArg = match.Groups[1].Value.Trim();
 					}
-
 					if (match.Groups[2].Success)
 					{
 						fileArg = match.Groups[2].Value;
@@ -144,7 +141,6 @@ public sealed partial class App : Application
 			{
 				// Extract the action
 				string action = actionArg["--action=".Length..].Trim();
-
 				if (!string.IsNullOrWhiteSpace(action))
 				{
 					Logger.Write($"Parsed Action: {action}");
@@ -155,7 +151,6 @@ public sealed partial class App : Application
 				if (fileArg is not null)
 				{
 					string filePath = fileArg["--file=".Length..].Trim('"');
-
 					if (!string.IsNullOrWhiteSpace(filePath))
 					{
 						Logger.Write($"Parsed File: {filePath}");
@@ -202,6 +197,7 @@ public sealed partial class App : Application
 		}
 
 		string[] possibleArgs = Environment.GetCommandLineArgs();
+
 		bool launchToUpdatePageFromNotification = false;
 
 		try
@@ -263,7 +259,6 @@ public sealed partial class App : Application
 				/*
 				Windows.ApplicationModel.Activation.LaunchActivatedEventArgs launchArgs = (Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)activatedEventArgs.Data;
 				string passed = launchArgs.Arguments;
-
 				Logger.Write($"Arguments: {passed}");
 				*/
 
@@ -332,7 +327,7 @@ public sealed partial class App : Application
 
 		// If the current session is not elevated and user configured the app to ask for elevation on startup
 		// Also prompt for elevation whether or not prompt for elevation setting is on when user selects a file to open from file explorer that requires elevated permissions
-		if (!Atlas.IsElevated && Atlas.Settings.PromptForElevationOnStartup || !Atlas.IsElevated && requireAdminPrivilege)
+		if (!Atlas.IsElevated && (Atlas.Settings.PromptForElevationOnStartup || requireAdminPrivilege))
 		{
 			// Build passthrough arguments.
 			if (Relaunch.RelaunchAppElevated(Atlas.AUMID, BuildRelaunchArguments()))
@@ -343,7 +338,6 @@ public sealed partial class App : Application
 			else if (requireAdminPrivilege)
 			{
 				Logger.Write(Atlas.GetStr("ElevationRequiredButDeniedMessage"));
-
 				// Exit the process anyway since admin privileges were required but user didn't successfully elevate.
 				Environment.Exit(0);
 			}
@@ -383,28 +377,17 @@ public sealed partial class App : Application
 		else if (_activationIsFileActivation && !string.IsNullOrWhiteSpace(_activationFilePath))
 		{
 			Logger.Write(string.Format(Atlas.GetStr("FileActivationLaunchMessage"), _activationFilePath));
-
 			try
 			{
-				SiPolicy.PolicyFileRepresent policyRep = await Task.Run(() =>
-				{
-					return PolicyEditorVM.ParseFilePathAsPolicyRepresent(_activationFilePath);
-				});
+				SiPolicy.PolicyFileRepresent policyRep = await Task.Run(() => PolicyEditorVM.ParseFilePathAsPolicyRepresent(_activationFilePath));
 
 				await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(policyRep);
 			}
 			catch (Exception ex)
 			{
 				Logger.Write(string.Format(Atlas.GetStr("PolicyEditorLaunchErrorMessage"), ex.Message));
-
 				// Continue doing the normal navigation if there was a problem
 				await InitialNav();
-			}
-			finally
-			{
-				// Clear ephemeral file activation context
-				_activationFilePath = null;
-				_activationIsFileActivation = false;
 			}
 		}
 		// If there is/was activation through protocol/CLI/context menu (action-based)
@@ -427,14 +410,12 @@ public sealed partial class App : Application
 						case ViewModelBase.LaunchProtocolActions.FileSignature:
 							{
 								ViewFileCertificatesVM vm = ViewModelProvider.ViewFileCertificatesVM;
-
 								await vm.OpenInViewFileCertificatesVM(_activationFilePath);
 								break;
 							}
 						case ViewModelBase.LaunchProtocolActions.FileHashes:
 							{
 								GetCIHashesVM vm = ViewModelProvider.GetCIHashesVM;
-
 								await vm.OpenInGetCIHashes(_activationFilePath);
 								break;
 							}
@@ -462,12 +443,6 @@ public sealed partial class App : Application
 
 				// Continue doing the normal navigation if there was a problem
 				await InitialNav();
-			}
-			finally
-			{
-				// Clear ephemeral action context after it's been used
-				_activationAction = null;
-				_activationFilePath = null;
 			}
 		}
 		// Navigation restoration path or user asking for specific page to launch.

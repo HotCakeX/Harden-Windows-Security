@@ -22,7 +22,6 @@ namespace AppControlManager.CustomUIElements;
 // https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.controls.contentdialog
 internal sealed partial class CustomPatternBasedFilePath : ContentDialogV2
 {
-
 	internal static readonly ObservableCollection<FilePathPatternExample> FilePathPatternExamplesCollection = [];
 
 	internal static void PopulateFilePathPatternExamplesCollection()
@@ -30,34 +29,34 @@ internal sealed partial class CustomPatternBasedFilePath : ContentDialogV2
 		FilePathPatternExamplesCollection.Clear();
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
-		{
-			Example = "C:\\Windows\\*",
-			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription1")
-		});
+		(
+			example: "C:\\Windows\\*",
+			description: Atlas.GetStr("CustomPatternBasedFilePathExampleDescription1")
+		));
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
-		{
-			Example = "D:\\EnterpriseApps\\MyApp\\*",
-			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription2")
-		});
+		(
+			example: "D:\\EnterpriseApps\\MyApp\\*",
+			description: Atlas.GetStr("CustomPatternBasedFilePathExampleDescription2")
+		));
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
-		{
-			Example = "*\\Bing.exe",
-			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription3")
-		});
+		(
+			example: "*\\Bing.exe",
+			description: Atlas.GetStr("CustomPatternBasedFilePathExampleDescription3")
+		));
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
-		{
-			Example = "C:\\*\\CCMCACHE\\*\\7z????-x64.exe",
-			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription4")
-		});
+		(
+			example: "C:\\*\\CCMCACHE\\*\\7z????-x64.exe",
+			description: Atlas.GetStr("CustomPatternBasedFilePathExampleDescription4")
+		));
 
 		FilePathPatternExamplesCollection.Add(new FilePathPatternExample
-		{
-			Example = "C:\\Users\\UserName\\AppData\\Local\\Temp\\????????-????-????-????-????????????.tmp.node",
-			Description = Atlas.GetStr("CustomPatternBasedFilePathExampleDescription5")
-		});
+		(
+			example: "C:\\Users\\UserName\\AppData\\Local\\Temp\\????????-????-????-????-????????????.tmp.node",
+			description: Atlas.GetStr("CustomPatternBasedFilePathExampleDescription5")
+		));
 	}
 
 	internal CustomPatternBasedFilePath()
@@ -68,8 +67,8 @@ internal sealed partial class CustomPatternBasedFilePath : ContentDialogV2
 	}
 }
 
-internal sealed class FilePathPatternExample
+internal sealed class FilePathPatternExample(string example, string description)
 {
-	internal string? Example;
-	internal string? Description;
+	internal string Example => example;
+	internal string Description => description;
 }

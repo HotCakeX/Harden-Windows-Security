@@ -60,8 +60,8 @@ internal static class CiToolHelper
 			ushort part3 = (ushort)((num & 0x00000000FFFF0000) >> 16); // Third 16 bits
 			ushort part4 = (ushort)(num & 0x000000000000FFFF);         // Lowest 16 bits
 
-			// Form the version string and attempt to parse it into a Version object, don't need the bool output of the parse result
-			return Version.Parse($"{part1}.{part2}.{part3}.{part4}");
+			// Construct the Version object directly from the four version parts
+			return new Version(part1, part2, part3, part4);
 		}
 		catch (Exception ex)
 		{
@@ -123,7 +123,7 @@ internal static class CiToolHelper
 			foreach (JsonElement policyElement in policiesElement.EnumerateArray())
 			{
 				// Create a new Policy object and populate its properties from the JSON data
-				CiPolicyInfo? policy = new(
+				CiPolicyInfo policy = new(
 					policyID: policyElement.GetPropertyOrDefault("PolicyID", string.Empty) ?? throw new InvalidOperationException("CiTool reported a policy without an ID!"),
 					basePolicyID: policyElement.GetPropertyOrDefault("BasePolicyID", string.Empty),
 					friendlyName: policyElement.GetPropertyOrDefault("FriendlyName", string.Empty),

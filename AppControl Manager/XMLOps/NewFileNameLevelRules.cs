@@ -121,7 +121,7 @@ internal static class NewFileNameLevelRules
 
 		foreach (FileNameRuleCreator fileNameItem in CollectionsMarshal.AsSpan(fileNameData))
 		{
-			string denyID = $"ID_Deny_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
+			string denyID = $"ID_DENY_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
 			Deny newFileAttrib = new(id: denyID)
 			{

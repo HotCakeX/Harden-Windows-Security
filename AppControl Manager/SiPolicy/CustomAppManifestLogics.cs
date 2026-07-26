@@ -35,7 +35,7 @@ internal static class CustomAppManifestLogics
 	/// <exception cref="InvalidOperationException">Thrown when neither a valid file path nor a stream is provided, or if the XML does not conform to the schema.</exception>
 	internal static AppManifest DeserializeAppManifest(string? filePath, MemoryStream? stream)
 	{
-		XmlElement? root;
+		XmlElement root;
 
 		if (!string.IsNullOrEmpty(filePath))
 		{

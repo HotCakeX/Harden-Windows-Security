@@ -1606,7 +1606,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				string directoryPath = Path.Join(Atlas.SystemDrive, "Windows", "Boot", "Resources");
 
 				// Iterate through each directory in the specified path
-				foreach (string directory in Directory.GetDirectories(directoryPath))
+				foreach (string directory in Directory.EnumerateDirectories(directoryPath))
 				{
 					// Add the desired file path to the list
 					kernelModeDriversList.Add(Path.Join(directory, "bootres.dll.mui"));

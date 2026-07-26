@@ -254,9 +254,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 			PolicyFiles.Clear();
 
 			// Only files directly within the directory, no recursion.
-			string[] files = Directory.GetFiles(Atlas.HardeningPoliciesPath, "*.json", SearchOption.TopDirectoryOnly);
-
-			foreach (string path in files)
+			foreach (string path in Directory.EnumerateFiles(Atlas.HardeningPoliciesPath, "*.json", SearchOption.TopDirectoryOnly))
 			{
 				string name = Path.GetFileNameWithoutExtension(path); // strip .json from display name
 				PolicyFiles.Add(new IntunePolicyFileItem(name, path));

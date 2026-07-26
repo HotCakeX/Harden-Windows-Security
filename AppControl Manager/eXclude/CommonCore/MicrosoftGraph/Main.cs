@@ -1794,8 +1794,7 @@ DeviceEvents
 
 			if (Directory.Exists(TokenCacheDiskLocation))
 			{
-				string[] files = Directory.GetFiles(TokenCacheDiskLocation);
-				foreach (string file in files)
+				foreach (string file in Directory.EnumerateFiles(TokenCacheDiskLocation))
 				{
 					// Retry loop for cross-process delays
 					for (int i = 0; i < 5; i++)

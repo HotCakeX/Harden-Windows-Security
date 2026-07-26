@@ -158,9 +158,7 @@ internal static class Logger
 		long size = 0;
 
 		// Get all files in the directory and its subdirectories
-		FileInfo[] files = new DirectoryInfo(directoryPath).GetFiles("*", SearchOption.AllDirectories);
-
-		foreach (FileInfo file in files)
+		foreach (FileInfo file in new DirectoryInfo(directoryPath).EnumerateFiles("*", SearchOption.AllDirectories))
 		{
 			// Add the size of each file to the total size
 			size += file.Length;

@@ -172,12 +172,12 @@ internal static partial class Merger
 							// Create a new FileRuleRef
 							FileRuleRef fileRuleRefCopy = new(ruleID: rand);
 
-							DenyRule allowRule = new(
+							DenyRule denyRule = new(
 								denyElement: denyElementCopy,
 								fileRuleRefElement: fileRuleRefCopy,
 								signingScenario: scenarioType);
 
-							_ = denyRules.Add(allowRule);
+							_ = denyRules.Add(denyRule);
 						}
 					}
 				}

@@ -139,7 +139,6 @@ internal sealed class NamedPipeServer : IDisposable
 		while (IsRunning && !cancellationToken.IsCancellationRequested)
 		{
 			bool wasConnected = false;
-			bool sessionCounted;
 
 			try
 			{
@@ -150,7 +149,6 @@ internal sealed class NamedPipeServer : IDisposable
 
 				// Count this session as active and stop the idle timer if this is the first connection
 				OnClientConnected();
-				sessionCounted = true;
 
 				await Task.Delay(10, cancellationToken).ConfigureAwait(false);
 
@@ -161,10 +159,7 @@ internal sealed class NamedPipeServer : IDisposable
 				finally
 				{
 					// Ensure we decrement the active session count even if session handling throws
-					if (sessionCounted)
-					{
-						OnClientDisconnected();
-					}
+					OnClientDisconnected();
 				}
 			}
 			catch (OperationCanceledException)
@@ -247,7 +242,7 @@ internal sealed class NamedPipeServer : IDisposable
 
 				// Verify the client's elevation status once per session (after the first byte).
 				bool adminVerified = false;
-				bool adminAllowed = false;
+				bool adminAllowed;
 
 				while (pipeServer.IsConnected && !cancellationToken.IsCancellationRequested)
 				{
@@ -465,11 +460,6 @@ internal sealed class NamedPipeServer : IDisposable
 				string error = process.StandardError.ReadToEnd();
 
 				process.WaitForExit();
-
-				if (process.ExitCode is not 0)
-				{
-					return (process.ExitCode, output, error);
-				}
 
 				return (process.ExitCode, output, error);
 			}

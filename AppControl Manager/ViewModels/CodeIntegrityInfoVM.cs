@@ -66,7 +66,7 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 			const string command = @"get root\Microsoft\Windows\DeviceGuard Win32_DeviceGuard";
 
 			// Get the Application Control Status
-			await Task.Run(async () =>
+			await Task.Run(() =>
 			{
 				string result = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, command);
 				List<Dictionary<string, object?>> deserializedData = ComJsonDeserializer.DeserializeInstances(result);

@@ -227,8 +227,8 @@ internal static class Helper
 	/// Converts a version string of up to four "."-separated numeric segments
 	/// into a single 64-bit integer by packing each segment into 16 bits.
 	/// Returns 0 if <paramref name="version"/> is null.
-	/// Throws InvalidOperationException if there are more than four segments,
-	/// or FormatException/OverflowException if any segment is not a valid UInt16.
+	/// Throws InvalidOperationException if there are more than four segments
+	/// or if any segment is not a valid UInt16.
 	/// </summary>
 	internal unsafe static ulong ConvertStringVersionToUInt64(string? version)
 	{
@@ -329,7 +329,7 @@ internal static class Helper
 				// One more segment successfully parsed
 				segmentsParsed++;
 
-				// Advance our pointer to the end of the just‐parsed segment
+				// Advance our pointer to the end of the just-parsed segment
 				ptr = partEnd;
 			}
 		}

@@ -95,7 +95,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 						_ = Directory.CreateDirectory(NewCustomEventViewsPath);
 					}
 
-					foreach (string file in Directory.GetFiles(SourceDirectory))
+					foreach (string file in Directory.EnumerateFiles(SourceDirectory))
 					{
 						File.Copy(file, Path.Join(NewCustomEventViewsPath, Path.GetFileName(file)), true);
 					}
@@ -108,9 +108,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 						return false;
 					}
 
-					string[] sourceFiles = Directory.GetFiles(SourceDirectory);
-
-					foreach (string sourceFile in sourceFiles)
+					foreach (string sourceFile in Directory.EnumerateFiles(SourceDirectory))
 					{
 						string destinationFile = Path.Join(NewCustomEventViewsPath, Path.GetFileName(sourceFile));
 						if (!File.Exists(destinationFile))

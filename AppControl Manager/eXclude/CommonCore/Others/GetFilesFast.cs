@@ -38,7 +38,7 @@ internal static class FileUtility
 		IReadOnlyCollection<string> directoryPaths,
 		IReadOnlyCollection<string> filePaths)
 	{
-		// Normalize each directory‐path into an absolute path ending with a single separator.
+		// Normalize each directory-path into an absolute path ending with a single separator.
 		HashSet<string> normalizedDirs = new(StringComparer.OrdinalIgnoreCase);
 
 		foreach (string dir in directoryPaths)
@@ -71,7 +71,7 @@ internal static class FileUtility
 			}
 			catch (Exception)
 			{
-				// If the file‐string is not a valid path, skip it
+				// If the file-string is not a valid path, skip it
 				continue;
 			}
 
@@ -97,7 +97,7 @@ internal static class FileUtility
 
 			if (!residesUnderExcluded)
 			{
-				// Use the original file‐string (not the full‐path) in the output set
+				// Use the original file-string (not the full-path) in the output set
 				_ = output.Add(file);
 			}
 		}

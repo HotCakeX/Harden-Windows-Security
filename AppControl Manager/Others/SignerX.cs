@@ -31,7 +31,7 @@ namespace AppControlManager.Others;
 /// <param name="certEKU">Lists the enhanced key usages associated with the certificate.</param>
 /// <param name="certOemID">Represents the OEM identifier related to the certificate, if any.</param>
 /// <param name="fileAttribRef">References attributes related to files associated with the signer.</param>
-/// <param name="fileAttrib">Contains a dictionary of file attributes linked to the signer.</param>
+/// <param name="fileAttrib">Contains a list of file attributes linked to the signer.</param>
 /// <param name="signerScope">Defines the scope of the signer within the policy.</param>
 /// <param name="isWHQL">Indicates whether the signer is Windows Hardware Quality Labs certified.</param>
 /// <param name="isAllowed">Specifies if the signer is permitted under the policy.</param>
@@ -42,7 +42,7 @@ internal sealed class SignerX(
 	string certRoot,
 	string? certPublisher,
 	string? certIssuer,
-	List<string>? certEKU,
+	List<string> certEKU,
 	string? certOemID,
 	List<string> fileAttribRef,
 	List<ExFileInfo> fileAttrib,
@@ -57,7 +57,7 @@ internal sealed class SignerX(
 	internal string CertRoot => certRoot;
 	internal string? CertPublisher => certPublisher;
 	internal string? CertIssuer => certIssuer;
-	internal List<string>? CertEKU => certEKU;
+	internal List<string> CertEKU => certEKU;
 	internal string? CertOemID => certOemID;
 	internal List<string> FileAttribRef => fileAttribRef;
 	internal List<ExFileInfo> FileAttrib => fileAttrib;

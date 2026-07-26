@@ -67,17 +67,14 @@ internal static class CustomSerialization
 		XmlElement rulesElement = xmlDoc.CreateElement("Rules", Atlas.SiPolicyNamespace);
 		_ = root.AppendChild(rulesElement);
 
-		if (policy.Rules.Count > 0)
+		foreach (RuleType rule in CollectionsMarshal.AsSpan(policy.Rules))
 		{
-			foreach (RuleType rule in CollectionsMarshal.AsSpan(policy.Rules))
-			{
-				XmlElement ruleElement = xmlDoc.CreateElement("Rule", Atlas.SiPolicyNamespace);
+			XmlElement ruleElement = xmlDoc.CreateElement("Rule", Atlas.SiPolicyNamespace);
 
-				if (!AppendTextElement(xmlDoc, ruleElement, "Option", ConvertOptionType(rule.Item)))
-					continue;
+			if (!AppendTextElement(xmlDoc, ruleElement, "Option", ConvertOptionType(rule.Item)))
+				continue;
 
-				_ = rulesElement.AppendChild(ruleElement);
-			}
+			_ = rulesElement.AppendChild(ruleElement);
 		}
 
 		// EKUs

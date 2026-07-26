@@ -421,7 +421,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 				.GetAwaiter()
 				.GetResult();
 
-		// Extracted the XML content from the markdown string will saved in this variable
+		// Extracted XML content from the markdown string will be saved in this variable
 		string xmlContent = ExtractXmlFromHtml(msftUserModeBlockRulesAsString);
 
 		// Load the XML content into an XmlDocument

@@ -159,7 +159,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 		#region Add EKU
 
-		if (!policyObj.EKUs.Any(e => e.ID == EKUID))
+		if (!policyObj.EKUs.Any(e => string.Equals(e.ID, EKUID, StringComparison.Ordinal)))
 		{
 			policyObj.EKUs.Add(new EKU
 			(
@@ -288,7 +288,7 @@ internal static class NewWHQLFilePublisherLevelRules
 
 		#region Add EKU
 
-		if (!policyObj.EKUs.Any(e => e.ID == EKUID))
+		if (!policyObj.EKUs.Any(e => string.Equals(e.ID, EKUID, StringComparison.Ordinal)))
 		{
 			policyObj.EKUs.Add(new EKU
 			(

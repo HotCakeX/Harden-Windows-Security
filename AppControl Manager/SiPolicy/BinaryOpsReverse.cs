@@ -47,7 +47,7 @@ internal static class BinaryOpsReverse
 		// PolicyTypeID is not needed in the XML, clear it
 		policy.PolicyTypeID = null;
 
-		// Serialize it it because we need to pass the SiPolicy obj to
+		// Serialize it because we need to pass the SiPolicy obj to
 		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
 
 		// Deserialize it because we need to normalize the content such as empty or whitespaces values for File Rules etc.
@@ -305,7 +305,7 @@ internal static class BinaryOpsReverse
 			}
 		}
 
-		// Version‐specific blocks:
+		// Version-specific blocks:
 		if (version >= 3)
 		{
 			uint tag3 = reader.ReadUInt32();

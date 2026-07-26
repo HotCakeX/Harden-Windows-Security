@@ -450,13 +450,7 @@ internal static class CustomDeserialization
 	}
 
 	// Convert a hex string (without delimiters) to a ReadOnlyMemory<byte>.
-	private static ReadOnlyMemory<byte> ConvertHexStringToByteArray(string? hex)
-	{
-		if (string.IsNullOrWhiteSpace(hex))
-			return ReadOnlyMemory<byte>.Empty;
-
-		return Convert.FromHexString(hex);
-	}
+	private static ReadOnlyMemory<byte> ConvertHexStringToByteArray(string? hex) => string.IsNullOrWhiteSpace(hex) ? ReadOnlyMemory<byte>.Empty : Convert.FromHexString(hex);
 
 	internal static readonly FrozenDictionary<string, OptionType> PolicyRuleOptionsActual = new Dictionary<string, OptionType>(StringComparer.Ordinal)
 	{

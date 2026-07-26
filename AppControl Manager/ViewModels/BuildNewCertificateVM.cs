@@ -229,7 +229,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-				// Validate the TimeStamp URl
+				// Validate the TimeStamp URL
 				string? timestampUrl = string.IsNullOrWhiteSpace(SigningTimestampUrl) ? null : SigningTimestampUrl;
 
 				(IEnumerable<string>, int) files = FileUtility.GetFilesFast(

@@ -213,12 +213,10 @@ internal static class BinarySecurityAnalyzer
 			return [];
 		}
 
-		// Get all directories under the base path
-		string[] directories = Directory.GetDirectories(basePath, "*", SearchOption.AllDirectories);
-
 		List<string> fileList = [];
 
-		foreach (string dir in directories)
+		// Get all directories under the base path
+		foreach (string dir in Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories))
 		{
 			BinarySecurityProfile[] scanResult = ScanDirectory(dir);
 
@@ -264,9 +262,7 @@ internal static class BinarySecurityAnalyzer
 			}
 
 			// Get all directories under the base path
-			string[] directories = Directory.GetDirectories(basePath, "*", SearchOption.AllDirectories);
-
-			foreach (string dir in directories)
+			foreach (string dir in Directory.EnumerateDirectories(basePath, "*", SearchOption.AllDirectories))
 			{
 				BinarySecurityProfile[] scanResult = ScanDirectory(dir);
 

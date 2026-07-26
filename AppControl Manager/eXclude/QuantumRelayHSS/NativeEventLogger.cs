@@ -55,16 +55,14 @@ internal static class NativeEventLogger
 					_ => 0x0004                              // EVENTLOG_INFORMATION_TYPE
 				};
 
-				// Single insertion string.
-				string insertion = message ?? string.Empty;
 				IntPtr pInsertion = IntPtr.Zero;
 				IntPtr pArray = IntPtr.Zero;
 
 				try
 				{
-					pInsertion = Marshal.StringToHGlobalUni(insertion);    // LPWSTR
-					pArray = Marshal.AllocHGlobal(IntPtr.Size);            // LPWSTR*
-					Marshal.WriteIntPtr(pArray, pInsertion);               // array[0] = pInsertion
+					pInsertion = Marshal.StringToHGlobalUni(message);    // LPWSTR
+					pArray = Marshal.AllocHGlobal(IntPtr.Size);          // LPWSTR*
+					Marshal.WriteIntPtr(pArray, pInsertion);             // array[0] = pInsertion
 
 					_ = NativeMethods.ReportEventW(
 						hEventLog,
@@ -117,7 +115,7 @@ internal static class NativeEventLogger
 				0x0002 | 0x0004, // KEY_SET_VALUE | KEY_CREATE_SUB_KEY
 				IntPtr.Zero,
 				out hKey,
-				out uint disposition);
+				out _);
 
 			if (rc != 0 || hKey == IntPtr.Zero)
 			{

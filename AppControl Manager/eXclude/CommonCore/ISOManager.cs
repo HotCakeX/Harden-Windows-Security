@@ -1432,14 +1432,12 @@ internal static partial class ISOManager
 		long totalSize = 0;
 		DirectoryInfo d = new(directoryPath);
 
-		FileInfo[] fis = d.GetFiles();
-		foreach (FileInfo fi in fis)
+		foreach (FileInfo fi in d.EnumerateFiles())
 		{
 			totalSize += fi.Length;
 		}
 
-		DirectoryInfo[] dis = d.GetDirectories();
-		foreach (DirectoryInfo di in dis)
+		foreach (DirectoryInfo di in d.EnumerateDirectories())
 		{
 			totalSize += CalculateTotalBytes(di.FullName);
 		}
@@ -1456,17 +1454,15 @@ internal static partial class ISOManager
 			throw new DirectoryNotFoundException($"Source directory not found: {directoryInfo.FullName}");
 		}
 
-		DirectoryInfo[] directories = directoryInfo.GetDirectories();
 		_ = Directory.CreateDirectory(destinationDir);
 
-		FileInfo[] files = directoryInfo.GetFiles();
-		foreach (FileInfo file in files)
+		foreach (FileInfo file in directoryInfo.EnumerateFiles())
 		{
 			string targetFilePath = Path.Join(destinationDir, file.Name);
 			currentCopiedBytes = CopyFileWithProgress(file.FullName, targetFilePath, totalBytesToCopy, currentCopiedBytes, progress);
 		}
 
-		foreach (DirectoryInfo subDir in directories)
+		foreach (DirectoryInfo subDir in directoryInfo.EnumerateDirectories())
 		{
 			string newDestinationDir = Path.Join(destinationDir, subDir.Name);
 			currentCopiedBytes = CopyDirectoryWithProgress(subDir.FullName, newDestinationDir, totalBytesToCopy, currentCopiedBytes, progress);
@@ -1484,17 +1480,15 @@ internal static partial class ISOManager
 			throw new DirectoryNotFoundException($"Source directory not found: {directoryInfo.FullName}");
 		}
 
-		DirectoryInfo[] directories = directoryInfo.GetDirectories();
 		_ = Directory.CreateDirectory(destinationDir);
 
-		FileInfo[] files = directoryInfo.GetFiles();
-		foreach (FileInfo file in files)
+		foreach (FileInfo file in directoryInfo.EnumerateFiles())
 		{
 			string targetFilePath = Path.Join(destinationDir, file.Name);
 			currentCopiedBytes = CopyFileWithProgress(file.FullName, targetFilePath, totalBytesToCopy, currentCopiedBytes, progress);
 		}
 
-		foreach (DirectoryInfo subDir in directories)
+		foreach (DirectoryInfo subDir in directoryInfo.EnumerateDirectories())
 		{
 			// Exclude the "sources" folder completely when copying to the FAT32 partition
 			if (string.Equals(subDir.Name, "sources", StringComparison.OrdinalIgnoreCase))
@@ -1563,11 +1557,9 @@ internal static partial class ISOManager
 			throw new DirectoryNotFoundException($"Source directory not found: {directoryInfo.FullName}");
 		}
 
-		DirectoryInfo[] directories = directoryInfo.GetDirectories();
 		_ = Directory.CreateDirectory(destinationDir);
 
-		FileInfo[] files = directoryInfo.GetFiles();
-		foreach (FileInfo file in files)
+		foreach (FileInfo file in directoryInfo.EnumerateFiles())
 		{
 			string targetFilePath = Path.Join(destinationDir, file.Name);
 
@@ -1578,7 +1570,7 @@ internal static partial class ISOManager
 			_ = file.CopyTo(targetFilePath, overwrite: true);
 		}
 
-		foreach (DirectoryInfo subDir in directories)
+		foreach (DirectoryInfo subDir in directoryInfo.EnumerateDirectories())
 		{
 			string newDestinationDir = Path.Join(destinationDir, subDir.Name);
 			CopyDirectory(subDir.FullName, newDestinationDir);
@@ -1594,11 +1586,9 @@ internal static partial class ISOManager
 			throw new DirectoryNotFoundException($"Source directory not found: {directoryInfo.FullName}");
 		}
 
-		DirectoryInfo[] directories = directoryInfo.GetDirectories();
 		_ = Directory.CreateDirectory(destinationDir);
 
-		FileInfo[] files = directoryInfo.GetFiles();
-		foreach (FileInfo file in files)
+		foreach (FileInfo file in directoryInfo.EnumerateFiles())
 		{
 			string targetFilePath = Path.Join(destinationDir, file.Name);
 
@@ -1608,7 +1598,7 @@ internal static partial class ISOManager
 			_ = file.CopyTo(targetFilePath, overwrite: true);
 		}
 
-		foreach (DirectoryInfo subDir in directories)
+		foreach (DirectoryInfo subDir in directoryInfo.EnumerateDirectories())
 		{
 			// Exclude the "sources" folder completely when copying to the FAT32 partition
 			if (string.Equals(subDir.Name, "sources", StringComparison.OrdinalIgnoreCase))

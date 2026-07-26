@@ -47,9 +47,8 @@ public sealed partial class App : Application
 	/// <param name="args">Details about the launch request and process.</param>
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 	{
-		// Ephemeral activation context used only during this launch session
+		// Ephemeral activation path used only during this launch session
 		string? _activationFilePath = null;
-		bool _activationIsFileActivation = false;
 
 		// CLI state carried across elevation
 		int? _cliPresetIndex = null;
@@ -380,7 +379,6 @@ public sealed partial class App : Application
 
 									// Store ephemeral activation context
 									_activationFilePath = item.Path;
-									_activationIsFileActivation = true;
 
 									break;
 								}
@@ -560,29 +558,7 @@ public sealed partial class App : Application
 		{
 			await ViewModelProvider.NavigationService.Navigate(typeof(Pages.UpdatePage), null);
 		}
-		// File activation path (opened via File Explorer or protocol that yielded File activation)
-		else if (_activationIsFileActivation && !string.IsNullOrWhiteSpace(_activationFilePath))
-		{
-			Logger.Write(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("FileActivationLaunchMessage"), _activationFilePath));
-
-			try
-			{
-				await ViewModelProvider.GroupPolicyEditorVM.OpenInGroupPolicyEditor(_activationFilePath);
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-				// Continue doing the normal navigation if there was a problem
-				await InitialNav();
-			}
-			finally
-			{
-				// Clear the file activated launch args after it's been used
-				_activationFilePath = null;
-				_activationIsFileActivation = false;
-			}
-		}
-		// CLI handoff path: elevated relaunch or direct CLI launch with --file=
+		// File activation (opened via File Explorer or protocol that yielded File activation) or CLI handoff path
 		else if (!string.IsNullOrWhiteSpace(_activationFilePath))
 		{
 			Logger.Write(string.Format(CultureInfo.InvariantCulture, Atlas.GetStr("FileActivationLaunchMessage"), _activationFilePath));
@@ -596,11 +572,6 @@ public sealed partial class App : Application
 				Logger.Write(ex);
 				// Continue doing the normal navigation if there was a problem
 				await InitialNav();
-			}
-			finally
-			{
-				// Clear after use
-				_activationFilePath = null;
 			}
 		}
 		// Navigation restoration path or user asking for specific page to launch.

@@ -1,3 +1,5 @@
 * The Backup and restore page is now accessible when running unelevated.
 
 * Updated dependencies to the latest version.
+
+* Made various performance improvements to the app.

@@ -475,11 +475,9 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		}
 	}
 
-	private static CubicBezierEasingFunction CreateEase(Compositor compositor)
-	{
-		// Slight ease for a pleasant pop effect
-		return compositor.CreateCubicBezierEasingFunction(new Vector2(0.2f, 0.0f), new Vector2(0.2f, 1.0f));
-	}
+	// Slight ease for a pleasant pop effect
+	private static CubicBezierEasingFunction CreateEase(Compositor compositor) =>
+		 compositor.CreateCubicBezierEasingFunction(new Vector2(0.2f, 0.0f), new Vector2(0.2f, 1.0f));
 
 	private void StartScaleAnimation(Visual visual, float targetScale)
 	{

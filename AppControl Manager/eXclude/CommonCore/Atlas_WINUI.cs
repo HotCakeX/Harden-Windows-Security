@@ -20,8 +20,8 @@ using System.Threading;
 using System.Xml;
 using Microsoft.UI.Dispatching;
 using Microsoft.Windows.ApplicationModel.Resources;
+using Microsoft.Windows.Storage;
 using Windows.ApplicationModel;
-using Windows.Storage;
 
 namespace CommonCore;
 
@@ -123,7 +123,7 @@ internal static partial class Atlas
 	/// Initializes the app settings class.
 	/// </summary>
 	private static readonly Lazy<AppSettings.Main> _appSettings = new(() =>
-		new AppSettings.Main(ApplicationData.Current.LocalSettings), LazyThreadSafetyMode.PublicationOnly);
+		new AppSettings.Main(ApplicationData.GetDefault().LocalSettings), LazyThreadSafetyMode.PublicationOnly);
 
 	/// <summary>
 	/// The application settings. Any references (instance or static) throughout the app to App settings use this property.

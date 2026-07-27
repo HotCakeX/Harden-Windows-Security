@@ -473,24 +473,21 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				// Collect all of the ASLR-Incompatible files.
 				HashSet<string> results = BinarySecurityAnalyzer.GetASLRIncompatibleExes();
 
-				if (results.Count > 0)
+				foreach (string item in results)
 				{
-					foreach (string item in results)
-					{
-						// Disable the Mandatory ASLR for the PE
-						Result addResult = AddMitigationsForProcess(
-						   item,
-						   [MitigationOptions.ForceRelocateImages],
-						   null,
-						   null,
-						   "on",
-						   false,
-						   false);
+					// Disable the Mandatory ASLR for the PE
+					Result addResult = AddMitigationsForProcess(
+					   item,
+					   [MitigationOptions.ForceRelocateImages],
+					   null,
+					   null,
+					   "on",
+					   false,
+					   false);
 
-						if (!addResult.IsSuccess)
-						{
-							throw new InvalidOperationException(addResult.Error);
-						}
+					if (!addResult.IsSuccess)
+					{
+						throw new InvalidOperationException(addResult.Error);
 					}
 				}
 			}),

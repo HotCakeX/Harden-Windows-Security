@@ -323,9 +323,9 @@ internal sealed partial class WindowsUpdateVM : MUnitListViewModelBase
 
 	private static List<WindowsUpdateItem> GetSelectedUpdateItems(IList<object> selectedItems)
 	{
-		List<WindowsUpdateItem> selectedUpdates = [];
+		List<WindowsUpdateItem> selectedUpdates = new(selectedItems.Count);
 
-		foreach (object? selectedItem in selectedItems)
+		foreach (object selectedItem in selectedItems)
 		{
 			if (selectedItem is WindowsUpdateItem update)
 			{

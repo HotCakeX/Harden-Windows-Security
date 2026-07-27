@@ -137,168 +137,165 @@ public sealed partial class App : Application
 			return string.Join(' ', parts);
 		}
 
-		void ParseArgs(string[]? ArgsLines)
+		void ParseArgs(string[] ArgsLines)
 		{
-			if (ArgsLines is not null)
+			// Detect console request and attach/allocate a console.
+			Logger.CliRequested = ArgsLines.Any(a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
+			if (Logger.CliRequested)
 			{
-				// Detect console request and attach/allocate a console.
-				Logger.CliRequested = ArgsLines.Any(a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
-				if (Logger.CliRequested)
-				{
-					ConsoleHelper.AttachOrAllocate();
-					Logger.Write("Harden System Security - CLI mode");
+				ConsoleHelper.AttachOrAllocate();
+				Logger.Write("Harden System Security - CLI mode");
 
-					// Extract a single-token action right after --cli if provided
-					int cliIndex = Array.FindIndex(ArgsLines, a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
-					if (cliIndex >= 0 && cliIndex + 1 < ArgsLines.Length)
+				// Extract a single-token action right after --cli if provided
+				int cliIndex = Array.FindIndex(ArgsLines, a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
+				if (cliIndex >= 0 && cliIndex + 1 < ArgsLines.Length)
+				{
+					string possibleAction = ArgsLines[cliIndex + 1];
+					// Action token must not be another flag (must not begin with "--")
+					if (!string.IsNullOrWhiteSpace(possibleAction) && !possibleAction.StartsWith("--", StringComparison.Ordinal))
 					{
-						string possibleAction = ArgsLines[cliIndex + 1];
-						// Action token must not be another flag (must not begin with "--")
-						if (!string.IsNullOrWhiteSpace(possibleAction) && !possibleAction.StartsWith("--", StringComparison.Ordinal))
+						_cliAction = possibleAction;
+						// Elevation required for both actions
+						if (string.Equals(_cliAction, "ExportReport", StringComparison.OrdinalIgnoreCase) ||
+							string.Equals(_cliAction, "ImportReport", StringComparison.OrdinalIgnoreCase))
 						{
-							_cliAction = possibleAction;
-							// Elevation required for both actions
-							if (string.Equals(_cliAction, "ExportReport", StringComparison.OrdinalIgnoreCase) ||
-								string.Equals(_cliAction, "ImportReport", StringComparison.OrdinalIgnoreCase))
-							{
-								requireAdminPrivilege = true;
-							}
+							requireAdminPrivilege = true;
 						}
 					}
 				}
+			}
 
-				// Parse CLI: preset index (0,1,2)
-				string? presetArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--preset=", StringComparison.OrdinalIgnoreCase));
-				if (presetArg is not null)
+			// Parse CLI: preset index (0,1,2)
+			string? presetArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--preset=", StringComparison.OrdinalIgnoreCase));
+			if (presetArg is not null)
+			{
+				string raw = presetArg["--preset=".Length..].Trim();
+				if (int.TryParse(raw, out int idx) && idx >= 0 && idx <= 2)
 				{
-					string raw = presetArg["--preset=".Length..].Trim();
-					if (int.TryParse(raw, out int idx) && idx >= 0 && idx <= 2)
+					_cliPresetIndex = idx;
+					requireAdminPrivilege = true;
+				}
+				else
+				{
+					Logger.Write("--preset must be 0 (Basic), 1 (Recommended), or 2 (Complete).");
+					Environment.Exit(2);
+					return;
+				}
+			}
+
+			// Parse CLI: device usage intent
+			string? intentArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--intent=", StringComparison.OrdinalIgnoreCase));
+			if (intentArg is not null)
+			{
+				string rawIntent = intentArg["--intent=".Length..].Trim();
+				if (Enum.TryParse(rawIntent, true, out Intent parsedIntent))
+				{
+					_cliDeviceIntent = parsedIntent;
+					requireAdminPrivilege = true;
+				}
+				else
+				{
+					Logger.Write("Error: --intent value was not valid.");
+					Environment.Exit(2);
+					return;
+				}
+			}
+
+			string? opArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--op=", StringComparison.OrdinalIgnoreCase));
+			if (opArg is not null)
+			{
+				// Store raw operation text; validation is done via enum parsing below.
+				_cliOperation = opArg["--op=".Length..].Trim();
+			}
+
+			// Look for our key
+			string? fileArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
+
+			if (fileArg is not null)
+			{
+				string filePath = fileArg["--file=".Length..].Trim('"');
+
+				if (!string.IsNullOrWhiteSpace(filePath))
+				{
+					if (File.Exists(filePath))
 					{
-						_cliPresetIndex = idx;
-						requireAdminPrivilege = true;
+						Logger.Write($"Parsed File: {filePath}");
+						_activationFilePath = filePath;
+
+						// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+						requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true);
 					}
 					else
 					{
-						Logger.Write("--preset must be 0 (Basic), 1 (Recommended), or 2 (Complete).");
-						Environment.Exit(2);
-						return;
+						Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
 					}
 				}
+			}
 
-				// Parse CLI: device usage intent
-				string? intentArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--intent=", StringComparison.OrdinalIgnoreCase));
-				if (intentArg is not null)
+			// Parse navigation restoration arguments
+			string? navTagArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--navtag=", StringComparison.OrdinalIgnoreCase));
+			if (navTagArg is not null)
+			{
+				string rawTag = navTagArg["--navtag=".Length..].Trim();
+				if (!string.IsNullOrWhiteSpace(rawTag))
 				{
-					string rawIntent = intentArg["--intent=".Length..].Trim();
-					if (Enum.TryParse(rawIntent, true, out Intent parsedIntent))
+					_cliNavTag = rawTag;
+					if (!ViewModelProvider.NavigationService.mainWindowVM.NavigationPageToItemContentMap.TryGetValue(_cliNavTag, out PageTypeToNavTo))
 					{
-						_cliDeviceIntent = parsedIntent;
-						requireAdminPrivilege = true;
+						Logger.Write($"{rawTag} is not a valid page tag.");
 					}
 					else
 					{
-						Logger.Write("Error: --intent value was not valid.");
-						Environment.Exit(2);
-						return;
-					}
-				}
-
-				string? opArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--op=", StringComparison.OrdinalIgnoreCase));
-				if (opArg is not null)
-				{
-					// Store raw operation text; validation is done via enum parsing below.
-					_cliOperation = opArg["--op=".Length..].Trim();
-				}
-
-				// Look for our key
-				string? fileArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
-
-				if (fileArg is not null)
-				{
-					string filePath = fileArg["--file=".Length..].Trim('"');
-
-					if (!string.IsNullOrWhiteSpace(filePath))
-					{
-						if (File.Exists(filePath))
+						// If the page requires elevation, we must ask for it.
+						if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
 						{
-							Logger.Write($"Parsed File: {filePath}");
-							_activationFilePath = filePath;
-
-							// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-							requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true);
-						}
-						else
-						{
-							Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
+							requireAdminPrivilege = true;
 						}
 					}
 				}
+			}
 
-				// Parse navigation restoration arguments
-				string? navTagArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--navtag=", StringComparison.OrdinalIgnoreCase));
-				if (navTagArg is not null)
+			// Parse import/export specific arguments
+			string? inArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--in=", StringComparison.OrdinalIgnoreCase));
+			if (inArg is not null)
+			{
+				string rawIn = inArg["--in=".Length..].Trim().Trim('"');
+				if (!string.IsNullOrWhiteSpace(rawIn))
 				{
-					string rawTag = navTagArg["--navtag=".Length..].Trim();
-					if (!string.IsNullOrWhiteSpace(rawTag))
-					{
-						_cliNavTag = rawTag;
-						if (!ViewModelProvider.NavigationService.mainWindowVM.NavigationPageToItemContentMap.TryGetValue(_cliNavTag, out PageTypeToNavTo))
-						{
-							Logger.Write($"{rawTag} is not a valid page tag.");
-						}
-						else
-						{
-							// If the page requires elevation, we must ask for it.
-							if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
-							{
-								requireAdminPrivilege = true;
-							}
-						}
-					}
+					_cliImportPath = rawIn;
+					// Elevation required regardless of validation specifics
+					requireAdminPrivilege = true;
 				}
+			}
 
-				// Parse import/export specific arguments
-				string? inArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--in=", StringComparison.OrdinalIgnoreCase));
-				if (inArg is not null)
+			string? outArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--out=", StringComparison.OrdinalIgnoreCase));
+			if (outArg is not null)
+			{
+				string rawOut = outArg["--out=".Length..].Trim().Trim('"');
+				if (!string.IsNullOrWhiteSpace(rawOut))
 				{
-					string rawIn = inArg["--in=".Length..].Trim().Trim('"');
-					if (!string.IsNullOrWhiteSpace(rawIn))
-					{
-						_cliImportPath = rawIn;
-						// Elevation required regardless of validation specifics
-						requireAdminPrivilege = true;
-					}
+					_cliExportPath = rawOut;
+					requireAdminPrivilege = true;
 				}
+			}
 
-				string? outArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--out=", StringComparison.OrdinalIgnoreCase));
-				if (outArg is not null)
+			string? modeArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--mode=", StringComparison.OrdinalIgnoreCase));
+			if (modeArg is not null)
+			{
+				string rawMode = modeArg["--mode=".Length..].Trim();
+				if (string.Equals(rawMode, "full", StringComparison.OrdinalIgnoreCase))
 				{
-					string rawOut = outArg["--out=".Length..].Trim().Trim('"');
-					if (!string.IsNullOrWhiteSpace(rawOut))
-					{
-						_cliExportPath = rawOut;
-						requireAdminPrivilege = true;
-					}
+					_cliModeFull = true;
 				}
-
-				string? modeArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--mode=", StringComparison.OrdinalIgnoreCase));
-				if (modeArg is not null)
+				else if (string.Equals(rawMode, "partial", StringComparison.OrdinalIgnoreCase))
 				{
-					string rawMode = modeArg["--mode=".Length..].Trim();
-					if (string.Equals(rawMode, "full", StringComparison.OrdinalIgnoreCase))
-					{
-						_cliModeFull = true;
-					}
-					else if (string.Equals(rawMode, "partial", StringComparison.OrdinalIgnoreCase))
-					{
-						_cliModeFull = false;
-					}
-					else
-					{
-						Logger.Write("Error: --mode must be 'full' or 'partial'.");
-						Environment.Exit(2);
-						return;
-					}
+					_cliModeFull = false;
+				}
+				else
+				{
+					Logger.Write("Error: --mode must be 'full' or 'partial'.");
+					Environment.Exit(2);
+					return;
 				}
 			}
 		}

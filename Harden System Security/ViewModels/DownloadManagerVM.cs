@@ -481,7 +481,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	// Download Manager persistence overview:
 	//
 	// 1. The in-app history list is saved to DownloadManagerHistory.json in the app-local data folder
-	//    (ApplicationData.Current.LocalFolder). Each entry stores the user-facing metadata that must
+	//    (Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalPath). Each entry stores the user-facing metadata that must
 	//    survive app restarts, such as the original URL, display name, selected destination directory,
 	//    current state, byte counters, timestamps, and the last effective connection count the runtime used.
 	//
@@ -489,7 +489,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	//    - <filename>.hssdownload.part : the partial payload stored in the same target directory and named
 	//      from the final file path, so while a download is in progress the .part file exists there and is
 	//      later renamed in-place to the final name without extra copies.
-	//    - a checkpoint JSON stored under ApplicationData.Current.LocalFolder\DownloadManagerCheckpoints,
+	//    - a checkpoint JSON stored under Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalPath\DownloadManagerCheckpoints,
 	//      keyed by the final file path. That JSON contains the segment map, total size, range-support
 	//      information, and the file paths required to recover the download after shutdown, crashes, or
 	//      sudden power loss without cluttering the user's Downloads folder.
@@ -670,7 +670,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		PooledConnectionLifetime = TimeSpan.FromMinutes(15)
 	});
 
-	private static readonly string _checkpointDirectoryPath = Path.Join(ApplicationData.Current.LocalFolder.Path, "DownloadManagerCheckpoints");
+	private static readonly string _checkpointDirectoryPath = Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalPath, "DownloadManagerCheckpoints");
 
 	internal static readonly HashSet<string> PictureExtensions = new(StringComparer.OrdinalIgnoreCase) { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp", ".tif", ".tiff" };
 
@@ -721,7 +721,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	private readonly Dictionary<DownloadManagerItem, DownloadRuntimeState> _activeDownloadRuntimes = [];
 	private readonly List<DownloadManagerItem> _selectedDownloadItems = [];
 	private readonly ListViewHelper.SortState _sortState = new();
-	private readonly string _historyFilePath = Path.Join(ApplicationData.Current.LocalFolder.Path, "DownloadManagerHistory.json");
+	private readonly string _historyFilePath = Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalPath, "DownloadManagerHistory.json");
 	private FrameworkElement? _downloadManagerPresetsSectionHeader;
 	private int _activeDownloadCount;
 	private bool _completionActionTriggered;
@@ -1668,7 +1668,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		{
 			process = Process.Start(new ProcessStartInfo
 			{
-				FileName = Directory.CreateDirectory(ApplicationData.Current.LocalFolder.Path).FullName,
+				FileName = Directory.CreateDirectory(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalPath).FullName,
 				UseShellExecute = true
 			});
 		}

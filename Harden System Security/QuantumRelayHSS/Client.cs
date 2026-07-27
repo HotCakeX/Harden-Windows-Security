@@ -34,7 +34,7 @@ internal static class Client
 	/// <param name="command">Executable/command to run.</param>
 	/// <param name="arguments">Optional arguments.</param>
 	internal static string RunCommand(string command, string? arguments) =>
-		ExecuteRequest((writer) =>
+		ExecuteRequest(writer =>
 		{
 			writer.Write((byte)RequestCommand.RunProcess);
 			CommonCore.QuantumRelay.Helpers.WriteString(writer, command);
@@ -48,7 +48,7 @@ internal static class Client
 	/// <param name="destination">Destination file path.</param>
 	/// <param name="overwrite">Whether to overwrite the destination if it exists.</param>
 	internal static void CopyFile(string source, string destination, bool overwrite) =>
-		ExecuteRequest((writer) =>
+		ExecuteRequest(writer =>
 		{
 			writer.Write((byte)RequestCommand.CopyFile);
 			CommonCore.QuantumRelay.Helpers.WriteString(writer, source);
@@ -61,7 +61,7 @@ internal static class Client
 	/// </summary>
 	/// <param name="path">File path to delete.</param>
 	internal static void DeleteFile(string path) =>
-		ExecuteRequest((writer) =>
+		ExecuteRequest(writer =>
 		{
 			writer.Write((byte)RequestCommand.DeleteFile);
 			CommonCore.QuantumRelay.Helpers.WriteString(writer, path);

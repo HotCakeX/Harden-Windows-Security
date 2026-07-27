@@ -743,7 +743,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	#region Apply
 
 	/// <summary>
-	/// Applies the selected policies from to system.
+	/// Applies the selected policies to system.
 	/// </summary>
 	internal async void ApplySelectedPolicies_Click()
 	{

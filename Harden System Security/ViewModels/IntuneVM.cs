@@ -176,11 +176,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	/// <summary>
 	/// When online features are enabled, this method will enable the relevant buttons and perform extra necessary actions
 	/// </summary>
-	private void UpdateButtonsStates(bool on)
-	{
-		// Enable the options if a valid value is set as Active Account
-		AreOnlineFeaturesEnabled = on;
-	}
+	private void UpdateButtonsStates(bool on) => AreOnlineFeaturesEnabled = on;
 
 	/// <summary>
 	/// Event handler for the Select Groups button.
@@ -403,7 +399,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		if (lv is null || lv.SelectedItems.Count == 0)
 			return;
 
-		CommonCore.Others.ListViewHelper.ConvertRowToText<DeviceManagementConfigurationPolicy>(lv.SelectedItems.Cast<object>().ToList(), DeviceManagementConfigurationPolicyPropertyMappings);
+		CommonCore.Others.ListViewHelper.ConvertRowToText<DeviceManagementConfigurationPolicy>(lv.SelectedItems, DeviceManagementConfigurationPolicyPropertyMappings);
 	}
 
 	/// <summary>

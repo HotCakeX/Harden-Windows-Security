@@ -719,7 +719,7 @@
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
 
-                                    <MenuFlyoutItem x:Uid="ExportSelectedRows" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ExportSelectedDataToJSON_Click}">
+                                    <MenuFlyoutItem x:Uid="ExportSelectedRows" Click="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ExportSelectedDataToJSON}">
                                         <MenuFlyoutItem.KeyboardAccelerators>
                                             <KeyboardAccelerator Key="E" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.GroupPolicyEditorVM.ExportSelectedDataToJSON_Invoke}"/>
                                         </MenuFlyoutItem.KeyboardAccelerators>

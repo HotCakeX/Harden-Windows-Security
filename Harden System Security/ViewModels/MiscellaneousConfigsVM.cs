@@ -331,7 +331,7 @@ internal sealed partial class MiscellaneousConfigsVM : MUnitListViewModelBase
 					{
 						try
 						{
-							uint SERVICE_QUERY_CONFIG = 0x0001;
+							const uint SERVICE_QUERY_CONFIG = 0x0001;
 							IntPtr hService = NativeMethods.OpenServiceW(scManager, "WebClient", SERVICE_QUERY_CONFIG | NativeMethods.SERVICE_QUERY_STATUS);
 							if (hService != IntPtr.Zero)
 							{

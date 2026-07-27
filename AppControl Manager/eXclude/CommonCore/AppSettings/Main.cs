@@ -23,7 +23,7 @@ using AppControlManager;
 using System.Threading;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
-using Windows.Storage;
+using Microsoft.Windows.Storage;
 
 namespace CommonCore.AppSettings;
 
@@ -49,7 +49,8 @@ internal sealed partial class Main : ViewModelBase
 	{
 	}
 
-	internal static Main CreateDefaultSettingsSnapshot() => new(ApplicationData.Current.LocalSettings, false);
+	// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/applicationdata/ApplicationData.md
+	internal static Main CreateDefaultSettingsSnapshot() => new(ApplicationData.GetDefault().LocalSettings, false);
 
 	private Main(ApplicationDataContainer LocalSettings, bool loadPersistedValues)
 	{

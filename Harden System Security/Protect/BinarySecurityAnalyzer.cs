@@ -192,12 +192,6 @@ internal static class BinarySecurityAnalyzer
 			}
 		}
 
-		// Return if no files were found
-		if (fileList.Count is 0)
-		{
-			return [];
-		}
-
 		return fileList;
 	}
 
@@ -228,12 +222,6 @@ internal static class BinarySecurityAnalyzer
 					fileList.Add(item.BinaryPath);
 				}
 			}
-		}
-
-		// Return if no files were found
-		if (fileList.Count is 0)
-		{
-			return [];
 		}
 
 		return fileList;
@@ -291,6 +279,6 @@ internal static class BinarySecurityAnalyzer
 		foreach (string item in CollectionsMarshal.AsSpan(results))
 			Logger.Write(item);
 
-		return results.ToHashSet();
+		return results.ToHashSet(StringComparer.OrdinalIgnoreCase);
 	}
 }

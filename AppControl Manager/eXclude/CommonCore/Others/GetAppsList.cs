@@ -29,8 +29,8 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.Windows.Storage;
 using Windows.ApplicationModel;
-using Windows.Management.Core;
 using Windows.Management.Deployment;
 
 namespace CommonCore.Others;
@@ -634,25 +634,24 @@ internal static class GetAppsList
 	}
 
 	/// <summary>
-	/// Gets the total size of the package data folders that are exposed through ApplicationDataManager.
+	/// Gets the total size of the package data folders that are exposed through ApplicationData.
 	/// </summary>
 	private static long? GetAppDataSizeInBytes(string packageFamilyName)
 	{
 		try
 		{
-			using Windows.Storage.ApplicationData applicationData = ApplicationDataManager.CreateForPackageFamily(packageFamilyName);
+			using ApplicationData applicationData = ApplicationData.GetForPackageFamily(packageFamilyName);
 
-			ReadOnlySpan<string?> appsRelatedDirectories = [
-				applicationData.LocalFolder?.Path,
-				applicationData.LocalCacheFolder?.Path,
-				applicationData.RoamingFolder?.Path,
-				applicationData.SharedLocalFolder?.Path,
-				applicationData.TemporaryFolder?.Path
+			ReadOnlySpan<string> appsRelatedDirectories = [
+				applicationData.LocalPath,
+				applicationData.LocalCachePath,
+				applicationData.SharedLocalPath,
+				applicationData.TemporaryPath
 				];
 
 			long totalSizeInBytes = 0;
 
-			foreach (string? folderPath in appsRelatedDirectories)
+			foreach (string folderPath in appsRelatedDirectories)
 			{
 				long? currentFolderSize = GetDirectorySizeInBytes(folderPath);
 				if (!currentFolderSize.HasValue)
@@ -683,7 +682,7 @@ internal static class GetAppsList
 	/// <summary>
 	/// Recursively computes the size of a directory while ignoring inaccessible entries and reparse points.
 	/// </summary>
-	private static long? GetDirectorySizeInBytes(string? directoryPath)
+	private static long? GetDirectorySizeInBytes(string directoryPath)
 	{
 		if (!Directory.Exists(directoryPath))
 		{

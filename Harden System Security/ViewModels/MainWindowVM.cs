@@ -931,7 +931,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 				{
 					Text = install
 						? "This will download the official DoD/DoW PKI PKCS#7 certificate bundle directly from DoD Cyber Exchange and install them into the local machine certificate stores."
-						: "This will download the official DoD/Dow PKI PKCS#7 certificate bundle directly from DoD Cyber Exchange and remove matching CA certificates from the local machine certificate stores.",
+						: "This will download the official DoD/DoW PKI PKCS#7 certificate bundle directly from DoD Cyber Exchange and remove matching CA certificates from the local machine certificate stores.",
 					TextWrapping = TextWrapping.Wrap
 				},
 				PrimaryButtonText = Atlas.GetStr("Continue"),

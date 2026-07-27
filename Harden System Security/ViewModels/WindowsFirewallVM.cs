@@ -411,13 +411,13 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 
 			await Task.Run(() =>
 			{
+				string action = FirewallActionBlock ? "block" : "allow";
+				string store = FirewallStoreGPO ? "localhost" : "PersistentStore";
+
 				foreach (string file in SelectedFiles)
 				{
 					string ruleNameInbound = $"{(FirewallActionBlock ? "Blocking" : "Allowing")}-{file}-Inbound";
 					string ruleNameOutbound = $"{(FirewallActionBlock ? "Blocking" : "Allowing")}-{file}-Outbound";
-
-					string action = FirewallActionBlock ? "block" : "allow";
-					string store = FirewallStoreGPO ? "localhost" : "PersistentStore";
 
 					MainInfoBar.WriteInfo(string.Format(Atlas.GetStr("WindowsFirewallCreateRuleForMessage"), file));
 
@@ -559,13 +559,11 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 			// Clear current data so repeated retrieval doesn't duplicate rows.
 			ClearFirewallRulesListInternal();
 
-			List<FirewallRule>? firewallRules = null;
-
-			await Task.Run(() =>
+			List<FirewallRule>? firewallRules = await Task.Run(static () =>
 			{
 				string rulesOutput = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "firewallprogramlist");
 
-				firewallRules = JsonSerializer.Deserialize(rulesOutput, FirewallRuleJSONContext.Default.ListFirewallRule);
+				return JsonSerializer.Deserialize(rulesOutput, FirewallRuleJSONContext.Default.ListFirewallRule);
 			});
 
 			if (firewallRules is not null)
@@ -591,10 +589,8 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// <summary>
 	/// Deletes a Firewall rule using rule Name.
 	/// </summary>
-	private static void DeleteFirewallRule(string ruleName)
-	{
+	private static void DeleteFirewallRule(string ruleName) =>
 		Logger.Write(QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"""firewalldelete "{ruleName}" """));
-	}
 
 	#region Search
 

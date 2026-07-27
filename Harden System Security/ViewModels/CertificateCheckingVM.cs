@@ -707,14 +707,10 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Computes uppercase hex SHA256 of the certificate's raw data. Returns empty string if cert is null.
+	/// Computes uppercase hex SHA256 of the certificate's raw data.
 	/// </summary>
-	private static string ComputeCertSha256Hex(X509Certificate2? cert)
+	private static string ComputeCertSha256Hex(X509Certificate2 cert)
 	{
-		if (cert is null)
-		{
-			return string.Empty;
-		}
 		byte[] hash = System.Security.Cryptography.SHA256.HashData(cert.RawData);
 		return Convert.ToHexString(hash);
 	}

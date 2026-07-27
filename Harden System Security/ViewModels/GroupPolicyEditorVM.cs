@@ -87,7 +87,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 		foreach (RegistryPolicyEntry item in Policies)
 		{
 			maxWidth1 = ListViewHelper.MeasureText(item.KeyName, maxWidth1);
-			maxWidth2 = ListViewHelper.MeasureText(item.ValueName.ToString(), maxWidth2);
+			maxWidth2 = ListViewHelper.MeasureText(item.ValueName, maxWidth2);
 			maxWidth3 = ListViewHelper.MeasureText(item.ValueDisplay, maxWidth3);
 			maxWidth4 = ListViewHelper.MeasureText(item.Category.ToString(), maxWidth4);
 			maxWidth5 = ListViewHelper.MeasureText(item.SubCategory.ToString(), maxWidth5);
@@ -799,15 +799,13 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 	#region Export
 
-	internal async void ExportSelectedDataToJSON_Invoke(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender, Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+	internal void ExportSelectedDataToJSON_Invoke(Microsoft.UI.Xaml.Input.KeyboardAccelerator sender, Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
 	{
-		await ExportSelectedDataToJSON();
+		ExportSelectedDataToJSON();
 		args.Handled = true;
 	}
 
-	internal async void ExportSelectedDataToJSON_Click() => await ExportSelectedDataToJSON();
-
-	private async Task ExportSelectedDataToJSON()
+	internal void ExportSelectedDataToJSON()
 	{
 		try
 		{
@@ -1138,7 +1136,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 					// Retrieve friendly names
 					AdmxAdmlParser.PopulateFriendlyNames(policy.Entries);
 
-					string? saveLoc = OutputDirForJsonFilesAfterConversion is null
+					string saveLoc = OutputDirForJsonFilesAfterConversion is null
 						? Path.Join(
 							Path.GetDirectoryName(item) ?? Atlas.SystemDrive,
 							Path.GetFileNameWithoutExtension(item) + ".json")

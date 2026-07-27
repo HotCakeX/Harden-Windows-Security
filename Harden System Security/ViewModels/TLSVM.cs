@@ -44,7 +44,7 @@ internal sealed partial class TLSVM : MUnitListViewModelBase
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
-		new(() =>
+		new(static () =>
 		{
 
 			#region One-time global registrations for this category - Registers specialized strategies for specific policies.

@@ -112,7 +112,7 @@ internal static class MUnitCatalog
 		_pagesListFromSearch.Clear();
 
 		// Normalize the query once
-		ReadOnlySpan<char> needle = query.Trim().ToLowerInvariant();
+		ReadOnlySpan<char> needle = query.AsSpan().Trim();
 
 		// Benchmarks show converting these Lists to Span first and then using For loop on them is faster than using For loop directly on Lists.
 		ReadOnlySpan<string> lowerNamesSpan = CollectionsMarshal.AsSpan(LowerNames);
@@ -120,7 +120,7 @@ internal static class MUnitCatalog
 
 		for (int i = 0; i < lowerNamesSpan.Length; i++)
 		{
-			if (lowerNamesSpan[i].IndexOf(needle) >= 0)
+			if (lowerNamesSpan[i].IndexOf(needle, StringComparison.OrdinalIgnoreCase) >= 0)
 			{
 				Type candidatePageType = PageByMUnitId[nameIdsSpan[i]];
 

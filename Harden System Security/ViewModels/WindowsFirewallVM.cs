@@ -55,7 +55,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
-		new(() =>
+		new(static () =>
 		{
 			// Create MUnits from Group Policies.
 			List<MUnit> temp = MUnit.CreateMUnitsFromPolicies(Categories.WindowsFirewall);

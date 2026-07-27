@@ -719,7 +719,7 @@ internal sealed partial class CSPVM : ViewModelBase
 
 		private static string NormalizeBasePath(string path)
 		{
-			string p = (path ?? string.Empty).Trim();
+			string p = path.Trim();
 			p = p.Replace('\\', '/');
 
 			while (p.Contains("//", StringComparison.Ordinal))
@@ -745,7 +745,7 @@ internal sealed partial class CSPVM : ViewModelBase
 		private static string CombinePath(string basePath, string segment)
 		{
 			string b = string.IsNullOrWhiteSpace(basePath) ? "./" : EnsureDotSlash(basePath);
-			string s = (segment ?? string.Empty).Trim();
+			string s = segment.Trim();
 
 			if (s.Length == 0) return b;
 
@@ -870,7 +870,7 @@ internal sealed partial class CSPVM : ViewModelBase
 				XmlDocument doc = new();
 				doc.LoadXml(resultXml);
 				XmlNodeList statusNodes = doc.GetElementsByTagName("Status");
-				if (statusNodes != null && statusNodes.Count > 1)
+				if (statusNodes.Count > 1)
 				{
 					XmlNode statusNode = statusNodes[1]!;
 					foreach (XmlNode child in statusNode.ChildNodes)

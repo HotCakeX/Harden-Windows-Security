@@ -56,7 +56,7 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 
 		switch (volume.VolumeType)
 		{
-			case VolumeType.OperationSystem:
+			case VolumeType.OperatingSystem:
 				{
 					SelectedKeyProtectorTypeIndex = 0;
 					IsOSDriveSectionEnabled = true;
@@ -127,7 +127,7 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 		{
 			ElementsAreEnabled = false;
 
-			BitLockerVolume[] volumes = await Task.Run(() =>
+			BitLockerVolume[] volumes = await Task.Run(static () =>
 			{
 				const string command = "bitlocker list all";
 				string result = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, command)

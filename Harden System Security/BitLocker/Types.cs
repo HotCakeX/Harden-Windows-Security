@@ -216,7 +216,7 @@ internal enum LockStatus
 // https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume#properties
 internal enum VolumeType
 {
-	OperationSystem = 0,
+	OperatingSystem = 0,
 	FixedDisk = 1,
 	Removable = 2
 }

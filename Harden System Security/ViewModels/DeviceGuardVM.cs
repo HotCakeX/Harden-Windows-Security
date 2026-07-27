@@ -43,7 +43,7 @@ internal sealed partial class DeviceGuardVM : MUnitListViewModelBase
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
-		new(() =>
+		new(static () =>
 		{
 			return MUnit.CreateMUnitsFromPolicies(Categories.DeviceGuard);
 		}, LazyThreadSafetyMode.ExecutionAndPublication);

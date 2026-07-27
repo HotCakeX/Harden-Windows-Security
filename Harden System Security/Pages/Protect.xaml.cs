@@ -46,7 +46,7 @@ internal sealed partial class Protect : Page, CommonCore.UI.IPageHeaderProvider
 	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnBorderPointerExited(object sender, PointerRoutedEventArgs e) => AnimateShadowBlur((FrameworkElement)sender, 10.0f);
 
-	private void AnimateShadowBlur(FrameworkElement element, float toBlurRadius)
+	private static void AnimateShadowBlur(FrameworkElement element, float toBlurRadius)
 	{
 		CommonCore.ToolKits.AttachedShadowBase? shadowBase = CommonCore.ToolKits.Effects.GetShadow(element);
 

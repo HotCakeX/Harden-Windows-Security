@@ -58,7 +58,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
-		new(() =>
+		new(static () =>
 		{
 			return MUnit.CreateMUnitsFromPolicies(Categories.BitLockerSettings);
 		}, LazyThreadSafetyMode.ExecutionAndPublication);
@@ -172,7 +172,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				OnPropertyChanged(nameof(HasProtectorsVisibility));
 
 				// Only enable the Suspend feature if OS drive is selected.
-				IsSuspendFeatureEnabled = SelectedBitLockerVolume?.VolumeType is VolumeType.OperationSystem;
+				IsSuspendFeatureEnabled = SelectedBitLockerVolume?.VolumeType is VolumeType.OperatingSystem;
 			}
 		}
 	}
@@ -767,7 +767,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 				return;
 			}
 
-			BitLockerVolume OSDrive = AllBitLockerVolumes.First(x => x.VolumeType is VolumeType.OperationSystem);
+			BitLockerVolume OSDrive = AllBitLockerVolumes.First(x => x.VolumeType is VolumeType.OperatingSystem);
 
 			if (SelectedBitLockerVolume.VolumeType is VolumeType.FixedDisk &&
 				OSDrive.ConversionStatus is not ConversionStatus.FullyEncrypted)
@@ -799,7 +799,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 				switch (SelectedBitLockerVolume.VolumeType)
 				{
-					case VolumeType.OperationSystem:
+					case VolumeType.OperatingSystem:
 						{
 							if (customDialog.IsNormalOSDriveEncryptionLevelSelected)
 							{

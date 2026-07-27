@@ -682,7 +682,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 						}
 
 						string rootSubject = rootCert.Subject;
-						string rootSha256Hex = ComputeCertSha256Hex(rootCert);
+						string rootSha256Hex = AuthRootProcessor.ComputeCertSha256Hex(rootCert);
 
 						NonStlRootCert item = new(
 							storeLocationString: loc.ToString(),
@@ -704,15 +704,6 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 		}
 
 		return results;
-	}
-
-	/// <summary>
-	/// Computes uppercase hex SHA256 of the certificate's raw data.
-	/// </summary>
-	private static string ComputeCertSha256Hex(X509Certificate2 cert)
-	{
-		byte[] hash = System.Security.Cryptography.SHA256.HashData(cert.RawData);
-		return Convert.ToHexString(hash);
 	}
 
 	/// <summary>

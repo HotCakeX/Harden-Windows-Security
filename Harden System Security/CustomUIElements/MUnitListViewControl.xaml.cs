@@ -173,7 +173,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// </summary>
 	private void AppSettings_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (e.PropertyName == nameof(AppSettings.StickyHeadersForListViews))
+		if (string.Equals(e.PropertyName, nameof(AppSettings.StickyHeadersForListViews), StringComparison.Ordinal))
 		{
 			// Update the ItemsStackPanel when the setting changes
 			ConfigureItemsStackPanel();

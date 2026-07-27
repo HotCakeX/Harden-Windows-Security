@@ -426,7 +426,7 @@ internal static class MSBaseline
 		}
 
 		return commonCount > 0
-			? string.Join(Path.DirectorySeparatorChar.ToString(), segments1.Take(commonCount))
+			? string.Join(Path.DirectorySeparatorChar, segments1.Take(commonCount))
 			: string.Empty;
 	}
 

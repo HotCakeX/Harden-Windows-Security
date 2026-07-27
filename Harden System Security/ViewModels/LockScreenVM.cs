@@ -43,7 +43,7 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
-		new(() =>
+		new(static () =>
 		{
 			List<MUnit> temp = MUnit.CreateMUnitsFromPolicies(Categories.LockScreen);
 			temp.AddRange(CreateUnits());

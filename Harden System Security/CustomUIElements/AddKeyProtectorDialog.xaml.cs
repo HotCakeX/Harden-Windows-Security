@@ -62,7 +62,7 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 
 		SelectedRemovableDrive = RemovableDrives.FirstOrDefault();
 
-		if (volume.VolumeType is VolumeType.OperationSystem)
+		if (volume.VolumeType is VolumeType.OperatingSystem)
 		{
 			// Only enable OS-Drive-Only KPs if the selected volume is the OS-Drive
 			OSOnlyKeyProtectorsAreEnabled = true;

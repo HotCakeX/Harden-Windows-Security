@@ -45,7 +45,7 @@ internal sealed partial class EdgeVM : MUnitListViewModelBase
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
-		new(() =>
+		new(static () =>
 		{
 			// Register specialized strategies.
 			RegisterSpecializedStrategies();

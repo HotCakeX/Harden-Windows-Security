@@ -335,7 +335,7 @@ internal static class WinGetPackageSearchService
 		string sourceName = GetPackageRefreshSourceName(packageSearchResult);
 		bool isKnownInstalled = packageSearchResult.IsKnownInstalled;
 		// Installed-program results must be refreshed through an installed composite so both installed and available versions remain correlated.
-		// If we don't do this, after updating an instaleld package to a new version in the "Installed Programs" section, its "Installed: " will be "unavailable".
+		// If we don't do this, after updating an installed package to a new version in the "Installed Programs" section, its "Installed: " will be "unavailable".
 		PackageCatalog catalog = isKnownInstalled
 			? await ConnectInstalledPackageCatalogAsync(packageManager, sourceName, cancellationToken)
 			: await ConnectPackageRefreshCatalogAsync(packageManager, sourceName, cancellationToken);

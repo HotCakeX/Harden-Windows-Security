@@ -52,7 +52,7 @@ internal sealed partial class WindowsUpdateVM : MUnitListViewModelBase
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
-		new(() =>
+		new(static () =>
 		{
 			return MUnit.CreateMUnitsFromPolicies(Categories.WindowsUpdateConfigurations);
 		}, LazyThreadSafetyMode.ExecutionAndPublication);

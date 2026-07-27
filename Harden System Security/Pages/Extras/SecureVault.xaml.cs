@@ -110,7 +110,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	private static readonly Color PasswordStrengthStrongColor = Color.FromArgb(255, 18, 160, 78);
 	private static readonly Color PasswordStrengthVeryStrongColor = Color.FromArgb(255, 5, 150, 105);
 	private static readonly Color PasswordStrengthExcellentColor = Color.FromArgb(255, 2, 132, 199);
-	private readonly DispatcherQueueTimer? refreshTimer;
+	private readonly DispatcherQueueTimer refreshTimer;
 	// Stores the vault data key protected in-place with CryptProtectMemory and only accessible to the current process while the vault remains unlocked.
 	// The key is only unprotected for the shortest possible duration immediately around cryptographic operations that require it.
 	private byte[]? currentVaultDataKey;
@@ -1086,7 +1086,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 			RaiseVaultStateProperties();
 			RefreshAllTokens();
 			RefreshFilteredTokens();
-			refreshTimer?.Start();
+			refreshTimer.Start();
 			MainInfoBar.WriteSuccess("Vault is unlocked. Encrypted portable vault is loaded.");
 		}
 		catch
@@ -1595,7 +1595,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		FilteredTokens.AddRange(filteredList);
 	}
 
-	private void UpdateToken(TotpTokenItem tokenItem, long unixTimeSeconds)
+	private static void UpdateToken(TotpTokenItem tokenItem, long unixTimeSeconds)
 	{
 		try
 		{
@@ -2568,7 +2568,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		_ = (PasteInputTextBox?.Text = string.Empty);
 		IsVaultUnlocked = false;
 		RaiseVaultStateProperties();
-		refreshTimer?.Stop();
+		refreshTimer.Stop();
 	}
 
 	private void AnimateVaultVisualState()

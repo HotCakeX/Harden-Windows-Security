@@ -1209,7 +1209,7 @@ internal static class AuthRootProcessor
 						{
 							NonStlRootCert item = new(
 								storeLocationString: loc.ToString(),
-								storeNameString: storeName.ToString(),
+								storeNameString: storeName,
 								subject: leaf.Subject,
 								issuer: leaf.Issuer,
 								leafThumbprintSha1: leafSha1,
@@ -1296,14 +1296,10 @@ internal static class AuthRootProcessor
 	}
 
 	/// <summary>
-	/// Computes uppercase hex SHA256 of the certificate's raw data. Returns empty string if cert is null.
+	/// Computes uppercase hex SHA256 of the certificate's raw data.
 	/// </summary>
-	private static string ComputeCertSha256Hex(X509Certificate2? cert)
+	internal static string ComputeCertSha256Hex(X509Certificate2 cert)
 	{
-		if (cert is null)
-		{
-			return string.Empty;
-		}
 		byte[] hash = SHA256.HashData(cert.RawData);
 		return Convert.ToHexString(hash);
 	}

@@ -70,7 +70,7 @@ internal static class AlgorithmManager
 							BCRYPT_KEY_DERIVATION_OPERATION;
 
 		IntPtr pAlgList = IntPtr.Zero;
-		uint algCount = 0;
+		uint algCount;
 
 		try
 		{

@@ -45,7 +45,7 @@ internal sealed partial class MicrosoftBaseLinesOverridesVM : MUnitListViewModel
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
-		new(() =>
+		new(static () =>
 		{
 			// Create MUnits from Group Policies.
 			List<MUnit> temp = MUnit.CreateMUnitsFromPolicies(Categories.MSFTSecBaselines_OptionalOverrides);

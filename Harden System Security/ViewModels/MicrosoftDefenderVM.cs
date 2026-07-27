@@ -56,7 +56,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	/// </summary>
 	/// <returns>List of all MUnits for this ViewModel</returns>
 	private static readonly Lazy<List<MUnit>> LazyCatalog =
-		new(() =>
+		new(static () =>
 		{
 			#region One-time global registrations for this category - Registers specialized strategies for specific policies.
 

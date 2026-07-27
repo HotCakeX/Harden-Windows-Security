@@ -488,6 +488,8 @@ jobs:
               # Copy the X64 components to the directory before the build starts
               Copy-Item -Path '.\eXclude\Shell\x64\Release\Shell.dll' -Destination 'Shell' -Force
 
+              New-Item -Path '.\CppInterop' -ItemType Directory -Force | Out-Null
+
               Copy-Item -Path '.\eXclude\ComManager\x64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
               # Generate for X64 architecture

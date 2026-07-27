@@ -529,6 +529,8 @@ jobs:
 
               # Copy the X64 components to the directory before the build starts
 
+              New-Item -Path '.\CppInterop' -ItemType Directory -Force | Out-Null
+
               Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\x64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
               Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputX64\DISMService.exe' -Destination '.\DISMService.exe' -Force

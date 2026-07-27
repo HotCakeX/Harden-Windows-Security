@@ -66,7 +66,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	{
 		// Measure header text widths first.
 		double maxWidth1 = ListViewHelper.MeasureText(Atlas.GetStr("CategoryHeader/Text"));
-		double maxWidth2 = ListViewHelper.MeasureText(Atlas.GetStr("SubcategoryHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(Atlas.GetStr("SubCategoryHeader/Text"));
 		double maxWidth3 = ListViewHelper.MeasureText(Atlas.GetStr("AuditSettingHeader/Text"));
 		double maxWidth4 = ListViewHelper.MeasureText(Atlas.GetStr("CategoryGUIDHeader/Text"));
 		double maxWidth5 = ListViewHelper.MeasureText(Atlas.GetStr("SubcategoryGUIDHeader/Text"));
@@ -169,7 +169,7 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 		= new Dictionary<string, (string Label, Func<AuditPolicyInfo, object?> Getter)>
 		{
 			{ "CategoryName",            (Atlas.GetStr("CategoryHeader/Text"),           ape => ape.CategoryName) },
-			{ "SubcategoryName",         (Atlas.GetStr("SubcategoryHeader/Text"),        ape => ape.SubcategoryName) },
+			{ "SubcategoryName",         (Atlas.GetStr("SubCategoryHeader/Text"),        ape => ape.SubcategoryName) },
 			{ "AuditSettingDescription", (Atlas.GetStr("AuditSettingHeader/Text"),       ape => ape.AuditSettingDescription) },
 			{ "CategoryGuid",            (Atlas.GetStr("CategoryGUIDHeader/Text"),       ape => ape.CategoryGuid) },
 			{ "SubcategoryGuid",         (Atlas.GetStr("SubcategoryGUIDHeader/Text"),    ape => ape.SubcategoryGuid) }

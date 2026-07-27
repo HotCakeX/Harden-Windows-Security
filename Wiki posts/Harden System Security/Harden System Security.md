@@ -894,6 +894,8 @@ function Build_HSS {
 
     # Copy the X64 components to the directory before the build starts
 
+    New-Item -Path '.\CppInterop' -ItemType Directory -Force | Out-Null
+
     Copy-Item -Path '..\AppControl Manager\eXclude\ComManager\x64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputX64\DISMService.exe' -Destination '.\DISMService.exe' -Force
@@ -1116,14 +1118,14 @@ function Build_HSS {
 
         $Elapsed = $Stopwatch.Elapsed
         [string]$Result = @"
-                  Execution Time:
-                  ----------------------------
-                  Total Time   : $($Elapsed.ToString('g'))
-                  Hours        : $($Elapsed.Hours)
-                  Minutes      : $($Elapsed.Minutes)
-                  Seconds      : $($Elapsed.Seconds)
-                  Milliseconds : $($Elapsed.Milliseconds)
-                  ----------------------------
+                            Execution Time:
+                            ----------------------------
+                            Total Time   : $($Elapsed.ToString('g'))
+                            Hours        : $($Elapsed.Hours)
+                            Minutes      : $($Elapsed.Minutes)
+                            Seconds      : $($Elapsed.Seconds)
+                            Milliseconds : $($Elapsed.Milliseconds)
+                            ----------------------------
 "@
 
         Write-Host -Object $Result -ForegroundColor Cyan

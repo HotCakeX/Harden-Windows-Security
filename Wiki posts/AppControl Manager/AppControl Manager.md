@@ -754,6 +754,8 @@ function Build_ACM {
     # Copy the X64 components to the directory before the build starts
     Copy-Item -Path '.\eXclude\Shell\x64\Release\Shell.dll' -Destination 'Shell' -Force
 
+    New-Item -Path '.\CppInterop' -ItemType Directory -Force | Out-Null
+
     Copy-Item -Path '.\eXclude\ComManager\x64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 
     # Generate for X64 architecture
@@ -1015,14 +1017,14 @@ function Build_ACM {
 
         $Elapsed = $Stopwatch.Elapsed
         [string]$Result = @"
-Execution Time:
-----------------------------
-Total Time   : $($Elapsed.ToString('g'))
-Hours        : $($Elapsed.Hours)
-Minutes      : $($Elapsed.Minutes)
-Seconds      : $($Elapsed.Seconds)
-Milliseconds : $($Elapsed.Milliseconds)
-----------------------------
+          Execution Time:
+          ----------------------------
+          Total Time   : $($Elapsed.ToString('g'))
+          Hours        : $($Elapsed.Hours)
+          Minutes      : $($Elapsed.Minutes)
+          Seconds      : $($Elapsed.Seconds)
+          Milliseconds : $($Elapsed.Milliseconds)
+          ----------------------------
 "@
 
         Write-Host -Object $Result -ForegroundColor Cyan

@@ -1382,7 +1382,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 									}
 								}
 							},
-							CloseButtonText = Atlas.GetStr("Ok"),
+							CloseButtonText = Atlas.GetStr("OK"),
 						};
 
 						_ = await dialog.ShowAsync();

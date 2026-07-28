@@ -1772,7 +1772,7 @@ namespace BitLocker {
 			if (GetVolumeInfo(withColon.c_str(), vi))
 			{
 				// Apply post-fetch filtering based on flags:
-				// onlyNonOS => include only FixedDisk (i.e., non-OS data volumes; OS volume has VolumeType::OperationSystem)
+				// onlyNonOS => include only FixedDisk (i.e., non-OS data volumes; OS volume has VolumeType::OperatingSystem)
 				if (onlyNonOS && vi.volumeType != VolumeType::FixedDisk)
 					continue;
 

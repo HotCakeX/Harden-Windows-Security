@@ -5777,13 +5777,13 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>App Control पॉलिसियों को परिनियोजित और हटाने के लिए वैकल्पिक विधियाँ उपलब्ध कराने हेतु इस फ़ीचर को सक्षम करें। ये विधियाँ CiTool निष्पादन योग्य पर निर्भर नहीं हैं और यदि CiTool अवरुद्ध या अनुपलब्ध है तो उपयोग की जा सकती हैं.</value>
   </data>
-    <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <data name="ClearOperatingSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
     <value>सिस्टम लॉग साफ करें</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>ऑपरेटिंग सिस्टम में विभिन्न लॉग साफ करें। यह क्रिया अपरिवर्तनीय है।</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>ऑपरेटिंग सिस्टम में विभिन्न लॉग साफ करें। यह क्रिया अपरिवर्तनीय है।</value>
   </data>
   <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">

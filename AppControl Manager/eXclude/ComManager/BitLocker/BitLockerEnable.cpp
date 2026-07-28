@@ -408,7 +408,7 @@ namespace BitLocker {
 		bool osProtected = false;
 		for (const auto& v : all)
 		{
-			if (v.volumeType == VolumeType::OperationSystem &&
+			if (v.volumeType == VolumeType::OperatingSystem &&
 				v.protectionStatus == ProtectionStatus::Protected)
 			{
 				osProtected = true;

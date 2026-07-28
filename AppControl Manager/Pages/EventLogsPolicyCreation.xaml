@@ -443,7 +443,7 @@
 
                                 <MenuFlyoutSeparator/>
 
-                                <MenuFlyoutSubItem x:Uid="ClearOperationSystemLogsMenuFlyoutItem"
+                                <MenuFlyoutSubItem x:Uid="ClearOperatingSystemLogsMenuFlyoutItem"
                                                    IsEnabled="{x:Bind ViewModel.IsElevated}">
                                     <MenuFlyoutSubItem.Icon>
                                         <FontIcon Glyph="&#xE814;"/>

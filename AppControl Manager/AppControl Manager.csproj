@@ -364,5 +364,5 @@
         <Copy SourceFiles="$(_ComManagerPublishedExecutable)"
               DestinationFiles="$(MSBuildProjectDirectory)\CppInterop\ComManager.exe" />
     </Target>
-    
+
 </Project>

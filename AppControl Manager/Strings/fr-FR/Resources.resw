@@ -5777,13 +5777,13 @@
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Activez cette fonctionnalité pour rendre disponibles des méthodes alternatives pour déployer et supprimer des politiques App Control. Ces méthodes ne dépendent pas de l'exécutable CiTool et peuvent être utilisées si CiTool est bloqué ou indisponible.</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
     <value>Effacer les Journaux Système</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Effacer différents journaux dans le système d'exploitation. Cette action est irréversible.</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Effacer différents journaux dans le système d'exploitation. Cette action est irréversible.</value>
   </data>
   <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">

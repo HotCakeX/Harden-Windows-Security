@@ -5777,13 +5777,13 @@ CATATAN: Opsi ini selalu ditegakkan jika ada kebijakan App Control UMCI yang men
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Aktifkan fitur ini untuk menyediakan metode alternatif untuk menerapkan dan menghapus kebijakan App Control. Metode ini tidak bergantung pada file yang dapat dieksekusi CiTool dan dapat digunakan jika CiTool diblokir atau tidak tersedia.</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
     <value>Bersihkan Log Sistem</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Bersihkan berbagai log di sistem operasi. Tindakan ini tidak dapat dibatalkan.</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Bersihkan berbagai log di sistem operasi. Tindakan ini tidak dapat dibatalkan.</value>
   </data>
   <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">

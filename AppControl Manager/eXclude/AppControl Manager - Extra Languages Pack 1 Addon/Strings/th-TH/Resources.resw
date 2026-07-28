@@ -5777,13 +5777,13 @@
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>เปิดใช้งานคุณสมบัตินี้เพื่อทำให้มีวิธีการทางเลือกในการปรับใช้และลบนโยบาย App Control วิธีการเหล่านี้ไม่ขึ้นอยู่กับไฟล์ปฏิบัติการ CiTool และสามารถใช้ได้หาก CiTool ถูกบล็อกหรือไม่พร้อมใช้งาน</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
     <value>ล้างบันทึกระบบ</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>ล้างบันทึกต่าง ๆ ในระบบปฏิบัติการ การดำเนินการนี้ไม่สามารถย้อนกลับได้</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>ล้างบันทึกต่าง ๆ ในระบบปฏิบัติการ การดำเนินการนี้ไม่สามารถย้อนกลับได้</value>
   </data>
   <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">

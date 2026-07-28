@@ -5777,13 +5777,13 @@
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ενεργοποιήστε αυτήν τη δυνατότητα για να καταστήσετε διαθέσιμες εναλλακτικές μεθόδους ανάπτυξης και κατάργησης πολιτικών App Control. Αυτές οι μέθοδοι δεν εξαρτώνται από το εκτελέσιμο CiTool και μπορούν να χρησιμοποιηθούν αν το CiTool είναι μπλοκαρισμένο ή μη διαθέσιμο.</value>
   </data>
-    <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <data name="ClearOperatingSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
     <value>Καθαρισμός αρχείων καταγραφής συστήματος</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>Καθαρισμός διαφόρων αρχείων καταγραφής στο λειτουργικό σύστημα. Η ενέργεια αυτή είναι μη αναστρέψιμη.</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Καθαρισμός διαφόρων αρχείων καταγραφής στο λειτουργικό σύστημα. Η ενέργεια αυτή είναι μη αναστρέψιμη.</value>
   </data>
   <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">

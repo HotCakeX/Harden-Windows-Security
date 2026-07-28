@@ -107,7 +107,7 @@ namespace BitLocker {
 	// https://learn.microsoft.com/windows/win32/secprov/win32-encryptablevolume#properties
 	enum class VolumeType : unsigned long
 	{
-		OperationSystem = 0,
+		OperatingSystem = 0,
 		FixedDisk = 1,
 		Removable = 2
 	};

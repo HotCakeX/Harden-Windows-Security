@@ -5777,13 +5777,13 @@
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>قم بتمكين هذه الميزة لإتاحة طرق بديلة لنشر وإزالة نهج App Control. هذه الطرق لا تعتمد على الملف التنفيذي CiTool ويمكن استخدامها إذا كان CiTool محجوباً أو غير متاح.</value>
   </data>
-    <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+    <data name="ClearOperatingSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
     <value>مسح سجلات النظام</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>مسح سجلات مختلفة في نظام التشغيل. هذا الإجراء غير قابل للاسترجاع.</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>مسح سجلات مختلفة في نظام التشغيل. هذا الإجراء غير قابل للاسترجاع.</value>
   </data>
   <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">

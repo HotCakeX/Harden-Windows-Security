@@ -53,7 +53,7 @@ internal sealed partial class TemperatureSampler : IDisposable
 		status = NativeMethods.PdhCollectQueryData(_hQuery);
 		if (status == PDH_NO_DATA)
 		{
-			// Some systems do not expose ACPI thermal zone data such as VMs or regular desktop PCs. 
+			// Some systems do not expose ACPI thermal zone data such as VMs or regular desktop PCs.
 			// Leave the CPU temperature as N/A in the Home page and do not throw an exception, since this is not an error condition.
 			Dispose();
 			return;

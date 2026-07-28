@@ -5777,13 +5777,13 @@
   <data name="UseV2CIManagementSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
     <value>この機能を有効にすると、App Controlポリシーの展開と削除に代替方法が利用可能になります。これらの方法はCiTool実行ファイルに依存せず、CiToolがブロックされているか利用できない場合に使用できます。</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.Text" xml:space="preserve">
     <value>システムログをクリア</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.ToolTipService.ToolTip" xml:space="preserve">
     <value>オペレーティングシステム内のさまざまなログをクリアします。この操作は元に戻せません。</value>
   </data>
-  <data name="ClearOperationSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
+  <data name="ClearOperatingSystemLogsMenuFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>オペレーティングシステム内のさまざまなログをクリアします。この操作は元に戻せません。</value>
   </data>
   <data name="ClearOSCodeIntegrityLogsMenuFlyoutItem.Text" xml:space="preserve">

@@ -17,7 +17,6 @@
 
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Microsoft.Web.WebView2.Core;
 
 namespace AppControlManager.Pages;
 

@@ -7733,4 +7733,49 @@
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>החל אמצעי הפחתת סיכונים לבידוד ערוצי צד בעת הפעלת היישום כדי לשפר את האבטחה בעת השימוש בכספת המאובטחת, במחיר של ירידה בביצועים.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>הפעלת אפשרות זו מאפשרת לאפליקציה להציג הודעות מוקפצות ב-Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>הצגת הודעות מוקפצות ב-Windows</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הפעלת אפשרות זו מאפשרת לאפליקציה להציג הודעות מוקפצות ב-Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הפעלת אפשרות זו מאפשרת לאפליקציה להציג הודעות מוקפצות ב-Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>הסר ממרכז ההודעות ב-Windows את כל ההודעות המוקפצות השייכות לאפליקציה זו.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>הסרת כל ההודעות</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר ממרכז ההודעות ב-Windows את כל ההודעות המוקפצות השייכות לאפליקציה זו.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר ממרכז ההודעות ב-Windows את כל ההודעות המוקפצות השייכות לאפליקציה זו.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>הסר הכול</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר ממרכז ההודעות ב-Windows את כל ההודעות המוקפצות השייכות לאפליקציה זו.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הסר ממרכז ההודעות ב-Windows את כל ההודעות המוקפצות השייכות לאפליקציה זו.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>הודעות</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>הגדרות הודעות</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>נהל הגדרות הקשורות להודעות ולהתראות.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>נהל הגדרות הקשורות להודעות ולהתראות.</value>
+  </data>
 </root>

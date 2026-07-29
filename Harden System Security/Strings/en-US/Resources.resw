@@ -7733,4 +7733,49 @@ Thumbprint: {3}</value>
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Apply side-channel isolation mitigations at application startup to improve security when using the secure vault, at the cost of reduced performance.</value>
   </data>
+  <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Enabling this allows the app to display toast notifications in Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Display Toast Notifications in Windows</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enabling this allows the app to display toast notifications in Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Enabling this allows the app to display toast notifications in Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Remove all toast notifications that belong to this app from the Notifications Center in Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Remove all notifications</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove all toast notifications that belong to this app from the Notifications Center in Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove all toast notifications that belong to this app from the Notifications Center in Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>Remove all</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove all toast notifications that belong to this app from the Notifications Center in Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Remove all toast notifications that belong to this app from the Notifications Center in Windows.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>Notification Settings</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Manage settings related to notifications and notices.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Manage settings related to notifications and notices.</value>
+  </data>
 </root>

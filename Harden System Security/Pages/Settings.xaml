@@ -439,6 +439,33 @@
                     </CCToolKit:SettingsExpander.Items>
                 </CCToolKit:SettingsExpander>
 
+                <!-- Notifications section -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="Notifications" />
+                <CCToolKit:SettingsExpander IsExpanded="True" x:Uid="NotificationSettingsSettingsExpander">
+                    <CCToolKit:SettingsExpander.HeaderIcon>
+                        <FontIcon Glyph="&#xE7E7;" />
+                    </CCToolKit:SettingsExpander.HeaderIcon>
+
+                    <CCToolKit:SettingsExpander.Items>
+                        <customUI:SettingsCardV2 x:Uid="EnableToastNotificationsSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xF6C5;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
+                            <ToggleSwitch IsOn="{x:Bind ViewModel.AppSettings.ToastNotificationsAreEnabled, Mode=TwoWay}"
+                                          x:Uid="ToggleSwitchGeneral"/>
+                        </customUI:SettingsCardV2>
+
+                        <customUI:SettingsCardV2 x:Uid="RemoveAllToastNotificationsSettingsCard">
+                            <customUI:SettingsCardV2.HeaderIcon>
+                                <FontIcon Glyph="&#xE894;" />
+                            </customUI:SettingsCardV2.HeaderIcon>
+                            <Button Click="{x:Bind ViewModel.RemoveAllToastNotifications}" x:Uid="RemoveAllToastNotificationsButton" />
+                        </customUI:SettingsCardV2>
+
+                    </CCToolKit:SettingsExpander.Items>
+
+                </CCToolKit:SettingsExpander>
+
                 <!-- Language section -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" x:Uid="LanguageTextBlock" />
                 <CCToolKit:SettingsExpander IsExpanded="True" x:Uid="LanguageSettingSettingsExpander">

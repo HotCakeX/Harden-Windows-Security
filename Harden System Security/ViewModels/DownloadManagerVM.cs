@@ -2619,6 +2619,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			}).ConfigureAwait(false);
 
 			DeleteFileIfExists(checkpoint.CheckpointFilePath);
+			ShowDownloadCompletedToast(item);
 			if (RemoveCompletedDownloadsFromList)
 			{
 				_ = await RemoveItemFromListAsync(item, announce: false).ConfigureAwait(false);
@@ -2652,6 +2653,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			current.CurrentBytesPerSecond = 0;
 		}).ConfigureAwait(false);
 
+		ShowDownloadCompletedToast(item);
 		if (RemoveCompletedDownloadsFromList)
 		{
 			_ = await RemoveItemFromListAsync(item, announce: false).ConfigureAwait(false);
@@ -2661,6 +2663,18 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		await SaveHistoryAsync().ConfigureAwait(false);
 		_ = RefreshPreviewAsync(item);
 	}
+
+	/// <summary>
+	/// Announces a successfully finalized download after the final file is available and the item state is complete.
+	/// </summary>
+	private static void ShowDownloadCompletedToast(DownloadManagerItem item) =>
+		UnelevatedOperations.ToastNotifications.ShowToastNotification(
+			title: "Download completed",
+			body: item.DisplayName,
+			attributionText: $"Saved to {item.DestinationDirectory}",
+			group: "Download Manager",
+			soundEvent: Microsoft.Windows.AppNotifications.Builder.AppNotificationSoundEvent.Default,
+			inlineImage: new("ms-appx:///Assets/Others/DownloadsCompletion.gif"));
 
 	private static readonly char[] TrimEndChars = ['.', ',', ';', ')', ']', '}'];
 

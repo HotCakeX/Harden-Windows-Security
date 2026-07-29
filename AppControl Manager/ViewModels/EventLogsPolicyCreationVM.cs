@@ -30,7 +30,6 @@ using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
 
 namespace AppControlManager.ViewModels;
@@ -503,20 +502,12 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				));
 
 			// Display Toast Notification
-			if (AppNotificationManager.IsSupported() && Atlas.Settings.ToastNotificationsAreEnabled)
-			{
-				AppNotification notification = new AppNotificationBuilder()
-						.AddText("App Control event scan completed.")
-						.AddText($"Successfully retrieved {AllFileIdentities.Count} data.")
-						.SetAudioEvent(AppNotificationSoundEvent.SMS)
-						.SetTimeStamp(DateTime.Now)
-						.SetGroup("Event Scan")
-						.SetScenario(AppNotificationScenario.Default)
-						.SetAttributionText("Inspect the data in the app.")
-						.BuildNotification();
-
-				AppNotificationManager.Default.Show(notification);
-			}
+			UnelevatedOperations.ToastNotifications.ShowToastNotification(
+				title: "App Control event scan completed.",
+				body: $"Successfully retrieved {AllFileIdentities.Count} data.",
+				attributionText: "Inspect the data in the app.",
+				group: "Event Scan",
+				soundEvent: AppNotificationSoundEvent.SMS);
 
 			// Analyze the data
 			await AnalysisResults.PrepareAnalysis(AllFileIdentities);

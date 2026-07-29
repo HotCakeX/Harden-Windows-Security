@@ -7733,4 +7733,49 @@ Thumbprint: {3}</value>
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Applica le mitigazioni di isolamento dei canali laterali all’avvio dell’applicazione per migliorare la sicurezza durante l’utilizzo dell’archivio protetto, a scapito di prestazioni ridotte.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>L’attivazione di questa opzione consente all’app di visualizzare notifiche popup in Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Visualizza notifiche popup in Windows</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>L’attivazione di questa opzione consente all’app di visualizzare notifiche popup in Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>L’attivazione di questa opzione consente all’app di visualizzare notifiche popup in Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Rimuovi dal Centro notifiche di Windows tutte le notifiche popup appartenenti a questa app.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Rimuovi tutte le notifiche</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rimuovi dal Centro notifiche di Windows tutte le notifiche popup appartenenti a questa app.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rimuovi dal Centro notifiche di Windows tutte le notifiche popup appartenenti a questa app.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>Rimuovi tutto</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rimuovi dal Centro notifiche di Windows tutte le notifiche popup appartenenti a questa app.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Rimuovi dal Centro notifiche di Windows tutte le notifiche popup appartenenti a questa app.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>Notifiche</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>Impostazioni delle notifiche</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gestisci le impostazioni relative alle notifiche e agli avvisi.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Gestisci le impostazioni relative alle notifiche e agli avvisi.</value>
+  </data>
 </root>

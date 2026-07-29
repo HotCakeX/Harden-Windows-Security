@@ -7733,4 +7733,49 @@
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Застосуйте заходи ізоляції побічних каналів під час запуску програми, щоб підвищити безпеку під час використання захищеного сховища, ціною зниження продуктивності.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Увімкнення цього параметра дозволяє програмі відображати спливаючі сповіщення у Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Відображати спливаючі сповіщення у Windows</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Увімкнення цього параметра дозволяє програмі відображати спливаючі сповіщення у Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Увімкнення цього параметра дозволяє програмі відображати спливаючі сповіщення у Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Видаліть із Центру сповіщень Windows усі спливаючі сповіщення, що належать цій програмі.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Видалити всі сповіщення</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Видаліть із Центру сповіщень Windows усі спливаючі сповіщення, що належать цій програмі.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Видаліть із Центру сповіщень Windows усі спливаючі сповіщення, що належать цій програмі.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>Видалити все</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Видаліть із Центру сповіщень Windows усі спливаючі сповіщення, що належать цій програмі.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Видаліть із Центру сповіщень Windows усі спливаючі сповіщення, що належать цій програмі.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>Сповіщення</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>Налаштування сповіщень</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Керуйте налаштуваннями, пов’язаними зі сповіщеннями та повідомленнями.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Керуйте налаштуваннями, пов’язаними зі сповіщеннями та повідомленнями.</value>
+  </data>
 </root>

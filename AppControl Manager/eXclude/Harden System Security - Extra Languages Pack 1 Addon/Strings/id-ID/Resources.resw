@@ -7733,4 +7733,49 @@ Thumbprint: {3}</value>
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Terapkan mitigasi isolasi saluran samping saat aplikasi dimulai untuk meningkatkan keamanan saat menggunakan brankas aman, dengan konsekuensi penurunan kinerja.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Mengaktifkan opsi ini memungkinkan aplikasi menampilkan notifikasi toast di Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Tampilkan Notifikasi Toast di Windows</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Mengaktifkan opsi ini memungkinkan aplikasi menampilkan notifikasi toast di Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Mengaktifkan opsi ini memungkinkan aplikasi menampilkan notifikasi toast di Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Hapus semua notifikasi toast milik aplikasi ini dari Pusat Notifikasi di Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Hapus semua notifikasi</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hapus semua notifikasi toast milik aplikasi ini dari Pusat Notifikasi di Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Hapus semua notifikasi toast milik aplikasi ini dari Pusat Notifikasi di Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>Hapus semua</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Hapus semua notifikasi toast milik aplikasi ini dari Pusat Notifikasi di Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Hapus semua notifikasi toast milik aplikasi ini dari Pusat Notifikasi di Windows.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>Notifikasi</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>Pengaturan Notifikasi</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kelola pengaturan yang berkaitan dengan notifikasi dan pemberitahuan.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Kelola pengaturan yang berkaitan dengan notifikasi dan pemberitahuan.</value>
+  </data>
 </root>

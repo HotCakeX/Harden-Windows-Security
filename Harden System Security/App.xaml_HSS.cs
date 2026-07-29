@@ -20,7 +20,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using CommonCore.GroupPolicy;
-using CommonCore.Taskbar;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Others;
 using HardenSystemSecurity.ViewModels;
@@ -300,7 +299,6 @@ public sealed partial class App : Application
 			}
 		}
 
-		string[] possibleArgs = Environment.GetCommandLineArgs();
 		bool launchToUpdatePageFromNotification = false;
 
 		try
@@ -345,6 +343,7 @@ public sealed partial class App : Application
 				}
 				else if (launchToUpdatePageFromNotification)
 				{
+					// the redirect brokers across the integrity boundary because it's package-identity–scoped, not token-scoped. 
 					await notificationTargetInstance.RedirectActivationToAsync(activatedEventArgs);
 					Environment.Exit(0);
 					return;
@@ -393,12 +392,12 @@ public sealed partial class App : Application
 				}
 				else if (!launchToUpdatePageFromNotification)
 				{
-					ParseArgs(possibleArgs);
+					ParseArgs(Program.GetLaunchArguments());
 				}
 			}
 			else
 			{
-				ParseArgs(possibleArgs);
+				ParseArgs(Program.GetLaunchArguments());
 			}
 		}
 		catch (Exception ex)
@@ -546,7 +545,7 @@ public sealed partial class App : Application
 		MainWindow.Activate();
 
 		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
-		BadgeNotificationManager.Current.ClearBadge();
+		try { BadgeNotificationManager.Current.ClearBadge(); } catch { }
 
 		#region Initial navigation and file activation processing
 

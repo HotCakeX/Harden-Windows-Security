@@ -7733,4 +7733,49 @@
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>ใช้มาตรการบรรเทาการแยกช่องทางข้างเคียงเมื่อเริ่มต้นแอปพลิเคชัน เพื่อเพิ่มความปลอดภัยขณะใช้งานตู้นิรภัยที่ปลอดภัย โดยแลกกับประสิทธิภาพที่ลดลง.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>การเปิดใช้งานตัวเลือกนี้จะอนุญาตให้แอปแสดงการแจ้งเตือนแบบป๊อปอัปใน Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>แสดงการแจ้งเตือนแบบป๊อปอัปใน Windows</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>การเปิดใช้งานตัวเลือกนี้จะอนุญาตให้แอปแสดงการแจ้งเตือนแบบป๊อปอัปใน Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>การเปิดใช้งานตัวเลือกนี้จะอนุญาตให้แอปแสดงการแจ้งเตือนแบบป๊อปอัปใน Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>นำการแจ้งเตือนแบบป๊อปอัปทั้งหมดของแอปนี้ออกจากศูนย์การแจ้งเตือนใน Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>นำการแจ้งเตือนทั้งหมดออก</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>นำการแจ้งเตือนแบบป๊อปอัปทั้งหมดของแอปนี้ออกจากศูนย์การแจ้งเตือนใน Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>นำการแจ้งเตือนแบบป๊อปอัปทั้งหมดของแอปนี้ออกจากศูนย์การแจ้งเตือนใน Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>นำทั้งหมดออก</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>นำการแจ้งเตือนแบบป๊อปอัปทั้งหมดของแอปนี้ออกจากศูนย์การแจ้งเตือนใน Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>นำการแจ้งเตือนแบบป๊อปอัปทั้งหมดของแอปนี้ออกจากศูนย์การแจ้งเตือนใน Windows.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>การแจ้งเตือน</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>การตั้งค่าการแจ้งเตือน</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>จัดการการตั้งค่าที่เกี่ยวข้องกับการแจ้งเตือนและประกาศ.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>จัดการการตั้งค่าที่เกี่ยวข้องกับการแจ้งเตือนและประกาศ.</value>
+  </data>
 </root>

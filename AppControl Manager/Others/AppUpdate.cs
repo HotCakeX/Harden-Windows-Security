@@ -19,8 +19,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Services.Store;
 using Microsoft.Windows.BadgeNotifications;
-using Microsoft.Windows.AppNotifications.Builder;
-using Microsoft.Windows.AppNotifications;
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.Others;
@@ -48,31 +46,16 @@ internal static class AppUpdate
 
 	private static void DisplayAvailableUpdateNotifications()
 	{
-		try
-		{
-			// Display Toast Notification
-			if (AppNotificationManager.IsSupported())
-			{
-				AppNotification notification = new AppNotificationBuilder()
-						.AddArgument(UpdateNotificationActionKey, UpdateNotificationActionValue)
-						.AddText("New Update Available")
-						.AddText("There is a new update available for the app.")
-						.SetAudioEvent(AppNotificationSoundEvent.Reminder)
-						.SetTimeStamp(DateTime.Now)
-						.SetGroup("New Update")
-						.SetScenario(AppNotificationScenario.Default)
-						.SetAttributionText("Please update to the latest version by opening the Microsoft Store.")
-						.BuildNotification();
-				AppNotificationManager.Default.Show(notification);
-			}
+		// Display Toast Notification
+		UnelevatedOperations.ToastNotifications.ShowToastNotification(title: "New Update Available",
+																	  body: "There is a new update available for the app.",
+																	  attributionText: "Please update to the latest version by opening the Microsoft Store.",
+																	  group: "New Update",
+																	  soundEvent: Microsoft.Windows.AppNotifications.Builder.AppNotificationSoundEvent.Reminder,
+																	  arguments: (UpdateNotificationActionKey, UpdateNotificationActionValue));
 
-			// Display a badge on the taskbar icon to indicate that an update is available
-			BadgeNotificationManager.Current.SetBadgeAsGlyph(BadgeNotificationGlyph.Alert);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
+		// Display a badge on the taskbar icon to indicate that an update is available
+		UnelevatedOperations.TaskbarBadge.SetTaskbarBadge(BadgeNotificationGlyph.Alert);
 	}
 
 	/// <summary>

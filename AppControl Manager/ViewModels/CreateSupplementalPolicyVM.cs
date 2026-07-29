@@ -33,7 +33,6 @@ using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
 using WinRT;
 
@@ -544,28 +543,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				}
 
 				// Display Toast Notification
-				if (AppNotificationManager.IsSupported() && Atlas.Settings.ToastNotificationsAreEnabled)
+				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					AppNotification notification = OperationModeComboBoxSelectedIndex == 0
-						? new AppNotificationBuilder()
-							.AddText("Supplemental policy creation completed.")
-							.AddText($"The '{FilesAndFoldersSupplementalPolicyName}' policy was added to the library.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText("Access the library on the Sidebar for additional actions.")
-							.BuildNotification()
-						: new AppNotificationBuilder()
-							.AddText("Your policy has been updated.")
-							.AddText("New rules have been added to your selected policy.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText($"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.")
-							.BuildNotification();
-					AppNotificationManager.Default.Show(notification);
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Supplemental policy creation completed.",
+						body: $"The '{FilesAndFoldersSupplementalPolicyName}' policy was added to the library.",
+						attributionText: "Access the library on the Sidebar for additional actions.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
+				}
+				else
+				{
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Your policy has been updated.",
+						body: "New rules have been added to your selected policy.",
+						attributionText: $"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
 				}
 			});
 
@@ -947,28 +941,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				}
 
 				// Display Toast Notification
-				if (AppNotificationManager.IsSupported() && Atlas.Settings.ToastNotificationsAreEnabled)
+				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					AppNotification notification = OperationModeComboBoxSelectedIndex == 0
-						? new AppNotificationBuilder()
-							.AddText("Supplemental policy creation completed.")
-							.AddText($"The '{CertificatesBasedSupplementalPolicyName}' policy was added to the library.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText("Access the library on the Sidebar for additional actions.")
-							.BuildNotification()
-						: new AppNotificationBuilder()
-							.AddText("Your policy has been updated.")
-							.AddText("New rules have been added to your selected policy.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText($"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.")
-							.BuildNotification();
-					AppNotificationManager.Default.Show(notification);
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Supplemental policy creation completed.",
+						body: $"The '{CertificatesBasedSupplementalPolicyName}' policy was added to the library.",
+						attributionText: "Access the library on the Sidebar for additional actions.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
+				}
+				else
+				{
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Your policy has been updated.",
+						body: "New rules have been added to your selected policy.",
+						attributionText: $"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
 				}
 			});
 		}
@@ -1140,28 +1129,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				}
 
 				// Display Toast Notification
-				if (AppNotificationManager.IsSupported() && Atlas.Settings.ToastNotificationsAreEnabled)
+				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					AppNotification notification = OperationModeComboBoxSelectedIndex == 0
-						? new AppNotificationBuilder()
-							.AddText("Supplemental policy creation completed.")
-							.AddText($"The '{ISGBasedSupplementalPolicyName}' policy was added to the library.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText("Access the library on the Sidebar for additional actions.")
-							.BuildNotification()
-						: new AppNotificationBuilder()
-							.AddText("Your policy has been updated.")
-							.AddText("New rules have been added to your selected policy.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText($"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.")
-							.BuildNotification();
-					AppNotificationManager.Default.Show(notification);
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Supplemental policy creation completed.",
+						body: $"The '{ISGBasedSupplementalPolicyName}' policy was added to the library.",
+						attributionText: "Access the library on the Sidebar for additional actions.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
+				}
+				else
+				{
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Your policy has been updated.",
+						body: "New rules have been added to your selected policy.",
+						attributionText: $"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
 				}
 			});
 		}
@@ -1523,28 +1507,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				}
 
 				// Display Toast Notification
-				if (AppNotificationManager.IsSupported() && Atlas.Settings.ToastNotificationsAreEnabled)
+				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					AppNotification notification = OperationModeComboBoxSelectedIndex == 0
-						? new AppNotificationBuilder()
-							.AddText("Supplemental policy creation completed.")
-							.AddText($"The '{StrictKernelModePolicyName}' policy was added to the library.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText("Access the library on the Sidebar for additional actions.")
-							.BuildNotification()
-						: new AppNotificationBuilder()
-							.AddText("Your policy has been updated.")
-							.AddText("New rules have been added to your selected policy.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText($"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.")
-							.BuildNotification();
-					AppNotificationManager.Default.Show(notification);
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Supplemental policy creation completed.",
+						body: $"The '{StrictKernelModePolicyName}' policy was added to the library.",
+						attributionText: "Access the library on the Sidebar for additional actions.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
+				}
+				else
+				{
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Your policy has been updated.",
+						body: "New rules have been added to your selected policy.",
+						attributionText: $"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
 				}
 			});
 		}
@@ -2129,28 +2108,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				}
 
 				// Display Toast Notification
-				if (AppNotificationManager.IsSupported() && Atlas.Settings.ToastNotificationsAreEnabled)
+				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					AppNotification notification = OperationModeComboBoxSelectedIndex == 0
-						? new AppNotificationBuilder()
-							.AddText("Supplemental policy creation completed.")
-							.AddText($"The '{PFNBasedSupplementalPolicyName}' policy was added to the library.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText("Access the library on the Sidebar for additional actions.")
-							.BuildNotification()
-						: new AppNotificationBuilder()
-							.AddText("Your policy has been updated.")
-							.AddText("New rules have been added to your selected policy.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText($"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.")
-							.BuildNotification();
-					AppNotificationManager.Default.Show(notification);
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Supplemental policy creation completed.",
+						body: $"The '{PFNBasedSupplementalPolicyName}' policy was added to the library.",
+						attributionText: "Access the library on the Sidebar for additional actions.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
+				}
+				else
+				{
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Your policy has been updated.",
+						body: "New rules have been added to your selected policy.",
+						attributionText: $"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
 				}
 			});
 		}
@@ -2512,28 +2486,23 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				}
 
 				// Display Toast Notification
-				if (AppNotificationManager.IsSupported() && Atlas.Settings.ToastNotificationsAreEnabled)
+				if (OperationModeComboBoxSelectedIndex is 0)
 				{
-					AppNotification notification = OperationModeComboBoxSelectedIndex == 0
-						? new AppNotificationBuilder()
-							.AddText("Supplemental policy creation completed.")
-							.AddText($"The '{CustomPatternBasedFileRuleBasedSupplementalPolicyName}' policy was added to the library.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText("Access the library on the Sidebar for additional actions.")
-							.BuildNotification()
-						: new AppNotificationBuilder()
-							.AddText("Your policy has been updated.")
-							.AddText("New rules have been added to your selected policy.")
-							.SetAudioEvent(AppNotificationSoundEvent.SMS)
-							.SetTimeStamp(DateTime.Now)
-							.SetGroup("Policy Creation")
-							.SetScenario(AppNotificationScenario.Default)
-							.SetAttributionText($"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.")
-							.BuildNotification();
-					AppNotificationManager.Default.Show(notification);
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Supplemental policy creation completed.",
+						body: $"The '{CustomPatternBasedFileRuleBasedSupplementalPolicyName}' policy was added to the library.",
+						attributionText: "Access the library on the Sidebar for additional actions.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
+				}
+				else
+				{
+					UnelevatedOperations.ToastNotifications.ShowToastNotification(
+						title: "Your policy has been updated.",
+						body: "New rules have been added to your selected policy.",
+						attributionText: $"Successfully Updated '{PolicyFileToMergeWith?.PolicyIdentifier}'.",
+						group: "Policy Creation",
+						soundEvent: AppNotificationSoundEvent.SMS);
 				}
 			});
 		}

@@ -54,10 +54,6 @@ public sealed partial class App : Application
 	/// </summary>
 	private static readonly SemaphoreSlim _dialogSemaphore = new(1, 1);
 
-	/// <summary>
-	/// Initializes the singleton application object. This is the first line of authored code
-	/// executed, and as such is the logical equivalent of main() or WinMain().
-	/// </summary>
 	internal App()
 	{
 		InitializeComponent();
@@ -131,20 +127,15 @@ public sealed partial class App : Application
 	}
 
 	/*
-
 	/// <summary>
 	/// Event handler for FirstChanceException events.
 	/// This event is raised as soon as an exception is thrown, before any catch blocks are executed.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void CurrentDomain_FirstChanceException(object? sender, FirstChanceExceptionEventArgs e)
 	{
-		// Log the first chance exception details.
 		// Note: FirstChanceExceptions are raised for all exceptions, even if they are handled later.
 		Logger.Write($"FirstChanceException caught: {e.Exception.Message}");
 	}
-
 	*/
 
 	/// <summary>

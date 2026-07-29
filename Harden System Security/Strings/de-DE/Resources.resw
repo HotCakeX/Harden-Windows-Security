@@ -7733,4 +7733,49 @@ Fingerabdruck: {3}</value>
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Wenden Sie beim Anwendungsstart Maßnahmen zur Seitenkanal-Isolation an, um die Sicherheit bei der Nutzung des sicheren Tresors zu verbessern, auf Kosten einer reduzierten Leistung.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Wenn diese Option aktiviert ist, kann die App Toastbenachrichtigungen in Windows anzeigen.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Toastbenachrichtigungen in Windows anzeigen</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wenn diese Option aktiviert ist, kann die App Toastbenachrichtigungen in Windows anzeigen.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wenn diese Option aktiviert ist, kann die App Toastbenachrichtigungen in Windows anzeigen.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Alle Toastbenachrichtigungen dieser App aus dem Benachrichtigungscenter in Windows entfernen.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Alle Benachrichtigungen entfernen</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Toastbenachrichtigungen dieser App aus dem Benachrichtigungscenter in Windows entfernen.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Toastbenachrichtigungen dieser App aus dem Benachrichtigungscenter in Windows entfernen.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>Alle entfernen</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Alle Toastbenachrichtigungen dieser App aus dem Benachrichtigungscenter in Windows entfernen.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Alle Toastbenachrichtigungen dieser App aus dem Benachrichtigungscenter in Windows entfernen.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>Benachrichtigungen</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>Benachrichtigungseinstellungen</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Einstellungen für Benachrichtigungen und Hinweise verwalten.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Einstellungen für Benachrichtigungen und Hinweise verwalten.</value>
+  </data>
 </root>

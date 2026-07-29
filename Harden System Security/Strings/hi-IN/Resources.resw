@@ -7733,4 +7733,49 @@
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>सुरक्षित वॉल्ट का उपयोग करते समय सुरक्षा को बेहतर बनाने के लिए एप्लिकेशन स्टार्टअप पर साइड-चैनल आइसोलेशन मिटिगेशन लागू करें, जिससे प्रदर्शन कम हो सकता है.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>इसे सक्षम करने से ऐप Windows में टोस्ट सूचनाएँ प्रदर्शित कर सकता है.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Windows में टोस्ट सूचनाएँ प्रदर्शित करें</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इसे सक्षम करने से ऐप Windows में टोस्ट सूचनाएँ प्रदर्शित कर सकता है.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इसे सक्षम करने से ऐप Windows में टोस्ट सूचनाएँ प्रदर्शित कर सकता है.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Windows के सूचना केंद्र से इस ऐप से संबंधित सभी टोस्ट सूचनाएँ हटाएँ.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>सभी सूचनाएँ हटाएँ</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows के सूचना केंद्र से इस ऐप से संबंधित सभी टोस्ट सूचनाएँ हटाएँ.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows के सूचना केंद्र से इस ऐप से संबंधित सभी टोस्ट सूचनाएँ हटाएँ.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>सभी हटाएँ</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Windows के सूचना केंद्र से इस ऐप से संबंधित सभी टोस्ट सूचनाएँ हटाएँ.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Windows के सूचना केंद्र से इस ऐप से संबंधित सभी टोस्ट सूचनाएँ हटाएँ.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>सूचनाएँ</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>सूचना सेटिंग्स</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सूचनाओं और नोटिस से संबंधित सेटिंग्स प्रबंधित करें.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>सूचनाओं और नोटिस से संबंधित सेटिंग्स प्रबंधित करें.</value>
+  </data>
 </root>

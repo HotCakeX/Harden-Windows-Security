@@ -62,7 +62,7 @@ internal static class TaskTracking
 			try
 			{
 				// Set the active badge
-				BadgeNotificationManager.Current.SetBadgeAsGlyph(BadgeNotificationGlyph.Activity);
+				UnelevatedOperations.TaskbarBadge.SetTaskbarBadge(BadgeNotificationGlyph.Activity);
 			}
 			catch (Exception ex)
 			{
@@ -78,7 +78,7 @@ internal static class TaskTracking
 				try
 				{
 					// Clear the active badge if no more active operations
-					BadgeNotificationManager.Current.ClearBadge();
+					UnelevatedOperations.TaskbarBadge.ClearTaskbarBadge();
 				}
 				catch (Exception ex)
 				{

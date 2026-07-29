@@ -7733,4 +7733,49 @@
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>在应用程序启动时应用侧信道隔离缓解措施，以在使用安全保管库时提高安全性，但会降低性能。</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>启用此选项后，应用可以在 Windows 中显示 Toast 通知。</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>在 Windows 中显示 Toast 通知</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>启用此选项后，应用可以在 Windows 中显示 Toast 通知。</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>启用此选项后，应用可以在 Windows 中显示 Toast 通知。</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>从 Windows 通知中心移除属于此应用的所有 Toast 通知。</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>移除所有通知</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>从 Windows 通知中心移除属于此应用的所有 Toast 通知。</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>从 Windows 通知中心移除属于此应用的所有 Toast 通知。</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>全部移除</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>从 Windows 通知中心移除属于此应用的所有 Toast 通知。</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>从 Windows 通知中心移除属于此应用的所有 Toast 通知。</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>通知</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>通知设置</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>管理与通知和提示相关的设置。</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>管理与通知和提示相关的设置。</value>
+  </data>
 </root>

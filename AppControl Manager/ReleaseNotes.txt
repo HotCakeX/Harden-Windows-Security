@@ -1,7 +1,9 @@
-* You can now easily create wildcard folder path rules when you create base policies. A pre-defined list is presented to you which you can modify by adding or removing items in it. Completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1182
+- Improved support for installations where the app is installed for a Standard user account and elevated in place using an Administrator account's credentials. The following features are now available in this configuration:
+  - Displaying toast notifications
+  - Displaying taskbar icon badges for activities in progress
+  - Pinning the app to the taskbar
+  - Pinning the app to the Start menu
 
-* Updated dependencies to the latest version.
+- Toast notifications are now displayed even when the app is running with elevated privileges.
 
-* Improved the app and UI performance.
-
-* The Backup and restore page is now accessible when running unelevated.
+These improvements provide more consistent behavior across different account and elevation configurations, resulting in a more reliable and unified experience. They also make the app more compatible with the new Administrator Protection feature in Windows.

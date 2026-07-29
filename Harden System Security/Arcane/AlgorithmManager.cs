@@ -70,11 +70,10 @@ internal static class AlgorithmManager
 							BCRYPT_KEY_DERIVATION_OPERATION;
 
 		IntPtr pAlgList = IntPtr.Zero;
-		uint algCount;
 
 		try
 		{
-			int status = NativeMethods.BCryptEnumAlgorithms(allOperations, out algCount, out pAlgList, 0);
+			int status = NativeMethods.BCryptEnumAlgorithms(allOperations, out uint algCount, out pAlgList, 0);
 
 			if (status != 0 || pAlgList == IntPtr.Zero || algCount == 0)
 			{

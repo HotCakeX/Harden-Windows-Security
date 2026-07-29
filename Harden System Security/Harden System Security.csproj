@@ -67,7 +67,7 @@
         <AssemblyName>HardenSystemSecurity</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>1.0.75.0</FileVersion>
+        <FileVersion>1.0.76.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <AssemblyProduct>HardenSystemSecurity</AssemblyProduct>
         <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
@@ -246,6 +246,9 @@
         <Compile Include="..\AppControl Manager\CustomUIElements\SettingsControl\Helpers.cs" Link="CustomUIElements\SettingsControl\Helpers.cs" />
         <Compile Include="..\AppControl Manager\CustomUIElements\SettingsControl\SettingsCard.xaml.cs" Link="CustomUIElements\SettingsControl\SettingsCard.xaml.cs" />
         <Compile Include="..\AppControl Manager\CustomUIElements\SettingsControl\SettingsExpander.xaml.cs" Link="CustomUIElements\SettingsControl\SettingsExpander.xaml.cs" />
+
+        <!-- Main Entry Point -->
+        <Compile Include="..\AppControl Manager\Program.cs" Link="Program.cs" />
     </ItemGroup>
 
     <!-- NuGet packages
@@ -266,7 +269,7 @@
         <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.10" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
-        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.21.0" />
+        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.22.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4078.44" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2526" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
@@ -277,7 +280,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.WindowsPackageManager.ComInterop" Version="1.30.70-preview" />
+        <PackageReference Include="Microsoft.WindowsPackageManager.ComInterop" Version="1.30.80-preview" />
         <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.10" />
 
     </ItemGroup>
@@ -293,7 +296,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <DefineConstants>$(DefineConstants);HARDEN_SYSTEM_SECURITY</DefineConstants>
+        <DefineConstants>$(DefineConstants);HARDEN_SYSTEM_SECURITY;DISABLE_XAML_GENERATED_MAIN</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>
@@ -473,9 +476,7 @@
     </ItemGroup>
 
     <!-- Build DISMService only when its executable is missing from this project directory. -->
-    <Target Name="EnsureDISMServiceExecutable"
-            BeforeTargets="PrepareForBuild"
-            Condition="!Exists('$(MSBuildProjectDirectory)\DISMService.exe')">
+    <Target Name="EnsureDISMServiceExecutable" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildProjectDirectory)\DISMService.exe')">
         <PropertyGroup>
             <!-- Resolve all paths from this project so the target is independent of the current working directory. -->
             <_DISMServiceProject>$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\DISMService\DISMService.csproj</_DISMServiceProject>
@@ -490,34 +491,23 @@
         </PropertyGroup>
 
         <!-- Fail early if the active project platform is not one of the two supported architectures. -->
-        <Error Condition="'$(_DISMServiceRuntimeIdentifier)' == ''"
-               Text="DISMService supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
-        <Error Condition="!Exists('$(_DISMServiceProject)')"
-               Text="The DISMService project was not found at '$(_DISMServiceProject)'." />
-        <Error Condition="!Exists('$(_DISMServicePublishProfile)')"
-               Text="The DISMService publish profile was not found at '$(_DISMServicePublishProfile)'." />
+        <Error Condition="'$(_DISMServiceRuntimeIdentifier)' == ''" Text="DISMService supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
+        <Error Condition="!Exists('$(_DISMServiceProject)')" Text="The DISMService project was not found at '$(_DISMServiceProject)'." />
+        <Error Condition="!Exists('$(_DISMServicePublishProfile)')" Text="The DISMService publish profile was not found at '$(_DISMServicePublishProfile)'." />
 
         <!-- Restore, clean, build and publish only the architecture selected for the current app build. -->
-        <Exec Command="dotnet restore &quot;$(_DISMServiceProject)&quot; -r $(_DISMServiceRuntimeIdentifier)"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet clean &quot;$(_DISMServiceProject)&quot; --configuration Release"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet build &quot;$(_DISMServiceProject)&quot; --configuration Release --verbosity minimal /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_DISMServiceRuntimeIdentifier)"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet msbuild &quot;$(_DISMServiceProject)&quot; /p:Configuration=Release /restore /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_DISMServiceRuntimeIdentifier) /p:PublishProfile=&quot;$(_DISMServicePublishProfile)&quot; /t:Publish -v:minimal"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet restore &quot;$(_DISMServiceProject)&quot; -r $(_DISMServiceRuntimeIdentifier)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet clean &quot;$(_DISMServiceProject)&quot; --configuration Release" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet build &quot;$(_DISMServiceProject)&quot; --configuration Release --verbosity minimal /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_DISMServiceRuntimeIdentifier)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet msbuild &quot;$(_DISMServiceProject)&quot; /p:Configuration=Release /restore /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_DISMServiceRuntimeIdentifier) /p:PublishProfile=&quot;$(_DISMServicePublishProfile)&quot; /t:Publish -v:minimal" WorkingDirectory="$(MSBuildProjectDirectory)" />
 
         <!-- Place the native executable in the app project root for its existing Content item. -->
-        <Error Condition="!Exists('$(_DISMServicePublishedExecutable)')"
-               Text="DISMService was published, but '$(_DISMServicePublishedExecutable)' was not produced." />
-        <Copy SourceFiles="$(_DISMServicePublishedExecutable)"
-              DestinationFiles="$(MSBuildProjectDirectory)\DISMService.exe" />
+        <Error Condition="!Exists('$(_DISMServicePublishedExecutable)')" Text="DISMService was published, but '$(_DISMServicePublishedExecutable)' was not produced." />
+        <Copy SourceFiles="$(_DISMServicePublishedExecutable)" DestinationFiles="$(MSBuildProjectDirectory)\DISMService.exe" />
     </Target>
 
     <!-- Build QuantumRelayHSS only when its executable is missing from this project directory. -->
-    <Target Name="EnsureQuantumRelayHSSExecutable"
-            BeforeTargets="PrepareForBuild"
-            Condition="!Exists('$(MSBuildProjectDirectory)\QuantumRelayHSS.exe')">
+    <Target Name="EnsureQuantumRelayHSSExecutable" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildProjectDirectory)\QuantumRelayHSS.exe')">
         <PropertyGroup>
             <!-- Resolve all paths from this project so the target is independent of the current working directory. -->
             <_QuantumRelayHSSProject>$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj</_QuantumRelayHSSProject>
@@ -532,34 +522,23 @@
         </PropertyGroup>
 
         <!-- Fail early if the active project platform is not one of the two supported architectures. -->
-        <Error Condition="'$(_QuantumRelayHSSRuntimeIdentifier)' == ''"
-               Text="QuantumRelayHSS supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
-        <Error Condition="!Exists('$(_QuantumRelayHSSProject)')"
-               Text="The QuantumRelayHSS project was not found at '$(_QuantumRelayHSSProject)'." />
-        <Error Condition="!Exists('$(_QuantumRelayHSSPublishProfile)')"
-               Text="The QuantumRelayHSS publish profile was not found at '$(_QuantumRelayHSSPublishProfile)'." />
+        <Error Condition="'$(_QuantumRelayHSSRuntimeIdentifier)' == ''" Text="QuantumRelayHSS supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
+        <Error Condition="!Exists('$(_QuantumRelayHSSProject)')" Text="The QuantumRelayHSS project was not found at '$(_QuantumRelayHSSProject)'." />
+        <Error Condition="!Exists('$(_QuantumRelayHSSPublishProfile)')" Text="The QuantumRelayHSS publish profile was not found at '$(_QuantumRelayHSSPublishProfile)'." />
 
         <!-- Restore, clean, build and publish only the architecture selected for the current app build. -->
-        <Exec Command="dotnet restore &quot;$(_QuantumRelayHSSProject)&quot; -r $(_QuantumRelayHSSRuntimeIdentifier)"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet clean &quot;$(_QuantumRelayHSSProject)&quot; --configuration Release"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet build &quot;$(_QuantumRelayHSSProject)&quot; --configuration Release --verbosity minimal /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_QuantumRelayHSSRuntimeIdentifier)"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet msbuild &quot;$(_QuantumRelayHSSProject)&quot; /p:Configuration=Release /restore /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_QuantumRelayHSSRuntimeIdentifier) /p:PublishProfile=&quot;$(_QuantumRelayHSSPublishProfile)&quot; /t:Publish -v:minimal"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet restore &quot;$(_QuantumRelayHSSProject)&quot; -r $(_QuantumRelayHSSRuntimeIdentifier)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet clean &quot;$(_QuantumRelayHSSProject)&quot; --configuration Release" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet build &quot;$(_QuantumRelayHSSProject)&quot; --configuration Release --verbosity minimal /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_QuantumRelayHSSRuntimeIdentifier)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="dotnet msbuild &quot;$(_QuantumRelayHSSProject)&quot; /p:Configuration=Release /restore /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_QuantumRelayHSSRuntimeIdentifier) /p:PublishProfile=&quot;$(_QuantumRelayHSSPublishProfile)&quot; /t:Publish -v:minimal" WorkingDirectory="$(MSBuildProjectDirectory)" />
 
         <!-- Place the service executable in the app project root for its existing Content item. -->
-        <Error Condition="!Exists('$(_QuantumRelayHSSPublishedExecutable)')"
-               Text="QuantumRelayHSS was published, but '$(_QuantumRelayHSSPublishedExecutable)' was not produced." />
-        <Copy SourceFiles="$(_QuantumRelayHSSPublishedExecutable)"
-              DestinationFiles="$(MSBuildProjectDirectory)\QuantumRelayHSS.exe" />
+        <Error Condition="!Exists('$(_QuantumRelayHSSPublishedExecutable)')" Text="QuantumRelayHSS was published, but '$(_QuantumRelayHSSPublishedExecutable)' was not produced." />
+        <Copy SourceFiles="$(_QuantumRelayHSSPublishedExecutable)" DestinationFiles="$(MSBuildProjectDirectory)\QuantumRelayHSS.exe" />
     </Target>
 
     <!-- Build ComManager only when its executable is missing from the CppInterop directory. -->
-    <Target Name="EnsureComManagerExecutable"
-            BeforeTargets="PrepareForBuild"
-            Condition="!Exists('$(MSBuildProjectDirectory)\CppInterop\ComManager.exe')">
+    <Target Name="EnsureComManagerExecutable" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildProjectDirectory)\CppInterop\ComManager.exe')">
         <PropertyGroup>
 
             <!-- Resolve all paths from this project so the target is independent of the current working directory. -->
@@ -572,20 +551,15 @@
         </PropertyGroup>
 
         <!-- Fail early if the active project platform is not one of the two supported architectures. -->
-        <Error Condition="'$(_ComManagerOutputDirectory)' == ''"
-               Text="ComManager supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
-        <Error Condition="!Exists('$(_ComManagerSolution)')"
-               Text="The ComManager solution was not found at '$(_ComManagerSolution)'." />
+        <Error Condition="'$(_ComManagerOutputDirectory)' == ''" Text="ComManager supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
+        <Error Condition="!Exists('$(_ComManagerSolution)')" Text="The ComManager solution was not found at '$(_ComManagerSolution)'." />
 
         <!-- Clean and rebuild only the architecture selected for the current app build. -->
-        <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(_ComManagerSolution)&quot; /p:Configuration=Release /p:Platform=$(Platform) /target:&quot;Clean;Rebuild&quot;"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(_ComManagerSolution)&quot; /p:Configuration=Release /p:Platform=$(Platform) /target:&quot;Clean;Rebuild&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" />
 
         <!-- Place the native executable in CppInterop for its existing Content item. -->
-        <Error Condition="!Exists('$(_ComManagerPublishedExecutable)')"
-               Text="ComManager was rebuilt, but '$(_ComManagerPublishedExecutable)' was not produced." />
-        <Copy SourceFiles="$(_ComManagerPublishedExecutable)"
-              DestinationFiles="$(MSBuildProjectDirectory)\CppInterop\ComManager.exe" />
+        <Error Condition="!Exists('$(_ComManagerPublishedExecutable)')" Text="ComManager was rebuilt, but '$(_ComManagerPublishedExecutable)' was not produced." />
+        <Copy SourceFiles="$(_ComManagerPublishedExecutable)" DestinationFiles="$(MSBuildProjectDirectory)\CppInterop\ComManager.exe" />
     </Target>
 
 </Project>

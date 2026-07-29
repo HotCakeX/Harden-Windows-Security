@@ -7733,4 +7733,49 @@
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>طبّق تخفيفات عزل القنوات الجانبية عند بدء تشغيل التطبيق لتحسين الأمان أثناء استخدام المخزن الآمن، وذلك على حساب انخفاض الأداء.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>يتيح تمكين هذا الخيار للتطبيق عرض إشعارات منبثقة في Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>عرض الإشعارات المنبثقة في Windows</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>يتيح تمكين هذا الخيار للتطبيق عرض إشعارات منبثقة في Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>يتيح تمكين هذا الخيار للتطبيق عرض إشعارات منبثقة في Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>أزل جميع الإشعارات المنبثقة التابعة لهذا التطبيق من مركز الإشعارات في Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>إزالة جميع الإشعارات</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أزل جميع الإشعارات المنبثقة التابعة لهذا التطبيق من مركز الإشعارات في Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أزل جميع الإشعارات المنبثقة التابعة لهذا التطبيق من مركز الإشعارات في Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>إزالة الكل</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>أزل جميع الإشعارات المنبثقة التابعة لهذا التطبيق من مركز الإشعارات في Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>أزل جميع الإشعارات المنبثقة التابعة لهذا التطبيق من مركز الإشعارات في Windows.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>الإشعارات</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>إعدادات الإشعارات</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة الإعدادات المتعلقة بالإشعارات والتنبيهات.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إدارة الإعدادات المتعلقة بالإشعارات والتنبيهات.</value>
+  </data>
 </root>

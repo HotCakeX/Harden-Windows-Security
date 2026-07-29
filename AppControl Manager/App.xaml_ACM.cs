@@ -196,8 +196,6 @@ public sealed partial class App : Application
 			}
 		}
 
-		string[] possibleArgs = Environment.GetCommandLineArgs();
-
 		bool launchToUpdatePageFromNotification = false;
 
 		try
@@ -308,16 +306,16 @@ public sealed partial class App : Application
 				{
 					ProtocolActivatedEventArgs? eventArgs = activatedEventArgs.Data as ProtocolActivatedEventArgs;
 					Logger.Write($"Protocol Activation Detected: {eventArgs?.Uri?.OriginalString}");
-					ParseArgs(possibleArgs, eventArgs?.Uri?.OriginalString);
+					ParseArgs(Program.GetLaunchArguments(), eventArgs?.Uri?.OriginalString);
 				}
 				else if (!launchToUpdatePageFromNotification)
 				{
-					ParseArgs(possibleArgs, null);
+					ParseArgs(Program.GetLaunchArguments(), null);
 				}
 			}
 			else
 			{
-				ParseArgs(possibleArgs, null);
+				ParseArgs(Program.GetLaunchArguments(), null);
 			}
 		}
 		catch (Exception ex)
@@ -356,15 +354,8 @@ public sealed partial class App : Application
 		MainWindow.Closed += Window_Closed;  // Assign event handler for the window closed event
 		MainWindow.Activate();
 
-		try
-		{
-			// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
-			BadgeNotificationManager.Current.ClearBadge();
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
+		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
+		try { BadgeNotificationManager.Current.ClearBadge(); } catch { }
 
 		#region Initial navigation and file activation processing
 

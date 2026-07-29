@@ -7733,4 +7733,49 @@
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Εφαρμόστε μετριασμούς απομόνωσης πλευρικών καναλιών κατά την εκκίνηση της εφαρμογής, για να βελτιώσετε την ασφάλεια κατά τη χρήση του ασφαλούς θησαυροφυλακίου, με κόστος τη μειωμένη απόδοση.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Η ενεργοποίηση αυτής της επιλογής επιτρέπει στην εφαρμογή να εμφανίζει αναδυόμενες ειδοποιήσεις στα Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Εμφάνιση αναδυόμενων ειδοποιήσεων στα Windows</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Η ενεργοποίηση αυτής της επιλογής επιτρέπει στην εφαρμογή να εμφανίζει αναδυόμενες ειδοποιήσεις στα Windows.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Η ενεργοποίηση αυτής της επιλογής επιτρέπει στην εφαρμογή να εμφανίζει αναδυόμενες ειδοποιήσεις στα Windows.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>Καταργήστε από το Κέντρο ειδοποιήσεων των Windows όλες τις αναδυόμενες ειδοποιήσεις που ανήκουν σε αυτήν την εφαρμογή.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>Κατάργηση όλων των ειδοποιήσεων</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καταργήστε από το Κέντρο ειδοποιήσεων των Windows όλες τις αναδυόμενες ειδοποιήσεις που ανήκουν σε αυτήν την εφαρμογή.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καταργήστε από το Κέντρο ειδοποιήσεων των Windows όλες τις αναδυόμενες ειδοποιήσεις που ανήκουν σε αυτήν την εφαρμογή.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>Κατάργηση όλων</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Καταργήστε από το Κέντρο ειδοποιήσεων των Windows όλες τις αναδυόμενες ειδοποιήσεις που ανήκουν σε αυτήν την εφαρμογή.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Καταργήστε από το Κέντρο ειδοποιήσεων των Windows όλες τις αναδυόμενες ειδοποιήσεις που ανήκουν σε αυτήν την εφαρμογή.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>Ειδοποιήσεις</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>Ρυθμίσεις ειδοποιήσεων</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχειριστείτε τις ρυθμίσεις που σχετίζονται με ειδοποιήσεις και ενημερώσεις.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Διαχειριστείτε τις ρυθμίσεις που σχετίζονται με ειδοποιήσεις και ενημερώσεις.</value>
+  </data>
 </root>

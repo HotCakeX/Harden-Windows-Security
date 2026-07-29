@@ -28,6 +28,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Microsoft.Windows.AppNotifications.Builder;
 using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
@@ -1392,6 +1393,10 @@ internal sealed partial class ProtectVM : ViewModelBase
 				};
 				MainInfoBar.WriteSuccess($"Successfully {operationPastTense} {processedCategories} categories");
 
+				string toastTitle = "Protection operation completed.";
+				string toastBody = $"Successfully {operationPastTense} {processedCategories} categories.";
+				string toastAttribution = "Review the results on the Protect page.";
+
 				// Prepare verification results PopUp
 				if (operation == MUnitOperation.Verify)
 				{
@@ -1416,7 +1421,18 @@ internal sealed partial class ProtectVM : ViewModelBase
 					DisplayVerificationPopup();
 
 					Logger.Write($"Verified {VerificationTotal} Security Measures in total. {VerificationCompliant} were compliant while {VerificationNonCompliant} were non-compliant. The system's security score is: {VerificationPercentage:F1}% UwU");
+
+					toastTitle = "Security verification completed.";
+					toastBody = $"{VerificationCompliant} of {VerificationTotal} security measures are compliant.";
+					toastAttribution = $"System security score: {VerificationPercentage:F1}%";
 				}
+
+				UnelevatedOperations.ToastNotifications.ShowToastNotification(
+					title: toastTitle,
+					body: toastBody,
+					attributionText: toastAttribution,
+					group: "Protection Operations",
+					soundEvent: AppNotificationSoundEvent.SMS);
 			}
 		}
 		catch (OperationCanceledException)

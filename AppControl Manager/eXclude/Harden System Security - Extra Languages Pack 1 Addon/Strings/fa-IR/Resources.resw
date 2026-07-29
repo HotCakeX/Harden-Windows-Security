@@ -7733,4 +7733,49 @@ Thumbprint: {3}</value>
   <data name="SideChannelIsolationMitigationsFlyoutItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>برای بهبود امنیت هنگام استفاده از خزانه امن، کاهش‌دهنده‌های جداسازی کانال جانبی را در زمان راه‌اندازی برنامه اعمال کنید، به بهای کاهش عملکرد.</value>
   </data>
+    <data name="EnableToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>فعال‌سازی این گزینه به برنامه اجازه می‌دهد اعلان‌های بازشو را در Windows نمایش دهد.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>نمایش اعلان‌های بازشو در Windows</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فعال‌سازی این گزینه به برنامه اجازه می‌دهد اعلان‌های بازشو را در Windows نمایش دهد.</value>
+  </data>
+  <data name="EnableToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فعال‌سازی این گزینه به برنامه اجازه می‌دهد اعلان‌های بازشو را در Windows نمایش دهد.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Description" xml:space="preserve">
+    <value>همه اعلان‌های بازشوی متعلق به این برنامه را از مرکز اعلان‌ها در Windows حذف کنید.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.Header" xml:space="preserve">
+    <value>حذف همه اعلان‌ها</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>همه اعلان‌های بازشوی متعلق به این برنامه را از مرکز اعلان‌ها در Windows حذف کنید.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>همه اعلان‌های بازشوی متعلق به این برنامه را از مرکز اعلان‌ها در Windows حذف کنید.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.Content" xml:space="preserve">
+    <value>حذف همه</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>همه اعلان‌های بازشوی متعلق به این برنامه را از مرکز اعلان‌ها در Windows حذف کنید.</value>
+  </data>
+  <data name="RemoveAllToastNotificationsButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>همه اعلان‌های بازشوی متعلق به این برنامه را از مرکز اعلان‌ها در Windows حذف کنید.</value>
+  </data>
+  <data name="Notifications.Text" xml:space="preserve">
+    <value>اعلان‌ها</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.Header" xml:space="preserve">
+    <value>تنظیمات اعلان‌ها</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تنظیمات مرتبط با اعلان‌ها و اطلاعیه‌ها را مدیریت کنید.</value>
+  </data>
+  <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تنظیمات مرتبط با اعلان‌ها و اطلاعیه‌ها را مدیریت کنید.</value>
+  </data>
 </root>

@@ -45,8 +45,8 @@
                 VerticalAlignment="Center">
 
             <CCToolKit:WrapPanel Orientation="Horizontal"
-                                 HorizontalSpacing="6"
-                                 VerticalSpacing="6"
+                                 HorizontalSpacing="10"
+                                 VerticalSpacing="8"
                                  VerticalAlignment="Center"
                                  XYFocusKeyboardNavigation="Enabled">
 
@@ -68,8 +68,17 @@
                     <customUI:ButtonV2.Flyout>
                         <Flyout>
                             <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
-                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedImagePath}" />
-                                <TextBlock x:Uid="ViewSelectedGroupPolicyFileTextBlock" TextWrapping="WrapWholeWords" />
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedImagePath}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+                                <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
                                 <TextBox Text="{x:Bind ViewModel.SelectedFilePath, Mode=OneWay}"
                                          TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="False"
                                          MinWidth="400" IsReadOnly="True" />
@@ -136,6 +145,60 @@
                         </MenuFlyout>
                     </DropDownButton.Flyout>
                 </DropDownButton>
+
+                <!-- Browse Folders for Bulk Removal -->
+                <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                   x:Uid="BrowseForFoldersButton"
+                                   ObservedData="{x:Bind ViewModel.SelectedFolders.Count, Mode=OneWay}"
+                                   VerticalAlignment="Center"
+                                   Click="{x:Bind ViewModel.BrowseForFolders_Click}">
+
+                    <customUI:ButtonV2.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xEC50;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </customUI:ButtonV2.ContentTemplate>
+
+                    <customUI:ButtonV2.Flyout>
+                        <Flyout>
+
+                            <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                <Button x:Uid="ClearButton" Click="{x:Bind ViewModel.ClearSelectedFolders}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xE894;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+
+                                <TextBlock x:Uid="SelectedDirectory" TextWrapping="WrapWholeWords" />
+
+                                <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedFolders, Mode=OneWay}" />
+
+                            </CCToolKit:WrapPanel>
+
+                        </Flyout>
+                    </customUI:ButtonV2.Flyout>
+
+                </customUI:ButtonV2>
+
+                <!-- Start Bulk Removal -->
+                <Button Style="{StaticResource AccentButtonStyle}"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.StartBulkRemoval_Click}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE768;" FontSize="16"/>
+                        <TextBlock Text="Start"/>
+                    </StackPanel>
+                </Button>
 
             </CCToolKit:WrapPanel>
         </Border>

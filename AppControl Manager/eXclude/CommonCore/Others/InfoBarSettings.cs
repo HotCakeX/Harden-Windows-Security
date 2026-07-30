@@ -30,7 +30,7 @@ internal sealed partial class InfoBarSettings : ViewModelBase
 	internal string? Message { get; set => SP(ref field, value); }
 	internal string? Title { get; set => SP(ref field, value); }
 
-	internal void WriteInfo(string Msg, string? title = null)
+	internal void WriteInfo(string Msg, string? title = null, bool noLogging = false)
 	{
 		if (Atlas.AppDispatcher.HasThreadAccess)
 		{
@@ -51,7 +51,10 @@ internal sealed partial class InfoBarSettings : ViewModelBase
 				IsClosable = false;
 			});
 		}
-		Logger.Write(title is not null ? CreateProperString(title) + Msg : Msg);
+
+		// noLogging -> Do not log the message to the log file. This is useful for messages that are not important or are expected to happen frequently.
+		if (!noLogging)
+			Logger.Write(title is not null ? CreateProperString(title) + Msg : Msg);
 	}
 
 	internal void WriteWarning(string Msg, string? title = null)

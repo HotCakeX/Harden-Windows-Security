@@ -19,10 +19,15 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using AppControlManager.Others;
 using CommonCore.IncrementalCollection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -64,6 +69,33 @@ internal sealed partial class EXIFManagerVM : ViewModelBase
 	internal Visibility EmptyStatePlaceholderVisibility => string.IsNullOrEmpty(SelectedFilePath) ? Visibility.Visible : Visibility.Collapsed;
 
 	internal readonly RangedObservableCollection<MetadataCategory> Categories = [];
+
+	/// <summary>
+	/// Data Collection for user-selected folders used by the bulk metadata removal operation.
+	/// </summary>
+	internal readonly UniqueStringObservableCollection SelectedFolders = [];
+
+	/// <summary>
+	/// The image file extensions supported by the EXIF scrubber.
+	/// </summary>
+	private static readonly string[] SupportedImageExtensions = [".jpg", ".jpeg", ".png"];
+
+	/// <summary>
+	/// Event handler for the UI to select folders for the bulk metadata removal operation.
+	/// </summary>
+	internal void BrowseForFolders_Click()
+	{
+		List<string> folders = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+		foreach (string folder in CollectionsMarshal.AsSpan(folders))
+		{
+			SelectedFolders.Add(folder);
+		}
+	}
+
+	/// <summary>
+	/// Clears the user-selected folders.
+	/// </summary>
+	internal void ClearSelectedFolders() => SelectedFolders.Clear();
 
 	/// <summary>
 	/// Event handler for the UI to select a photo.
@@ -244,7 +276,7 @@ internal sealed partial class EXIFManagerVM : ViewModelBase
 		try
 		{
 			AreElementsEnabled = false;
-			HashSet<string> toRemove = new(StringComparer.OrdinalIgnoreCase);
+			HashSet<string> toRemove = new(StringComparer.Ordinal);
 
 			foreach (MetadataCategory category in Categories)
 			{
@@ -338,6 +370,224 @@ internal sealed partial class EXIFManagerVM : ViewModelBase
 			}
 		}
 	}
+
+	/// <summary>
+	/// Event handler for the Start button of the bulk metadata removal operation.
+	/// Enumerates every supported image inside the user-selected folders, removes all safe-to-remove
+	/// metadata from each one (exactly as if each file was loaded and "Remove All" was pressed for it),
+	/// and then offers to save a detailed JSON report of the whole operation to disk.
+	/// </summary>
+	internal async void StartBulkRemoval_Click()
+	{
+		if (SelectedFolders.Count == 0)
+		{
+			MainInfoBar.WriteWarning("Please select at least one folder first.");
+			return;
+		}
+
+		using AppControlManager.CustomUIElements.ContentDialogV2 dialog = new()
+		{
+			Title = "Confirm Bulk Metadata Removal",
+			Content = new TextBlock
+			{
+				Text = "All supported images (JPG/JPEG/PNG) inside the selected folders and their sub-folders will have every safe-to-remove metadata category permanently removed.\n\nThis action will overwrite the original files and cannot be undone.",
+				TextWrapping = TextWrapping.Wrap
+			},
+			PrimaryButtonText = "Start Removal",
+			CloseButtonText = Atlas.GetStr("Cancel"),
+			DefaultButton = ContentDialogButton.Close
+		};
+
+		ContentDialogResult result = await dialog.ShowAsync();
+
+		if (result != ContentDialogResult.Primary)
+		{
+			return;
+		}
+
+		ExifBulkRemovalReport report;
+
+		try
+		{
+			using IDisposable taskTracker = TaskTracking.RegisterOperation();
+
+			AreElementsEnabled = false;
+			MainInfoBar.WriteInfo("Searching for supported image files in the selected folders...");
+
+			report = await Task.Run(() => RunBulkRemoval([.. SelectedFolders]));
+
+			if (report.TotalFilesFound == 0)
+			{
+				MainInfoBar.WriteWarning("No supported image files (JPG/JPEG/PNG) were found in the selected folders.");
+				return;
+			}
+
+			MainInfoBar.WriteSuccess($"Bulk removal complete. Processed {report.TotalFilesFound} files: {report.FilesCleaned} cleaned, {report.FilesWithNothingToRemove} had nothing to remove, {report.FilesFailed} failed. Reclaimed {report.TotalBytesReclaimed} bytes.");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+			return;
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+			MainInfoBar.IsClosable = true;
+		}
+
+		// Offer the user to save the detailed JSON report of the operation to disk.
+		try
+		{
+			string? jsonPath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, "EXIFBulkRemovalReport.json");
+			if (string.IsNullOrWhiteSpace(jsonPath))
+			{
+				return;
+			}
+
+			if (!jsonPath.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+			{
+				jsonPath += ".json";
+			}
+
+			await Task.Run(() =>
+			{
+				string json = JsonSerializer.Serialize(report, ExifBulkRemovalJsonContext.Default.ExifBulkRemovalReport);
+				File.WriteAllText(jsonPath, json, Encoding.UTF8);
+			});
+
+			MainInfoBar.WriteSuccess($"Successfully saved the bulk removal report to {jsonPath}");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Performs the actual bulk metadata removal work on a background thread and builds the detailed report.
+	/// </summary>
+	private ExifBulkRemovalReport RunBulkRemoval(List<string> folders)
+	{
+		DateTimeOffset startedAt = DateTimeOffset.Now;
+		Stopwatch stopwatch = Stopwatch.StartNew();
+
+		(IEnumerable<string> detectedFiles, int totalFilesFound) = FileUtility.GetFilesFast(folders, null, SupportedImageExtensions);
+
+		List<ExifBulkFileResult> results = new(totalFilesFound);
+
+		int filesCleaned = 0;
+		int filesWithNothingToRemove = 0;
+		int filesFailed = 0;
+		long totalSizeBefore = 0;
+		long totalSizeAfter = 0;
+		int processedSoFar = 0;
+
+		foreach (string filePath in detectedFiles)
+		{
+			processedSoFar++;
+
+			// Periodically report progress without flooding the UI dispatcher.
+			if (processedSoFar % 20 == 0)
+			{
+				MainInfoBar.WriteInfo($"Processing file {processedSoFar} of {totalFilesFound}...", noLogging: true);
+			}
+
+			long sizeBefore = 0;
+			long sizeAfter = 0;
+
+			try
+			{
+				sizeBefore = new FileInfo(filePath).Length;
+
+				// Analyze the file exactly like loading it in the UI does.
+				List<MetadataCategory> categories = EXIFScrubber.Analyze(filePath);
+
+				// Collect every safe-to-remove category, exactly like pressing "Remove All" does.
+				HashSet<string> toRemove = new(StringComparer.Ordinal);
+				List<string> removedCategories = new(categories.Count);
+				foreach (MetadataCategory category in categories)
+				{
+					if (category.IsSafeToRemove)
+					{
+						_ = toRemove.Add(category.CategoryId);
+						removedCategories.Add(category.DisplayName);
+					}
+				}
+
+				if (toRemove.Count == 0)
+				{
+					sizeAfter = sizeBefore;
+					filesWithNothingToRemove++;
+					results.Add(new ExifBulkFileResult(
+						filePath: filePath,
+						fileName: Path.GetFileName(filePath),
+						directory: Path.GetDirectoryName(filePath) ?? string.Empty,
+						status: "NothingToRemove",
+						removedCategories: removedCategories,
+						removedCategoryCount: 0,
+						sizeBeforeBytes: sizeBefore,
+						sizeAfterBytes: sizeAfter,
+						sizeDifferenceBytes: 0,
+						errorMessage: null));
+				}
+				else
+				{
+					EXIFScrubber.Scrub(filePath, toRemove);
+
+					sizeAfter = new FileInfo(filePath).Length;
+					filesCleaned++;
+					results.Add(new ExifBulkFileResult(
+						filePath: filePath,
+						fileName: Path.GetFileName(filePath),
+						directory: Path.GetDirectoryName(filePath) ?? string.Empty,
+						status: "Cleaned",
+						removedCategories: removedCategories,
+						removedCategoryCount: toRemove.Count,
+						sizeBeforeBytes: sizeBefore,
+						sizeAfterBytes: sizeAfter,
+						sizeDifferenceBytes: sizeBefore - sizeAfter,
+						errorMessage: null));
+				}
+			}
+			catch (Exception ex)
+			{
+				sizeAfter = sizeBefore;
+				filesFailed++;
+				results.Add(new ExifBulkFileResult(
+					filePath: filePath,
+					fileName: Path.GetFileName(filePath),
+					directory: Path.GetDirectoryName(filePath) ?? string.Empty,
+					status: "Failed",
+					removedCategories: [],
+					removedCategoryCount: 0,
+					sizeBeforeBytes: sizeBefore,
+					sizeAfterBytes: sizeAfter,
+					sizeDifferenceBytes: 0,
+					errorMessage: ex.Message));
+			}
+
+			totalSizeBefore += sizeBefore;
+			totalSizeAfter += sizeAfter;
+		}
+
+		stopwatch.Stop();
+
+		return new ExifBulkRemovalReport(
+			format: "Harden System Security EXIF Bulk Removal Report",
+			generatedAt: DateTimeOffset.Now,
+			operationStartedAt: startedAt,
+			durationMilliseconds: stopwatch.ElapsedMilliseconds,
+			selectedFolders: folders,
+			supportedExtensions: [.. SupportedImageExtensions],
+			totalFilesFound: totalFilesFound,
+			filesCleaned: filesCleaned,
+			filesWithNothingToRemove: filesWithNothingToRemove,
+			filesFailed: filesFailed,
+			totalSizeBeforeBytes: totalSizeBefore,
+			totalSizeAfterBytes: totalSizeAfter,
+			totalBytesReclaimed: totalSizeBefore - totalSizeAfter,
+			results: results);
+	}
 }
 
 internal sealed partial class MetadataTag(string name, string value)
@@ -350,14 +600,12 @@ internal sealed partial class MetadataTag(string name, string value)
 internal sealed partial class MetadataCategory(string categoryId, string displayName, bool isSafeToRemove) : INotifyPropertyChanged
 {
 	public event PropertyChangedEventHandler? PropertyChanged;
-
 	private void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new(propertyName));
 
 	internal string CategoryId => categoryId;
 	internal string DisplayName => displayName;
-	internal bool IsSafeToRemove => isSafeToRemove;
+	internal bool IsSafeToRemove { get; set; } = isSafeToRemove;
 	internal Visibility RemoveButtonVisibility => IsSafeToRemove ? Visibility.Visible : Visibility.Collapsed;
-
 	internal bool IsExpanded
 	{
 		get; set
@@ -369,13 +617,38 @@ internal sealed partial class MetadataCategory(string categoryId, string display
 			}
 		}
 	} = true;
-
 	internal readonly ObservableCollection<MetadataTag> Tags = [];
+}
+
+/// <summary>
+/// Identifies which Image File Directory is currently being walked.
+/// This is required because the Exif specification gives every IFD kind its own independent tag number space,
+/// and because only the 0th/1st IFD pair is linked together by an "offset to the next IFD" field.
+/// Sources:
+/// JEITA CP-3451C / CIPA DC-008-2012 - 4.6.2 IFD Structure, 4.6.3 Exif-specific IFD, Table 15 (GPS Attribute Information), Table 16 (Interoperability IFD Attribute Information)
+/// TIFF 6.0 Specification - Pages 13-16 - Image File Directory
+/// </summary>
+internal enum ExifIfdKind
+{
+	// The 0th IFD. It describes the primary image and uses the TIFF/Exif tag number space.
+	Primary,
+
+	// The 1st IFD. It describes the embedded thumbnail and uses the same TIFF/Exif tag number space as the 0th IFD.
+	Thumbnail,
+
+	// The Exif private IFD referenced by tag 0x8769. It uses the TIFF/Exif tag number space.
+	ExifPrivate,
+
+	// The GPS Info IFD referenced by tag 0x8825. It has its own tag number space (0x0000 - 0x001F).
+	Gps,
+
+	// The Interoperability IFD referenced by tag 0xA005. It has its own tag number space (0x0001, 0x0002, 0x1000 - 0x1002).
+	Interoperability
 }
 
 internal sealed partial class MetadataContext
 {
-	internal readonly Dictionary<string, MetadataCategory> CategoriesMap = new(StringComparer.OrdinalIgnoreCase);
+	internal readonly Dictionary<string, MetadataCategory> CategoriesMap = new(StringComparer.Ordinal);
 
 	internal void AddTag(string categoryId, string categoryName, bool isSafeToRemove, string name, string value)
 	{
@@ -383,6 +656,11 @@ internal sealed partial class MetadataContext
 		{
 			category = new MetadataCategory(categoryId, categoryName, isSafeToRemove);
 			CategoriesMap[categoryId] = category;
+		}
+		// A category is removable when at least one of the items it holds is removable.
+		else if (isSafeToRemove)
+		{
+			category.IsSafeToRemove = true;
 		}
 		category.Tags.Add(new MetadataTag(name, value));
 	}
@@ -412,7 +690,7 @@ internal static class EXIFScrubber
 		using FileStream inputStream = new(inputFilePath, FileMode.Open, FileAccess.Read);
 		ProcessFile(inputStream, null, null, ctx, inputFilePath);
 
-		List<MetadataCategory> resultList = [];
+		List<MetadataCategory> resultList = new(ctx.CategoriesMap.Count);
 		foreach (MetadataCategory category in ctx.CategoriesMap.Values)
 		{
 			resultList.Add(category);
@@ -503,48 +781,62 @@ internal static class EXIFScrubber
 		Span<byte> lengthBuffer = stackalloc byte[2];
 		Span<byte> replacementLenBytes = stackalloc byte[2];
 
+		// Holds a marker type byte that was already consumed from the stream by the entropy-coded data
+		// scanner after an SOS segment, so the next loop iteration processes it without re-reading it.
+		int pendingMarkerType = -1;
+
 		while (true)
 		{
-			int bytesRead = inputStream.Read(markerPrefix);
+			byte markerType;
 
-			// Shouldn't hit for normal JPEG files. It's defensive here for corrupt image files.
-			if (bytesRead == 0)
+			if (pendingMarkerType >= 0)
 			{
-				break;
+				markerType = (byte)pendingMarkerType;
+				pendingMarkerType = -1;
 			}
-
-			// Source: ISO/IEC 10918-1 : 1993(E) - B.1.1.2 Markers
-			// "All markers are assigned two-byte codes: an X'FF' byte followed by a byte which is not equal to 0 or X'FF'."
-			// If the byte is not 0xFF, it means we are encountering unexpected garbage data or proprietary padding between segments.
-			// We safely write this non-standard byte to the output to avoid corrupting the file and continue scanning for the next true marker.
-			if (markerPrefix[0] != startOfMarker)
+			else
 			{
-				outputStream?.Write(markerPrefix);
-				continue;
-			}
+				int bytesRead = inputStream.Read(markerPrefix);
 
-			// Read the second byte of the marker to identify its type
-			inputStream.ReadExactly(markerTypeBuffer);
-			byte markerType = markerTypeBuffer[0];
+				// Shouldn't hit for normal JPEG files. It's defensive here for corrupt image files.
+				if (bytesRead == 0)
+				{
+					break;
+				}
 
-			// Source: ISO/IEC 10918-1 : 1993(E) - B.1.1.2 Markers
-			// "Any marker may optionally be preceded by any number of fill bytes, which are bytes assigned code X'FF'."
-			// This loop safely consumes any legal 0xFF padding fill bytes until it finds the actual marker type byte.
-			while (markerType == startOfMarker)
-			{
-				outputStream?.WriteByte(startOfMarker);
+				// Source: ISO/IEC 10918-1 : 1993(E) - B.1.1.2 Markers
+				// "All markers are assigned two-byte codes: an X'FF' byte followed by a byte which is not equal to 0 or X'FF'."
+				// If the byte is not 0xFF, it means we are encountering unexpected garbage data or proprietary padding between segments.
+				// We safely write this non-standard byte to the output to avoid corrupting the file and continue scanning for the next true marker.
+				if (markerPrefix[0] != startOfMarker)
+				{
+					outputStream?.Write(markerPrefix);
+					continue;
+				}
+
+				// Read the second byte of the marker to identify its type
 				inputStream.ReadExactly(markerTypeBuffer);
 				markerType = markerTypeBuffer[0];
-			}
 
-			// 0x00 is not a valid marker type. It is used exclusively to escape 0xFF in entropy-coded data.
-			// If we encounter it here, it means the segment is malformed or contains garbage bytes.
-			// We output it safely to prevent stream desynchronization and continue looking for a true marker.
-			if (markerType == 0x00)
-			{
-				outputStream?.WriteByte(startOfMarker);
-				outputStream?.WriteByte(markerType);
-				continue;
+				// Source: ISO/IEC 10918-1 : 1993(E) - B.1.1.2 Markers
+				// "Any marker may optionally be preceded by any number of fill bytes, which are bytes assigned code X'FF'."
+				// This loop safely consumes any legal 0xFF padding fill bytes until it finds the actual marker type byte.
+				while (markerType == startOfMarker)
+				{
+					outputStream?.WriteByte(startOfMarker);
+					inputStream.ReadExactly(markerTypeBuffer);
+					markerType = markerTypeBuffer[0];
+				}
+
+				// 0x00 is not a valid marker type. It is used exclusively to escape 0xFF in entropy-coded data.
+				// If we encounter it here, it means the segment is malformed or contains garbage bytes.
+				// We output it safely to prevent stream desynchronization and continue looking for a true marker.
+				if (markerType == 0x00)
+				{
+					outputStream?.WriteByte(startOfMarker);
+					outputStream?.WriteByte(markerType);
+					continue;
+				}
 			}
 
 			// RSTm: Restart marker – A conditional marker which is placed between entropy - coded segments only if restart
@@ -563,15 +855,21 @@ internal static class EXIFScrubber
 			// read the next 2 bytes of actual image data as a "length", and try to skip ahead.
 			// This would instantly corrupt the parsing state and break the image.
 			// Source: ISO/IEC 10918-1 : 1993(E) - B.1.1.4 Marker segments
-			if ((markerType >= 0xD0 && markerType <= endOfImage) || markerType == 0x01)
+			if (markerType == endOfImage)
 			{
 				outputStream?.WriteByte(startOfMarker);
 				outputStream?.WriteByte(markerType);
 
-				if (markerType == endOfImage)
-				{
-					break; // We reached the absolute end of the image datastream, stop parsing.
-				}
+				// We reached the absolute end of the image datastream. Any bytes that follow the EOI marker are
+				// not part of the image and are handled as a removable trailing data category.
+				HandleTrailingData(inputStream, outputStream, categoriesToRemove, ctx, "EOI (End of Image) marker");
+				break;
+			}
+
+			if ((markerType >= 0xD0 && markerType <= startOfImage) || markerType == 0x01)
+			{
+				outputStream?.WriteByte(startOfMarker);
+				outputStream?.WriteByte(markerType);
 				continue; // Jumping back to the top of the while(true) loop to read the next byte.
 			}
 
@@ -602,6 +900,7 @@ internal static class EXIFScrubber
 				"XMP" => true,
 				"ExtendedXMP" => true,
 				"Photoshop/IRB" => true,
+				"Ducky" => true,
 				_ => false
 			};
 
@@ -613,6 +912,7 @@ internal static class EXIFScrubber
 				"Photoshop/IRB" => "Photoshop IRB",
 				"COM" => "Comment Data",
 				"JFXX" => "JFXX Thumbnail",
+				"Ducky" => "Adobe Save-for-Web (Ducky)",
 				"ICC_PROFILE" => "ICC Color Profile",
 				"JFIF" => "JFIF Header",
 				_ => chunkType.StartsWith("APP", StringComparison.OrdinalIgnoreCase) ? $"Application Marker ({chunkType})" : chunkType
@@ -621,6 +921,19 @@ internal static class EXIFScrubber
 			if (outputStream != null)
 			{
 				bool shouldRemove = isSafeToRemove && categoriesToRemove != null && categoriesToRemove.Contains(chunkType);
+
+				// The standard XMP segment and the ExtendedXMP segments form one logical XMP packet:
+				// the standard packet carries an xmpNote:HasExtendedXMP GUID that references the ExtendedXMP segments.
+				// Source: https://github.com/adobe/XMP-Toolkit-SDK/blob/main/docs/XMPSpecificationPart3.pdf - 1.1.3.1 Extended XMP in JPEG
+				// Removing only one of the two would either leave the ExtendedXMP payload orphaned inside the file
+				// (metadata survives the removal) or leave a dangling GUID reference in the standard packet,
+				// so a removal request for either category always removes both.
+				if (!shouldRemove && categoriesToRemove != null &&
+					(string.Equals(chunkType, "XMP", StringComparison.OrdinalIgnoreCase) || string.Equals(chunkType, "ExtendedXMP", StringComparison.OrdinalIgnoreCase)) &&
+					(categoriesToRemove.Contains("XMP") || categoriesToRemove.Contains("ExtendedXMP")))
+				{
+					shouldRemove = true;
+				}
 
 				if (shouldRemove)
 				{
@@ -713,15 +1026,188 @@ internal static class EXIFScrubber
 				{
 					ctx.AddTag(chunkType, categoryName, isSafeToRemove, "Marker Data", $"(Binary Data {payloadLength} bytes)");
 				}
+
+				if (isSafeToRemove && !ctx.CategoriesMap.ContainsKey(chunkType))
+				{
+					ctx.AddTag(chunkType, categoryName, true, "Marker Data", $"(Unparsable {chunkType} segment: {payloadLength} bytes)");
+				}
 			}
 
 			if (markerType == 0xDA)
 			{
-				if (outputStream != null)
+				// The entropy-coded scan data follows the SOS header segment. Instead of blindly copying the rest
+				// of the file (which would also preserve any metadata segments between progressive scans and any
+				// tracking data appended after the EOI marker), scan through the entropy-coded data to find the
+				// next true marker and hand it back to this loop for regular processing.
+				pendingMarkerType = CopyEntropyCodedData(inputStream, outputStream);
+				if (pendingMarkerType < 0)
 				{
-					inputStream.CopyTo(outputStream);
+					break; // The stream ended inside the entropy-coded data (truncated file, no EOI marker). Everything read was copied through.
 				}
-				break;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Copies JPEG entropy-coded scan data through to the output until the next true marker is found.
+	/// Stuffed bytes (0xFF00), restart markers (RST0-RST7) and fill bytes (0xFF padding) are part of the
+	/// entropy-coded data stream and are copied through verbatim.
+	/// Source: ISO/IEC 10918-1 : 1993(E) - B.1.1.2 Markers / B.1.1.5 Entropy-coded data segments / B.2.1 High-level syntax.
+	/// </summary>
+	/// <returns>The marker type byte of the next true marker (its 0xFF prefix and the type byte are consumed but not written), or -1 when the stream ends.</returns>
+	private static int CopyEntropyCodedData(Stream inputStream, Stream? outputStream)
+	{
+		if (inputStream.CanSeek)
+		{
+			byte[] buffer = new byte[65536];
+			int length = 0;
+			int pos = 0;
+
+			while (true)
+			{
+				if (pos >= length)
+				{
+					length = inputStream.Read(buffer, 0, buffer.Length);
+					pos = 0;
+					if (length == 0) return -1;
+				}
+
+				int ffIndex = Array.IndexOf(buffer, (byte)0xFF, pos, length - pos);
+				if (ffIndex < 0)
+				{
+					// No marker prefix in the remainder of the buffer: it is all entropy-coded data.
+					outputStream?.Write(buffer, pos, length - pos);
+					pos = length;
+					continue;
+				}
+
+				// Write the entropy-coded bytes that precede the 0xFF.
+				outputStream?.Write(buffer, pos, ffIndex - pos);
+				pos = ffIndex;
+
+				// The byte following the 0xFF decides what it is; refill the buffer if the 0xFF was its last byte.
+				if (pos + 1 >= length)
+				{
+					buffer[0] = 0xFF;
+					int refilled = inputStream.Read(buffer, 1, buffer.Length - 1);
+					if (refilled == 0)
+					{
+						// The file ends with a dangling 0xFF: copy it through and report end of stream.
+						outputStream?.WriteByte(0xFF);
+						return -1;
+					}
+					length = refilled + 1;
+					pos = 0;
+				}
+
+				byte next = buffer[pos + 1];
+
+				if (next == 0x00 || (next >= 0xD0 && next <= 0xD7))
+				{
+					// 0xFF00 is a stuffed data byte and RST0-RST7 are restart markers: both stay inside the scan data.
+					outputStream?.WriteByte(0xFF);
+					outputStream?.WriteByte(next);
+					pos += 2;
+					continue;
+				}
+
+				if (next == 0xFF)
+				{
+					// A fill byte. Write one 0xFF and re-examine from the second one, which may itself precede a marker.
+					outputStream?.WriteByte(0xFF);
+					pos += 1;
+					continue;
+				}
+
+				// A true marker terminates the entropy-coded data. Rewind the stream so its position sits
+				// immediately after the marker type byte, then let the caller process the marker.
+				pos += 2;
+				_ = inputStream.Seek(pos - length, SeekOrigin.Current);
+				return next;
+			}
+		}
+
+		// Byte-by-byte fallback for non-seekable streams where buffered over-reading cannot be rewound.
+		// Each read returns the byte value as an int (or -1 at end of stream) so that every byte is
+		// evaluated as its own value instead of re-reading the single shared buffer element.
+		Span<byte> single = stackalloc byte[1];
+		while (true)
+		{
+			int current = ReadSingleByte(inputStream, single);
+			if (current < 0) return -1;
+
+			if (current != 0xFF)
+			{
+				outputStream?.WriteByte((byte)current);
+				continue;
+			}
+
+			// Consume any fill bytes: every 0xFF that is followed by another 0xFF is padding.
+			int next;
+			while (true)
+			{
+				next = ReadSingleByte(inputStream, single);
+				if (next < 0)
+				{
+					outputStream?.WriteByte(0xFF);
+					return -1;
+				}
+				if (next != 0xFF) break;
+				outputStream?.WriteByte(0xFF);
+			}
+
+			if (next == 0x00 || (next >= 0xD0 && next <= 0xD7))
+			{
+				outputStream?.WriteByte(0xFF);
+				outputStream?.WriteByte((byte)next);
+				continue;
+			}
+
+			return next;
+		}
+	}
+
+	/// <summary>
+	/// Reads a single byte from the stream into the supplied one byte scratch buffer.
+	/// </summary>
+	/// <returns>The value of the byte that was read, or -1 when the stream ended.</returns>
+	private static int ReadSingleByte(Stream inputStream, Span<byte> scratch) => inputStream.Read(scratch) == 0 ? -1 : scratch[0];
+
+	/// <summary>
+	/// Handles any bytes that remain in the input stream after the logical end of the image datastream
+	/// (the EOI marker for JPEG, the IEND chunk for PNG). Decoders stop at the end-of-image structure, so this
+	/// appended data never affects how the image renders, yet it is a well known hiding place for tracking
+	/// payloads (vendor trailers, appended archives and similar).
+	/// In analysis mode the data is reported as a removable category; in scrub mode it is dropped when its
+	/// category was selected for removal and copied through verbatim otherwise.
+	/// </summary>
+	private static void HandleTrailingData(Stream inputStream, Stream? outputStream, HashSet<string>? categoriesToRemove, MetadataContext? ctx, string endMarkerName)
+	{
+		if (outputStream != null)
+		{
+			if (categoriesToRemove != null && categoriesToRemove.Contains("TrailingData"))
+			{
+				return; // Drop everything after the end of the image datastream.
+			}
+
+			inputStream.CopyTo(outputStream);
+			return;
+		}
+
+		if (ctx != null)
+		{
+			// Count the remaining bytes without loading them all into memory.
+			byte[] buffer = new byte[81920];
+			long trailingBytes = 0;
+			int bytesRead;
+			while ((bytesRead = inputStream.Read(buffer, 0, buffer.Length)) > 0)
+			{
+				trailingBytes += bytesRead;
+			}
+
+			if (trailingBytes > 0)
+			{
+				ctx.AddTag("TrailingData", "Trailing Data", true, "Appended Data", $"(Binary Data {trailingBytes} bytes after the {endMarkerName})");
 			}
 		}
 	}
@@ -765,11 +1251,15 @@ internal static class EXIFScrubber
 			uint chunkLength = BinaryPrimitives.ReadUInt32BigEndian(lengthBuffer);
 			string chunkType = Encoding.ASCII.GetString(typeBuffer);
 
-			bool isSafeToRemove = string.Equals(chunkType, "eXIf", StringComparison.OrdinalIgnoreCase) ||
-								  string.Equals(chunkType, "tEXt", StringComparison.OrdinalIgnoreCase) ||
-								  string.Equals(chunkType, "zTXt", StringComparison.OrdinalIgnoreCase) ||
-								  string.Equals(chunkType, "iTXt", StringComparison.OrdinalIgnoreCase) ||
-								  string.Equals(chunkType, "tIME", StringComparison.OrdinalIgnoreCase);
+			if (chunkLength > int.MaxValue)
+			{
+				throw new InvalidDataException("Invalid PNG chunk length encountered. The PNG specification does not allow a chunk length greater than 2147483647 bytes.");
+			}
+			bool isSafeToRemove = string.Equals(chunkType, "eXIf", StringComparison.Ordinal) ||
+							  string.Equals(chunkType, "tEXt", StringComparison.Ordinal) ||
+							  string.Equals(chunkType, "zTXt", StringComparison.Ordinal) ||
+							  string.Equals(chunkType, "iTXt", StringComparison.Ordinal) ||
+							  string.Equals(chunkType, "tIME", StringComparison.Ordinal);
 
 			string categoryName = chunkType switch
 			{
@@ -786,7 +1276,7 @@ internal static class EXIFScrubber
 
 			if (outputStream == null)
 			{
-				if (string.Equals(chunkType, "IDAT", StringComparison.OrdinalIgnoreCase))
+				if (string.Equals(chunkType, "IDAT", StringComparison.Ordinal))
 				{
 					_ = inputStream.Seek(chunkLength, SeekOrigin.Current);
 					inputStream.ReadExactly(crcBuffer);
@@ -802,12 +1292,12 @@ internal static class EXIFScrubber
 
 				if (ctx != null)
 				{
-					if (string.Equals(chunkType, "eXIf", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(chunkType, "eXIf", StringComparison.Ordinal))
 					{
 						ReadOnlySpan<byte> tiffData = new(chunkPayload);
 						ParseExif(tiffData, chunkType, categoryName, ctx);
 					}
-					else if (string.Equals(chunkType, "tEXt", StringComparison.OrdinalIgnoreCase))
+					else if (string.Equals(chunkType, "tEXt", StringComparison.Ordinal))
 					{
 						int nullIdx = Array.IndexOf(chunkPayload, (byte)0);
 						if (nullIdx >= 0 && nullIdx < chunkLength - 1)
@@ -821,8 +1311,8 @@ internal static class EXIFScrubber
 							ctx.AddTag(chunkType, categoryName, true, "Text Block", "(Binary Data)");
 						}
 					}
-					else if (string.Equals(chunkType, "iTXt", StringComparison.OrdinalIgnoreCase) ||
-							 string.Equals(chunkType, "zTXt", StringComparison.OrdinalIgnoreCase))
+					else if (string.Equals(chunkType, "iTXt", StringComparison.Ordinal) ||
+							 string.Equals(chunkType, "zTXt", StringComparison.Ordinal))
 					{
 						int nullIdx = Array.IndexOf(chunkPayload, (byte)0);
 						if (nullIdx >= 0)
@@ -835,19 +1325,19 @@ internal static class EXIFScrubber
 							ctx.AddTag(chunkType, categoryName, true, "Compressed Block", "(Binary Data)");
 						}
 					}
-					else if (string.Equals(chunkType, "tIME", StringComparison.OrdinalIgnoreCase))
+					else if (string.Equals(chunkType, "tIME", StringComparison.Ordinal))
 					{
 						ctx.AddTag(chunkType, categoryName, true, "Timestamp", "(Time Data)");
 					}
-					else if (string.Equals(chunkType, "iCCP", StringComparison.OrdinalIgnoreCase))
+					else if (string.Equals(chunkType, "iCCP", StringComparison.Ordinal))
 					{
 						ctx.AddTag(chunkType, categoryName, false, "Profile Data", "[Kept for Visual Fidelity]");
 					}
-					else if (string.Equals(chunkType, "pHYs", StringComparison.OrdinalIgnoreCase))
+					else if (string.Equals(chunkType, "pHYs", StringComparison.Ordinal))
 					{
 						ctx.AddTag(chunkType, categoryName, false, "Dimensions", "[Kept for Visual Fidelity]");
 					}
-					else if (string.Equals(chunkType, "IHDR", StringComparison.OrdinalIgnoreCase) && chunkLength >= 13)
+					else if (string.Equals(chunkType, "IHDR", StringComparison.Ordinal) && chunkLength >= 13)
 					{
 						uint width = BinaryPrimitives.ReadUInt32BigEndian(chunkPayload.AsSpan(0, 4));
 						uint height = BinaryPrimitives.ReadUInt32BigEndian(chunkPayload.AsSpan(4, 4));
@@ -863,9 +1353,14 @@ internal static class EXIFScrubber
 						ctx.AddTag(chunkType, categoryName, false, "Image Size", $"{width}x{height}");
 						ctx.AddTag(chunkType, categoryName, false, "Megapixels", (pixels / 1000000.0).ToString("F1"));
 					}
-					else if (!string.Equals(chunkType, "IEND", StringComparison.OrdinalIgnoreCase))
+					else if (!string.Equals(chunkType, "IEND", StringComparison.Ordinal))
 					{
 						ctx.AddTag(chunkType, categoryName, isSafeToRemove, "Chunk Data", $"(Binary Data {chunkLength} bytes)");
+					}
+
+					if (isSafeToRemove && !ctx.CategoriesMap.ContainsKey(chunkType))
+					{
+						ctx.AddTag(chunkType, categoryName, true, "Chunk Data", $"(Unparsable {chunkType} chunk: {chunkLength} bytes)");
 					}
 				}
 			}
@@ -883,7 +1378,7 @@ internal static class EXIFScrubber
 					inputStream.ReadExactly(crcBuffer);
 
 					byte[]? replacementPayload = null;
-					if (string.Equals(chunkType, "eXIf", StringComparison.OrdinalIgnoreCase))
+					if (string.Equals(chunkType, "eXIf", StringComparison.Ordinal))
 					{
 						ReadOnlySpan<byte> tiffData = new(chunkPayload);
 						ushort? orientation = GetExifOrientation(tiffData);
@@ -924,8 +1419,11 @@ internal static class EXIFScrubber
 				}
 			}
 
-			if (string.Equals(chunkType, "IEND", StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(chunkType, "IEND", StringComparison.Ordinal))
 			{
+				// Source: https://www.w3.org/TR/png-3/#5DataRep - "The IEND chunk marks the end of the PNG datastream."
+				// Anything that follows it is not part of the image; it is reported and removed as trailing data.
+				HandleTrailingData(inputStream, outputStream, categoriesToRemove, ctx, "IEND chunk");
 				break;
 			}
 		}
@@ -933,7 +1431,6 @@ internal static class EXIFScrubber
 
 	private static string IdentifyJpegChunk(byte markerType, byte[] payload)
 	{
-		// Comment
 		// Source: ISO/IEC 10918-1 : 1993(E) - Table B.1 – Marker code assignments - Other markers
 		if (markerType == 0xFE)
 		{
@@ -997,6 +1494,15 @@ internal static class EXIFScrubber
 			if (markerType == 0xED && payload.Length >= 14 && payload.AsSpan(0, 14).SequenceEqual("Photoshop 3.0\0"u8))
 			{
 				return "Photoshop/IRB";
+			}
+
+			// APP12 "Ducky" - written by Adobe Photoshop "Save for Web".
+			// It only carries editor metadata (the quality setting plus optional comment and copyright text)
+			// and is never used for decoding, so removing it cannot affect how the image renders.
+			// Source: https://exiftool.org/TagNames/APP12.html - identified by the ASCII signature "Ducky" at the start of the payload.
+			if (markerType == 0xEC && payload.Length >= 5 && payload.AsSpan(0, 5).SequenceEqual("Ducky"u8))
+			{
+				return "Ducky";
 			}
 
 			// Find out the exact application segment number by subtracting the base value (0xE0) from the markerType byte we are currently reading.
@@ -1257,6 +1763,11 @@ internal static class EXIFScrubber
 			uint dataSize = BinaryPrimitives.ReadUInt32BigEndian(payload.AsSpan(pos, 4));
 			pos += 4;
 
+			// A resource cannot be larger than the bytes remaining in the segment. A corrupted or malicious
+			// declared size would otherwise wrap negative in the "pos += (int)dataSize" advance below,
+			// moving the cursor backwards and spinning this loop forever on the same resource block.
+			if (dataSize > (uint)(payload.Length - pos)) break;
+
 			string resName = $"Photoshop Resource {resId}";
 			if (!string.IsNullOrEmpty(name)) resName += $" ({name})";
 
@@ -1376,22 +1887,42 @@ internal static class EXIFScrubber
 		if (tiffData.Length < 8) return null;
 
 		// Detecting byte order: "II" (4949.H) for little-endian and "MM" (4D4D.H) for big-endian
-		// Source: https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Header
-		bool isLittleEndian = tiffData[0] == 0x49 && tiffData[1] == 0x49;
+		// Source: https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Header		
+		bool isLittleEndian;
+		if (tiffData[0] == 0x49 && tiffData[1] == 0x49)
+		{
+			isLittleEndian = true;
+		}
+		else if (tiffData[0] == 0x4D && tiffData[1] == 0x4D)
+		{
+			isLittleEndian = false;
+		}
+		else
+		{
+			return null;
+		}
+
+		// Bytes 2-3 contain "An arbitrary but carefully chosen number (42) that further identifies the file as a TIFF file."
+		// Source: Page 13 - https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Header
+		// Without this check any buffer that happens to begin with "II" or "MM" would be accepted as a valid TIFF.
+		ushort magic = isLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(tiffData.Slice(2, 2)) : BinaryPrimitives.ReadUInt16BigEndian(tiffData.Slice(2, 2));
+		if (magic != 0x002A) return null;
 
 		// Read bytes 4-7 for IFD (Image File Directory)
 		// Source: https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Header
 		uint ifdOffset = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(tiffData.Slice(4, 4)) : BinaryPrimitives.ReadUInt32BigEndian(tiffData.Slice(4, 4));
 
-		// Validate the IDF data
+		// Validate the IFD data
 		// If there isn't enough room left in this buffer to read the mandatory 2-byte Entry Count, abort parsing and return null.
-		if (ifdOffset + 2 > tiffData.Length) return null;
+		// The offset is widened to a 64-bit signed integer before the addition because "ifdOffset" is an unmodified
+		// 32-bit value taken straight from the file.
+		if ((long)ifdOffset + 2 > tiffData.Length) return null;
 
 		// Read the 2-byte count of the number of directory entries (i.e., the number of fields)
 		// This tells the for loop below exactly how many tags to look for.
 		// Source: https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Directory
 		ushort entryCount = isLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(tiffData.Slice((int)ifdOffset, 2)) : BinaryPrimitives.ReadUInt16BigEndian(tiffData.Slice((int)ifdOffset, 2));
-		uint currentOffset = ifdOffset + 2;
+		long currentOffset = (long)ifdOffset + 2;
 
 		for (int i = 0; i < entryCount; i++)
 		{
@@ -1404,14 +1935,54 @@ internal static class EXIFScrubber
 
 			if (tagId == OrientationTag)
 			{
+				// Bytes 2-3 are the field Type and bytes 4-7 are the Count. Both of them are mandatory to locate and to decode the value.
+				// Source: https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Directory - IFD Entry
+				ushort dataType = isLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(entry.Slice(2, 2)) : BinaryPrimitives.ReadUInt16BigEndian(entry.Slice(2, 2));
+				uint dataCount = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(entry.Slice(4, 4)) : BinaryPrimitives.ReadUInt32BigEndian(entry.Slice(4, 4));
+
 				// Isolates Bytes 8, 9, 10, and 11, the exact location where the metadata value is.
 				// The specification mandates that this field is always exactly 4 bytes wide, regardless of how small the actual data is.
 				ReadOnlySpan<byte> valueField = entry.Slice(8, 4);
 
-				// So, out of the 4 bytes in valueField:
-				// Byte 0 and Byte 1 contain the actual Orientation number(the 2 - byte SHORT).
-				// Byte 2 and Byte 3 are just empty padding(zeros).
-				return isLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(valueField[..2]) : BinaryPrimitives.ReadUInt16BigEndian(valueField[..2]);
+				// Source: Page 15 - https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Directory
+				ulong totalBytes = (ulong)dataCount * (uint)GetExifComponentSize(dataType);
+				if (totalBytes == 0) return null;
+
+				ReadOnlySpan<byte> valueData;
+				if (totalBytes <= 4)
+				{
+					valueData = valueField[..(int)totalBytes];
+				}
+				else
+				{
+					uint dataOffset = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(valueField) : BinaryPrimitives.ReadUInt32BigEndian(valueField);
+					if (dataOffset + totalBytes > (ulong)tiffData.Length) return null;
+					valueData = tiffData.Slice((int)dataOffset, (int)totalBytes);
+				}
+
+				uint rawValue;
+				if (dataType == 1 && valueData.Length >= 1)
+				{
+					// BYTE. A single byte has no byte order, so it is read directly.
+					rawValue = valueData[0];
+				}
+				else if (dataType == 3 && valueData.Length >= 2)
+				{
+					rawValue = isLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(valueData[..2]) : BinaryPrimitives.ReadUInt16BigEndian(valueData[..2]);
+				}
+				else if (dataType == 4 && valueData.Length >= 4)
+				{
+					rawValue = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(valueData[..4]) : BinaryPrimitives.ReadUInt32BigEndian(valueData[..4]);
+				}
+				else
+				{
+					return null;
+				}
+
+				// The specification enumerates exactly 8 legal orientations (1 through 8) and states "Default is 1".
+				// Source: Pages 36-37 - https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Orientation
+				// Source: Table 4 - https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - JEITA CP-3451C / CIPA DC-008-2012
+				return rawValue is >= 1 and <= 8 ? (ushort)rawValue : null;
 			}
 			currentOffset += 12;
 		}
@@ -1490,15 +2061,17 @@ internal static class EXIFScrubber
 		uint ifdOffset = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(tiffData.Slice(4, 4)) : BinaryPrimitives.ReadUInt32BigEndian(tiffData.Slice(4, 4));
 
 		HashSet<uint> visitedOffsets = new();
-		ParseIfd(tiffData, ifdOffset, isLittleEndian, visitedOffsets, categoryId, categoryName, ctx);
+
+		// Source: https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - 4.5.2 - "the 0th IFD ... records the attribute information of the compressed image data"
+		ParseIfd(tiffData, ifdOffset, isLittleEndian, visitedOffsets, categoryId, categoryName, ctx, ExifIfdKind.Primary);
 	}
 
-	private static void ParseIfd(ReadOnlySpan<byte> tiffData, uint offset, bool isLittleEndian, HashSet<uint> visitedOffsets, string categoryId, string categoryName, MetadataContext ctx)
+	private static void ParseIfd(ReadOnlySpan<byte> tiffData, uint offset, bool isLittleEndian, HashSet<uint> visitedOffsets, string categoryId, string categoryName, MetadataContext ctx, ExifIfdKind kind)
 	{
-		if (offset + 2 > tiffData.Length || !visitedOffsets.Add(offset)) return;
+		if ((long)offset + 2 > tiffData.Length || !visitedOffsets.Add(offset)) return;
 
 		ushort entryCount = isLittleEndian ? BinaryPrimitives.ReadUInt16LittleEndian(tiffData.Slice((int)offset, 2)) : BinaryPrimitives.ReadUInt16BigEndian(tiffData.Slice((int)offset, 2));
-		uint currentOffset = offset + 2;
+		long currentOffset = (long)offset + 2;
 
 		for (int i = 0; i < entryCount; i++)
 		{
@@ -1510,9 +2083,14 @@ internal static class EXIFScrubber
 			uint dataCount = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(entry.Slice(4, 4)) : BinaryPrimitives.ReadUInt32BigEndian(entry.Slice(4, 4));
 			ReadOnlySpan<byte> valueField = entry.Slice(8, 4);
 
-			string tagName = GetTagName(tagId);
+			// Every kind of IFD has its own independent tag number space, so the same numeric tag ID means completely
+			// different things depending on which IFD it was found in.
+			// https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - Table 15 (GPS Attribute Information) and Table 16 (Interoperability IFD Attribute Information)
+			string tagName = GetTagName(tagId, kind);
 			int componentSize = GetExifComponentSize(dataType);
-			uint totalBytes = dataCount * (uint)componentSize;
+
+			// Source: https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Directory - Count/Value Offset
+			ulong totalBytes = (ulong)dataCount * (uint)componentSize;
 
 			ReadOnlySpan<byte> actualData;
 			if (totalBytes <= 4)
@@ -1522,12 +2100,15 @@ internal static class EXIFScrubber
 			else
 			{
 				uint dataOffset = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(valueField) : BinaryPrimitives.ReadUInt32BigEndian(valueField);
-				actualData = dataOffset + totalBytes <= tiffData.Length ? tiffData.Slice((int)dataOffset, (int)totalBytes) : default;
+				actualData = dataOffset + totalBytes <= (ulong)tiffData.Length ? tiffData.Slice((int)dataOffset, (int)totalBytes) : default;
 			}
 
 			string dataValueStr = FormatExifData(actualData, dataType, dataCount, isLittleEndian);
 
-			if (tagId == OrientationTag)
+			// Only the 0th IFD's Orientation is preserved, because GetExifOrientation reads the Orientation exclusively
+			// from the 0th IFD when it rebuilds the minimal replacement block.
+			// Source: https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - 4.6.4 Table 4 - Orientation is recorded in both the 0th and the 1st IFD, where the 1st IFD value applies to the thumbnail
+			if (tagId == OrientationTag && kind == ExifIfdKind.Primary)
 			{
 				ctx.AddTag(categoryId, categoryName, false, tagName, $"{dataValueStr} [Kept for Visual Fidelity]");
 			}
@@ -1536,21 +2117,42 @@ internal static class EXIFScrubber
 				ctx.AddTag(categoryId, categoryName, true, tagName, dataValueStr);
 			}
 
-			if (tagId == ExifIFD || tagId == GPSIFD || tagId == InteroperabilityIFD)
+			// Source: https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - Table 3 (0th IFD), Table 7 (Exif IFD)
+			if (kind is ExifIfdKind.Primary or ExifIfdKind.Thumbnail or ExifIfdKind.ExifPrivate)
 			{
-				uint subIfdOffset = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(valueField) : BinaryPrimitives.ReadUInt32BigEndian(valueField);
-				ParseIfd(tiffData, subIfdOffset, isLittleEndian, visitedOffsets, categoryId, categoryName, ctx);
+				ExifIfdKind? subIfdKind = tagId switch
+				{
+					ExifIFD => ExifIfdKind.ExifPrivate,
+					GPSIFD => ExifIfdKind.Gps,
+					InteroperabilityIFD => ExifIfdKind.Interoperability,
+					_ => null
+				};
+
+				if (subIfdKind.HasValue)
+				{
+					uint subIfdOffset = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(valueField) : BinaryPrimitives.ReadUInt32BigEndian(valueField);
+					ParseIfd(tiffData, subIfdOffset, isLittleEndian, visitedOffsets, categoryId, categoryName, ctx, subIfdKind.Value);
+				}
 			}
 
 			currentOffset += 12;
 		}
 
-		if (currentOffset + 4 <= tiffData.Length)
+
+		// https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - 4.5.2
+		if (kind is ExifIfdKind.Primary or ExifIfdKind.Thumbnail)
 		{
-			uint nextIfdOffset = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(tiffData.Slice((int)currentOffset, 4)) : BinaryPrimitives.ReadUInt32BigEndian(tiffData.Slice((int)currentOffset, 4));
-			if (nextIfdOffset != 0)
+			// Source: https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Page 14 - an IFD is a 2-byte entry count, followed by a sequence of 12-byte entries, followed by a 4-byte offset of the next IFD
+			long nextIfdFieldOffset = (long)offset + 2 + ((long)entryCount * 12);
+
+			if (nextIfdFieldOffset + 4 <= tiffData.Length)
 			{
-				ParseIfd(tiffData, nextIfdOffset, isLittleEndian, visitedOffsets, categoryId, categoryName, ctx);
+				uint nextIfdOffset = isLittleEndian ? BinaryPrimitives.ReadUInt32LittleEndian(tiffData.Slice((int)nextIfdFieldOffset, 4)) : BinaryPrimitives.ReadUInt32BigEndian(tiffData.Slice((int)nextIfdFieldOffset, 4));
+				if (nextIfdOffset != 0)
+				{
+					// The IFD that follows the 0th IFD is the 1st IFD, which describes the thumbnail.
+					ParseIfd(tiffData, nextIfdOffset, isLittleEndian, visitedOffsets, categoryId, categoryName, ctx, ExifIfdKind.Thumbnail);
+				}
 			}
 		}
 	}
@@ -1752,8 +2354,7 @@ internal static class EXIFScrubber
 
 	/// <summary>
 	/// Formats a TIFF/EXIF RATIONAL data type array into a human-readable string.
-	/// Source: TIFF 6.0 Specification (Page 15) - A RATIONAL is Two LONGs:
-	/// the first represents the numerator of a fraction; the second, the denominator.
+	/// Source: TIFF 6.0 Specification (Page 15)
 	/// </summary>
 	private static string FormatRationalArray(ReadOnlySpan<byte> data, uint count, bool isLittleEndian)
 	{
@@ -1838,7 +2439,19 @@ internal static class EXIFScrubber
 		return table;
 	}
 
-	private static string GetTagName(ushort tag) => tag switch
+	// Resolves a tag ID against the tag number space of the IFD it was found in.
+	// Every IFD kind defines its own independent set of tag numbers, so the IFD must be known before a tag ID can be named.
+	// Source: https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - Table 15 (GPS Attribute Information) and Table 16 (Interoperability IFD Attribute Information)
+	private static string GetTagName(ushort tag, ExifIfdKind kind) => kind switch
+	{
+		ExifIfdKind.Gps => GetGpsTagName(tag),
+		ExifIfdKind.Interoperability => GetInteroperabilityTagName(tag),
+		_ => GetTiffAndExifTagName(tag)
+	};
+
+	// The GPS Info IFD tag number space.
+	// Source: https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - Table 15 - 4.6.6 GPS Attribute Information
+	private static string GetGpsTagName(ushort tag) => tag switch
 	{
 		// Source: JEITA CP-3451C / CIPA DC-008-2012: https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf
 		// Table 15 - 4.6.6 GPS Attribute Information
@@ -1875,6 +2488,23 @@ internal static class EXIFScrubber
 		0x001E => "GPS differential correction",
 		0x001F => "Horizontal positioning error",
 
+		_ => $"Unknown GPS Tag (0x{tag:X4})",
+	};
+
+	// Source: https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - Table 16 - Interoperability IFD Attribute Information
+	private static string GetInteroperabilityTagName(ushort tag) => tag switch
+	{
+		0x0001 => "Interoperability Index",
+		0x0002 => "Interoperability Version",
+		0x1000 => "Related Image File Format",
+		0x1001 => "Related Image Width",
+		0x1002 => "Related Image Length",
+		_ => $"Unknown Interoperability Tag (0x{tag:X4})",
+	};
+
+	// Source: https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - Table 3 (0th IFD) and Table 7 (Exif IFD)
+	private static string GetTiffAndExifTagName(ushort tag) => tag switch
+	{
 		// TIFF 6.0 Standard Tags
 		// Source: Page 117 - Appendix A: TIFF Tags Sorted by Number - https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf
 		// https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf
@@ -1993,6 +2623,8 @@ internal static class EXIFScrubber
 		0xA002 => "Valid image width",
 		0xA003 => "Valid image height",
 		0xA004 => "Related audio file",
+		ExifIFD => "Exif IFD Pointer",
+		GPSIFD => "GPS Info IFD Pointer",
 		InteroperabilityIFD => "Interoperability tag",
 		0xA20B => "Flash energy",
 		0xA20C => "Spatial frequency response",
@@ -2055,4 +2687,149 @@ internal static class EXIFScrubber
 		"B2A0" => "B To A0 Intent",
 		_ => tag
 	};
+}
+
+/// <summary>
+/// Detailed JSON report of a whole bulk metadata removal operation.
+/// </summary>
+internal sealed class ExifBulkRemovalReport(
+	string format,
+	DateTimeOffset generatedAt,
+	DateTimeOffset operationStartedAt,
+	long durationMilliseconds,
+	List<string> selectedFolders,
+	List<string> supportedExtensions,
+	int totalFilesFound,
+	int filesCleaned,
+	int filesWithNothingToRemove,
+	int filesFailed,
+	long totalSizeBeforeBytes,
+	long totalSizeAfterBytes,
+	long totalBytesReclaimed,
+	List<ExifBulkFileResult> results)
+{
+	[JsonInclude]
+	[JsonPropertyOrder(0)]
+	internal string Format => format;
+
+	[JsonInclude]
+	[JsonPropertyOrder(1)]
+	internal DateTimeOffset GeneratedAt => generatedAt;
+
+	[JsonInclude]
+	[JsonPropertyOrder(2)]
+	internal DateTimeOffset OperationStartedAt => operationStartedAt;
+
+	[JsonInclude]
+	[JsonPropertyOrder(3)]
+	internal long DurationMilliseconds => durationMilliseconds;
+
+	[JsonInclude]
+	[JsonPropertyOrder(4)]
+	internal List<string> SelectedFolders => selectedFolders;
+
+	[JsonInclude]
+	[JsonPropertyOrder(5)]
+	internal List<string> SupportedExtensions => supportedExtensions;
+
+	[JsonInclude]
+	[JsonPropertyOrder(6)]
+	internal int TotalFilesFound => totalFilesFound;
+
+	[JsonInclude]
+	[JsonPropertyOrder(7)]
+	internal int FilesCleaned => filesCleaned;
+
+	[JsonInclude]
+	[JsonPropertyOrder(8)]
+	internal int FilesWithNothingToRemove => filesWithNothingToRemove;
+
+	[JsonInclude]
+	[JsonPropertyOrder(9)]
+	internal int FilesFailed => filesFailed;
+
+	[JsonInclude]
+	[JsonPropertyOrder(10)]
+	internal long TotalSizeBeforeBytes => totalSizeBeforeBytes;
+
+	[JsonInclude]
+	[JsonPropertyOrder(11)]
+	internal long TotalSizeAfterBytes => totalSizeAfterBytes;
+
+	[JsonInclude]
+	[JsonPropertyOrder(12)]
+	internal long TotalBytesReclaimed => totalBytesReclaimed;
+
+	[JsonInclude]
+	[JsonPropertyOrder(13)]
+	internal List<ExifBulkFileResult> Results => results;
+}
+
+/// <summary>
+/// Per-file entry of the bulk metadata removal JSON report.
+/// </summary>
+internal sealed class ExifBulkFileResult(
+	string filePath,
+	string fileName,
+	string directory,
+	string status,
+	List<string> removedCategories,
+	int removedCategoryCount,
+	long sizeBeforeBytes,
+	long sizeAfterBytes,
+	long sizeDifferenceBytes,
+	string? errorMessage)
+{
+	[JsonInclude]
+	[JsonPropertyOrder(0)]
+	internal string FilePath => filePath;
+
+	[JsonInclude]
+	[JsonPropertyOrder(1)]
+	internal string FileName => fileName;
+
+	[JsonInclude]
+	[JsonPropertyOrder(2)]
+	internal string Directory => directory;
+
+	[JsonInclude]
+	[JsonPropertyOrder(3)]
+	internal string Status => status;
+
+	[JsonInclude]
+	[JsonPropertyOrder(4)]
+	internal List<string> RemovedCategories => removedCategories;
+
+	[JsonInclude]
+	[JsonPropertyOrder(5)]
+	internal int RemovedCategoryCount => removedCategoryCount;
+
+	[JsonInclude]
+	[JsonPropertyOrder(6)]
+	internal long SizeBeforeBytes => sizeBeforeBytes;
+
+	[JsonInclude]
+	[JsonPropertyOrder(7)]
+	internal long SizeAfterBytes => sizeAfterBytes;
+
+	[JsonInclude]
+	[JsonPropertyOrder(8)]
+	internal long SizeDifferenceBytes => sizeDifferenceBytes;
+
+	[JsonInclude]
+	[JsonPropertyOrder(9)]
+	internal string? ErrorMessage => errorMessage;
+}
+
+[JsonSerializable(typeof(ExifBulkRemovalReport))]
+[JsonSerializable(typeof(ExifBulkFileResult))]
+[JsonSerializable(typeof(List<ExifBulkFileResult>))]
+[JsonSerializable(typeof(List<string>))]
+[JsonSourceGenerationOptions(
+	WriteIndented = true,
+	PropertyNamingPolicy = JsonKnownNamingPolicy.Unspecified,
+	PropertyNameCaseInsensitive = true,
+	DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull)]
+internal sealed partial class ExifBulkRemovalJsonContext : JsonSerializerContext
+{
 }

@@ -107,8 +107,8 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 	/// <returns>A new list of MUnits with conflicts resolved.</returns>
 	private static List<MUnit> ResolvePolicyConflicts(List<MUnit> mUnits)
 	{
-		if (mUnits is null || mUnits.Count <= 1)
-			return mUnits ?? [];
+		if (mUnits.Count <= 1)
+			return mUnits;
 
 		List<MUnit> result = [];
 

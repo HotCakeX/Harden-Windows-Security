@@ -330,7 +330,7 @@ internal static class CategoryProcessorFactory
 			// - include entries whose DeviceIntents contains Intent.All (when any selected)
 			// - include entries intersecting with selected intents
 			List<RegistryPolicyEntry> all = ViewModelProvider.ASRVM.ASRPolicyFromJSON;
-			if (all == null || all.Count == 0)
+			if (all.Count == 0)
 			{
 				return;
 			}

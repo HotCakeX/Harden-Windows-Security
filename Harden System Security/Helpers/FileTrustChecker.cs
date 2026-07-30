@@ -42,6 +42,7 @@ internal static class FileTrustChecker
 	internal static unsafe FileTrustResult CheckFileTrust(string filePath)
 	{
 		IntPtr fileHandle = default;
+		IntPtr hModule = default;
 
 		try
 		{
@@ -53,7 +54,7 @@ internal static class FileTrustChecker
 			IntPtr extraInfoPtr = IntPtr.Zero;   // Pointer to extra info data
 
 			// Load Microsoft Defender library dynamically
-			IntPtr hModule = NativeMethods.LoadLibraryExW(DefenderPath, IntPtr.Zero, 0);
+			hModule = NativeMethods.LoadLibraryExW(DefenderPath, IntPtr.Zero, 0);
 
 			if (hModule == IntPtr.Zero)
 			{
@@ -72,7 +73,7 @@ internal static class FileTrustChecker
 			fileHandle = NativeMethods.CreateFileW(filePath, 0x80000000, 0x00000001, IntPtr.Zero, 0x00000003, 0, IntPtr.Zero);
 
 			// Check if file failed to open
-			if (fileHandle == new IntPtr(-1))
+			if (fileHandle == NativeMethods.INVALID_HANDLE_VALUE)
 			{
 				int error = Marshal.GetLastPInvokeError();
 				throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorOpeningHandleToFile"), filePath, error));
@@ -115,7 +116,13 @@ internal static class FileTrustChecker
 		finally
 		{
 			// Close the file handle after operation
-			_ = NativeMethods.CloseHandle(fileHandle);
+			if (fileHandle != IntPtr.Zero && fileHandle != NativeMethods.INVALID_HANDLE_VALUE)
+			{
+				_ = NativeMethods.CloseHandle(fileHandle);
+			}
+
+			// Release the module reference acquired by LoadLibraryExW
+			NativeLibrary.Free(hModule);
 		}
 	}
 
@@ -178,13 +185,13 @@ internal static class FileTrustChecker
 	internal sealed class FileTrustResult(
 		string reputation,
 		TrustSource source,
-		string? duration,
+		string duration,
 		string handle
 		)
 	{
 		internal string Reputation => reputation;
 		internal TrustSource Source => source;
-		internal string? Duration => duration;
+		internal string Duration => duration;
 		internal string Handle => handle;
 	}
 

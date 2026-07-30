@@ -964,7 +964,7 @@ internal static partial class ISOManager
 			0,
 			IntPtr.Zero);
 
-		if (handle == new IntPtr(-1))
+		if (handle == Interop.NativeMethods.INVALID_HANDLE_VALUE)
 		{
 			throw new InvalidOperationException($"Failed to open {physicalDrivePath} for writing. Ensure the application is running as administrator.");
 		}
@@ -1775,7 +1775,7 @@ internal static partial class ISOManager
 			0,
 			IntPtr.Zero);
 
-		if (handle == new IntPtr(-1)) // INVALID_HANDLE_VALUE
+		if (handle == Interop.NativeMethods.INVALID_HANDLE_VALUE)
 		{
 			return uint.MaxValue;
 		}

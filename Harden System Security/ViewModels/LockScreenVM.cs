@@ -60,7 +60,7 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 	/// </summary>
 	private static List<MUnit> CreateUnits()
 	{
-		List<MUnit> temp = [];
+		List<MUnit> temp = new(3);
 
 		temp.Add(new(
 			category: Categories.LockScreen,
@@ -95,7 +95,6 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 
 			id: new("019a9053-c2ad-784a-a5f3-98833b9561ef")
 		));
-
 
 		temp.Add(new(
 			category: Categories.LockScreen,

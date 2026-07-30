@@ -200,11 +200,9 @@ internal sealed partial class CountryIPBlockingVM : ViewModelBase
 				CountryData[]? countries = JsonSerializer.Deserialize(jsonContent, CountryDataJsonContext.Default.CountryDataArray) ?? throw new InvalidOperationException("Failed to deserialize countries data");
 
 				// Sort by friendly name
-				List<CountryData> countryItems = countries
+				_allCountries = countries
 					.OrderBy(item => item.FriendlyName, StringComparer.OrdinalIgnoreCase)
 					.ToList();
-
-				_allCountries = countryItems;
 
 				FilterCountries(); // Initial population
 			});

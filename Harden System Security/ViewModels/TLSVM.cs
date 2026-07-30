@@ -81,7 +81,7 @@ internal sealed partial class TLSVM : MUnitListViewModelBase
 				string cipherSuitesValue = targetPolicy.RegValue;
 
 				// Parse the configured cipher suites into a HashSet
-				HashSet<string> configuredCipherSuites = cipherSuitesValue.Split([','], StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
+				HashSet<string> configuredCipherSuites = cipherSuitesValue.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 				// Get the list of currently configured cipher suites via Arcane library
 				List<Arcane.TlsCipherSuite> results = Arcane.CipherSuiteManager.EnumerateConfiguredCipherSuites();

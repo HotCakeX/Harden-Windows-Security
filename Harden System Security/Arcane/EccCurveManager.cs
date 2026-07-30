@@ -164,7 +164,7 @@ internal static class EccCurveManager
 
 			// Get the curve name list size
 			status = NativeMethods.BCryptGetProperty(hAlg, BCRYPT_ECC_CURVE_NAME_LIST, IntPtr.Zero, 0, out uint cbNeeded, 0);
-			if (status != 0 || cbNeeded <= 0)
+			if (status != 0 || cbNeeded == 0)
 			{
 				return result;
 			}

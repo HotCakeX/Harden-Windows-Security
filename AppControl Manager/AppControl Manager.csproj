@@ -230,7 +230,7 @@
         <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.10" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
-        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.21.0" />
+        <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.22.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4078.44" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2526" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
@@ -334,9 +334,7 @@
     <Import Project="eXclude\CommonCore\CommonCore.projitems" Label="Shared" />
 
     <!-- Build ComManager only when its executable is missing from the CppInterop directory. -->
-    <Target Name="EnsureComManagerExecutable"
-            BeforeTargets="PrepareForBuild"
-            Condition="!Exists('$(MSBuildProjectDirectory)\CppInterop\ComManager.exe')">
+    <Target Name="EnsureComManagerExecutable" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildProjectDirectory)\CppInterop\ComManager.exe')">
         <PropertyGroup>
 
             <!-- Resolve all paths from this project so the target is independent of the current working directory. -->
@@ -349,20 +347,15 @@
         </PropertyGroup>
 
         <!-- Fail early if the active project platform is not one of the two supported architectures. -->
-        <Error Condition="'$(_ComManagerOutputDirectory)' == ''"
-               Text="ComManager supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
-        <Error Condition="!Exists('$(_ComManagerSolution)')"
-               Text="The ComManager solution was not found at '$(_ComManagerSolution)'." />
+        <Error Condition="'$(_ComManagerOutputDirectory)' == ''" Text="ComManager supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
+        <Error Condition="!Exists('$(_ComManagerSolution)')" Text="The ComManager solution was not found at '$(_ComManagerSolution)'." />
 
         <!-- Clean and rebuild only the architecture selected for the current app build. -->
-        <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(_ComManagerSolution)&quot; /p:Configuration=Release /p:Platform=$(Platform) /target:&quot;Clean;Rebuild&quot;"
-              WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Exec Command="&quot;$(MSBuildBinPath)\MSBuild.exe&quot; &quot;$(_ComManagerSolution)&quot; /p:Configuration=Release /p:Platform=$(Platform) /target:&quot;Clean;Rebuild&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" />
 
         <!-- Place the native executable in CppInterop for its existing Content item. -->
-        <Error Condition="!Exists('$(_ComManagerPublishedExecutable)')"
-               Text="ComManager was rebuilt, but '$(_ComManagerPublishedExecutable)' was not produced." />
-        <Copy SourceFiles="$(_ComManagerPublishedExecutable)"
-              DestinationFiles="$(MSBuildProjectDirectory)\CppInterop\ComManager.exe" />
+        <Error Condition="!Exists('$(_ComManagerPublishedExecutable)')" Text="ComManager was rebuilt, but '$(_ComManagerPublishedExecutable)' was not produced." />
+        <Copy SourceFiles="$(_ComManagerPublishedExecutable)" DestinationFiles="$(MSBuildProjectDirectory)\CppInterop\ComManager.exe" />
     </Target>
 
 </Project>

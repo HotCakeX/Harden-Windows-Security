@@ -7,3 +7,5 @@
 - Toast notifications are now displayed even when the app is running with elevated privileges.
 
 These improvements provide more consistent behavior across different account and elevation configurations, resulting in a more reliable and unified experience. They also make the app more compatible with the new Administrator Protection feature in Windows.
+
+- Improved the Policy Comparer page: Sort no longer requires an extra button press, when you change the sort order, the data is automatically sorted. Also, the similarity is now percentage based so you can see exactly the difference of each section in policies.

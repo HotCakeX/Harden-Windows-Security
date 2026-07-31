@@ -222,7 +222,7 @@
                                                     <TextBlock Text="{x:Bind Note}"
                                                                TextWrapping="WrapWholeWords"
                                                                Opacity="0.74"/>
-                                                    <TextBlock Text="{x:Bind DeltaText}"
+                                                    <TextBlock Text="{x:Bind SimilarityText}"
                                                                FontWeight="SemiBold"
                                                                TextWrapping="WrapWholeWords"/>
                                                 </StackPanel>
@@ -304,21 +304,12 @@
                                                  HorizontalAlignment="Right"
                                                  HorizontalSpacing="8"
                                                  VerticalSpacing="8">
+                                <FontIcon Glyph="&#xE8CB;"
+                                          FontSize="16"
+                                          VerticalAlignment="Center"/>
                                 <ComboBox MinWidth="160"
                                           ItemsSource="{x:Bind ViewModel.PreviewSortOptions}"
                                           SelectedItem="{x:Bind ViewModel.SelectedPreviewSortOption, Mode=TwoWay}"/>
-                                <Button Content="Sort"
-                                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
-                                        Click="{x:Bind ViewModel.ApplyPreviewSortLogic}">
-                                    <Button.ContentTemplate>
-                                        <DataTemplate x:DataType="x:String">
-                                            <StackPanel Orientation="Horizontal" Spacing="8">
-                                                <FontIcon Glyph="&#xE8CB;" FontSize="16"/>
-                                                <TextBlock Text="{x:Bind}"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </Button.ContentTemplate>
-                                </Button>
                             </CCToolKit:WrapPanel>
                         </Grid>
                         <Grid Grid.Row="1">

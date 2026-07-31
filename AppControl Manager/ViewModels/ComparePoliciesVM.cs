@@ -39,6 +39,7 @@ internal sealed partial class PolicyElementCountItem(
 	string section,
 	int firstCount,
 	int secondCount,
+	int sharedCount,
 	string note,
 	Action<PolicyElementCountItem> changed) : ViewModelBase
 {
@@ -47,7 +48,15 @@ internal sealed partial class PolicyElementCountItem(
 	internal int FirstCount => firstCount;
 	internal int SecondCount => secondCount;
 	internal string Note => note;
-	internal string DeltaText => firstCount == secondCount ? "Same" : firstCount > secondCount ? $"First +{firstCount - secondCount}" : $"Second +{secondCount - firstCount}";
+	internal string SimilarityText
+	{
+		get
+		{
+			int unionCount = firstCount + secondCount - sharedCount;
+			double similarityPercentage = unionCount == 0 ? 100D : sharedCount * 100D / unionCount;
+			return $"{similarityPercentage:0.#}% same";
+		}
+	}
 
 	internal bool? IsFirstEnabled
 	{
@@ -120,7 +129,16 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 	internal readonly ObservableCollection<PolicyElementCountItem> ElementCounts = [];
 	internal readonly ObservableCollection<PolicyPreviewItem> PreviewItems = [];
 	internal readonly List<string> PreviewSortOptions = [PreviewSortBoth, PreviewSortFirstPolicy, PreviewSortSecondPolicy];
-	internal string SelectedPreviewSortOption { get; set => SP(ref field, value); } = PreviewSortBoth;
+	internal string SelectedPreviewSortOption
+	{
+		get; set
+		{
+			if (SP(ref field, value) && SelectedElementCountItem is PolicyElementCountItem item)
+			{
+				RefreshPreviewForItem(item);
+			}
+		}
+	} = PreviewSortBoth;
 
 	internal PolicyFileRepresent? FirstPolicy { get; set => SP(ref field, value); }
 	internal PolicyFileRepresent? SecondPolicy { get; set => SP(ref field, value); }
@@ -338,7 +356,7 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 				Note = item.Note,
 				FirstCount = item.FirstCount,
 				SecondCount = item.SecondCount,
-				Delta = item.DeltaText
+				Similarity = item.SimilarityText
 			});
 
 			sections.Add(new PolicySectionExportModel
@@ -353,7 +371,7 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 
 		return new PolicyComparisonExportModel
 		{
-			SchemaVersion = 1,
+			SchemaVersion = 2,
 			ExportedAtUtc = DateTimeOffset.UtcNow,
 			FirstPolicyName = FirstPolicy?.PolicyIdentifier ?? string.Empty,
 			SecondPolicyName = SecondPolicy?.PolicyIdentifier ?? string.Empty,
@@ -393,35 +411,47 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 	private void PopulateInventory(PolicyCatalog first, PolicyCatalog second)
 	{
 		ElementCounts.Clear();
-		ElementCounts.Add(new("EKUs", "EKUs", first.Ekus.Count, second.Ekus.Count, "Unique EKU definitions available for signer constraints.", RefreshPreviewForItem));
-		ElementCounts.Add(new("AllFileRules", "All file rules", first.AllFileRules.Count, second.AllFileRules.Count, "All Allow, Deny, FileAttrib, and generic FileRule elements.", RefreshPreviewForItem));
-		ElementCounts.Add(new("AllowRules", "Allow rules", first.AllowRules.Count, second.AllowRules.Count, "Direct allow file rules in the FileRules section.", RefreshPreviewForItem));
-		ElementCounts.Add(new("DenyRules", "Deny rules", first.DenyRules.Count, second.DenyRules.Count, "Direct deny file rules in the FileRules section.", RefreshPreviewForItem));
-		ElementCounts.Add(new("FileAttributes", "File attributes", first.FileAttributes.Count, second.FileAttributes.Count, "File publisher attributes referenced by signers.", RefreshPreviewForItem));
-		ElementCounts.Add(new("GenericFileRules", "Generic FileRule elements", first.GenericFileRules.Count, second.GenericFileRules.Count, "Schema FileRule elements with Match, Exclude, or Attribute type.", RefreshPreviewForItem));
-		ElementCounts.Add(new("Signers", "Signers", first.Signers.Count, second.Signers.Count, "Signer definitions in the Signers section.", RefreshPreviewForItem));
-		ElementCounts.Add(new("CiSigners", "CI signers", first.CiSigners.Count, second.CiSigners.Count, "Signers trusted for CI policy signing semantics.", RefreshPreviewForItem));
-		ElementCounts.Add(new("UpdatePolicySigners", "Update policy signers", first.UpdatePolicySigners.Count, second.UpdatePolicySigners.Count, "Signers authorized to update the policy.", RefreshPreviewForItem));
-		ElementCounts.Add(new("SupplementalPolicySigners", "Supplemental policy signers", first.SupplementalPolicySigners.Count, second.SupplementalPolicySigners.Count, "Signers authorized for supplemental policies.", RefreshPreviewForItem));
-		ElementCounts.Add(new("SigningScenarios", "Signing scenarios", first.SigningScenarios.Count, second.SigningScenarios.Count, "Total signing scenarios in the policy.", RefreshPreviewForItem));
-		ElementCounts.Add(new("UserModeAllowedSigners", "User mode allowed signers", first.UserModeAllowedSigners.Count, second.UserModeAllowedSigners.Count, "Allowed signer references in signing scenario value 12.", RefreshPreviewForItem));
-		ElementCounts.Add(new("UserModeDeniedSigners", "User mode denied signers", first.UserModeDeniedSigners.Count, second.UserModeDeniedSigners.Count, "Denied signer references in signing scenario value 12.", RefreshPreviewForItem));
-		ElementCounts.Add(new("UserModeFileRuleRefs", "User mode file rule refs", first.UserModeFileRuleRefs.Count, second.UserModeFileRuleRefs.Count, "File rule references in signing scenario value 12.", RefreshPreviewForItem));
-		ElementCounts.Add(new("KernelModeAllowedSigners", "Kernel mode allowed signers", first.KernelModeAllowedSigners.Count, second.KernelModeAllowedSigners.Count, "Allowed signer references in signing scenario value 131.", RefreshPreviewForItem));
-		ElementCounts.Add(new("KernelModeDeniedSigners", "Kernel mode denied signers", first.KernelModeDeniedSigners.Count, second.KernelModeDeniedSigners.Count, "Denied signer references in signing scenario value 131.", RefreshPreviewForItem));
-		ElementCounts.Add(new("KernelModeFileRuleRefs", "Kernel mode file rule refs", first.KernelModeFileRuleRefs.Count, second.KernelModeFileRuleRefs.Count, "File rule references in signing scenario value 131.", RefreshPreviewForItem));
-		ElementCounts.Add(new("Settings", "Settings", first.Settings.Count, second.Settings.Count, "All settings in the Settings section, including PolicyInfo metadata.", RefreshPreviewForItem));
-		ElementCounts.Add(new("Macros", "Macros", first.Macros.Count, second.Macros.Count, "Macro definitions used by file rules and settings.", RefreshPreviewForItem));
-		ElementCounts.Add(new("AppSettings", "App settings", first.AppSettings.Count, second.AppSettings.Count, "Application settings under AppSettings.", RefreshPreviewForItem));
-		ElementCounts.Add(new("AppIDTags", "AppID tags", first.AppIdTags.Count, second.AppIdTags.Count, "AppID tags across signing scenarios.", RefreshPreviewForItem));
+		ElementCounts.Add(new("EKUs", "EKUs", first.Ekus.Count, second.Ekus.Count, CountSharedItems(first.Ekus, second.Ekus), "Unique EKU definitions available for signer constraints.", RefreshPreviewForItem));
+		ElementCounts.Add(new("AllFileRules", "All file rules", first.AllFileRules.Count, second.AllFileRules.Count, CountSharedItems(first.AllFileRules, second.AllFileRules), "All Allow, Deny, FileAttrib, and generic FileRule elements.", RefreshPreviewForItem));
+		ElementCounts.Add(new("AllowRules", "Allow rules", first.AllowRules.Count, second.AllowRules.Count, CountSharedItems(first.AllowRules, second.AllowRules), "Direct allow file rules in the FileRules section.", RefreshPreviewForItem));
+		ElementCounts.Add(new("DenyRules", "Deny rules", first.DenyRules.Count, second.DenyRules.Count, CountSharedItems(first.DenyRules, second.DenyRules), "Direct deny file rules in the FileRules section.", RefreshPreviewForItem));
+		ElementCounts.Add(new("FileAttributes", "File attributes", first.FileAttributes.Count, second.FileAttributes.Count, CountSharedItems(first.FileAttributes, second.FileAttributes), "File publisher attributes referenced by signers.", RefreshPreviewForItem));
+		ElementCounts.Add(new("GenericFileRules", "Generic FileRule elements", first.GenericFileRules.Count, second.GenericFileRules.Count, CountSharedItems(first.GenericFileRules, second.GenericFileRules), "Schema FileRule elements with Match, Exclude, or Attribute type.", RefreshPreviewForItem));
+		ElementCounts.Add(new("Signers", "Signers", first.Signers.Count, second.Signers.Count, CountSharedItems(first.Signers, second.Signers), "Signer definitions in the Signers section.", RefreshPreviewForItem));
+		ElementCounts.Add(new("CiSigners", "CI signers", first.CiSigners.Count, second.CiSigners.Count, CountSharedItems(first.CiSigners, second.CiSigners), "Signers trusted for CI policy signing semantics.", RefreshPreviewForItem));
+		ElementCounts.Add(new("UpdatePolicySigners", "Update policy signers", first.UpdatePolicySigners.Count, second.UpdatePolicySigners.Count, CountSharedItems(first.UpdatePolicySigners, second.UpdatePolicySigners), "Signers authorized to update the policy.", RefreshPreviewForItem));
+		ElementCounts.Add(new("SupplementalPolicySigners", "Supplemental policy signers", first.SupplementalPolicySigners.Count, second.SupplementalPolicySigners.Count, CountSharedItems(first.SupplementalPolicySigners, second.SupplementalPolicySigners), "Signers authorized for supplemental policies.", RefreshPreviewForItem));
+		ElementCounts.Add(new("SigningScenarios", "Signing scenarios", first.SigningScenarios.Count, second.SigningScenarios.Count, CountSharedItems(first.SigningScenarios, second.SigningScenarios), "Total signing scenarios in the policy.", RefreshPreviewForItem));
+		ElementCounts.Add(new("UserModeAllowedSigners", "User mode allowed signers", first.UserModeAllowedSigners.Count, second.UserModeAllowedSigners.Count, CountSharedItems(first.UserModeAllowedSigners, second.UserModeAllowedSigners), "Allowed signer references in signing scenario value 12.", RefreshPreviewForItem));
+		ElementCounts.Add(new("UserModeDeniedSigners", "User mode denied signers", first.UserModeDeniedSigners.Count, second.UserModeDeniedSigners.Count, CountSharedItems(first.UserModeDeniedSigners, second.UserModeDeniedSigners), "Denied signer references in signing scenario value 12.", RefreshPreviewForItem));
+		ElementCounts.Add(new("UserModeFileRuleRefs", "User mode file rule refs", first.UserModeFileRuleRefs.Count, second.UserModeFileRuleRefs.Count, CountSharedItems(first.UserModeFileRuleRefs, second.UserModeFileRuleRefs), "File rule references in signing scenario value 12.", RefreshPreviewForItem));
+		ElementCounts.Add(new("KernelModeAllowedSigners", "Kernel mode allowed signers", first.KernelModeAllowedSigners.Count, second.KernelModeAllowedSigners.Count, CountSharedItems(first.KernelModeAllowedSigners, second.KernelModeAllowedSigners), "Allowed signer references in signing scenario value 131.", RefreshPreviewForItem));
+		ElementCounts.Add(new("KernelModeDeniedSigners", "Kernel mode denied signers", first.KernelModeDeniedSigners.Count, second.KernelModeDeniedSigners.Count, CountSharedItems(first.KernelModeDeniedSigners, second.KernelModeDeniedSigners), "Denied signer references in signing scenario value 131.", RefreshPreviewForItem));
+		ElementCounts.Add(new("KernelModeFileRuleRefs", "Kernel mode file rule refs", first.KernelModeFileRuleRefs.Count, second.KernelModeFileRuleRefs.Count, CountSharedItems(first.KernelModeFileRuleRefs, second.KernelModeFileRuleRefs), "File rule references in signing scenario value 131.", RefreshPreviewForItem));
+		ElementCounts.Add(new("Settings", "Settings", first.Settings.Count, second.Settings.Count, CountSharedItems(first.Settings, second.Settings), "All settings in the Settings section, including PolicyInfo metadata.", RefreshPreviewForItem));
+		ElementCounts.Add(new("Macros", "Macros", first.Macros.Count, second.Macros.Count, CountSharedItems(first.Macros, second.Macros), "Macro definitions used by file rules and settings.", RefreshPreviewForItem));
+		ElementCounts.Add(new("AppSettings", "App settings", first.AppSettings.Count, second.AppSettings.Count, CountSharedItems(first.AppSettings, second.AppSettings), "Application settings under AppSettings.", RefreshPreviewForItem));
+		ElementCounts.Add(new("AppIDTags", "AppID tags", first.AppIdTags.Count, second.AppIdTags.Count, CountSharedItems(first.AppIdTags, second.AppIdTags), "AppID tags across signing scenarios.", RefreshPreviewForItem));
 	}
 
-	internal void ApplyPreviewSortLogic()
+	/// <summary>
+	/// Counts content-identical items by their canonical, ID-independent keys.
+	/// </summary>
+	private static int CountSharedItems(PolicySection firstSection, PolicySection secondSection)
 	{
-		if (SelectedElementCountItem is PolicyElementCountItem item)
+		PolicySection smallerSection = firstSection.Count <= secondSection.Count ? firstSection : secondSection;
+		PolicySection largerSection = ReferenceEquals(smallerSection, firstSection) ? secondSection : firstSection;
+		int sharedCount = 0;
+
+		foreach (string key in smallerSection.Items.Keys)
 		{
-			RefreshPreviewForItem(item);
+			if (largerSection.Items.ContainsKey(key))
+			{
+				sharedCount++;
+			}
 		}
+
+		return sharedCount;
 	}
 
 	private void RefreshPreviewForItem(PolicyElementCountItem item)
@@ -1080,7 +1110,7 @@ internal sealed class PolicyInventoryExportModel
 	public string Note { get; init; } = string.Empty;
 	public int FirstCount { get; init; }
 	public int SecondCount { get; init; }
-	public string Delta { get; init; } = string.Empty;
+	public string Similarity { get; init; } = string.Empty;
 }
 
 internal sealed class PolicySectionExportModel

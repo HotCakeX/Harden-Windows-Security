@@ -133,9 +133,9 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 	{
 		get; set
 		{
-			if (SP(ref field, value) && SelectedElementCountItem is PolicyElementCountItem item)
+			if (SP(ref field, value))
 			{
-				RefreshPreviewForItem(item);
+				RefreshPreviewForItem(SelectedElementCountItem);
 			}
 		}
 	} = PreviewSortBoth;
@@ -169,14 +169,14 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 	internal string? PreviewTitle { get; set => SP(ref field, value); }
 	internal string? PreviewSubtitle { get; set => SP(ref field, value); }
 
-	internal object? SelectedElementCountItem
+	internal PolicyElementCountItem? SelectedElementCountItem
 	{
 		get; set
 		{
-			if (SP(ref field, value) && field is PolicyElementCountItem item)
+			if (SP(ref field, value))
 			{
-				item.EnableBoth();
-				RefreshPreviewForItem(item);
+				value?.EnableBoth();
+				RefreshPreviewForItem(value);
 			}
 		}
 	}
@@ -454,9 +454,9 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 		return sharedCount;
 	}
 
-	private void RefreshPreviewForItem(PolicyElementCountItem item)
+	private void RefreshPreviewForItem(PolicyElementCountItem? item)
 	{
-		if (FirstCatalog is null || SecondCatalog is null)
+		if (FirstCatalog is null || SecondCatalog is null || item is null)
 		{
 			return;
 		}

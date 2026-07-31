@@ -2318,9 +2318,12 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	private SiPolicy.PolicyFileRepresent? _FinalCustomPatternBasedFileRuleSupplementalPolicy { get; set => SP(ref field, value); }
 
 	/// <summary>
-	/// The custom pattern used for file rule.
+	/// The custom patterns used to create file path rules.
 	/// </summary>
-	internal string? SupplementalPolicyCustomPatternBasedCustomPatternTextBox { get; set => SPT(ref field, value); }
+	internal readonly FilePathWildcardRulesSettings SupplementalPolicyCustomPatternBasedFileRules = new(
+		includeRecommendedRules: false,
+		isEnabled: true,
+		enableToggleVisibility: Visibility.Collapsed);
 
 	/// <summary>
 	/// Initialization details for the main Create button for the Pattern Based FileRule section
@@ -2391,7 +2394,8 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			return;
 		}
 
-		if (string.IsNullOrWhiteSpace(SupplementalPolicyCustomPatternBasedCustomPatternTextBox))
+		List<string>? customFileRulePatterns = SupplementalPolicyCustomPatternBasedFileRules.GetRules();
+		if (customFileRulePatterns is null || customFileRulePatterns.Count is 0)
 		{
 			CustomFilePathRulesInfoBar.WriteWarning(Atlas.GetStr("EnterCustomPatternSubtitle"),
 				Atlas.GetStr("EnterCustomPatternTitle"));
@@ -2428,7 +2432,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: [SupplementalPolicyCustomPatternBasedCustomPatternTextBox]);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: null, level: ScanLevels.CustomFileRulePattern, folderPaths: null, customFileRulePatterns: new HashSet<string>(customFileRulePatterns, StringComparer.OrdinalIgnoreCase));
 
 				// Create a new SiPolicy object with the data package.
 				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);

@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AppControlManager.Main;
 using AppControlManager.Others;
@@ -26,6 +27,8 @@ using AppControlManager.SiPolicy;
 using AppControlManager.XMLOps;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using Windows.System;
 using WinRT;
 
 namespace AppControlManager.ViewModels;
@@ -1018,42 +1021,80 @@ internal sealed class AppManifestItem(string name, string description, string pa
 
 internal sealed partial class FilePathWildcardRulesSettings : ViewModelBase
 {
-	internal FilePathWildcardRulesSettings() => Rules =
-		[
-			@"C:\Program Files\*",
-			@"C:\Program Files (x86)\*",
-			@"C:\Windows\*",
-			@"C:\ProgramData\*"
-		];
+	internal FilePathWildcardRulesSettings(
+		bool includeRecommendedRules = true,
+		bool isEnabled = false,
+		Visibility enableToggleVisibility = Visibility.Visible)
+	{
+		Rules = [];
 
+		if (includeRecommendedRules)
+		{
+			Rules.Add(new FilePathWildcardRuleItem(@"C:\Program Files\*", this));
+			Rules.Add(new FilePathWildcardRuleItem(@"C:\Program Files (x86)\*", this));
+			Rules.Add(new FilePathWildcardRuleItem(@"C:\Windows\*", this));
+			Rules.Add(new FilePathWildcardRuleItem(@"C:\ProgramData\*", this));
+		}
+
+		IsEnabled = isEnabled;
+		EnableToggleVisibility = enableToggleVisibility;
+	}
+
+	/// <summary>
+	/// Whether rules from this collection should be included in policy creation.
+	/// This is independent from whether the collection was initialized with recommended rules.
+	/// </summary>
 	internal bool IsEnabled { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Controls whether consumers display the optional enable or disable toggle.
+	/// </summary>
+	internal Visibility EnableToggleVisibility { get; }
+
 	internal string? NewRule { get; set => SP(ref field, value); }
-	internal string? SelectedRule { get; set => SP(ref field, value); }
-	internal ObservableCollection<string> Rules { get; }
+
+	internal ObservableCollection<FilePathWildcardRuleItem> Rules { get; }
+
+	/// <summary>
+	/// Adds the current rule when Enter is pressed in the rule input box.
+	/// </summary>
+	internal void AddRuleOnEnter(object sender, KeyRoutedEventArgs e)
+	{
+		if (e.Key is VirtualKey.Enter)
+		{
+			AddRule();
+			e.Handled = true;
+		}
+	}
+
 	internal void AddRule()
 	{
 		if (string.IsNullOrWhiteSpace(NewRule))
 		{
 			return;
 		}
-		foreach (string rule in Rules)
+
+		foreach (FilePathWildcardRuleItem rule in Rules)
 		{
-			if (string.Equals(rule, NewRule, StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(rule.Value, NewRule, StringComparison.OrdinalIgnoreCase))
 			{
 				NewRule = null;
 				return;
 			}
 		}
-		Rules.Add(NewRule);
+
+		Rules.Add(new FilePathWildcardRuleItem(NewRule, this));
 		NewRule = null;
 	}
-	internal void RemoveSelectedRule()
-	{
-		if (SelectedRule is not null)
-		{
-			_ = Rules.Remove(SelectedRule);
-			SelectedRule = null;
-		}
-	}
-	internal List<string>? GetRules() => IsEnabled ? [.. Rules] : null;
+
+	internal void RemoveRule(FilePathWildcardRuleItem rule) => _ = Rules.Remove(rule);
+
+	internal List<string>? GetRules() => IsEnabled ? [.. Rules.Select(static rule => rule.Value)] : null;
+}
+
+internal sealed class FilePathWildcardRuleItem(string value, FilePathWildcardRulesSettings owner)
+{
+	internal string Value => value;
+
+	internal void Remove() => owner.RemoveRule(this);
 }

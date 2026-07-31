@@ -602,17 +602,23 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <summary>
 	/// File path rule creation pipeline to add the selected wildcard rules to base policies.
 	/// </summary>
-	private static SiPolicy.SiPolicy AddFilePathWildcardRules(SiPolicy.SiPolicy policyObj, List<string>? filePathWildcardRules)
+	private static SiPolicy.SiPolicy AddFilePathWildcardRules(SiPolicy.SiPolicy mainPolicyObj, List<string>? filePathWildcardRules)
 	{
 		if (filePathWildcardRules is null || filePathWildcardRules.Count is 0)
 		{
-			return policyObj;
+			return mainPolicyObj;
 		}
 		HashSet<string> uniqueRules = new(filePathWildcardRules, StringComparer.OrdinalIgnoreCase);
+
 		FileBasedInfoPackage dataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(
 			level: ScanLevels.CustomFileRulePattern,
 			customFileRulePatterns: uniqueRules);
-		return NewFilePathRules.CreateAllow(policyObj, dataPackage.FilePaths);
+
+		// Create a new SiPolicy object with the data package.
+		SiPolicy.SiPolicy policy = Master.Initiate(dataPackage, SiPolicyIntel.Authorization.Allow);
+
+		// Merge the newly created policy with the main one
+		return Merger.Merge(mainPolicyObj, [policy]);
 	}
 
 	/// <summary>

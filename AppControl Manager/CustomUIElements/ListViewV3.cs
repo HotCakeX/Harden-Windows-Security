@@ -109,7 +109,7 @@ internal sealed partial class ListViewV3 : ListView
 			// Find the outer ScrollView if not already captured
 			if (_parentScrollView == null)
 			{
-				_parentScrollView = FindParentScrollView();
+				_parentScrollView = FindParentScrollView(this, _innerScrollViewer);
 			}
 
 			// Disable vertical scrolling for the outer ScrollView only for mouse input
@@ -135,19 +135,23 @@ internal sealed partial class ListViewV3 : ListView
 	/// <summary>
 	/// Walks up the visual tree to find the first ScrollView ancestor *after* the ListView's own inner ScrollViewer
 	/// </summary>
+	/// <param name="listView">The ListView contained by the parent ScrollView.</param>
+	/// <param name="innerScrollViewer">The ScrollViewer created by the ListView's control template, if it has been located.</param>
+	/// <returns>The first parent ScrollView, or null if one is not found.</returns>
 	[DynamicWindowsRuntimeCast(typeof(ScrollView))]
-	private ScrollView? FindParentScrollView()
+	internal static ScrollView? FindParentScrollView(ListView listView, ScrollViewer? innerScrollViewer)
 	{
-		// Start from the inner ScrollViewer if we have it, otherwise from 'this'
-		DependencyObject? parent = (_innerScrollViewer as DependencyObject) ?? this;
+		DependencyObject? parent = innerScrollViewer is not null
+			? innerScrollViewer
+			: listView;
 
-		// Move up until we find a ScrollView that's *not* the inner one
-		while (parent != null)
+		while (parent is not null)
 		{
 			parent = VisualTreeHelper.GetParent(parent);
-			if (parent is ScrollView sv && sv != _innerScrollViewer)
+
+			if (parent is ScrollView scrollView)
 			{
-				return sv;
+				return scrollView;
 			}
 		}
 		return null;

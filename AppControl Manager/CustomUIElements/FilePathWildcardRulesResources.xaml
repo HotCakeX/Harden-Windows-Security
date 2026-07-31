@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    x:Class="AppControlManager.CustomUIElements.FilePathWildcardRulesResources"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:viewmodels="using:AppControlManager.ViewModels"
+    xmlns:customUI="using:AppControlManager.CustomUIElements">
+    <DataTemplate x:Key="FilePathWildcardRulesTemplate"
+                  x:DataType="viewmodels:FilePathWildcardRulesSettings">
+        <Grid Width="420"
+              RowSpacing="8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ToggleSwitch Grid.Row="0"
+                          OffContent="Don't add any rules"
+                          OnContent="Add these rules"
+                          IsOn="{x:Bind IsEnabled, Mode=TwoWay}"
+                          Visibility="{x:Bind EnableToggleVisibility}" />
+            <Grid Grid.Row="1"
+                  ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <AutoSuggestBox Text="{x:Bind NewRule, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                PlaceholderText="C:\Path\*"                                
+                                VerticalAlignment="Center"
+                                IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+                                TextChanged="DirectoryPathAutoSuggestBox_TextChanged"
+                                SuggestionChosen="DirectoryPathAutoSuggestBox_SuggestionChosen"
+                                QuerySubmitted="DirectoryPathAutoSuggestBox_QuerySubmitted"
+                                Unloaded="DirectoryPathAutoSuggestBox_Unloaded"
+                                QueryIcon="Find">
+                    <!-- https://github.com/microsoft/microsoft-ui-xaml/issues/9249 -->
+                    <AutoSuggestBox.TextBoxStyle>
+                        <Style BasedOn="{StaticResource AutoSuggestBoxTextBoxStyle}" TargetType="TextBox">
+                            <Setter Property="IsSpellCheckEnabled" Value="False" />
+                            <Setter Property="IsTextPredictionEnabled" Value="False" />
+                        </Style>
+                    </AutoSuggestBox.TextBoxStyle>
+                </AutoSuggestBox>
+                <Button Grid.Column="1"
+                        VerticalAlignment="Center"
+                        IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+                        Click="{x:Bind AddRule}">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8">
+                        <SymbolIcon Symbol="Add" />
+                        <TextBlock Text="Add" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <customUI:FilePathWildcardRulesListView Grid.Row="2"
+                                                    MaxHeight="120"
+                                                    VerticalAlignment="Center"
+                                                    ItemsSource="{x:Bind Rules, Mode=OneWay}"
+                                                    SelectionMode="Single"
+                                                    IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
+                                                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                                                    ScrollViewer.VerticalScrollMode="Enabled">
+                <customUI:FilePathWildcardRulesListView.ItemTemplate>
+                    <DataTemplate x:DataType="viewmodels:FilePathWildcardRuleItem">
+                        <Grid MinHeight="40"                              
+                              ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock VerticalAlignment="Center"
+                                       Text="{x:Bind Value}"
+                                       IsTextSelectionEnabled="True"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap" />
+                            <Button Grid.Column="1"
+                                    ToolTipService.ToolTip="Remove rule"
+                                    Click="{x:Bind Remove}">
+                                <FontIcon Glyph="&#xE74D;" />
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </customUI:FilePathWildcardRulesListView.ItemTemplate>
+            </customUI:FilePathWildcardRulesListView>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

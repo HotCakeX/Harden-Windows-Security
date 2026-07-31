@@ -43,7 +43,7 @@ internal sealed partial class MenuFlyoutV2 : MenuFlyout
 	/// <summary>
 	/// Event handler to prevent the MenuFlyout to automatically close immediately after selecting a checkbox or any button in it
 	/// </summary>
-	internal void MenuFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
+	internal static void MenuFlyout_Closing(FlyoutBase sender, FlyoutBaseClosingEventArgs args)
 	{
 		if (sender is MenuFlyoutV2 { IsPointerOver: true })
 		{

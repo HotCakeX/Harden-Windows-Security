@@ -107,7 +107,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	private NavigationService Nav => ViewModelProvider.NavigationService;
 
-	private readonly ContentCoordinateConverter? contentCoordinateConverter;
+	private readonly ContentCoordinateConverter contentCoordinateConverter;
 	private readonly OverlappedPresenter overlappedPresenter;
 	internal bool IsWindowMaximized { get; set => this.SP(ref field, value); }
 	internal bool IsWindowAlwaysOnTop { get; set => this.SP(ref field, value); }
@@ -236,11 +236,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	{
 		if (TopBarOverrideMenuFlyout.IsOpen)
 			TopBarOverrideMenuFlyout.Hide();
-
-		if (overlappedPresenter is not null)
-		{
-			IsWindowMaximized = overlappedPresenter.State is OverlappedPresenterState.Maximized;
-		}
+		IsWindowMaximized = overlappedPresenter.State is OverlappedPresenterState.Maximized;
 	}
 
 	private void RestoreWindow_Click() => overlappedPresenter.Restore();
@@ -410,7 +406,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		{
 			case WinMsg.WM_NCRBUTTONUP:
 				{
-					if (wParam.ToUInt32() is 2 && instance.Content is not null && instance.Content.XamlRoot is not null && instance.contentCoordinateConverter is not null)
+					if (wParam.ToUInt32() is 2 && instance.Content is not null && instance.Content.XamlRoot is not null)
 					{
 						Point local = instance.contentCoordinateConverter.ConvertScreenToLocal(new PointInt32(lParam.ToInt32() & 0xFFFF, lParam.ToInt32() >> 16));
 
@@ -488,11 +484,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			{
 				TopBarOverrideMenuFlyout.Hide();
 			}
-
-			if (overlappedPresenter is not null)
-			{
-				IsWindowMaximized = overlappedPresenter.State is OverlappedPresenterState.Maximized;
-			}
+			IsWindowMaximized = overlappedPresenter.State is OverlappedPresenterState.Maximized;
 		}
 	}
 
@@ -2258,7 +2250,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Event handler for right-click context menu option for each policy in the library to clear/remove its file path association.
 	/// </summary>
-	private async void OnRemovePolicyFilePath(object sender, RoutedEventArgs e)
+	private void OnRemovePolicyFilePath(object sender, RoutedEventArgs e)
 	{
 		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
 		{

@@ -110,12 +110,11 @@ internal sealed partial class HeaderTile : Button
 		Visual visual = ElementCompositionPreview.GetElementVisual(this);
 		visual.Scale = new Vector3(0.8f);
 
-		Vector2 center = new(0.5f, 0.5f);
 		const string expression = "Vector2(this.Target.Size.X * X, this.Target.Size.Y * Y)";
 		ExpressionAnimation animation = visual.Compositor.CreateExpressionAnimation(expression);
 
-		animation.SetScalarParameter("X", center.X);
-		animation.SetScalarParameter("Y", center.Y);
+		animation.SetScalarParameter("X", 0.5f);
+		animation.SetScalarParameter("Y", 0.5f);
 
 		visual.StopAnimation("CenterPoint.XY");
 		visual.StartAnimation("CenterPoint.XY", animation);

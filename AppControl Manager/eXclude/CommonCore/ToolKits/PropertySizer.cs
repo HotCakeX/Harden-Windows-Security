@@ -30,7 +30,7 @@ internal sealed partial class PropertySizer : SizerBase
 {
 	private double _currentSize;
 
-	internal PropertySizer() : base()
+	internal PropertySizer()
 	{
 		// Default properties specific to PropertySizer
 		HorizontalAlignment = HorizontalAlignment.Stretch;

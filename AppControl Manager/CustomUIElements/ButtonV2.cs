@@ -136,7 +136,7 @@ internal sealed partial class ButtonV2 : Button
 		{
 			Content = Atlas.GetStr("SelectedText"); // Change text to "Selected" (localized) when active; otherwise restore original content
 
-			// Without this dispatcher, due to pages not having navigation page, sometimes the shadow will not be re-applied when we navigate away to another page and then navigate back
+			// Without this dispatcher, due to pages not having navigation cache, sometimes the shadow will not be re-applied when we navigate away to another page and then navigate back
 			_ = DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
 			{
 				Effects.SetShadow(this, _selectedShadow);
@@ -272,7 +272,7 @@ internal sealed partial class SplitButtonV2 : SplitButton
 		{
 			Content = Atlas.GetStr("SelectedText"); // Change text to "Selected" (localized) when active; otherwise restore original content
 
-			// Without this dispatcher, due to pages not having navigation page, sometimes the shadow will not be re-applied when we navigate away to another page and then navigate back
+			// Without this dispatcher, due to pages not having navigation cache, sometimes the shadow will not be re-applied when we navigate away to another page and then navigate back
 			_ = DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () =>
 			{
 				Effects.SetShadow(this, _selectedShadow);

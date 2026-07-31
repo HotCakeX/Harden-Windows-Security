@@ -37,8 +37,8 @@ namespace CommonCore.ToolKits;
 internal abstract class SizerBase : UserControl
 {
 	// Visual Elements
-	private readonly protected Grid? _rootGrid;
-	private readonly protected Rectangle? _thumb;
+	private readonly protected Grid _rootGrid;
+	private readonly protected Rectangle _thumb;
 
 	// State
 	private bool _pressed;
@@ -252,7 +252,6 @@ internal abstract class SizerBase : UserControl
 
 	private void OnOrientationChanged()
 	{
-		if (_thumb == null) return;
 		if (Orientation == Orientation.Vertical)
 		{
 			_thumb.Width = ThumbWidth;
@@ -270,8 +269,6 @@ internal abstract class SizerBase : UserControl
 	[DynamicWindowsRuntimeCast(typeof(Brush))]
 	private void UpdateVisualState()
 	{
-		if (_rootGrid == null || _thumb == null) return;
-
 		static Brush GetBrush(string key)
 		{
 			if (Application.Current.Resources.TryGetValue(key, out object? res) && res is Brush b) return b;
@@ -339,7 +336,7 @@ internal sealed partial class GridSplitter : SizerBase
 	private RowDefinition? _cachedCurrentRow;
 	private RowDefinition? _cachedSiblingRow;
 
-	internal GridSplitter() : base() { }
+	internal GridSplitter() { }
 
 	private static readonly DependencyProperty ResizeDirectionProperty =
 		DependencyProperty.Register(nameof(ResizeDirection), typeof(GridResizeDirection), typeof(GridSplitter), new PropertyMetadata(GridResizeDirection.Auto, OnResizeDirectionChanged));
@@ -447,7 +444,7 @@ internal sealed partial class GridSplitter : SizerBase
 		}
 		else
 		{
-			foreach (ColumnDefinition? col in _cachedResizable.ColumnDefinitions)
+			foreach (ColumnDefinition col in _cachedResizable.ColumnDefinitions)
 			{
 				if (col == _cachedCurrentColumn) _ = SetColumnWidth(_cachedCurrentColumn, currentChange, GridUnitType.Star);
 				else if (col == _cachedSiblingColumn) _ = SetColumnWidth(_cachedSiblingColumn, siblingChange, GridUnitType.Star);
@@ -478,7 +475,7 @@ internal sealed partial class GridSplitter : SizerBase
 		}
 		else
 		{
-			foreach (RowDefinition? row in _cachedResizable.RowDefinitions)
+			foreach (RowDefinition row in _cachedResizable.RowDefinitions)
 			{
 				if (row == _cachedCurrentRow) _ = SetRowHeight(_cachedCurrentRow, currentChange, GridUnitType.Star);
 				else if (row == _cachedSiblingRow) _ = SetRowHeight(_cachedSiblingRow, siblingChange, GridUnitType.Star);

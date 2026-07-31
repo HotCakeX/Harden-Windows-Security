@@ -1173,7 +1173,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			// Parse
 			XDocument doc = XDocument.Parse(xml, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
-			XElement root = doc.Root!;
+			XElement? root = doc.Root;
 			if (root != null && string.Equals(root.Name.LocalName, "versions", StringComparison.OrdinalIgnoreCase))
 			{
 				string engineVal = root.Element(XName.Get("engine"))?.Value?.Trim() ?? string.Empty;
@@ -1704,7 +1704,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				Header = Atlas.GetStr("NewComputerName"),
 				PlaceholderText = Atlas.GetStr("EnterNewName"),
-				Text = ComputerNameText ?? string.Empty,
+				Text = ComputerNameText,
 				HorizontalAlignment = HorizontalAlignment.Stretch
 			};
 

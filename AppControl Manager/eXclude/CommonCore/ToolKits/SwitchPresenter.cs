@@ -81,11 +81,6 @@ public partial class Case : DependencyObject
 	/// </summary>
 	public static readonly DependencyProperty TargetValueProperty =
 		DependencyProperty.Register(nameof(TargetValue), typeof(object), typeof(Case), new PropertyMetadata(null));
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Case"/> class.
-	/// </summary>
-	public Case() { }
 }
 
 /// <summary>
@@ -93,10 +88,6 @@ public partial class Case : DependencyObject
 /// </summary>
 public partial class CaseCollection : DependencyObjectCollection
 {
-	/// <summary>
-	/// Initializes a new instance of the <see cref="CaseCollection"/> class.
-	/// </summary>
-	public CaseCollection() { }
 }
 
 /// <summary>

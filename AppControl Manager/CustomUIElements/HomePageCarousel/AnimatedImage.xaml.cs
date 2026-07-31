@@ -59,7 +59,7 @@ internal sealed partial class AnimatedImage : UserControl
 		nameof(ImageUrl),
 		typeof(Uri),
 		typeof(AnimatedImage),
-		new PropertyMetadata(defaultValue: null, (d, e) => ((AnimatedImage)d).IsImageChanged((Uri)e.NewValue)));
+		new PropertyMetadata(defaultValue: null, (d, e) => ((AnimatedImage)d).IsImageChanged()));
 
 	public Uri ImageUrl
 	{
@@ -79,7 +79,7 @@ internal sealed partial class AnimatedImage : UserControl
 		}
 	}
 
-	private void IsImageChanged(Uri newValue)
+	private void IsImageChanged()
 	{
 		BottomImage.Source = new BitmapImage(ImageUrl);
 		BottomImage.Opacity = 1;

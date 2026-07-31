@@ -174,8 +174,8 @@ internal static class FileDialogHelper
 
 		if (paths.Count == 1)
 		{
-			string? dir = paths[0];
-			if (!string.IsNullOrEmpty(dir))
+			string dir = paths[0];
+			if (dir.Length != 0)
 				DirectoryToOpen = dir;
 		}
 

@@ -123,18 +123,6 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
-			// Ensure basic initialization even if something fails
-			try
-			{
-				_loadedHandler = ContentDialogV2_Loaded;
-				_openedHandler = ContentDialogV2_Opened;
-				_closingHandler = ContentDialogV2_Closing;
-			}
-			catch (Exception innerEx)
-			{
-				Logger.Write(innerEx);
-				// Constructor must never throw - continue with default state
-			}
 		}
 	}
 
@@ -1432,7 +1420,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	/// </summary>
 	internal new IAsyncOperation<ContentDialogResult> ShowAsync()
 	{
-		// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the error
+		// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the new one.
 		if (CurrentlyOpenContentDialog is ContentDialogV2 dialog)
 		{
 			Logger.Write("A Content Dialog is already open, closing it first before displaying the new one");

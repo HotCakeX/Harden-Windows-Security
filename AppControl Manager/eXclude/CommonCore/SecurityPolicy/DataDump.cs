@@ -59,7 +59,7 @@ internal static class DataDump
 			_ = content.AppendLine($"│  Domain/Workgroup: {GetDomainOrWorkgroup()}");
 			_ = content.AppendLine($"│  Current User: {Environment.UserName}");
 			_ = content.AppendLine($"│  User Domain: {Environment.UserDomainName}");
-			_ = content.AppendLine($"│  User Is Administrator: {IsCurrentUserAdministrator()}");
+			_ = content.AppendLine($"│  User Is Administrator: {Atlas.IsElevated}");
 			_ = content.AppendLine($"│  User SID: {GetCurrentUserSid()}");
 			_ = content.AppendLine($"│  Interactive Session: {Environment.UserInteractive}");
 			_ = content.AppendLine($"│  System Directory: {Environment.SystemDirectory}");
@@ -105,7 +105,7 @@ internal static class DataDump
 			_ = content.AppendLine($"│  Current Process ID: {Environment.ProcessId}");
 			_ = content.AppendLine($"│  Process Name: {process.ProcessName}");
 			_ = content.AppendLine($"│  Process Start Time: {process.StartTime:yyyy-MM-dd HH:mm:ss}");
-			_ = content.AppendLine($"│  Elevated Process: {IsElevated()}");
+			_ = content.AppendLine($"│  Elevated Process: {Atlas.IsElevated}");
 			_ = content.AppendLine($"│  UAC Enabled: {IsUacEnabled()}");
 			_ = content.AppendLine($"│  Current Culture: {CultureInfo.CurrentCulture.Name}");
 			_ = content.AppendLine($"│  Current UI Culture: {CultureInfo.CurrentUICulture.Name}");
@@ -117,17 +117,17 @@ internal static class DataDump
 			_ = content.AppendLine("┌─ SYSTEM ACCESS POLICIES");
 			_ = content.AppendLine("│");
 			_ = content.AppendLine("│  Password Policies:");
-			_ = content.AppendLine($"│    • Minimum Password Age: {FormatValue(systemAccess.MinimumPasswordAge)} days");
-			_ = content.AppendLine($"│    • Maximum Password Age: {FormatValue(systemAccess.MaximumPasswordAge)} days");
-			_ = content.AppendLine($"│    • Minimum Password Length: {FormatValue(systemAccess.MinimumPasswordLength)} characters");
+			_ = content.AppendLine($"│    • Minimum Password Age: {systemAccess.MinimumPasswordAge} days");
+			_ = content.AppendLine($"│    • Maximum Password Age: {systemAccess.MaximumPasswordAge} days");
+			_ = content.AppendLine($"│    • Minimum Password Length: {systemAccess.MinimumPasswordLength} characters");
 			_ = content.AppendLine($"│    • Password Complexity: {FormatBooleanValue(systemAccess.PasswordComplexity)}");
-			_ = content.AppendLine($"│    • Password History Size: {FormatValue(systemAccess.PasswordHistorySize)} passwords");
+			_ = content.AppendLine($"│    • Password History Size: {systemAccess.PasswordHistorySize} passwords");
 			_ = content.AppendLine($"│    • Clear Text Password: {FormatBooleanValue(systemAccess.ClearTextPassword)}");
 			_ = content.AppendLine("│");
 			_ = content.AppendLine("│  Account Lockout Policies:");
-			_ = content.AppendLine($"│    • Lockout Bad Count: {FormatValue(systemAccess.LockoutBadCount)} attempts");
-			_ = content.AppendLine($"│    • Reset Lockout Count: {FormatValue(systemAccess.ResetLockoutCount)} minutes");
-			_ = content.AppendLine($"│    • Lockout Duration: {FormatValue(systemAccess.LockoutDuration)} minutes");
+			_ = content.AppendLine($"│    • Lockout Bad Count: {systemAccess.LockoutBadCount} attempts");
+			_ = content.AppendLine($"│    • Reset Lockout Count: {systemAccess.ResetLockoutCount} minutes");
+			_ = content.AppendLine($"│    • Lockout Duration: {systemAccess.LockoutDuration} minutes");
 			_ = content.AppendLine($"│    • Allow Administrator Lockout: {FormatBooleanValue(systemAccess.AllowAdministratorLockout)}");
 			_ = content.AppendLine("│");
 			_ = content.AppendLine("│  Account Settings:");
@@ -147,15 +147,11 @@ internal static class DataDump
 			if (privilegeRights.Count != 0)
 			{
 				// Group and sort privileges
-				Dictionary<string, string[]> sortedPrivileges = privilegeRights
-					.OrderBy(kvp => kvp.Key, StringComparer.OrdinalIgnoreCase)
-					.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-				foreach (KeyValuePair<string, string[]> privilege in sortedPrivileges)
+				foreach (KeyValuePair<string, string[]> privilege in privilegeRights.OrderBy(kvp => kvp.Key, StringComparer.OrdinalIgnoreCase))
 				{
 					_ = content.AppendLine($"│  {FormatPrivilegeName(privilege.Key)}:");
 
-					if (privilege.Value != null && privilege.Value.Length > 0)
+					if (privilege.Value.Length > 0)
 					{
 						foreach (string user in privilege.Value.OrderBy(u => u, StringComparer.OrdinalIgnoreCase))
 						{
@@ -198,20 +194,6 @@ internal static class DataDump
 		catch
 		{
 			return Environment.UserDomainName;
-		}
-	}
-
-	private static string IsCurrentUserAdministrator()
-	{
-		try
-		{
-			using WindowsIdentity identity = WindowsIdentity.GetCurrent();
-			WindowsPrincipal principal = new(identity);
-			return principal.IsInRole(WindowsBuiltInRole.Administrator) ? "Yes" : "No";
-		}
-		catch
-		{
-			return "Unknown";
 		}
 	}
 
@@ -382,20 +364,6 @@ internal static class DataDump
 		}
 	}
 
-	private static string IsElevated()
-	{
-		try
-		{
-			using WindowsIdentity identity = WindowsIdentity.GetCurrent();
-			WindowsPrincipal principal = new(identity);
-			return principal.IsInRole(WindowsBuiltInRole.Administrator) ? "Yes" : "No";
-		}
-		catch
-		{
-			return "Unknown";
-		}
-	}
-
 	private static string IsUacEnabled()
 	{
 		try
@@ -425,8 +393,6 @@ internal static class DataDump
 		return $"{size:F2} {suffixes[suffixIndex]} ({bytes:N0} bytes)";
 	}
 
-	private static string FormatValue(object? value) => value?.ToString() ?? "Not configured";
-
 	private static string FormatStringValue(string? value) => string.IsNullOrEmpty(value) ? "Not configured" : $"\"{value}\"";
 
 	private static string FormatBooleanValue(object? value)
@@ -441,8 +407,31 @@ internal static class DataDump
 		};
 	}
 
-	// Convert technical privilege names to more readable format
-	private static string FormatPrivilegeName(string privilegeName) =>
-		 privilegeName.Replace("Se", "").Replace("Privilege", " Privilege")
-			.Replace("Right", " Right").Trim();
+	// Convert technical privilege names to a more readable format.
+	// Names always start with the "Se" prefix and end with either "Privilege" or "Right",
+	// e.g. "SeSecurityPrivilege" -> "Security Privilege", "SeInteractiveLogonRight" -> "InteractiveLogon Right".
+	private static string FormatPrivilegeName(string privilegeName)
+	{
+		ReadOnlySpan<char> span = privilegeName.AsSpan().Trim();
+
+		// Strip the leading "Se" prefix
+		if (span.StartsWith("Se", StringComparison.OrdinalIgnoreCase))
+		{
+			span = span[2..];
+		}
+
+		// Insert a single space before the trailing "Privilege" suffix.
+		if (span.EndsWith("Privilege", StringComparison.OrdinalIgnoreCase))
+		{
+			return string.Concat(span[..^"Privilege".Length].TrimEnd(), " Privilege");
+		}
+
+		// Insert a single space before the trailing "Right" suffix.
+		if (span.EndsWith("Right", StringComparison.OrdinalIgnoreCase))
+		{
+			return string.Concat(span[..^"Right".Length].TrimEnd(), " Right");
+		}
+
+		return span.ToString();
+	}
 }

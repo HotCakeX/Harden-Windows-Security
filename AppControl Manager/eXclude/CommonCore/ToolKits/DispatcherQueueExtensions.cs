@@ -241,7 +241,7 @@ internal static class DispatcherQueueExtensions
 				{
 					if (function() is Task<T> awaitableResult)
 					{
-						var result = await awaitableResult.ConfigureAwait(false);
+						T result = await awaitableResult.ConfigureAwait(false);
 
 						taskCompletionSource.SetResult(result);
 					}

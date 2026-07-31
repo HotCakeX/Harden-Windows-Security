@@ -59,11 +59,7 @@ internal sealed partial class EqualPanel : Panel
 		set => SetValue(OrientationProperty, value);
 	}
 
-	internal EqualPanel()
-	{
-		Orientation = Orientation.Horizontal;
-		_ = RegisterPropertyChangedCallback(HorizontalAlignmentProperty, OnAlignmentChanged);
-	}
+	internal EqualPanel() => _ = RegisterPropertyChangedCallback(HorizontalAlignmentProperty, OnAlignmentChanged);
 
 	protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
 	{
@@ -73,7 +69,7 @@ internal sealed partial class EqualPanel : Panel
 		List<UIElement> elements = Children.Where(static e => e.Visibility == Visibility.Visible).ToList();
 		_visibleItemsCount = elements.Count;
 
-		foreach (UIElement? child in CollectionsMarshal.AsSpan(elements))
+		foreach (UIElement child in CollectionsMarshal.AsSpan(elements))
 		{
 			child.Measure(availableSize);
 			_maxItemWidth = Math.Max(_maxItemWidth, child.DesiredSize.Width);
@@ -125,7 +121,7 @@ internal sealed partial class EqualPanel : Panel
 		if (Orientation == Orientation.Horizontal) _maxItemWidth = currentMaxItemU;
 		else _maxItemHeight = currentMaxItemU;
 
-		foreach (UIElement? child in Children.Where(static e => e.Visibility == Visibility.Visible))
+		foreach (UIElement child in Children.Where(static e => e.Visibility == Visibility.Visible))
 		{
 			child.Arrange(new Windows.Foundation.Rect(pos.X, pos.Y, _maxItemWidth, _maxItemHeight));
 			pos.U += currentMaxItemU + Spacing;

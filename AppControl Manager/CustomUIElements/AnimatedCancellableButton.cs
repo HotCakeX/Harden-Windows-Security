@@ -650,38 +650,28 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 		{
 			return;
 		}
-
 		try
 		{
-			if (_attachedShadow == null)
-			{
-				_attachedShadow = CreateShadow();
-			}
+			_attachedShadow ??= CreateShadow();
 
-			if (_attachedShadow != null && !_hasShadowApplied)
+			if (!_hasShadowApplied)
 			{
 				Effects.SetShadow(this, _attachedShadow);
 				_hasShadowApplied = true;
 			}
-
-			if (_attachedShadow != null)
+			_currentBlurRadius = MIN_BLUR_RADIUS;
+			_shadowIncreasing = true;
+			_colorTransitionCounter = 0;
+			_colorHoldCounter = 0;
+			_inColorTransition = false;
+			_attachedShadow.BlurRadius = _currentBlurRadius;
+			_attachedShadow.Color = GetCurrentShadowColor();
+			_attachedShadow.Opacity = SHADOW_OPACITY;
+			if (_shadowTimer != null)
 			{
-				_currentBlurRadius = MIN_BLUR_RADIUS;
-				_shadowIncreasing = true;
-				_colorTransitionCounter = 0;
-				_colorHoldCounter = 0;
-				_inColorTransition = false;
-				_attachedShadow.BlurRadius = _currentBlurRadius;
-				_attachedShadow.Color = GetCurrentShadowColor();
-				_attachedShadow.Opacity = SHADOW_OPACITY;
-
-				if (_shadowTimer != null)
-				{
-					_shadowTimer.Start();
-					_isShadowAnimationRunning = true;
-
-					ExternalShadowAnimationRunning = true;
-				}
+				_shadowTimer.Start();
+				_isShadowAnimationRunning = true;
+				ExternalShadowAnimationRunning = true;
 			}
 		}
 		catch (Exception)

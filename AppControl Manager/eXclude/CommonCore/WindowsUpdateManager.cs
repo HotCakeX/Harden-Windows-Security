@@ -171,7 +171,6 @@ internal unsafe static partial class WindowsUpdateManager
 		catch (InvalidOperationException)
 		{
 			updateId = "Unavailable";
-			revisionNumber = 0;
 		}
 
 		// Gather optional metadata. Missing properties are converted to "Unavailable".
@@ -1570,45 +1569,6 @@ internal static class WindowsUpdateDisplayFormatter
 		}
 
 		return string.Join(Environment.NewLine, parts);
-	}
-
-	// Converts text like "Name=value, Other=value" into labeled UI lines.
-	internal static string FormatKeyValueList(string value)
-	{
-		if (IsEmptyDisplayValue(value))
-		{
-			return value;
-		}
-
-		string[] pairs = value.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-		if (pairs.Length == 0)
-		{
-			return value;
-		}
-
-		List<string> lines = new(capacity: pairs.Length);
-
-		for (int index = 0; index < pairs.Length; index++)
-		{
-			string pair = pairs[index];
-
-			int separatorIndex = pair.IndexOf('=', StringComparison.Ordinal);
-
-			if (separatorIndex <= 0 || separatorIndex == pair.Length - 1)
-			{
-				lines.Add(pair);
-				continue;
-			}
-
-			string name = pair[..separatorIndex].Trim();
-			string displayName = FormatPropertyName(name);
-			string displayValue = pair[(separatorIndex + 1)..].Trim();
-
-			lines.Add($"{displayName}: {displayValue}");
-		}
-
-		return string.Join(Environment.NewLine, lines);
 	}
 
 	// Formats download content records for the UI. Large collections are summarized to avoid rendering many long URLs.

@@ -190,14 +190,14 @@ internal static class FirewallWmiHelper
 		Guid CLSID_WbemContext = new("674B6698-EE92-11D0-AD71-00C04FD8FDFF");
 		Guid IID_IWbemContext = new("44aca674-e8fc-11d0-a07c-00c04fb68820");
 
-		uint CLSCTX_INPROC_SERVER = 1;
-		uint RPC_C_AUTHN_WINNT = 10;
-		uint RPC_C_AUTHZ_NONE = 0;
-		uint RPC_C_AUTHN_LEVEL_CALL = 3;
-		uint RPC_C_IMP_LEVEL_IMPERSONATE = 3;
-		int WBEM_FLAG_FORWARD_ONLY = 0x20;
-		int WBEM_FLAG_RETURN_IMMEDIATELY = 0x10;
-		int WBEM_INFINITE = -1;
+		const uint CLSCTX_INPROC_SERVER = 1;
+		const uint RPC_C_AUTHN_WINNT = 10;
+		const uint RPC_C_AUTHZ_NONE = 0;
+		const uint RPC_C_AUTHN_LEVEL_CALL = 3;
+		const uint RPC_C_IMP_LEVEL_IMPERSONATE = 3;
+		const int WBEM_FLAG_FORWARD_ONLY = 0x20;
+		const int WBEM_FLAG_RETURN_IMMEDIATELY = 0x10;
+		const int WBEM_INFINITE = -1;
 
 		// 1. Create Locator
 		int hr = NativeMethods.CoCreateInstanceWbemLocator(

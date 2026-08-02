@@ -167,23 +167,12 @@ internal sealed partial class HighPerfIncrementalCollection<TDataType>(List<TDat
 		try
 		{
 			int startIndex = ActivePageIndex * PageSize;
-			int count;
 
-			// If start index exceeds count, we've reached the end
-			if (startIndex >= sourceList.Count)
-			{
-				// Advance page index even for empty results to maintain state consistency
-				ActivePageIndex += 1;
-				count = 0;
-			}
-			else
-			{
-				// Calculate safe count to grab
-				count = Math.Min(PageSize, sourceList.Count - startIndex);
+			// Advance page index
+			ActivePageIndex += 1;
 
-				// Advance page index
-				ActivePageIndex += 1;
-			}
+			// If start index exceeds count, we've reached the end, otherwise calculate safe count to grab
+			int count = startIndex >= sourceList.Count ? 0 : Math.Min(PageSize, sourceList.Count - startIndex);
 
 			if (count > 0)
 			{
@@ -226,7 +215,6 @@ internal sealed partial class HighPerfIncrementalCollection<TDataType>(List<TDat
 			if (_loadsSuspended)
 			{
 				// Do nothing while suspended; the Reset/replace from the filter will keep UI consistent.
-				// loadedItemCount remains 0; finally will release the semaphore.
 				return new LoadMoreItemsResult { Count = 0 };
 			}
 
@@ -369,10 +357,9 @@ internal sealed partial class HighPerfIncrementalCollection<TDataType>(List<TDat
 			// Reset paging & state.
 			ActivePageIndex = 0;
 			HasAdditionalItems = true;
-			bool hadItems = Count > 0;
 
 			// If the collection had items, clear it atomically and notify listeners.
-			if (hadItems)
+			if (Count > 0)
 			{
 				using (BeginBulkUpdate())
 				{
@@ -380,7 +367,6 @@ internal sealed partial class HighPerfIncrementalCollection<TDataType>(List<TDat
 				}
 			}
 
-			// Prepare for manual first-page load
 			_ = LoadDataInternal();
 		}
 		finally

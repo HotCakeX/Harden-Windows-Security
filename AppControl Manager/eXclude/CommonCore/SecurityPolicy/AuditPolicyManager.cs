@@ -18,7 +18,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -223,7 +222,7 @@ internal static class AuditPrivilegeHelper
 				return;
 			}
 
-			IntPtr processHandle = Process.GetCurrentProcess().Handle;
+			IntPtr processHandle = NativeMethods.GetCurrentProcess();
 
 			bool opened = NativeMethods.OpenProcessToken(processHandle, TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, out nint tokenHandle);
 			if (!opened)

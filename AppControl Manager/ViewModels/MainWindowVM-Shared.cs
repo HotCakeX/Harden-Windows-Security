@@ -394,11 +394,13 @@ internal sealed partial class MainWindowVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
+				using Process beforeProcess = Process.GetCurrentProcess();
+
 				// Baseline memory snapshot before forcing GC/compaction.
 				long beforeHeapBytes = GC.GetGCMemoryInfo().HeapSizeBytes;
 				long beforeManagedBytes = GC.GetTotalMemory(false);
-				long beforeWorkingSetBytes = Process.GetCurrentProcess().WorkingSet64;
-				long beforePrivateBytes = Process.GetCurrentProcess().PrivateMemorySize64;
+				long beforeWorkingSetBytes = beforeProcess.WorkingSet64;
+				long beforePrivateBytes = beforeProcess.PrivateMemorySize64;
 
 				// Request a one-time LOH compaction.
 				GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
@@ -420,11 +422,13 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					blocking: true,
 					compacting: true);
 
+				using Process afterProcess = Process.GetCurrentProcess();
+
 				// Memory snapshot after GC/compaction completes.
 				long afterHeapBytes = GC.GetGCMemoryInfo().HeapSizeBytes;
 				long afterManagedBytes = GC.GetTotalMemory(false);
-				long afterWorkingSetBytes = Process.GetCurrentProcess().WorkingSet64;
-				long afterPrivateBytes = Process.GetCurrentProcess().PrivateMemorySize64;
+				long afterWorkingSetBytes = afterProcess.WorkingSet64;
+				long afterPrivateBytes = afterProcess.PrivateMemorySize64;
 
 				// Compute deltas
 				long heapDelta = beforeHeapBytes - afterHeapBytes;

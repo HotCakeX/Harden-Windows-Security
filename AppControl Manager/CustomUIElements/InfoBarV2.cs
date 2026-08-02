@@ -65,17 +65,11 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 	// Flag to indicate when handling the close button click to allow proper close after animation
 	private bool _isHandlingCloseButton;
 
-	// Flag to prevent default close behavior when wanting to show custom animation first
-	private bool _preventDefaultClose;
-
 	// Flag to track if any animation is currently in progress to prevent conflicts
 	private bool _animationInProgress;
 
 	// Enables one-time activation of text selection on the internal "Message" TextBlock
 	private bool _messageTextSelectionEnabled;
-
-	// Timer used for close button handling - needed to work around InfoBar's internal close timing
-	private readonly DispatcherTimer _closeButtonTimer;
 
 	// Additional state tracking for better animation conflict resolution
 	private bool _isCurrentlyShowingAnimation;
@@ -113,14 +107,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		Unloaded += InfoBarV2_Unloaded;
 		Closing += InfoBarV2_Closing;  // Critical for intercepting close button clicks
 		Closed += InfoBarV2_Closed;
-
-		// Initialize close button timer with short interval for responsive close handling
-		// The timer is needed because InfoBar's close button handling has timing issues
-		_closeButtonTimer = new DispatcherTimer
-		{
-			Interval = TimeSpan.FromMilliseconds(10)
-		};
-		_closeButtonTimer.Tick += CloseButtonTimer_Tick;
 
 		// Initialize all transform objects that will be used for animations
 		InitializeTransforms();
@@ -543,10 +529,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 			// Clean up animation resources
 			CleanupAnimations();
 
-			// Stop and detach timer to eliminate handler references
-			_closeButtonTimer.Tick -= CloseButtonTimer_Tick;
-			_closeButtonTimer.Stop();
-
 			// Cancel all pending DispatcherQueue operations
 			CancelAllPendingDispatcherOperations();
 
@@ -631,7 +613,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 		_isClosingViaButton = false;
 		_suppressCloseAnimation = false;
 		_isHandlingCloseButton = false;
-		_preventDefaultClose = false;
 		_animationInProgress = false;
 		_isCurrentlyShowingAnimation = false;
 		_isCurrentlyHidingAnimation = false;
@@ -701,34 +682,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 		// Reset all close-related flags
 		_isClosingViaButton = false;
-		_preventDefaultClose = false;
-	}
-
-	/// <summary>
-	/// Timer tick handler for close button processing.
-	/// This timer was added to work around timing issues with InfoBar's close button handling.
-	/// </summary>
-	private void CloseButtonTimer_Tick(object? sender, object e)
-	{
-		// Immediately return if we're disposed or unloading to prevent crashes
-		if (_isDisposed || _isUnloading)
-		{
-			_closeButtonTimer?.Stop();
-			return;
-		}
-
-		_closeButtonTimer.Stop();
-
-		if (_isClosingViaButton && _preventDefaultClose)
-		{
-			_preventDefaultClose = false;
-
-			// Start the custom hide animation using safe dispatcher operation
-			SafeDispatcherQueueTryEnqueue(() =>
-			{
-				AnimateInfoBarState(false);
-			});
-		}
 	}
 
 	/// <summary>
@@ -1824,7 +1777,6 @@ internal sealed partial class InfoBarV2 : InfoBar, INotifyPropertyChanged
 
 		// Reset all animation state completely
 		ResetAllAnimationState();
-		_closeButtonTimer?.Stop();
 	}
 
 	/// <summary>

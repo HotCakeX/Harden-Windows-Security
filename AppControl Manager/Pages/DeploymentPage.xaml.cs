@@ -32,7 +32,6 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, Comm
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = this;
 	}
 
 	#region Augmentation Interface

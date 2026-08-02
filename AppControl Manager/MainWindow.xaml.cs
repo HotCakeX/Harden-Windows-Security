@@ -176,9 +176,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		// This is required. Without it, the page that has the TabView would make the App Window's TitleBar non-draggable.
 		SetTitleBar(AppTitleBar);
 
-		// Set the DataContext of the Grid to enable bindings in XAML
-		RootGrid.DataContext = this;
-
 		// Apply the BackDrop at startup.
 		ViewModel.UpdateSystemBackDrop(this);
 

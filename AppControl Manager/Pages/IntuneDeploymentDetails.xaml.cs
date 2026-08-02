@@ -33,7 +33,6 @@ internal sealed partial class IntuneDeploymentDetails : Page, CommonCore.UI.IPag
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = this;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("IntuneDeploymentDetailsPageTitle");

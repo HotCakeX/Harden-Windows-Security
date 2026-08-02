@@ -35,7 +35,6 @@ internal sealed partial class Settings : Page, CommonCore.UI.IPageHeaderProvider
 	internal Settings()
 	{
 		InitializeComponent();
-		DataContext = this;
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 

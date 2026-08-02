@@ -83,6 +83,17 @@ internal static class Program
 		// Assign the launch arguments to the static property so that they can be accessed from anywhere in the application.
 		_launchArguments = args;
 
+#if HARDEN_SYSTEM_SECURITY
+		// The Widgets Board launches the app with this argument in order to activate the widget provider COM server.
+		// It is a completely headless code path that must never reach the XAML application startup.
+		// The COM runtime can supply additional ones such as "-Embedding" but we don't need them.
+		if (args.Length >= 1 && string.Equals(args[0], Widgets.WidgetProviderHost.ComServerArgument, StringComparison.OrdinalIgnoreCase))
+		{
+			Widgets.WidgetProviderHost.Run();
+			Environment.Exit(0);
+		}
+#endif
+
 		// Nothing can run after this, so this should always be at the end.
 		InvokeXamlGeneratedMain(null, args);
 	}

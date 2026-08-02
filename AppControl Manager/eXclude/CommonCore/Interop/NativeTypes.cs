@@ -2253,3 +2253,22 @@ internal struct MEMORYSTATUSEX
 	internal ulong ullAvailVirtual;
 	internal ulong ullAvailExtendedVirtual;
 }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/unknwn/nn-unknwn-iclassfactory
+/// Implemented by out of process COM servers so that the COM runtime can create instances of a registered class.
+/// </summary>
+[GeneratedComInterface]
+[Guid("00000001-0000-0000-C000-000000000046")]
+[InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+internal partial interface IClassFactory
+{
+	[PreserveSig]
+	int CreateInstance(IntPtr pUnkOuter, in Guid riid, out IntPtr ppvObject);
+
+	/// <summary>
+	/// The native parameter is a Win32 BOOL, which is a 4 byte integer, so it is declared as a blittable Int32.
+	/// </summary>
+	[PreserveSig]
+	int LockServer(int fLock);
+}

@@ -67,7 +67,7 @@
         <AssemblyName>HardenSystemSecurity</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>1.0.76.0</FileVersion>
+        <FileVersion>1.0.77.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <AssemblyProduct>HardenSystemSecurity</AssemblyProduct>
         <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
@@ -276,6 +276,7 @@
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.3.5" />
         <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.3" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="2.0.5" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260610101">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -471,6 +472,12 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Resources\WMI\WMISettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Widgets\PerformanceWidgetCard.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Resources\Widgets\WinGetUpdatesWidgetCard.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

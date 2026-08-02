@@ -1,0 +1,7 @@
+Windows Widgets
+
+Added two widgets for the Windows Widgets board: Performance Monitor and WinGet Management.
+
+The Performance Monitor widget lets you view important system performance metrics at a glance. The WinGet Management widget lets you check your system for available app updates and displays the results with version details. It also includes a button for opening Harden System Security, where you can manage and install the available updates.
+
+The widgets are designed for efficient resource usage. The Performance Monitor stops collecting metrics when the Windows Widgets board is closed or not visible. WinGet update checks run only when you request them, and no Widget related background resource is ever used when the widgets are not pinned.

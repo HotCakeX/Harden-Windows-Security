@@ -3646,4 +3646,25 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int CryptUnprotectMemory(nint pDataIn, uint cbDataIn, uint dwFlags);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-coregisterclassobject
+	/// </summary>
+	[LibraryImport("OLE32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CoRegisterClassObject(
+		in Guid rclsid,
+		IntPtr pUnk,
+		uint dwClsContext,
+		uint flags,
+		out uint lpdwRegister);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/combaseapi/nf-combaseapi-corevokeclassobject
+	/// </summary>
+	[LibraryImport("OLE32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CoRevokeClassObject(uint dwRegister);
+
 }

@@ -1,0 +1,321 @@
+{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.6",
+    "verticalContentAlignment": "center",
+    "body": [
+        {
+            "type": "Container",
+            "spacing": "none",
+            "height": "stretch",
+            "verticalContentAlignment": "center",
+            "items": [
+                {
+                    "type": "ColumnSet",
+                    "spacing": "none",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "CPU Temperature",
+                                    "size": "${textSize}",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${cpuTemperatureValue}",
+                                    "size": "${textSize}",
+                                    "weight": "bolder",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${barSpacing}",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "${cpuTemperatureFill}",
+                            "spacing": "none",
+                            "minHeight": "${barHeight}",
+                            "backgroundImage": {
+                                "url": "${barFillImage}",
+                                "fillMode": "cover"
+                            },
+                            "items": []
+                        },
+                        {
+                            "type": "Column",
+                            "width": "${cpuTemperatureRemainder}",
+                            "spacing": "none",
+                            "minHeight": "${barHeight}",
+                            "backgroundImage": {
+                                "url": "${barTrackImage}",
+                                "fillMode": "cover"
+                            },
+                            "items": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "spacing": "${groupSpacing}",
+            "height": "stretch",
+            "verticalContentAlignment": "center",
+            "items": [
+                {
+                    "type": "ColumnSet",
+                    "spacing": "none",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "CPU Usage",
+                                    "size": "${textSize}",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${cpuUsageValue}",
+                                    "size": "${textSize}",
+                                    "weight": "bolder",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${barSpacing}",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "${cpuUsageFill}",
+                            "spacing": "none",
+                            "minHeight": "${barHeight}",
+                            "backgroundImage": {
+                                "url": "${barFillImage}",
+                                "fillMode": "cover"
+                            },
+                            "items": []
+                        },
+                        {
+                            "type": "Column",
+                            "width": "${cpuUsageRemainder}",
+                            "spacing": "none",
+                            "minHeight": "${barHeight}",
+                            "backgroundImage": {
+                                "url": "${barTrackImage}",
+                                "fillMode": "cover"
+                            },
+                            "items": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "spacing": "${groupSpacing}",
+            "height": "stretch",
+            "verticalContentAlignment": "center",
+            "items": [
+                {
+                    "type": "ColumnSet",
+                    "spacing": "none",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "Memory",
+                                    "size": "${textSize}",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${memoryValue}",
+                                    "size": "${textSize}",
+                                    "weight": "bolder",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${barSpacing}",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "${memoryFill}",
+                            "spacing": "none",
+                            "minHeight": "${barHeight}",
+                            "backgroundImage": {
+                                "url": "${barFillImage}",
+                                "fillMode": "cover"
+                            },
+                            "items": []
+                        },
+                        {
+                            "type": "Column",
+                            "width": "${memoryRemainder}",
+                            "spacing": "none",
+                            "minHeight": "${barHeight}",
+                            "backgroundImage": {
+                                "url": "${barTrackImage}",
+                                "fillMode": "cover"
+                            },
+                            "items": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "$when": "${storageTemperatureVisible}",
+            "type": "Container",
+            "spacing": "${groupSpacing}",
+            "height": "stretch",
+            "verticalContentAlignment": "center",
+            "items": [
+                {
+                    "type": "ColumnSet",
+                    "spacing": "none",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "Disk Temperature",
+                                    "size": "${textSize}",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${storageTemperatureValue}",
+                                    "size": "${textSize}",
+                                    "weight": "bolder",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${barSpacing}",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "${storageTemperatureFill}",
+                            "spacing": "none",
+                            "minHeight": "${barHeight}",
+                            "backgroundImage": {
+                                "url": "${barFillImage}",
+                                "fillMode": "cover"
+                            },
+                            "items": []
+                        },
+                        {
+                            "type": "Column",
+                            "width": "${storageTemperatureRemainder}",
+                            "spacing": "none",
+                            "minHeight": "${barHeight}",
+                            "backgroundImage": {
+                                "url": "${barTrackImage}",
+                                "fillMode": "cover"
+                            },
+                            "items": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

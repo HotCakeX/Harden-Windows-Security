@@ -36,7 +36,7 @@
   <Identity
     Name="VioletHansen.HardenSystemSecurity"
     Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
-    Version="1.0.76.0" />
+    Version="1.0.77.0" />
 
   <mp:PhoneIdentity PhoneProductId="74d36aa3-e613-41ec-808e-c5d051224316" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
@@ -96,7 +96,7 @@
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"  Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png">
         </uap:DefaultTile >
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badgeAndTileText"/>
@@ -113,8 +113,100 @@
             <com:ExeServer Executable="HardenSystemSecurity.exe" Arguments="----AppNotificationActivated:" DisplayName="Harden System Security">
               <com:Class Id="019EDBF2-C28D-7693-BB1E-44EC0D96DCEF" />
             </com:ExeServer>
+            <!-- Out of process COM server of the Widgets Board widget provider. The GUID is unique to this app. -->
+            <!-- https://learn.microsoft.com/windows/apps/develop/widgets/implement-widget-provider-cs -->
+            <com:ExeServer Executable="HardenSystemSecurity.exe" Arguments="-RegisterProcessAsComServer" DisplayName="Harden System Security Widget Provider">
+              <com:Class Id="1483997C-ECDF-42F9-842A-87C912F13155" DisplayName="Harden System Security Widget Provider" />
+            </com:ExeServer>
           </com:ComServer>
         </com:Extension>
+
+        <!-- Widgets Board widget provider registration -->
+        <uap3:Extension Category="windows.appExtension">        
+          <uap3:AppExtension Name="com.microsoft.windows.widgets"
+                             DisplayName="Harden System Security"
+                             Id="HardenSystemSecurityWidgetProvider">
+            <uap3:Properties>
+              <WidgetProvider>
+                <ProviderIcons>
+                  <Icon Path="Assets\Widgets\PerformanceWidgetIcon.png" />
+                </ProviderIcons>
+                <Activation>
+                  <!-- The app exports a COM class which implements IWidgetProvider -->
+                  <CreateInstance ClassId="1483997C-ECDF-42F9-842A-87C912F13155" />
+                </Activation>
+                <Definitions>
+                  <!-- The Id must stay identical to WidgetProvider.PerformanceWidgetDefinitionId -->
+                  <Definition Id="HardenSystemSecurity_Performance"
+                              DisplayName="Performance"
+                              Description="Live CPU temperature, CPU usage, memory usage and disk temperature of your device.">
+                    <Capabilities>
+                      <Capability>
+                        <Size Name="small" />
+                      </Capability>
+                      <Capability>
+                        <Size Name="medium" />
+                      </Capability>
+                      <Capability>
+                        <Size Name="large" />
+                      </Capability>
+                    </Capabilities>
+                    <ThemeResources>
+                      <Icons>
+                        <Icon Path="Assets\Widgets\PerformanceWidgetIcon.png" />
+                      </Icons>
+                      <Screenshots>
+                        <Screenshot Path="Assets\Widgets\PerformanceWidgetMedium.png" DisplayAltText="Performance widget showing CPU temperature, CPU usage, memory usage and disk temperature" />
+                      </Screenshots>
+                      <DarkMode>
+                        <Screenshots>
+                          <Screenshot Path="Assets\Widgets\PerformanceWidgetMedium.png" DisplayAltText="Performance widget showing CPU temperature, CPU usage, memory usage and disk temperature" />
+                        </Screenshots>
+                      </DarkMode>
+                      <LightMode>
+                        <Screenshots>
+                          <Screenshot Path="Assets\Widgets\PerformanceWidgetMediumLight.jpg" DisplayAltText="Performance widget showing CPU temperature, CPU usage, memory usage and disk temperature" />
+                        </Screenshots>
+                      </LightMode>
+                    </ThemeResources>
+                  </Definition>
+                  <!-- The Id must stay identical to WidgetProvider.WinGetUpdatesWidgetDefinitionId -->
+                  <!-- The small size is not offered because a table of app versions does not fit into it -->
+                  <Definition Id="HardenSystemSecurity_WinGetUpdates"
+                              DisplayName="App Updates"
+                              Description="Check WinGet for newer versions of your installed apps and see which ones have an update available.">
+                    <Capabilities>
+                      <Capability>
+                        <Size Name="medium" />
+                      </Capability>
+                      <Capability>
+                        <Size Name="large" />
+                      </Capability>
+                    </Capabilities>
+                    <ThemeResources>
+                      <Icons>
+                        <Icon Path="Assets\Widgets\WinGetUpdatesWidgetIcon.png" />
+                      </Icons>
+                      <Screenshots>
+                        <Screenshot Path="Assets\Widgets\WingetWidgetMedium.png" DisplayAltText="App Updates widget showing the number of available WinGet updates and the names of the apps" />
+                      </Screenshots>
+                      <DarkMode>
+                        <Screenshots>
+                          <Screenshot Path="Assets\Widgets\WingetWidgetMedium.png" DisplayAltText="App Updates widget showing the number of available WinGet updates and the names of the apps" />
+                        </Screenshots>
+                      </DarkMode>
+                      <LightMode>
+                        <Screenshots>
+                          <Screenshot Path="Assets\Widgets\WingetWidgetMediumLight.jpg" DisplayAltText="App Updates widget showing the number of available WinGet updates and the names of the apps" />
+                        </Screenshots>
+                      </LightMode>
+                    </ThemeResources>
+                  </Definition>
+                </Definitions>
+              </WidgetProvider>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
 
         <uap3:Extension Category="windows.appExecutionAlias" Executable="HardenSystemSecurity.exe" EntryPoint="Windows.FullTrustApplication">
           <uap3:AppExecutionAlias>

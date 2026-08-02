@@ -229,6 +229,52 @@ internal static class WinGetPackageSearchService
 		return results;
 	}
 
+	/// <summary>
+	/// Returns only the installed packages that WinGet reports an available update for.
+	///
+	/// It queries the very same remote-backed local composite catalog that <see cref="GetInstalledProgramsAsync"/> uses,
+	/// because that is what lets WinGet correlate an installed entry with the version that its source offers, which is
+	/// exactly the signal that the "Installed Programs" section filters on with its updates only toggle.
+	///
+	/// Unlike <see cref="GetInstalledProgramsAsync"/> it produces plain immutable objects instead of
+	/// <see cref="WinGetPackageSearchResult"/> instances, so it does not depend on the XAML dispatcher of the app and
+	/// can therefore also run inside of the headless widget provider COM server process.
+	/// </summary>
+	/// <param name="cancellationToken">Cancels the WinGet query.</param>
+	internal static async Task<List<WinGetAvailableUpdate>> GetAvailableUpdatesAsync(CancellationToken cancellationToken)
+	{
+		PackageManager packageManager = new();
+		PackageCatalog catalog = await ConnectSearchCatalogAsync(packageManager, cancellationToken, CompositeSearchBehavior.LocalCatalogs);
+		FindPackagesResult findResult = await FindInstalledPackagesAsync(catalog, cancellationToken);
+
+		if (findResult.Status is not FindPackagesResultStatus.Ok)
+		{
+			throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "WinGet installed program query failed with status {0}. Extended error: {1}.", findResult.Status, GetExtendedErrorCode(findResult)));
+		}
+
+		List<WinGetAvailableUpdate> updates = new(findResult.Matches.Count);
+
+		for (int index = 0; index < findResult.Matches.Count; index++)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+
+			CatalogPackage package = findResult.Matches[index].CatalogPackage;
+
+			if (!GetIsUpdateAvailable(package))
+			{
+				continue;
+			}
+
+			updates.Add(new WinGetAvailableUpdate(
+				SafeOptionalString(package.Id),
+				SafeString(package.Name, package.Id),
+				SafeOptionalString(GetInstalledVersion(package)?.Version),
+				SafeOptionalString(GetDefaultInstallVersion(package)?.Version)));
+		}
+
+		return updates;
+	}
+
 	internal static IReadOnlyList<WinGetSourceInfo> GetSources()
 	{
 		PackageManager packageManager = new();

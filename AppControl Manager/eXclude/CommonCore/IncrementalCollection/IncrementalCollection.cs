@@ -652,7 +652,30 @@ internal sealed partial class MemoryMappedFileDataProvider : IFileDataProvider
 		FileInfo fileInfo = new(filePath);
 		_fileSize = fileInfo.Length;
 
-		_mmf = MemoryMappedFile.CreateFromFile(filePath, FileMode.Open, "LogFile", _fileSize, MemoryMappedFileAccess.Read);
+		FileStream? fileStream = null;
+		try
+		{
+			// Open the file explicitly so logs that are still being written by another process can be mapped read-only.
+			fileStream = new FileStream(
+				filePath,
+				FileMode.Open,
+				FileAccess.Read,
+				FileShare.ReadWrite | FileShare.Delete);
+			_mmf = MemoryMappedFile.CreateFromFile(
+				fileStream,
+				mapName: null,
+				capacity: 0,
+				MemoryMappedFileAccess.Read,
+				HandleInheritability.None,
+				leaveOpen: false);
+			// Ownership of the stream has been transferred to the memory-mapped file.
+			fileStream = null;
+		}
+		finally
+		{
+			fileStream?.Dispose();
+		}
+
 		_accessor = _mmf.CreateViewAccessor(0, _fileSize, MemoryMappedFileAccess.Read);
 
 		_lineOffsets = [];

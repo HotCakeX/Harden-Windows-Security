@@ -121,6 +121,9 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	{
 		InitializeComponent();
 
+		// Set the icon for the app's preview on the taskbar.
+		AppWindow.SetIcon(@"Assets\AppIcon.ico");
+
 		Instance = this;
 
 		Nav.Initialize(ContentFrame, MainNavigation);

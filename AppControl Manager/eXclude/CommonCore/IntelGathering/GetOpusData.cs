@@ -55,9 +55,7 @@ internal static partial class Opus
 				// Checking if the OID value of the signed attribute matches the Opus SPC_SP_OPUS_INFO_OBJID
 				if (string.Equals(signedAttribute.Oid.Value, SPC_SP_OPUS_INFO_OBJID, StringComparison.OrdinalIgnoreCase))
 				{
-					// Initializing pcbStructInfo to 0
 					uint pcbStructInfo = 0;
-					// Initializing decodedDataPtr to IntPtr.Zero
 					IntPtr decodedDataPtr = IntPtr.Zero;
 
 					try

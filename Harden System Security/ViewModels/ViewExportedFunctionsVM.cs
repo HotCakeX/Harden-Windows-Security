@@ -173,8 +173,8 @@ internal sealed partial class ViewExportedFunctionsVM : ViewModelBase
 							]))
 				]);
 
-				string json = JsonSerializer.Serialize(exportDocument, ExportedFunctionsJsonContext.Default.ExportedFunctionsExportDocument);
-				File.WriteAllText(jsonPath, json, Encoding.UTF8);
+				using FileStream fileStream = File.Create(jsonPath);
+				JsonSerializer.Serialize(fileStream, exportDocument, ExportedFunctionsJsonContext.Default.ExportedFunctionsExportDocument);
 			});
 
 			MainInfoBar.WriteSuccess($"Successfully exported {entriesToExport.Count} entries to {jsonPath}");

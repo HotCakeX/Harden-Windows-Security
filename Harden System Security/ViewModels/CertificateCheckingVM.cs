@@ -749,9 +749,8 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 			await Task.Run(() =>
 			{
-				string jsonString = JsonSerializer.Serialize(certificatesToExport, NonStlRootCertJsonContext.Default.ListNonStlRootCert);
-
-				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
+				using FileStream fileStream = File.Create(saveLocation);
+				JsonSerializer.Serialize(fileStream, certificatesToExport, NonStlRootCertJsonContext.Default.ListNonStlRootCert);
 			});
 
 			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedCertificates"), certificatesToExport.Count, saveLocation));

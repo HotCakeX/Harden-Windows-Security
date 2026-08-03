@@ -167,6 +167,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	{
 		ViewModel = viewModel;
 		InitializeComponent();
+		AppWindow.SetIcon(@"Assets\AppIcon.ico"); // Set the icon for the app's preview on the taskbar.
 		InitializeLiveGraphCardDepth();
 		InitializeHomeTitleBadge();
 		ExtendsContentIntoTitleBar = true;
@@ -1075,17 +1076,18 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		}
 	}
 
+	private static readonly string[] Units = ["B/s", "KB/s", "MB/s", "GB/s"];
+
 	private static string FormatThroughput(double bytesPerSecond)
 	{
-		string[] units = ["B/s", "KB/s", "MB/s", "GB/s"];
 		double value = Math.Max(0.0, bytesPerSecond);
 		int unitIndex = 0;
-		while (value >= 1024.0 && unitIndex < units.Length - 1)
+		while (value >= 1024.0 && unitIndex < Units.Length - 1)
 		{
 			value /= 1024.0;
 			unitIndex++;
 		}
-		return value.ToString(unitIndex == 0 ? "0" : "0.##", CultureInfo.InvariantCulture) + " " + units[unitIndex];
+		return value.ToString(unitIndex == 0 ? "0" : "0.##", CultureInfo.InvariantCulture) + " " + Units[unitIndex];
 	}
 
 	internal static string FormatMemoryRangeLabel(string? value) => AppendUnit(value, "MB");

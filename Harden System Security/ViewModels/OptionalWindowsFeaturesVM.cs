@@ -2797,9 +2797,8 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			await Task.Run(() =>
 			{
-				string jsonString = JsonSerializer.Serialize(AllItems, DISMOutputEntryJsonContext.Default.ListDISMOutputEntry);
-
-				File.WriteAllText(saveLocation, jsonString, Encoding.UTF8);
+				using FileStream fileStream = File.Create(saveLocation);
+				JsonSerializer.Serialize(fileStream, AllItems, DISMOutputEntryJsonContext.Default.ListDISMOutputEntry);
 			});
 
 			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedOptionalFeatures"), AllItems.Count, saveLocation));

@@ -63,12 +63,6 @@ static constexpr GUID g_commandGuids[] = {
 	CLSID_SubCommand3
 };
 
-static constexpr LPCWSTR g_commandActions[] = {
-	L"--action=PolicyEditor --file=\"%s\"",
-	L"--action=FileSignature --file=\"%s\"",
-	L"--action=FileHashes --file=\"%s\""
-};
-
 // Direct array access lookup table for icon locations
 static LPCWSTR* g_iconLocationLookupTable[] = {
 	reinterpret_cast<LPCWSTR*>(&g_cachedPolicyEditorIconLocation),

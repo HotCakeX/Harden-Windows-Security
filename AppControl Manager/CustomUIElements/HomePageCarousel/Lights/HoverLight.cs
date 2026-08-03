@@ -82,7 +82,7 @@ internal sealed partial class HoverLight : XamlLight
 		CubicBezierEasingFunction cbEasing = compositor.CreateCubicBezierEasingFunction(new Vector2(0.3f, 0.7f), new Vector2(0.9f, 0.5f));
 		_offsetAnimation = compositor.CreateVector3KeyFrameAnimation();
 		_offsetAnimation.InsertKeyFrame(1, restingPosition, cbEasing);
-		_offsetAnimation.Duration = TimeSpan.FromSeconds(0.5f);
+		_offsetAnimation.Duration = TimeSpan.FromSeconds(0.5);
 
 		spotLight.Offset = restingPosition;
 

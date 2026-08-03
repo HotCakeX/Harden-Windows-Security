@@ -122,7 +122,7 @@
         </com:Extension>
 
         <!-- Widgets Board widget provider registration -->
-        <uap3:Extension Category="windows.appExtension">        
+        <uap3:Extension Category="windows.appExtension">
           <uap3:AppExtension Name="com.microsoft.windows.widgets"
                              DisplayName="Harden System Security"
                              Id="HardenSystemSecurityWidgetProvider">

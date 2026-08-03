@@ -25,10 +25,8 @@ internal static class CertCNFetcher
 	/// <summary>
 	/// Gets the common names (CN) of the certificates in the Personal certificate store of the Current User.
 	/// </summary>
-	/// <exception cref="InvalidOperationException"></exception>
 	internal static IEnumerable<string> GetCertCNs()
 	{
-
 		// Output collection
 		HashSet<string> output = [];
 

@@ -53,6 +53,8 @@ namespace HardenSystemSecurity.Widgets;
 /// size it is pinned at. The fourth metric, which is the disk temperature, carries a "$when" that drops its entire
 /// container on the small size where there is no room left for it.
 /// https://learn.microsoft.com/adaptive-cards/templating/language
+///
+/// Widget manifest version: https://learn.microsoft.com/en-us/adaptive-cards/resources/partners
 /// </summary>
 internal static class PerformanceWidgetCard
 {

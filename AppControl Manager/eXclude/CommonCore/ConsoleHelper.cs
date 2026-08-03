@@ -66,8 +66,7 @@ internal static partial class ConsoleHelper
 				{
 					try
 					{
-						ConsoleLifetime? lifetime = s_lifetime;
-						lifetime?.Dispose();
+						s_lifetime.Dispose();
 					}
 					catch
 					{

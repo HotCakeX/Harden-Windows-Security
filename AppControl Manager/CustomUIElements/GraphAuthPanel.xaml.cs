@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.MicrosoftGraph;
@@ -138,36 +137,6 @@ internal sealed partial class GraphAuthPanel : UserControl
 	}
 
 	#region Animations and shadows
-
-	private void GraphAuthPanel_Unloaded()
-	{
-		List<CanvasControl> canvasControls = [];
-		CollectWin2DCanvasControls(this, canvasControls);
-
-		foreach (CanvasControl canvasControl in canvasControls)
-		{
-			canvasControl.Draw -= AccountMetadataGradientShadowCanvas_Draw;
-			canvasControl.RemoveFromVisualTree();
-		}
-	}
-
-	[DynamicWindowsRuntimeCast(typeof(CanvasControl))]
-	private static void CollectWin2DCanvasControls(DependencyObject parent, List<CanvasControl> canvasControls)
-	{
-		int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
-
-		for (int index = 0; index < childrenCount; index++)
-		{
-			DependencyObject child = VisualTreeHelper.GetChild(parent, index);
-
-			if (child is CanvasControl canvasControl)
-			{
-				canvasControls.Add(canvasControl);
-			}
-
-			CollectWin2DCanvasControls(child, canvasControls);
-		}
-	}
 
 	/// <summary>
 	/// Starts the hover animation for the visible metadata card and its matching gradient shadow.
@@ -315,7 +284,7 @@ internal sealed partial class GraphAuthPanel : UserControl
 	/// <summary>
 	/// Draws the 5-color blurred gradient shadow and clears the tile interior so the glow remains outside the card surface.
 	/// </summary>
-	private void AccountMetadataGradientShadowCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+	internal static void AccountMetadataGradientShadowCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
 	{
 		float canvasWidth = Math.Max(0.0f, (float)sender.ActualWidth);
 		float canvasHeight = Math.Max(0.0f, (float)sender.ActualHeight);

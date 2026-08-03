@@ -92,11 +92,9 @@ internal static class SystemAccessDefaults
 		// Get current system access settings
 		SystemAccessInfo currentSettings = SecurityPolicyReader.GetSystemAccess();
 
-		// Serialize to JSON
-		string json = JsonSerializer.Serialize(currentSettings, SystemAccessJsonContext.Default.SystemAccessInfo);
-
-		// Write to file
-		File.WriteAllText(filePath, json);
+		// Serialize to JSON	
+		using FileStream fileStream = File.Create(filePath);
+		JsonSerializer.Serialize(fileStream, currentSettings, SystemAccessJsonContext.Default.SystemAccessInfo);
 	}
 }
 

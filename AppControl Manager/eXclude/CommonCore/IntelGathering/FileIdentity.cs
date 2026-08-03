@@ -335,20 +335,19 @@ internal sealed class FileIdentity
 
 		infoBarSettings.WriteInfo(Atlas.GetStr("ExportingToJSONMsg"));
 
-		List<FileIdentity> dataToExport = [];
-
-		await Task.Run(() =>
+		int totalDataCount = await Task.Run(() =>
 		{
-			dataToExport = fileIdentities.ToList();
+			List<FileIdentity> dataToExport = fileIdentities.ToList();
 
-			string jsonString = JsonSerializer.Serialize(
-				dataToExport,
+			using FileStream fileStream = File.Create(savePath);
+
+			JsonSerializer.Serialize(fileStream, dataToExport,
 				FileIdentityJsonSerializationContext.Default.ListFileIdentity);
 
-			File.WriteAllText(savePath, jsonString);
+			return dataToExport.Count;
 		});
 
-		infoBarSettings.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedDataToJSON"), dataToExport.Count, savePath));
+		infoBarSettings.WriteSuccess(string.Format(Atlas.GetStr("SuccessfullyExportedDataToJSON"), totalDataCount, savePath));
 	}
 }
 

@@ -70,7 +70,6 @@ internal sealed partial class ListViewV2 : ListView
 		Unloaded += OnUnloaded;
 	}
 
-	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	private async void OnListViewV2SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		try
@@ -82,20 +81,19 @@ internal sealed partial class ListViewV2 : ListView
 				return;
 			}
 
-			ListView lv = (ListView)sender;
-			ScrollViewer? sv = lv.FindScrollViewer();
+			ScrollViewer? sv = this.FindScrollViewer();
 
 			// Early exit when there is no selection, the list is empty or ScrollViewer couldn't be found for the ListView.
 			// This prevents container lookups and ScrollIntoView calls.
-			if (lv.Items.Count == 0 || lv.SelectedIndex < 0 || sv is null)
+			if (this.Items.Count == 0 || this.SelectedIndex < 0 || sv is null)
 			{
 				return;
 			}
 
 			await ListViewHelper.SmoothScrollIntoViewWithIndexCenterVerticallyOnlyAsync(
-					listView: lv,
+					listView: this,
 					listViewScrollViewer: sv,
-					index: lv.SelectedIndex,
+					index: this.SelectedIndex,
 					disableAnimation: false,
 					scrollIfVisible: true
 				);

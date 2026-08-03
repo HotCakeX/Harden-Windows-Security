@@ -19,21 +19,14 @@ using System.Runtime.InteropServices;
 
 namespace CommonCore.Others;
 
-internal static partial class CryptoAPI
+internal static class CryptoAPI
 {
-
-	// Define constants for the name types
 	internal const int CERT_NAME_SIMPLE_DISPLAY_TYPE = 4; // Display type for simple names
-	internal const int CERT_NAME_ATTR_TYPE = 3; // Display type for attributes
 	internal const int CERT_NAME_ISSUER_FLAG = 0x1; // Flag indicating that the issuer name should be retrieved
 
 	/// <summary>
 	/// The main method of the class to get the name string
 	/// </summary>
-	/// <param name="pCertContext"></param>
-	/// <param name="dwType"></param>
-	/// <param name="pvTypePara"></param>
-	/// <param name="isIssuer"></param>
 	internal static string GetNameString(IntPtr pCertContext, int dwType, string? pvTypePara, bool isIssuer)
 	{
 		// Allocate a buffer for the name string
@@ -45,7 +38,6 @@ internal static partial class CryptoAPI
 
 		try
 		{
-
 			if (!string.IsNullOrEmpty(pvTypePara))
 			{
 				// Using Unicode encoding for better compatibility
@@ -67,7 +59,6 @@ internal static partial class CryptoAPI
 
 			// Return the name string or an empty string if failed
 			return result > 0 ? new string(nameBuffer, 0, result - 1) : string.Empty; // Exclude null terminator
-
 		}
 		finally
 		{
@@ -76,7 +67,6 @@ internal static partial class CryptoAPI
 			{
 				Marshal.FreeHGlobal(pvTypeParaPtr);
 			}
-
 		}
 	}
 }

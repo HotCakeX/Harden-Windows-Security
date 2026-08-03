@@ -25,7 +25,6 @@ const PORTABLE_EXEC_SIG: u32 = 0x00004550;
 const OPT_HDR_32_MAGIC: u16 = 0x010B;
 const OPT_HDR_64_MAGIC: u16 = 0x020B;
 const ARCH_X64_MACHINE: u16 = 0x8664;
-const RELOCATIONS_REMOVED: u16 = 0x0001;
 const ENTROPY_RANDOMIZATION: u16 = 0x0020;
 
 // https://learn.microsoft.com/cpp/build/reference/dynamicbase-use-address-space-layout-randomization
@@ -359,8 +358,6 @@ impl BinarySecurityAnalyzer {
 
         // Evaluate address space layout randomization
         let address_randomization: SecurityFeatureStatus = if has_base_randomization {
-            let _relocations_stripped: bool =
-                file_header.file_properties & RELOCATIONS_REMOVED != 0;
             SecurityFeatureStatus::Enabled
         } else {
             SecurityFeatureStatus::Disabled

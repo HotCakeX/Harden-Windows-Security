@@ -193,7 +193,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			try
 			{
-				UserKindText = Atlas.IsElevated ? $"{Environment.UserName} - Administrator Privilege" : $"{Environment.UserName} - Standard Privilege";
+				UserKindText = Atlas.IsElevated ? $"{Environment.UserName} - Elevated Process" : $"{Environment.UserName} - Unelevated Process";
 			}
 			catch (Exception ex)
 			{

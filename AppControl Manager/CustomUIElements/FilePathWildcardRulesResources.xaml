@@ -26,7 +26,7 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <AutoSuggestBox Text="{x:Bind NewRule, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                PlaceholderText="C:\Path\*"                                
+                                PlaceholderText="C:\Path\*"
                                 VerticalAlignment="Center"
                                 IsEnabled="{x:Bind IsEnabled, Mode=OneWay}"
                                 TextChanged="DirectoryPathAutoSuggestBox_TextChanged"
@@ -63,7 +63,7 @@
                                                     ScrollViewer.VerticalScrollMode="Enabled">
                 <customUI:FilePathWildcardRulesListView.ItemTemplate>
                     <DataTemplate x:DataType="viewmodels:FilePathWildcardRuleItem">
-                        <Grid MinHeight="40"                              
+                        <Grid MinHeight="40"
                               ColumnSpacing="8">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />

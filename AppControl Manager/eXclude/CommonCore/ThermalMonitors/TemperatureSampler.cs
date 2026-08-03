@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
@@ -25,7 +24,7 @@ internal sealed partial class TemperatureSampler : IDisposable
 {
 	private const string ThermalCounterPath = @"\Thermal Zone Information(*)\Temperature";
 
-	private static readonly List<string> _cpuKeywords =
+	private static readonly string[] _cpuKeywords =
 	[
 		"cpu", "package", "pkg", "proc", "soc", "tdie", "tctl", "core", "ccd", "die"
 	];
@@ -194,10 +193,9 @@ internal sealed partial class TemperatureSampler : IDisposable
 		}
 
 		// Already Celsius
-		double cFromC = raw;
-		if (IsPlausibleCelsius(cFromC))
+		if (IsPlausibleCelsius(raw))
 		{
-			return cFromC;
+			return raw;
 		}
 
 		return double.NaN;
@@ -207,7 +205,7 @@ internal sealed partial class TemperatureSampler : IDisposable
 
 	private static bool ContainsAnyKeyword(ReadOnlySpan<char> text)
 	{
-		foreach (string keyword in CollectionsMarshal.AsSpan(_cpuKeywords))
+		foreach (string keyword in _cpuKeywords)
 		{
 			if (text.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0)
 			{

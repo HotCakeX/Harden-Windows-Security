@@ -61,17 +61,7 @@ internal sealed partial class BackdropMicaBrush : XamlCompositionBrushBase
 	// Keeping a reference to the backdrop so we can dispose it explicitly in OnDisconnected.
 	private CompositionBackdropBrush? backdrop;
 
-	private Compositor? Compositor
-	{
-		get
-		{
-			if (field == null)
-			{
-				field = ElementCompositionPreview.GetElementVisual(MainWindow.RootGridPub).Compositor;
-			}
-			return field;
-		}
-	}
+	private Compositor? Compositor => field ??= ElementCompositionPreview.GetElementVisual(MainWindow.RootGridPub).Compositor;
 
 	#region TintColor
 
@@ -192,8 +182,6 @@ internal sealed partial class BackdropMicaBrush : XamlCompositionBrushBase
 	}
 
 	#endregion
-
-	public BackdropMicaBrush() { }
 
 	protected override void OnConnected()
 	{

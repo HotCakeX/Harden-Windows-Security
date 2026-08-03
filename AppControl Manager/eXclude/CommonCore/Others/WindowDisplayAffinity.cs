@@ -61,17 +61,10 @@ internal static class WindowDisplayAffinity
 			return;
 		}
 
-		try
+		if (!NativeMethods.SetWindowDisplayAffinity(windowHandle, (uint)affinity))
 		{
-			if (!NativeMethods.SetWindowDisplayAffinity(windowHandle, (uint)affinity))
-			{
-				int errorCode = Marshal.GetLastPInvokeError();
-				throw new Win32Exception(errorCode, $"SetWindowDisplayAffinity failed with error code: {errorCode}");
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
+			int errorCode = Marshal.GetLastPInvokeError();
+			Logger.Write($"SetWindowDisplayAffinity failed with error code: {errorCode}");
 		}
 	}
 }

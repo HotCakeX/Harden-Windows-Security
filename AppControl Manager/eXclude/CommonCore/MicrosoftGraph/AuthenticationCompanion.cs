@@ -106,7 +106,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	/// </summary>
 	/// <param name="sender"></param>
 	/// <param name="e"></param>
-	internal void AuthenticatedAccounts_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+	private void AuthenticatedAccounts_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
 	{
 		// Determine the Shimmer/ListView visibility on every collection change event that is fired
 		ShimmerListViewVisibilityConfig();

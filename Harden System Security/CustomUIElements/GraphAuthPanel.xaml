@@ -28,7 +28,7 @@
                                      ClearColor="Transparent"
                                      IsHitTestVisible="False"
                                      Canvas.ZIndex="0"
-                                     Draw="{x:Bind customUI:GraphAuthPanel.AccountMetadataGradientShadowCanvas_Draw}"/>
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
                 <win2d:CanvasControl Grid.Row="0"
                                      Grid.Column="1"
                                      Height="112"
@@ -37,7 +37,7 @@
                                      ClearColor="Transparent"
                                      IsHitTestVisible="False"
                                      Canvas.ZIndex="0"
-                                     Draw="{x:Bind customUI:GraphAuthPanel.AccountMetadataGradientShadowCanvas_Draw}"/>
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
                 <win2d:CanvasControl Grid.Row="1"
                                      Grid.Column="0"
                                      Height="112"
@@ -46,7 +46,7 @@
                                      ClearColor="Transparent"
                                      IsHitTestVisible="False"
                                      Canvas.ZIndex="0"
-                                     Draw="{x:Bind customUI:GraphAuthPanel.AccountMetadataGradientShadowCanvas_Draw}"/>
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
                 <win2d:CanvasControl Grid.Row="1"
                                      Grid.Column="1"
                                      Height="112"
@@ -55,7 +55,7 @@
                                      ClearColor="Transparent"
                                      IsHitTestVisible="False"
                                      Canvas.ZIndex="0"
-                                     Draw="{x:Bind customUI:GraphAuthPanel.AccountMetadataGradientShadowCanvas_Draw}"/>
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
                 <win2d:CanvasControl Grid.Row="2"
                                      Grid.Column="0"
                                      Grid.ColumnSpan="2"
@@ -65,7 +65,7 @@
                                      ClearColor="Transparent"
                                      IsHitTestVisible="False"
                                      Canvas.ZIndex="0"
-                                     Draw="{x:Bind customUI:GraphAuthPanel.AccountMetadataGradientShadowCanvas_Draw}"/>
+                                     Draw="AccountMetadataGradientShadowCanvas_Draw"/>
                 <Border Grid.Row="0"
                         Grid.Column="0"
                         Height="76"
@@ -511,7 +511,9 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <Button BorderThickness="0.8" x:Uid="MicrosoftGraphButton">
+    <Button x:Name="MicrosoftGraphButton"
+            x:Uid="MicrosoftGraphButton"
+            BorderThickness="0.8">
 
         <Button.Resources>
             <!-- https://github.com/microsoft/microsoft-ui-xaml/blob/main/src/controls/dev/CommonStyles/Button_themeresources.xaml#L13-L16 -->
@@ -550,7 +552,8 @@
             </StackPanel>
         </Button.Content>
         <Button.Flyout>
-            <Flyout Placement="Bottom">
+            <Flyout x:Name="MicrosoftGraphFlyout"
+                    Placement="Bottom">
 
                 <Flyout.FlyoutPresenterStyle>
                     <Style TargetType="FlyoutPresenter">

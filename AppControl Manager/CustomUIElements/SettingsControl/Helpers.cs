@@ -46,32 +46,26 @@ internal static class ResourceDictionaryExtensions
 		else
 		{
 			// Clone theme dictionaries
-			if (source.ThemeDictionaries != null)
+			foreach (KeyValuePair<object, object> theme in source.ThemeDictionaries)
 			{
-				foreach (KeyValuePair<object, object> theme in source.ThemeDictionaries)
+				if (theme.Value is ResourceDictionary themedResource)
 				{
-					if (theme.Value is ResourceDictionary themedResource)
-					{
-						ResourceDictionary themeDictionary = new();
-						themeDictionary.CopyFrom(themedResource);
-						destination.ThemeDictionaries[theme.Key] = themeDictionary;
-					}
-					else
-					{
-						destination.ThemeDictionaries[theme.Key] = theme.Value;
-					}
+					ResourceDictionary themeDictionary = new();
+					themeDictionary.CopyFrom(themedResource);
+					destination.ThemeDictionaries[theme.Key] = themeDictionary;
+				}
+				else
+				{
+					destination.ThemeDictionaries[theme.Key] = theme.Value;
 				}
 			}
 
-			// Clone merged dictionaries
-			if (source.MergedDictionaries != null)
+			// Clone merged dictionaries		
+			foreach (ResourceDictionary mergedResource in source.MergedDictionaries)
 			{
-				foreach (ResourceDictionary? mergedResource in source.MergedDictionaries)
-				{
-					ResourceDictionary themeDictionary = new();
-					themeDictionary.CopyFrom(mergedResource);
-					destination.MergedDictionaries.Add(themeDictionary);
-				}
+				ResourceDictionary themeDictionary = new();
+				themeDictionary.CopyFrom(mergedResource);
+				destination.MergedDictionaries.Add(themeDictionary);
 			}
 
 			// Clone all contents

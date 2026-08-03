@@ -32,7 +32,8 @@
                                   VerticalAlignment="Center" />
 
                     <customUI:GraphAuthPanel Host="{x:Bind ViewModel}"
-                                             VerticalAlignment="Center" />
+                                             VerticalAlignment="Center"
+                                             x:Name="GraphAuthPanel" />
 
                     <Button Click="{x:Bind ViewModel.SelectGroups_Click}"
                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"

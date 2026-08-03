@@ -33,4 +33,10 @@ internal sealed partial class Intune : Page, CommonCore.UI.IPageHeaderProvider
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("IntunePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Intune-%7C-Harden-System-Security");
+
+	protected override void OnNavigatedFrom(NavigationEventArgs e)
+	{
+		GraphAuthPanel.CleanUpBeforeNavigation();
+		base.OnNavigatedFrom(e);
+	}
 }

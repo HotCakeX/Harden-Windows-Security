@@ -517,7 +517,7 @@ public sealed class AttachedShadowElementContext
 	}
 
 	/// <summary>
-	/// Retries a resource with the specified key and type
+	/// Retrieves a resource with the specified key and type
 	/// </summary>
 	/// <typeparam name="T">The type of the resource being retrieved.</typeparam>
 	/// <param name="key">Key to use to lookup the resource.</param>
@@ -588,7 +588,7 @@ public sealed class AttachedShadowElementContext
 	internal bool TryGetResource<T>(TypedResourceKey<T> key, out T? resource) => TryGetResource(key.Key, out resource);
 
 	/// <summary>
-	/// Retries a resource with the specified key and type
+	/// Retrieves a resource with the specified key and type
 	/// </summary>
 	/// <typeparam name="T">The type of the resource being retrieved.</typeparam>
 	/// <returns>The resource if it exists or a default value.</returns>

@@ -99,7 +99,7 @@ internal static class WebView2Config
 		}
 
 		// Delete the entire WebView2's unique directory once all WebView2 processes have been terminated.
-		TryDeleteDirectoryWithRetries(WebView2Dir, 10, 500);
+		TryDeleteDirectoryWithRetries(WebView2Dir, 10);
 	}
 
 	/// <summary>
@@ -108,8 +108,7 @@ internal static class WebView2Config
 	/// </summary>
 	/// <param name="path">Target directory path to delete.</param>
 	/// <param name="maxAttempts">Maximum number of attempts.</param>
-	/// <param name="delayMs">Delay between attempts in milliseconds.</param>
-	internal static void TryDeleteDirectoryWithRetries(string path, int maxAttempts, int delayMs)
+	private static void TryDeleteDirectoryWithRetries(string path, int maxAttempts)
 	{
 		for (int attempt = 1; attempt <= maxAttempts; attempt++)
 		{
@@ -120,23 +119,11 @@ internal static class WebView2Config
 				return;
 			}
 			catch (DirectoryNotFoundException) { return; } // Already deleted
-			catch (IOException)
-			{
-				// Transient file lock (e.g., CrashpadMetrics-active.pma). Retry after delay.
-			}
-			catch (UnauthorizedAccessException)
-			{
-				// Attribute/ACL related; attributes are normalized each attempt. Retry after delay.
-			}
 			catch { } // Ignore unexpected cleanup errors; will retry.
 
 			if (attempt < maxAttempts)
 			{
-				try
-				{
-					Thread.Sleep(delayMs);
-				}
-				catch { } // Ignore interruptions.
+				Thread.Sleep(500);
 			}
 		}
 	}

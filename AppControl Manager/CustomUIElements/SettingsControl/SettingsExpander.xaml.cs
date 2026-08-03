@@ -29,7 +29,7 @@ using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Markup;
+using Microsoft.UI.Xaml.Markup;
 using WinRT;
 
 namespace CommonCore.ToolKits;
@@ -117,7 +117,7 @@ internal sealed partial class SettingsExpander : Control
 	/// <returns>An automation peer for <see cref="SettingsExpander"/>.</returns>
 	protected override AutomationPeer OnCreateAutomationPeer() => new SettingsExpanderAutomationPeer(this);
 
-	private void OnIsExpandedChanged(bool oldValue, bool newValue)
+	private void OnIsExpandedChanged(bool newValue)
 	{
 		UpdateExpanderState();
 
@@ -367,7 +367,7 @@ internal partial class SettingsExpander
 	 nameof(IsExpanded),
 	 typeof(bool),
 	 typeof(SettingsExpander),
-	 new PropertyMetadata(defaultValue: false, (d, e) => ((SettingsExpander)d).OnIsExpandedPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+	 new PropertyMetadata(defaultValue: false, (d, e) => ((SettingsExpander)d).OnIsExpandedPropertyChanged((bool)e.NewValue)));
 
 	/// <summary>
 	/// Gets or sets the Header.
@@ -437,9 +437,9 @@ internal partial class SettingsExpander
 		set => SetValue(IsExpandedProperty, value);
 	}
 
-	private void OnIsExpandedPropertyChanged(bool oldValue, bool newValue)
+	private void OnIsExpandedPropertyChanged(bool newValue)
 	{
-		OnIsExpandedChanged(oldValue, newValue);
+		OnIsExpandedChanged(newValue);
 
 		if (newValue)
 		{
@@ -472,7 +472,7 @@ internal sealed partial class SettingsExpanderAutomationPeer(SettingsExpander ow
 	/// differentiates the control represented by this AutomationPeer.
 	/// </summary>
 	/// <returns>The string that contains the name.</returns>
-	protected override string GetClassNameCore() => Owner.GetType().Name;
+	protected override string GetClassNameCore() => nameof(SettingsExpander);
 
 	protected override string GetNameCore()
 	{

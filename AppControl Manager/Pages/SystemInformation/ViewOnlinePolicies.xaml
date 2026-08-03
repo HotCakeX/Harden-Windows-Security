@@ -28,7 +28,8 @@
 
             <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12" XYFocusKeyboardNavigation="Enabled">
 
-                <customUI:GraphAuthPanel Host="{x:Bind ViewModel}" />
+                <customUI:GraphAuthPanel Host="{x:Bind ViewModel}"
+                                         x:Name="GraphAuthPanel"/>
 
                 <Button HorizontalAlignment="Center"
                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"

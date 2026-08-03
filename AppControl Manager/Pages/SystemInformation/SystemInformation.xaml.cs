@@ -77,6 +77,15 @@ internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeade
 		}
 	}
 
+	protected override void OnNavigatedFrom(NavigationEventArgs e)
+	{
+		if (ContentFrame.Content is ViewOnlinePolicies viewOnlinePolicies)
+		{
+			viewOnlinePolicies.CleanUpBeforeNavigation();
+		}
+		base.OnNavigatedFrom(e);
+	}
+
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("SystemInformationPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information");
 }

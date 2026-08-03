@@ -31,4 +31,12 @@ internal sealed partial class ViewOnlinePolicies : Page
 		DataContext = ViewModel;
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
+
+	internal void CleanUpBeforeNavigation() => GraphAuthPanel.CleanUpBeforeNavigation();
+
+	protected override void OnNavigatedFrom(NavigationEventArgs e)
+	{
+		CleanUpBeforeNavigation();
+		base.OnNavigatedFrom(e);
+	}
 }

@@ -187,6 +187,12 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("MDEAHPolicyCreationPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Policy-From-MDE-Advanced-Hunting");
+
+	protected override void OnNavigatedFrom(NavigationEventArgs e)
+	{
+		GraphAuthPanel.CleanUpBeforeNavigation();
+		base.OnNavigatedFrom(e);
+	}
 }
 
 internal sealed class MDEAdvancedHuntingQueriesForMDEAHPolicyCreationPage(string queryTitle, string query)

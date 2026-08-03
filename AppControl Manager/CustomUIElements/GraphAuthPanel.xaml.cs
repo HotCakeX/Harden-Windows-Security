@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.MicrosoftGraph;
@@ -37,6 +38,8 @@ namespace AppControlManager.CustomUIElements;
 internal sealed partial class GraphAuthPanel : UserControl
 {
 	private CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
+
+	private readonly HashSet<CanvasControl> _canvasControls = [];
 
 	public IGraphAuthHost Host
 	{
@@ -61,6 +64,21 @@ internal sealed partial class GraphAuthPanel : UserControl
 	internal GraphAuthPanel() => InitializeComponent();
 
 	private async void GraphAuthPanel_Loaded() => await RestoreAccountsAsync();
+
+	// https://learn.microsoft.com/en-us/windows/apps/develop/win2d/avoiding-memory-leaks
+	internal void CleanUpBeforeNavigation()
+	{
+		MicrosoftGraphFlyout.Hide();
+
+		foreach (CanvasControl canvasControl in _canvasControls)
+		{
+			canvasControl.RemoveFromVisualTree();
+		}
+
+		_canvasControls.Clear();
+		MicrosoftGraphFlyout.Content = null;
+		MicrosoftGraphButton.Flyout = null;
+	}
 
 	private static async void OnHostChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
@@ -284,8 +302,9 @@ internal sealed partial class GraphAuthPanel : UserControl
 	/// <summary>
 	/// Draws the 5-color blurred gradient shadow and clears the tile interior so the glow remains outside the card surface.
 	/// </summary>
-	internal static void AccountMetadataGradientShadowCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+	internal void AccountMetadataGradientShadowCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
 	{
+		_ = _canvasControls.Add(sender);
 		float canvasWidth = Math.Max(0.0f, (float)sender.ActualWidth);
 		float canvasHeight = Math.Max(0.0f, (float)sender.ActualHeight);
 

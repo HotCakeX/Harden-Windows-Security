@@ -62,7 +62,8 @@
                                     <FontIcon Glyph="&#xEC27;" />
                                 </customUI:SettingsCardV2.HeaderIcon>
 
-                                <customUI:GraphAuthPanel Host="{x:Bind ViewModel}" />
+                                <customUI:GraphAuthPanel Host="{x:Bind ViewModel}"
+                                                         x:Name="GraphAuthPanel" />
 
                             </customUI:SettingsCardV2>
 

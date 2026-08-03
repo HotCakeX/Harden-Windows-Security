@@ -75,4 +75,9 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, Comm
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("DeploymentPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-App-Control-Policy");
 
+	protected override void OnNavigatedFrom(NavigationEventArgs e)
+	{
+		GraphAuthPanel.CleanUpBeforeNavigation();
+		base.OnNavigatedFrom(e);
+	}
 }

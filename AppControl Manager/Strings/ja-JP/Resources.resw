@@ -3070,10 +3070,6 @@
     <value>SettingDefinition要素に必要な'IgnoreAuditPolicies'属性がありません。</value>
     <comment>アプリマニフェスト検証</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>AppManifestオブジェクトをnullにすることはできません。</value>
-    <comment>アプリマニフェスト検証</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>AppManifestの'Id'プロパティは必須であり、nullまたは空にできません。</value>
     <comment>アプリマニフェスト検証</comment>

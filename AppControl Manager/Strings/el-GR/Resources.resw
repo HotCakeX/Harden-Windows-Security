@@ -3070,10 +3070,6 @@
     <value>Λείπει το απαραίτητο χαρακτηριστικό 'IgnoreAuditPolicies' στο στοιχείο SettingDefinition.</value>
     <comment>Επικύρωση App Manifest</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>Το αντικείμενο AppManifest δεν μπορεί να είναι null.</value>
-    <comment>Επικύρωση App Manifest</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>Η ιδιότητα 'Id' του AppManifest είναι απαραίτητη και δεν μπορεί να είναι null ή κενή.</value>
     <comment>Επικύρωση App Manifest</comment>

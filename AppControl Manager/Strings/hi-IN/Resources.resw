@@ -3070,10 +3070,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
     <value>SettingDefinition तत्व में आवश्यक 'IgnoreAuditPolicies' गुण गायब है।</value>
     <comment>ऐप मैनिफेस्ट मान्यता</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>AppManifest ऑब्जेक्ट null नहीं हो सकता।</value>
-    <comment>ऐप मैनिफेस्ट मान्यता</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>AppManifest की 'Id' प्रॉपर्टी आवश्यक है और null या खाली नहीं हो सकती।</value>
     <comment>ऐप मैनिफेस्ट मान्यता</comment>

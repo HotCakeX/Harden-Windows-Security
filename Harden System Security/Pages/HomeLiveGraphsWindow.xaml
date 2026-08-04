@@ -377,7 +377,7 @@
                                     <Grid>
                                         <TextBlock x:Name="NetworkUsageChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
                                         <TextBlock x:Uid="NetworkUsageTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
-                                        <TextBlock x:Name="NetworkUsageValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0.0 Mbps" />
+                                        <TextBlock x:Name="NetworkUsageValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0 B/s" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="NetworkUsageLiveGraph" Grid.Row="1" PrimarySeriesName="Network Usage" ValueUnit="MB/s" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="False" FixedMaximum="0" StrokeColor="#FF00B7C3" GridColor="#FF038387" />
                                     <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">

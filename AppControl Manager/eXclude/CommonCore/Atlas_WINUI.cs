@@ -171,4 +171,7 @@ internal static partial class Atlas
 		CloseInput = true
 	}, LazyThreadSafetyMode.None);
 
+
+	internal static readonly string[] RateUnits = ["B/s", "KB/s", "MB/s", "GB/s", "TB/s"];
+	internal static readonly string[] SizeUnits = ["B", "KB", "MB", "GB", "TB"];
 }

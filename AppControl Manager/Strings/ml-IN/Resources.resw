@@ -3070,10 +3070,6 @@
     <comment>App Manifest Validation</comment>
     <value>SettingDefinition ഘടകത്തിൽ ആവശ്യമായ 'IgnoreAuditPolicies' ആട്രിബ്യൂട്ട് ലഭ്യമല്ല.</value>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <comment>App Manifest Validation</comment>
-    <value>AppManifest ഒബ്‌ജക്റ്റ് ശൂന്യമായിരിക്കാൻ പാടില്ല.</value>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <comment>App Manifest Validation</comment>
     <value>AppManifest-ന്റെ 'Id' പ്രോപ്പർട്ടി ആവശ്യമാണ്, അത് ശൂന്യമോ ശൂന്യമോ ആയിരിക്കാൻ പാടില്ല.</value>

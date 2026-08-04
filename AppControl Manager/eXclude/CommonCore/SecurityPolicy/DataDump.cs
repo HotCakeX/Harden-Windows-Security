@@ -380,17 +380,16 @@ internal static class DataDump
 
 	private static string FormatBytes(long bytes)
 	{
-		string[] suffixes = ["B", "KB", "MB", "GB", "TB"];
 		int suffixIndex = 0;
 		double size = bytes;
 
-		while (size >= 1024 && suffixIndex < suffixes.Length - 1)
+		while (size >= 1024 && suffixIndex < Atlas.SizeUnits.Length - 1)
 		{
 			size /= 1024;
 			suffixIndex++;
 		}
 
-		return $"{size:F2} {suffixes[suffixIndex]} ({bytes:N0} bytes)";
+		return $"{size:F2} {Atlas.SizeUnits[suffixIndex]} ({bytes:N0} bytes)";
 	}
 
 	private static string FormatStringValue(string? value) => string.IsNullOrEmpty(value) ? "Not configured" : $"\"{value}\"";

@@ -60,7 +60,7 @@ internal static class ResourceDictionaryExtensions
 				}
 			}
 
-			// Clone merged dictionaries		
+			// Clone merged dictionaries
 			foreach (ResourceDictionary mergedResource in source.MergedDictionaries)
 			{
 				ResourceDictionary themeDictionary = new();

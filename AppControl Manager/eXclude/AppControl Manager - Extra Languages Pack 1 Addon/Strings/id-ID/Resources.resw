@@ -3070,10 +3070,6 @@ CATATAN: Opsi ini selalu ditegakkan jika ada kebijakan App Control UMCI yang men
     <value>Atribut 'IgnoreAuditPolicies' yang diperlukan tidak ada dalam elemen SettingDefinition.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>Objek AppManifest tidak boleh null.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>Properti 'Id' dari AppManifest diperlukan dan tidak boleh null atau kosong.</value>
     <comment>App Manifest Validation</comment>

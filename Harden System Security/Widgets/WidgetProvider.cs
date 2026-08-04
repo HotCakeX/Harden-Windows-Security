@@ -549,7 +549,7 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 					dataPerSize[widgetState.Size] = data;
 				}
 
-				if (TryPrepareUpdate(widgetState, WinGetUpdatesWidgetCard.Template, data, null, out PreparedUpdate update))
+				if (TryPrepareUpdate(widgetState, WinGetUpdatesWidgetCard.Template.Value, data, null, out PreparedUpdate update))
 				{
 					updates ??= new List<PreparedUpdate>(winGetWidgets.Count);
 					updates.Add(update);
@@ -701,7 +701,7 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 						dataPerSize[widgetState.Size] = data;
 					}
 
-					if (TryPrepareUpdate(widgetState, PerformanceWidgetCard.Template, data, null, out PreparedUpdate update))
+					if (TryPrepareUpdate(widgetState, PerformanceWidgetCard.Template.Value, data, null, out PreparedUpdate update))
 					{
 						updates ??= new List<PreparedUpdate>(activeWidgets.Count);
 						updates.Add(update);
@@ -825,7 +825,7 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 					// what was last sent takes care of, so a Widgets Board that already knows it is left alone.
 					if (TryPrepareUpdate(
 						widgetState,
-						NetworkWidgetCard.Template,
+						NetworkWidgetCard.Template.Value,
 						NetworkWidgetCard.BuildData(first, second, widgetState.Size),
 						BuildNetworkCustomState(firstLuid, secondLuid),
 						out PreparedUpdate update))
@@ -934,7 +934,7 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 
 			if (string.Equals(definitionId, PerformanceWidgetDefinitionId, StringComparison.OrdinalIgnoreCase))
 			{
-				template = PerformanceWidgetCard.Template;
+				template = PerformanceWidgetCard.Template.Value;
 				data = PerformanceWidgetCard.BuildData(SampleMetrics(size is not WidgetSize.Small), size);
 			}
 			else
@@ -946,7 +946,7 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 					snapshot = _winGetUpdates;
 				}
 
-				template = WinGetUpdatesWidgetCard.Template;
+				template = WinGetUpdatesWidgetCard.Template.Value;
 				data = WinGetUpdatesWidgetCard.BuildData(snapshot, size);
 			}
 

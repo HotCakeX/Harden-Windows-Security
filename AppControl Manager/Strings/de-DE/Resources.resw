@@ -3070,10 +3070,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
     <value>Im Element SettingDefinition fehlt das erforderliche Attribut 'IgnoreAuditPolicies'.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>Das Objekt AppManifest darf nicht null sein.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>Die Eigenschaft 'Id' von AppManifest ist erforderlich und darf nicht null oder leer sein.</value>
     <comment>App Manifest Validation</comment>

@@ -16,12 +16,10 @@
 //
 
 using System.Buffers;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
 using HardenSystemSecurity.WinGet;
 using Microsoft.Windows.Widgets;
 
@@ -67,11 +65,6 @@ namespace HardenSystemSecurity.Widgets;
 /// </summary>
 internal static class WinGetUpdatesWidgetCard
 {
-	// How many package rows fit into the content area of each size without pushing the buttons out of the widget. The
-	// header row of the table claims the room of one package row on top of these.
-	private const int MediumPackageRowCount = 3;
-	private const int LargePackageRowCount = 8;
-
 	/// <summary>
 	/// What a version column of a package row shows when WinGet did not report that version at all, because an empty
 	/// cell would make the row look like it lost its alignment.
@@ -79,87 +72,20 @@ internal static class WinGetUpdatesWidgetCard
 	private const string UnknownVersion = "-";
 
 	/// <summary>
-	/// The full path of the Adaptive Card template file that ships next to the app.
-	/// </summary>
-	private static readonly string TemplateFilePath = Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "WinGetUpdatesWidgetCard.json");
-	private static readonly Lock _templateLock = new();
-
-	/// <summary>
-	/// The full path of the image that the card displays in front of the headline.
-	/// </summary>
-	private static readonly string IconFilePath = Path.Join(AppContext.BaseDirectory, "Assets", "Others", "WinGetWidgetIcon.png");
-	private static readonly Lock _iconLock = new();
-
-	/// <summary>
-	/// The Adaptive Card template, which is read from the JSON file only once per process because the file never changes
+	/// The Adaptive Card template, which is read from the JSON file (that ships with the app) only once per process because the file never changes
 	/// while the app is running and because only the data payload differs between the updates.
-	/// It is an empty string when the file cannot be read, in which case no update is sent to the Widgets Board at all.
 	/// </summary>
-	internal static string Template
-	{
-		get
-		{
-			lock (_templateLock)
-			{
-				string? cachedTemplate = field;
-
-				if (cachedTemplate is null)
-				{
-					try
-					{
-						cachedTemplate = File.ReadAllText(TemplateFilePath);
-					}
-					catch (Exception ex)
-					{
-						Logger.Write(ex);
-						cachedTemplate = string.Empty;
-					}
-
-					field = cachedTemplate;
-				}
-
-				return cachedTemplate;
-			}
-		}
-	}
+	internal static readonly Lazy<string> Template = new(() => File.ReadAllText(Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "WinGetUpdatesWidgetCard.json")));
 
 	/// <summary>
-	/// The image of the card, encoded as a "data:" URI, which is read from the PNG file of the app package only once
-	/// per process.
-	/// It is an empty string when the file cannot be read, in which case the card simply drops the image.
+	/// The image of the card, encoded as a "data:" URI, which is read from the PNG file of the app package only once per process.
 	///
 	/// The Widgets Board renders the card in its own process and therefore cannot resolve an "ms-appx:///" URI of this
 	/// package, while the Adaptive Cards schema does support a "data:" URI on an image since version 1.2, so the bytes
 	/// of the image travel to the host inside of the data payload.
 	/// https://adaptivecards.io/explorer/Image.html
 	/// </summary>
-	private static string Icon
-	{
-		get
-		{
-			lock (_iconLock)
-			{
-				string? cachedIcon = field;
-
-				if (cachedIcon is null)
-				{
-					try
-					{
-						cachedIcon = string.Concat("data:image/png;base64,", Convert.ToBase64String(File.ReadAllBytes(IconFilePath)));
-					}
-					catch (Exception ex)
-					{
-						Logger.Write(ex);
-						cachedIcon = string.Empty;
-					}
-
-					field = cachedIcon;
-				}
-
-				return cachedIcon;
-			}
-		}
-	}
+	internal static readonly Lazy<string> Icon = new(() => string.Concat("data:image/png;base64,", Convert.ToBase64String(File.ReadAllBytes(Path.Join(AppContext.BaseDirectory, "Assets", "Others", "WinGetWidgetIcon.png")))));
 
 	/// <summary>
 	/// Produces the data payload that the Widgets Board merges into <see cref="Template"/>.
@@ -170,14 +96,14 @@ internal static class WinGetUpdatesWidgetCard
 	{
 		// The large widget has room for both a bigger headline and considerably more package rows than the medium one.
 		bool isLarge = size is WidgetSize.Large;
-		int maximumRows = isLarge ? LargePackageRowCount : MediumPackageRowCount;
+		int maximumRows = isLarge ? 8 : 3;
 		string rowTextSize = isLarge ? "default" : "small";
 		string headlineSize = isLarge ? "large" : "medium";
 
 		// The image only takes the room that it needs to stay proportional to the headline next to it, and its width is
 		// a multiple of four so that it stays pixel perfect on every scaling factor of the Widgets Board.
 		// https://learn.microsoft.com/windows/apps/design/widgets/widgets-design-fundamentals
-		string icon = Icon;
+		string icon = Icon.Value;
 		bool hasIcon = icon.Length > 0;
 		string iconWidth = isLarge ? "40px" : "32px";
 
@@ -185,8 +111,7 @@ internal static class WinGetUpdatesWidgetCard
 		bool completed = snapshot.State is WinGetUpdatesState.Completed;
 
 		// The count is only a meaningful number once an update check actually produced a result.
-		bool countVisible = completed;
-		string count = countVisible ? updateCount.ToString(CultureInfo.InvariantCulture) : string.Empty;
+		string count = completed ? updateCount.ToString(CultureInfo.InvariantCulture) : string.Empty;
 		string countColor = updateCount > 0 ? "accent" : "good";
 
 		string headline;
@@ -209,7 +134,7 @@ internal static class WinGetUpdatesWidgetCard
 						_ => "Updates Available"
 					};
 
-					subtitle = string.Concat("Last Checked At ", snapshot.CompletedAt.ToString("t", CultureInfo.CurrentCulture));
+					subtitle = string.Create(CultureInfo.CurrentCulture, $"Last Checked At {snapshot.CompletedAt:t}");
 					break;
 				}
 			case WinGetUpdatesState.Failed:
@@ -245,17 +170,17 @@ internal static class WinGetUpdatesWidgetCard
 			writer.WriteString("icon", icon);
 			writer.WriteString("iconWidth", iconWidth);
 
-			writer.WriteBoolean("countVisible", countVisible);
+			writer.WriteBoolean("countVisible", completed);
 			writer.WriteString("count", count);
 			writer.WriteString("countColor", countColor);
 
 			// The count only moves away from the image when both of them are actually rendered, otherwise the collapsed
 			// count column would keep a gap that has nothing in front of it.
-			writer.WriteString("countSpacing", hasIcon && countVisible ? "small" : "none");
+			writer.WriteString("countSpacing", hasIcon && completed ? "small" : "none");
 
 			// The headline follows whichever element ends up in front of it, and it starts at the very left edge of the
 			// card when neither the image nor the count is rendered.
-			writer.WriteString("headlineSpacing", countVisible ? "medium" : hasIcon ? "small" : "none");
+			writer.WriteString("headlineSpacing", completed ? "medium" : hasIcon ? "small" : "none");
 			writer.WriteString("headlineSize", headlineSize);
 			writer.WriteString("headline", headline);
 			writer.WriteBoolean("hasSubtitle", subtitle.Length > 0);

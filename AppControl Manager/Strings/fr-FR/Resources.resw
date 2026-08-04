@@ -3070,10 +3070,6 @@
     <value>Attribut 'IgnoreAuditPolicies' requis manquant dans l'élément SettingDefinition.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>L'objet AppManifest ne peut pas être nul.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>La propriété 'Id' d'AppManifest est requise et ne peut être ni nulle ni vide.</value>
     <comment>App Manifest Validation</comment>

@@ -3070,10 +3070,6 @@
     <value>В елементі SettingDefinition відсутній обов'язковий атрибут 'IgnoreAuditPolicies'.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>Об'єкт AppManifest не може бути null.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>Властивість 'Id' AppManifest є обов'язковою і не може бути null або порожньою.</value>
     <comment>App Manifest Validation</comment>

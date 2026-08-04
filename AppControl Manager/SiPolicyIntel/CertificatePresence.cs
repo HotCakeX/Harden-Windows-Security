@@ -57,9 +57,6 @@ internal static class CertificatePresence
 			return false;
 		}
 
-		// Get the ID of all of the UpdatePolicySigners elements
-		IEnumerable<string>? updatePolicySignerIDs = policyObject.UpdatePolicySigners?.Select(x => x.SignerId);
-
 		// Get all of the <Signer> elements from the policy
 		Dictionary<string, Signer> signerDictionary = new(capacity: policyObject.Signers?.Count ?? 0);
 		foreach (Signer signer in CollectionsMarshal.AsSpan(policyObject.Signers))
@@ -68,45 +65,44 @@ internal static class CertificatePresence
 		}
 
 		// Loop over each updatePolicySignerID in the policy
-		if (updatePolicySignerIDs is not null)
-			foreach (string updatePolicySigner in updatePolicySignerIDs)
+		foreach (UpdatePolicySigner updatePolicySigner in CollectionsMarshal.AsSpan(policyObject.UpdatePolicySigners))
+		{
+			// Try to find a signer that is for UpdatePolicySigners
+			if (signerDictionary.TryGetValue(updatePolicySigner.SignerId, out Signer? signerForUpdateSigner))
 			{
-				// Try to find a signer that is for UpdatePolicySigners
-				if (signerDictionary.TryGetValue(updatePolicySigner, out Signer? signerForUpdateSigner))
+				// If signer is TBS Signer
+				if (signerForUpdateSigner.CertRoot.Type is CertEnumType.TBS)
 				{
-					// If signer is TBS Signer
-					if (signerForUpdateSigner.CertRoot.Type is CertEnumType.TBS)
+					// Get the string value of the CertRoot which is the TBS Hash
+					string certRootTBS = Convert.ToHexString(signerForUpdateSigner.CertRoot.Value.Span);
+
+					if (kind is PolicyFileRepresentKind.CIP)
 					{
-						// Get the string value of the CertRoot which is the TBS Hash
-						string certRootTBS = Convert.ToHexString(signerForUpdateSigner.CertRoot.Value.Span);
-
-						if (kind is PolicyFileRepresentKind.CIP)
-						{
-							if (
-								// Compare the selected certificate's TBS hash with the TBS hash of the signer which is the cert Root value
-								string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase)
-
-								// We could also compare the Signer's name with the selected certificate's Common Name
-								// But if the SiPolicy object was created from a CIP file, it would have empty string for Signer Name since it is not included in the CIP binary file.
-								// && string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase)
-								)
-							{
-								return true;
-							}
-						}
-						else
-						{
+						if (
 							// Compare the selected certificate's TBS hash with the TBS hash of the signer which is the cert Root value
-							// Also compare the Signer's name with the selected certificate's Common Name
-							if (string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase) &&
-								string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase))
-							{
-								return true;
-							}
+							string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase)
+
+							// We could also compare the Signer's name with the selected certificate's Common Name
+							// But if the SiPolicy object was created from a CIP file, it would have empty string for Signer Name since it is not included in the CIP binary file.
+							// && string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase)
+							)
+						{
+							return true;
+						}
+					}
+					else
+					{
+						// Compare the selected certificate's TBS hash with the TBS hash of the signer which is the cert Root value
+						// Also compare the Signer's name with the selected certificate's Common Name
+						if (string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase) &&
+							string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase))
+						{
+							return true;
 						}
 					}
 				}
 			}
+		}
 
 		Logger.Write(Atlas.GetStr("NoMatchingUpdatePolicySignerMessage"));
 		return false;

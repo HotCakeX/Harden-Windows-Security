@@ -778,7 +778,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			_liveNetworkInterfaceIndex = ResolveBestInterfaceIndex();
 			if (_liveNetworkInterfaceIndex == 0)
 			{
-				NetworkUsageValueTextBlock.Text = "0.0 Mbps";
+				NetworkUsageValueTextBlock.Text = "0 B/s";
 				AddNetworkUsageSample(0.0);
 				return;
 			}
@@ -800,7 +800,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 
 		if (result != 0)
 		{
-			NetworkUsageValueTextBlock.Text = "0.0 Mbps";
+			NetworkUsageValueTextBlock.Text = "0 B/s";
 			AddNetworkUsageSample(0.0);
 			return;
 		}
@@ -811,7 +811,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			_previousLiveNetworkInBytes = row.InOctets;
 			_previousLiveNetworkOutBytes = row.OutOctets;
 			_previousLiveNetworkSampleTicks = nowTicks;
-			NetworkUsageValueTextBlock.Text = "0.0 Mbps";
+			NetworkUsageValueTextBlock.Text = "0 B/s";
 			AddNetworkUsageSample(0.0);
 			return;
 		}
@@ -829,22 +829,22 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			_previousLiveNetworkInBytes = currentInBytes;
 			_previousLiveNetworkOutBytes = currentOutBytes;
 			_previousLiveNetworkSampleTicks = nowTicks;
-			NetworkUsageValueTextBlock.Text = "0.0 Mbps";
+			NetworkUsageValueTextBlock.Text = "0 B/s";
 			AddNetworkUsageSample(0.0);
 			return;
 		}
 
 		ulong deltaInBytes = currentInBytes - _previousLiveNetworkInBytes;
 		ulong deltaOutBytes = currentOutBytes - _previousLiveNetworkOutBytes;
-		double bitsPerSecondDown = deltaInBytes * 8.0 / elapsedSeconds;
-		double bitsPerSecondUp = deltaOutBytes * 8.0 / elapsedSeconds;
+		double bytesPerSecondDown = deltaInBytes / elapsedSeconds;
+		double bytesPerSecondUp = deltaOutBytes / elapsedSeconds;
 		_previousLiveNetworkInBytes = currentInBytes;
 		_previousLiveNetworkOutBytes = currentOutBytes;
 		_previousLiveNetworkSampleTicks = nowTicks;
 
-		double totalMegabitsPerSecond = (bitsPerSecondDown + bitsPerSecondUp) / 1_000_000.0;
-		NetworkUsageValueTextBlock.Text = totalMegabitsPerSecond.ToString("0.0", CultureInfo.InvariantCulture) + " Mbps";
-		AddNetworkUsageSample(totalMegabitsPerSecond);
+		double totalBytesPerSecond = bytesPerSecondDown + bytesPerSecondUp;
+		NetworkUsageValueTextBlock.Text = HomeVM.FormatNetworkDataValue(totalBytesPerSecond, isRate: true);
+		AddNetworkUsageSample(totalBytesPerSecond);
 	}
 
 	private static uint ResolveBestInterfaceIndex()
@@ -858,7 +858,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	{
 		AddLiveMetricSample(_networkUsageChartSamples, value);
 		NetworkUsageLiveGraph.Samples = _networkUsageChartSamples;
-		NetworkUsageChartMaxLabelTextBlock.Text = FormatThroughputRangeLabel(GetLiveMetricMaximumLabel(_networkUsageChartSamples));
+		NetworkUsageChartMaxLabelTextBlock.Text = HomeVM.FormatNetworkDataValue(GetLiveMetricMaximum(_networkUsageChartSamples), isRate: true);
 	}
 
 	private static void AddLiveMetricSample(List<double> samples, double value)
@@ -868,6 +868,16 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			samples.RemoveAt(0);
 		}
 		samples.Add(Math.Max(0.0, value));
+	}
+
+	private static double GetLiveMetricMaximum(List<double> samples)
+	{
+		double maximum = 0.0;
+		for (int index = 0; index < samples.Count; index++)
+		{
+			maximum = Math.Max(maximum, samples[index]);
+		}
+		return maximum;
 	}
 
 	private static string GetLiveMetricMaximumLabel(List<double> samples)
@@ -1092,7 +1102,6 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 
 	internal static string FormatMemoryRangeLabel(string? value) => AppendUnit(value, "MB");
 	internal static string FormatTemperatureRangeLabel(string? value) => AppendUnit(value, "°C");
-	internal static string FormatThroughputRangeLabel(string? value) => AppendUnit(value, "MB/s");
 
 	private static string AppendUnit(string? value, string unit)
 	{

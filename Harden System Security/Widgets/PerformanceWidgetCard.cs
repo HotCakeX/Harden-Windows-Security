@@ -96,12 +96,6 @@ internal static class PerformanceWidgetCard
 	private static ReadOnlySpan<byte> PngSignature => [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
 
 	/// <summary>
-	/// The full path of the Adaptive Card template file that ships next to the app.
-	/// </summary>
-	private static readonly string TemplateFilePath = Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "PerformanceWidgetCard.json");
-	private static readonly Lock _templateLock = new();
-
-	/// <summary>
 	/// The payload of every visible Performance widget is rebuilt on every tick of the sampling timer for as long as
 	/// the Widgets Board shows it, and the provider process stays alive in the background the whole time, so the buffer
 	/// and the writer that produce that payload are created once and then reused instead of being allocated over and
@@ -113,37 +107,10 @@ internal static class PerformanceWidgetCard
 	private static readonly Utf8JsonWriter _writer = new(_buffer);
 
 	/// <summary>
-	/// The Adaptive Card template, which is read from the JSON file only once per process because the file never changes
+	/// The Adaptive Card template, which is read from the JSON file (that ships with the app) only once per process because the file never changes
 	/// while the app is running and because only the data payload differs between the updates.
-	/// It is an empty string when the file cannot be read, in which case no update is sent to the Widgets Board at all.
 	/// </summary>
-	internal static string Template
-	{
-		get
-		{
-			lock (_templateLock)
-			{
-				string? cachedTemplate = field;
-
-				if (cachedTemplate is null)
-				{
-					try
-					{
-						cachedTemplate = File.ReadAllText(TemplateFilePath);
-					}
-					catch (Exception ex)
-					{
-						Logger.Write(ex);
-						cachedTemplate = string.Empty;
-					}
-
-					field = cachedTemplate;
-				}
-
-				return cachedTemplate;
-			}
-		}
-	}
+	internal static readonly Lazy<string> Template = new(() => File.ReadAllText(Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "PerformanceWidgetCard.json")));
 
 	/// <summary>
 	/// Produces the data payload that the Widgets Board merges into <see cref="Template"/>.

@@ -93,7 +93,6 @@ internal sealed partial class PerformanceMetricsSampler : IDisposable
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
-			_temperatureSampler = null;
 		}
 	}
 

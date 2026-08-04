@@ -715,8 +715,6 @@ internal static class GetAppsList
 		}
 	}
 
-	private static readonly string[] Suffixes = ["B", "KB", "MB", "GB", "TB"];
-
 	/// <summary>
 	/// Formats a byte count using the app's existing size formatting style.
 	/// </summary>
@@ -730,13 +728,13 @@ internal static class GetAppsList
 		int suffixIndex = 0;
 		double size = sizeInBytes.Value;
 
-		while (size >= 1024D && suffixIndex < Suffixes.Length - 1)
+		while (size >= 1024D && suffixIndex < Atlas.SizeUnits.Length - 1)
 		{
 			size /= 1024D;
 			suffixIndex++;
 		}
 
-		return $"{size:F2} {Suffixes[suffixIndex]}";
+		return $"{size:F2} {Atlas.SizeUnits[suffixIndex]}";
 	}
 
 	/// <summary>

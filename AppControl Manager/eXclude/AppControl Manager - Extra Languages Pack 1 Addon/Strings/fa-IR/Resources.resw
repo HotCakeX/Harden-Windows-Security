@@ -3070,10 +3070,6 @@
     <value>ویژگی «IgnoreAuditPolicies» موردنیاز در عنصر SettingDefinition وجود ندارد.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>شیء AppManifest نمی‌تواند null باشد.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>ویژگی «Id» از AppManifest موردنیاز است و نمی‌تواند null یا خالی باشد.</value>
     <comment>App Manifest Validation</comment>

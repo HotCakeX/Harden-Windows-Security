@@ -97,16 +97,6 @@ internal readonly struct NetworkPanelData(
 internal static class NetworkWidgetCard
 {
 	/// <summary>
-	/// The units of a rate, from the smallest to the largest one, each of them a factor of 1000 apart.
-	/// </summary>
-	private static readonly string[] SpeedUnits = ["B/s", "KB/s", "MB/s", "GB/s"];
-
-	/// <summary>
-	/// The units of a cumulative amount of traffic, from the smallest to the largest one.
-	/// </summary>
-	private static readonly string[] SizeUnits = ["B", "KB", "MB", "GB", "TB"];
-
-	/// <summary>
 	/// The factor between two neighbouring units. Windows reports network traffic in decimal units, which is what makes
 	/// the totals of the card read exactly like the byte counters of the status dialog of an adapter and like the
 	/// amounts that the Settings app shows, instead of being about seven percent lower than either of them.
@@ -114,22 +104,11 @@ internal static class NetworkWidgetCard
 	private const double UnitFactor = 1000.0;
 
 	/// <summary>
-	/// What the card shows when the machine has no adapter that Windows would list.
-	/// </summary>
-	private const string EmptyMessage = "No network adapter was found on this device.";
-
-	/// <summary>
 	/// The longest text that any single value of the card can produce, which is a scaled number with one decimal, a
 	/// space and a unit for the speeds and the totals, and the position of the carousel with the disconnected note for
 	/// the subtle line below the name of an adapter.
 	/// </summary>
 	private const int MaximumValueLength = 64;
-
-	/// <summary>
-	/// The full path of the Adaptive Card template file that ships next to the app.
-	/// </summary>
-	private static readonly string TemplateFilePath = Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "NetworkWidgetCard.json");
-	private static readonly Lock _templateLock = new();
 
 	/// <summary>
 	/// The payload of every visible Network widget is rebuilt once per second for as long as the Widgets Board shows
@@ -143,37 +122,10 @@ internal static class NetworkWidgetCard
 	private static readonly Utf8JsonWriter _writer = new(_buffer);
 
 	/// <summary>
-	/// The Adaptive Card template, which is read from the JSON file only once per process because the file never changes
-	/// while the app is running and because only the data payload differs between the updates.
-	/// It is an empty string when the file cannot be read, in which case no update is sent to the Widgets Board at all.
+	/// The Adaptive Card template, which is read from the JSON file (that ships with the app) only once per process because the file never changes
+	/// while the app is running and because only the data payload differs between the updates.	
 	/// </summary>
-	internal static string Template
-	{
-		get
-		{
-			lock (_templateLock)
-			{
-				string? cachedTemplate = field;
-
-				if (cachedTemplate is null)
-				{
-					try
-					{
-						cachedTemplate = File.ReadAllText(TemplateFilePath);
-					}
-					catch (Exception ex)
-					{
-						Logger.Write(ex);
-						cachedTemplate = string.Empty;
-					}
-
-					field = cachedTemplate;
-				}
-
-				return cachedTemplate;
-			}
-		}
-	}
+	internal static readonly Lazy<string> Template = new(() => File.ReadAllText(Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "NetworkWidgetCard.json")));
 
 	/// <summary>
 	/// Produces the data payload that the Widgets Board merges into <see cref="Template"/>.
@@ -210,24 +162,24 @@ internal static class NetworkWidgetCard
 
 			_writer.WriteBoolean("hasAdapters", hasAdapters);
 			_writer.WriteBoolean("noAdapters", !hasAdapters);
-			_writer.WriteString("emptyMessage", EmptyMessage);
+			_writer.WriteString("emptyMessage", "No network adapter was found on this device.");
 
 			_writer.WriteString("firstName", first.Name);
 			WriteMeta("firstMeta", first);
 			_writer.WriteBoolean("firstNavigationVisible", first.AdapterCount > 1);
-			WriteValue("firstUpload", first.Sample.SendBytesPerSecond, SpeedUnits);
-			WriteValue("firstDownload", first.Sample.ReceiveBytesPerSecond, SpeedUnits);
-			WriteValue("firstSent", first.Sample.TotalSentBytes, SizeUnits);
-			WriteValue("firstReceived", first.Sample.TotalReceivedBytes, SizeUnits);
+			WriteValue("firstUpload", first.Sample.SendBytesPerSecond, Atlas.RateUnits);
+			WriteValue("firstDownload", first.Sample.ReceiveBytesPerSecond, Atlas.RateUnits);
+			WriteValue("firstSent", first.Sample.TotalSentBytes, Atlas.SizeUnits);
+			WriteValue("firstReceived", first.Sample.TotalReceivedBytes, Atlas.SizeUnits);
 
 			_writer.WriteBoolean("secondPanelVisible", secondPanelVisible);
 			_writer.WriteString("secondName", second.Name);
 			WriteMeta("secondMeta", second);
 			_writer.WriteBoolean("secondNavigationVisible", second.AdapterCount > 1);
-			WriteValue("secondUpload", second.Sample.SendBytesPerSecond, SpeedUnits);
-			WriteValue("secondDownload", second.Sample.ReceiveBytesPerSecond, SpeedUnits);
-			WriteValue("secondSent", second.Sample.TotalSentBytes, SizeUnits);
-			WriteValue("secondReceived", second.Sample.TotalReceivedBytes, SizeUnits);
+			WriteValue("secondUpload", second.Sample.SendBytesPerSecond, Atlas.RateUnits);
+			WriteValue("secondDownload", second.Sample.ReceiveBytesPerSecond, Atlas.RateUnits);
+			WriteValue("secondSent", second.Sample.TotalSentBytes, Atlas.SizeUnits);
+			WriteValue("secondReceived", second.Sample.TotalReceivedBytes, Atlas.SizeUnits);
 
 			_writer.WriteEndObject();
 			_writer.Flush();

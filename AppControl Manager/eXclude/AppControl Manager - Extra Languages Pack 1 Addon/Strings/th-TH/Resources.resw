@@ -3070,10 +3070,6 @@
     <value>ขาดแอตทริบิวต์ 'IgnoreAuditPolicies' ที่จำเป็นในองค์ประกอบ SettingDefinition</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>ออบเจกต์ AppManifest ต้องไม่เป็น null</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>คุณสมบัติ 'Id' ของ AppManifest เป็นสิ่งจำเป็นและต้องไม่เป็น null หรือว่างเปล่า</value>
     <comment>App Manifest Validation</comment>

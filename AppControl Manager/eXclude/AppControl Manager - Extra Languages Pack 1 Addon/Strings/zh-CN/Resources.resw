@@ -3070,10 +3070,6 @@
     <value>SettingDefinition 元素中缺少必需的 'IgnoreAuditPolicies' 属性。</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>AppManifest 对象不能为 null。</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>AppManifest 的 'Id' 属性是必需的，不能为 null 或空。</value>
     <comment>App Manifest Validation</comment>

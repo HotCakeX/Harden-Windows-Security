@@ -70,8 +70,8 @@ internal static class CustomAppManifestLogics
 			throw new InvalidOperationException(Atlas.GetStr("AppManifestEmptyIdAttributeValidationError"));
 		}
 
-		List<SettingDefinition> settings = [];
 		XmlNodeList settingNodes = root.GetElementsByTagName("SettingDefinition", NamespaceUri);
+		List<SettingDefinition> settings = new(settingNodes.Count);
 		foreach (XmlElement settingElem in settingNodes)
 		{
 			SettingDefinition setting = DeserializeSettingDefinition(settingElem);
@@ -132,11 +132,6 @@ internal static class CustomAppManifestLogics
 	/// <exception cref="InvalidOperationException">Thrown when the manifest contains invalid data per the schema.</exception>
 	internal static XmlDocument CreateXmlFromAppManifest(AppManifest manifest)
 	{
-		if (manifest is null)
-		{
-			throw new ArgumentNullException(nameof(manifest), Atlas.GetStr("AppManifestObjectNullValidationError"));
-		}
-
 		if (string.IsNullOrEmpty(manifest.Id))
 		{
 			throw new InvalidOperationException(Atlas.GetStr("AppManifestPropertyIdNullOrEmptyValidationError"));
@@ -161,7 +156,7 @@ internal static class CustomAppManifestLogics
 			XmlElement settingElem = xmlDoc.CreateElement("SettingDefinition", NamespaceUri);
 			settingElem.SetAttribute("Name", setting.Name);
 			settingElem.SetAttribute("Type", setting.Type.ToString());
-			settingElem.SetAttribute("IgnoreAuditPolicies", setting.IgnoreAuditPolicies.ToString().ToLowerInvariant());
+			settingElem.SetAttribute("IgnoreAuditPolicies", setting.IgnoreAuditPolicies ? "true" : "false");
 			_ = root.AppendChild(settingElem);
 		}
 

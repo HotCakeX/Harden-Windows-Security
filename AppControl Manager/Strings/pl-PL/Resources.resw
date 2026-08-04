@@ -3070,10 +3070,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
     <value>Brak wymaganego atrybutu „IgnoreAuditPolicies” w elemencie SettingDefinition.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>Obiekt AppManifest nie może być pusty.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>Właściwość „Id” AppManifest jest wymagana i nie może być pusta ani mieć wartości null.</value>
     <comment>App Manifest Validation</comment>

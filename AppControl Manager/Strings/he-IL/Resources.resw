@@ -3070,10 +3070,6 @@
     <value>חסר המאפיין הנדרש 'IgnoreAuditPolicies' באלמנט SettingDefinition.</value>
     <comment>App Manifest Validation</comment>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <value>האובייקט AppManifest לא יכול להיות null.</value>
-    <comment>App Manifest Validation</comment>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <value>המאפיין 'Id' של AppManifest נדרש ולא יכול להיות null או ריק.</value>
     <comment>App Manifest Validation</comment>

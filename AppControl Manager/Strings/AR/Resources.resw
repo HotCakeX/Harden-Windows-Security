@@ -3070,10 +3070,6 @@
     <comment>App Manifest Validation</comment>
     <value>السمة المطلوبة "IgnoreAuditPolicies" مفقودة في عنصر SettingDefinition.</value>
   </data>
-  <data name="AppManifestObjectNullValidationError" xml:space="preserve">
-    <comment>App Manifest Validation</comment>
-    <value>لا يمكن أن يكون كائن AppManifest فارغًا.</value>
-  </data>
   <data name="AppManifestPropertyIdNullOrEmptyValidationError" xml:space="preserve">
     <comment>App Manifest Validation</comment>
     <value>خاصية "Id" لـ AppManifest مطلوبة ولا يمكن أن تكون فارغة أو خالية.</value>

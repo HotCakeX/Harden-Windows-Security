@@ -936,7 +936,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 	/// <summary>
 	/// Initializes and starts the internet speed (throughput) updater.
-	/// Picks the interface Windows routes to 8.8.8.8 and computes bps from 64-bit octet deltas.
+	/// Picks the interface Windows routes to 8.8.8.8 and computes bytes per second from 64-bit octet deltas.
 	/// </summary>
 	private void InitializeInternetSpeedUpdater()
 	{
@@ -952,7 +952,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
-	/// Samples interface counters and updates InternetSpeedText as "X.X Mbps ↓ / Y.Y Mbps ↑".
+	/// Samples interface counters and updates InternetSpeedText with decimal byte-per-second units.
 	/// Uses 64-bit byte counters to avoid 32-bit wrap issues on high-speed links.
 	/// Handles adapter changes and resets gracefully.
 	/// </summary>
@@ -965,7 +965,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			if (_netIfIndex == 0)
 			{
-				InternetSpeedText = "0.0 Mbps ↓ / 0.0 Mbps ↑";
+				InternetSpeedText = "0 B/s ↓ / 0 B/s ↑";
 				InternetTotalText = "Total: 0 B ↓ / 0 B ↑";
 				return;
 			}
@@ -991,7 +991,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		if (result != 0)
 		{
 			// Still failed
-			InternetSpeedText = "0.0 Mbps ↓ / 0.0 Mbps ↑";
+			InternetSpeedText = "0 B/s ↓ / 0 B/s ↑";
 			InternetTotalText = "Total: 0 B ↓ / 0 B ↑";
 			return;
 		}
@@ -1004,8 +1004,8 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			_prevInBytes = row.InOctets;
 			_prevOutBytes = row.OutOctets;
 			_prevSampleTicks = nowTicks;
-			InternetSpeedText = "0.0 Mbps ↓ / 0.0 Mbps ↑";
-			InternetTotalText = "Total: " + FormatDataSize(_prevInBytes) + " ↓ / " + FormatDataSize(_prevOutBytes) + " ↑";
+			InternetSpeedText = "0 B/s ↓ / 0 B/s ↑";
+			InternetTotalText = "Total: " + FormatNetworkDataValue(_prevInBytes, isRate: false) + " ↓ / " + FormatNetworkDataValue(_prevOutBytes, isRate: false) + " ↑";
 			return;
 		}
 
@@ -1024,24 +1024,23 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			_prevInBytes = curIn;
 			_prevOutBytes = curOut;
 			_prevSampleTicks = nowTicks;
-			InternetSpeedText = "0.0 Mbps ↓ / 0.0 Mbps ↑";
-			InternetTotalText = "Total: " + FormatDataSize(_prevInBytes) + " ↓ / " + FormatDataSize(_prevOutBytes) + " ↑";
+			InternetSpeedText = "0 B/s ↓ / 0 B/s ↑";
+			InternetTotalText = "Total: " + FormatNetworkDataValue(_prevInBytes, isRate: false) + " ↓ / " + FormatNetworkDataValue(_prevOutBytes, isRate: false) + " ↑";
 			return;
 		}
 
 		ulong deltaIn = curIn - _prevInBytes;
 		ulong deltaOut = curOut - _prevOutBytes;
 
-		// Bytes/sec -> bits/sec, then format to human-readable Mbps/Gbps with one decimal.
-		double bpsDown = deltaIn * 8.0 / elapsedSec;
-		double bpsUp = deltaOut * 8.0 / elapsedSec;
+		double bytesPerSecondDown = deltaIn / elapsedSec;
+		double bytesPerSecondUp = deltaOut / elapsedSec;
 
 		_prevInBytes = curIn;
 		_prevOutBytes = curOut;
 		_prevSampleTicks = nowTicks;
 
-		InternetSpeedText = FormatBitrate(bpsDown) + " ↓ / " + FormatBitrate(bpsUp) + " ↑";
-		InternetTotalText = "Total: " + FormatDataSize(curIn) + " ↓ / " + FormatDataSize(curOut) + " ↑";
+		InternetSpeedText = FormatNetworkDataValue(bytesPerSecondDown, isRate: true) + " ↓ / " + FormatNetworkDataValue(bytesPerSecondUp, isRate: true) + " ↑";
+		InternetTotalText = "Total: " + FormatNetworkDataValue(curIn, isRate: false) + " ↓ / " + FormatNetworkDataValue(curOut, isRate: false) + " ↑";
 	}
 
 	/// <summary>
@@ -1056,30 +1055,28 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
-	/// Formats bits-per-second as "X.X Kbps/Mbps/Gbps" with one decimal.
+	/// Applies the shared decimal scaling and boundary rounding used by network totals and throughput.
 	/// </summary>
-	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-	private static string FormatBitrate(double bps)
+	internal static string FormatNetworkDataValue(double bytes, bool isRate)
 	{
-		const double Kbps = 1000.0;
-		const double Mbps = 1000.0 * 1000.0;
-		const double Gbps = 1000.0 * 1000.0 * 1000.0;
+		const double UnitFactor = 1000.0;
+		ReadOnlySpan<string> units = isRate ? Atlas.RateUnits : Atlas.SizeUnits;
+		double scaled = double.IsFinite(bytes) && bytes > 0.0 ? bytes : 0.0;
+		int unitIndex = 0;
 
-		if (bps >= Gbps)
+		while (scaled >= UnitFactor && unitIndex < units.Length - 1)
 		{
-			double val = bps / Gbps;
-			return val.ToString("0.0", CultureInfo.InvariantCulture) + " Gbps";
+			scaled /= UnitFactor;
+			unitIndex++;
 		}
-		else if (bps >= Mbps)
+
+		if (unitIndex < units.Length - 1 && scaled >= (unitIndex is 0 ? UnitFactor - 0.5 : UnitFactor - 0.05))
 		{
-			double val = bps / Mbps;
-			return val.ToString("0.0", CultureInfo.InvariantCulture) + " Mbps";
+			scaled /= UnitFactor;
+			unitIndex++;
 		}
-		else
-		{
-			double val = bps / Kbps;
-			return val.ToString("0.0", CultureInfo.InvariantCulture) + " Kbps";
-		}
+
+		return scaled.ToString(unitIndex is 0 ? "0" : "0.0", CultureInfo.InvariantCulture) + " " + units[unitIndex];
 	}
 
 	// Safely converts int bytes to ulong bytes. Just an overload.

@@ -343,7 +343,7 @@ public sealed partial class App : Application
 				}
 				else if (launchToUpdatePageFromNotification)
 				{
-					// the redirect brokers across the integrity boundary because it's package-identity–scoped, not token-scoped. 
+					// the redirect brokers across the integrity boundary because it's package-identity–scoped, not token-scoped.
 					await notificationTargetInstance.RedirectActivationToAsync(activatedEventArgs);
 					Environment.Exit(0);
 					return;

@@ -123,7 +123,7 @@ internal static class NetworkWidgetCard
 
 	/// <summary>
 	/// The Adaptive Card template, which is read from the JSON file (that ships with the app) only once per process because the file never changes
-	/// while the app is running and because only the data payload differs between the updates.	
+	/// while the app is running and because only the data payload differs between the updates.
 	/// </summary>
 	internal static readonly Lazy<string> Template = new(() => File.ReadAllText(Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "NetworkWidgetCard.json")));
 

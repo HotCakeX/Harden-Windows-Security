@@ -1887,7 +1887,7 @@ internal static class EXIFScrubber
 		if (tiffData.Length < 8) return null;
 
 		// Detecting byte order: "II" (4949.H) for little-endian and "MM" (4D4D.H) for big-endian
-		// Source: https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Header		
+		// Source: https://www.itu.int/itudoc/itu-t/com16/tiff-fx/docs/tiff6.pdf - Image File Header
 		bool isLittleEndian;
 		if (tiffData[0] == 0x49 && tiffData[1] == 0x49)
 		{

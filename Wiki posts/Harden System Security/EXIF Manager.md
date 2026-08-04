@@ -14,7 +14,7 @@ The **EXIF Manager** is a privacy-focused feature integrated into [the Harden Sy
 
 Digital photos often contain hidden information, such as the camera model, software used to modify them, exact GPS location, and timestamps. The EXIF Manager parses the internal structure of the image file, categorizing every piece of metadata. When you choose to remove metadata, the app safely strips out privacy-leaking and unnecessary data segments while carefully preserving chunks that are required for 100% visual integrity (such as ICC Color Profiles, physical dimensions, and minimal EXIF headers required to maintain the correct image Orientation).
 
-**Supported Image Formats:** `.jpg`, `.jpeg`, `.png`. 
+**Supported Image Formats:** `.jpg`, `.jpeg`, `.png`.
 
 *More will be added in the future.*
 

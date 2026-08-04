@@ -453,8 +453,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// Event handler for the SelectionChanged event of the ListView.
 	/// Triggered by <see cref="SelectAllMenuFlyoutItem_Click(object, RoutedEventArgs)"/> and <see cref="RemoveSelectionsMenuFlyoutItem_Click(object, RoutedEventArgs)"/> to keep things consistent.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void MainListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		// Skip processing if we're currently restoring selection to prevent recursion

@@ -856,7 +856,6 @@ internal static partial class BinaryOpsForward
 	/// <summary>
 	/// Writes app settings as binary.
 	/// </summary>
-	/// <param name="setting"></param>
 	private static void WriteStringSetAppSetting(AppSetting? setting, BinaryWriter BodyWriter)
 	{
 		const byte Tag = 4;

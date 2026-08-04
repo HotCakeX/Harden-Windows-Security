@@ -912,8 +912,6 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	/// <summary>
 	/// Copy a single property of the current selection
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyExclusionProperty_Click(object sender, RoutedEventArgs e)
 	{

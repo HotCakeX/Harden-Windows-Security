@@ -24,8 +24,6 @@ namespace CommonCore.Others;
 /// Represents a signed CMS and its certificate chain.
 /// Since .NET isn't showing any warnings for not disposing of this type, we have to make sure we do it ourselves.
 /// </summary>
-/// <param name="signerCertificate"></param>
-/// <param name="chainContext"></param>
 internal sealed partial class AllFileSigners(SignedCms signerCertificate, IntPtr chainContext) : IDisposable
 {
 	internal SignedCms Signer => signerCertificate;

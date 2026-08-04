@@ -2639,10 +2639,6 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// Export restores any custom rule created in the Advanced Firewall settings of Windows Defender.
 	/// </summary>
-	/// <param name="wszMachineOrGPO"></param>
-	/// <param name="fGPO"></param>
-	/// <param name="wszFilePath"></param>
-	/// <param name="fSomeInfoLost"></param>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
 	internal static partial uint FWExportPolicy(
@@ -2656,10 +2652,6 @@ internal static unsafe partial class NativeMethods
 	/// Importing overwrites everything in the Advanced Firewall settings of Windows Defender.
 	/// It does not touch or overwrite the Firewall rules defined in the Group Policy.
 	/// </summary>
-	/// <param name="wszMachineOrGPO"></param>
-	/// <param name="fGPO"></param>
-	/// <param name="wszFilePath"></param>
-	/// <param name="fSomeInfoLost"></param>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
 	internal static partial uint FWImportPolicy(
@@ -2673,7 +2665,6 @@ internal static unsafe partial class NativeMethods
 	/// Overwrites everything in the Advanced Firewall settings of Windows Defender with the default rules.
 	/// It does not touch or overwrite the Firewall rules defined in the Group Policy.
 	/// </summary>
-	/// <param name="wszMachineOrGPO"></param>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll", StringMarshalling = StringMarshalling.Utf16)]
 	internal static partial uint FWRestoreDefaults(string? wszMachineOrGPO);
@@ -2696,7 +2687,6 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/openspecs/windows_protocols/ms-fasp/2959ec3a-df7c-4da9-b118-385b62312067
 	/// </summary>
-	/// <param name="hPolicy"></param>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll")]
 	internal static partial uint FWClosePolicyStore(nint hPolicy);
@@ -2707,7 +2697,6 @@ internal static unsafe partial class NativeMethods
 	/// It does not delete any Firewall rules defined in the Group Policy.
 	/// Deletion is instant.
 	/// </summary>
-	/// <param name="hPolicy"></param>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("FirewallAPI.dll")]
 	internal static partial uint FWDeleteAllFirewallRules(nint hPolicy);

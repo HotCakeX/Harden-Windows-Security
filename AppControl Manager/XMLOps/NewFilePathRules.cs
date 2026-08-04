@@ -29,8 +29,6 @@ internal static class NewFilePathRules
 	/// Create a new Allow FilePath rule (including Wildcards) in the SiPolicy object
 	/// Rules will only be created for User-Mode files as Kernel-mode drivers do not support FilePath rules
 	/// </summary>
-	/// <param name="policyObj"></param>
-	/// <param name="data"></param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy policyObj, List<FilePathCreator> data)
 	{
@@ -85,8 +83,6 @@ internal static class NewFilePathRules
 	/// <summary>
 	/// Creates a new Deny FilePath rule (including Wildcards) in the SiPolicy object
 	/// </summary>
-	/// <param name="policyObj"></param>
-	/// <param name="data"></param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy policyObj, List<FilePathCreator> data)
 	{

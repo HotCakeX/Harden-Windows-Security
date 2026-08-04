@@ -21,8 +21,6 @@ namespace AppControlManager.WindowComponents;
 /// https://learn.microsoft.com/windows/apps/design/controls/breadcrumbbar#itemssource
 /// Represents an item in the BreadCrumBar's ItemsSource collection
 /// </summary>
-/// <param name="label"></param>
-/// <param name="page"></param>
 internal readonly struct Crumb(string label, Type page)
 {
 	internal string Label => label;

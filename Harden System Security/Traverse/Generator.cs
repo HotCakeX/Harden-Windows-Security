@@ -29,8 +29,6 @@ internal static class Generator
 	/// <summary>
 	/// Helper to verify all MUnits in a ViewModel and compute score + items for Traverse
 	/// </summary>
-	/// <param name="viewModel"></param>
-	/// <param name="cancellationToken"></param>
 	internal static async Task<(int Score, List<MUnit> Items)> VerifyAndSnapshotMUnitCategoryAsync(
 		IMUnitListViewModel viewModel,
 		CancellationToken cancellationToken)

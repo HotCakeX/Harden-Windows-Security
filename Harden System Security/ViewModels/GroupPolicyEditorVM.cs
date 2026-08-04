@@ -243,8 +243,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Copy a single property of the current selection
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
@@ -1365,7 +1363,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Method used to open the Group Policy Editor with the selected policy file.
 	/// </summary>
-	/// <param name="filePath"></param>
 	internal async Task OpenInGroupPolicyEditor(string? filePath)
 	{
 		if (filePath is null)

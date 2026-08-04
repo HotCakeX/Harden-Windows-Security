@@ -24,11 +24,6 @@ namespace CommonCore.IntelGathering;
 /// <summary>
 /// The full chain package of a signed file, includes all of the signature information
 /// </summary>
-/// <param name="certificatechain"></param>
-/// <param name="signedcms"></param>
-/// <param name="rootcertificate"></param>
-/// <param name="intermediatecertificates"></param>
-/// <param name="leafcertificate"></param>
 internal sealed class ChainPackage(
 	X509Chain certificatechain,
 	SignedCms signedcms,

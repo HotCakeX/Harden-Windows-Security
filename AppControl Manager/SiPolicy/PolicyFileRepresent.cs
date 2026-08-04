@@ -31,7 +31,6 @@ namespace AppControlManager.SiPolicy;
 /// <summary>
 /// This type represents a <see cref="SiPolicy.SiPolicy"/> object for representation in different parts of the app and UI.
 /// </summary>
-/// <param name="policyObj"></param>
 internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFileRepresentKind kind = PolicyFileRepresentKind.XML) : ViewModelBase
 {
 	/// <summary>
@@ -92,7 +91,6 @@ internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFile
 	/// <summary>
 	/// Helper method to generate the identifier string.
 	/// </summary>
-	/// <param name="policy"></param>
 	private static string GetIdentifier(SiPolicy policy) => PolicySettingsManager.GetPolicyName(policy) ?? policy.PolicyID;
 
 	/// <summary>
@@ -135,7 +133,6 @@ internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFile
 	/// Accepts a policy file representation, offers a save dialog so user can save it somewhere,
 	/// Then opens the file in the default file handler in the OS.
 	/// </summary>
-	/// <param name="policy"></param>
 	internal static async Task OpenInDefaultFileHandler(PolicyFileRepresent? policy)
 	{
 		try

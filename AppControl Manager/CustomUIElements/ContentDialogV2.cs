@@ -1436,8 +1436,6 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	/// Without this event handler, when the ContentDialog is resized either by us or by changes to its content size,
 	/// it would get an ugly opaque shadow thingy around it.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void BackgroundBorder_SizeChanged(object sender, SizeChangedEventArgs e)
 	{
 		try

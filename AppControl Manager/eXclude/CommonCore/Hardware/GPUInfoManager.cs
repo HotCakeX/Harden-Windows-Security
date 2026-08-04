@@ -113,7 +113,6 @@ internal static class GPUInfoManager
 	/// <summary>
 	/// Safely marshal strings from IntPtr
 	/// </summary>
-	/// <param name="ptr"></param>
 	private static string MarshalStringFromPtr(IntPtr ptr)
 	{
 		if (ptr == IntPtr.Zero)
@@ -125,7 +124,6 @@ internal static class GPUInfoManager
 	/// <summary>
 	/// Builds a stable deduplication key for GPU entries returned by the native library.
 	/// </summary>
-	/// <param name="gpu"></param>
 	private static string GetGpuDeduplicationKey(GpuInfo gpu)
 	{
 		string pnpDeviceId = gpu.PnpDeviceId.Trim();

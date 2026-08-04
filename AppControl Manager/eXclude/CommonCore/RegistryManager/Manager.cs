@@ -32,7 +32,6 @@ internal static class Manager
 	/// Modifies or removes the <see cref="RegistryPolicyEntry"/> items from the JSON files
 	/// whose <see cref="RegistryPolicyEntry.Source"/> is <see cref="Source.Registry"/>.
 	/// </summary>
-	/// <param name="package"></param>
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void EditRegistry(RegistryPolicyEntry package)
@@ -390,7 +389,6 @@ internal static class Manager
 	/// - REG_BINARY: Base64
 	/// - REG_MULTI_SZ: semicolon-separated
 	/// </summary>
-	/// <param name="entry"></param>
 	internal static string? BuildRegValueFromParsedValue(RegistryPolicyEntry entry)
 	{
 		object? parsed = entry.ParsedValue;

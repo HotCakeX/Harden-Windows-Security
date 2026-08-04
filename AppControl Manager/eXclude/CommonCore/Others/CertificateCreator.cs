@@ -246,7 +246,6 @@ internal static class CertificateGenerator
 	/// Searches through all the relevant certificate stores for any certificate with a given Subject Common Name
 	/// And deletes all of the detected instances
 	/// </summary>
-	/// <param name="subjectName"></param>
 	internal static void DeleteCertificateByCN(string subjectName)
 	{
 		// Search through both user and machine certificate stores
@@ -268,8 +267,6 @@ internal static class CertificateGenerator
 	/// <summary>
 	/// Deletes the certificate
 	/// </summary>
-	/// <param name="subjectName"></param>
-	/// <param name="storeLocation"></param>
 	private static void DeleteCertificateFromAllStores(string subjectName, StoreLocation storeLocation)
 	{
 		// Iterate through all specified store names

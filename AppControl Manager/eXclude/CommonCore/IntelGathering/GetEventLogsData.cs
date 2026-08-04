@@ -1122,7 +1122,6 @@ internal static class GetEventLogsData
 	/// <summary>
 	/// Replaces global root NT paths to the normal paths
 	/// </summary>
-	/// <param name="path"></param>
 	internal static string ResolvePath(string path)
 	{
 		// Find the matching DriveMapping for the device path prefix

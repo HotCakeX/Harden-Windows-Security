@@ -37,7 +37,6 @@ internal sealed partial class CodeIntegrityInfoVM : ViewModelBase
 	/// <summary>
 	/// Local method to convert numbers to their actual string values
 	/// </summary>
-	/// <param name="status"></param>
 	private static string? GetPolicyStatus(object? status) => status switch
 	{
 		0L => Atlas.GetStr("NotRunningOrDisabled"),

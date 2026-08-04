@@ -103,7 +103,6 @@ internal static class CILogIntel
 	/// <summary>
 	/// Resolves the Validated/Requested Signing Level int to friendly string
 	/// </summary>
-	/// <param name="SigningLevelInt"></param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static string? GetValidatedRequestedSigningLevel(int? SigningLevelInt) =>
 		 SigningLevelInt.HasValue && (uint)SigningLevelInt.Value < ReqValSigningLevelsLength
@@ -113,7 +112,6 @@ internal static class CILogIntel
 	/// <summary>
 	/// Resolves the VerificationError int to a friendly string
 	/// </summary>
-	/// <param name="VerificationError"></param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static string? GetVerificationError(int? VerificationError) =>
 		VerificationError.HasValue && (uint)VerificationError.Value < VerificationErrorTableLength
@@ -123,7 +121,6 @@ internal static class CILogIntel
 	/// <summary>
 	/// Resolves the SignatureType int to a friendly string
 	/// </summary>
-	/// <param name="SignatureType"></param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static string? GetSignatureType(int? SignatureType) =>
 		SignatureType.HasValue && (uint)SignatureType.Value < SignatureTypeTableLength

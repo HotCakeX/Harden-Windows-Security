@@ -30,8 +30,6 @@ internal static class NewCertificateSignerRules
 	/// The level is Pca/Root/Leaf certificate, meaning there is no certificate publisher mentioned
 	/// Only Certificate TBS and its name are used.
 	/// </summary>
-	/// <param name="policyObj"></param>
-	/// <param name="signerData"></param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy policyObj, List<CertificateSignerCreator> signerData)
 	{

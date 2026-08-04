@@ -194,8 +194,6 @@ internal sealed class RegistryPolicyEntry(
 	/// <summary>
 	/// Saves a list of RegistryPolicyEntry to a JSON file.
 	/// </summary>
-	/// <param name="path"></param>
-	/// <param name="files"></param>
 	internal static void Save(string path, List<RegistryPolicyEntry> files)
 	{
 		string json = JsonSerializer.Serialize(files, PolicyInputJsonContext.Default.ListRegistryPolicyEntry);
@@ -205,7 +203,6 @@ internal sealed class RegistryPolicyEntry(
 	/// <summary>
 	/// Reads a JSON file containing the RegistryPolicyEntry data.
 	/// </summary>
-	/// <param name="path"></param>
 	/// <exception cref="FileNotFoundException"></exception>
 	internal static List<RegistryPolicyEntry> Load(string path)
 	{
@@ -222,7 +219,6 @@ internal sealed class RegistryPolicyEntry(
 	/// <summary>
 	/// Reads a JSON file containing the RegistryPolicyEntry data and resolves the resource keys from the JSON.
 	/// </summary>
-	/// <param name="path"></param>
 	/// <exception cref="FileNotFoundException"></exception>
 	internal static List<RegistryPolicyEntry> LoadWithFriendlyNameKeyResolve(string path)
 	{

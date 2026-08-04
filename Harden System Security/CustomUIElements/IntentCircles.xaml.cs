@@ -171,8 +171,6 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	/// <summary>
 	/// Control-level hover (keeps stacked -> expanded spacing)
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void IntentCircles_PointerEntered(object sender, Microsoft.UI.Xaml.Input.PointerRoutedEventArgs e)
 	{
 		if (_isDisposed) return;
@@ -299,7 +297,6 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	/// <summary>
 	/// Returns a cached easing function for the specified compositor; disposes/recreates if compositor changed.
 	/// </summary>
-	/// <param name="compositor"></param>
 	private CubicBezierEasingFunction GetOrCreateHoverEase(Compositor compositor)
 	{
 		// If not created yet, or compositor changed (e.g., control recreated), (re)create the easing.
@@ -499,7 +496,6 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	/// <summary>
 	/// Spacing animation
 	/// </summary>
-	/// <param name="toExpanded"></param>
 	private void AnimateSpacing(bool toExpanded)
 	{
 		if (_isDisposed) return;

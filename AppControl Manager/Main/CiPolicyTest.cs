@@ -26,7 +26,6 @@ internal static class CiPolicyTest
 	/// <summary>
 	/// Gets the path to an App Control XML file and validates it against the schema
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void TestCiPolicy(string xmlFilePath)

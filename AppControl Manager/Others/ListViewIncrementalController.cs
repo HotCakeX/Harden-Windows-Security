@@ -230,7 +230,6 @@ internal sealed partial class ListViewIncrementalController(
 	/// <summary>
 	/// Runs the actual filter apply. If the bound collection is still loading a page, retry shortly without blocking the UI thread.
 	/// </summary>
-	/// <param name="searchText"></param>
 	private async Task ApplySearchCoreAsync(string? searchText)
 	{
 		if (ObservableSource is null) return;

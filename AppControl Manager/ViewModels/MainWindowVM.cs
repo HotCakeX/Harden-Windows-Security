@@ -1043,7 +1043,6 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// The only method used to add new policies to the Sidebar's Policies Library.
 	/// </summary>
-	/// <param name="policy"></param>
 	internal async Task AssignToSidebar(SiPolicy.PolicyFileRepresent policy)
 	{
 		await PoliciesLibraryCacheLock.WaitAsync();
@@ -1119,7 +1118,6 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	/// Handles the change event for the EncryptPoliciesLibrary setting.
 	/// Converts existing cache files between encrypted and plain text formats.
 	/// </summary>
-	/// <param name="shouldEncrypt"></param>
 	private async void OnEncryptPoliciesLibraryChanged(bool shouldEncrypt)
 	{
 		await PoliciesLibraryCacheLock.WaitAsync();
@@ -1188,7 +1186,6 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Event handler for the global Icons Style change event
 	/// </summary>
-	/// <param name="style"></param>
 	[DynamicWindowsRuntimeCast(typeof(Brush))]
 	internal void OnIconsStylesChanged(string? style)
 	{

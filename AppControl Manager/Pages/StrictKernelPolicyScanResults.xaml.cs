@@ -39,8 +39,6 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 	/// <summary>
 	/// Click event handler for copy
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{
@@ -70,8 +68,6 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 	/// <summary>
 	/// CTRL + C shortcut event handler
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	private void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
 		ViewModel.StrictKernel_ListViewFlyoutMenuCopy_Click();

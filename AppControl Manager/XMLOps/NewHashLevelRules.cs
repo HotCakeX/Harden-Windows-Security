@@ -29,7 +29,6 @@ internal static class NewHashLevelRules
 	/// <summary>
 	/// Creates new Allow Hash level rules in the SiPolicy object
 	/// </summary>
-	/// <param name="siPolicy"></param>
 	/// <param name="hashes"> The Hashes to be used for creating the rules </param>
 	/// <returns>Modified SiPolicy object</returns>
 	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy siPolicy, List<HashCreator> hashes)
@@ -104,7 +103,6 @@ internal static class NewHashLevelRules
 	/// <summary>
 	/// Creates new Deny Hash level rules in the SiPolicy object
 	/// </summary>
-	/// <param name="siPolicy"></param>
 	/// <param name="hashes"> The Hashes to be used for creating the rules </param>
 	/// <returns>Modified SiPolicy object</returns>
 	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy siPolicy, List<HashCreator> hashes)

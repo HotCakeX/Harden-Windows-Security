@@ -22,9 +22,6 @@ internal static class RGBHEX
 	/// <summary>
 	/// Converts 3 RGB bytes to a 6-character uppercase hex string (no '#').
 	/// </summary>
-	/// <param name="r"></param>
-	/// <param name="g"></param>
-	/// <param name="b"></param>
 	internal static string ToHex(byte r, byte g, byte b)
 	{
 		// Fast, uppercase by default, no '#'

@@ -29,7 +29,6 @@ internal static partial class Merger
 	/// This is a context-aware method that collects all "Allow" elements or Allow rules in the policy from FileRules node/section.
 	/// It de-duplicates them using a custom HashSet.
 	/// </summary>
-	/// <param name="siPolicies"></param>
 	private static HashSet<AllowRule> CollectAllowRules(List<SiPolicy> siPolicies)
 	{
 		// HashSet to store the unique Allow rules
@@ -114,7 +113,6 @@ internal static partial class Merger
 	/// This is a context-aware method that collects all "Deny" elements or Deny rules in the policy from FileRules node/section.
 	/// It de-duplicates them using a custom HashSet.
 	/// </summary>
-	/// <param name="siPolicies"></param>
 	private static HashSet<DenyRule> CollectDenyRules(List<SiPolicy> siPolicies)
 	{
 		// HashSet to store the unique Deny rules
@@ -192,7 +190,6 @@ internal static partial class Merger
 	/// This is a context-aware method that collects all "FileRule" elements or FileRule rules in the policy from FileRules node/section.
 	/// It de-duplicates them using a custom HashSet.
 	/// </summary>
-	/// <param name="siPolicies"></param>
 	private static HashSet<FileRuleRule> CollectFileRules(List<SiPolicy> siPolicies)
 	{
 		// HashSet to store the unique FileRule rules
@@ -269,7 +266,6 @@ internal static partial class Merger
 	/// This is a context-aware method that collects all "Signer" elements or Signer rules in the policy from Signers node/section.
 	/// Each signer is complete and has all of the elements that can be used in the policy file independently.
 	/// </summary>
-	/// <param name="siPolicies"></param>
 	private static SignerCollection CollectSignerRules(List<SiPolicy> siPolicies)
 	{
 		// The output with HashSets to store unique data
@@ -427,15 +423,6 @@ internal static partial class Merger
 	/// <summary>
 	/// Helper method that categorizes each signer
 	/// </summary>
-	/// <param name="signer"></param>
-	/// <param name="scenarioType"></param>
-	/// <param name="auth"></param>
-	/// <param name="allowedSigner"></param>
-	/// <param name="deniedSigner"></param>
-	/// <param name="ciSignerSet"></param>
-	/// <param name="fileAttribDictionary"></param>
-	/// <param name="signerCollection"></param>
-	/// <param name="ekuDictionary"></param>
 	private static void AddSignerRule(
 	Signer signer,
 	SSType scenarioType,
@@ -815,9 +802,6 @@ internal static partial class Merger
 	/// <summary>
 	/// Processes SupplementalPolicySigners
 	/// </summary>
-	/// <param name="supplementalPolicySignerIDs"></param>
-	/// <param name="Signers"></param>
-	/// <param name="signerCollection"></param>
 	private static void ProcessSupplementalPolicySigners(
 		HashSet<string> supplementalPolicySignerIDs,
 		Dictionary<string, Signer> Signers,
@@ -859,9 +843,6 @@ internal static partial class Merger
 	/// <summary>
 	/// Processes UpdatePolicySigners
 	/// </summary>
-	/// <param name="updatePolicySignerIDs"></param>
-	/// <param name="Signers"></param>
-	/// <param name="signerCollection"></param>
 	private static void ProcessUpdatePolicySigners(
 		HashSet<string> updatePolicySignerIDs,
 		Dictionary<string, Signer> Signers,

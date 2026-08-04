@@ -32,7 +32,6 @@ internal static class GetCertificateDetails
 	/// CertType    = ($SubjectCN -eq $IssuerCN) ? 'Root' : (($SubjectCN -eq $FileSubjectCN) ? 'Leaf' : 'Intermediate')
 	///
 	/// </summary>
-	/// <param name="completeSignatureResult"></param>
 	internal static List<ChainPackage> Get(List<AllFileSigners> completeSignatureResult)
 	{
 		// A list to hold the final result of the method

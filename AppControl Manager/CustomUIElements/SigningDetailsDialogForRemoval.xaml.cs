@@ -131,8 +131,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	/// <summary>
 	/// Event handler for AutoSuggestBox
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	private void CertificateCNAutoSuggestBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
 	{
 		if (args.Reason == AutoSuggestionBoxTextChangeReason.UserInput)
@@ -150,8 +148,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	/// <summary>
 	/// Start suggesting when a tap or mouse click happens.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(AutoSuggestBox))]
 	private void CertificateCommonNameAutoSuggestBox_GotFocus(object sender, RoutedEventArgs e)
 	{
@@ -225,7 +221,6 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 	/// <summary>
 	/// To show the Teaching Tip for the Verify button
 	/// </summary>
-	/// <param name="message"></param>
 	private void ShowTeachingTip(string message)
 	{
 		VerifyButtonTeachingTip.IsOpen = true;

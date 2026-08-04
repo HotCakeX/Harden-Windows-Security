@@ -844,7 +844,6 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	/// <summary>
 	/// Imports firewall rules to different stores.
 	/// </summary>
-	/// <param name="isGpo"></param>
 	private async Task ImportFirewallRules(bool isGpo)
 	{
 		try

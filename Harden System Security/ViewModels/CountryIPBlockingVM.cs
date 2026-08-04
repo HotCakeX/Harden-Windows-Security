@@ -31,8 +31,6 @@ namespace HardenSystemSecurity.ViewModels;
 /// <summary>
 /// Data model for targeted lists ComboBox items.
 /// </summary>
-/// <param name="title"></param>
-/// <param name="learnMoreUrl"></param>
 internal sealed class ComboBoxItemModelForCountryIPBlocking(string title, string learnMoreUrl)
 {
 	internal string Title => title;

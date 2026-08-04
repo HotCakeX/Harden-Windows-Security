@@ -546,8 +546,6 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Loaded event for the UI ListView.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal void ListView_Loaded(object sender, RoutedEventArgs e) => LogListView = (ListView)sender;
 

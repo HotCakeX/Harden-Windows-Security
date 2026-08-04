@@ -1778,7 +1778,6 @@ internal static class MSBaseline
 	/// <summary>
 	/// Helper method to apply System Access settings from a dictionary.
 	/// </summary>
-	/// <param name="settings"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	private static void ApplySystemAccessSettings(Dictionary<string, string> settings)
 	{

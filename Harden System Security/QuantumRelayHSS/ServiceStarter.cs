@@ -27,9 +27,6 @@ internal static partial class ServiceStarter
 	/// <summary>
 	/// Starts the given service and waits until it reaches "running" status or the timeout/cancellation is hit.
 	/// </summary>
-	/// <param name="serviceName"></param>
-	/// <param name="timeout"></param>
-	/// <param name="cancellationToken"></param>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="Win32Exception"></exception>
 	internal static async Task StartServiceAsync(string serviceName, TimeSpan timeout, CancellationToken cancellationToken = default)

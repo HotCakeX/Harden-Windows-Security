@@ -281,7 +281,6 @@ internal static class CiToolHelper
 	/// <summary>
 	/// Deploys a Code Integrity policy on the system by accepting the CIP content.
 	/// </summary>
-	/// <param name="policyBytes"></param>
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>

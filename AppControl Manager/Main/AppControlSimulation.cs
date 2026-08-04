@@ -43,9 +43,6 @@ internal static class AppControlSimulation
 	/// <summary>
 	/// An Aux method that calls the main method then checks the result to make sure all files are allowed, if they are then returns true, otherwise returns false
 	/// </summary>
-	/// <param name="filePaths"></param>
-	/// <param name="policyObj"></param>
-	/// <param name="noCatalogScanning"></param>
 	internal static bool Invoke(List<string>? filePaths, SiPolicy.SiPolicy policyObj, bool noCatalogScanning)
 	{
 		// Call the main method to get the verdicts
@@ -62,13 +59,7 @@ internal static class AppControlSimulation
 	/// <summary>
 	/// The main method that performs the App Control Simulation.
 	/// </summary>
-	/// <param name="filePaths"></param>
-	/// <param name="folderPaths"></param>
-	/// <param name="policyObj"></param>
-	/// <param name="scanSecurityCatalogs"></param>
-	/// <param name="catRootPath"></param>
 	/// <param name="threadsCount"> The number of concurrent threads used to run the simulation </param>
-	/// <param name="progressReporter"></param>
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>

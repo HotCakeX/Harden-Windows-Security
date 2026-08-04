@@ -143,8 +143,6 @@ public sealed partial class App : Application
 	/// This event is raised when a faulted Task's exception is not observed.
 	/// UnobservedTaskException doesn't help for exceptions thrown in event handlers.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private static async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
 	{
 		// Log the unobserved task exception details.

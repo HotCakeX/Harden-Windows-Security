@@ -39,7 +39,6 @@ internal static class AdmxAdmlParser
 	/// <summary>
 	/// Parse ADML/ADMX (en-US only) once per call and fill missing FriendlyName values in-place.
 	/// </summary>
-	/// <param name="entries"></param>
 	internal static void PopulateFriendlyNames(List<RegistryPolicyEntry> entries)
 	{
 		if (entries.Count == 0)

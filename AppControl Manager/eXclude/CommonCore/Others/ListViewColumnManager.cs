@@ -69,7 +69,6 @@ internal sealed partial class ListViewColumnManager<T>
 	/// <summary>
 	/// Data structure to define a column
 	/// </summary>
-	/// <param name="key"></param>
 	/// <param name="headerResourceKeyOrText">Resource key for Atlas.GetStr OR the raw text itself if useRawHeader is true</param>
 	/// <param name="dataGetter">Function to get the text for measurement</param>
 	/// <param name="defaultVisibility">The default visibility of the column. Defaults to Visible.</param>

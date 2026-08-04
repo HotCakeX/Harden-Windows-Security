@@ -413,7 +413,6 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// Installs an app package from a user-supplied path.
 	/// It can automatically detect if the package is signed or unsigned and perform signing if needed.
 	/// </summary>
-	/// <param name="packagePath"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	private static async Task InstallAppPackage(
 		string? packagePath,

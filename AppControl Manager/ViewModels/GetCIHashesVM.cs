@@ -45,8 +45,6 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	/// <summary>
 	/// Handles when files are dragged over the page.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void OnDragOver(object sender, DragEventArgs e)
 	{
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -65,8 +63,6 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	/// <summary>
 	/// Handles when files are dropped on the page.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	internal async void OnDrop(object sender, DragEventArgs e)
 	{
@@ -288,7 +284,6 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 	/// <summary>
 	/// The method used to open the <see cref="GetCIHashes"/> page from other parts of the application.
 	/// </summary>
-	/// <param name="filePath"></param>
 	internal async Task OpenInGetCIHashes(string? filePath)
 	{
 		try

@@ -30,7 +30,6 @@ internal static partial class OptimizeMDECSVData
 	/// Converts an entire MDE Advanced Hunting CSV file into a list of classes.
 	/// Optimizes the MDE CSV data by adding the nested properties in the "AdditionalFields" property to the parent record as first-level properties, all in one class.
 	/// </summary>
-	/// <param name="filePath"></param>
 	/// <exception cref="InvalidDataException"></exception>
 	internal static List<MDEAdvancedHuntingData> ReadCsv(string filePath)
 	{
@@ -162,7 +161,6 @@ internal static partial class OptimizeMDECSVData
 	/// Ensures the JSON string is well formatted. If a field has no double quotes, it will add them around it.
 	/// It safely skips values that are already quoted strings to prevent corruption.
 	/// </summary>
-	/// <param name="jsonString"></param>
 	private static string EnsureAllValuesAreQuoted(string jsonString)
 	{
 		// Group 'QuotedString': Matches anything inside double quotes (including escaped quotes).
@@ -189,7 +187,6 @@ internal static partial class OptimizeMDECSVData
 	/// <summary>
 	/// Parses each line/row of the CSV file.
 	/// </summary>
-	/// <param name="line"></param>
 	private static string[] ParseCsvLine(string line)
 	{
 		List<string> fields = [];
@@ -258,9 +255,6 @@ internal static partial class OptimizeMDECSVData
 	/// Gets the value of a column from the CSV row and returns it.
 	/// Returns null if the column does not exist or the value is empty.
 	/// </summary>
-	/// <param name="values"></param>
-	/// <param name="headerMap"></param>
-	/// <param name="columnName"></param>
 	private static string? GetValue(string[] values, Dictionary<string, int> headerMap, string columnName)
 	{
 		if (headerMap.TryGetValue(columnName, out int index) && index < values.Length)

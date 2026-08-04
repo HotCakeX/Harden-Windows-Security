@@ -235,8 +235,6 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// Event handler for the SelectionChanged event of the ListView.
 	/// Is also triggered when using SelectAll or De-Select all buttons.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		if (IsAdding) return;
@@ -268,8 +266,6 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	/// <summary>
 	/// Event handler for when the List View is loaded.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal async void MainListView_Loaded(object sender, RoutedEventArgs e)
 	{

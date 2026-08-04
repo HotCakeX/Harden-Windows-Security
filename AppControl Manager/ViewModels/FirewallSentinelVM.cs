@@ -93,8 +93,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Event handler for when the Sidebar Library collection changes.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void SidebarPoliciesLibrary_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) =>
 			FilterPolicies();
 
@@ -535,8 +533,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Configures the system and firewall for different modes of App ID Tagging.
 	/// </summary>
-	/// <param name="mode"></param>
-	/// <param name="sender"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	[DynamicWindowsRuntimeCast(typeof(UIElement))]
@@ -1558,8 +1554,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Checks if a single packet matches the filter term.
 	/// </summary>
-	/// <param name="x"></param>
-	/// <param name="term"></param>
 	private static bool IsPacketMatchingFilter(FirewallEvent x, string term)
 	{
 		return (x.Application != null && x.Application.Contains(term, StringComparison.OrdinalIgnoreCase)) ||

@@ -29,7 +29,6 @@ internal static class NewFileNameLevelRules
 	/// Each rule includes the Allow element in the "FileRules" section,
 	/// And a corresponding "FileRuleRef" in the "FileRulesRef" section.
 	/// </summary>
-	/// <param name="policyObj"></param>
 	/// <param name="fileNameData"> The FileName data to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method </param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy policyObj, List<FileNameRuleCreator> fileNameData)

@@ -803,8 +803,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// <summary>
 	/// CTRL + C shortcut event handler
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	internal void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
 		ListViewFlyoutMenuCopy_Click();

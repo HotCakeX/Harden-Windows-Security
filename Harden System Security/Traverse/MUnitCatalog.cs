@@ -71,8 +71,6 @@ internal static class MUnitCatalog
 	/// <summary>
 	/// Extra non-MUnit search entries, to be registered once at startup before first query.
 	/// </summary>
-	/// <param name="pageType"></param>
-	/// <param name="localizedTitle"></param>
 	internal readonly struct ExtraSearchEntry(Type pageType, string localizedTitle)
 	{
 		internal Type PageType => pageType;

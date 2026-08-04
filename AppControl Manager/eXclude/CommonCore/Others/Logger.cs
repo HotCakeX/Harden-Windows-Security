@@ -49,8 +49,6 @@ internal static class Logger
 	/// <summary>
 	/// Called from the App class during app initialization to set up the logging system.
 	/// </summary>
-	/// <param name="logsDirectory"></param>
-	/// <param name="appName"></param>
 	internal static void Configure(string logsDirectory, string appName)
 	{
 		// Create the Logs directory if it doesn't exist, won't do anything if it exists
@@ -128,7 +126,6 @@ internal static class Logger
 	/// <summary>
 	/// Write the log to the file
 	/// </summary>
-	/// <param name="message"></param>
 	internal static void Write(string message, LogTypeIntel logType = LogTypeIntel.Information)
 	{
 		string logEntry = $"{DateTime.Now}: {message}";

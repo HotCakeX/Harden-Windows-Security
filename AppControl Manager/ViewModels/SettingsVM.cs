@@ -559,8 +559,6 @@ internal sealed partial class SettingsVM : ViewModelBase
 	/// <summary>
 	/// Executed when flow direction toggle is changed.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(ToggleSwitch))]
 	internal void FlowDirectionToggleSwitch_Toggled(object sender, RoutedEventArgs e)
 	{

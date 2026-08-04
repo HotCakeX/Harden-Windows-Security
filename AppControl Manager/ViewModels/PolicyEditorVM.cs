@@ -700,7 +700,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// To remove an item from the File rules based ListView
 	/// </summary>
-	/// <param name="item"></param>
 	internal void RemoveFileRuleFromCollection(PolicyEditor.FileBasedRulesForListView item)
 	{
 		if (!FileRulesCollection.Remove(item))
@@ -716,7 +715,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// To remove an item from the Signature based rules ListView
 	/// </summary>
-	/// <param name="item"></param>
 	internal void RemoveSignatureRuleFromCollection(PolicyEditor.SignatureBasedRulesForListView item)
 	{
 		if (!SignatureRulesCollection.Remove(item))
@@ -753,7 +751,6 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	/// <summary>
 	/// Accepts a path to an XML or CIP file and then returns a <see cref="PolicyFileRepresent"/> made from it.
 	/// </summary>
-	/// <param name="filePath"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static SiPolicy.PolicyFileRepresent ParseFilePathAsPolicyRepresent(string filePath)
 	{

@@ -428,7 +428,6 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 	/// <summary>
 	/// Used by any code from the app to use the functionalities in this VM.
 	/// </summary>
-	/// <param name="policy"></param>
 	internal async Task OpenInConfigurePolicyRuleOptions(SiPolicy.PolicyFileRepresent? policy)
 	{
 		try

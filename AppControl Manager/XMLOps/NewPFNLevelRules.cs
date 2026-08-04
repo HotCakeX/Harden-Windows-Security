@@ -27,8 +27,6 @@ internal static class NewPFNLevelRules
 	/// <summary>
 	/// Creates PFN rules and adds them to the SiPolicy object
 	/// </summary>
-	/// <param name="siPolicy"></param>
-	/// <param name="PFNData"></param>
 	/// <returns>Modified SiPolicy object</returns>
 	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy siPolicy, List<PFNRuleCreator> PFNData)
 	{
@@ -72,8 +70,6 @@ internal static class NewPFNLevelRules
 	/// <summary>
 	/// Creates PFN rules and adds them to the SiPolicy object
 	/// </summary>
-	/// <param name="siPolicy"></param>
-	/// <param name="PFNData"></param>
 	/// <returns>Modified SiPolicy object</returns>
 	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy siPolicy, List<PFNRuleCreator> PFNData)
 	{

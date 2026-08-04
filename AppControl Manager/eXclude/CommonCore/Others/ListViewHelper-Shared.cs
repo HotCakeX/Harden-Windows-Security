@@ -100,16 +100,11 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// Registers a ListView in the cache as soon as it is loaded.
 	/// </summary>
-	/// <param name="key"></param>
-	/// <param name="listView"></param>
 	internal static void Register(ListViewsRegistry key, ListView listView) => ListViewsCache[key] = listView;
 
 	/// <summary>
 	/// Registers a ListView and its ScrollViewer in the caches.
 	/// </summary>
-	/// <param name="key"></param>
-	/// <param name="listView"></param>
-	/// <param name="viewer"></param>
 	internal static void Register(ListViewsRegistry key, ListView listView, ScrollViewer viewer)
 	{
 		// Logger.Write("Registering ListView in the cache");
@@ -122,7 +117,6 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// Removes the references to a ListView and its ScrollViewer in the caches.
 	/// </summary>
-	/// <param name="key"></param>
 	internal static void Unregister(ListViewsRegistry key, ListView instance)
 	{
 		// Always remove the exact instance from the tracking map.
@@ -195,7 +189,6 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// Called when the user changes the font for ListViews in the Settings page.
 	/// </summary>
-	/// <param name="fontFamily"></param>
 	internal static void UpdateFontFamily(string fontFamily)
 	{
 		// Ensure the width is calculated correctly based on the selected font for List Views so the size of the text is accurate.
@@ -218,7 +211,6 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// Used by Incremental Collections to measure column cell widths without adding the InitValueAdded padding.
 	/// </summary>
-	/// <param name="text"></param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static double MeasureTextEx(string? text)
 	{
@@ -230,8 +222,6 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// This overload is used for measuring column widths and returning the biggest value between the current text's width and current column's width.
 	/// </summary>
-	/// <param name="text"></param>
-	/// <param name="maxWidth"></param>
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	internal static double MeasureText(string? text, double maxWidth)
 	{
@@ -250,7 +240,6 @@ internal static partial class ListViewHelper
 	/// <summary>
 	/// Select all of the items in the ListView's ItemsSource.
 	/// </summary>
-	/// <param name="lw"></param>
 	internal static void SelectAll(ListView? lw)
 	{
 		if (lw is null) return;

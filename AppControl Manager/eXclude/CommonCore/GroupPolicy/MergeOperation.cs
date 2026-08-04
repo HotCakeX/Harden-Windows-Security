@@ -20,11 +20,6 @@ namespace CommonCore.GroupPolicy;
 /// <summary>
 /// A class representing a single merge operation on registry policy entries.
 /// </summary>
-/// <param name="operationType"></param>
-/// <param name="keyName"></param>
-/// <param name="valueName"></param>
-/// <param name="oldEntry"></param>
-/// <param name="newEntry"></param>
 internal sealed class MergeOperation(
 	OperationType operationType,
 	string keyName,

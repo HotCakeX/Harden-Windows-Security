@@ -148,8 +148,6 @@ internal sealed partial class ListViewV2 : ListView
 	/// <summary>
 	/// Loaded event of the ListView. Every time the ListView becomes visible, such as by navigating to the page containing it, this event will be fired.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
 		// Cache the ListView immediately so selection-only operations work even when the template ScrollViewer is not ready yet.
@@ -167,8 +165,6 @@ internal sealed partial class ListViewV2 : ListView
 	/// <summary>
 	/// Whenever we navigate away from a page that contains the ListView, this event will be fired.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void OnUnloaded(object? sender, RoutedEventArgs e) => ListViewHelper.Unregister(RegistryKey, this);
 
 	/// <summary>

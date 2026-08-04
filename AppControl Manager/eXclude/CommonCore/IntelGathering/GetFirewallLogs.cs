@@ -349,7 +349,6 @@ internal static class GetFirewallLogs
 	/// <summary>
 	/// Parses an EventRecord into a <see cref="FirewallEvent"/> object.
 	/// </summary>
-	/// <param name="eventRecord"></param>
 	/// <param name="resolveDestinationAddresses">Determines whether to synchronously resolve destination IP addresses to domains.</param>
 	private static FirewallEvent? ParseFirewallEvent(EventRecord eventRecord, bool resolveDestinationAddresses)
 	{

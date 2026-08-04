@@ -137,8 +137,6 @@ internal static class Main
 	/// Method for signing Code Integrity Policies (CIP).
 	/// </summary>
 	/// <param name="fileContent">The CIP content to be signed.</param>
-	/// <param name="CertCN"></param>
-	/// <param name="Cert"></param>
 	/// <exception cref="ArgumentNullException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static byte[] SignCIP(byte[] fileContent, string? CertCN = null, X509Certificate2? Cert = null)
@@ -618,8 +616,6 @@ internal static class Main
 	/// <summary>
 	/// Signs an App Package.
 	/// </summary>
-	/// <param name="PackagePath"></param>
-	/// <param name="Cert"></param>
 	internal static void SignAppPackage(string PackagePath, X509Certificate2 Cert)
 	{
 		try

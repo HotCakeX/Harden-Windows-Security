@@ -167,7 +167,6 @@ internal interface IApplyGroupPolicy : IApplyStrategy
 /// <summary>
 /// Implementation of the <see cref="IApplyGroupPolicy"/> strategy.
 /// </summary>
-/// <param name="policy"></param>
 internal sealed class GroupPolicyApply(RegistryPolicyEntry policy) : IApplyGroupPolicy
 {
 	public RegistryPolicyEntry Policy => policy;
@@ -190,7 +189,6 @@ internal interface IApplyRegistry : IApplyStrategy
 /// <summary>
 /// Implementation of the <see cref="IApplyRegistry"/> strategy.
 /// </summary>
-/// <param name="policy"></param>
 internal sealed class RegistryApply(RegistryPolicyEntry policy) : IApplyRegistry
 {
 	public RegistryPolicyEntry Policy => policy;
@@ -274,7 +272,6 @@ internal interface IVerifyGroupPolicy : IVerifyStrategy
 /// <summary>
 /// Implementation of the <see cref="IVerifyGroupPolicy"/> strategy.
 /// </summary>
-/// <param name="policy"></param>
 internal sealed class GroupPolicyVerify(RegistryPolicyEntry policy) : IVerifyGroupPolicy
 {
 	public RegistryPolicyEntry Policy => policy;
@@ -298,7 +295,6 @@ internal interface IVerifyRegistry : IVerifyStrategy
 /// <summary>
 /// Implementation of the <see cref="IVerifyRegistry"/> strategy.
 /// </summary>
-/// <param name="policy"></param>
 internal sealed class RegistryVerify(RegistryPolicyEntry policy) : IVerifyRegistry
 {
 	public RegistryPolicyEntry Policy => policy;
@@ -346,7 +342,6 @@ internal interface IRemoveGroupPolicy : IRemoveStrategy
 /// <summary>
 /// Implementation of the <see cref="IRemoveGroupPolicy"/> strategy.
 /// </summary>
-/// <param name="policy"></param>
 internal sealed class GroupPolicyRemove(RegistryPolicyEntry policy) : IRemoveGroupPolicy
 {
 	public RegistryPolicyEntry Policy => policy;
@@ -370,7 +365,6 @@ internal interface IRemoveRegistry : IRemoveStrategy
 /// <summary>
 /// Implementation of the <see cref="IRemoveRegistry"/> strategy.
 /// </summary>
-/// <param name="policy"></param>
 internal sealed class RegistryRemove(RegistryPolicyEntry policy) : IRemoveRegistry
 {
 	public RegistryPolicyEntry Policy => policy;
@@ -1374,9 +1368,6 @@ internal sealed partial class MUnit(
 	/// The core method that each ViewModel must implement to process MUnits with bulk operations.
 	/// This will be called by the user control for all operations. Including single Apply/Remove/Verify buttons as well as those that operate on all items or only the selected items.
 	/// </summary>
-	/// <param name="viewModel"></param>
-	/// <param name="mUnits"></param>
-	/// <param name="operation"></param>
 	/// <param name="cancellationToken">Optional cancellation token for the operation</param>
 	internal async static Task ProcessMUnitsWithBulkOperations(IMUnitListViewModel viewModel, List<MUnit> mUnits, MUnitOperation operation, CancellationToken? cancellationToken = null)
 	{
@@ -1553,7 +1544,6 @@ internal sealed partial class MUnit(
 	/// <summary>
 	/// Used to normalize the subcategory name for display purposes.
 	/// </summary>
-	/// <param name="subCategory"></param>
 	private static string SubCategoryToDisplayString(SubCategories? subCategory)
 	{
 		if (subCategory is null)

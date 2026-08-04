@@ -32,9 +32,6 @@ internal static class CertificatePresence
 	/// The reason we don't need to check signature of the deployed signed cip files in the EFI partition is because
 	/// The user-selected XML policy's ID is already checked against the deployed signed policies and that provides the necessary signing details in the XML.
 	/// </summary>
-	/// <param name="policyObject"></param>
-	/// <param name="certificatePath"></param>
-	/// <param name="certCN"></param>
 	/// <param name="kind">The source of the policyObject and where it was created from.</param>
 	internal static bool InferCertificatePresence(SiPolicy.SiPolicy policyObject, string certificatePath, string certCN, SiPolicy.PolicyFileRepresentKind kind)
 	{
@@ -112,8 +109,6 @@ internal static class CertificatePresence
 	/// Gets the path to a .cer certificate file and a certificate common name
 	/// Makes sure the common name belongs to the certificate file
 	/// </summary>
-	/// <param name="certificatePath"></param>
-	/// <param name="certCN"></param>
 	internal static bool VerifyCertAndCNMatch(string certificatePath, string certCN)
 	{
 		// Create a certificate object from the .cer file

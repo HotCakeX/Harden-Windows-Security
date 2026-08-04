@@ -52,8 +52,6 @@ internal static partial class Merger
 	/// Only the data that are collections will be merged.
 	/// No data is lost in the merge process.
 	/// </summary>
-	/// <param name="mainPolicy"></param>
-	/// <param name="otherPolicies"></param>
 	internal static SiPolicy Merge(SiPolicy mainPolicy, List<SiPolicy>? otherPolicies)
 	{
 		// Create a list of all SiPolicy objects that will participate in the merge process.
@@ -477,17 +475,6 @@ internal static partial class Merger
 	/// </summary>
 	/// <param name="mainPolicy">The deserialized SiPolicy object of the main policy</param>
 	/// <param name="ekusToUse">EKUs collection of data used to generate the policy</param>
-	/// <param name="fileRulesNode"></param>
-	/// <param name="signers"></param>
-	/// <param name="ciSigners"></param>
-	/// <param name="userModeAllowedSigners"></param>
-	/// <param name="userModeDeniedSigners"></param>
-	/// <param name="kernelModeAllowedSigners"></param>
-	/// <param name="kernelModeDeniedSigners"></param>
-	/// <param name="supplementalPolicySignersCol"></param>
-	/// <param name="updatePolicySignersCol"></param>
-	/// <param name="kernelModeFileRulesRefs"></param>
-	/// <param name="userModeFileRulesRefs"></param>
 	internal static SiPolicy PolicyGenerator(
 		SiPolicy mainPolicy,
 		List<EKU> ekusToUse,
@@ -731,8 +718,6 @@ internal static partial class Merger
 	/// CertOemID
 	/// CertIssuer
 	/// </summary>
-	/// <param name="signerX"></param>
-	/// <param name="signerY"></param>
 	internal static bool IsSignerRuleMatch(Signer signerX, Signer signerY)
 	{
 		return string.Equals(signerX.Name, signerY.Name, StringComparison.OrdinalIgnoreCase) &&
@@ -892,8 +877,6 @@ internal static partial class Merger
 	/// null and " " -> Not Equal
 	/// null and null -> Not Equal
 	/// </summary>
-	/// <param name="a"></param>
-	/// <param name="b"></param>
 	private static bool BothAreWhitespaceOrEqual(string? a, string? b)
 	{
 		bool isAEmpty = a is not null && string.IsNullOrWhiteSpace(a);

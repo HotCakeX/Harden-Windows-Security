@@ -229,7 +229,6 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	/// <summary>
 	/// When online features are enabled, this method will enable the relevant buttons and performs extra necessary actions
 	/// </summary>
-	/// <param name="on"></param>
 	private void UpdateButtonsStates(bool on)
 	{
 		// Enable the options if a valid value is set as Active Account

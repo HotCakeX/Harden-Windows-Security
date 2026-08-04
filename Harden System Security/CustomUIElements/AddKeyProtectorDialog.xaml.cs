@@ -158,8 +158,6 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 	/// <summary>
 	/// Event handler for the primary button click
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 	{
 		// Resolve the selected key protector type when the primary button is selected.

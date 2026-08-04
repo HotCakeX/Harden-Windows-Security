@@ -20,22 +20,6 @@ namespace AppControlManager.PolicyEditor;
 /// <summary>
 /// Data model for the File Based Rules list view.
 /// </summary>
-/// <param name="id"></param>
-/// <param name="friendlyName"></param>
-/// <param name="fileName"></param>
-/// <param name="internalName"></param>
-/// <param name="fileDescription"></param>
-/// <param name="productName"></param>
-/// <param name="packageFamilyName"></param>
-/// <param name="packageVersion"></param>
-/// <param name="minimumFileVersion"></param>
-/// <param name="maximumFileVersion"></param>
-/// <param name="hash"></param>
-/// <param name="appIDs"></param>
-/// <param name="filePath"></param>
-/// <param name="type"></param>
-/// <param name="sourceType"></param>
-/// <param name="source"></param>
 /// <param name="requireHotpatchID">Only used for <see cref="SiPolicy.Allow"/> type</param>
 /// <param name="minimumHotpatchSequence">Only used for <see cref="SiPolicy.Allow"/> type</param>
 /// <param name="maximumHotpatchSequence">Only used for <see cref="SiPolicy.Allow"/> type</param>

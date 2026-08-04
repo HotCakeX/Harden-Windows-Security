@@ -30,7 +30,6 @@ internal static class NewPublisherLevelRules
 	/// Creates a new Allow Publisher level rule in the SiPolicy object
 	/// Each rule includes the Signers, AllowedSigners, and CiSigners (depending on kernel/user mode)
 	/// </summary>
-	/// <param name="policyObj"></param>
 	/// <param name="publisherSigners">The PublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method</param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy policyObj, List<PublisherSignerCreator> publisherSigners)
@@ -96,7 +95,6 @@ internal static class NewPublisherLevelRules
 	/// Creates a new Deny Publisher level rule in the SiPolicy object
 	/// Each rule includes the Signers, DeniedSigners, and CiSigners (depending on kernel/user mode)
 	/// </summary>
-	/// <param name="policyObj"></param>
 	/// <param name="publisherSigners">The PublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method</param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy policyObj, List<PublisherSignerCreator> publisherSigners)

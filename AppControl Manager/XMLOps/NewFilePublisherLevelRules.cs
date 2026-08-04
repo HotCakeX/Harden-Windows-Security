@@ -30,7 +30,6 @@ internal static class NewFilePublisherLevelRules
 	/// Creates a new Allow FilePublisher level rule in the SiPolicy object
 	/// Each rule includes the FileAttribs, Signers, AllowedSigners, and CiSigners (depending on kernel/user mode)
 	/// </summary>
-	/// <param name="policyObj"></param>
 	/// <param name="filePublisherSigners"> The FilePublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method </param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy policyObj, List<FilePublisherSignerCreator> filePublisherSigners)
@@ -137,7 +136,6 @@ internal static class NewFilePublisherLevelRules
 	/// Creates a new Deny FilePublisher level rule in the SiPolicy object
 	/// Each rule includes the FileAttribs, Signers, DeniedSigners, and CiSigners (depending on kernel/user mode)
 	/// </summary>
-	/// <param name="policyObj"></param>
 	/// <param name="filePublisherSigners"> The FilePublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method </param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy policyObj, List<FilePublisherSignerCreator> filePublisherSigners)

@@ -24,14 +24,6 @@ namespace AppControlManager.SiPolicyIntel;
 /// <summary>
 /// For Levels: WHQLFilePublisher
 /// </summary>
-/// <param name="fileAttribElements"></param>
-/// <param name="allowedSignerElement"></param>
-/// <param name="deniedSignerElement"></param>
-/// <param name="ciSignerElement"></param>
-/// <param name="signerElement"></param>
-/// <param name="ekus"></param>
-/// <param name="signingScenario"></param>
-/// <param name="auth"></param>
 internal sealed class WHQLFilePublisher(
 	List<FileAttrib> fileAttribElements,
 	AllowedSigner? allowedSignerElement,

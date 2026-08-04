@@ -23,11 +23,6 @@ namespace AppControlManager.Others;
 /// <summary>
 /// Used to create a Publisher signer rule for a file
 /// </summary>
-/// <param name="certificateDetails"></param>
-/// <param name="fileName"></param>
-/// <param name="authenticodeSHA256"></param>
-/// <param name="authenticodeSHA1"></param>
-/// <param name="siSigningScenario"></param>
 internal sealed class PublisherSignerCreator(
 	List<CertificateDetailsCreator> certificateDetails,
 	string? fileName,

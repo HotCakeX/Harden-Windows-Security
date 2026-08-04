@@ -106,8 +106,6 @@ internal static class SetCiPolicyInfo
 	/// <summary>
 	/// An overload of the Set method, responsible for setting the version number, policyID and BasePolicyID in the policy
 	/// </summary>
-	/// <param name="policyObj"></param>
-	/// <param name="version"></param>
 	/// <param name="ID">This will be used as the BasePolicyID and PolicyID of the policy</param>
 	internal static SiPolicy.SiPolicy Set(SiPolicy.SiPolicy policyObj, Version version, string? ID = null)
 	{
@@ -163,8 +161,6 @@ internal static class SetCiPolicyInfo
 	/// <summary>
 	/// Swaps the PolicyID and BasePolicyID GUIDs in an App Control for Business policy with the provided value, for non-Supplemental policy types only.
 	/// </summary>
-	/// <param name="policyIdInput"></param>
-	/// <param name="policyObj"></param>
 	internal static SiPolicy.SiPolicy SetPolicyIDs(string policyIdInput, SiPolicy.SiPolicy policyObj)
 	{
 		if (policyObj.PolicyType is SiPolicy.PolicyType.SupplementalPolicy)

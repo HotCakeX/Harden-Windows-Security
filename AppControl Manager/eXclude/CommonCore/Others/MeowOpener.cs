@@ -25,7 +25,6 @@ internal static class MeowParser
 	/// <summary>
 	/// Gets the hashes of the members in a security catalog file.
 	/// </summary>
-	/// <param name="SecurityCatalogFilePath"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static unsafe HashSet<string> GetHashes(string SecurityCatalogFilePath)
 	{

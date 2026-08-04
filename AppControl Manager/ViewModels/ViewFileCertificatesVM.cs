@@ -256,8 +256,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Copy a single property of the current selection
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[WinRT.DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
@@ -278,7 +276,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Get the certificates of the .CIP files
 	/// </summary>
-	/// <param name="file"></param>
 	private async Task<List<FileCertificateInfoCol>> FetchForCIP(string file)
 	{
 		List<FileCertificateInfoCol> output = [];
@@ -331,7 +328,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Fetch for the .cer files
 	/// </summary>
-	/// <param name="file"></param>
 	private async Task<List<FileCertificateInfoCol>> FetchForCER(string file)
 	{
 		List<FileCertificateInfoCol> output = [];
@@ -742,8 +738,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// DragOver handler.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void OnDragOver(object sender, DragEventArgs e)
 	{
 		if (e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -762,8 +756,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Drop handler, triggers Fetch().
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[WinRT.DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	internal async void OnDrop(object sender, DragEventArgs e)
 	{
@@ -789,7 +781,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Used by any code from the app to use the functionalities in this VM.
 	/// </summary>
-	/// <param name="filePath"></param>
 	internal async Task OpenInViewFileCertificatesVM(string? filePath)
 	{
 		try
@@ -810,7 +801,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Retrieves detailed fields from an X509Certificate2 object.
 	/// </summary>
-	/// <param name="cert"></param>
 	private static (int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) ExtractDetailedFields(X509Certificate2 cert)
 	{
 		int? version = cert?.Version;

@@ -114,7 +114,6 @@ internal static class CertificateHelper
 	/// <summary>
 	/// Calculates the TBS value of a certificate
 	/// </summary>
-	/// <param name="cert"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static string GetTBSCertificate(X509Certificate2 cert)
 	{
@@ -170,7 +169,6 @@ internal static class CertificateHelper
 	/// Converts a hexadecimal string to an OID
 	/// Used for converting hexadecimal values found in the EKU sections of the App Control policies to their respective OIDs.
 	/// </summary>
-	/// <param name="hex"></param>
 	/// <exception cref="ArgumentException"></exception>
 	internal static string ConvertHexToOID(string hex)
 	{

@@ -110,8 +110,6 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 	/// <summary>
 	/// Click event handler for copy
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
 	{

@@ -27,8 +27,6 @@ internal static class Management
 	/// <summary>
 	/// Initializes the <see cref="SiPolicy.SiPolicy"/> object by accepting a string path to a valid XML file or an XmlDocument object.
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
-	/// <param name="XmlObj"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static SiPolicy Initialize(string? xmlFilePath, XmlDocument? XmlObj) =>
 		 CustomDeserialization.DeserializeSiPolicy(xmlFilePath, XmlObj);
@@ -36,8 +34,6 @@ internal static class Management
 	/// <summary>
 	/// Converts a Code Integrity policy to CIP binary file.
 	/// </summary>
-	/// <param name="xmlFilePath"></param>
-	/// <param name="BinPath"></param>
 	internal static void ConvertXMLToBinary(string? xmlFilePath, string BinPath)
 	{
 		if (File.Exists(BinPath))
@@ -70,8 +66,6 @@ internal static class Management
 	/// Saves the SiPolicy object to a XML file.
 	/// Uses custom hand made serialization logic that is compatible with Native AOT compilation
 	/// </summary>
-	/// <param name="policy"></param>
-	/// <param name="filePath"></param>
 	internal static void SavePolicyToFile(SiPolicy policy, string filePath)
 	{
 		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);

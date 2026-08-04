@@ -351,8 +351,6 @@ internal sealed partial class CSPVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the copy button of OMA-URI.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void CopyOmaUri_Click(object sender, RoutedEventArgs e)
 	{
 		if (sender is FrameworkElement { DataContext: CspPolicyEntry entry } && !string.IsNullOrEmpty(entry.OmaUri))

@@ -24,10 +24,6 @@ namespace AppControlManager.SiPolicyIntel;
 /// <summary>
 /// For Levels: WHQLPublisher, WHQL
 /// </summary>
-/// <param name="signerElement"></param>
-/// <param name="ekus"></param>
-/// <param name="signingScenario"></param>
-/// <param name="auth"></param>
 internal sealed class WHQLPublisher(
 	AllowedSigner? allowedSignerElement,
 	DeniedSigner? deniedSignerElement,

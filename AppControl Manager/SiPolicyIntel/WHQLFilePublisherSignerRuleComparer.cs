@@ -84,8 +84,6 @@ internal sealed class WHQLFilePublisherSignerRuleComparer : IEqualityComparer<WH
 	/// <summary>
 	/// Merge FileAttribElements of the ignored rule into the existing one
 	/// </summary>
-	/// <param name="existing"></param>
-	/// <param name="newRule"></param>
 	private static void MergeFileAttribElements(WHQLFilePublisher existing, WHQLFilePublisher newRule)
 	{
 		if (newRule.FileAttribElements is null || existing.FileAttribElements is null)

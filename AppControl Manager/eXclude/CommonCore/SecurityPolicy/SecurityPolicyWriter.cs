@@ -318,8 +318,6 @@ internal static class SecurityPolicyWriter
 	/// <summary>
 	/// Sets the minimumPasswordAge and maximumPasswordAge for the [System Access] section.
 	/// </summary>
-	/// <param name="minimumPasswordAge"></param>
-	/// <param name="maximumPasswordAge"></param>
 	internal unsafe static void SetPasswordAge(int minimumPasswordAge, int maximumPasswordAge)
 	{
 		// Get current settings first
@@ -384,7 +382,6 @@ internal static class SecurityPolicyWriter
 	/// <summary>
 	/// Sets the minimum password length for the [System Access] section.
 	/// </summary>
-	/// <param name="minimumPasswordLength"></param>
 	internal unsafe static void SetMinimumPasswordLength(int minimumPasswordLength)
 	{
 		// Get current settings first
@@ -444,7 +441,6 @@ internal static class SecurityPolicyWriter
 	/// <summary>
 	/// Sets the passwordHistorySize for the [System Access] section.
 	/// </summary>
-	/// <param name="passwordHistorySize"></param>
 	/// <returns>Throws InvalidOperationException if any underlying API call fails.</returns>
 	internal unsafe static void SetPasswordHistorySize(int passwordHistorySize)
 	{
@@ -505,9 +501,6 @@ internal static class SecurityPolicyWriter
 	/// <summary>
 	/// Sets 3 properties for the [System Access] section at the same time.
 	/// </summary>
-	/// <param name="lockoutBadCount"></param>
-	/// <param name="resetLockoutCount"></param>
-	/// <param name="lockoutDuration"></param>
 	/// <returns>Throws InvalidOperationException if any underlying API call fails.</returns>
 	internal unsafe static void SetLockoutPolicy(int lockoutBadCount, int resetLockoutCount, int lockoutDuration)
 	{
@@ -568,7 +561,6 @@ internal static class SecurityPolicyWriter
 	/// <summary>
 	/// Sets the lockoutBadCount individually. Use SetLockoutPolicy for setting 3 policies at the same time.
 	/// </summary>
-	/// <param name="lockoutBadCount"></param>
 	internal unsafe static void SetLockoutBadCount(int lockoutBadCount)
 	{
 		// Get current settings first
@@ -619,7 +611,6 @@ internal static class SecurityPolicyWriter
 	/// <summary>
 	/// Sets the resetLockoutCount individually. Use SetLockoutPolicy for setting 3 policies at the same time.
 	/// </summary>
-	/// <param name="resetLockoutCount"></param>
 	internal unsafe static void SetResetLockoutCount(int resetLockoutCount)
 	{
 		// Get current settings first
@@ -673,7 +664,6 @@ internal static class SecurityPolicyWriter
 	/// <summary>
 	/// Sets the lockoutDuration individually. Use SetLockoutPolicy for setting 3 policies at the same time.
 	/// </summary>
-	/// <param name="lockoutDuration"></param>
 	internal unsafe static void SetLockoutDuration(int lockoutDuration)
 	{
 		// Get current settings first

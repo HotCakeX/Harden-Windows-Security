@@ -700,11 +700,6 @@ DeviceEvents
 	/// <summary>
 	/// https://learn.microsoft.com/mem/intune/configuration/custom-settings-windows-10
 	/// </summary>
-	/// <param name="accessToken"></param>
-	/// <param name="policyData"></param>
-	/// <param name="policyID"></param>
-	/// <param name="policyName"></param>
-	/// <param name="descriptionText"></param>
 	private static async Task<string?> CreateCustomIntunePolicy(string accessToken, string policyData, string? policyName, string policyID, string descriptionText, AzureCloudInstance environment)
 	{
 
@@ -961,7 +956,6 @@ DeviceEvents
 	/// Deletes a custom Intune policy identified by the given policy ID.
 	/// </summary>
 	/// <param name="policyId">The ID of the policy to delete.</param>
-	/// <param name="account"></param>
 	/// <returns>A task that represents the asynchronous delete operation.</returns>
 	/// <exception cref="InvalidOperationException">Thrown when the user is not authenticated or the deletion fails.</exception>
 	internal static async Task DeletePolicy(AuthenticatedAccounts? account, string policyId)
@@ -1148,7 +1142,6 @@ DeviceEvents
 	/// <summary>
 	/// Get all of the non-Custom-OMAURI policies.
 	/// </summary>
-	/// <param name="account"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<List<DeviceManagementConfigurationPolicy>> RetrieveConfigurationPolicies(AuthenticatedAccounts account)
 	{
@@ -1211,8 +1204,6 @@ DeviceEvents
 	/// <summary>
 	/// Creates an Intune configuration policy from a JSON file.
 	/// </summary>
-	/// <param name="account"></param>
-	/// <param name="jsonFilePath"></param>
 	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static async Task<string?> CreateConfigurationPolicyFromJson(AuthenticatedAccounts account, string jsonFilePath)
@@ -1377,7 +1368,6 @@ DeviceEvents
 	/// <summary>
 	/// Retrieves Device Health Scripts (for Managed Installer policies).
 	/// </summary>
-	/// <param name="account"></param>
 	internal static async Task<List<DeviceHealthScript>> RetrieveDeviceHealthScripts(AuthenticatedAccounts account)
 	{
 		List<DeviceHealthScript> allScripts = [];
@@ -1434,7 +1424,6 @@ DeviceEvents
 	/// <summary>
 	/// Creates the specific Managed Installer policy/script in Intune.
 	/// </summary>
-	/// <param name="account"></param>
 	/// <returns>The ID of the created policy</returns>
 	internal static async Task<string?> CreateManagedInstallerPolicy(AuthenticatedAccounts account)
 	{
@@ -1497,8 +1486,6 @@ DeviceEvents
 	/// <summary>
 	/// Deletes a Managed Installer policy (device health script).
 	/// </summary>
-	/// <param name="account"></param>
-	/// <param name="policyId"></param>
 	internal static async Task DeleteManagedInstallerPolicy(AuthenticatedAccounts? account, string policyId)
 	{
 		if (account is null) return;

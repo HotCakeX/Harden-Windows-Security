@@ -366,8 +366,6 @@ internal sealed partial class MergePoliciesVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the button that removes Signing Scenario from policies.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(UIElement))]
 	internal async void RemoveSigningScenario(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
 	{

@@ -27,7 +27,6 @@ internal static class RemoveSigningScenarios
 	/// Removes the User-mode signing scenario block completely, as well as any associated Signers and other elements
 	/// From an App Control policy object.
 	/// </summary>
-	/// <param name="policyObj"></param>
 	internal static SiPolicy.SiPolicy RemoveUserMode(SiPolicy.SiPolicy policyObj)
 	{
 		// Signers that reference the User-Mode signing scenario
@@ -100,7 +99,6 @@ internal static class RemoveSigningScenarios
 	/// Removes the Kernel-mode signing scenario block completely, as well as any associated Signers and other elements
 	/// From an App Control policy object.
 	/// </summary>
-	/// <param name="policyObj"></param>
 	internal static SiPolicy.SiPolicy RemoveKernelMode(SiPolicy.SiPolicy policyObj)
 	{
 		// Signers that reference the Kernel-Mode signing scenario

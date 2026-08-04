@@ -1761,8 +1761,6 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// <summary>
 	/// Event handler for when the ListView is loaded - store reference and sync selection
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(ListViewBase))]
 	internal void MainListView_Loaded(object sender, RoutedEventArgs e)
 	{
@@ -1774,8 +1772,6 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 	/// Event handler for the SelectionChanged event of the ListView.
 	/// Triggered by <see cref="SelectAll_Click(object, RoutedEventArgs)"/> and <see cref="RemoveSelections_Click(object, RoutedEventArgs)"/> to keep things consistent.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void MainListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		if (_isUpdatingSelection) return;

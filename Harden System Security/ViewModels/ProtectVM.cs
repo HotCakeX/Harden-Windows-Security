@@ -206,8 +206,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// This is invoked from the ListView item's context menu (Tag carries the bound MUnit).
 	/// Deletes a single MUnit from both the preview ObservableCollection and its backing list.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void DeleteDeviceIntentPreviewItem_Click(object sender, RoutedEventArgs e)
 	{
@@ -224,8 +222,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Swipe Control's delete action event handler to delete an item from the ListView.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	internal void DeleteDeviceIntentPreviewItem_SwipeInvoked(SwipeItem sender, SwipeItemInvokedEventArgs args)
 	{
@@ -556,7 +552,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Disables/Enables all animated buttons in this page.
 	/// </summary>
-	/// <param name="enable"></param>
 	private void EnableDisableAnimatedButtons(bool enable)
 	{
 		IsApplyButtonEnabled = enable;
@@ -708,8 +703,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the SelectionChanged event of the ListView.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		if (IsAdding) return;
@@ -737,8 +730,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// When the ListView is loaded or page is navigated to/from, this runs to check all of the items that were previously checked.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal void ProtectionCategoriesListView_Loaded(object sender, RoutedEventArgs e)
 	{
@@ -764,7 +755,6 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Generates Protection categories based on the selected preset.
 	/// </summary>
-	/// <param name="Preset"></param>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	private List<ProtectionCategoryListViewItem> GenerateCategories(int Preset)
 	{

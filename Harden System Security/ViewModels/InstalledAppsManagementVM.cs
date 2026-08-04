@@ -249,8 +249,6 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// <summary>
 	/// Event handler for when the ListView is loaded - store reference and sync selection
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(ListViewBase))]
 	internal void MainListView_Loaded(object sender, RoutedEventArgs e)
 	{
@@ -356,8 +354,6 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// For De-selecting all items on the UI. Will automatically trigger <see cref="MainListView_SelectionChanged"/> method as well,
 	/// Removing the items from <see cref="AppsListItemsSourceSelectedItems"/>.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void RemoveSelectionsMenuFlyoutItem_Click()
 	{
 		AppsListItemsSourceSelectedItems.Clear();
@@ -369,8 +365,6 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// Event handler for the SelectionChanged event of the ListView.
 	/// Triggered by <see cref="SelectAllMenuFlyoutItem_Click(object, RoutedEventArgs)"/> and <see cref="RemoveSelectionsMenuFlyoutItem_Click(object, RoutedEventArgs)"/> to keep things consistent.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void MainListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
 		// Skip processing if we're currently restoring selection to prevent recursion
@@ -1105,7 +1099,6 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// <summary>
 	/// The main method that actually uninstalls an app.
 	/// </summary>
-	/// <param name="package"></param>
 	/// <returns>true if error occurred, false if OK</returns>
 	private async Task<bool> UninstallApp(PackagedAppView package)
 	{

@@ -27,7 +27,6 @@ internal static partial class GetFileHashes
 	/// Takes an App Control policy and returns all of the Hashes in the Hash rules.
 	/// The method is intentionally not made to handle Allow all rules since checking for their existence happens in the main method in Simulation.
 	/// </summary>
-	/// <param name="policyObj"></param>
 	internal static HashSet<string> Get(SiPolicy.SiPolicy policyObj)
 	{
 		// Create an empty HashSet to store the output

@@ -668,8 +668,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <summary>
 	/// Creates the base policy responsible for blocking a large number of RMMs, Remote Monitoring and Management software.
 	/// </summary>
-	/// <param name="IsAudit"></param>
-	/// <param name="deploy"></param>
 	internal static PolicyFileRepresent BuildRMMBlocking(bool IsAudit, bool deploy)
 	{
 		const string fileName = "Blocking RMMs - Remote Monitor and Management";
@@ -701,8 +699,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <summary>
 	/// Creates the base policy for Downloads Defense Measures.
 	/// </summary>
-	/// <param name="IsAudit"></param>
-	/// <param name="deploy"></param>
 	internal static PolicyFileRepresent BuildDownloadsDefenseMeasures(bool IsAudit, bool deploy)
 	{
 		const string fileName = "Downloads-Defense-Measures";
@@ -777,8 +773,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 	/// <summary>
 	/// Creates the base policy for blocking dangerous script hosts and engines.
 	/// </summary>
-	/// <param name="IsAudit"></param>
-	/// <param name="deploy"></param>
 	internal static PolicyFileRepresent BuildDangerousScriptBlockingPolicy(bool IsAudit, bool deploy)
 	{
 		const string fileName = "Dangerous-Script-Hosts-Blocking";

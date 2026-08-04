@@ -568,8 +568,6 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 	/// It undoes deletion actions in the reverse order they happened (Last-In, First-Out).
 	/// Only Single-picture deletions or duplicate-group deletions supported, not automated deletion of all duplicates because they can be too large.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	internal void Undo_Click(object sender, RoutedEventArgs e)
 	{
 		if (_undoStack.Count == 0) return;

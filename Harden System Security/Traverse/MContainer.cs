@@ -32,7 +32,6 @@ namespace HardenSystemSecurity.Traverse;
 /// Base type that provides a concrete Score property and a strongly-typed Items list.
 /// </summary>
 /// <typeparam name="TItem"></typeparam>
-/// <param name="items"></param>
 internal abstract class CategoryBase<TItem>(List<TItem> items)
 {
 	/// <summary>

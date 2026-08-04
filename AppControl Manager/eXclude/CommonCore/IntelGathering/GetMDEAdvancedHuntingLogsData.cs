@@ -30,7 +30,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// Ensures that each Audit or Blocked event has its correlated Signing information events grouped together.
 	/// CodeIntegrity and AppLocker logs are considered separately in each group of EtwActivityId.
 	/// </summary>
-	/// <param name="data"></param>
 	internal static HashSet<FileIdentity> Retrieve(List<MDEAdvancedHuntingData> data)
 	{
 
@@ -192,7 +191,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// <summary>
 	/// Method to safely set FileVersion from a nullable string
 	/// </summary>
-	/// <param name="versionString"></param>
 	private static Version? SetFileVersion(string? versionString)
 	{
 		_ = Version.TryParse(versionString, out Version? version);
@@ -202,7 +200,6 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// <summary>
 	/// Method to safely get an integer value from string
 	/// </summary>
-	/// <param name="data"></param>
 	private static int? GetIntValue(string? data) =>
 		 int.TryParse(data, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : null;
 

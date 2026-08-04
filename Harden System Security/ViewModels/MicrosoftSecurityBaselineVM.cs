@@ -239,8 +239,6 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// <summary>
 	/// Sorts the ListView based on the clicked header column tag.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
@@ -653,7 +651,6 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	/// Copies a single property of the currently selected verification result to the clipboard.
 	/// </summary>
 	/// <param name="sender">MenuFlyoutItem whose Tag corresponds to the property key.</param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyVerificationResultProperty_Click(object sender, RoutedEventArgs e)
 	{

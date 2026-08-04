@@ -586,7 +586,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the global Icons Style change event
 	/// </summary>
-	/// <param name="style"></param>
 	[DynamicWindowsRuntimeCast(typeof(Brush))]
 	internal void OnIconsStylesChanged(string? style)
 	{

@@ -1225,8 +1225,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// CTRL + C shortcut event handler
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	internal void CtrlC_Invoked_EventLogs(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
 		ListViewFlyoutMenuCopy_Click_EventLogs();
@@ -1236,8 +1234,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// CTRL + C shortcut event handler
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	internal void CtrlC_Invoked_LocalFiles(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
 		ListViewFlyoutMenuCopy_Click_LocalFiles();

@@ -62,11 +62,6 @@ internal sealed partial class UserConfiguration(
 	/// Sets user configuration settings to the JSON file
 	/// By default all params are null, so use named parameters when calling this method for easy invocation
 	/// </summary>
-	/// <param name="CertificateCommonName"></param>
-	/// <param name="CertificatePath"></param>
-	/// <param name="StrictKernelPolicyGUID"></param>
-	/// <param name="AutoUpdateCheck"></param>
-	/// <param name="SignedPolicyStage1RemovalTimes"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static UserConfiguration Set(
 	string? CertificateCommonName = null,
@@ -113,11 +108,6 @@ internal sealed partial class UserConfiguration(
 	/// <summary>
 	/// Removes the user configurations from the JSON file one by one using the provided parameters
 	/// </summary>
-	/// <param name="CertificateCommonName"></param>
-	/// <param name="CertificatePath"></param>
-	/// <param name="StrictKernelPolicyGUID"></param>
-	/// <param name="AutoUpdateCheck"></param>
-	/// <param name="SignedPolicyStage1RemovalTimes"></param>
 	internal static void Remove(
 	bool CertificateCommonName = false,
 	bool CertificatePath = false,
@@ -185,7 +175,6 @@ internal sealed partial class UserConfiguration(
 	/// <summary>
 	/// Parses the JSON string and returns a UserConfiguration object
 	/// </summary>
-	/// <param name="json"></param>
 	private static UserConfiguration ParseJson(string json)
 	{
 		using JsonDocument doc = JsonDocument.Parse(json);
@@ -253,7 +242,6 @@ internal sealed partial class UserConfiguration(
 	/// <summary>
 	/// Writes the UserConfiguration object to the JSON file
 	/// </summary>
-	/// <param name="userConfiguration"></param>
 	private static void WriteUserConfiguration(UserConfiguration userConfiguration)
 	{
 		string jsonString = JsonSerializer.Serialize(userConfiguration, UserConfigurationContext.Default.UserConfiguration);

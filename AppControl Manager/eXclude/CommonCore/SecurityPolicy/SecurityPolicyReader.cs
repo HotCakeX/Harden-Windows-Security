@@ -471,7 +471,6 @@ internal static class SecurityPolicyReader
 	/// <summary>
 	/// To get account name by RID using SAM APIs
 	/// </summary>
-	/// <param name="rid"></param>
 	private static unsafe string GetAccountNameByRid(uint rid)
 	{
 		try
@@ -705,7 +704,6 @@ internal static class SecurityPolicyReader
 	/// 1 => add an ACCESS_ALLOWED ACE for Anonymous SID with AccessMask exactly POLICY_LOOKUP_NAMES, without modifying any existing ACEs.
 	/// 0 => remove only ACEs for Anonymous SID whose AccessMask is exactly POLICY_LOOKUP_NAMES.
 	/// </summary>
-	/// <param name="value"></param>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static void LsaAnonymousNameLookupSetValue(int value)

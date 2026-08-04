@@ -600,7 +600,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// <summary>
 	/// If returns true, the signed policy can be removed
 	/// </summary>
-	/// <param name="policyID"></param>
 	private static bool VerifyRemovalEligibility(string policyID)
 	{
 		// When system was last reboot
@@ -777,8 +776,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// <summary>
 	/// Copy a single property of the current selection
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{
@@ -827,7 +824,6 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// <summary>
 	/// Finds the local CIP file path of a given policy, if it exists on the system.
 	/// </summary>
-	/// <param name="policyInfoObj"></param>
 	internal static string? GetLocalCIPFile(CiPolicyInfo? policyInfoObj)
 	{
 		string? output = null;

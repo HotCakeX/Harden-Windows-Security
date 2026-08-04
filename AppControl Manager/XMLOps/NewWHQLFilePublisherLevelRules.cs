@@ -54,7 +54,6 @@ internal static class NewWHQLFilePublisherLevelRules
 	/// Creates new Allow WHQLFilePublisher level rules in the SiPolicy object
 	/// Each rule includes the FileAttribs, Signers, AllowedSigners, and CiSigners (depending on kernel/user mode), EKU.
 	/// </summary>
-	/// <param name="policyObj"></param>
 	/// <param name="whqlFilePublisherSigners"> The WHQLFilePublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method.</param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateAllow(SiPolicy.SiPolicy policyObj, List<WHQLFilePublisherSignerCreator> whqlFilePublisherSigners)
@@ -178,7 +177,6 @@ internal static class NewWHQLFilePublisherLevelRules
 	/// Creates a new Deny WHQLFilePublisher level rule in the SiPolicy object.
 	/// Each rule includes the FileAttribs, Signers, DeniedSigners, and CiSigners (depending on kernel/user mode), EKU.
 	/// </summary>
-	/// <param name="policyObj"></param>
 	/// <param name="whqlFilePublisherSigners"> The WHQLFilePublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method.</param>
 	/// <returns>SiPolicy</returns>
 	internal static SiPolicy.SiPolicy CreateDeny(SiPolicy.SiPolicy policyObj, List<WHQLFilePublisherSignerCreator> whqlFilePublisherSigners)

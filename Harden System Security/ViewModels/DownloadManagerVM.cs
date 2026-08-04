@@ -3191,7 +3191,6 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	/// And if we do that, the shapes fall back to the default black fill; Therefore we normalize styled SVGs for preview rendering with this method.
 	/// class-based style properties are inlined onto the matching SVG elements before loading the preview, so the preview now keeps its intended colors.
 	/// </summary>
-	/// <param name="svgMarkup"></param>
 	private static string NormalizeSvgMarkupForSvgImageSource(string svgMarkup)
 	{
 		if (string.IsNullOrWhiteSpace(svgMarkup) || !svgMarkup.Contains("<style", StringComparison.OrdinalIgnoreCase))

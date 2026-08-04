@@ -265,8 +265,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 	/// <summary>
 	/// Copy a single property of the current selection
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{

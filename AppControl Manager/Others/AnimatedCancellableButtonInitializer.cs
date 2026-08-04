@@ -24,7 +24,6 @@ namespace AppControlManager.Others;
 /// Creates the necessary backing fields for XAML compiled bindings to store the animated cancellable button's states
 /// in the View Model so that it won't rely on the navigation cache to remember its important properties' values.
 /// </summary>
-/// <param name="buttonContent"></param>
 internal sealed partial class AnimatedCancellableButtonInitializer(string buttonContent) : ViewModelBase
 {
 

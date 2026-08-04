@@ -40,7 +40,6 @@ internal sealed partial class BitLocker : Page, CommonCore.UI.IPageHeaderProvide
 	/// OnNavigatedFrom indicates real page navigation (not transient Unloaded under TabView).
 	/// We explicitly dispose the special controls that were prevented from auto-disposal.
 	/// </summary>
-	/// <param name="e"></param>
 	protected override void OnNavigatedFrom(NavigationEventArgs e)
 	{
 		base.OnNavigatedFrom(e);

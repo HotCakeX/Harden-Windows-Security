@@ -92,7 +92,6 @@ internal static class RegistryPolicyParser
 	/// <summary>
 	/// Parses a .POL file from the specified file path.
 	/// </summary>
-	/// <param name="filePath"></param>
 	/// <exception cref="FileNotFoundException"></exception>
 	internal static RegistryPolicyFile ParseFile(string filePath)
 	{
@@ -236,8 +235,6 @@ internal static class RegistryPolicyParser
 	/// <summary>
 	/// Creates a .POL file.
 	/// </summary>
-	/// <param name="filePath"></param>
-	/// <param name="policyFile"></param>
 	internal static void WriteFile(string filePath, RegistryPolicyFile policyFile)
 	{
 		_ = ExecuteWithRetry(() =>

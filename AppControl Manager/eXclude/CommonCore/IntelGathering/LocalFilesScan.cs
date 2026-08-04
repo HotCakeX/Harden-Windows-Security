@@ -400,7 +400,6 @@ internal static class LocalFilesScan
 	/// Gets the EKU OIDs of the leaf certificates of all of the signers of a signed file, the ones that App Control policy uses for EKU-based authorization.
 	/// Only the leaf certificates have EKUs, others such as root or intermediate have KUs only.
 	/// </summary>
-	/// <param name="fileSigners"></param>
 	internal static List<string> GetOIDs(List<AllFileSigners> fileSigners)
 	{
 		List<string> output = [];
@@ -440,7 +439,6 @@ internal static class LocalFilesScan
 	/// <summary>
 	/// Determines whether a file has WHQL signer among all of its signers
 	/// </summary>
-	/// <param name="Collection"></param>
 	private static bool DetermineWHQL(X509ExtensionCollection Collection)
 	{
 		foreach (X509Extension ext in Collection)

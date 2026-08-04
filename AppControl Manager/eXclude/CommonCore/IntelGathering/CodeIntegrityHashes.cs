@@ -22,10 +22,6 @@ namespace CommonCore.IntelGathering;
 /// Used primarily by the internal methods.
 /// Use CodeIntegrityHashesV2 for more hash algorithms.
 /// </summary>
-/// <param name="sha1Page"></param>
-/// <param name="sha256Page"></param>
-/// <param name="sha1Authenticode"></param>
-/// <param name="sha256Authenticode"></param>
 internal sealed class CodeIntegrityHashes(
 	string? sha1Page,
 	string? sha256Page,

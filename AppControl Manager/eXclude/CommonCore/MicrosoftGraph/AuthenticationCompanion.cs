@@ -41,9 +41,6 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	/// <summary>
 	/// The constructor needs methods to run when the Active Account is updated
 	/// </summary>
-	/// <param name="updateButtons"></param>
-	/// <param name="infoBar"></param>
-	/// <param name="authContext"></param>
 	internal AuthenticationCompanion(Action<bool> updateButtons, InfoBarSettings infoBar, AuthenticationContext authContext)
 	{
 		_UpdateButtons = updateButtons;
@@ -104,8 +101,6 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	/// <summary>
 	/// To subscribe to the Saved Accounts Observable Collection's events to update the local instances automatically
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void AuthenticatedAccounts_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
 	{
 		// Determine the Shimmer/ListView visibility on every collection change event that is fired

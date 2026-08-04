@@ -457,8 +457,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// Event handler for when the main AppWindow size changes.
 	/// Throughout the app the AppWindow's size must be used, nothing else such as frame size, Window size etc.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	[DynamicWindowsRuntimeCast(typeof(Style))]
 	internal void MainWindow_SizeChanged(AppWindow sender, AppWindowChangedEventArgs args)
 	{
@@ -566,8 +564,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Ensures the TitleBar's text follows the app's appearance when the window is in and out of focus
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
 	{
 		if (args.WindowActivationState == WindowActivationState.Deactivated)
@@ -596,8 +592,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Event handler for the global NavigationView location change event
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void OnNavigationViewLocationChanged(object? sender, NavigationViewLocationChangedEventArgs e)
 	{
 		// Set the NavigationView's location based on the event
@@ -781,8 +775,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// Changing it during runtime is not possible without trigger a theme change: Light/Dark.
 	/// Application.RequestedTheme is read-only, so we use RootGrid which is the origin of all other elements.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void OnNavigationBackgroundChanged(object? sender, NavigationBackgroundChangedEventArgs e)
 	{
 		// Get the current theme
@@ -809,8 +801,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// Event handler for the global AppThemeChanged event
 	/// Also changes the AnimatedIcons based on the theme to maintain their accessibility
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void OnAppThemeChanged(object? sender, AppThemeChangedEventArgs e)
 	{
 		if (ViewModel.ForceDarkModeTheme)
@@ -942,8 +932,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// Event handler for the AppWindow Closing event.
 	/// Shows a confirmation dialog before closing the application.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
 	{
 		// If we should always ask for confirmation
@@ -1464,8 +1452,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Occurs each time an element is made ready for use, necessary for virtualization.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	[DynamicWindowsRuntimeCast(typeof(Control))]
 	[DynamicWindowsRuntimeCast(typeof(SwipeControl))]
 	[DynamicWindowsRuntimeCast(typeof(Grid))]
@@ -1832,7 +1818,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// The only method that should ever remove policies from the Sidebar Library.
 	/// </summary>
-	/// <param name="policyContext"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	private async Task ExecuteRemove(PolicyFileRepresent policyContext)
 	{
@@ -1885,7 +1870,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Opens a policy from the Sidebar's Library in the Policy Editor.
 	/// </summary>
-	/// <param name="policyContext"></param>
 	private static async Task ExecuteOpenInPolicyEditor(PolicyFileRepresent policyContext)
 	{
 		try
@@ -2005,8 +1989,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Event handler for right-click context menu option for each policy in the library.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void OnCopyPolicyID(object sender, RoutedEventArgs e)
 	{
 		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
@@ -2018,8 +2000,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Event handler for right-click context menu option for each policy in the library.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void OnCopyBasePolicyID(object sender, RoutedEventArgs e)
 	{
 		if (sender is FrameworkElement { DataContext: PolicyFileRepresent policyContext })
@@ -2031,8 +2011,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Event handler for setting the tag color of a policy in the sidebar library.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private async void OnSetPolicyColorClicked(object sender, RoutedEventArgs e)
 	{
 		if (sender is MenuFlyoutItem { Tag: string colorTag, DataContext: PolicyFileRepresent policyContext })
@@ -2099,8 +2077,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Event handler for when policies are dragged over the Sidebar's policies library.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void OnSidebarDragOver(object sender, DragEventArgs e)
 	{
 		e.AcceptedOperation = Windows.ApplicationModel.DataTransfer.DataPackageOperation.None;
@@ -2115,8 +2091,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Event handler for when policies are dropped over the Sidebar's policies library.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	private async void OnSidebarDrop(object sender, DragEventArgs e)
 	{
@@ -2266,8 +2240,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// Event handler for the Ctrl+F keyboard accelerator.
 	/// Focuses the search box when the accelerator is invoked.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	private void SearchAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
 		_ = TitleBarSearchBox.Focus(FocusState.Programmatic);

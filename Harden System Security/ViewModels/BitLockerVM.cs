@@ -72,7 +72,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// This is used to apply the BitLocker category before enabling BitLocker encryption for any drive.
 	/// Ensures the correct policies are in place in order to use enhanced security features of BitLocker.
 	/// </summary>
-	/// <param name="cancellationToken"></param>
 	private async Task ApplyAllBitLockerSecurityMeasuresAsync(CancellationToken? cancellationToken = null)
 	{
 		bool errorsOccurred = false;
@@ -418,8 +417,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// <summary>
 	/// Copy a single property of the current selection
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyVolumeProperty_Click(object sender, RoutedEventArgs e)
 	{
@@ -438,8 +435,6 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	/// <summary>
 	/// Copy event handler for individual key protectors.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void CopyKeyProtector_Click(object sender, RoutedEventArgs e)
 	{

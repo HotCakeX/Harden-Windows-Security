@@ -37,7 +37,6 @@ internal static partial class Atlas
 	/// <summary>
 	/// This method is responsible for retrieving localized strings from the SecurityMeasures for Security measures' friendly name field based on a key.
 	/// </summary>
-	/// <param name="key"></param>
 	internal static string GetSecurityStr(string key)
 	{
 		try
@@ -55,7 +54,6 @@ internal static partial class Atlas
 	/// <summary>
 	/// This method is responsible for retrieving localized strings from the resource files based on a key.
 	/// </summary>
-	/// <param name="key"></param>
 	internal static string GetStr(string key)
 	{
 		try

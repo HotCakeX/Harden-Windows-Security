@@ -48,7 +48,6 @@ internal static class CiFileHash
 	/// A method that only outputs the hashes used primarily by the app.
 	/// Needs to remain as fast as possible since it's called in tight loops.
 	/// </summary>
-	/// <param name="filePath"></param>
 	internal static CodeIntegrityHashes GetCiFileHashes(string filePath)
 	{
 		using FileStream fileStream = File.OpenRead(filePath);
@@ -440,9 +439,6 @@ internal static class CiFileHash
 	/// <summary>
 	/// Helper method for BCryptGetProperty
 	/// </summary>
-	/// <param name="hObject"></param>
-	/// <param name="propertyName"></param>
-	/// <param name="value"></param>
 	private static bool BCryptGetProperty(IntPtr hObject, string propertyName, out uint value)
 	{
 		value = 0;
@@ -466,8 +462,6 @@ internal static class CiFileHash
 	/// <summary>
 	/// a method to get the hash of the first page of a file as a hexadecimal string
 	/// </summary>
-	/// <param name="algName"></param>
-	/// <param name="fileName"></param>
 	private static unsafe string? GetPageHash(string algName, string fileName)
 	{
 		// initialize the buffer pointer to zero
@@ -511,7 +505,6 @@ internal static class CiFileHash
 	/// <summary>
 	/// Calculates Flat file hashes.
 	/// </summary>
-	/// <param name="fileName"></param>
 	/// <exception cref="InvalidOperationException"></exception>
 	private static unsafe (string?, string?) GetFlatHash(string fileName)
 	{

@@ -23,9 +23,6 @@ namespace CommonCore.Others;
 /// <summary>
 /// Defines a Windows Firewall rule.
 /// </summary>
-/// <param name="name"></param>
-/// <param name="direction"></param>
-/// <param name="action"></param>
 internal sealed class FirewallRule(string name, string direction, string action)
 {
 	[JsonInclude]
@@ -49,7 +46,6 @@ internal sealed class FirewallRule(string name, string direction, string action)
 	/// <summary>
 	/// Extract only the file path from a name shaped like: Prefix-<file path>-Suffix
 	/// </summary>
-	/// <param name="s"></param>
 	private static string GetDisplayName(string s)
 	{
 		if (string.IsNullOrWhiteSpace(s))

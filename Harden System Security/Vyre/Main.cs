@@ -1310,8 +1310,6 @@ internal static partial class CabinetArchiveExtractor
 	/// <summary>
 	/// Not used anywhere at the moment, we process everything in the memory.
 	/// </summary>
-	/// <param name="cabinetFilePath"></param>
-	/// <param name="extractionRootDirectoryPath"></param>
 	internal static void ExtractCabinet(string cabinetFilePath, string extractionRootDirectoryPath)
 	{
 		_ = Directory.CreateDirectory(extractionRootDirectoryPath);

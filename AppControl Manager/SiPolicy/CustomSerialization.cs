@@ -874,10 +874,6 @@ internal static class CustomSerialization
 	/// <summary>
 	/// Helper method, its return value must be checked by the caller and handled accordingly
 	/// </summary>
-	/// <param name="doc"></param>
-	/// <param name="parent"></param>
-	/// <param name="name"></param>
-	/// <param name="value"></param>
 	private static bool AppendTextElement(XmlDocument doc, XmlElement parent, string name, string? value)
 	{
 		if (!string.IsNullOrEmpty(value))
@@ -894,11 +890,6 @@ internal static class CustomSerialization
 	/// <summary>
 	/// Helper method, its return value must be checked by the caller and handled accordingly
 	/// </summary>
-	/// <param name="doc"></param>
-	/// <param name="parent"></param>
-	/// <param name="name"></param>
-	/// <param name="attribute"></param>
-	/// <param name="value"></param>
 	private static bool AppendAttributeElement(XmlDocument doc, XmlElement parent, string name, string attribute, string? value)
 	{
 		if (!string.IsNullOrEmpty(value))

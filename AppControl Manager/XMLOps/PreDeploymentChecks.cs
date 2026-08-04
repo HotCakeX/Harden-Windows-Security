@@ -27,7 +27,6 @@ internal static partial class PreDeploymentChecks
 	/// <summary>
 	/// Takes an <see cref="SiPolicy.SiPolicy"/> and checks whether it has an allow all rule.
 	/// </summary>
-	/// <param name="policyObj"></param>
 	internal static bool CheckForAllowAll(SiPolicy.SiPolicy policyObj)
 	{
 		// Check if the policy contains any FileRules
@@ -46,7 +45,6 @@ internal static partial class PreDeploymentChecks
 	/// Throws an error if the system has a deployed Signed policy with the same PolicyID as the PolicyID of the PolicyObj that is provided to the method.
 	/// We use it to make sure we don't deploy an Unsigned policy to the local system while there is already a Signed policy with the same PolicyID deployed.
 	/// </summary>
-	/// <param name="policyObj"></param>
 	internal static void CheckForSignatureConflict(SiPolicy.SiPolicy policyObj)
 	{
 		// If the policy is indeed Unsigned

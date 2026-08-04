@@ -571,9 +571,6 @@ internal static partial class CIManager
 		/// Upsert (add/update) via prefixed wrapper that takes the management 'this' pointer.
 		/// Native signature: __int64 __fastcall ManageCI_BeginUpsertCIPolicy(CodeIntegrity::Management* a1, BYTE* a2, unsigned int a3)
 		/// </summary>
-		/// <param name="managementThis"></param>
-		/// <param name="policyBytes"></param>
-		/// <param name="size"></param>
 		[LibraryImport("ManageCI")]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 		internal static partial int ManageCI_BeginUpsertCIPolicy(void* managementThis, void* policyBytes, uint size);

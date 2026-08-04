@@ -60,9 +60,6 @@ internal static class SignerAndHashBuilder
 	/// <param name="data">The Data to be processed. These are the logs selected by the user and contain both signed and unsigned data.</param>
 	/// <param name="level"><see cref="ScanLevels"/></param>
 	/// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g., when sandboxing-like behavior using Macros and AppIDs are used.</param>
-	/// <param name="folderPaths"></param>
-	/// <param name="customFileRulePatterns"></param>
-	/// <param name="packageFamilyNames"></param>
 	internal static FileBasedInfoPackage BuildSignerAndHashObjects(
 	List<FileIdentity>? data = null,
 	IReadOnlyCollection<string>? folderPaths = null,

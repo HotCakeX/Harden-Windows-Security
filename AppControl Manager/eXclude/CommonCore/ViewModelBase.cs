@@ -64,7 +64,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// </summary>
 	/// <param name="field">The existing value.</param>
 	/// <param name="newValue">The new value.</param>
-	/// <param name="propertyName"></param>
 	internal protected bool SP<T>(ref T field, T newValue, [CallerMemberName] string? propertyName = null)
 	{
 		if (EqualityComparer<T>.Default.Equals(field, newValue))
@@ -88,9 +87,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// Only for properties that are nullable texts.
 	/// This plays typewriter audio if Sound is enabled in the app settings.
 	/// </summary>
-	/// <param name="field"></param>
-	/// <param name="newValue"></param>
-	/// <param name="propertyName"></param>
 	internal protected bool SPT(ref string? field, string? newValue, [CallerMemberName] string? propertyName = null)
 	{
 		if (string.Equals(field, newValue, StringComparison.Ordinal))
@@ -334,7 +330,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <summary>
 	/// Opens the directory where a file is located in File Explorer.
 	/// </summary>
-	/// <param name="ListViewKey"></param>
 	internal static void OpenInFileExplorer(ListViewHelper.ListViewsRegistry ListViewKey)
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewKey);
@@ -390,7 +385,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	/// <summary>
 	/// Opens a file in the default file handler in the OS.
 	/// </summary>
-	/// <param name="filePath"></param>
 	internal static async Task OpenFileInDefaultFileHandler(string? filePath)
 	{
 		try
@@ -494,7 +488,6 @@ internal static class PropertyChangeExtensions
 	/// </summary>
 	/// <param name="field">The existing value.</param>
 	/// <param name="newValue">The new value.</param>
-	/// <param name="propertyName"></param>
 	internal static bool SP<T>(this INPCImplant host, ref T field, T newValue, [CallerMemberName] string? propertyName = null)
 	{
 		if (EqualityComparer<T>.Default.Equals(field, newValue))

@@ -256,7 +256,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// <summary>
 	/// Fetches the assignments for the selected policy
 	/// </summary>
-	/// <param name="policy"></param>
 	internal async Task<List<PolicyAssignmentDisplay>> GetPolicyAssignments(CiPolicyInfo policy)
 	{
 		try
@@ -475,8 +474,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// <summary>
 	/// Copy a single property of the current selection
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
 	internal void CopyPolicyProperty_Click(object sender, RoutedEventArgs e)
 	{

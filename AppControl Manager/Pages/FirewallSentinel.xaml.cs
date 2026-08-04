@@ -80,8 +80,6 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 	/// <summary>
 	/// Cleanup resources when the page is unloaded to prevent memory leaks.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	private void FirewallSentinel_Unloaded(object sender, RoutedEventArgs e)
 	{
 		foreach (NeonBorderVisuals visual in _neonVisualsMap.Values)
@@ -96,8 +94,6 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 	/// <summary>
 	/// Called when the Inner overlay grid is loaded
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="e"></param>
 	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void Card_Loaded(object sender, RoutedEventArgs e)
 	{

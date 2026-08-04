@@ -36,7 +36,6 @@ internal static class FileTrustChecker
 	/// <summary>
 	/// Function to check the trust of a given file path
 	/// </summary>
-	/// <param name="filePath"></param>
 	/// <exception cref="FileNotFoundException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static unsafe FileTrustResult CheckFileTrust(string filePath)

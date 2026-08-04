@@ -26,7 +26,6 @@ internal static class XmlFilePathExtractor
 	/// <summary>
 	/// Extracts all the file paths from the Allow rules in an App Control policy
 	/// </summary>
-	/// <param name="policyObj"></param>
 	internal static HashSet<string> GetFilePaths(SiPolicy.SiPolicy policyObj)
 	{
 		HashSet<string> filePaths = new(StringComparer.OrdinalIgnoreCase);

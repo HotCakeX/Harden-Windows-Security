@@ -24,9 +24,6 @@ namespace HardenSystemSecurity.Protect;
 /// <summary>
 /// Type used by the ListView in the Protect page.
 /// </summary>
-/// <param name="title"></param>
-/// <param name="subTitle"></param>
-/// <param name="logo"></param>
 /// <param name="subCategories">Any sub-categories that the main category might be using.</param>
 internal sealed class ProtectionCategoryListViewItem(
 	Categories category,

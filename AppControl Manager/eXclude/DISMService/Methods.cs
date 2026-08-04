@@ -705,7 +705,6 @@ internal static class Methods
 	/// <summary>
 	/// Checks whether a feature or capability is enabled or disabled
 	/// </summary>
-	/// <param name="obj"></param>
 	internal static bool IsEnabled(DISMOutput? obj)
 	{
 		if (obj is null)

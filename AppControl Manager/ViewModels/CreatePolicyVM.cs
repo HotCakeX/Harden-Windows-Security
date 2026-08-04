@@ -696,7 +696,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 	/// <summary>
 	/// The method used to open the <see cref="CreatePolicy"/> page from other parts of the application.
 	/// </summary>
-	/// <param name="type"></param>
 	internal async Task OpenInCreatePolicy(LaunchProtocolActions type)
 	{
 		try

@@ -29,8 +29,6 @@ internal static class AddSigningDetails
 	/// Regardless of how many chains a certificate contains, only the leaf certificate will be used.
 	/// It will also remove the unsigned policy rule option.
 	/// </summary>
-	/// <param name="policyObject"></param>
-	/// <param name="certificateFile"></param>
 	internal static SiPolicy.SiPolicy Add(SiPolicy.SiPolicy policyObject, string certificateFile)
 	{
 		// Create a certificate object from the .cer file

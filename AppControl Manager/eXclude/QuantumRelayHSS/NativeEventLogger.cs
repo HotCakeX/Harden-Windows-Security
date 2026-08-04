@@ -33,8 +33,6 @@ internal static class NativeEventLogger
 	/// Used to write logs to Windows Event Logs when the log can't be sent to the client because
 	/// the client is unavailable or the log need to be written before client is connected or after it is disconnected.
 	/// </summary>
-	/// <param name="message"></param>
-	/// <param name="type"></param>
 	internal static void WriteEntry(string message, EventLogEntryType type)
 	{
 		try

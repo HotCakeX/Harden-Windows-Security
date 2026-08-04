@@ -89,7 +89,6 @@ internal sealed class NavigationService
 	/// Event handler to change visibility of the AnimatedIcons on the currently visible page in the frame
 	/// It is called by the Sidebar's Browse/Clear buttons' event handlers
 	/// </summary>
-	/// <param name="on"></param>
 	internal void AffectPagesAnimatedIconsVisibilitiesEx(bool on)
 	{
 		// Decide the visibility to set the animated icons to based on the parameter
@@ -141,8 +140,6 @@ internal sealed class NavigationService
 	/// Main navigation method that is used by the search bar, direct clicks on the main navigation items
 	/// And by other methods throughout the app in order to navigate to sub-pages
 	/// </summary>
-	/// <param name="navPageType"></param>
-	/// <param name="navItemTag"></param>
 	/// <param name="targetId">Optional ID of an item to scroll to on the target page.</param>
 	internal async Task Navigate(Type? navPageType, string? navItemTag = null, Guid? targetId = null)
 	{
@@ -280,7 +277,6 @@ internal sealed class NavigationService
 	/// <summary>
 	/// Updates the BreadCrumbBar in response to a page navigation in the app.
 	/// </summary>
-	/// <param name="currentPageType"></param>
 	private void SetCrumbBar(Type currentPageType)
 	{
 		// Get the item from BreadCrumb dictionary that belongs to the next page we navigated to
@@ -341,8 +337,6 @@ internal sealed class NavigationService
 	/// which is necessary if the same main page is selected but user has navigated to inner pages and then wants to go back by selecting the already selected main navigation item again.
 	/// The duplicate-loading logic is implemented manually in code behind.
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	internal async void MainNavigation_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs? args)
 	{
 		try
@@ -407,8 +401,6 @@ internal sealed class NavigationService
 	/// <summary>
 	/// Event handler for when a suggestion is chosen in the AutoSuggestBox
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	internal async void SearchBox_SuggestionChosen(AutoSuggestBox sender, AutoSuggestBoxSuggestionChosenEventArgs args)
 	{
 		UnifiedSearchBarResult result = (UnifiedSearchBarResult)args.SelectedItem;
@@ -520,8 +512,6 @@ internal sealed class NavigationService
 	/// <summary>
 	/// Event handler for the BreadCrumbBar's ItemClicked event
 	/// </summary>
-	/// <param name="sender"></param>
-	/// <param name="args"></param>
 	internal async void BreadcrumbBar_ItemClicked(BreadcrumbBar sender, BreadcrumbBarItemClickedEventArgs args)
 	{
 		Crumb crumb = (Crumb)args.Item;

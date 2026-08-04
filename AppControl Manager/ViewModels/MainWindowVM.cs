@@ -623,19 +623,18 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 							string uniqueID = Path.GetFileNameWithoutExtension(file);
 
 							byte[] fileBytes = await File.ReadAllBytesAsync(file);
-							bool isFileEncrypted = false;
-							byte[]? decryptedBytes = null;
-							byte[]? plainContentForParsing = null;
+							// Non-null when the file on disk was encrypted and was decrypted successfully, null when the file is plain text.
+							byte[]? decryptedBytes;
+							byte[] plainContentForParsing;
 
 							// Try to decrypt the file content to check its state
 							try
 							{
 								decryptedBytes = ProtectedData.Unprotect(fileBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
-								isFileEncrypted = true;
 							}
 							catch (CryptographicException)
 							{
-								isFileEncrypted = false;
+								decryptedBytes = null;
 							}
 
 							// Ensure the file on disk matches the 'shouldEncrypt' setting.
@@ -643,7 +642,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 							// Setting: Encrypt
 							if (AppSettings.EncryptPoliciesLibrary)
 							{
-								if (isFileEncrypted)
+								if (decryptedBytes is not null)
 								{
 									// Setting: Encrypt
 									// File: Encrypted.
@@ -675,7 +674,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 							else
 							{
 								// Setting: Decrypt (Plain)
-								if (isFileEncrypted)
+								if (decryptedBytes is not null)
 								{
 									// Setting: Plain
 									// File: Encrypted.
@@ -684,7 +683,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 									{
 										if (File.Exists(file))
 											File.Delete(file);
-										await File.WriteAllBytesAsync(file, decryptedBytes!);
+										await File.WriteAllBytesAsync(file, decryptedBytes);
 									}
 									catch (Exception ex)
 									{
@@ -705,7 +704,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 
 							// Create XML doc from the file's bytes
 							XmlDocument xmlDocument = new();
-							using MemoryStream stream = new(plainContentForParsing!);
+							using MemoryStream stream = new(plainContentForParsing);
 							xmlDocument.Load(stream);
 
 							PolicyFileRepresent policyToAdd = new(Management.Initialize(null, xmlDocument))

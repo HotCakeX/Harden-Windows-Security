@@ -27,8 +27,7 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial nint show_file_picker(
@@ -39,8 +38,7 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial StringArrayForFileDialogHelper show_files_picker(
@@ -51,8 +49,7 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial nint show_folder_picker(
@@ -62,8 +59,7 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial StringArrayForFileDialogHelper show_folders_picker(
@@ -73,8 +69,7 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop")]
 #endif
 	internal static partial void free_string(nint s);
@@ -82,8 +77,7 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop")]
 #endif
 	internal static partial void free_string_array(StringArrayForFileDialogHelper arr);
@@ -91,8 +85,7 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf16)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf16)]
 #endif
 	internal static partial int launch_app(
@@ -104,8 +97,7 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop")]
 #endif
 	internal static partial int update_taskbar_progress(
@@ -114,12 +106,10 @@ internal static unsafe partial class NativeMethods
 			ulong total,
 			out int lastError);
 
-
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial nint show_save_file_dialog(
@@ -131,38 +121,31 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial nint scan_directory_via_interop(string directoryPath);
 
-
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial nint scan_file_via_interop(string filePath);
 
-
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop")]
 #endif
 	internal static partial void release_analysis_results(nint results);
 
-
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop")]
 #endif
 	internal static partial nint detect_system_gpus();
@@ -170,18 +153,15 @@ internal static unsafe partial class NativeMethods
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop")]
 #endif
 	internal static partial void release_gpu_information(nint results);
 
-
 #if DEBUG
 	[LibraryImport("RustInterop/rust_interop.dll", StringMarshalling = StringMarshalling.Utf8)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
-#endif
-#if !DEBUG
+#else
 	[LibraryImport("rust_interop", StringMarshalling = StringMarshalling.Utf8)]
 #endif
 	internal static partial int launch_unelevated(

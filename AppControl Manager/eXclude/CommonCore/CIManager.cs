@@ -494,7 +494,7 @@ internal static partial class CIManager
 			//    committing each queued operation via their stored 'TransactionHandle::commit' functions.
 			//  - For each commit, instruments telemetry (InstrumentCommitCiPolicy / InstrumentCommitSbcpToken).
 			//  - If any set had items, calls NtSetSystemInformation(SystemContextSwitchInformation|0x80, ...)
-			//    — the same kernel notification CiTool uses to apply the changes.
+			//    - the same kernel notification CiTool uses to apply the changes.
 			//  - Clears the transaction sets and stops the telemetry activity.
 			int hrCommit = NativeMethods.ManageCI_Commit();
 			if (hrCommit != 0)

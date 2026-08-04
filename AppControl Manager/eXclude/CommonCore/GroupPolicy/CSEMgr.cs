@@ -136,31 +136,28 @@ internal sealed partial class GroupPolicyObject : IDisposable
 	public GroupPolicyObject()
 	{
 		// Try to initialize COM, but handle the case where it's already initialized
-		bool shouldUninitialize;
 		int hr = NativeMethods.CoInitializeEx(IntPtr.Zero, CSEMgr.COINIT_APARTMENTTHREADED);
 
 		if (hr == CSEMgr.S_OK)
 		{
 			// COM was successfully initialized by us
-			shouldUninitialize = true;
+			_shouldUninitializeCom = true;
 		}
 		else if (hr == CSEMgr.RPC_E_CHANGED_MODE)
 		{
 			// COM is already initialized in a different mode, continue without uninitializing
-			shouldUninitialize = false;
+			_shouldUninitializeCom = false;
 		}
 		else if (hr == CSEMgr.S_FALSE)
 		{
 			// COM is already initialized in the same mode, don't uninitialize
-			shouldUninitialize = false;
+			_shouldUninitializeCom = false;
 		}
 		else
 		{
 			// Some other COM initialization error
 			throw new InvalidOperationException(string.Format(Atlas.GetStr("FailedToInitializeCOMError"), hr));
 		}
-
-		_shouldUninitializeCom = shouldUninitialize;
 
 		try
 		{

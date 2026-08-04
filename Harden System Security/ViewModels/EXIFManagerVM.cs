@@ -1702,7 +1702,7 @@ internal static class EXIFScrubber
 	}
 
 	// Source: https://www.color.org/specification/ICC.1-2001-04.pdf
-	// Page 63: 6.5.26 XYZType - Table 78 — XYZType encoding
+	// Page 63: 6.5.26 XYZType - Table 78 - XYZType encoding
 	private static string ParseIccXyz(ReadOnlySpan<byte> data)
 	{
 		if (data.Length < 20) return "(Binary data)";

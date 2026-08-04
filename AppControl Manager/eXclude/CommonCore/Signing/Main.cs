@@ -282,9 +282,6 @@ internal static class Main
 								   string? timestampUrl = null,
 								   bool enablePageHashing = false)
 	{
-		if (string.IsNullOrEmpty(FilePath))
-			throw new ArgumentNullException(nameof(FilePath));
-
 		ArgumentNullException.ThrowIfNull(signingCertificate);
 
 		if (!signingCertificate.HasPrivateKey)
@@ -435,11 +432,6 @@ internal static class Main
 										X509Certificate2 signingCertificate,
 										string? timestampUrl = null)
 	{
-		if (string.IsNullOrEmpty(FilePath))
-			throw new ArgumentNullException(nameof(FilePath));
-
-		ArgumentNullException.ThrowIfNull(signingCertificate);
-
 		if (!signingCertificate.HasPrivateKey)
 			throw new ArgumentException(Atlas.GetStr("CertificateMustHavePrivateKey"), nameof(signingCertificate));
 
@@ -645,7 +637,7 @@ internal static class Main
 	/// <summary>
 	/// Signs normal PEs and scripts.
 	/// </summary>
-	internal static void SignPEs(List<string> FilePaths, X509Certificate2? Cert, string? CertCN, string? timestampUrl, bool EnablePageHashing)
+	internal static void SignPEs(IEnumerable<string> FilePaths, X509Certificate2? Cert, string? CertCN, string? timestampUrl, bool EnablePageHashing)
 	{
 		try
 		{

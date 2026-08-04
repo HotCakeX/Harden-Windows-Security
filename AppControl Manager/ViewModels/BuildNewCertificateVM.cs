@@ -245,7 +245,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 				MainInfoBar.WriteInfo($"Signing {files.Item2} files...");
 
 				CommonCore.Signing.Main.SignPEs(
-					FilePaths: files.Item1.ToList(),
+					FilePaths: files.Item1,
 					Cert: null,
 					CertCN: SigningCertificateCNToUseForSigning,
 					timestampUrl: timestampUrl,

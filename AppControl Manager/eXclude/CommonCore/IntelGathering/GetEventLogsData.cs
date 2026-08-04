@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.IO;
@@ -582,7 +583,7 @@ internal static class GetEventLogsData
 			}
 
 			if (TryParseOidFromBytes(hex.Slice(oidStart, oidHexChars), out string? oid))
-				result.Add(oid!);
+				result.Add(oid);
 			else
 			{
 				result.Clear();
@@ -607,7 +608,7 @@ internal static class GetEventLogsData
 		return byte.TryParse(hex.Slice(start, 2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out value);
 	}
 
-	private static bool TryParseOidFromBytes(ReadOnlySpan<char> oidHexBytes, out string? oid)
+	private static bool TryParseOidFromBytes(ReadOnlySpan<char> oidHexBytes, [NotNullWhen(true)] out string? oid)
 	{
 		oid = null;
 		if (oidHexBytes.IsEmpty || (oidHexBytes.Length % 2) != 0)
@@ -1090,16 +1091,14 @@ internal static class GetEventLogsData
 			return null;
 		}
 
-		string value = valueSpan.ToString();
-
 		// If the string is just whitespace, return null to match the original behavior of string.IsNullOrWhiteSpace check on InnerText.
-		if (string.IsNullOrWhiteSpace(value))
+		if (valueSpan.IsWhiteSpace())
 		{
 			return null;
 		}
 
 		// Decode XML entities (e.g., &amp; -> &) to ensure parity with XmlDocument
-		return WebUtility.HtmlDecode(value);
+		return WebUtility.HtmlDecode(valueSpan.ToString());
 	}
 
 	/// <summary>

@@ -1,0 +1,7 @@
+* Completed the following feature request by adding file path rule creation support to both Event logs and MDE Advanced Hunting policy creation: https://github.com/HotCakeX/Harden-Windows-Security/issues/1181
+
+* Updated dependencies to the latest versions.
+
+* Improved memory management of the application.
+
+* JSON exports across the app are now much faster.

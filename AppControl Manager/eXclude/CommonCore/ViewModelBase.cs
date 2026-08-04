@@ -155,6 +155,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		new("File Publisher", ScanLevels.FilePublisher, 4, BuildFallbackChain("Publisher", "Hash")),
 		new("Publisher", ScanLevels.Publisher, 3, BuildFallbackChain("Hash")),
 		new("Hash", ScanLevels.Hash, 5, BuildFallbackChain("No Fallback")),
+		new("File Path", ScanLevels.FilePath, 2, BuildFallbackChain("No Fallback")),
 		new("File Name", ScanLevels.FileName, 2, BuildFallbackChain("Hash"))
 	];
 

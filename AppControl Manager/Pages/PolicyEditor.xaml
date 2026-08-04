@@ -981,8 +981,7 @@
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="ListViewItem">
-                                                    <Grid x:Name="LayoutRoot"
-                                                          Background="{TemplateBinding Background}"
+                                                    <Grid Background="{TemplateBinding Background}"
                                                           BorderBrush="{TemplateBinding BorderBrush}"
                                                           BorderThickness="{TemplateBinding BorderThickness}">
 
@@ -1048,17 +1047,16 @@
                                                                 Margin="1">
                                                             <Border.BorderBrush>
                                                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                                    <GradientStop Color="Transparent" Offset="0" x:Name="GradientStop1"/>
+                                                                    <GradientStop Color="Transparent" Offset="0"/>
                                                                     <GradientStop Color="DeepPink" Offset="0.25"/>
                                                                     <GradientStop Color="MediumOrchid" Offset="0.5"/>
                                                                     <GradientStop Color="DodgerBlue" Offset="0.75"/>
-                                                                    <GradientStop Color="Transparent" Offset="1" x:Name="GradientStop2"/>
+                                                                    <GradientStop Color="Transparent" Offset="1"/>
                                                                 </LinearGradientBrush>
                                                             </Border.BorderBrush>
                                                         </Border>
 
-                                                        <ContentPresenter x:Name="ContentPresenter"
-                                                                          Content="{TemplateBinding Content}"
+                                                        <ContentPresenter Content="{TemplateBinding Content}"
                                                                           ContentTemplate="{TemplateBinding ContentTemplate}"
                                                                           Margin="{TemplateBinding Padding}"
                                                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

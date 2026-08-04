@@ -68,7 +68,7 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	[DynamicWindowsRuntimeCast(typeof(PlaneProjection))]
 	[DynamicWindowsRuntimeCast(typeof(CompositeTransform))]
-	private void CardContainer_PointerEntered(object sender, PointerRoutedEventArgs e)
+	private static void CardContainer_PointerEntered(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is GridViewItem container)
 		{
@@ -96,7 +96,7 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	[DynamicWindowsRuntimeCast(typeof(PlaneProjection))]
 	[DynamicWindowsRuntimeCast(typeof(CompositeTransform))]
-	private void CardContainer_PointerMoved(object sender, PointerRoutedEventArgs e)
+	private static void CardContainer_PointerMoved(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is GridViewItem container)
 		{
@@ -180,7 +180,7 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 	[DynamicWindowsRuntimeCast(typeof(GridViewItem))]
 	[DynamicWindowsRuntimeCast(typeof(PlaneProjection))]
 	[DynamicWindowsRuntimeCast(typeof(CompositeTransform))]
-	private void CardContainer_PointerExited(object sender, PointerRoutedEventArgs e)
+	private static void CardContainer_PointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		if (sender is GridViewItem container && container.Projection is PlaneProjection projection && container.RenderTransform is CompositeTransform transform)
 		{

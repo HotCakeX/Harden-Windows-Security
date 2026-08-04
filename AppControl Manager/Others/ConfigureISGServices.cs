@@ -118,10 +118,9 @@ internal static class ConfigureISGServices
 		{
 			object? value = key.GetValue("VerifiedAndReputablePolicyState");
 
-			RegistryValueKind valueKind = key.GetValueKind("VerifiedAndReputablePolicyState");
-
 			if (value is not null)
 			{
+				RegistryValueKind valueKind = key.GetValueKind("VerifiedAndReputablePolicyState");
 
 				if (
 					(valueKind is RegistryValueKind.String && !string.Equals(value.ToString(), "0", StringComparison.OrdinalIgnoreCase)) ||

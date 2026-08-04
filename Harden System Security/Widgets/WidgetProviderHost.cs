@@ -47,6 +47,10 @@ internal static class WidgetProviderHost
 	// https://learn.microsoft.com/windows/win32/api/objbase/ne-objbase-coinit
 	private const uint COINIT_MULTITHREADED = 0x0;
 
+	// How often the memory of the process is reclaimed while it serves pinned widgets. A minute keeps the working set of
+	// the process visibly flat, and collecting a heap that only ever holds a few kilobytes of card payloads is free.
+	private const int MemoryTrimIntervalMilliseconds = 60000;
+
 	/// <summary>
 	/// Registers the widget provider class object and blocks until the last pinned widget is removed.
 	/// </summary>
@@ -103,8 +107,12 @@ internal static class WidgetProviderHost
 				return;
 			}
 
-			// Blocking until the Widgets Board reports that no instance of the widget is pinned anymore.
-			_ = WidgetProvider.NoWidgetsRemainingEvent.WaitOne();
+			// Blocking until the Widgets Board reports that no instance of the widget is pinned anymore, waking up every
+			// so often in order to give the memory of this long running background process a chance to be reclaimed.
+			while (!WidgetProvider.NoWidgetsRemainingEvent.WaitOne(MemoryTrimIntervalMilliseconds))
+			{
+				TrimMemory();
+			}
 		}
 		catch (Exception ex)
 		{
@@ -123,6 +131,32 @@ internal static class WidgetProviderHost
 			}
 
 			NativeMethods.CoUninitialize();
+		}
+	}
+
+	/// <summary>
+	/// Collects the managed memory of the process, runs the finalizers that release whatever COM objects the Widgets
+	/// Board handed over in the meantime, and returns the freed pages to the operating system.
+	///
+	/// A headless provider that only builds a few kilobytes of JSON per tick allocates so little that a generation two
+	/// collection would practically never happen on its own, which is what would otherwise let the working set of a
+	/// process that runs for days keep creeping upwards.
+	/// </summary>
+	private static void TrimMemory()
+	{
+		try
+		{
+			GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+
+			// The runtime callable wrappers of the COM objects that were released by the collection only let go of the
+			// underlying native proxies once their finalizers ran, and the memory of those finalized objects is only
+			// reclaimed by the collection that follows them.
+			GC.WaitForPendingFinalizers();
+			GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
 		}
 	}
 }

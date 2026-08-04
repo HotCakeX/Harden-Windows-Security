@@ -267,7 +267,7 @@ internal unsafe struct MIB_IF_ROW2
 	internal ulong InterfaceLuid; // NET_LUID
 	internal uint InterfaceIndex; // NET_IFINDEX
 	internal Guid InterfaceGuid;
-	private fixed char Alias[257]; // IF_MAX_STRING_SIZE + 1
+	internal fixed char Alias[257]; // IF_MAX_STRING_SIZE + 1
 	private fixed char Description[257]; // IF_MAX_STRING_SIZE + 1
 	internal uint PhysicalAddressLength;
 	private fixed byte PhysicalAddress[32]; // IF_MAX_PHYS_ADDRESS_LENGTH
@@ -305,6 +305,28 @@ internal unsafe struct MIB_IF_ROW2
 	internal ulong OutMulticastOctets;
 	internal ulong OutBroadcastOctets;
 	internal ulong OutQLen;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/netioapi/ne-netioapi-mib_if_table_level
+/// </summary>
+internal enum MIB_IF_TABLE_LEVEL
+{
+	MibIfTableNormal = 0,
+	MibIfTableRaw = 1,
+	MibIfTableNormalWithoutStatistics = 2
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/netioapi/ns-netioapi-mib_if_table2
+/// The native table is a variable length structure, so only its header is described here and the rows that follow it
+/// are read through <see cref="Table"/>, which is the very first element of the trailing array.
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct MIB_IF_TABLE2
+{
+	internal uint NumEntries;
+	internal MIB_IF_ROW2 Table;
 }
 
 [Flags]

@@ -1006,6 +1006,24 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/netioapi/nf-netioapi-getiftable2ex
+	/// The returned table has to be released with <see cref="FreeMibTable(IntPtr)"/>.
+	/// </summary>
+	/// <returns>NO_ERROR (0) on success</returns>
+	[LibraryImport("Iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetIfTable2Ex(MIB_IF_TABLE_LEVEL Level, out IntPtr Table);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/netioapi/nf-netioapi-freemibtable
+	/// </summary>
+	[LibraryImport("Iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial void FreeMibTable(IntPtr Memory);
+
+
+	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath
 	/// </summary>
 	[LibraryImport("shell32.dll")]

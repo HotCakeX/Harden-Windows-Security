@@ -68,6 +68,9 @@ internal static class PerformanceWidgetCard
 	private const int MinimumBarWeight = 1;
 	private const int MaximumBarWeight = TotalBarWeight - MinimumBarWeight;
 
+	// The longest text that a single column weight can produce, which is the total weight itself.
+	private const int MaximumWeightLength = 8;
+
 	// The default Windows accent color, only used if the real accent color cannot be read from the system.
 	// https://learn.microsoft.com/windows/apps/design/style/color
 	private const byte FallbackAccentRed = 0x00;
@@ -97,6 +100,17 @@ internal static class PerformanceWidgetCard
 	/// </summary>
 	private static readonly string TemplateFilePath = Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "PerformanceWidgetCard.json");
 	private static readonly Lock _templateLock = new();
+
+	/// <summary>
+	/// The payload of every visible Performance widget is rebuilt on every tick of the sampling timer for as long as
+	/// the Widgets Board shows it, and the provider process stays alive in the background the whole time, so the buffer
+	/// and the writer that produce that payload are created once and then reused instead of being allocated over and
+	/// over again. They are guarded by a lock of their own because the payloads can be built from the sampling timer
+	/// and from a Widgets Board callback at the same time.
+	/// </summary>
+	private static readonly Lock _writerLock = new();
+	private static readonly ArrayBufferWriter<byte> _buffer = new(2048);
+	private static readonly Utf8JsonWriter _writer = new(_buffer);
 
 	/// <summary>
 	/// The Adaptive Card template, which is read from the JSON file only once per process because the file never changes
@@ -217,48 +231,59 @@ internal static class PerformanceWidgetCard
 
 		GetBarImages(out string barFillImage, out string barTrackImage);
 
-		ArrayBufferWriter<byte> buffer = new(2048);
-
-		using (Utf8JsonWriter writer = new(buffer))
+		lock (_writerLock)
 		{
-			writer.WriteStartObject();
+			// Everything that the previous payload left behind is dropped while both of the underlying buffers are kept.
+			_buffer.ResetWrittenCount();
+			_writer.Reset();
 
-			writer.WriteString("textSize", textSize);
-			writer.WriteString("groupSpacing", groupSpacing);
-			writer.WriteString("barSpacing", barSpacing);
-			writer.WriteString("barHeight", barHeight);
+			_writer.WriteStartObject();
 
-			writer.WriteString("cpuTemperatureValue", temperatureText);
-			WriteBarWeights(writer, "cpuTemperatureFill", "cpuTemperatureRemainder", temperaturePercentage);
+			_writer.WriteString("textSize", textSize);
+			_writer.WriteString("groupSpacing", groupSpacing);
+			_writer.WriteString("barSpacing", barSpacing);
+			_writer.WriteString("barHeight", barHeight);
 
-			writer.WriteString("cpuUsageValue", cpuUsageText);
-			WriteBarWeights(writer, "cpuUsageFill", "cpuUsageRemainder", cpuUsagePercentage);
+			_writer.WriteString("cpuTemperatureValue", temperatureText);
+			WriteBarWeights("cpuTemperatureFill", "cpuTemperatureRemainder", temperaturePercentage);
 
-			writer.WriteString("memoryValue", memoryText);
-			WriteBarWeights(writer, "memoryFill", "memoryRemainder", memoryPercentage);
+			_writer.WriteString("cpuUsageValue", cpuUsageText);
+			WriteBarWeights("cpuUsageFill", "cpuUsageRemainder", cpuUsagePercentage);
 
-			writer.WriteBoolean("storageTemperatureVisible", storageTemperatureVisible);
-			writer.WriteString("storageTemperatureValue", storageTemperatureText);
-			WriteBarWeights(writer, "storageTemperatureFill", "storageTemperatureRemainder", storageTemperaturePercentage);
+			_writer.WriteString("memoryValue", memoryText);
+			WriteBarWeights("memoryFill", "memoryRemainder", memoryPercentage);
 
-			writer.WriteString("barFillImage", barFillImage);
-			writer.WriteString("barTrackImage", barTrackImage);
+			_writer.WriteBoolean("storageTemperatureVisible", storageTemperatureVisible);
+			_writer.WriteString("storageTemperatureValue", storageTemperatureText);
+			WriteBarWeights("storageTemperatureFill", "storageTemperatureRemainder", storageTemperaturePercentage);
 
-			writer.WriteEndObject();
+			_writer.WriteString("barFillImage", barFillImage);
+			_writer.WriteString("barTrackImage", barTrackImage);
+
+			_writer.WriteEndObject();
+			_writer.Flush();
+
+			return Encoding.UTF8.GetString(_buffer.WrittenSpan);
 		}
-
-		return Encoding.UTF8.GetString(buffer.WrittenSpan);
 	}
 
 	/// <summary>
-	/// Writes the two relative column weights that make up a single bar.
+	/// Writes the two relative column weights that make up a single bar. It must only be called while
+	/// <see cref="_writerLock"/> is held.
 	/// </summary>
-	private static void WriteBarWeights(Utf8JsonWriter writer, string fillPropertyName, string remainderPropertyName, double percentage)
+	private static void WriteBarWeights(string fillPropertyName, string remainderPropertyName, double percentage)
 	{
 		int fillWeight = Math.Clamp((int)Math.Round(percentage * (TotalBarWeight / 100.0)), MinimumBarWeight, MaximumBarWeight);
 
-		writer.WriteString(fillPropertyName, fillWeight.ToString(CultureInfo.InvariantCulture));
-		writer.WriteString(remainderPropertyName, (TotalBarWeight - fillWeight).ToString(CultureInfo.InvariantCulture));
+		// The weights are written through a stack buffer so that the numbers of a card that is rebuilt for as long as
+		// the widget stays pinned never turn into garbage of their own.
+		Span<char> destination = stackalloc char[MaximumWeightLength];
+
+		_ = fillWeight.TryFormat(destination, out int length, default, CultureInfo.InvariantCulture);
+		_writer.WriteString(fillPropertyName, destination[..length]);
+
+		_ = (TotalBarWeight - fillWeight).TryFormat(destination, out length, default, CultureInfo.InvariantCulture);
+		_writer.WriteString(remainderPropertyName, destination[..length]);
 	}
 
 	private static double BytesToGigabytes(ulong bytes) => bytes / 1073741824.0;

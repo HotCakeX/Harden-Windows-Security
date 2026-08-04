@@ -202,6 +202,38 @@
                       </LightMode>
                     </ThemeResources>
                   </Definition>
+                  <!-- The Id must stay identical to WidgetProvider.NetworkWidgetDefinitionId -->
+                  <!-- The small size is not offered because the speeds and the totals of an adapter do not fit into it -->
+                  <Definition Id="HardenSystemSecurity_Network"
+                              DisplayName="Network"
+                              Description="Live download and upload speeds together with the total data received and sent by each of your network adapters.">
+                    <Capabilities>
+                      <Capability>
+                        <Size Name="medium" />
+                      </Capability>
+                      <Capability>
+                        <Size Name="large" />
+                      </Capability>
+                    </Capabilities>
+                    <ThemeResources>
+                      <Icons>
+                        <Icon Path="Assets\Widgets\NetworkWidgetIcon.png" />
+                      </Icons>
+                      <Screenshots>
+                        <Screenshot Path="Assets\Widgets\NetworkWidgetMedium.png" DisplayAltText="Network widget showing the live download and upload speeds and the total data received and sent by a network adapter" />
+                      </Screenshots>
+                      <DarkMode>
+                        <Screenshots>
+                          <Screenshot Path="Assets\Widgets\NetworkWidgetMedium.png" DisplayAltText="Network widget showing the live download and upload speeds and the total data received and sent by a network adapter" />
+                        </Screenshots>
+                      </DarkMode>
+                      <LightMode>
+                        <Screenshots>
+                          <Screenshot Path="Assets\Widgets\NetworkWidgetMediumLight.jpg" DisplayAltText="Network widget showing the live download and upload speeds and the total data received and sent by a network adapter" />
+                        </Screenshots>
+                      </LightMode>
+                    </ThemeResources>
+                  </Definition>
                 </Definitions>
               </WidgetProvider>
             </uap3:Properties>

@@ -1,0 +1,479 @@
+{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.6",
+    "verticalContentAlignment": "center",
+    "body": [
+        {
+            "type": "TextBlock",
+            "$when": "${noAdapters}",
+            "spacing": "none",
+            "text": "${emptyMessage}",
+            "size": "medium",
+            "weight": "lighter",
+            "isSubtle": true,
+            "horizontalAlignment": "center",
+            "wrap": true,
+            "maxLines": 3
+        },
+        {
+            "type": "Container",
+            "$when": "${hasAdapters}",
+            "spacing": "none",
+            "height": "stretch",
+            "verticalContentAlignment": "center",
+            "items": [
+                {
+                    "type": "ColumnSet",
+                    "spacing": "none",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "ActionSet",
+                                    "$when": "${firstNavigationVisible}",
+                                    "spacing": "none",
+                                    "actions": [
+                                        {
+                                            "type": "Action.Execute",
+                                            "title": "\u25C4",
+                                            "verb": "networkPreviousFirst"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${firstName}",
+                                    "size": "${nameSize}",
+                                    "weight": "bolder",
+                                    "horizontalAlignment": "center",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${firstMeta}",
+                                    "size": "small",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "horizontalAlignment": "center",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "ActionSet",
+                                    "$when": "${firstNavigationVisible}",
+                                    "spacing": "none",
+                                    "actions": [
+                                        {
+                                            "type": "Action.Execute",
+                                            "title": "\u25BA",
+                                            "verb": "networkNextFirst"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${rowSpacing}",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "\u2191 Upload",
+                                    "size": "${textSize}",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${firstUpload}",
+                                    "size": "${textSize}",
+                                    "weight": "bolder",
+                                    "color": "good",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${rowSpacing}",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "\u2193 Download",
+                                    "size": "${textSize}",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${firstDownload}",
+                                    "size": "${textSize}",
+                                    "weight": "bolder",
+                                    "color": "accent",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${rowSpacing}",
+                    "separator": true,
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "Sent",
+                                    "size": "small",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${firstSent}",
+                                    "size": "default",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "small",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "Received",
+                                    "size": "small",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${firstReceived}",
+                                    "size": "default",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "Container",
+            "$when": "${secondPanelVisible}",
+            "spacing": "${panelSpacing}",
+            "height": "stretch",
+            "separator": true,
+            "verticalContentAlignment": "center",
+            "items": [
+                {
+                    "type": "ColumnSet",
+                    "spacing": "none",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "ActionSet",
+                                    "$when": "${secondNavigationVisible}",
+                                    "spacing": "none",
+                                    "actions": [
+                                        {
+                                            "type": "Action.Execute",
+                                            "title": "\u25C4",
+                                            "verb": "networkPreviousSecond"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${secondName}",
+                                    "size": "${nameSize}",
+                                    "weight": "bolder",
+                                    "horizontalAlignment": "center",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${secondMeta}",
+                                    "size": "small",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "horizontalAlignment": "center",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "ActionSet",
+                                    "$when": "${secondNavigationVisible}",
+                                    "spacing": "none",
+                                    "actions": [
+                                        {
+                                            "type": "Action.Execute",
+                                            "title": "\u25BA",
+                                            "verb": "networkNextSecond"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${rowSpacing}",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "\u2191 Upload",
+                                    "size": "${textSize}",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${secondUpload}",
+                                    "size": "${textSize}",
+                                    "weight": "bolder",
+                                    "color": "good",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${rowSpacing}",
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "\u2193 Download",
+                                    "size": "${textSize}",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "auto",
+                            "spacing": "small",
+                            "verticalContentAlignment": "center",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${secondDownload}",
+                                    "size": "${textSize}",
+                                    "weight": "bolder",
+                                    "color": "accent",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "ColumnSet",
+                    "spacing": "${rowSpacing}",
+                    "separator": true,
+                    "columns": [
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "none",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "Sent",
+                                    "size": "small",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "wrap": false,
+                                    "maxLines": 1
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${secondSent}",
+                                    "size": "default",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Column",
+                            "width": "stretch",
+                            "spacing": "small",
+                            "items": [
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "Received",
+                                    "size": "small",
+                                    "weight": "lighter",
+                                    "isSubtle": true,
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "spacing": "none",
+                                    "text": "${secondReceived}",
+                                    "size": "default",
+                                    "horizontalAlignment": "right",
+                                    "wrap": false,
+                                    "maxLines": 1
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -480,6 +480,9 @@
         <Content Include="Resources\Widgets\WinGetUpdatesWidgetCard.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Resources\Widgets\NetworkWidgetCard.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <!-- Build DISMService only when its executable is missing from this project directory. -->

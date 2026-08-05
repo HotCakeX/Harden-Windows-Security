@@ -117,11 +117,8 @@ internal static class CertificateHelper
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static string GetTBSCertificate(X509Certificate2 cert)
 	{
-		// Get the raw data of the certificate.
-		byte[] rawData = cert.RawData;
-
 		// Create an ASN.1 reader to parse the certificate.
-		AsnReader asnReader = new(rawData, AsnEncodingRules.DER);
+		AsnReader asnReader = new(cert.RawDataMemory, AsnEncodingRules.DER);
 
 		// Read the certificate sequence.
 		AsnReader certificate = asnReader.ReadSequence();

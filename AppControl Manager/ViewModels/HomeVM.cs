@@ -597,14 +597,12 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// </summary>
 	private void UpdateSystemTime()
 	{
-		DateTime now = DateTime.Now;
-
 		// Detect 24-hour vs 12-hour from the current culture's short time pattern.
 		bool is24Hour = CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern.Contains('H', StringComparison.Ordinal);
 
 		string format = is24Hour ? "HH:mm" : "h:mm tt";
 
-		string timeString = now.ToString(format, CultureInfo.CurrentCulture);
+		string timeString = DateTime.Now.ToString(format, CultureInfo.CurrentCulture);
 		string timeZoneString = GetLocalUtcOffsetString();
 
 		SystemTimeText = $"{timeString}  ( {timeZoneString} )";

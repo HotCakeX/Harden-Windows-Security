@@ -919,15 +919,8 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 			return null;
 		}
 
-		try
-		{
-			string? fileName = Path.GetFileName(candidate);
-			return string.IsNullOrWhiteSpace(fileName) ? candidate : fileName;
-		}
-		catch
-		{
-			return candidate;
-		}
+		string fileName = Path.GetFileName(candidate);
+		return string.IsNullOrWhiteSpace(fileName) ? candidate : fileName;
 	}
 
 	private static void ProcessEventForDictionaries(
@@ -969,13 +962,13 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		List<AnalysisResultItem> result = new(take > 100 ? dict.Count : take);
 		foreach (KeyValuePair<string, int> kvp in dict.OrderByDescending(x => x.Value).Take(take))
 		{
-			string? display = kvp.Key;
+			string display = kvp.Key;
 			if (fileNameOnly)
 			{
 				display = Path.GetFileName(kvp.Key);
 			}
 
-			result.Add(new AnalysisResultItem(name: kvp.Key, displayName: display ?? kvp.Key, count: kvp.Value, itemColor: Colors.Gray));
+			result.Add(new AnalysisResultItem(name: kvp.Key, displayName: display, count: kvp.Value, itemColor: Colors.Gray));
 		}
 		return result;
 	}
@@ -1234,7 +1227,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 		{
 			DependencyObject child = VisualTreeHelper.GetChild(parent, i);
 
-			if (child is T t && t.Name == name)
+			if (child is T t && string.Equals(t.Name, name, StringComparison.Ordinal))
 			{
 				return t;
 			}

@@ -60,7 +60,7 @@ internal sealed partial class SigningDetailsDialog : ContentDialogV2
 		// Get the user configurations
 		UserConfiguration currentUserConfigs = UserConfiguration.ReadUserConfiguration();
 
-		// Fill in the text boxes based on the current user configs
+		// Read the text boxes from the UI controls
 		CertFilePathTextBox.Text = currentUserConfigs.CertificatePath;
 		CertificateCommonNameAutoSuggestBox.Text = currentUserConfigs.CertificateCommonName;
 

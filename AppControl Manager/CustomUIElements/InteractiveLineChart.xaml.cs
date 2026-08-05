@@ -215,15 +215,8 @@ internal sealed partial class InteractiveLineChart : UserControl, INPCImplant
 				return null;
 			}
 
-			try
-			{
-				string fileName = Path.GetFileName(value);
-				return string.IsNullOrWhiteSpace(fileName) ? value : fileName;
-			}
-			catch
-			{
-				return value;
-			}
+			string fileName = Path.GetFileName(value);
+			return string.IsNullOrWhiteSpace(fileName) ? value : fileName;
 		}
 
 		private static void AppendTopValues(StringBuilder builder, string title, Dictionary<string, int>? values)

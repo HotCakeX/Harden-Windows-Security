@@ -384,7 +384,7 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 
 	private static List<PolicyPreviewExportModel> BuildSectionExportItems(PolicySection firstSection, PolicySection secondSection)
 	{
-		HashSet<string> keys = [.. firstSection.Items.Keys, .. secondSection.Items.Keys];
+		HashSet<string> keys = new([.. firstSection.Items.Keys, .. secondSection.Items.Keys], StringComparer.OrdinalIgnoreCase);
 		List<PolicyPreviewExportModel> items = new(keys.Count);
 
 		foreach (string key in keys.OrderBy(static x => x, StringComparer.OrdinalIgnoreCase))
@@ -463,7 +463,7 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 
 		PolicySection firstSection = FirstCatalog.GetSection(item.Key);
 		PolicySection secondSection = SecondCatalog.GetSection(item.Key);
-		HashSet<string> keys = [];
+		HashSet<string> keys = new(StringComparer.OrdinalIgnoreCase);
 
 		if (item.IsFirstEnabled is true)
 		{
@@ -1026,10 +1026,10 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 		internal IReadOnlyList<PropertyFact> Properties => properties;
 	}
 
-	private sealed class PropertyFact(string name, string? value)
+	private sealed class PropertyFact(string name, string value)
 	{
 		internal string Name => name;
-		internal string Value => value ?? string.Empty;
+		internal string Value => value;
 	}
 
 	private sealed class PropertyComparison(IReadOnlyList<string> shared, IReadOnlyList<string> different)

@@ -555,7 +555,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// </summary>
 	private static FileCertificateInfoCol ProcessAndAddCertificates(X509Certificate2 cert, int signerNumber, CertificateType type)
 	{
-		(int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) det
+		(string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int PublicKeyLength) det
 			= ExtractDetailedFields(cert);
 
 		return new FileCertificateInfoCol
@@ -574,9 +574,9 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 					.Select(ext =>
 						ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext.Oid?.Value)
 					.Where(oid => !string.IsNullOrWhiteSpace(oid))),
-			version: det.Version,
-			hasPrivateKey: det.HasPrivateKey,
-			archived: det.Archived,
+			version: cert.Version,
+			hasPrivateKey: cert.HasPrivateKey,
+			archived: cert.Archived,
 			certificatePolicies: det.CertificatePolicies,
 			authorityInformationAccess: det.AuthorityInformationAccess,
 			crlDistributionPoints: det.CrlDistributionPoints,
@@ -584,7 +584,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			keyUsage: det.KeyUsage,
 			authorityKeyIdentifier: det.AuthorityKeyIdentifier,
 			subjectKeyIdentifier: det.SubjectKeyIdentifier,
-			rawDataLength: det.RawDataLength,
+			rawDataLength: cert.RawDataMemory.Length,
 			publicKeyLength: det.PublicKeyLength
 		);
 	}
@@ -801,11 +801,8 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// <summary>
 	/// Retrieves detailed fields from an X509Certificate2 object.
 	/// </summary>
-	private static (int? Version, bool? HasPrivateKey, bool? Archived, string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int RawDataLength, int PublicKeyLength) ExtractDetailedFields(X509Certificate2 cert)
+	private static (string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int PublicKeyLength) ExtractDetailedFields(X509Certificate2 cert)
 	{
-		int? version = cert?.Version;
-		bool? hasPrivateKey = cert?.HasPrivateKey;
-		bool? archived = cert?.Archived;
 		string? certificatePolicies = null;
 		string? authorityInformationAccess = null;
 		string? crlDistributionPoints = null;
@@ -813,22 +810,21 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		string? keyUsage = null;
 		string? authorityKeyIdentifier = null;
 		string? subjectKeyIdentifier = null;
-		int rawDataLength = cert?.RawData?.Length ?? 0;
 
 		int publicKeyLength = 0;
 		try
 		{
-			if (string.Equals(cert?.PublicKey?.Oid?.Value, "1.2.840.113549.1.1.1", StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(cert.PublicKey.Oid.Value, "1.2.840.113549.1.1.1", StringComparison.OrdinalIgnoreCase))
 			{
-				using RSA? rsa = cert?.GetRSAPublicKey();
+				using RSA? rsa = cert.GetRSAPublicKey();
 				if (rsa != null)
 				{
 					publicKeyLength = rsa.KeySize;
 				}
 			}
-			else if (string.Equals(cert?.PublicKey?.Oid?.Value, "1.2.840.10045.2.1", StringComparison.OrdinalIgnoreCase))
+			else if (string.Equals(cert.PublicKey.Oid.Value, "1.2.840.10045.2.1", StringComparison.OrdinalIgnoreCase))
 			{
-				using ECDsa? ecdsa = cert?.GetECDsaPublicKey();
+				using ECDsa? ecdsa = cert.GetECDsaPublicKey();
 				if (ecdsa != null)
 				{
 					publicKeyLength = ecdsa.KeySize;
@@ -836,7 +832,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			}
 			else
 			{
-				using DSA? dsa = cert?.GetDSAPublicKey();
+				using DSA? dsa = cert.GetDSAPublicKey();
 				if (dsa != null)
 				{
 					publicKeyLength = dsa.KeySize;
@@ -844,7 +840,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 				if (publicKeyLength == 0)
 				{
-					using ECDiffieHellman? ecdh = cert?.GetECDiffieHellmanPublicKey();
+					using ECDiffieHellman? ecdh = cert.GetECDiffieHellmanPublicKey();
 					if (ecdh != null)
 					{
 						publicKeyLength = ecdh.KeySize;
@@ -859,89 +855,86 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 
 		try
 		{
-			if (cert is not null)
+			foreach (X509Extension ext in cert.Extensions)
 			{
-				foreach (X509Extension ext in cert.Extensions)
+				if (ext.Oid?.Value is null)
 				{
-					if (ext.Oid?.Value is null)
-					{
-						continue;
-					}
+					continue;
+				}
 
-					if (string.Equals(ext.Oid.Value, "2.5.29.37", StringComparison.OrdinalIgnoreCase))
+				if (string.Equals(ext.Oid.Value, "2.5.29.37", StringComparison.OrdinalIgnoreCase))
+				{
+					try
 					{
-						try
-						{
-							X509EnhancedKeyUsageExtension ekuExt = new(ext, ext.Critical);
-							keyUsage = ekuExt.Format(false);
-						}
-						catch { }
+						X509EnhancedKeyUsageExtension ekuExt = new(ext, ext.Critical);
+						keyUsage = ekuExt.Format(false);
 					}
-					else if (string.Equals(ext.Oid.Value, "2.5.29.15", StringComparison.OrdinalIgnoreCase))
+					catch { }
+				}
+				else if (string.Equals(ext.Oid.Value, "2.5.29.15", StringComparison.OrdinalIgnoreCase))
+				{
+					try
 					{
-						try
-						{
-							X509KeyUsageExtension kuExt = new(ext, ext.Critical);
-							keyUsage = kuExt.Format(false);
-						}
-						catch { }
+						X509KeyUsageExtension kuExt = new(ext, ext.Critical);
+						keyUsage = kuExt.Format(false);
 					}
-					else if (string.Equals(ext.Oid.Value, "2.5.29.19", StringComparison.OrdinalIgnoreCase))
+					catch { }
+				}
+				else if (string.Equals(ext.Oid.Value, "2.5.29.19", StringComparison.OrdinalIgnoreCase))
+				{
+					try
 					{
-						try
-						{
-							X509BasicConstraintsExtension bcExt = new(ext, ext.Critical);
-							basicConstraints = $"CA: {bcExt.CertificateAuthority}, PathLengthConstraint: {(bcExt.HasPathLengthConstraint ? bcExt.PathLengthConstraint.ToString() : "None")}";
-						}
-						catch { }
+						X509BasicConstraintsExtension bcExt = new(ext, ext.Critical);
+						basicConstraints = $"CA: {bcExt.CertificateAuthority}, PathLengthConstraint: {(bcExt.HasPathLengthConstraint ? bcExt.PathLengthConstraint.ToString() : "None")}";
 					}
-					else if (string.Equals(ext.Oid.Value, "2.5.29.35", StringComparison.OrdinalIgnoreCase))
+					catch { }
+				}
+				else if (string.Equals(ext.Oid.Value, "2.5.29.35", StringComparison.OrdinalIgnoreCase))
+				{
+					try
 					{
-						try
-						{
-							authorityKeyIdentifier = Convert.ToHexString(ext.RawData);
-						}
-						catch { }
+						authorityKeyIdentifier = Convert.ToHexString(ext.RawData);
 					}
-					else if (string.Equals(ext.Oid.Value, "2.5.29.14", StringComparison.OrdinalIgnoreCase))
+					catch { }
+				}
+				else if (string.Equals(ext.Oid.Value, "2.5.29.14", StringComparison.OrdinalIgnoreCase))
+				{
+					try
 					{
-						try
-						{
-							X509SubjectKeyIdentifierExtension skiExt = new(ext, ext.Critical);
-							subjectKeyIdentifier = skiExt.SubjectKeyIdentifier;
-						}
-						catch { }
+						X509SubjectKeyIdentifierExtension skiExt = new(ext, ext.Critical);
+						subjectKeyIdentifier = skiExt.SubjectKeyIdentifier;
 					}
-					else if (string.Equals(ext.Oid.Value, "2.5.29.31", StringComparison.OrdinalIgnoreCase))
+					catch { }
+				}
+				else if (string.Equals(ext.Oid.Value, "2.5.29.31", StringComparison.OrdinalIgnoreCase))
+				{
+					try
 					{
-						try
-						{
-							crlDistributionPoints = ext.Format(false);
-						}
-						catch { }
+						crlDistributionPoints = ext.Format(false);
 					}
-					else if (string.Equals(ext.Oid.Value, "1.3.6.1.5.5.7.1.1", StringComparison.OrdinalIgnoreCase))
+					catch { }
+				}
+				else if (string.Equals(ext.Oid.Value, "1.3.6.1.5.5.7.1.1", StringComparison.OrdinalIgnoreCase))
+				{
+					try
 					{
-						try
-						{
-							authorityInformationAccess = ext.Format(false);
-						}
-						catch { }
+						authorityInformationAccess = ext.Format(false);
 					}
-					else if (string.Equals(ext.Oid.Value, "2.5.29.32", StringComparison.OrdinalIgnoreCase))
+					catch { }
+				}
+				else if (string.Equals(ext.Oid.Value, "2.5.29.32", StringComparison.OrdinalIgnoreCase))
+				{
+					try
 					{
-						try
-						{
-							certificatePolicies = ext.Format(false);
-						}
-						catch { }
+						certificatePolicies = ext.Format(false);
 					}
+					catch { }
 				}
 			}
 		}
 		catch { }
 
-		return (version, hasPrivateKey, archived, certificatePolicies, authorityInformationAccess, crlDistributionPoints, basicConstraints, keyUsage, authorityKeyIdentifier, subjectKeyIdentifier, rawDataLength, publicKeyLength);
+		return (certificatePolicies, authorityInformationAccess, crlDistributionPoints, basicConstraints, keyUsage, authorityKeyIdentifier, subjectKeyIdentifier, publicKeyLength);
 	}
 
 	/// <summary>

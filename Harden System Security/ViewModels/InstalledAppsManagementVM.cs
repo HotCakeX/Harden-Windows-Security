@@ -1355,8 +1355,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				await GetAppsList.PopulateStorageDetailsAsync(item);
 			}
 
-			DateTime now = DateTime.Now;
-			string defaultFileName = $"Installed Apps {now:yyyy-MM-dd_HH-mm-ss}.json";
+			string defaultFileName = $"Installed Apps {DateTime.Now:yyyy-MM-dd_HH-mm-ss}.json";
 
 			string? savePath = FileDialogHelper.ShowSaveFileDialog(Atlas.JSONPickerFilter, defaultFileName);
 			if (string.IsNullOrWhiteSpace(savePath))

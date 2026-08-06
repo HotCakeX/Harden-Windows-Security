@@ -29,7 +29,6 @@ internal sealed partial class DownloadManager : Page, CommonCore.UI.IPageHeaderP
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	private void SelectAllDownloadsAppBarButton_Click() => ListViewHelper.SelectAll(DownloadItemsListView);

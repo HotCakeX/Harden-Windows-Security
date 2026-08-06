@@ -137,7 +137,7 @@
                              SelectionMode="Extended">
 
             <customUI:ListViewV2.ItemTemplate>
-                <DataTemplate x:DataType="vm:CspPolicyEntry" xmlns:VMs="using:HardenSystemSecurity.ViewModels">
+                <DataTemplate x:DataType="vm:CspPolicyEntry">
                     <Border BorderThickness="1"
                             BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
                             CornerRadius="8"
@@ -166,7 +166,7 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <Button Padding="6,4" Click="{x:Bind VMs:ViewModelProvider.CSPVM.CopyOmaUri_Click}">
+                                    <Button Padding="6,4" Click="{x:Bind vm:ViewModelProvider.CSPVM.CopyOmaUri_Click}">
                                         <FontIcon Glyph="&#xE8C8;" FontSize="12"/>
                                     </Button>
 
@@ -271,7 +271,7 @@
                             <MenuFlyout>
                                 <MenuFlyoutItem x:Uid="CopyRow"
                                                 Icon="Copy"
-                                                Click="{x:Bind VMs:ViewModelProvider.CSPVM.CopySelected_Click}" />
+                                                Click="{x:Bind vm:ViewModelProvider.CSPVM.CopySelected_Click}" />
                             </MenuFlyout>
                         </Border.ContextFlyout>
                     </Border>

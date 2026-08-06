@@ -30,7 +30,6 @@ internal sealed partial class WinGetManagement : Page, CommonCore.UI.IPageHeader
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 		WinGetSectionSelectorBar.SelectedItem = SearchSectionSelectorBarItem;
 	}
 

@@ -29,7 +29,6 @@ internal sealed partial class MicrosoftDefender : Page, CommonCore.UI.IPageHeade
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	/// <summary>

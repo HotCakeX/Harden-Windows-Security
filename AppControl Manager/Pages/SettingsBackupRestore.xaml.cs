@@ -32,7 +32,6 @@ internal sealed partial class SettingsBackupRestore : Page, CommonCore.UI.IPageH
 	internal SettingsBackupRestore()
 	{
 		InitializeComponent();
-		DataContext = ViewModel;
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 

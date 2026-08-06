@@ -32,7 +32,6 @@ internal sealed partial class Simulation : Page, IAnimatedIconsManager, CommonCo
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	#region Augmentation Interface

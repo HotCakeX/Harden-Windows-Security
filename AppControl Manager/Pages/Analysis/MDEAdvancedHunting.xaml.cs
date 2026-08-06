@@ -30,7 +30,6 @@ internal sealed partial class MDEAdvancedHunting : Page
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	internal async void ExportPageToPdf_Click()

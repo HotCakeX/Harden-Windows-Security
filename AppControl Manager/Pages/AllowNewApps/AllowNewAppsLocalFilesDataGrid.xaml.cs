@@ -36,7 +36,6 @@ internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	/// <summary>

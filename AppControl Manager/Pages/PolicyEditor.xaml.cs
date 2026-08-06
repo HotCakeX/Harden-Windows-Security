@@ -33,7 +33,6 @@ internal sealed partial class PolicyEditor : Page, CommonCore.UI.IPageHeaderProv
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 		_DiamondButtonFlyout = DiamondButtonFlyout;
 		_DiamondButton = DiamondButton;
 	}

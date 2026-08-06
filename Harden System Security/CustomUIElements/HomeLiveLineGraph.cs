@@ -197,6 +197,23 @@ internal sealed partial class HomeLiveLineGraph : Grid
 	// Optional formatter for series whose stored sample unit differs from their preferred display unit.
 	internal Func<double, string>? ValueFormatter { get; set; }
 
+	internal bool AnimationsEnabled
+	{
+		get; set
+		{
+			if (field == value)
+			{
+				return;
+			}
+
+			field = value;
+			if (!value)
+			{
+				ApplySeriesTargetsWithoutAnimation();
+			}
+		}
+	} = true;
+
 	public bool UseFixedMinimum
 	{
 		get => (bool)GetValue(UseFixedMinimumProperty);
@@ -301,7 +318,14 @@ internal sealed partial class HomeLiveLineGraph : Grid
 		EffectiveMaximum = maximum;
 		UpdateSeries(_primarySeriesLine, _primarySeriesFill, _primaryStrokeBrush, _primaryFillBrush, _primaryAnimationState, Samples, StrokeColor, PrimaryFillOpacity, width, height, minimum, maximum);
 		UpdateSeries(_secondarySeriesLine, _secondarySeriesFill, _secondaryStrokeBrush, _secondaryFillBrush, _secondaryAnimationState, SecondarySamples, SecondaryStrokeColor, SecondaryFillOpacity, width, height, minimum, maximum);
-		StartSeriesAnimationIfNeeded();
+		if (AnimationsEnabled)
+		{
+			StartSeriesAnimationIfNeeded();
+		}
+		else
+		{
+			ApplySeriesTargetsWithoutAnimation();
+		}
 	}
 
 	private void UpdateGrid(double width, double height)
@@ -408,6 +432,17 @@ internal sealed partial class HomeLiveLineGraph : Grid
 		fillBrush.GradientStops[1].Color = visibleColor;
 		fillBrush.GradientStops[2].Offset = 1.0;
 		fillBrush.GradientStops[2].Color = transparentColor;
+	}
+
+	private void ApplySeriesTargetsWithoutAnimation()
+	{
+		StopSeriesAnimationRendering();
+		ApplyPoints(_primarySeriesLine.Points, _primaryAnimationState.TargetLinePoints);
+		ApplyPoints(_primarySeriesFill.Points, _primaryAnimationState.TargetFillPoints);
+		ApplyPoints(_secondarySeriesLine.Points, _secondaryAnimationState.TargetLinePoints);
+		ApplyPoints(_secondarySeriesFill.Points, _secondaryAnimationState.TargetFillPoints);
+		_primaryAnimationState.IsAnimating = false;
+		_secondaryAnimationState.IsAnimating = false;
 	}
 
 	private void StartSeriesAnimationIfNeeded()

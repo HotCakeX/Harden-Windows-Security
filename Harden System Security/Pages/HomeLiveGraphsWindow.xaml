@@ -5,14 +5,12 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:local="using:AppControlManager.Pages"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:win2d="using:Microsoft.Graphics.Canvas.UI.Xaml"
     Closed="{x:Bind Dispose}"
     Title="Live System Intelligence">
     <Grid Background="#000503" Loaded="{x:Bind OnRootGridLoaded}">
         <!--Animated Backgrounds-->
         <Grid x:Name="AnimatedBackgroundLayer" IsHitTestVisible="False" />
-        <Border x:Name="HomeTitleBadgeBorder"
-                HorizontalAlignment="Left"
+        <Border HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Margin="15,15,15,0"
                 Padding="14,5"
@@ -60,16 +58,14 @@
                             <CompositeTransform ScaleX="1" ScaleY="1" />
                         </Ellipse.RenderTransform>
                     </Ellipse>
-                    <Ellipse x:Name="HomeTitlePulseDotEllipse"
-                             Width="8"
+                    <Ellipse Width="8"
                              Height="8"
                              Fill="#FF00FFB4"
                              HorizontalAlignment="Center"
                              VerticalAlignment="Center"
                              Opacity="1" />
                 </Grid>
-                <Grid x:Name="HomeTitleRollingTextClip"
-                      Height="31"
+                <Grid Height="31"
                       VerticalAlignment="Center">
                     <Grid.Clip>
                         <RectangleGeometry Rect="0,0,380,31" />
@@ -97,6 +93,9 @@
                         <ComboBoxItem Content="Blue / White" />
                     </ComboBox>
                     <Slider x:Uid="BackgroundOpacitySlider" Width="170" Minimum="0" Maximum="1" Value="1" StepFrequency="0.01" SmallChange="0.01" LargeChange="0.1" ValueChanged="{x:Bind OnBackgroundOpacitySliderValueChanged}" />
+                    <ToggleSwitch x:Name="ChartAnimationsToggleSwitch"
+                                  Header="Chart animations"
+                                  Toggled="{x:Bind OnChartAnimationsToggleSwitchToggled}" />
                     <ComboBox x:Name="GraphSizeComboBox" x:Uid="GraphSizeComboBox" Width="120" SelectedIndex="1" SelectionChanged="{x:Bind OnGraphSizeComboBoxSelectionChanged}">
                         <ComboBoxItem x:Uid="GraphSizeSmallComboBoxItem" />
                         <ComboBoxItem x:Uid="GraphSizeMediumComboBoxItem" />
@@ -140,7 +139,18 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="AppRamChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="1000 MB" />
-                                        <TextBlock x:Uid="AppRamUsageTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <ToggleButton x:Name="AppRamTitleToggleButton"
+                                                      ToolTipService.ToolTip="Click or tap to pop out"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Padding="8,2"
+                                                      Checked="{x:Bind OnChartTitleToggled}"
+                                                      Unchecked="{x:Bind OnChartTitleToggled}">
+                                            <TextBlock x:Uid="AppRamUsageTitle"
+                                                       FontWeight="SemiBold"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="NoWrap" />
+                                        </ToggleButton>
                                         <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.AppRamText, Mode=OneWay}" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="AppRamLiveGraph"
@@ -148,7 +158,7 @@
                                                             Samples="{x:Bind ViewModel.AppRamChartSamples, Mode=OneWay}" EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="App RAM" ValueUnit="MB" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="1000" StrokeColor="#FFE87500" GridColor="#FFC75F00" />
                                     <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
                                         <TextBlock x:Name="AppRamChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB" />
-                                        <TextBlock x:Name="AppRamChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                        <TextBlock x:Name="AppRamChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}" />
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -181,13 +191,24 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="SystemMemoryUtilizationChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100%" />
-                                        <TextBlock x:Uid="MemoryUtilizationTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <ToggleButton x:Name="SystemMemoryUtilizationTitleToggleButton"
+                                                      ToolTipService.ToolTip="Click or tap to pop out"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Padding="8,2"
+                                                      Checked="{x:Bind OnChartTitleToggled}"
+                                                      Unchecked="{x:Bind OnChartTitleToggled}">
+                                            <TextBlock x:Uid="MemoryUtilizationTitle"
+                                                       FontWeight="SemiBold"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="NoWrap" />
+                                        </ToggleButton>
                                         <TextBlock x:Name="SystemMemoryUtilizationValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0.0 %" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="SystemMemoryUtilizationLiveGraph" Grid.Row="1" PrimarySeriesName="Memory Utilization" ValueUnit="%" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FF76B9ED" GridColor="#FF0078D4" />
                                     <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
                                         <TextBlock x:Name="SystemMemoryUtilizationChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0%" />
-                                        <TextBlock x:Name="SystemMemoryUtilizationChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                        <TextBlock x:Name="SystemMemoryUtilizationChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}" />
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -220,13 +241,24 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="StorageTemperatureChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100 °C" />
-                                        <TextBlock x:Uid="StorageTemperatureTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <ToggleButton x:Name="StorageTemperatureTitleToggleButton"
+                                                      ToolTipService.ToolTip="Click or tap to pop out"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Padding="8,2"
+                                                      Checked="{x:Bind OnChartTitleToggled}"
+                                                      Unchecked="{x:Bind OnChartTitleToggled}">
+                                            <TextBlock x:Uid="StorageTemperatureTitle"
+                                                       FontWeight="SemiBold"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="NoWrap" />
+                                        </ToggleButton>
                                         <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.DiskTemperatureText, Mode=OneWay}" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="StorageTemperatureLiveGraph" Grid.Row="1" Samples="{x:Bind ViewModel.StorageTemperatureChartSamples, Mode=OneWay}" EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="Storage Temperature" ValueUnit="°C" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FF13A10E" GridColor="#FF10893E" />
                                     <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
                                         <TextBlock x:Name="StorageTemperatureChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 °C" />
-                                        <TextBlock x:Name="StorageTemperatureChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                        <TextBlock x:Name="StorageTemperatureChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}" />
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -259,13 +291,24 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="CpuTemperatureChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100 °C" />
-                                        <TextBlock x:Uid="CpuTemperatureTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <ToggleButton x:Name="CpuTemperatureTitleToggleButton"
+                                                      ToolTipService.ToolTip="Click or tap to pop out"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Padding="8,2"
+                                                      Checked="{x:Bind OnChartTitleToggled}"
+                                                      Unchecked="{x:Bind OnChartTitleToggled}">
+                                            <TextBlock x:Uid="CpuTemperatureTitle"
+                                                       FontWeight="SemiBold"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="NoWrap" />
+                                        </ToggleButton>
                                         <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.CpuTemperatureText, Mode=OneWay}" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="CpuTemperatureLiveGraph" Grid.Row="1" Samples="{x:Bind ViewModel.CpuTemperatureChartSamples, Mode=OneWay}" EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="CPU Temperature" ValueUnit="°C" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FF40B6E6" GridColor="#FF0078D4" />
                                     <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
                                         <TextBlock x:Name="CpuTemperatureChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 °C" />
-                                        <TextBlock x:Name="CpuTemperatureChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                        <TextBlock x:Name="CpuTemperatureChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}" />
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -298,13 +341,24 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="CpuUsageChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="100%" />
-                                        <TextBlock x:Uid="CpuUsageTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <ToggleButton x:Name="CpuUsageTitleToggleButton"
+                                                      ToolTipService.ToolTip="Click or tap to pop out"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Padding="8,2"
+                                                      Checked="{x:Bind OnChartTitleToggled}"
+                                                      Unchecked="{x:Bind OnChartTitleToggled}">
+                                            <TextBlock x:Uid="CpuUsageTitle"
+                                                       FontWeight="SemiBold"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="NoWrap" />
+                                        </ToggleButton>
                                         <TextBlock x:Name="CpuUsageValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0.0 %" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="CpuUsageLiveGraph" Grid.Row="1" PrimarySeriesName="CPU Usage" ValueUnit="%" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="True" FixedMaximum="100" StrokeColor="#FFBF5AF2" GridColor="#FF881798" />
                                     <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
                                         <TextBlock x:Name="CpuUsageChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0%" />
-                                        <TextBlock x:Name="CpuUsageChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                        <TextBlock x:Name="CpuUsageChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}" />
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -337,13 +391,24 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="DiskActivityMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
-                                        <TextBlock x:Uid="DiskActivityTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <ToggleButton x:Name="DiskActivityTitleToggleButton"
+                                                      ToolTipService.ToolTip="Click or tap to pop out"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Padding="8,2"
+                                                      Checked="{x:Bind OnChartTitleToggled}"
+                                                      Unchecked="{x:Bind OnChartTitleToggled}">
+                                            <TextBlock x:Uid="DiskActivityTitle"
+                                                       FontWeight="SemiBold"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="NoWrap" />
+                                        </ToggleButton>
                                         <TextBlock x:Name="DiskActivityValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="210" TextTrimming="CharacterEllipsis" Text="R: 0 B/s - W: 0 B/s" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="DiskActivityLiveGraph" Grid.Row="1" PrimarySeriesName="Write" SecondarySeriesName="Read" ValueUnit="MB/s" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="False" FixedMaximum="0" StrokeColor="#FFFFB900" SecondaryStrokeColor="#FF13A10E" GridColor="#FFFF8C00" />
                                     <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
                                         <TextBlock x:Name="DiskActivityMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
-                                        <TextBlock x:Name="DiskActivityStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                        <TextBlock x:Name="DiskActivityStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}" />
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -376,13 +441,24 @@
                                     </Grid.RowDefinitions>
                                     <Grid>
                                         <TextBlock x:Name="NetworkUsageChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
-                                        <TextBlock x:Uid="NetworkUsageTitle" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" TextWrapping="NoWrap" />
+                                        <ToggleButton x:Name="NetworkUsageTitleToggleButton"
+                                                      ToolTipService.ToolTip="Click or tap to pop out"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Padding="8,2"
+                                                      Checked="{x:Bind OnChartTitleToggled}"
+                                                      Unchecked="{x:Bind OnChartTitleToggled}">
+                                            <TextBlock x:Uid="NetworkUsageTitle"
+                                                       FontWeight="SemiBold"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="NoWrap" />
+                                        </ToggleButton>
                                         <TextBlock x:Name="NetworkUsageValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="0 B/s" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="NetworkUsageLiveGraph" Grid.Row="1" PrimarySeriesName="Network Usage" ValueUnit="MB/s" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="False" FixedMaximum="0" StrokeColor="#FF00B7C3" GridColor="#FF038387" />
                                     <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
                                         <TextBlock x:Name="NetworkUsageChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 MB/s" />
-                                        <TextBlock x:Name="NetworkUsageChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}" />
+                                        <TextBlock x:Name="NetworkUsageChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}" />
                                     </Grid>
                                 </Grid>
                             </Border>
@@ -439,7 +515,7 @@
                             </Border.Background>
                         </Border>
                     </Grid>
-                    <SelectorBar x:Name="DiagnosticsSelectorBar" SelectionChanged="{x:Bind OnDiagnosticsSelectorBarSelectionChanged}" Margin="0,0,14,0" HorizontalAlignment="Center">
+                    <SelectorBar SelectionChanged="{x:Bind OnDiagnosticsSelectorBarSelectionChanged}" Margin="0,0,14,0" HorizontalAlignment="Center">
                         <SelectorBarItem x:Name="NetworkOpennessSelectorBarItem"
                                          x:Uid="NetworkOpennessFeature"
                                          IsSelected="True">
@@ -447,8 +523,7 @@
                                 <FontIcon Glyph="&#xE704;" />
                             </SelectorBarItem.Icon>
                         </SelectorBarItem>
-                        <SelectorBarItem x:Name="WifiProfilesSelectorBarItem"
-                                         x:Uid="WifiProfilesFeature">
+                        <SelectorBarItem x:Uid="WifiProfilesFeature">
                             <SelectorBarItem.Icon>
                                 <FontIcon Glyph="&#xE701;" />
                             </SelectorBarItem.Icon>

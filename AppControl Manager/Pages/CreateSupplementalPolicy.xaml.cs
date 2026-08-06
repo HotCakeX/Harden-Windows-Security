@@ -34,7 +34,6 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	#region Augmentation Interface

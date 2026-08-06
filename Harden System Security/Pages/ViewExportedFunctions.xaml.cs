@@ -29,7 +29,6 @@ internal sealed partial class ViewExportedFunctions : Page, CommonCore.UI.IPageH
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ViewExportedFunctionsButton/ToolTipService/ToolTip");

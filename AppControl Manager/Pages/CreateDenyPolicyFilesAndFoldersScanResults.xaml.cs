@@ -29,7 +29,6 @@ internal sealed partial class CreateDenyPolicyFilesAndFoldersScanResults : Page,
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("CreateDenyPolicyFilesAndFoldersScanResultsPageTitle");

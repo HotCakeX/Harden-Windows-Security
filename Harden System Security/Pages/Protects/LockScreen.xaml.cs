@@ -29,7 +29,6 @@ internal sealed partial class LockScreen : Page, CommonCore.UI.IPageHeaderProvid
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("LockScreenPageTitle");

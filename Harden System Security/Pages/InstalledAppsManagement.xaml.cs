@@ -29,7 +29,6 @@ internal sealed partial class InstalledAppsManagement : Page, CommonCore.UI.IPag
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("InstalledAppsManagementPageTitle");

@@ -34,7 +34,6 @@ internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, Co
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	#region Augmentation Interface

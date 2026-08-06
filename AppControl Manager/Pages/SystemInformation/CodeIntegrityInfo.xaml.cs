@@ -28,6 +28,5 @@ internal sealed partial class CodeIntegrityInfo : Page
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 }

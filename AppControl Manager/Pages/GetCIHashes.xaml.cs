@@ -49,7 +49,6 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	[DynamicWindowsRuntimeCast(typeof(GridViewItem))]

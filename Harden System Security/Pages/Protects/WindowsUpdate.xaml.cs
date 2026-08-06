@@ -29,7 +29,6 @@ internal sealed partial class WindowsUpdate : Page, CommonCore.UI.IPageHeaderPro
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	/// <summary>

@@ -29,7 +29,6 @@ internal sealed partial class Microsoft365AppsSecurityBaseline : Page, CommonCor
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("Microsoft365AppsSecurityBaselinePageTitle");

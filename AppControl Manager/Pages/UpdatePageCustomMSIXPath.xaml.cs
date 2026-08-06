@@ -28,6 +28,5 @@ internal sealed partial class UpdatePageCustomMSIXPath : Page
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 }

@@ -29,7 +29,6 @@ internal sealed partial class MicrosoftSecurityBaseline : Page, CommonCore.UI.IP
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("MicrosoftSecurityBaselinePageTitle");

@@ -29,7 +29,6 @@ internal sealed partial class NonAdmin : Page, CommonCore.UI.IPageHeaderProvider
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("NonAdminPageTitle");

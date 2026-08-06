@@ -37,7 +37,6 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	/// <summary>

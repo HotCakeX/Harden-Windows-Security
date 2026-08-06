@@ -28,7 +28,6 @@ internal sealed partial class Intune : Page, CommonCore.UI.IPageHeaderProvider
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("IntunePageTitle");

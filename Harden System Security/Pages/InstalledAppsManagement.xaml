@@ -55,7 +55,7 @@
                         </VisualStateGroup>
                     </VisualStateManager.VisualStateGroups>
 
-                    <Grid x:Name="MainBorder" RowSpacing="5">
+                    <Grid RowSpacing="5">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
@@ -247,8 +247,7 @@
                             </Grid>
                         </CCToolKit:WrapPanel>
 
-                        <Expander x:Name="DetailsExpander"
-                                  Grid.ColumnSpan="3"
+                        <Expander Grid.ColumnSpan="3"
                                   Grid.Row="2"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"

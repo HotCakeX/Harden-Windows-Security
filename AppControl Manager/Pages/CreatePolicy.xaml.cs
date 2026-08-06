@@ -28,7 +28,6 @@ internal sealed partial class CreatePolicy : Page, CommonCore.UI.IPageHeaderProv
 	internal CreatePolicy()
 	{
 		InitializeComponent();
-		DataContext = ViewModel;
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 

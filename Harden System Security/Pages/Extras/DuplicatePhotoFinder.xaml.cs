@@ -30,7 +30,6 @@ internal sealed partial class DuplicatePhotoFinder : Page, CommonCore.UI.IPageHe
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("DuplicatePhotosFinderPageTitle");

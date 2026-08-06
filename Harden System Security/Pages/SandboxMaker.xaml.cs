@@ -28,7 +28,6 @@ internal sealed partial class SandboxMaker : Page, CommonCore.UI.IPageHeaderProv
 	{
 		InitializeComponent();
 		NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("SandboxMakerNavItem/ToolTipService/ToolTip");

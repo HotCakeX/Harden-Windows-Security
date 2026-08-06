@@ -29,7 +29,6 @@ internal sealed partial class MiscellaneousConfigs : Page, CommonCore.UI.IPageHe
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("MiscellaneousConfigsPageTitle");

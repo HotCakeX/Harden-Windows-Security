@@ -28,7 +28,6 @@ internal sealed partial class BuildNewCertificate : Page, CommonCore.UI.IPageHea
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("BuildNewCertificatePageTitle");

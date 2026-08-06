@@ -29,7 +29,6 @@ internal sealed partial class WindowsFirewall : Page, CommonCore.UI.IPageHeaderP
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	/// <summary>

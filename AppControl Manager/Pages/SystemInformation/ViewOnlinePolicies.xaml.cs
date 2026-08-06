@@ -28,7 +28,6 @@ internal sealed partial class ViewOnlinePolicies : Page
 	internal ViewOnlinePolicies()
 	{
 		InitializeComponent();
-		DataContext = ViewModel;
 		NavigationCacheMode = NavigationCacheMode.Disabled;
 	}
 

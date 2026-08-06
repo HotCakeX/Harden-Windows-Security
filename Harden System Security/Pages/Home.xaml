@@ -431,7 +431,7 @@
                                                 HorizontalAlignment="Left"
                                                 FontSize="8"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}"/>
+                                                Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}"/>
                                     <TextBlock Grid.Row="1"
                                                 Grid.Column="1"
                                                 Margin="0,0,0,0"
@@ -524,7 +524,7 @@
                                                 HorizontalAlignment="Left"
                                                 FontSize="8"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}"/>
+                                                Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}"/>
                                     <TextBlock Grid.Row="1"
                                                 Grid.Column="1"
                                                 Margin="0,0,0,0"
@@ -784,7 +784,7 @@
                                                 HorizontalAlignment="Left"
                                                 FontSize="8"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="{x:Bind ViewModel.HomeChartStartSecondsLabel, Mode=OneWay}"/>
+                                                Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}"/>
                                     <TextBlock Grid.Row="1"
                                                 Grid.Column="1"
                                                 Margin="0,0,0,0"

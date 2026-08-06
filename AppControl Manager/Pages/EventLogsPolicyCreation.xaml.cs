@@ -34,7 +34,6 @@ internal sealed partial class EventLogsPolicyCreation : Page, IAnimatedIconsMana
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	#region Augmentation Interface

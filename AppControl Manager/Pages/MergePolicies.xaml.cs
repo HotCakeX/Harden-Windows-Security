@@ -32,7 +32,6 @@ internal sealed partial class MergePolicies : Page, IAnimatedIconsManager, Commo
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	#region Augmentation Interface

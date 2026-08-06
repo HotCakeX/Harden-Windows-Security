@@ -32,7 +32,6 @@ internal sealed partial class BitLocker : Page, CommonCore.UI.IPageHeaderProvide
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 		ViewModel.ExportJsonButtonHighlightRequested += OnExportJsonButtonHighlightRequested;
 	}
 

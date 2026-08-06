@@ -36,7 +36,6 @@ internal sealed partial class MDEAHPolicyCreation : Page, IAnimatedIconsManager,
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 
 		// Perform initial selected item assignment for the SelectorBar
 		InitSelectorBar();

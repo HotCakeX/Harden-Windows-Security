@@ -29,7 +29,6 @@ internal sealed partial class WindowsNetworking : Page, CommonCore.UI.IPageHeade
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("WindowsNetworkingPageTitle");

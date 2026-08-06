@@ -36,7 +36,6 @@ internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 
 		BrowseForXMLPolicyButton_FlyOutPub = BrowseForXMLPolicyButton_FlyOut;
 		BrowseForXMLPolicyButtonPub = BrowseForXMLPolicyButton;

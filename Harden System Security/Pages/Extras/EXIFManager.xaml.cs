@@ -29,7 +29,6 @@ internal sealed partial class EXIFManager : Page, CommonCore.UI.IPageHeaderProvi
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("EXIFManagerPageTitle");

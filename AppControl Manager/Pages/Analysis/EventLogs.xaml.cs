@@ -30,7 +30,6 @@ internal sealed partial class EventLogs : Page
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	internal async void ExportPageToPdf_Click()

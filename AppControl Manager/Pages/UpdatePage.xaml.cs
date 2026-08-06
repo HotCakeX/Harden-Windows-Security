@@ -33,7 +33,6 @@ internal sealed partial class UpdatePage : Page, CommonCore.UI.IPageHeaderProvid
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("UpdatePageTitle");

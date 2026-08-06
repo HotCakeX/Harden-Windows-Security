@@ -35,6 +35,7 @@ using Microsoft.Graphics.Canvas.UI;
 using Microsoft.Graphics.Canvas.UI.Xaml;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -131,8 +132,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		Big = 2
 	}
 
-	private readonly DispatcherTimer _diskActivityTimer = new();
-	private readonly DispatcherTimer _liveOnlyMetricTimer = new();
+	private readonly DispatcherTimer _liveMetricsTimer = new();
 	private readonly DispatcherTimer _blackHoleRenderTimer = new();
 	private readonly List<double> _diskReadMegabytesPerSecondSamples = new(DiskActivityMaxSamples);
 	private readonly List<double> _diskWriteMegabytesPerSecondSamples = new(DiskActivityMaxSamples);
@@ -159,7 +159,174 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	private AnimatedTesseractBackground? _animatedTesseractBackground;
 	private CanvasControl? _blackHoleCanvas;
 	private bool _isDisposed;
+	private readonly Dictionary<ToggleButton, ChartPopoutState> _chartPopouts = new(ChartCount);
 	private DateTimeOffset _blackHoleStartTime;
+
+	private sealed class ChartPopoutState(Window window, Grid frame, Border card, Grid windowRoot, TextBlock placeholder)
+	{
+		internal Window Window => window;
+		internal Grid Frame => frame;
+		internal Border Card => card;
+		internal Grid WindowRoot => windowRoot;
+		internal TextBlock Placeholder => placeholder;
+	}
+
+	[DynamicWindowsRuntimeCast(typeof(ToggleButton))]
+	private void OnChartTitleToggled(object sender, RoutedEventArgs args)
+	{
+		ToggleButton titleToggle = (ToggleButton)sender;
+		if (titleToggle.IsChecked == true)
+		{
+			OpenChartPopout(titleToggle);
+		}
+		else if (_chartPopouts.TryGetValue(titleToggle, out ChartPopoutState? state))
+		{
+			state.Window.Close();
+		}
+	}
+
+	[DynamicWindowsRuntimeCast(typeof(TextBlock))]
+	private void OpenChartPopout(ToggleButton titleToggle)
+	{
+		if (_chartPopouts.ContainsKey(titleToggle))
+		{
+			return;
+		}
+
+		(Grid frame, Border card, RowDefinition graphRow) = GetChartElements(titleToggle);
+		TextBlock placeholder = new()
+		{
+			Text = "Chart is open in an overlay window",
+			HorizontalAlignment = HorizontalAlignment.Center,
+			VerticalAlignment = VerticalAlignment.Center,
+			TextAlignment = TextAlignment.Center,
+			TextWrapping = TextWrapping.Wrap,
+			FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+			Opacity = 0.72
+		};
+		_ = frame.Children.Remove(card);
+		frame.Children.Add(placeholder);
+
+		Window popoutWindow = new();
+		Grid windowRoot = new()
+		{
+			Background = new SolidColorBrush(Color.FromArgb(255, 5, 3, 12)),
+			RequestedTheme = ElementTheme.Dark
+		};
+		card.Width = double.NaN;
+		card.Height = double.NaN;
+		card.Margin = new Thickness(0.0);
+		card.CornerRadius = new CornerRadius(0.0);
+		card.BorderThickness = new Thickness(0.0);
+		card.HorizontalAlignment = HorizontalAlignment.Stretch;
+		card.VerticalAlignment = VerticalAlignment.Stretch;
+		graphRow.Height = new GridLength(1.0, GridUnitType.Star);
+		windowRoot.Children.Add(card);
+		popoutWindow.Content = windowRoot;
+
+		OverlappedPresenter presenter = OverlappedPresenter.Create();
+		presenter.IsAlwaysOnTop = true;
+		presenter.IsResizable = true;
+		presenter.PreferredMinimumWidth = 300;
+		presenter.PreferredMinimumHeight = 250;
+		popoutWindow.AppWindow.SetPresenter(presenter);
+		popoutWindow.AppWindow.TitleBar.PreferredTheme = TitleBarTheme.Dark;
+
+		popoutWindow.AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
+		popoutWindow.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Collapsed;
+
+		popoutWindow.AppWindow.ResizeClient(new SizeInt32(500, 300));
+		popoutWindow.AppWindow.Title = ((TextBlock)titleToggle.Content).Text;
+
+		InputNonClientPointerSource nonClientPointerSource = InputNonClientPointerSource.GetForWindowId(popoutWindow.AppWindow.Id);
+		windowRoot.SizeChanged += (_, sizeArgs) => SetPopoutWindowRegions(nonClientPointerSource, windowRoot, titleToggle, sizeArgs.NewSize);
+
+		popoutWindow.AppWindow.SetIcon(@"Assets\AppIcon.ico");
+
+		ChartPopoutState state = new(popoutWindow, frame, card, windowRoot, placeholder);
+		_chartPopouts.Add(titleToggle, state);
+		popoutWindow.Closed += (_, _) => RestoreChart(titleToggle, state);
+		popoutWindow.Activate();
+	}
+
+	private static void SetPopoutWindowRegions(InputNonClientPointerSource nonClientPointerSource, FrameworkElement windowRoot, FrameworkElement interactiveElement, Size size)
+	{
+		double scale = windowRoot.XamlRoot?.RasterizationScale ?? 1.0;
+		RectInt32[] captionRegions =
+		[
+			new RectInt32(0, 0, Math.Max(1, (int)Math.Ceiling(size.Width * scale)), Math.Max(1, (int)Math.Ceiling(size.Height * scale)))
+		];
+		nonClientPointerSource.SetRegionRects(NonClientRegionKind.Caption, captionRegions);
+
+		GeneralTransform transform = interactiveElement.TransformToVisual(windowRoot);
+		Rect bounds = transform.TransformBounds(new Rect(0.0, 0.0, interactiveElement.ActualWidth, interactiveElement.ActualHeight));
+		int left = (int)Math.Floor(bounds.X * scale);
+		int top = (int)Math.Floor(bounds.Y * scale);
+		int right = (int)Math.Ceiling((bounds.X + bounds.Width) * scale);
+		int bottom = (int)Math.Ceiling((bounds.Y + bounds.Height) * scale);
+		RectInt32[] passthroughRegions =
+		[
+			new RectInt32(left, top, Math.Max(1, right - left), Math.Max(1, bottom - top))
+		];
+		nonClientPointerSource.SetRegionRects(NonClientRegionKind.Passthrough, passthroughRegions);
+	}
+
+	private (Grid Frame, Border Card, RowDefinition GraphRow) GetChartElements(ToggleButton titleToggle)
+	{
+		if (ReferenceEquals(titleToggle, AppRamTitleToggleButton))
+		{
+			return (AppRamCardFrame, AppRamCard, AppRamGraphRow);
+		}
+		if (ReferenceEquals(titleToggle, SystemMemoryUtilizationTitleToggleButton))
+		{
+			return (SystemMemoryUtilizationCardFrame, SystemMemoryUtilizationCard, SystemMemoryUtilizationGraphRow);
+		}
+		if (ReferenceEquals(titleToggle, StorageTemperatureTitleToggleButton))
+		{
+			return (StorageTemperatureCardFrame, StorageTemperatureCard, StorageTemperatureGraphRow);
+		}
+		if (ReferenceEquals(titleToggle, CpuTemperatureTitleToggleButton))
+		{
+			return (CpuTemperatureCardFrame, CpuTemperatureCard, CpuTemperatureGraphRow);
+		}
+		if (ReferenceEquals(titleToggle, CpuUsageTitleToggleButton))
+		{
+			return (CpuUsageCardFrame, CpuUsageCard, CpuUsageGraphRow);
+		}
+		if (ReferenceEquals(titleToggle, DiskActivityTitleToggleButton))
+		{
+			return (DiskActivityCardFrame, DiskActivityCard, DiskActivityGraphRow);
+		}
+		if (ReferenceEquals(titleToggle, NetworkUsageTitleToggleButton))
+		{
+			return (NetworkUsageCardFrame, NetworkUsageCard, NetworkUsageGraphRow);
+		}
+		foreach (KeyValuePair<string, GpuChartState> chartStatePair in _gpuChartStates)
+		{
+			GpuChartState chartState = chartStatePair.Value;
+			if (ReferenceEquals(titleToggle, chartState.TitleToggleButton))
+			{
+				return (chartState.CardFrame, chartState.Card, chartState.GraphRow);
+			}
+		}
+		throw new InvalidOperationException("The chart title toggle is not associated with a live graph.");
+	}
+
+	private void RestoreChart(ToggleButton titleToggle, ChartPopoutState state)
+	{
+		if (!_chartPopouts.Remove(titleToggle))
+		{
+			return;
+		}
+		_ = state.WindowRoot.Children.Remove(state.Card);
+		_ = state.Frame.Children.Remove(state.Placeholder);
+		state.Card.CornerRadius = new CornerRadius(10.0);
+		state.Card.BorderThickness = new Thickness(1.0);
+		state.Card.Margin = new Thickness(LiveGraphCardGlowBleed);
+		state.Frame.Children.Add(state.Card);
+		titleToggle.IsChecked = false;
+		ApplyGraphSize(_currentGraphSize);
+	}
 
 	internal HomeVM ViewModel { get; }
 
@@ -167,6 +334,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	{
 		ViewModel = viewModel;
 		InitializeComponent();
+		ChartAnimationsToggleSwitch.IsOn = true;
 		NetworkUsageLiveGraph.ValueFormatter = static value => HomeVM.FormatNetworkDataValue(value, isRate: true);
 		AppWindow.SetIcon(@"Assets\AppIcon.ico"); // Set the icon for the app's preview on the taskbar.
 		InitializeLiveGraphCardDepth();
@@ -185,15 +353,11 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		UpdateEffectiveMaximumLabels();
 		AppWindow.TitleBar.PreferredTheme = TitleBarTheme.Dark; // The window is designed to be used in Dark mode.
 		AppWindow.ResizeClient(new SizeInt32(1120, 840));
-		_liveOnlyMetricTimer.Interval = TimeSpan.FromSeconds(HomeLiveMetricUpdateIntervalSeconds);
-		_liveOnlyMetricTimer.Tick += OnLiveOnlyMetricTimerTick;
+		_liveMetricsTimer.Interval = TimeSpan.FromSeconds(HomeLiveMetricUpdateIntervalSeconds);
+		_liveMetricsTimer.Tick += OnLiveMetricsTimerTick;
 		UpdateLiveOnlyMetrics(firstNetworkSample: true);
-		_liveOnlyMetricTimer.Start();
-
-		_diskActivityTimer.Interval = TimeSpan.FromSeconds(2.0);
-		_diskActivityTimer.Tick += OnDiskActivityTimerTick;
 		UpdateDiskActivity();
-		_diskActivityTimer.Start();
+		_liveMetricsTimer.Start();
 		InitializeSensorsMonitoring();
 		OnHeartPrivacyWindowInitialized();
 	}
@@ -302,7 +466,6 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	private void UpdateHomeTitlePulse()
 	{
 		double elapsedSeconds = GetHomeTitleAnimationSeconds() - _homeTitlePulseStartSeconds;
-		HomeTitlePulseDotEllipse.Opacity = 1.0;
 		UpdateHomeTitlePulseRing(HomeTitlePulseRingOneEllipse, elapsedSeconds, 0.0);
 		UpdateHomeTitlePulseRing(HomeTitlePulseRingTwoEllipse, elapsedSeconds, 2.27);
 		UpdateHomeTitlePulseRing(HomeTitlePulseRingThreeEllipse, elapsedSeconds, 4.54);
@@ -654,11 +817,14 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			return;
 		}
 		_isDisposed = true;
+		ChartPopoutState[] popoutStates = [.. _chartPopouts.Values];
+		for (int index = 0; index < popoutStates.Length; index++)
+		{
+			popoutStates[index].Window.Close();
+		}
 		ViewModel.OnLiveGraphsWindowClosed(this);
-		_liveOnlyMetricTimer.Stop();
-		_liveOnlyMetricTimer.Tick -= OnLiveOnlyMetricTimerTick;
-		_diskActivityTimer.Stop();
-		_diskActivityTimer.Tick -= OnDiskActivityTimerTick;
+		_liveMetricsTimer.Stop();
+		_liveMetricsTimer.Tick -= OnLiveMetricsTimerTick;
 		_blackHoleRenderTimer.Stop();
 		_blackHoleRenderTimer.Tick -= OnBlackHoleRenderTimerTick;
 		StopSensorsMonitoring();
@@ -673,17 +839,19 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		RemoveAnimatedTesseractBackground();
 		CloseCpuUsageCounters();
 		CloseDiskActivityCounters();
-		_gpuUsageTimer.Stop();
-		if (_gpuUsageTimerSubscribed)
-		{
-			_gpuUsageTimer.Tick -= OnGpuUsageTimerTick;
-			_gpuUsageTimerSubscribed = false;
-		}
 
 		CloseGpuCounters();
 	}
 
-	private void OnLiveOnlyMetricTimerTick(object? sender, object e) => UpdateLiveOnlyMetrics(firstNetworkSample: false);
+	/// <summary>
+	/// Refreshes all 2-second live metrics in one dispatcher iteration.
+	/// </summary>
+	private void OnLiveMetricsTimerTick(object? sender, object e)
+	{
+		UpdateLiveOnlyMetrics(firstNetworkSample: false);
+		UpdateDiskActivity();
+		UpdateGpuUsage();
+	}
 
 	private void UpdateLiveOnlyMetrics(bool firstNetworkSample)
 	{
@@ -881,32 +1049,38 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		return maximum;
 	}
 
-	private static string GetLiveMetricMaximumLabel(List<double> samples)
-	{
-		if (samples.Count == 0)
-		{
-			return "0";
-		}
-
-		double maximum = samples[0];
-		for (int index = 1; index < samples.Count; index++)
-		{
-			if (samples[index] > maximum)
-			{
-				maximum = samples[index];
-			}
-		}
-		return maximum.ToString("0.#", CultureInfo.InvariantCulture);
-	}
-
-	private void OnDiskActivityTimerTick(object? sender, object e) => UpdateDiskActivity();
-
 	private void OnLiveGraphsScrollViewerSizeChanged()
 	{
 		if (_isGraphLayoutReady)
 		{
 			ApplyGraphSize(_currentGraphSize);
 			ApplyGpuGraphSizeFromCurrentSettings();
+		}
+	}
+
+	private void OnChartAnimationsToggleSwitchToggled() => ApplyChartAnimationSetting(ChartAnimationsToggleSwitch.IsOn);
+
+	private void ApplyChartAnimationSetting(bool animationsEnabled)
+	{
+		ReadOnlySpan<HomeLiveLineGraph> liveGraphs =
+		[
+			AppRamLiveGraph,
+			SystemMemoryUtilizationLiveGraph,
+			StorageTemperatureLiveGraph,
+			CpuTemperatureLiveGraph,
+			CpuUsageLiveGraph,
+			DiskActivityLiveGraph,
+			NetworkUsageLiveGraph
+		];
+
+		for (int index = 0; index < liveGraphs.Length; index++)
+		{
+			liveGraphs[index].AnimationsEnabled = animationsEnabled;
+		}
+
+		foreach (KeyValuePair<string, GpuChartState> chartStatePair in _gpuChartStates)
+		{
+			chartStatePair.Value.Graph.AnimationsEnabled = animationsEnabled;
 		}
 	}
 
@@ -928,6 +1102,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		_ => new GraphLayoutSettings(568.0, 382.0, 506.0, 320.0, 236.0, 28.0, 210.0, 12.0, 11.0)
 	};
 
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void ApplyGraphSize(LiveGraphSize graphSize)
 	{
 		if (!_isGraphLayoutReady)
@@ -942,17 +1117,20 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		LiveGraphsWrapGrid.ItemWidth = settings.ItemWidth;
 		LiveGraphsWrapGrid.ItemHeight = settings.ItemHeight;
 		LiveGraphsWrapGrid.MaximumRowsOrColumns = columns;
-		Grid[] cardFrames = [AppRamCardFrame, SystemMemoryUtilizationCardFrame, StorageTemperatureCardFrame, CpuTemperatureCardFrame, CpuUsageCardFrame, DiskActivityCardFrame, NetworkUsageCardFrame];
-		Border[] cards = [AppRamCard, SystemMemoryUtilizationCard, StorageTemperatureCard, CpuTemperatureCard, CpuUsageCard, DiskActivityCard, NetworkUsageCard];
-		RowDefinition[] graphRows = [AppRamGraphRow, SystemMemoryUtilizationGraphRow, StorageTemperatureGraphRow, CpuTemperatureGraphRow, CpuUsageGraphRow, DiskActivityGraphRow, NetworkUsageGraphRow];
+		ReadOnlySpan<Grid> cardFrames = [AppRamCardFrame, SystemMemoryUtilizationCardFrame, StorageTemperatureCardFrame, CpuTemperatureCardFrame, CpuUsageCardFrame, DiskActivityCardFrame, NetworkUsageCardFrame];
+		ReadOnlySpan<Border> cards = [AppRamCard, SystemMemoryUtilizationCard, StorageTemperatureCard, CpuTemperatureCard, CpuUsageCard, DiskActivityCard, NetworkUsageCard];
+		ReadOnlySpan<RowDefinition> graphRows = [AppRamGraphRow, SystemMemoryUtilizationGraphRow, StorageTemperatureGraphRow, CpuTemperatureGraphRow, CpuUsageGraphRow, DiskActivityGraphRow, NetworkUsageGraphRow];
 		for (int index = 0; index < cards.Length; index++)
 		{
 			cardFrames[index].Width = settings.CardWidth + (LiveGraphCardGlowBleed * 2.0);
 			cardFrames[index].Height = settings.CardHeight + (LiveGraphCardGlowBleed * 2.0);
-			cards[index].Width = settings.CardWidth;
-			cards[index].Height = settings.CardHeight;
-			cards[index].Margin = new Thickness(LiveGraphCardGlowBleed);
-			graphRows[index].Height = new GridLength(settings.GraphHeight);
+			if (cards[index].Parent is Grid parentGrid && ReferenceEquals(parentGrid, cardFrames[index]))
+			{
+				cards[index].Width = settings.CardWidth;
+				cards[index].Height = settings.CardHeight;
+				cards[index].Margin = new Thickness(LiveGraphCardGlowBleed);
+				graphRows[index].Height = new GridLength(settings.GraphHeight);
+			}
 		}
 		ApplyFooterHeight(settings.FooterHeight);
 		ApplyRangeLabelFontSize(settings.LabelFontSize);
@@ -962,7 +1140,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 
 	private void ApplyFooterHeight(double footerHeight)
 	{
-		RowDefinition[] footerRows = [AppRamGraphFooterRow, SystemMemoryUtilizationGraphFooterRow, StorageTemperatureGraphFooterRow, CpuTemperatureGraphFooterRow, CpuUsageGraphFooterRow, DiskActivityGraphFooterRow, NetworkUsageGraphFooterRow];
+		ReadOnlySpan<RowDefinition> footerRows = [AppRamGraphFooterRow, SystemMemoryUtilizationGraphFooterRow, StorageTemperatureGraphFooterRow, CpuTemperatureGraphFooterRow, CpuUsageGraphFooterRow, DiskActivityGraphFooterRow, NetworkUsageGraphFooterRow];
 		for (int index = 0; index < footerRows.Length; index++)
 		{
 			footerRows[index].Height = new GridLength(footerHeight);
@@ -973,13 +1151,11 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	{
 		DiskActivityValueTextBlock.MaxWidth = settings.ValueMaxWidth;
 		DiskActivityValueTextBlock.FontSize = settings.ValueFontSize;
-		DiskActivityValueTextBlock.LineHeight = 0.0;
-		DiskActivityValueTextBlock.MaxHeight = double.PositiveInfinity;
 	}
 
 	private void ApplyRangeLabelFontSize(double fontSize)
 	{
-		TextBlock[] textBlocks = [AppRamChartMinLabelTextBlock, AppRamChartMaxLabelTextBlock, AppRamChartStartSecondsLabelTextBlock, SystemMemoryUtilizationChartMinLabelTextBlock, SystemMemoryUtilizationChartMaxLabelTextBlock, SystemMemoryUtilizationChartStartSecondsLabelTextBlock, StorageTemperatureChartMinLabelTextBlock, StorageTemperatureChartMaxLabelTextBlock, StorageTemperatureChartStartSecondsLabelTextBlock, CpuTemperatureChartMinLabelTextBlock, CpuTemperatureChartMaxLabelTextBlock, CpuTemperatureChartStartSecondsLabelTextBlock, CpuUsageChartMinLabelTextBlock, CpuUsageChartMaxLabelTextBlock, CpuUsageChartStartSecondsLabelTextBlock, DiskActivityMinLabelTextBlock, DiskActivityMaxLabelTextBlock, DiskActivityStartSecondsLabelTextBlock, NetworkUsageChartMinLabelTextBlock, NetworkUsageChartMaxLabelTextBlock, NetworkUsageChartStartSecondsLabelTextBlock];
+		ReadOnlySpan<TextBlock> textBlocks = [AppRamChartMinLabelTextBlock, AppRamChartMaxLabelTextBlock, AppRamChartStartSecondsLabelTextBlock, SystemMemoryUtilizationChartMinLabelTextBlock, SystemMemoryUtilizationChartMaxLabelTextBlock, SystemMemoryUtilizationChartStartSecondsLabelTextBlock, StorageTemperatureChartMinLabelTextBlock, StorageTemperatureChartMaxLabelTextBlock, StorageTemperatureChartStartSecondsLabelTextBlock, CpuTemperatureChartMinLabelTextBlock, CpuTemperatureChartMaxLabelTextBlock, CpuTemperatureChartStartSecondsLabelTextBlock, CpuUsageChartMinLabelTextBlock, CpuUsageChartMaxLabelTextBlock, CpuUsageChartStartSecondsLabelTextBlock, DiskActivityMinLabelTextBlock, DiskActivityMaxLabelTextBlock, DiskActivityStartSecondsLabelTextBlock, NetworkUsageChartMinLabelTextBlock, NetworkUsageChartMaxLabelTextBlock, NetworkUsageChartStartSecondsLabelTextBlock];
 		for (int index = 0; index < textBlocks.Length; index++)
 		{
 			textBlocks[index].FontSize = fontSize;
@@ -1410,22 +1586,18 @@ internal sealed partial class HomeLiveGraphsWindow
 	private const string GpuPhysicalToken = "_phys_";
 	private const string GpuEngineToken = "_eng_";
 	private const string DisplayAdapterAqsFilter = "System.Devices.ClassGuid:=\"{4d36e968-e325-11ce-bfc1-08002be10318}\"";
-
-	private readonly DispatcherTimer _gpuUsageTimer = new();
 	private readonly Dictionary<string, GpuChartState> _gpuChartStates = new(StringComparer.OrdinalIgnoreCase);
 	private IntPtr _gpuEngineUtilizationCounter;
 	private readonly List<string> _gpuDisplayNames = new();
-	private readonly Dictionary<string, GpuDxgiAdapterDescriptor> _gpuDxgiAdaptersByLuid = new(StringComparer.OrdinalIgnoreCase);
+	private readonly Dictionary<string, string> _gpuDxgiAdaptersByLuid = new(StringComparer.OrdinalIgnoreCase);
 	private readonly Dictionary<string, string> _gpuDxgiDisplayNamesByGroupKey = new(StringComparer.OrdinalIgnoreCase);
 	private readonly Dictionary<string, int> _gpuDxgiDisplayIndexesByGroupKey = new(StringComparer.OrdinalIgnoreCase);
 	// Reused on each GPU poll to avoid allocating a totals dictionary every tick.
 	private readonly Dictionary<string, double> _gpuAdapterTotals = new(StringComparer.OrdinalIgnoreCase);
 	private bool _gpuUsageInitialized;
-	private bool _gpuUsageTimerSubscribed;
 	private IntPtr _gpuPdhQuery;
 
-
-	private sealed class GpuChartState(int displayIndex, Grid cardFrame, Border card, RowDefinition graphRow, RowDefinition footerRow, HomeLiveLineGraph graph, TextBlock titleTextBlock, TextBlock valueTextBlock, TextBlock maxLabelTextBlock, TextBlock minLabelTextBlock, TextBlock startSecondsLabelTextBlock)
+	private sealed class GpuChartState(int displayIndex, Grid cardFrame, Border card, RowDefinition graphRow, RowDefinition footerRow, HomeLiveLineGraph graph, ToggleButton titleToggleButton, TextBlock titleTextBlock, TextBlock valueTextBlock, TextBlock maxLabelTextBlock, TextBlock minLabelTextBlock, TextBlock startSecondsLabelTextBlock)
 	{
 		internal int DisplayIndex => displayIndex;
 		internal Grid CardFrame => cardFrame;
@@ -1433,6 +1605,7 @@ internal sealed partial class HomeLiveGraphsWindow
 		internal RowDefinition GraphRow => graphRow;
 		internal RowDefinition FooterRow => footerRow;
 		internal HomeLiveLineGraph Graph => graph;
+		internal ToggleButton TitleToggleButton => titleToggleButton;
 		internal TextBlock TitleTextBlock => titleTextBlock;
 		internal TextBlock ValueTextBlock => valueTextBlock;
 		internal TextBlock MaxLabelTextBlock => maxLabelTextBlock;
@@ -1441,13 +1614,6 @@ internal sealed partial class HomeLiveGraphsWindow
 		internal readonly List<double> Samples = new(GpuUsageMaxSamples);
 	}
 
-
-	private sealed class GpuDxgiAdapterDescriptor(string groupKey, string displayName, int displayIndex)
-	{
-		internal string GroupKey => groupKey;
-		internal string DisplayName => displayName;
-		internal int DisplayIndex => displayIndex;
-	}
 
 	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void OnRootGridLoaded(object sender, RoutedEventArgs e)
@@ -1463,6 +1629,7 @@ internal sealed partial class HomeLiveGraphsWindow
 		_ = UpdateGpuDisplayNamesAsync();
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void ApplyGpuGraphSizeFromCurrentSettings()
 	{
 		if (!_isGraphLayoutReady || _gpuChartStates.Count == 0)
@@ -1476,10 +1643,13 @@ internal sealed partial class HomeLiveGraphsWindow
 			GpuChartState chartState = chartStatePair.Value;
 			chartState.CardFrame.Width = settings.CardWidth + (LiveGraphCardGlowBleed * 2.0);
 			chartState.CardFrame.Height = settings.CardHeight + (LiveGraphCardGlowBleed * 2.0);
-			chartState.Card.Width = settings.CardWidth;
-			chartState.Card.Height = settings.CardHeight;
-			chartState.Card.Margin = new Thickness(LiveGraphCardGlowBleed);
-			chartState.GraphRow.Height = new GridLength(settings.GraphHeight);
+			if (chartState.Card.Parent is Grid parentGrid && ReferenceEquals(parentGrid, chartState.CardFrame))
+			{
+				chartState.Card.Width = settings.CardWidth;
+				chartState.Card.Height = settings.CardHeight;
+				chartState.Card.Margin = new Thickness(LiveGraphCardGlowBleed);
+				chartState.GraphRow.Height = new GridLength(settings.GraphHeight);
+			}
 			chartState.FooterRow.Height = new GridLength(settings.FooterHeight);
 			chartState.ValueTextBlock.MaxWidth = settings.ValueMaxWidth;
 			chartState.ValueTextBlock.FontSize = settings.ValueFontSize;
@@ -1490,12 +1660,13 @@ internal sealed partial class HomeLiveGraphsWindow
 		}
 	}
 
+	private static readonly string[] RequestedProperties = ["System.ItemNameDisplay"];
+
 	private async Task UpdateGpuDisplayNamesAsync()
 	{
 		try
 		{
-			string[] requestedProperties = ["System.ItemNameDisplay"];
-			DeviceInformationCollection displayAdapters = await DeviceInformation.FindAllAsync(DisplayAdapterAqsFilter, requestedProperties, DeviceInformationKind.Device);
+			DeviceInformationCollection displayAdapters = await DeviceInformation.FindAllAsync(DisplayAdapterAqsFilter, RequestedProperties, DeviceInformationKind.Device);
 			_gpuDisplayNames.Clear();
 			for (int index = 0; index < displayAdapters.Count; index++)
 			{
@@ -1510,7 +1681,7 @@ internal sealed partial class HomeLiveGraphsWindow
 			}
 
 			ApplyGpuDisplayNames();
-			EnsureGpuUsageTimerStarted();
+			RefreshGpuUsageIfCountersReady();
 		}
 		catch (Exception)
 		{
@@ -1595,32 +1766,21 @@ internal sealed partial class HomeLiveGraphsWindow
 
 		_gpuUsageInitialized = true;
 		InitializeGpuCounters();
-		EnsureGpuUsageTimerStarted();
+		RefreshGpuUsageIfCountersReady();
 	}
 
-	private void EnsureGpuUsageTimerStarted()
+	/// <summary>
+	/// Performs an immediate GPU refresh after the counters become available.
+	/// </summary>
+	private void RefreshGpuUsageIfCountersReady()
 	{
 		if (_gpuPdhQuery == IntPtr.Zero || _gpuEngineUtilizationCounter == IntPtr.Zero)
 		{
 			return;
 		}
 
-		if (!_gpuUsageTimerSubscribed)
-		{
-			_gpuUsageTimer.Interval = TimeSpan.FromSeconds(2.0);
-			_gpuUsageTimer.Tick += OnGpuUsageTimerTick;
-			_gpuUsageTimerSubscribed = true;
-		}
-
 		UpdateGpuUsage();
-
-		if (!_gpuUsageTimer.IsEnabled)
-		{
-			_gpuUsageTimer.Start();
-		}
 	}
-
-	private void OnGpuUsageTimerTick(object? sender, object e) => UpdateGpuUsage();
 
 	private void InitializeGpuCounters()
 	{
@@ -1708,9 +1868,9 @@ internal sealed partial class HomeLiveGraphsWindow
 			return;
 		}
 
-		if (!_gpuDxgiDisplayNamesByGroupKey.TryGetValue(groupKey, out string? displayName))
+		if (!_gpuDxgiDisplayNamesByGroupKey.ContainsKey(groupKey))
 		{
-			displayName = GetDxgiAdapterDescription(adapterDescription);
+			string displayName = GetDxgiAdapterDescription(adapterDescription);
 			if (string.IsNullOrWhiteSpace(displayName))
 			{
 				displayName = "GPU " + _gpuDxgiDisplayNamesByGroupKey.Count.ToString(CultureInfo.InvariantCulture) + " Usage";
@@ -1719,9 +1879,7 @@ internal sealed partial class HomeLiveGraphsWindow
 			_gpuDxgiDisplayNamesByGroupKey.Add(groupKey, displayName);
 			_gpuDxgiDisplayIndexesByGroupKey.Add(groupKey, _gpuDxgiDisplayIndexesByGroupKey.Count);
 		}
-
-		int displayIndex = _gpuDxgiDisplayIndexesByGroupKey[groupKey];
-		_gpuDxgiAdaptersByLuid[luidKey] = new GpuDxgiAdapterDescriptor(groupKey, displayName, displayIndex);
+		_gpuDxgiAdaptersByLuid[luidKey] = groupKey;
 	}
 
 	private static string CreateGpuLuidAdapterKey(LUID luid) =>
@@ -1753,7 +1911,7 @@ internal sealed partial class HomeLiveGraphsWindow
 			return string.Empty;
 		}
 
-		return _gpuDxgiAdaptersByLuid.TryGetValue(luidKey, out GpuDxgiAdapterDescriptor? adapterDescriptor) ? adapterDescriptor.GroupKey : string.Empty;
+		return _gpuDxgiAdaptersByLuid.TryGetValue(luidKey, out string? groupKey) ? groupKey : string.Empty;
 	}
 
 	private static string TryGetGpuLuidAdapterKey(string counterPath)
@@ -1791,11 +1949,15 @@ internal sealed partial class HomeLiveGraphsWindow
 		string displayName = GetGpuAdapterDisplayName(adapterKey, displayIndex);
 		TextBlock maxLabelTextBlock = CreateGpuLabelTextBlock("100%", HorizontalAlignment.Left);
 		TextBlock titleTextBlock = CreateGpuTitleTextBlock(displayName);
+		ToggleButton titleToggleButton = CreateGpuTitleToggleButton(titleTextBlock);
+		ToolTipService.SetToolTip(titleToggleButton, "Click or tap to pop out");
+		titleToggleButton.Checked += OnChartTitleToggled;
+		titleToggleButton.Unchecked += OnChartTitleToggled;
 		TextBlock valueTextBlock = CreateGpuLabelTextBlock("0%", HorizontalAlignment.Right);
 		valueTextBlock.MaxWidth = 150.0;
 		Grid headerGrid = new();
 		headerGrid.Children.Add(maxLabelTextBlock);
-		headerGrid.Children.Add(titleTextBlock);
+		headerGrid.Children.Add(titleToggleButton);
 		headerGrid.Children.Add(valueTextBlock);
 
 		HomeLiveLineGraph graph = new()
@@ -1807,7 +1969,8 @@ internal sealed partial class HomeLiveGraphsWindow
 			UseFixedMaximum = true,
 			FixedMaximum = 100.0,
 			StrokeColor = GetGpuChartColor(displayIndex),
-			GridColor = GetGpuGridColor(displayIndex)
+			GridColor = GetGpuGridColor(displayIndex),
+			AnimationsEnabled = ChartAnimationsToggleSwitch.IsOn
 		};
 
 		TextBlock minLabelTextBlock = CreateGpuLabelTextBlock("0%", HorizontalAlignment.Left);
@@ -1842,11 +2005,18 @@ internal sealed partial class HomeLiveGraphsWindow
 		Color gpuChartColor = GetGpuChartColor(displayIndex);
 		Color gpuGridColor = GetGpuGridColor(displayIndex);
 		Grid cardFrame = CreateLiveGraphCardFrame(card, Color.FromArgb(102, gpuChartColor.R, gpuChartColor.G, gpuChartColor.B), Color.FromArgb(102, gpuGridColor.R, gpuGridColor.G, gpuGridColor.B));
-		_gpuChartStates.Add(adapterKey, new GpuChartState(displayIndex, cardFrame, card, graphRow, footerRow, graph, titleTextBlock, valueTextBlock, maxLabelTextBlock, minLabelTextBlock, startSecondsLabelTextBlock));
+		_gpuChartStates.Add(adapterKey, new GpuChartState(displayIndex, cardFrame, card, graphRow, footerRow, graph, titleToggleButton, titleTextBlock, valueTextBlock, maxLabelTextBlock, minLabelTextBlock, startSecondsLabelTextBlock));
 		LiveGraphsWrapGrid.Children.Add(cardFrame);
 		ApplyGpuGraphSizeFromCurrentSettings();
 	}
 
+	private static ToggleButton CreateGpuTitleToggleButton(TextBlock titleTextBlock) => new()
+	{
+		Content = titleTextBlock,
+		HorizontalAlignment = HorizontalAlignment.Center,
+		VerticalAlignment = VerticalAlignment.Center,
+		Padding = new Thickness(8.0, 2.0, 8.0, 2.0)
+	};
 	private static TextBlock CreateGpuTitleTextBlock(string text) => new()
 	{
 		Text = text,
@@ -1868,17 +2038,13 @@ internal sealed partial class HomeLiveGraphsWindow
 		Text = text
 	};
 
-	private static Color GetGpuChartColor(int displayIndex)
-	{
-		Color[] colors = [Color.FromArgb(255, 255, 99, 146), Color.FromArgb(255, 130, 207, 255), Color.FromArgb(255, 255, 204, 77), Color.FromArgb(255, 167, 139, 250)];
-		return colors[displayIndex % colors.Length];
-	}
+	private static readonly Color[] GpuChartColors = [Color.FromArgb(255, 255, 99, 146), Color.FromArgb(255, 130, 207, 255), Color.FromArgb(255, 255, 204, 77), Color.FromArgb(255, 167, 139, 250)];
 
-	private static Color GetGpuGridColor(int displayIndex)
-	{
-		Color[] colors = [Color.FromArgb(255, 189, 52, 96), Color.FromArgb(255, 0, 120, 212), Color.FromArgb(255, 181, 126, 0), Color.FromArgb(255, 115, 70, 180)];
-		return colors[displayIndex % colors.Length];
-	}
+	private static Color GetGpuChartColor(int displayIndex) => GpuChartColors[displayIndex % GpuChartColors.Length];
+
+	private static readonly Color[] GpuGridColors = [Color.FromArgb(255, 189, 52, 96), Color.FromArgb(255, 0, 120, 212), Color.FromArgb(255, 181, 126, 0), Color.FromArgb(255, 115, 70, 180)];
+
+	private static Color GetGpuGridColor(int displayIndex) => GpuGridColors[displayIndex % GpuGridColors.Length];
 
 	private void UpdateGpuUsage()
 	{

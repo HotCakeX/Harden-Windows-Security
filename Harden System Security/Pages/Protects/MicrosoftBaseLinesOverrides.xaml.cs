@@ -29,7 +29,6 @@ internal sealed partial class MicrosoftBaseLinesOverrides : Page, CommonCore.UI.
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("MicrosoftBaseLinesOverridesPageTitle");

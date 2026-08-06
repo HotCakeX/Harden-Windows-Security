@@ -33,7 +33,6 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	/// <summary>

@@ -26,9 +26,5 @@ internal sealed partial class SystemShutdownInfoDialog : ContentDialogV2
 {
 	private SystemShutdownInfoDialogVM ViewModel => ViewModelProvider.SystemShutdownInfoDialogVM;
 
-	internal SystemShutdownInfoDialog()
-	{
-		InitializeComponent();
-		DataContext = ViewModel;
-	}
+	internal SystemShutdownInfoDialog() => InitializeComponent();
 }

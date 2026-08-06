@@ -29,7 +29,6 @@ internal sealed partial class AuditPolicies : Page, CommonCore.UI.IPageHeaderPro
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("AuditPoliciesPageTitle");

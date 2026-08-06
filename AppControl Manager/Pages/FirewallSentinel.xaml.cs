@@ -40,7 +40,6 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("FirewallSentinelPageTitle");

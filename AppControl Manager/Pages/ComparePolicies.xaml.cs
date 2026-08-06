@@ -32,7 +32,6 @@ internal sealed partial class ComparePolicies : Page, IAnimatedIconsManager, Com
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	#region Augmentation Interface

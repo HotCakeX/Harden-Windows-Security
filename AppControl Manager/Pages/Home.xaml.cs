@@ -176,7 +176,6 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 	{
 		InitializeComponent();
 		NavigationCacheMode = NavigationCacheMode.Disabled;
-		DataContext = ViewModel;
 	}
 
 	private async void OnInitialLoaded()

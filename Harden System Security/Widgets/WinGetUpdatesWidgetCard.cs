@@ -85,7 +85,7 @@ internal static class WinGetUpdatesWidgetCard
 	/// of the image travel to the host inside of the data payload.
 	/// https://adaptivecards.io/explorer/Image.html
 	/// </summary>
-	internal static readonly Lazy<string> Icon = new(() => string.Concat("data:image/png;base64,", Convert.ToBase64String(File.ReadAllBytes(Path.Join(AppContext.BaseDirectory, "Assets", "Others", "WinGetWidgetIcon.png")))));
+	internal static readonly Lazy<string> Icon = new(static () => string.Concat("data:image/png;base64,", Convert.ToBase64String(File.ReadAllBytes(Path.Join(AppContext.BaseDirectory, "Assets", "Others", "WinGetWidgetIcon.png")))));
 
 	/// <summary>
 	/// Produces the data payload that the Widgets Board merges into <see cref="Template"/>.

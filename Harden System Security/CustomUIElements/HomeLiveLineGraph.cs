@@ -194,6 +194,9 @@ internal sealed partial class HomeLiveLineGraph : Grid
 
 	public static readonly DependencyProperty ValueUnitProperty = DependencyProperty.Register(nameof(ValueUnit), typeof(string), typeof(HomeLiveLineGraph), new PropertyMetadata(string.Empty));
 
+	// Optional formatter for series whose stored sample unit differs from their preferred display unit.
+	internal Func<double, string>? ValueFormatter { get; set; }
+
 	public bool UseFixedMinimum
 	{
 		get => (bool)GetValue(UseFixedMinimumProperty);
@@ -642,6 +645,11 @@ internal sealed partial class HomeLiveLineGraph : Grid
 
 	private string FormatValue(double value)
 	{
+		if (ValueFormatter is not null)
+		{
+			return ValueFormatter(value);
+		}
+
 		string formattedValue = value.ToString("0.##", CultureInfo.InvariantCulture);
 		return string.IsNullOrWhiteSpace(ValueUnit) ? formattedValue : formattedValue + " " + ValueUnit;
 	}

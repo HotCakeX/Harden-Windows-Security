@@ -3306,9 +3306,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>La directiva de Intune se deserializó correctamente pero el objeto relevante está vacío.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>Hubo un error al analizar el número de opción de regla {0} a su valor de cadena: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>El ID del objeto de la directiva de Intune era nulo para la directiva seleccionada que se va a eliminar</value>
   </data>

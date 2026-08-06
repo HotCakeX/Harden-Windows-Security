@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>La politique Intune a été désérialisée avec succès mais l'objet pertinent est vide.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>Une erreur s'est produite lors de l'analyse du numéro d'option de règle {0} en sa valeur de chaîne : {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>L'ID d'objet de politique Intune était nul pour la politique sélectionnée à supprimer</value>
   </data>

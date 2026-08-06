@@ -34,14 +34,11 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 	#region MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
-	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
+	public AuthenticationCompanion AuthCompanionCLS { get; }
 
 	// Enable the retrieve button if a valid value is set as Active Account
 	private void UpdateButtonsStates(bool on) => AreElementsEnabled = on;
 
-	/// <summary>
-	/// Automatically provided via constructor injection by the DI container during build.
-	/// </summary>
 	internal ViewOnlinePoliciesVM()
 	{
 		MainInfoBar = new();
@@ -157,24 +154,14 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 							foreach (string item2 in CollectionsMarshal.AsSpan(policyResult.Item2.PolicyOptions))
 							{
-								try
+								// Ensure the number has a value in the Enum
+								if (int.TryParse(item2, out int index))
 								{
-									// Ensure the number has a value in the Enum
-									if (int.TryParse(item2, out int index))
-									{
-										// Cast the number to the enum
-										OptionType option = (OptionType)index;
+									// Cast the number to the enum
+									OptionType option = (OptionType)index;
 
-										// Get the enum member name and add it to the list
-										optionsToReplaceWith.Add(option.ToString());
-									}
-								}
-								catch (Exception ex)
-								{
-									Logger.Write(string.Format(
-										Atlas.GetStr("ErrorParsingRuleOptionMessage"),
-										item2,
-										ex.Message));
+									// Get the enum member name and add it to the list
+									optionsToReplaceWith.Add(option.ToString());
 								}
 							}
 

@@ -973,7 +973,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 				policyObj.BasePolicyID = policyObj.PolicyID;
 
 				policyObj = SetCiPolicyInfo.Set(policyObj, true, policyNameStr, null);
-				policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"), null);
+				policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0), null);
 				policyObj = CiRuleOptions.Set(policyObj, template: CiRuleOptions.PolicyTemplate.Base, EnableAuditMode: false, RequireEVSigners: false, ScriptEnforcement: true, TestMode: false);
 
 				if (AppManifestsCreateAndDeploy)
@@ -986,8 +986,7 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 			await ViewModelProvider.MainWindowVM.AssignToSidebar(_policyPathAppManifests);
 
-			if (sender is not null)
-				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+			MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 			AppManifestsInfoBarActionButtonVisibility = Visibility.Visible;
 			AppManifestsInfoBar.WriteSuccess(Atlas.GetStr("AppManifestsPolicyCreatedSuccessfully"));

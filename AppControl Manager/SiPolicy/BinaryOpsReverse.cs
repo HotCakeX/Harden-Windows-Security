@@ -720,7 +720,7 @@ internal static class BinaryOpsReverse
 			FileRulesRef = ParseFileRulesRef(reader, fileRuleIds)
 		};
 
-		SigningScenario scen = new(id, value, productSigners)
+		return new(id, value, productSigners)
 		{
 			InheritedScenarios = inheritedScenarios,
 			MinimumHashAlgorithm = minimumHashAlgorithm,
@@ -737,8 +737,6 @@ internal static class BinaryOpsReverse
 				FileRulesRef = ParseFileRulesRef(reader, fileRuleIds)
 			}
 		};
-
-		return scen;
 	}
 
 	/// <summary>

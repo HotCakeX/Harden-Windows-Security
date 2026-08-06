@@ -55,7 +55,7 @@ internal static class NewFileNameLevelRules
 		{
 			string allowID = $"ID_ALLOW_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
-			Allow newFileAttrib = new(id: allowID)
+			Allow newAllow = new(id: allowID)
 			{
 				FriendlyName = Atlas.GetStr("FileNameRuleTypeFriendlyName"),
 				MinimumFileVersion = fileNameItem.FileVersion?.ToString()
@@ -63,22 +63,22 @@ internal static class NewFileNameLevelRules
 
 			if (!string.IsNullOrWhiteSpace(fileNameItem.OriginalFileName))
 			{
-				newFileAttrib.FileName = fileNameItem.OriginalFileName;
+				newAllow.FileName = fileNameItem.OriginalFileName;
 			}
 			else if (!string.IsNullOrWhiteSpace(fileNameItem.InternalName))
 			{
-				newFileAttrib.InternalName = fileNameItem.InternalName;
+				newAllow.InternalName = fileNameItem.InternalName;
 			}
 			else if (!string.IsNullOrWhiteSpace(fileNameItem.FileDescription))
 			{
-				newFileAttrib.FileDescription = fileNameItem.FileDescription;
+				newAllow.FileDescription = fileNameItem.FileDescription;
 			}
 			else if (!string.IsNullOrWhiteSpace(fileNameItem.ProductName))
 			{
-				newFileAttrib.ProductName = fileNameItem.ProductName;
+				newAllow.ProductName = fileNameItem.ProductName;
 			}
 
-			policyObj.FileRules.Add(newFileAttrib);
+			policyObj.FileRules.Add(newAllow);
 
 
 			// For User-Mode files
@@ -122,7 +122,7 @@ internal static class NewFileNameLevelRules
 		{
 			string denyID = $"ID_DENY_A_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}";
 
-			Deny newFileAttrib = new(id: denyID)
+			Deny newDeny = new(id: denyID)
 			{
 				FriendlyName = Atlas.GetStr("FileNameRuleTypeFriendlyName"),
 				MinimumFileVersion = fileNameItem.FileVersion?.ToString()
@@ -130,22 +130,22 @@ internal static class NewFileNameLevelRules
 
 			if (!string.IsNullOrWhiteSpace(fileNameItem.OriginalFileName))
 			{
-				newFileAttrib.FileName = fileNameItem.OriginalFileName;
+				newDeny.FileName = fileNameItem.OriginalFileName;
 			}
 			else if (!string.IsNullOrWhiteSpace(fileNameItem.InternalName))
 			{
-				newFileAttrib.InternalName = fileNameItem.InternalName;
+				newDeny.InternalName = fileNameItem.InternalName;
 			}
 			else if (!string.IsNullOrWhiteSpace(fileNameItem.FileDescription))
 			{
-				newFileAttrib.FileDescription = fileNameItem.FileDescription;
+				newDeny.FileDescription = fileNameItem.FileDescription;
 			}
 			else if (!string.IsNullOrWhiteSpace(fileNameItem.ProductName))
 			{
-				newFileAttrib.ProductName = fileNameItem.ProductName;
+				newDeny.ProductName = fileNameItem.ProductName;
 			}
 
-			policyObj.FileRules.Add(newFileAttrib);
+			policyObj.FileRules.Add(newDeny);
 
 
 			// For User-Mode files

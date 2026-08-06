@@ -49,7 +49,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	/// </summary>
 	internal readonly InfoBarSettings MainInfoBar;
 
-	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
+	public AuthenticationCompanion AuthCompanionCLS { get; }
 
 	internal Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 

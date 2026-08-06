@@ -22,7 +22,7 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.XMLOps;
 
-internal static partial class PreDeploymentChecks
+internal static class PreDeploymentChecks
 {
 	/// <summary>
 	/// Takes an <see cref="SiPolicy.SiPolicy"/> and checks whether it has an allow all rule.

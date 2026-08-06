@@ -71,7 +71,7 @@ internal sealed partial class BuildNewCertificateVM : ViewModelBase
 		SHA3_512 = 5
 	}
 
-	private readonly Dictionary<HashAlgorithm, HashAlgorithmName> AlgoCorrelation = new() {
+	private static readonly Dictionary<HashAlgorithm, HashAlgorithmName> AlgoCorrelation = new() {
 		{ HashAlgorithm.SHA2_256, HashAlgorithmName.SHA256 },
 		{ HashAlgorithm.SHA2_384, HashAlgorithmName.SHA384 },
 		{ HashAlgorithm.SHA2_512, HashAlgorithmName.SHA512 },

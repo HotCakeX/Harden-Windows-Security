@@ -114,7 +114,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 		AreElementsEnabled = on;
 	}
 
-	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
+	public AuthenticationCompanion AuthCompanionCLS { get; }
 
 	#endregion MICROSOFT GRAPH IMPLEMENTATION DETAILS
 
@@ -292,7 +292,7 @@ DeviceEvents
 	/// <summary>
 	/// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
 	/// </summary>
-	internal void ListViewFlyoutMenuCopy_Click()
+	internal static void ListViewFlyoutMenuCopy_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting);
 		if (lv is null) return;
@@ -307,7 +307,7 @@ DeviceEvents
 	internal void BrowseForLogs_Flyout_Clear_Click() => MDEAdvancedHuntingLogs.Clear();
 
 	/// <summary>
-	/// Event handler for the select Code Integrity EVTX file path button
+	/// Event handler to select CSV files.
 	/// </summary>
 	internal void BrowseForLogs_Click()
 	{
@@ -712,7 +712,7 @@ DeviceEvents
 									Management.SavePolicyToFile(PolicyToAddLogsTo.PolicyObj, PolicyToAddLogsTo.FilePath);
 								}
 
-								// Add the supplemental policy path to the class variable
+								// Add the supplemental policy object to the class variable
 								FinalSupplementalPolicy = PolicyToAddLogsTo;
 
 								// Assign the created policy to the Sidebar
@@ -765,9 +765,9 @@ DeviceEvents
 								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 								// Set policy version
-								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+								policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
-								// Add the supplemental policy path to the class variable
+								// Add the supplemental policy object to the class variable
 								FinalSupplementalPolicy = new(policyObj);
 
 								// Assign the created policy to the Sidebar
@@ -823,9 +823,9 @@ DeviceEvents
 								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 								// Set policy version
-								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+								policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
-								// Add the supplemental policy path to the class variable
+								// Add the supplemental policy object to the class variable
 								FinalSupplementalPolicy = new(policyObj);
 
 								// Assign the created policy to the Sidebar
@@ -909,8 +909,6 @@ DeviceEvents
 
 		MainInfoBar.WriteInfo(Atlas.GetStr("RetrievingMDEAdvancedHuntingDataMessage"));
 
-		MDEAdvancedHuntingDataRootObject? root = null;
-
 		try
 		{
 			AreElementsEnabled = false;
@@ -922,7 +920,7 @@ DeviceEvents
 			if (result is not null)
 			{
 				// Deserialize the JSON result
-				root = await Task.Run(() => JsonSerializer.Deserialize(result, MDEAdvancedHuntingJSONSerializationContext.Default.MDEAdvancedHuntingDataRootObject));
+				MDEAdvancedHuntingDataRootObject? root = await Task.Run(() => JsonSerializer.Deserialize(result, MDEAdvancedHuntingJSONSerializationContext.Default.MDEAdvancedHuntingDataRootObject));
 
 				if (root is null)
 				{
@@ -1009,7 +1007,7 @@ DeviceEvents
 	/// <summary>
 	/// CTRL + C shortcut event handler
 	/// </summary>
-	internal void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+	internal static void CtrlC_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
 	{
 		ListViewFlyoutMenuCopy_Click();
 		args.Handled = true;

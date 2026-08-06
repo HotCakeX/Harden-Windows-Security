@@ -21,7 +21,7 @@ using AppControlManager.SiPolicy;
 
 namespace AppControlManager.SimulationMethods;
 
-internal static partial class GetFileHashes
+internal static class GetFileHashes
 {
 	/// <summary>
 	/// Takes an App Control policy and returns all of the Hashes in the Hash rules.

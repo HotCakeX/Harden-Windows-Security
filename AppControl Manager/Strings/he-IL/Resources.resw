@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>מדיניות Intune פורקה בהצלחה אך האובייקט הרלוונטי ריק.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>אירעה שגיאה בניתוח מספר אפשרות הכלל {0} לערך המחרוזת שלו: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>מזהה האובייקט של מדיניות Intune היה null עבור המדיניות הנבחרת למחיקה</value>
   </data>

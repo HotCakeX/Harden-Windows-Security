@@ -555,8 +555,7 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	/// </summary>
 	private static FileCertificateInfoCol ProcessAndAddCertificates(X509Certificate2 cert, int signerNumber, CertificateType type)
 	{
-		(string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int PublicKeyLength) det
-			= ExtractDetailedFields(cert);
+		(string? CertificatePolicies, string? AuthorityInformationAccess, string? CrlDistributionPoints, string? BasicConstraints, string? KeyUsage, string? AuthorityKeyIdentifier, string? SubjectKeyIdentifier, int PublicKeyLength) = ExtractDetailedFields(cert);
 
 		return new FileCertificateInfoCol
 		(
@@ -577,15 +576,15 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			version: cert.Version,
 			hasPrivateKey: cert.HasPrivateKey,
 			archived: cert.Archived,
-			certificatePolicies: det.CertificatePolicies,
-			authorityInformationAccess: det.AuthorityInformationAccess,
-			crlDistributionPoints: det.CrlDistributionPoints,
-			basicConstraints: det.BasicConstraints,
-			keyUsage: det.KeyUsage,
-			authorityKeyIdentifier: det.AuthorityKeyIdentifier,
-			subjectKeyIdentifier: det.SubjectKeyIdentifier,
+			certificatePolicies: CertificatePolicies,
+			authorityInformationAccess: AuthorityInformationAccess,
+			crlDistributionPoints: CrlDistributionPoints,
+			basicConstraints: BasicConstraints,
+			keyUsage: KeyUsage,
+			authorityKeyIdentifier: AuthorityKeyIdentifier,
+			subjectKeyIdentifier: SubjectKeyIdentifier,
 			rawDataLength: cert.RawDataMemory.Length,
-			publicKeyLength: det.PublicKeyLength
+			publicKeyLength: PublicKeyLength
 		);
 	}
 

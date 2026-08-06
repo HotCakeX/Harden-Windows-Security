@@ -36,7 +36,6 @@ internal static class SupplementalForSelf
 	{
 		SiPolicy.SiPolicy policyObj = SwapDetails(basePolicyID);
 
-
 		Logger.Write(string.Format(Atlas.GetStr("LogCheckingDeploymentStatusSupplemental"), Atlas.AppControlManagerSpecialPolicyName));
 
 		// Get all the deployed supplemental policies to see if our policy is among them

@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Політику Intune успішно десеріалізовано, але відповідний об'єкт порожній.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>Сталася помилка під час аналізу номера параметра правила {0} у його рядкове значення: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>ID об'єкта політики Intune був null для вибраної політики, яку потрібно видалити</value>
   </data>

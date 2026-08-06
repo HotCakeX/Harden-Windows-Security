@@ -804,9 +804,9 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ListViewFlyoutMenuCopy_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:MDEAHPolicyCreationVM.ListViewFlyoutMenuCopy_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.CtrlC_Invoked}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:MDEAHPolicyCreationVM.CtrlC_Invoked}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />

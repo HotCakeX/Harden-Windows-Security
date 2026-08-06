@@ -3306,9 +3306,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Intune policy was deserialized successfully but the relevant object is empty.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>There was an error parsing {0} rule option number to its string value: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>Intune policy object ID was null for the selected policy to be deleted</value>
   </data>

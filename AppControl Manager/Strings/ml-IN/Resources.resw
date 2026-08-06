@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Intune നയം വിജയകരമായി ഡീസീരിയലൈസ് ചെയ്തു, എന്നാൽ പ്രസക്തമായ ഒബ്ജക്റ്റ് ശൂന്യമാണ്.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>{0} റൂൾ ഓപ്ഷൻ നമ്പർ അതിന്റെ സ്ട്രിംഗ് മൂല്യത്തിലേക്ക് പാഴ്‌സ് ചെയ്യുന്നതിൽ ഒരു പിശക് സംഭവിച്ചു: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>ഇല്ലാതാക്കേണ്ട തിരഞ്ഞെടുത്ത നയത്തിനായുള്ള Intune നയ ഒബ്ജക്റ്റ് ഐഡി ശൂന്യമായിരുന്നു</value>
   </data>

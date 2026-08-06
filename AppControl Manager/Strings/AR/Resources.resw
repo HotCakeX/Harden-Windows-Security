@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>تم إلغاء تسلسل سياسة Intune بنجاح ولكن الكائن ذي الصلة فارغ.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>حدث خطأ أثناء تحليل رقم خيار القاعدة {0} إلى قيمته النصية: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>كان معرف كائن سياسة Intune فارغًا للسياسة المحددة المراد حذفها</value>
   </data>

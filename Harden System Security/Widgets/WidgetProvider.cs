@@ -96,8 +96,6 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 	/// </summary>
 	internal static readonly ManualResetEvent NoWidgetsRemainingEvent = new(false);
 
-	private static readonly Lock _instanceLock = new();
-
 	/// <summary>
 	/// The connection to the Widgets Board. A single one serves the whole lifetime of the COM server, because handing
 	/// out a card through a freshly acquired manager would create a COM object on every single tick of the sampling
@@ -222,17 +220,7 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 	/// Only a single provider object is handed out because every pinned widget shares the same sampler, timer and
 	/// WinGet update check.
 	/// </summary>
-	internal static WidgetProvider Instance
-	{
-		get
-		{
-			lock (_instanceLock)
-			{
-				field ??= new WidgetProvider();
-				return field;
-			}
-		}
-	}
+	internal static readonly Lazy<WidgetProvider> Instance = new(static () => new());
 
 	/// <summary>
 	/// The COM server can be relaunched while widgets are already pinned, in which case the Widgets Board does not

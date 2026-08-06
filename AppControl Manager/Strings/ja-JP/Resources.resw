@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Intuneポリシーは正常に逆シリアル化されましたが、関連オブジェクトが空です。</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>{0}ルールオプション番号をその文字列値に解析する際にエラーが発生しました：{1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>削除する選択されたポリシーのIntuneポリシーオブジェクトIDがnullでした</value>
   </data>

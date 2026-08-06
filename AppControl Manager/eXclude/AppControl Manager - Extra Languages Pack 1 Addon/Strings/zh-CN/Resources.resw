@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Intune 策略已成功反序列化，但相关对象为空。</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>将 {0} 规则选项编号解析为其字符串值时出错：{1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>要删除所选策略的 Intune 策略对象 ID 为 null</value>
   </data>

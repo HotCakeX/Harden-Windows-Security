@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>ดีซีเรียลไลซ์นโยบาย Intune สำเร็จ แต่ออบเจกต์ที่เกี่ยวข้องว่างเปล่า</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>เกิดข้อผิดพลาดในการแปลงหมายเลขตัวเลือกกฎ {0} เป็นค่าสตริง: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>ID ออบเจกต์นโยบาย Intune เป็น null สำหรับนโยบายที่เลือกให้ลบ</value>
   </data>

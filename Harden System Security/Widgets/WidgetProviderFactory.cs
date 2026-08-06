@@ -48,7 +48,7 @@ internal sealed partial class WidgetProviderFactory : IClassFactory
 		try
 		{
 			// The provider is a WinRT object, so CsWinRT creates the vtable for it, which also keeps the whole path AOT safe.
-			inspectablePointer = MarshalInspectable<WidgetProvider>.FromManaged(WidgetProvider.Instance);
+			inspectablePointer = MarshalInspectable<WidgetProvider>.FromManaged(WidgetProvider.Instance.Value);
 
 			if (inspectablePointer == IntPtr.Zero)
 			{

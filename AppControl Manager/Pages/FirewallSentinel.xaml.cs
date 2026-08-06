@@ -61,7 +61,7 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 	/// <summary>
 	/// List of colors to cycle through.
 	/// </summary>
-	private static readonly List<Color> _pastelColors =
+	private static readonly Color[] _pastelColors =
 	[
 		Color.FromArgb(255, 255, 179, 186), // Pastel Yellow
         Color.FromArgb(255, 255, 223, 186), // Pastel Orange
@@ -142,7 +142,7 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 
 			// Get the next color in the cycle
 			Color nextColor = _pastelColors[_colorIndex];
-			_colorIndex = (_colorIndex + 1) % _pastelColors.Count;
+			_colorIndex = (_colorIndex + 1) % _pastelColors.Length;
 
 			visuals.PlayOpen(nextColor);
 		}

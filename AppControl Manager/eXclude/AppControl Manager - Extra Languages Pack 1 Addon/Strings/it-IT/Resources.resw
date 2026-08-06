@@ -3306,9 +3306,6 @@ NOTA: questa opzione viene sempre applicata se un qualsiasi criterio UMCI di App
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Il criterio Intune è stato deserializzato correttamente, ma l'oggetto pertinente è vuoto.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>Si è verificato un errore durante l'analisi del numero dell'opzione delle regole {0} nel relativo valore stringa: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>L'ID dell'oggetto criterio Intune era null per il criterio selezionato da eliminare</value>
   </data>

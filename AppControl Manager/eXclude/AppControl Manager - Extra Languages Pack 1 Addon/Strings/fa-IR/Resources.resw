@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>خط‌مشی Intune با موفقیت واسپاری‌زدایی شد اما شیء مربوطه خالی است.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>هنگام تجزیه شماره گزینه قاعده {0} به مقدار رشته‌ای آن خطایی رخ داد: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>شناسه شیء خط‌مشی Intune برای خط‌مشی انتخاب‌شده جهت حذف null بود</value>
   </data>

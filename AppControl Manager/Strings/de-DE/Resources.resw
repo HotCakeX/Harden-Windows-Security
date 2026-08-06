@@ -3306,9 +3306,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Intune-Richtlinie wurde erfolgreich deserialisiert, aber das relevante Objekt ist leer.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>Beim Analysieren der Regeloptionsnummer {0} in ihren Zeichenfolgenwert ist ein Fehler aufgetreten: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>Die Objekt-ID der Intune-Richtlinie war null für die ausgewählte zu löschende Richtlinie</value>
   </data>

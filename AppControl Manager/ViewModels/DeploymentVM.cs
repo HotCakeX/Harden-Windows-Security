@@ -91,7 +91,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	internal readonly UniqueStringObservableCollection CIPFiles = [];
 	internal readonly UniqueStringObservableCollection XMLFilesToConvertToCIP = [];
 
-	public AuthenticationCompanion AuthCompanionCLS { get; private set; }
+	public AuthenticationCompanion AuthCompanionCLS { get; }
 
 	internal bool DeploySignedXMLButtonIsEnabled { get; set => SP(ref field, value); }
 

@@ -39,7 +39,7 @@ internal static class GetCIPolicySetting
 		UNICODE_STRING ValueNameUS = NativeMethods.InitUnicodeString(valueName);
 
 		// Prepare output variables
-		uint ValueSize = 1024;  // Changed to uint to match the P/Invoke declaration
+		uint ValueSize = 1024;
 		nint Value = Marshal.AllocHGlobal((int)ValueSize);
 
 		int result = NativeMethods.WldpQuerySecurityPolicy(

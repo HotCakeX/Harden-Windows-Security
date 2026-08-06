@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -27,17 +26,6 @@ namespace AppControlManager.SimulationMethods;
 
 internal static class GetSignerInfo
 {
-
-	/// <summary>
-	/// Well-known IDs for replacing root certificate values
-	/// </summary>
-	private static readonly FrozenSet<string> wellKnownIDs = FrozenSet.ToFrozenSet(
-		new[]
-			{
-				"03", "04", "05", "06", "07", "09", "0A", "0E", "0G", "0H", "0I"
-			}, StringComparer.OrdinalIgnoreCase
-	);
-
 	/// <summary>
 	/// Parses an App Control policy and returns its Signers.
 	/// </summary>
@@ -45,13 +33,13 @@ internal static class GetSignerInfo
 	/// <returns>a list of Signer objects. The output contains as much info as possible about each signer.</returns>
 	internal static List<SignerX> Get(SiPolicy.SiPolicy policyObj)
 	{
-		SigningScenario? UMCI = policyObj.SigningScenarios?.FirstOrDefault(x => Equals(x.Value, (byte)12));
-		SigningScenario? KMCI = policyObj.SigningScenarios?.FirstOrDefault(x => Equals(x.Value, (byte)131));
+		SigningScenario? UMCI = policyObj.SigningScenarios?.FirstOrDefault(x => x.Value == 12);
+		SigningScenario? KMCI = policyObj.SigningScenarios?.FirstOrDefault(x => x.Value == 131);
 
-		HashSet<string> allowedUMCISigners = [];
-		HashSet<string> deniedUMCISigners = [];
-		HashSet<string> allowedKMCISigners = [];
-		HashSet<string> deniedKMCISigners = [];
+		HashSet<string> allowedUMCISigners = new(StringComparer.OrdinalIgnoreCase);
+		HashSet<string> deniedUMCISigners = new(StringComparer.OrdinalIgnoreCase);
+		HashSet<string> allowedKMCISigners = new(StringComparer.OrdinalIgnoreCase);
+		HashSet<string> deniedKMCISigners = new(StringComparer.OrdinalIgnoreCase);
 
 		if (UMCI is not null)
 		{
@@ -119,7 +107,6 @@ internal static class GetSignerInfo
 
 		#endregion
 
-
 		#region
 
 		// A dictionary to store the correlation between the EKU IDs and their values
@@ -165,7 +152,8 @@ internal static class GetSignerInfo
 				// Get the CertRoot node of the current Signer
 				string certRootValue = Convert.ToHexString(signer.CertRoot.Value.Span);
 
-				if (wellKnownIDs.Contains(certRootValue))
+				// Only Wellknown CertRoots hold a single byte root index that has to be translated into a TBS hash.
+				if (signer.CertRoot.Type is CertEnumType.Wellknown)
 				{
 					switch (certRootValue)
 					{
@@ -201,15 +189,15 @@ internal static class GetSignerInfo
 							certRootValue = "ED55F82E1444F79CA9DCE826846FDC4E0EA3859E3D26EFEF412D2FFF0C7C8E6C";
 							signer.Name = "Microsoft Development Root Certificate Authority 2014";
 							break;
-						case "0G":
+						case "10":
 							certRootValue = "68D221D720E975DB5CD14B24F2970F86A5B8605A2A1BC784A17B83F7CF500A70EB177CE228273B8540A800178F23EAC8";
 							signer.Name = "Microsoft ECC Testing Root Certificate Authority 2017";
 							break;
-						case "0H":
+						case "11":
 							certRootValue = "214592CB01B59104195F80AF2886DBF85771AF42A3821D104BF18F415158C49CBC233511672CD6C432351AC9228E3E75";
 							signer.Name = "Microsoft ECC Development Root Certificate Authority 2018";
 							break;
-						case "0I":
+						case "12":
 							certRootValue = "32991981BF1575A1A5303BB93A381723EA346B9EC130FDB596A75BA1D7CE0B0A06570BB985D25841E23BE944E8FF118F";
 							signer.Name = "Microsoft ECC Product Root Certificate Authority 2018";
 							break;

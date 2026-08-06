@@ -86,8 +86,7 @@ internal sealed class FilePublisherSignerRuleComparer : IEqualityComparer<FilePu
 		if (newRule.FileAttribElements is null || existing.FileAttribElements is null)
 			return;
 
-		if (existing.SignerElement.FileAttribRef is null)
-			existing.SignerElement.FileAttribRef = [];
+		existing.SignerElement.FileAttribRef ??= [];
 
 		foreach (FileAttrib newFileAttrib in CollectionsMarshal.AsSpan(newRule.FileAttribElements))
 		{

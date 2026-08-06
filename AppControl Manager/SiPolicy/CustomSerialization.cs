@@ -168,8 +168,6 @@ internal static class CustomSerialization
 			// Don't append to the root yet
 			XmlElement signersElement = xmlDoc.CreateElement("Signers", Atlas.SiPolicyNamespace);
 
-			int totalValidSignerElements = 0;
-
 			foreach (Signer signer in CollectionsMarshal.AsSpan(policy.Signers))
 			{
 				XmlElement signerElement = xmlDoc.CreateElement("Signer", Atlas.SiPolicyNamespace);
@@ -232,8 +230,6 @@ internal static class CustomSerialization
 					}
 				}
 
-				totalValidSignerElements++;
-
 				// ArtifactRuleRef(s)
 				if (signer.ArtifactRuleRef is { Count: > 0 })
 				{
@@ -247,7 +243,7 @@ internal static class CustomSerialization
 				_ = signersElement.AppendChild(signerElement);
 			}
 			// Only append the Signers element to the root if it has valid elements and won't be empty
-			if (totalValidSignerElements > 0)
+			if (signersElement.HasChildNodes)
 				_ = root.AppendChild(signersElement);
 		}
 
@@ -393,8 +389,6 @@ internal static class CustomSerialization
 			// Create element but don't append it to the root yet
 			XmlElement settingsElement = xmlDoc.CreateElement("Settings", Atlas.SiPolicyNamespace);
 
-			int totalValidSettingsCount = 0;
-
 			foreach (Setting setting in CollectionsMarshal.AsSpan(policy.Settings))
 			{
 				// If the Setting's value is null we shouldn't create any setting at all because it would be against the schema guidelines
@@ -417,7 +411,7 @@ internal static class CustomSerialization
 				else if (setting.Value.Item is bool boolVal)
 				{
 					// Must be lowercase for CIP conversion to succeed, "True" is not ok but "true" is ok.
-					if (!AppendTextElement(xmlDoc, valueElement, "Boolean", boolVal.ToString().ToLowerInvariant()))
+					if (!AppendTextElement(xmlDoc, valueElement, "Boolean", boolVal ? "true" : "false"))
 					{
 						continue;
 					}
@@ -445,12 +439,10 @@ internal static class CustomSerialization
 				_ = settingElement.AppendChild(valueElement);
 
 				_ = settingsElement.AppendChild(settingElement);
-
-				totalValidSettingsCount++;
 			}
 
 			// Only append to the root if it is guaranteed that it won't be empty
-			if (totalValidSettingsCount > 0)
+			if (settingsElement.HasChildNodes)
 				_ = root.AppendChild(settingsElement);
 		}
 

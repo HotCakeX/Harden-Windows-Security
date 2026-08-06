@@ -3306,9 +3306,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Intune नीति सफलतापूर्वक डिसीरियलाइज़ हुई लेकिन संबंधित ऑब्जेक्ट खाली है।</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>{0} नियम विकल्प संख्या को स्ट्रिंग मान में पार्स करते समय त्रुटि: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>चयनित नीति को हटाने के लिए Intune नीति ऑब्जेक्ट ID null था</value>
   </data>

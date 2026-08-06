@@ -46,19 +46,11 @@ internal static class AddSigningDetails
 			value: Convert.FromHexString(CertTBS)
 		);
 
-		Signer supplementalPolicySigner = new(
-			id: $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
-			name: CertCommonName,
-			certRoot: certRoot
-		);
-
 		Signer updatePolicySigner = new(
 			id: $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
 			name: CertCommonName,
 			certRoot: certRoot
 		);
-
-		SupplementalPolicySigner supplementalPolicySigner1 = new(signerID: supplementalPolicySigner.ID);
 
 		UpdatePolicySigner updatePolicySigner1 = new(signerID: updatePolicySigner.ID);
 
@@ -68,9 +60,17 @@ internal static class AddSigningDetails
 
 		if (policyObject.PolicyType is not PolicyType.SupplementalPolicy)
 		{
+			Signer supplementalPolicySigner = new(
+				id: $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
+				name: CertCommonName,
+				certRoot: certRoot
+			);
+
 			// Only add the SupplementalPolicySigner if the policy is not a SupplementalPolicy
 			// Because only Base policies can have that
 			policyObject.Signers.Add(supplementalPolicySigner);
+
+			SupplementalPolicySigner supplementalPolicySigner1 = new(signerID: supplementalPolicySigner.ID);
 
 			policyObject.SupplementalPolicySigners ??= [];
 			policyObject.SupplementalPolicySigners.Add(supplementalPolicySigner1);
@@ -88,5 +88,4 @@ internal static class AddSigningDetails
 
 		return policyObject;
 	}
-
 }

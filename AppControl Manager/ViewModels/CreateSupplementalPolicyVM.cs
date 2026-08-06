@@ -520,7 +520,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Set policy version
-					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 					// Assign the new supplemental policy to the local variable
 					_FinalFilesAndFoldersSupplementalPolicy = new(policyObj);
@@ -921,7 +921,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 					// Set policy version
-					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 					// Assign the new supplemental policy to the local variable
 					_FinalCertificatesSupplementalPolicy = new(policyObj);
@@ -1484,7 +1484,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 					// Set policy version
-					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 					// Remove all User-Mode signing scenarios from the policy
 					policyObj = RemoveSigningScenarios.RemoveUserMode(policyObj);
@@ -2084,7 +2084,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 					// Set policy version
-					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 					// Assign the new supplemental policy to the local variable
 					_FinalPFNSupplementalPolicy = new(policyObj);
@@ -2315,7 +2315,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// <summary>
 	/// The final CustomPatternBasedFileRule Supplemental policy that is created.
 	/// </summary>
-	private SiPolicy.PolicyFileRepresent? _FinalCustomPatternBasedFileRuleSupplementalPolicy { get; set => SP(ref field, value); }
+	private SiPolicy.PolicyFileRepresent? _FinalCustomPatternBasedFileRuleSupplementalPolicy;
 
 	/// <summary>
 	/// The custom patterns used to create file path rules.
@@ -2468,7 +2468,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: [OptionType.DisabledRuntimeFilePathRuleProtection]);
 
 					// Set policy version
-					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 					// Assign the new supplemental policy to the local variable
 					_FinalCustomPatternBasedFileRuleSupplementalPolicy = new(policyObj);

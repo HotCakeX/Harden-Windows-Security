@@ -167,6 +167,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	{
 		ViewModel = viewModel;
 		InitializeComponent();
+		NetworkUsageLiveGraph.ValueFormatter = static value => HomeVM.FormatNetworkDataValue(value, isRate: true);
 		AppWindow.SetIcon(@"Assets\AppIcon.ico"); // Set the icon for the app's preview on the taskbar.
 		InitializeLiveGraphCardDepth();
 		InitializeHomeTitleBadge();

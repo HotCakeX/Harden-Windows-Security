@@ -689,7 +689,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 								// Set policy version
-								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+								policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 								FinalSupplementalPolicy = new(policyObj);
 
@@ -744,7 +744,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 								// Set policy version
-								policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+								policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 								FinalSupplementalPolicy = new(policyObj);
 

@@ -3306,9 +3306,6 @@ CATATAN: Opsi ini selalu ditegakkan jika ada kebijakan App Control UMCI yang men
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Kebijakan Intune berhasil dideserialisasi tetapi objek yang relevan kosong.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>Terjadi kesalahan saat mengurai nomor opsi aturan {0} ke nilai string-nya: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>ID objek kebijakan Intune bernilai null untuk kebijakan yang dipilih untuk dihapus</value>
   </data>

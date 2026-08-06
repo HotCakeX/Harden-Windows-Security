@@ -267,7 +267,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		// Finalize CI policy metadata
 		policyObj = SetCiPolicyInfo.Set(
 			policyObj,
-			new Version("1.0.0.0"),
+			new Version(1, 0, 0, 0),
 			PolicyIDToUse);
 
 		// Apply rule options
@@ -365,7 +365,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		// Finalize CI policy metadata
 		policyObj = SetCiPolicyInfo.Set(
 			policyObj,
-			new Version("1.0.0.0"),
+			new Version(1, 0, 0, 0),
 			PolicyIDToUse);
 
 		// Apply rule options
@@ -582,7 +582,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 			SupplementalForSelf.Deploy(policyObj.PolicyID);
 		}
 
-		policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"), PolicyIDToUse);
+		policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0), PolicyIDToUse);
 
 		policyObj = AddFilePathWildcardRules(policyObj, FilePathWildcardRules);
 
@@ -647,7 +647,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		}
 
 		policyObj = PolicyIDToUse is not null
-			? SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"), PolicyIDToUse)
+			? SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0), PolicyIDToUse)
 			// Reset PolicyID and BasePolicyID
 			: SetCiPolicyInfo.Set(policyObj, true, null, null);
 

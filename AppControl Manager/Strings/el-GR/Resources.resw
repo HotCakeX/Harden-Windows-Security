@@ -3306,9 +3306,6 @@
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Η πολιτική Intune αποσειριοποιήθηκε επιτυχώς αλλά το σχετικό αντικείμενο είναι κενό.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>Παρουσιάστηκε σφάλμα κατά την ανάλυση του αριθμού επιλογής κανόνα {0} στην τιμή συμβολοσειράς του: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>Το ID αντικειμένου πολιτικής Intune ήταν null για την επιλεγμένη πολιτική προς διαγραφή</value>
   </data>

@@ -87,7 +87,7 @@ internal sealed partial class TemporalPolarChart : UserControl, INPCImplant
 	private static readonly Color Series1Color = Color.FromArgb(255, 59, 130, 246);
 	private static readonly Color Series2Color = Color.FromArgb(255, 34, 197, 94);
 	private const double StartAngleDegrees = -90;
-	private TemporalPolarChartModeOption _selectedModeOption = new("Hourly", TemporalPolarChartMode.Hourly);
+	private TemporalPolarChartModeOption _selectedModeOption;
 	private static readonly string[] MonthlyLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	private static readonly string[] DayOfWeekLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 	private static readonly string[] HourlyLabels =

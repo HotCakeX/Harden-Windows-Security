@@ -214,7 +214,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// The Supplemental policy that is created.
 	/// </summary>
-	private SiPolicy.PolicyFileRepresent? FinalSupplementalPolicy { get; set => SP(ref field, value); }
+	private SiPolicy.PolicyFileRepresent? FinalSupplementalPolicy;
 
 	internal Visibility BrowseForXMLPolicyButtonLightAnimatedIconVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -265,7 +265,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// <summary>
 	/// Create a ThemeShadow used to highlight the active section/border.
 	/// </summary>
-	internal static readonly Shadow? ThemeShadow = new ThemeShadow();
+	internal static readonly Shadow ThemeShadow = new ThemeShadow();
 
 	// The default styles when the page is first constructed.
 	internal Brush? Step1Border_Brush { get; set => SP(ref field, value); }
@@ -526,7 +526,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
 
 				// Set policy version
-				policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+				policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 				if (_IsSignedPolicy)
 				{
@@ -537,7 +537,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				// Convert the policy to CIP
 				byte[] cipContent = Management.ConvertXMLToBinary(policyObj);
 
-				// Add the supplemental policy path to the class variable
+				// Add the supplemental policy object to the class variable
 				FinalSupplementalPolicy = new(policyObj);
 
 				// Assign the created policy to the Sidebar
@@ -861,14 +861,11 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 				// Get all deployed base policies
 				List<CiPolicyInfo> allDeployedBasePolicies = CiToolHelper.GetPolicies(false, true, false);
 
-				// Get all the deployed base policyIDs
-				List<string?> CurrentlyDeployedBasePolicyIDs = [.. allDeployedBasePolicies.Select(p => p.BasePolicyID)];
-
 				// Trim the curly braces from the policyID
 				string trimmedPolicyID = selectedBasePolicy.PolicyObj.PolicyID.TrimStart('{').TrimEnd('}');
 
 				// Make sure the selected policy is deployed on the system
-				if (!CurrentlyDeployedBasePolicyIDs.Any(id => string.Equals(id, trimmedPolicyID, StringComparison.OrdinalIgnoreCase)))
+				if (!allDeployedBasePolicies.Any(policy => string.Equals(policy.BasePolicyID, trimmedPolicyID, StringComparison.OrdinalIgnoreCase)))
 				{
 					throw new InvalidOperationException(Atlas.GetStr("ErrorPolicyNotDeployed"));
 				}
@@ -935,7 +932,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 					AuditModeCIP = CommonCore.Signing.Main.SignCIP(Management.ConvertXMLToBinary(tempBasePolicyAudit), _CertCN);
 
 					// Create Enforced mode CIP from the user-selected base policy
-					SiPolicy.SiPolicy? tempBasePolicyEnforced = CiRuleOptions.Set(policyObj: selectedBasePolicy.PolicyObj, rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledUnsignedSystemIntegrityPolicy]);
+					SiPolicy.SiPolicy tempBasePolicyEnforced = CiRuleOptions.Set(policyObj: selectedBasePolicy.PolicyObj, rulesToRemove: [OptionType.EnabledAuditMode, OptionType.EnabledUnsignedSystemIntegrityPolicy]);
 
 					// Convert the policy object to CIP and Sign it
 					byte[] cipBytesEnforced = CommonCore.Signing.Main.SignCIP(Management.ConvertXMLToBinary(tempBasePolicyEnforced), _CertCN);
@@ -1003,7 +1000,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 			Step2InfoBar.IsClosable = false;
 
-			// While the base policy is being deployed is audit mode, set the progress ring as indeterminate
+			// While the base policy is being deployed in audit mode, set the progress ring as indeterminate
 			Step2ProgressRingIsIndeterminate = true;
 
 			// Enable the ListView pages so user can select the logs

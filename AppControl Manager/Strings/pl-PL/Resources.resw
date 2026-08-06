@@ -3306,9 +3306,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="IntunePolicyDeserializedButEmptyMessage" xml:space="preserve">
     <value>Zasady Intune zostały pomyślnie zdeserializowane, ale odpowiedni obiekt jest pusty.</value>
   </data>
-  <data name="ErrorParsingRuleOptionMessage" xml:space="preserve">
-    <value>Wystąpił błąd podczas analizowania numeru opcji reguły {0} na jego wartość ciągu: {1}</value>
-  </data>
   <data name="IntunePolicyObjectIdNullMessage" xml:space="preserve">
     <value>Identyfikator obiektu zasad Intune był pusty dla wybranych zasad do usunięcia</value>
   </data>

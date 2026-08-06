@@ -384,7 +384,10 @@ internal sealed partial class ComparePoliciesVM : ViewModelBase
 
 	private static List<PolicyPreviewExportModel> BuildSectionExportItems(PolicySection firstSection, PolicySection secondSection)
 	{
-		HashSet<string> keys = new([.. firstSection.Items.Keys, .. secondSection.Items.Keys], StringComparer.OrdinalIgnoreCase);
+		HashSet<string> keys = new(firstSection.Count + secondSection.Count, StringComparer.OrdinalIgnoreCase);
+		keys.UnionWith(firstSection.Items.Keys);
+		keys.UnionWith(secondSection.Items.Keys);
+
 		List<PolicyPreviewExportModel> items = new(keys.Count);
 
 		foreach (string key in keys.OrderBy(static x => x, StringComparer.OrdinalIgnoreCase))

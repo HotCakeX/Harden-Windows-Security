@@ -379,7 +379,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Base);
 
 					// Set policy version
-					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 					// Assign the new supplemental policy to the local variable
 					_FilesAndFoldersDenyPolicyPath = new(policyObj);
@@ -784,7 +784,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Base);
 
 					// Set policy version
-					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 					PFNBasedCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -1107,7 +1107,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 					policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Base);
 
 					// Set policy version
-					policyObj = SetCiPolicyInfo.Set(policyObj, new Version("1.0.0.0"));
+					policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
 
 					PatternBasedFileRuleCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 

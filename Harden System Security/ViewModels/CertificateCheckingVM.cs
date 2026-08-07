@@ -599,7 +599,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 			{
 				DateTime start = DateTime.UtcNow;
 
-				List<NonStlRootCert> allCertificates = GetAllCertificatesFromAllStores();
+				List<NonStlRootCert> allCertificates = GetAllCertificatesFromAllStores(IncludeExpiredCertificates, IncludeCertificatesWithInvalidChains);
 
 				DateTime end = DateTime.UtcNow;
 
@@ -631,7 +631,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	/// <summary>
 	/// Gets all certificates from all certificate stores (LocalMachine and CurrentUser)
 	/// </summary>
-	private List<NonStlRootCert> GetAllCertificatesFromAllStores()
+	private static List<NonStlRootCert> GetAllCertificatesFromAllStores(bool includeExpiredCertificates, bool includeCertificatesWithInvalidChains)
 	{
 		List<NonStlRootCert> results = [];
 		DateTime nowUtc = DateTime.UtcNow;
@@ -658,7 +658,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 
 						// Time-valid filtering (applies to leaf). When IncludeExpiredCertificates=false,
 						// we exclude both expired and not-yet-valid certificates.
-						if (!IncludeExpiredCertificates)
+						if (!includeExpiredCertificates)
 						{
 							DateTime notBeforeUtc = leaf.NotBefore.Kind == DateTimeKind.Utc ? leaf.NotBefore : leaf.NotBefore.ToUniversalTime();
 							DateTime notAfterUtc = leaf.NotAfter.Kind == DateTimeKind.Utc ? leaf.NotAfter : leaf.NotAfter.ToUniversalTime();
@@ -671,8 +671,8 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 						// Apply the same chain validation options used by the certificate analysis workflow.
 						X509Certificate2? rootCert = AuthRootProcessor.TryGetChainRoot(
 							leaf,
-							IncludeExpiredCertificates,
-							IncludeCertificatesWithInvalidChains);
+							includeExpiredCertificates,
+							includeCertificatesWithInvalidChains);
 						if (rootCert is null)
 						{
 							continue;

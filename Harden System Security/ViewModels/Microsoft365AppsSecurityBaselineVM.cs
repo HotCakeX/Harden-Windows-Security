@@ -203,10 +203,10 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 
 		// Perform a case-insensitive search in all relevant fields
 		IEnumerable<VerificationResult> filteredResults = AllVerificationResults.Where(result =>
-			(result.FriendlyName is not null && result.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(result.SourceDisplay is not null && result.SourceDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(result.CurrentValue is not null && result.CurrentValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(result.ExpectedValue is not null && result.ExpectedValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+			(result.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(result.SourceDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(result.CurrentValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(result.ExpectedValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
 		);
 
 		VerificationResults.Clear();

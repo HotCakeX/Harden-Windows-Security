@@ -475,7 +475,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 			Process? process = null;
 			try
 			{
-				// Tell ingregedit.exe to open to the specific service by pre-setting the LastKey value
+				// Tell regedit.exe to open to the specific service by pre-setting the LastKey value
 				string keyPath = $@"Computer\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\{svm.Item.ServiceName}";
 				using Microsoft.Win32.RegistryKey? key = Microsoft.Win32.Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Applets\Regedit");
 				key?.SetValue("LastKey", keyPath, Microsoft.Win32.RegistryValueKind.String);
@@ -1319,7 +1319,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
-	private bool ModifyServiceConfig(string serviceName, uint serviceType, uint startType, uint errorControl)
+	private static bool ModifyServiceConfig(string serviceName, uint serviceType, uint startType, uint errorControl)
 	{
 		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return false;
@@ -1336,7 +1336,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		finally { _ = NativeMethods.CloseServiceHandle(scManager); }
 	}
 
-	private unsafe bool SetDelayedAutoStart(string serviceName, bool isDelayed)
+	private static unsafe bool SetDelayedAutoStart(string serviceName, bool isDelayed)
 	{
 		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return false;
@@ -1354,7 +1354,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		finally { _ = NativeMethods.CloseServiceHandle(scManager); }
 	}
 
-	private unsafe bool SetLaunchProtected(string serviceName, uint launchProtected)
+	private static unsafe bool SetLaunchProtected(string serviceName, uint launchProtected)
 	{
 		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return false;
@@ -2142,10 +2142,10 @@ internal sealed partial class ServiceSecurityInformation :
 	{
 		if (pMask == null) return unchecked((int)0x80070057);
 
-		uint GENERIC_READ = 0x80000000;
-		uint GENERIC_WRITE = 0x40000000;
-		uint GENERIC_EXECUTE = 0x20000000;
-		uint GENERIC_ALL = 0x10000000;
+		const uint GENERIC_READ = 0x80000000;
+		const uint GENERIC_WRITE = 0x40000000;
+		const uint GENERIC_EXECUTE = 0x20000000;
+		const uint GENERIC_ALL = 0x10000000;
 
 		if ((*pMask & GENERIC_READ) != 0)
 		{

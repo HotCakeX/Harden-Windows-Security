@@ -585,8 +585,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 					return false;
 				}
 
-				string? result1 = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference EngineUpdatesChannel");
-				string? result2 = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference PlatformUpdatesChannel");
+				string result1 = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference EngineUpdatesChannel");
+				string result2 = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference PlatformUpdatesChannel");
 
 				if (string.Equals(result1, "2", StringComparison.OrdinalIgnoreCase) &&
 					string.Equals(result2, "2", StringComparison.OrdinalIgnoreCase))
@@ -691,7 +691,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				return new Result(false, fromRegistryByNameResult.Error);
 
 			List<AppMitigations> fromRegistryByName = fromRegistryByNameResult.Value;
-			AppMitigations? appMitigations = null;
+			AppMitigations appMitigations;
 			if (fromRegistryByName.Count is 0)
 				appMitigations = new AppMitigations(processName);
 			else if (fromRegistryByName.Count > 1)
@@ -771,7 +771,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			string output = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath,
 							$"getavailability {wmiNamespace} {className} {propertyName}");
 
-			string token = output is not null ? output.Trim() : string.Empty;
+			string token = output.Trim();
 
 			if (bool.TryParse(token, out bool exists))
 			{

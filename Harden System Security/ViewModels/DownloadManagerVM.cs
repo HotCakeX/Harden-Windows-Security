@@ -2678,13 +2678,9 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 	private static readonly char[] TrimEndChars = ['.', ',', ';', ')', ']', '}'];
 
-	private static List<Uri> ExtractLinks(string? text)
+	private static List<Uri> ExtractLinks(string text)
 	{
 		List<Uri> results = [];
-		if (string.IsNullOrWhiteSpace(text))
-		{
-			return results;
-		}
 
 		HashSet<string> seen = new(StringComparer.OrdinalIgnoreCase);
 
@@ -4399,7 +4395,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 		if (dataView.Contains(StandardDataFormats.Text))
 		{
-			string? droppedText = await dataView.GetTextAsync();
+			string droppedText = await dataView.GetTextAsync();
 			foreach (Uri link in ExtractLinks(droppedText))
 			{
 				if (seen.Add(link.AbsoluteUri))

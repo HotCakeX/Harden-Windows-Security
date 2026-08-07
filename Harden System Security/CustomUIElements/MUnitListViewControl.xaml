@@ -401,7 +401,7 @@
                     ExternalShadowAnimationRunning="{x:Bind ViewModel.ApplyAllCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                     ExternalOperationStarted="{x:Bind ViewModel.ApplyAllCancellableButton.OperationStarted, Mode=OneWay}"
                     Click="{x:Bind ApplyAllMUnits}"
-                    IsEnabled="{x:Bind ComputeApplyAllEnabled(ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}"/>
+                    IsEnabled="{x:Bind customUI:MUnitListViewControl.ComputeApplyAllEnabled(ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}"/>
 
                 <!-- Verify All Button -->
                 <customUI:AnimatedCancellableButton
@@ -422,7 +422,7 @@
                     ExternalShadowAnimationRunning="{x:Bind ViewModel.VerifyAllCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                     ExternalOperationStarted="{x:Bind ViewModel.VerifyAllCancellableButton.OperationStarted, Mode=OneWay}"
                     Click="{x:Bind VerifyAllMUnits}"
-                    IsEnabled="{x:Bind ComputeVerifyAllEnabled(ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}"/>
+                    IsEnabled="{x:Bind customUI:MUnitListViewControl.ComputeVerifyAllEnabled(ViewModel.VerifyAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.RemoveAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}"/>
 
                 <!-- Remove All Button -->
                 <customUI:AnimatedCancellableButton
@@ -443,7 +443,7 @@
                     ExternalShadowAnimationRunning="{x:Bind ViewModel.RemoveAllCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                     ExternalOperationStarted="{x:Bind ViewModel.RemoveAllCancellableButton.OperationStarted, Mode=OneWay}"
                     Click="{x:Bind RemoveAllMUnits}"
-                    IsEnabled="{x:Bind ComputeRemoveAllEnabled(ViewModel.RemoveAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}" />
+                    IsEnabled="{x:Bind customUI:MUnitListViewControl.ComputeRemoveAllEnabled(ViewModel.RemoveAllCancellableButton.IsOperationInProgress, ViewModel.ApplyAllCancellableButton.IsOperationInProgress, ViewModel.VerifyAllCancellableButton.IsOperationInProgress, AnyItemOperationInProgress), Mode=OneWay}" />
 
                 <DropDownButton x:Uid="ManageSelectionsDropDownButton" AccessKey="M">
                     <DropDownButton.Flyout>

@@ -927,7 +927,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// Enables Apply-All if it's currently running (so Cancel remains clickable),
 	/// otherwise disables it when Verify-All or Remove-All or any item op is running.
 	/// </summary>
-	internal bool ComputeApplyAllEnabled(bool isApplyAllBusy, bool isVerifyAllBusy, bool isRemoveAllBusy, bool anyItemBusy)
+	internal static bool ComputeApplyAllEnabled(bool isApplyAllBusy, bool isVerifyAllBusy, bool isRemoveAllBusy, bool anyItemBusy)
 	{
 		bool enabled = isApplyAllBusy || !(isVerifyAllBusy || isRemoveAllBusy || anyItemBusy);
 		return enabled;
@@ -937,7 +937,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// Enables Verify-All if it's currently running (so Cancel remains clickable),
 	/// otherwise disables it when Apply-All or Remove-All or any item op is running.
 	/// </summary>
-	internal bool ComputeVerifyAllEnabled(bool isVerifyAllBusy, bool isApplyAllBusy, bool isRemoveAllBusy, bool anyItemBusy)
+	internal static bool ComputeVerifyAllEnabled(bool isVerifyAllBusy, bool isApplyAllBusy, bool isRemoveAllBusy, bool anyItemBusy)
 	{
 		bool enabled = isVerifyAllBusy || !(isApplyAllBusy || isRemoveAllBusy || anyItemBusy);
 		return enabled;
@@ -947,7 +947,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// Enables Remove-All if it's currently running (so Cancel remains clickable),
 	/// otherwise disables it when Apply-All or Verify-All or any item op is running.
 	/// </summary>
-	internal bool ComputeRemoveAllEnabled(bool isRemoveAllBusy, bool isApplyAllBusy, bool isVerifyAllBusy, bool anyItemBusy)
+	internal static bool ComputeRemoveAllEnabled(bool isRemoveAllBusy, bool isApplyAllBusy, bool isVerifyAllBusy, bool anyItemBusy)
 	{
 		bool enabled = isRemoveAllBusy || !(isApplyAllBusy || isVerifyAllBusy || anyItemBusy);
 		return enabled;
@@ -991,7 +991,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		foreach (GroupInfoListForMUnit group in CollectionsMarshal.AsSpan(ViewModel.ListViewItemsSourceBackingField))
 		{
 			// Filter items by status toggles and optional search.
-			IEnumerable<MUnit> filteredItemsEnum = group.Where(munit =>
+			List<MUnit> filteredItems = group.Where(munit =>
 				// Status filter
 				((munit.StatusState == StatusState.Applied && ViewModel.ShowApplied) ||
 				 (munit.StatusState == StatusState.NotApplied && ViewModel.ShowNotApplied) ||
@@ -1000,9 +1000,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 				&& (string.IsNullOrWhiteSpace(ViewModel.SearchKeyword) ||
 					(munit.Name?.Contains(ViewModel.SearchKeyword, StringComparison.OrdinalIgnoreCase) ?? false) ||
 					(munit.SubCategoryName?.Contains(ViewModel.SearchKeyword, StringComparison.OrdinalIgnoreCase) ?? false) ||
-					(munit.URL?.Contains(ViewModel.SearchKeyword, StringComparison.OrdinalIgnoreCase) ?? false)));
-
-			List<MUnit> filteredItems = filteredItemsEnum.ToList();
+					(munit.URL?.Contains(ViewModel.SearchKeyword, StringComparison.OrdinalIgnoreCase) ?? false))).ToList();
 
 			if (filteredItems.Count > 0)
 			{
@@ -1247,7 +1245,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// If one exists and belongs to the current data set, scrolls to and highlights it.
 	/// </summary>
 	[DynamicWindowsRuntimeCast(typeof(ListViewItem))]
-	private async void CheckForPendingNavigationHighlight()
+	private void CheckForPendingNavigationHighlight()
 	{
 		if (_isDisposed) return;
 		if (NavigationService.PendingNavigationTargetId == null) return;

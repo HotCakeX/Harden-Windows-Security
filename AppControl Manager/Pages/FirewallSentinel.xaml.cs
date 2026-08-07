@@ -408,11 +408,11 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 			}
 
 			// Dispose Composition objects
-			LeftLine?.Dispose();
-			BottomLine?.Dispose();
-			TopLine?.Dispose();
-			RightLine?.Dispose();
-			RootContainer?.Dispose();
+			LeftLine.Dispose();
+			BottomLine.Dispose();
+			TopLine.Dispose();
+			RightLine.Dispose();
+			RootContainer.Dispose();
 		}
 	}
 

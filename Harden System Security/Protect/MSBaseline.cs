@@ -1781,7 +1781,7 @@ internal static class MSBaseline
 	/// <exception cref="InvalidOperationException"></exception>
 	private static void ApplySystemAccessSettings(Dictionary<string, string> settings)
 	{
-		if (settings is null || settings.Count == 0)
+		if (settings.Count == 0)
 		{
 			return;
 		}

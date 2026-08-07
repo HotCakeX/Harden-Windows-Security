@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Pipes;
 using System.Runtime.InteropServices;
@@ -323,7 +324,7 @@ internal static class Program
 				}
 			}
 
-			if (!TryBeginOperation(name, out ManualResetEvent cancelEvent))
+			if (!TryBeginOperation(name, out ManualResetEvent? cancelEvent))
 			{
 				SendError("Another DISM operation is already in progress.");
 				return;
@@ -354,7 +355,7 @@ internal static class Program
 		{
 			string name = ReadString();
 
-			if (!TryBeginOperation(name, out ManualResetEvent cancelEvent))
+			if (!TryBeginOperation(name, out ManualResetEvent? cancelEvent))
 			{
 				SendError("Another DISM operation is already in progress.");
 				return;
@@ -396,7 +397,7 @@ internal static class Program
 				}
 			}
 
-			if (!TryBeginOperation(name, out ManualResetEvent cancelEvent))
+			if (!TryBeginOperation(name, out ManualResetEvent? cancelEvent))
 			{
 				SendError("Another DISM operation is already in progress.");
 				return;
@@ -427,7 +428,7 @@ internal static class Program
 		{
 			string name = ReadString();
 
-			if (!TryBeginOperation(name, out ManualResetEvent cancelEvent))
+			if (!TryBeginOperation(name, out ManualResetEvent? cancelEvent))
 			{
 				SendError("Another DISM operation is already in progress.");
 				return;
@@ -452,13 +453,13 @@ internal static class Program
 		}
 	}
 
-	private static bool TryBeginOperation(string itemName, out ManualResetEvent cancelEvent)
+	private static bool TryBeginOperation(string itemName, [NotNullWhen(true)] out ManualResetEvent? cancelEvent)
 	{
 		lock (_operationLock)
 		{
 			if (_operationInProgress)
 			{
-				cancelEvent = null!;
+				cancelEvent = null;
 				return false;
 			}
 

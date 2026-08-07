@@ -56,7 +56,6 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 	private SolidColorBrush? _hotPinkBrush;
 	private Flyout? _previewFlyout;
 	private DispatcherTimer? _hoverTimer;
-	private Frame? _currentPreviewFrame; // Track current frame for proper disposal
 	private bool _isDisposed;
 	private bool _isPointerOver;
 
@@ -247,9 +246,8 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			// Update the URL on the single shared preview page.
 			_ = (s_sharedPreviewPage?.PreviewUrl = LinkUrl);
 
-			// Use the shared frame in the single shared flyout.
-			_currentPreviewFrame = s_sharedPreviewFrame;
-			_previewFlyout.Content = _currentPreviewFrame;
+			// Use the shared frame in the single shared flyout.			
+			_previewFlyout.Content = s_sharedPreviewFrame;
 
 			// Show the shared flyout anchored to this button.
 			_previewFlyout.ShowAt(this);
@@ -259,15 +257,8 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			Logger.Write($"LinkButtonV2 show preview flyout failed: {ex.Message}");
 			// Reset static open state on error
 			s_isFlyoutOpen = false;
-			// Clean up frame on error
-			CleanupCurrentFrame();
 		}
 	}
-
-	/// <summary>
-	/// Cleans up the current preview frame and its content.
-	/// </summary>
-	private void CleanupCurrentFrame() => _currentPreviewFrame = null;
 
 	private static void OnLinkUrlChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
@@ -290,10 +281,8 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 		else
 		{
 			string tmp = string.Format(Atlas.GetStr("OpenTheFollowingLinkInBrowser"), LinkUrl);
-			string tooltipText = tmp;
-			string helpText = tmp;
-			ToolTipService.SetToolTip(this, tooltipText);
-			AutomationProperties.SetHelpText(this, helpText);
+			ToolTipService.SetToolTip(this, tmp);
+			AutomationProperties.SetHelpText(this, tmp);
 		}
 	}
 
@@ -650,10 +639,6 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			_hoverOutStoryboard?.Children.Clear();
 			_hoverInStoryboard = null;
 			_hoverOutStoryboard = null;
-
-			// Do not detach static flyout handlers here since they are shared for all instances.
-			// Clean up current frame reference only.
-			CleanupCurrentFrame();
 
 			_previewFlyout = null;
 

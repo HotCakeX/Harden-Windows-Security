@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace HardenSystemSecurity.Helpers;
 
@@ -49,8 +48,7 @@ internal static class OneDriveDirectories
 				try
 				{
 					// Enumerate directories within each user directory that start with "OneDrive"
-					IEnumerable<string> directories = Directory.EnumerateDirectories(userDirectory, "OneDrive*", SearchOption.TopDirectoryOnly)
-											   .Where(dir => dir.StartsWith(Path.Join(userDirectory, "OneDrive"), StringComparison.OrdinalIgnoreCase));
+					IEnumerable<string> directories = Directory.EnumerateDirectories(userDirectory, "OneDrive*", SearchOption.TopDirectoryOnly);
 
 					// Add each found directory to the list
 					directoriesList.AddRange(directories);

@@ -120,8 +120,7 @@ internal static class Client
 
 				case ResponseType.Final:
 					{
-						string output = CommonCore.QuantumRelay.Helpers.ReadString(reader);
-						return output;
+						return CommonCore.QuantumRelay.Helpers.ReadString(reader);
 					}
 
 				case ResponseType.Error:

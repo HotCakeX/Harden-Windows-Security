@@ -161,8 +161,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 		// Perform a case-insensitive search in all relevant fields
 		IEnumerable<RegistryPolicyEntry> filteredResults = AllPolicies.Where(policy =>
-			(policy.KeyName is not null && policy.KeyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(policy.ValueName is not null && policy.ValueName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(policy.KeyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			(policy.ValueName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			policy.ValueDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			(policy.Category is not null && (policy.Category.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
 			(policy.SubCategory is not null && (policy.SubCategory.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
@@ -824,8 +824,6 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			if (lv.SelectedItems.Count > 0)
 			{
 				// SelectedItems is an IList, and contains RegistryPolicyEntry
-				ListViewHelper.ConvertRowToText(lv.SelectedItems, RegistryPolicyEntryPropertyMappings);
-
 				foreach (object item in lv.SelectedItems)
 				{
 					if (item is RegistryPolicyEntry obj)
@@ -1225,7 +1223,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 							version: RegistryPolicyFile.REGISTRY_FILE_VERSION,
 							entries: policies);
 
-					string? saveLoc = OutputDirForPOLFilesAfterConversion is null
+					string saveLoc = OutputDirForPOLFilesAfterConversion is null
 						? Path.Join(
 							Path.GetDirectoryName(item) ?? Atlas.SystemDrive,
 							Path.GetFileNameWithoutExtension(item) + ".pol")

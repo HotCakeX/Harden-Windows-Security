@@ -20,7 +20,6 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -267,10 +266,10 @@ internal sealed partial class ASRVM : ViewModelBase
 	/// </summary>
 	private Dictionary<string, ASRRuleState> RetrieveSystemStates()
 	{
-		Dictionary<string, ASRRuleState> output = [];
+		Dictionary<string, ASRRuleState> output = new(StringComparer.OrdinalIgnoreCase);
 
 		// Get ASR rule IDs from the system
-		string? idsJson = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Ids");
+		string idsJson = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Ids");
 
 		if (string.IsNullOrEmpty(idsJson))
 		{
@@ -279,7 +278,7 @@ internal sealed partial class ASRVM : ViewModelBase
 		}
 
 		// Get ASR rule actions from the system
-		string? actionsJson = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Actions");
+		string actionsJson = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AttackSurfaceReductionRules_Actions");
 
 		if (string.IsNullOrEmpty(actionsJson))
 		{
@@ -305,10 +304,7 @@ internal sealed partial class ASRVM : ViewModelBase
 
 		for (int i = 0; i < ids.Length; i++)
 		{
-			string id = ids[i].ToLowerInvariant();
-			uint action = actions[i];
-
-			ASRRuleState state = action switch
+			ASRRuleState state = actions[i] switch
 			{
 				0 => ASRRuleState.NotConfigured,
 				1 => ASRRuleState.Block,
@@ -317,7 +313,7 @@ internal sealed partial class ASRVM : ViewModelBase
 				_ => ASRRuleState.NotConfigured
 			};
 
-			output[id] = state;
+			output[ids[i]] = state;
 		}
 
 		Logger.Write(string.Format(Atlas.GetStr("SuccessfullyRetrievedASRRuleStates"), output.Count));
@@ -493,9 +489,7 @@ internal sealed partial class ASRVM : ViewModelBase
 			// Update UI states based on system values
 			foreach (ASRRuleEntry entry in ASRItemsLVBound)
 			{
-				string ruleId = entry.PolicyEntry.ValueName.ToLowerInvariant();
-
-				if (results.TryGetValue(ruleId, out ASRRuleState systemState))
+				if (results.TryGetValue(entry.PolicyEntry.ValueName, out ASRRuleState systemState))
 				{
 					entry.State = systemState;
 					updatedRules++;
@@ -603,17 +597,17 @@ internal sealed partial class ASRVM : ViewModelBase
 			return;
 
 		// Perform a case-insensitive search in all relevant fields
-		List<ASRRuleEntry> filteredResults = AllASRRules.Where(rule =>
+		IEnumerable<ASRRuleEntry> filteredResults = AllASRRules.Where(rule =>
 			(rule.PolicyEntry.FriendlyName is not null && rule.PolicyEntry.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(rule.PolicyEntry.ValueName is not null && rule.PolicyEntry.ValueName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
 			(rule.PolicyEntry.Category is not null && rule.PolicyEntry.Category.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true) ||
 			(rule.PolicyEntry.SubCategory is not null && rule.PolicyEntry.SubCategory.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) == true) ||
 			rule.State.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
-		).ToList();
+		);
 
 		ASRItemsLVBound.Clear();
 
-		foreach (ASRRuleEntry item in CollectionsMarshal.AsSpan(filteredResults))
+		foreach (ASRRuleEntry item in filteredResults)
 		{
 			ASRItemsLVBound.Add(item);
 		}

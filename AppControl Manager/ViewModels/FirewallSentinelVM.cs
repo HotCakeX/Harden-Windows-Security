@@ -579,7 +579,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 		if (isPinnedPolicyPresent || areBackupsPresent)
 		{
-			StringBuilder warningMessage = new();
+			StringBuilder warningMessage = new(50);
 
 			if (isPinnedPolicyPresent)
 			{
@@ -880,9 +880,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	#endregion
 
-
 	#region Rule Creation Section
-
 
 	#region Files and Folders scan
 
@@ -1242,7 +1240,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 				}
 
 				// Generating signer rules
-				SiPolicy.SiPolicy? policyObj = CustomPolicyCreator.CreateEmpty();
+				SiPolicy.SiPolicy policyObj = CustomPolicyCreator.CreateEmpty();
 				policyObj = NewCertificateSignerRules.CreateAllow(policyObj, certificateResults);
 
 				// Merge the new supplemental policy with the Pinned App ID Tagging Policy
@@ -1290,7 +1288,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	internal async void OpenInDefaultFileHandler_Certificates() => await PolicyFileRepresent.OpenInDefaultFileHandler(PinnedPolicy);
 
 	#endregion
-
 
 	#region Custom Pattern-based File Rule
 
@@ -1441,9 +1438,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	#endregion
 
-
 	#endregion
-
 
 	#region Blocked Packets Logic
 

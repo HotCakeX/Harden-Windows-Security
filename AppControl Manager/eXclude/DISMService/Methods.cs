@@ -329,10 +329,6 @@ internal static class Methods
 		{
 			return new string((char*)ptr);
 		}
-		catch (AccessViolationException)
-		{
-			return string.Empty;
-		}
 		catch (Exception)
 		{
 			return string.Empty;
@@ -543,7 +539,7 @@ internal static class Methods
 		// Get a new session if one doesn't already exist
 		InitDISM();
 
-		List<DISMOutput> output = [];
+		List<DISMOutput> output = new(featureNames.Length);
 
 		if (featureNames.Length is 0)
 		{
@@ -612,7 +608,7 @@ internal static class Methods
 		// Get a new session if one doesn't already exist
 		InitDISM();
 
-		List<DISMOutput> output = [];
+		List<DISMOutput> output = new(capabilityNames.Length);
 
 		if (capabilityNames.Length is 0)
 		{
@@ -663,12 +659,12 @@ internal static class Methods
 	/// </summary>
 	internal static List<DISMOutput> GetAllAvailableResults()
 	{
-		List<DISMOutput> Output = [];
+		List<DISMOutput> output = [];
 
-		GetFeatures(Output);
-		GetCapabilities(Output);
+		GetFeatures(output);
+		GetCapabilities(output);
 
-		return Output;
+		return output;
 	}
 
 	/// <summary>

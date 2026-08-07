@@ -235,7 +235,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		popoutWindow.AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
 		popoutWindow.AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Collapsed;
 
-		popoutWindow.AppWindow.ResizeClient(new SizeInt32(500, 300));
+		popoutWindow.AppWindow.ResizeClient(new SizeInt32(550, 300));
 		popoutWindow.AppWindow.Title = ((TextBlock)titleToggle.Content).Text;
 
 		InputNonClientPointerSource nonClientPointerSource = InputNonClientPointerSource.GetForWindowId(popoutWindow.AppWindow.Id);
@@ -2209,7 +2209,7 @@ internal sealed partial class HomeLiveGraphsWindow
 
 	private async void OnNetworkOpennessRunButtonClick()
 	{
-		List<Task<NetworkOpennessResult>> pendingTasks = new(NetworkOpennessTargets.Value.Count);
+		List<Task<NetworkOpennessResult>> pendingTasks = new(NetworkOpennessTargets.Value.Length);
 
 		NetworkOpennessRunButton.IsEnabled = false;
 		NetworkOpennessProgressRing.Visibility = Visibility.Visible;
@@ -2226,7 +2226,7 @@ internal sealed partial class HomeLiveGraphsWindow
 		NetworkOpennessDetailsTextBox.Text = _networkOpennessDetailsBuilder.ToString();
 		UpdateNetworkOpennessScorePill(-1);
 
-		foreach (NetworkOpennessTarget item in CollectionsMarshal.AsSpan(NetworkOpennessTargets.Value))
+		foreach (NetworkOpennessTarget item in NetworkOpennessTargets.Value)
 		{
 			pendingTasks.Add(TestNetworkOpennessTargetAsync(item));
 		}
@@ -2239,8 +2239,8 @@ internal sealed partial class HomeLiveGraphsWindow
 			NetworkOpennessResult result = await completedTask;
 			completedCount++;
 
-			NetworkOpennessProgressBar.Value = (double)completedCount / NetworkOpennessTargets.Value.Count * 100.0;
-			NetworkOpennessStatusTextBlock.Text = "Completed " + completedCount.ToString(CultureInfo.InvariantCulture) + " of " + NetworkOpennessTargets.Value.Count.ToString(CultureInfo.InvariantCulture) + " checks.";
+			NetworkOpennessProgressBar.Value = (double)completedCount / NetworkOpennessTargets.Value.Length * 100.0;
+			NetworkOpennessStatusTextBlock.Text = "Completed " + completedCount.ToString(CultureInfo.InvariantCulture) + " of " + NetworkOpennessTargets.Value.Length.ToString(CultureInfo.InvariantCulture) + " checks.";
 			long displayedElapsedMilliseconds = result.ElapsedMilliseconds;
 			ApplyPrivacyModeNetworkDelayOverride(ref displayedElapsedMilliseconds);
 			AppendNetworkOpennessDetailLine(result.Target.Url + "   " + result.Status + "   " + displayedElapsedMilliseconds.ToString(CultureInfo.InvariantCulture) + " ms");
@@ -2396,7 +2396,7 @@ internal sealed partial class HomeLiveGraphsWindow
 		NetworkOpennessDetailsTextBox.SelectionStart = NetworkOpennessDetailsTextBox.Text.Length;
 	}
 
-	private static readonly Lazy<List<NetworkOpennessTarget>> NetworkOpennessTargets = new(() => [
+	private static readonly Lazy<NetworkOpennessTarget[]> NetworkOpennessTargets = new(() => [
 			new NetworkOpennessTarget("Social Media", "https://x.com"),
 			new NetworkOpennessTarget("Social Media", "https://youtube.com"),
 			new NetworkOpennessTarget("Social Media", "https://reddit.com"),
@@ -2865,7 +2865,7 @@ internal sealed partial class HomeLiveGraphsWindow
 		WifiSelectedSharedKeyTextBlock.Text = string.Empty;
 	}
 
-	private unsafe List<WifiProfileRow> GetSavedWifiProfiles()
+	private static unsafe List<WifiProfileRow> GetSavedWifiProfiles()
 	{
 		List<WifiProfileRow> rows = new(64);
 		uint openResult = NativeMethods.WlanOpenHandle(WifiWlanClientVersionLonghorn, IntPtr.Zero, out uint negotiatedVersion, out nint clientHandle);

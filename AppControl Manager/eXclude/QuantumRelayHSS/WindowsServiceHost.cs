@@ -240,21 +240,14 @@ internal static class WindowsServiceHost
 	{
 		try
 		{
-			if (s_pipeServer != null)
-			{
-				// Give the server a chance to shut down cleanly
-				Task stopTask = s_pipeServer.StopAsync();
-				_ = stopTask.Wait(15000);
-			}
+			// Give the server a chance to shut down cleanly
+			_ = s_pipeServer?.StopAsync().Wait(15000);
 		}
 		catch { }
 
 		try
 		{
-			if (s_workerTask != null)
-			{
-				_ = s_workerTask.Wait(15000);
-			}
+			_ = s_workerTask?.Wait(15000);
 		}
 		catch { }
 

@@ -204,7 +204,7 @@ internal sealed partial class HomeLightSensorMeterView : Grid
 	private readonly Rectangle[] _segments = new Rectangle[9];
 	private readonly Rectangle _marker = new();
 	private readonly TextBlock _luxTextBlock = new();
-	private readonly Color[] _segmentColors =
+	private static readonly Color[] _segmentColors =
 	[
 		Color.FromArgb(255, 15, 23, 42),
 		Color.FromArgb(255, 30, 41, 59),

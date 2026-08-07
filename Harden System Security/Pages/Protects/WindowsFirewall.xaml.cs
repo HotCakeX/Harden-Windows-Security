@@ -25,11 +25,7 @@ internal sealed partial class WindowsFirewall : Page, CommonCore.UI.IPageHeaderP
 {
 	private WindowsFirewallVM ViewModel => ViewModelProvider.WindowsFirewallVM;
 
-	internal WindowsFirewall()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal WindowsFirewall() => InitializeComponent();
 
 	/// <summary>
 	/// OnNavigatedFrom indicates real page navigation (not transient Unloaded under TabView).

@@ -17,7 +17,6 @@
 
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -32,7 +31,6 @@ internal sealed partial class PolicyEditor : Page, CommonCore.UI.IPageHeaderProv
 	internal PolicyEditor()
 	{
 		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
 		_DiamondButtonFlyout = DiamondButtonFlyout;
 		_DiamondButton = DiamondButton;
 	}

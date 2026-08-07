@@ -28,11 +28,7 @@ internal sealed partial class DeploymentPage : Page, IAnimatedIconsManager, Comm
 {
 	private DeploymentVM ViewModel => ViewModelProvider.DeploymentVM;
 
-	internal DeploymentPage()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal DeploymentPage() => InitializeComponent();
 
 	#region Augmentation Interface
 

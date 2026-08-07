@@ -16,7 +16,6 @@
 //
 
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
@@ -24,9 +23,5 @@ internal sealed partial class UpdatePageCustomMSIXPath : Page
 {
 	private ViewModels.UpdateVM ViewModel => ViewModels.ViewModelProvider.UpdateVM;
 
-	internal UpdatePageCustomMSIXPath()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal UpdatePageCustomMSIXPath() => InitializeComponent();
 }

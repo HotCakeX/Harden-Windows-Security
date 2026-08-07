@@ -29,11 +29,7 @@ internal sealed partial class SettingsBackupRestore : Page, CommonCore.UI.IPageH
 	private SettingsBackupRestoreVM ViewModel => HardenSystemSecurity.ViewModels.ViewModelProvider.SettingsBackupRestore;
 #endif
 
-	internal SettingsBackupRestore()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal SettingsBackupRestore() => InitializeComponent();
 
 	protected override void OnNavigatedTo(NavigationEventArgs e)
 	{

@@ -25,11 +25,7 @@ internal sealed partial class MicrosoftDefender : Page, CommonCore.UI.IPageHeade
 {
 	private MicrosoftDefenderVM ViewModel => ViewModelProvider.MicrosoftDefenderVM;
 
-	internal MicrosoftDefender()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal MicrosoftDefender() => InitializeComponent();
 
 	/// <summary>
 	/// OnNavigatedFrom indicates real page navigation (not transient Unloaded under TabView).

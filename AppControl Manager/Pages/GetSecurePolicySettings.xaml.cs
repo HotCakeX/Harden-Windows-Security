@@ -17,7 +17,6 @@
 
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -25,11 +24,7 @@ internal sealed partial class GetSecurePolicySettings : Page, CommonCore.UI.IPag
 {
 	private GetSecurePolicySettingsVM ViewModel => ViewModelProvider.GetSecurePolicySettingsVM;
 
-	internal GetSecurePolicySettings()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal GetSecurePolicySettings() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("GetSecurePolicySettingsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-Secure-Policy-Settings");

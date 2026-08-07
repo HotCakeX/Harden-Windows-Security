@@ -19,7 +19,6 @@ using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -35,7 +34,6 @@ internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 	internal AllowNewAppsStart()
 	{
 		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
 
 		BrowseForXMLPolicyButton_FlyOutPub = BrowseForXMLPolicyButton_FlyOut;
 		BrowseForXMLPolicyButtonPub = BrowseForXMLPolicyButton;

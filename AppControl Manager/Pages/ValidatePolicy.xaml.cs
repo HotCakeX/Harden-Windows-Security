@@ -16,7 +16,6 @@
 //
 
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -25,11 +24,7 @@ internal sealed partial class ValidatePolicy : Page, CommonCore.UI.IPageHeaderPr
 
 	private ViewModels.ValidatePolicyVM ViewModel => ViewModels.ViewModelProvider.ValidatePolicyVM;
 
-	internal ValidatePolicy()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal ValidatePolicy() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ValidatePolicyPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Validate-Policies");

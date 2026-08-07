@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
@@ -25,11 +24,7 @@ internal sealed partial class ViewExportedFunctions : Page, CommonCore.UI.IPageH
 {
 	private ViewExportedFunctionsVM ViewModel => ViewModelProvider.ViewExportedFunctionsVM;
 
-	internal ViewExportedFunctions()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal ViewExportedFunctions() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ViewExportedFunctionsButton/ToolTipService/ToolTip");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;

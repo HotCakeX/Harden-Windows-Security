@@ -21,7 +21,6 @@ using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 using WinRT;
 
 namespace AppControlManager.Pages;
@@ -30,11 +29,7 @@ internal sealed partial class CreateSupplementalPolicy : Page, IAnimatedIconsMan
 {
 	private CreateSupplementalPolicyVM ViewModel => ViewModelProvider.CreateSupplementalPolicyVM;
 
-	internal CreateSupplementalPolicy()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal CreateSupplementalPolicy() => InitializeComponent();
 
 	#region Augmentation Interface
 

@@ -16,7 +16,6 @@
 //
 
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;
@@ -32,11 +31,7 @@ internal sealed partial class Settings : Page, CommonCore.UI.IPageHeaderProvider
 	private SettingsVM ViewModel => ViewModelProvider.SettingsVM;
 	private MainWindowVM ViewModelMainWindow => ViewModelProvider.MainWindowVM;
 
-	internal Settings()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal Settings() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("SettingsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;

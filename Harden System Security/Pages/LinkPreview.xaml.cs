@@ -17,7 +17,6 @@
 
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using Windows.System;
 
 namespace AppControlManager.Pages;
@@ -41,7 +40,6 @@ internal sealed partial class LinkPreview : Page
 	internal LinkPreview()
 	{
 		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
 
 		// Initialize WebView2 and then re-apply the current PreviewUrl so it always wins over the initializer's source
 		_ = InitializeWebView2Async();

@@ -35,11 +35,7 @@ internal sealed partial class Logs : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private LogsVM ViewModel => ViewModelProvider.LogsVM;
 
-	internal Logs()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal Logs() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("LogsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;

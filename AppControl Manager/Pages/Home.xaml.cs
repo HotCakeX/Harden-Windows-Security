@@ -172,11 +172,7 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 	// Background "twinkle" cadence (single frame)
 	private double _bgNextTwinkleTime;
 
-	internal Home()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal Home() => InitializeComponent();
 
 	private async void OnInitialLoaded()
 	{

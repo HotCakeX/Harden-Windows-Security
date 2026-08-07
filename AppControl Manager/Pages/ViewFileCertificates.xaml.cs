@@ -17,7 +17,6 @@
 
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -26,11 +25,7 @@ internal sealed partial class ViewFileCertificates : Page, CommonCore.UI.IPageHe
 
 	private ViewFileCertificatesVM ViewModel => ViewModelProvider.ViewFileCertificatesVM;
 
-	internal ViewFileCertificates()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal ViewFileCertificates() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ViewFileCertificatesPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/View-File-Certificates");

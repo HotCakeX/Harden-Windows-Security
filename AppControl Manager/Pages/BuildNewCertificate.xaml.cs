@@ -16,7 +16,6 @@
 //
 
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -24,11 +23,7 @@ internal sealed partial class BuildNewCertificate : Page, CommonCore.UI.IPageHea
 {
 	private ViewModels.BuildNewCertificateVM ViewModel => ViewModels.ViewModelProvider.BuildNewCertificateVM;
 
-	internal BuildNewCertificate()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal BuildNewCertificate() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("BuildNewCertificatePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-New-Certificate");

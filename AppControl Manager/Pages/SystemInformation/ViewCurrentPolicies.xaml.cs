@@ -17,7 +17,6 @@
 
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -29,9 +28,5 @@ internal sealed partial class ViewCurrentPolicies : Page
 {
 	private ViewCurrentPoliciesVM ViewModel => ViewModelProvider.ViewCurrentPoliciesVM;
 
-	internal ViewCurrentPolicies()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal ViewCurrentPolicies() => InitializeComponent();
 }

@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
@@ -25,11 +24,7 @@ internal sealed partial class MicrosoftSecurityBaseline : Page, CommonCore.UI.IP
 {
 	private MicrosoftSecurityBaselineVM ViewModel => ViewModelProvider.MicrosoftSecurityBaselineVM;
 
-	internal MicrosoftSecurityBaseline()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal MicrosoftSecurityBaseline() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("MicrosoftSecurityBaselinePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines");

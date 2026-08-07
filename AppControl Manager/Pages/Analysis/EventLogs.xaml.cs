@@ -18,7 +18,6 @@
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages.Analysis;
 
@@ -26,11 +25,7 @@ internal sealed partial class EventLogs : Page
 {
 	private EventLogsPolicyCreationVM ViewModel => ViewModelProvider.EventLogsPolicyCreationVM;
 
-	internal EventLogs()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal EventLogs() => InitializeComponent();
 
 	internal async void ExportPageToPdf_Click()
 	{

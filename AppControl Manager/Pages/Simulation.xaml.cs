@@ -20,7 +20,6 @@ using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -28,11 +27,7 @@ internal sealed partial class Simulation : Page, IAnimatedIconsManager, CommonCo
 {
 	private SimulationVM ViewModel => ViewModelProvider.SimulationVM;
 
-	internal Simulation()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal Simulation() => InitializeComponent();
 
 	#region Augmentation Interface
 

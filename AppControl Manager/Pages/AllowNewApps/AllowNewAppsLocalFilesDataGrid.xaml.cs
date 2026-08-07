@@ -19,7 +19,6 @@ using AppControlManager.ViewModels;
 using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using WinRT;
 
 namespace AppControlManager.Pages;
@@ -29,14 +28,9 @@ namespace AppControlManager.Pages;
 /// </summary>
 internal sealed partial class AllowNewAppsLocalFilesDataGrid : Page
 {
-
 	private AllowNewAppsVM ViewModel => ViewModelProvider.AllowNewAppsVM;
 
-	internal AllowNewAppsLocalFilesDataGrid()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal AllowNewAppsLocalFilesDataGrid() => InitializeComponent();
 
 	/// <summary>
 	/// Click event handler for copy

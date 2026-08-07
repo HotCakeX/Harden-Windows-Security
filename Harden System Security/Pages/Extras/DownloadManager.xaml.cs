@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Extras;
 
@@ -25,11 +24,7 @@ internal sealed partial class DownloadManager : Page, CommonCore.UI.IPageHeaderP
 {
 	private DownloadManagerVM ViewModel => ViewModelProvider.DownloadManagerVM;
 
-	internal DownloadManager()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal DownloadManager() => InitializeComponent();
 
 	private void SelectAllDownloadsAppBarButton_Click() => ListViewHelper.SelectAll(DownloadItemsListView);
 

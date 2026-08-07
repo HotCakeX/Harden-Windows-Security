@@ -17,18 +17,13 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
 internal sealed partial class ServiceManager : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private ServiceManagerVM ViewModel => ViewModelProvider.ServiceManagerVM;
-	internal ServiceManager()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal ServiceManager() => InitializeComponent();
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("ServiceManagerPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Service-Manager");
 }

@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
@@ -25,11 +24,7 @@ internal sealed partial class LockScreen : Page, CommonCore.UI.IPageHeaderProvid
 {
 	private LockScreenVM ViewModel => ViewModelProvider.LockScreenVM;
 
-	internal LockScreen()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal LockScreen() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("LockScreenPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Lock-Screen");

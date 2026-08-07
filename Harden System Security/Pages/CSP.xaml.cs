@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
@@ -25,11 +24,7 @@ internal sealed partial class CSP : Page, CommonCore.UI.IPageHeaderProvider
 {
 	internal CSPVM ViewModel => ViewModelProvider.CSPVM;
 
-	internal CSP()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal CSP() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("CSPPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Configuration-Service-Provider-%7C-Harden-System-Security");

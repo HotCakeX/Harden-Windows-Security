@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
@@ -25,11 +24,7 @@ internal sealed partial class InstalledAppsManagement : Page, CommonCore.UI.IPag
 {
 	private InstalledAppsManagementVM ViewModel => ViewModelProvider.InstalledAppsManagementVM;
 
-	internal InstalledAppsManagement()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal InstalledAppsManagement() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("InstalledAppsManagementPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Manage-Installed-Apps");

@@ -37,7 +37,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
@@ -55,7 +54,6 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	internal SecureVault()
 	{
 		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
 		refreshTimer = DispatcherQueue.CreateTimer();
 		refreshTimer.Interval = TimeSpan.FromMilliseconds(RefreshIntervalMilliseconds);
 		refreshTimer.Tick += RefreshTimer_Tick;

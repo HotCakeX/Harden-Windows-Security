@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Extras;
 
@@ -25,11 +24,7 @@ internal sealed partial class DownloadManagerSettings : Page, CommonCore.UI.IPag
 {
 	private DownloadManagerVM ViewModel => ViewModelProvider.DownloadManagerVM;
 
-	internal DownloadManagerSettings()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal DownloadManagerSettings() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("DownloadManagerSettingsPageDescription");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Download-Manager");

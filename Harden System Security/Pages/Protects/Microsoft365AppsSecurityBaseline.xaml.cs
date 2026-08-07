@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
@@ -25,11 +24,7 @@ internal sealed partial class Microsoft365AppsSecurityBaseline : Page, CommonCor
 {
 	private Microsoft365AppsSecurityBaselineVM ViewModel => ViewModelProvider.Microsoft365AppsSecurityBaselineVM;
 
-	internal Microsoft365AppsSecurityBaseline()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal Microsoft365AppsSecurityBaseline() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("Microsoft365AppsSecurityBaselinePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-365-Apps-Security-Baseline");

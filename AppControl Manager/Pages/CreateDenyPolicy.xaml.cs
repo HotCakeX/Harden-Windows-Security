@@ -21,7 +21,6 @@ using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 using WinRT;
 
 namespace AppControlManager.Pages;
@@ -30,11 +29,7 @@ internal sealed partial class CreateDenyPolicy : Page, IAnimatedIconsManager, Co
 {
 	private CreateDenyPolicyVM ViewModel => ViewModelProvider.CreateDenyPolicyVM;
 
-	internal CreateDenyPolicy()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal CreateDenyPolicy() => InitializeComponent();
 
 	#region Augmentation Interface
 

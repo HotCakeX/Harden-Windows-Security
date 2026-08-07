@@ -24,11 +24,7 @@ internal sealed partial class SandboxMaker : Page, CommonCore.UI.IPageHeaderProv
 {
 	internal SandboxMakerVM ViewModel => ViewModelProvider.SandboxMakerVM;
 
-	internal SandboxMaker()
-	{
-		InitializeComponent();
-		NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Disabled;
-	}
+	internal SandboxMaker() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("SandboxMakerNavItem/ToolTipService/ToolTip");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sandbox-Maker");

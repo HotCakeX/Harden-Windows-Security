@@ -21,7 +21,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
 using WinRT;
 
 namespace AppControlManager.Pages;
@@ -45,11 +44,7 @@ internal sealed partial class GetCIHashes : Page, CommonCore.UI.IPageHeaderProvi
 {
 	private GetCIHashesVM ViewModel => ViewModelProvider.GetCIHashesVM;
 
-	internal GetCIHashes()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal GetCIHashes() => InitializeComponent();
 
 	[DynamicWindowsRuntimeCast(typeof(GridViewItem))]
 	private void HashGridView_ContainerContentChanging(ListViewBase sender, ContainerContentChangingEventArgs args)

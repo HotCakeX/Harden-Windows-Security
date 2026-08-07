@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Extras;
 
@@ -25,11 +24,7 @@ internal sealed partial class BootableDriveMaker : Page, CommonCore.UI.IPageHead
 {
 	private BootableDriveMakerVM ViewModel => ViewModelProvider.BootableDriveMakerVM;
 
-	internal BootableDriveMaker()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal BootableDriveMaker() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("BootableDriveMakerPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Bootable-Drive-Maker");

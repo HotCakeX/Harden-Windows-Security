@@ -25,11 +25,7 @@ internal sealed partial class ViewOnlinePolicies : Page
 {
 	private ViewOnlinePoliciesVM ViewModel => ViewModelProvider.ViewOnlinePoliciesVM;
 
-	internal ViewOnlinePolicies()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal ViewOnlinePolicies() => InitializeComponent();
 
 	internal void CleanUpBeforeNavigation() => GraphAuthPanel.CleanUpBeforeNavigation();
 

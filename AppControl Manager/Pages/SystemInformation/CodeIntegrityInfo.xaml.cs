@@ -16,7 +16,6 @@
 //
 
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -24,9 +23,5 @@ internal sealed partial class CodeIntegrityInfo : Page
 {
 	private ViewModels.CodeIntegrityInfoVM ViewModel => ViewModels.ViewModelProvider.CodeIntegrityInfoVM;
 
-	internal CodeIntegrityInfo()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal CodeIntegrityInfo() => InitializeComponent();
 }

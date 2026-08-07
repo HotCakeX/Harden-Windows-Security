@@ -19,7 +19,6 @@ using AppControlManager.ViewModels;
 using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using WinRT;
 
 namespace AppControlManager.Pages;
@@ -33,11 +32,7 @@ internal sealed partial class AllowNewAppsEventLogsDataGrid : Page
 
 	private AllowNewAppsVM ViewModel => ViewModelProvider.AllowNewAppsVM;
 
-	internal AllowNewAppsEventLogsDataGrid()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal AllowNewAppsEventLogsDataGrid() => InitializeComponent();
 
 	/// <summary>
 	/// Click event handler for copy

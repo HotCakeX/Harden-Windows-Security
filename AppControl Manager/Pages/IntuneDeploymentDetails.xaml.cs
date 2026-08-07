@@ -17,7 +17,6 @@
 
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -29,11 +28,7 @@ internal sealed partial class IntuneDeploymentDetails : Page, CommonCore.UI.IPag
 	private IntuneDeploymentDetailsVM ViewModel => ViewModelProvider.IntuneDeploymentDetailsVM;
 #endif
 
-	internal IntuneDeploymentDetails()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal IntuneDeploymentDetails() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("IntuneDeploymentDetailsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;

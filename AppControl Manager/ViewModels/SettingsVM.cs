@@ -19,8 +19,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Foundation;
-using Windows.UI.Shell;
-using Windows.UI.StartScreen;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.Globalization;
 using Microsoft.UI.Xaml;
@@ -36,11 +34,8 @@ namespace HardenSystemSecurity.ViewModels;
 #endif
 
 #if APP_CONTROL_MANAGER
-using System.Collections.ObjectModel;
 using CommonCore.IntelGathering;
 using AppControlManager.Main;
-using AppControlManager.WindowComponents;
-using System.Runtime.InteropServices;
 using CommonCore.IncrementalCollection;
 namespace AppControlManager.ViewModels;
 #endif

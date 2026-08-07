@@ -28,8 +28,6 @@ internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeade
 	{
 		InitializeComponent();
 
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-
 		if (Atlas.IsElevated)
 		{
 			// Navigate to a page when loaded

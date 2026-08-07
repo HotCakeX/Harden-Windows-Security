@@ -25,11 +25,7 @@ internal sealed partial class WindowsUpdate : Page, CommonCore.UI.IPageHeaderPro
 {
 	private WindowsUpdateVM ViewModel => ViewModelProvider.WindowsUpdateVM;
 
-	internal WindowsUpdate()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal WindowsUpdate() => InitializeComponent();
 
 	/// <summary>
 	/// OnNavigatedFrom indicates real page navigation, not transient Unloaded under TabView.

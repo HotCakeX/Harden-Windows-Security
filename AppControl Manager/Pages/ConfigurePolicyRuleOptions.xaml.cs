@@ -20,7 +20,6 @@ using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -28,11 +27,7 @@ internal sealed partial class ConfigurePolicyRuleOptions : Page, IAnimatedIconsM
 {
 	private ConfigurePolicyRuleOptionsVM ViewModel => ViewModelProvider.ConfigurePolicyRuleOptionsVM;
 
-	internal ConfigurePolicyRuleOptions()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal ConfigurePolicyRuleOptions() => InitializeComponent();
 
 	#region Augmentation Interface
 

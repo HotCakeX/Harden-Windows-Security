@@ -17,7 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages.Extras;
 
@@ -25,11 +24,7 @@ internal sealed partial class EXIFManager : Page, CommonCore.UI.IPageHeaderProvi
 {
 	private EXIFManagerVM ViewModel => ViewModelProvider.EXIFManagerVM;
 
-	internal EXIFManager()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal EXIFManager() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("EXIFManagerPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/EXIF-Manager");

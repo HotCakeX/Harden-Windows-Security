@@ -36,7 +36,6 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 	internal AllowNewApps()
 	{
 		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
 
 		// Navigate to the AllowNewAppsStart page when the window is loaded
 		_ = ContentFrame.Navigate(typeof(AllowNewAppsStart));

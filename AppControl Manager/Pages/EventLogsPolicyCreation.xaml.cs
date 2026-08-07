@@ -21,7 +21,6 @@ using AppControlManager.WindowComponents;
 using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 using WinRT;
 
 namespace AppControlManager.Pages;
@@ -30,11 +29,7 @@ internal sealed partial class EventLogsPolicyCreation : Page, IAnimatedIconsMana
 {
 	private EventLogsPolicyCreationVM ViewModel => ViewModelProvider.EventLogsPolicyCreationVM;
 
-	internal EventLogsPolicyCreation()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal EventLogsPolicyCreation() => InitializeComponent();
 
 	#region Augmentation Interface
 

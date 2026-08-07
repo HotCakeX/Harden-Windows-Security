@@ -17,7 +17,6 @@
 
 using AppControlManager.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -25,11 +24,7 @@ internal sealed partial class CreateSupplementalPolicyFilesAndFoldersScanResults
 {
 	private CreateSupplementalPolicyVM ViewModel => ViewModelProvider.CreateSupplementalPolicyVM;
 
-	internal CreateSupplementalPolicyFilesAndFoldersScanResults()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal CreateSupplementalPolicyFilesAndFoldersScanResults() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("CreateSupplementalPolicyFilesAndFoldersScanResultsPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => null;

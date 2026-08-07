@@ -20,7 +20,6 @@ using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -28,11 +27,7 @@ internal sealed partial class ComparePolicies : Page, IAnimatedIconsManager, Com
 {
 	private ComparePoliciesVM ViewModel => ViewModelProvider.ComparePoliciesVM;
 
-	internal ComparePolicies()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal ComparePolicies() => InitializeComponent();
 
 	#region Augmentation Interface
 	public void SetVisibility(Visibility visibility)

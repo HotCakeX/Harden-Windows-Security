@@ -20,7 +20,6 @@ using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace AppControlManager.Pages;
 
@@ -28,11 +27,7 @@ internal sealed partial class MergePolicies : Page, IAnimatedIconsManager, Commo
 {
 	private MergePoliciesVM ViewModel => ViewModelProvider.MergePoliciesVM;
 
-	internal MergePolicies()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal MergePolicies() => InitializeComponent();
 
 	#region Augmentation Interface
 

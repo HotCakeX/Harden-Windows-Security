@@ -18,7 +18,6 @@
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 namespace HardenSystemSecurity.Pages;
 
@@ -29,7 +28,6 @@ internal sealed partial class WinGetManagement : Page, CommonCore.UI.IPageHeader
 	internal WinGetManagement()
 	{
 		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
 		WinGetSectionSelectorBar.SelectedItem = SearchSectionSelectorBarItem;
 	}
 

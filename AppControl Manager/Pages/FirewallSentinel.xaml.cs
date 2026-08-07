@@ -26,7 +26,6 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using Windows.UI;
 using WinRT;
 
@@ -36,11 +35,7 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 {
 	private FirewallSentinelVM ViewModel => ViewModelProvider.FirewallSentinelVM;
 
-	internal FirewallSentinel()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal FirewallSentinel() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("FirewallSentinelPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Firewall-Sentinel");
@@ -79,7 +74,7 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 	/// <summary>
 	/// Cleanup resources when the page is unloaded to prevent memory leaks.
 	/// </summary>
-	private void FirewallSentinel_Unloaded(object sender, RoutedEventArgs e)
+	private void FirewallSentinel_Unloaded()
 	{
 		foreach (NeonBorderVisuals visual in _neonVisualsMap.Values)
 		{

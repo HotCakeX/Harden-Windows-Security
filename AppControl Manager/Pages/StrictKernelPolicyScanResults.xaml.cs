@@ -20,7 +20,6 @@ using CommonCore.IntelGathering;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Navigation;
 using WinRT;
 
 namespace AppControlManager.Pages;
@@ -29,11 +28,7 @@ internal sealed partial class StrictKernelPolicyScanResults : Page, CommonCore.U
 {
 	private CreateSupplementalPolicyVM ViewModel => ViewModelProvider.CreateSupplementalPolicyVM;
 
-	internal StrictKernelPolicyScanResults()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal StrictKernelPolicyScanResults() => InitializeComponent();
 
 	/// <summary>
 	/// Click event handler for copy

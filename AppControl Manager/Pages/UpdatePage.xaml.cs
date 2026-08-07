@@ -16,7 +16,6 @@
 //
 
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
 
 #if HARDEN_SYSTEM_SECURITY
 namespace HardenSystemSecurity.Pages;
@@ -29,11 +28,7 @@ internal sealed partial class UpdatePage : Page, CommonCore.UI.IPageHeaderProvid
 {
 	private ViewModels.UpdateVM ViewModel => ViewModels.ViewModelProvider.UpdateVM;
 
-	internal UpdatePage()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal UpdatePage() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("UpdatePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update");

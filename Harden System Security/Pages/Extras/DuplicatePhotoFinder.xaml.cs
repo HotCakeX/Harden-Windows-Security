@@ -17,8 +17,6 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-
 
 namespace HardenSystemSecurity.Pages.Extras;
 
@@ -26,11 +24,7 @@ internal sealed partial class DuplicatePhotoFinder : Page, CommonCore.UI.IPageHe
 {
 	private DuplicatePhotoFinderVM ViewModel => ViewModelProvider.DuplicatePhotoFinderVM;
 
-	internal DuplicatePhotoFinder()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal DuplicatePhotoFinder() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("DuplicatePhotosFinderPageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Duplicate-Photo-Finder");

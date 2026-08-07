@@ -24,11 +24,7 @@ namespace HardenSystemSecurity.Pages;
 internal sealed partial class Intune : Page, CommonCore.UI.IPageHeaderProvider
 {
 	private IntuneVM ViewModel => ViewModelProvider.IntuneVM;
-	internal Intune()
-	{
-		InitializeComponent();
-		NavigationCacheMode = NavigationCacheMode.Disabled;
-	}
+	internal Intune() => InitializeComponent();
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("IntunePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Intune-%7C-Harden-System-Security");

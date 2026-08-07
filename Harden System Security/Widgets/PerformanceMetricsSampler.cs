@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using AppControlManager.Pages;
 using CommonCore.ThermalMonitors;
 
 namespace HardenSystemSecurity.Widgets;

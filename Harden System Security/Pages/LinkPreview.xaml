@@ -15,11 +15,11 @@
         <!-- Navigation Bar -->
         <CCToolKit:WrapPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="3" VerticalSpacing="3" VerticalAlignment="Top" Margin="0,0,0,4">
 
-            <Button Click="{x:Bind BackButton_Click}" IsEnabled="False" x:Name="BackButton">
+            <Button Click="{x:Bind BackButton_Click}" IsEnabled="{x:Bind LinkPreviewWebView2.CanGoBack, Mode=OneWay}">
                 <FontIcon Glyph="&#xE72B;" FontSize="12" />
             </Button>
 
-            <Button Click="{x:Bind ForwardButton_Click}" IsEnabled="False" x:Name="ForwardButton">
+            <Button Click="{x:Bind ForwardButton_Click}" IsEnabled="{x:Bind LinkPreviewWebView2.CanGoForward, Mode=OneWay}">
                 <FontIcon Glyph="&#xE72A;" FontSize="12" />
             </Button>
 

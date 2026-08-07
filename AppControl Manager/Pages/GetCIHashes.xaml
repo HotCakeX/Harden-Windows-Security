@@ -292,15 +292,14 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock x:Name="modalHeaderText"
-                                Style="{ThemeResource TitleTextBlockStyle}"
-                                Margin="20"
-                                HorizontalAlignment="Left"
-                                TextWrapping="Wrap"
-                                Grid.Column="0"
-                                VerticalAlignment="Center"
-                                Foreground="White"
-                                FontWeight="SemiBold">
+                        <TextBlock Style="{ThemeResource TitleTextBlockStyle}"
+                                   Margin="20"
+                                   HorizontalAlignment="Left"
+                                   TextWrapping="Wrap"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   Foreground="White"
+                                   FontWeight="SemiBold">
                          <Run Text="{x:Bind ViewModel.SelectedHashItem.AlgorithmName, Mode=OneWay}"
                               FontWeight="Bold" Foreground="HotPink"/>
                          <Run Text="{x:Bind ViewModel.SelectedHashItem.HashTypeName, Mode=OneWay}"/>

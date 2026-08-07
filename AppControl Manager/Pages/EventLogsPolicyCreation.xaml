@@ -175,8 +175,7 @@
                                                        Width="310"
                                                        TextWrapping="WrapWholeWords"/>
 
-                                                <customUI:ButtonV2 x:Uid="FileBrowseButton"
-                                                                   x:Name="PolicyToAddLogsToButton"
+                                                <customUI:ButtonV2 x:Uid="FileBrowseButton"                                                                   
                                                                    Margin="5"
                                                                    Style="{StaticResource AccentButtonStyle}"
                                                                    ObservedData="{x:Bind ViewModel.PolicyToAddLogsTo.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
@@ -192,7 +191,7 @@
                                                     </customUI:ButtonV2.ContentTemplate>
 
                                                     <customUI:ButtonV2.Flyout>
-                                                        <Flyout x:Name="PolicyToAddLogsToButton_FlyOut">
+                                                        <Flyout>
 
                                                             <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -231,8 +230,7 @@
                                                            TextWrapping="WrapWholeWords"
                                                            Width="310" />
 
-                                                <customUI:ButtonV2 x:Uid="FileBrowseButton"
-                                                                   x:Name="BasePolicyButton"
+                                                <customUI:ButtonV2 x:Uid="FileBrowseButton"                                                                   
                                                                    Margin="5"
                                                                    Style="{StaticResource AccentButtonStyle}"
                                                                    ObservedData="{x:Bind ViewModel.BasePolicyXMLFile.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
@@ -248,7 +246,7 @@
                                                     </customUI:ButtonV2.ContentTemplate>
 
                                                     <customUI:ButtonV2.Flyout>
-                                                        <Flyout x:Name="BasePolicyButton_FlyOut">
+                                                        <Flyout>
 
                                                             <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
 
@@ -532,8 +530,7 @@
                     <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"
                                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
 
-                    <SplitButton x:Uid="DataAnalysisButton"
-                                 x:Name="DataAnalysisButton"
+                    <SplitButton x:Uid="DataAnalysisButton"                                 
                                  IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                  Click="{x:Bind ViewModel.DataAnalysisSplitButton_Click}"
                                  VerticalAlignment="Center">

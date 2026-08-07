@@ -16,7 +16,7 @@
         <!-- Navigation Bar -->
         <CCToolKit:WrapPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="5" VerticalSpacing="5" VerticalAlignment="Top" Margin="0,0,0,10" XYFocusKeyboardNavigation="Enabled">
             <!-- Back Button with Icon - Set initially to disabled until it makes sense to be enabled -->
-            <Button Click="{x:Bind BackButton_Click}" IsEnabled="False" x:Name="BackButton" AccessKey="B">
+            <Button Click="{x:Bind BackButton_Click}" IsEnabled="{x:Bind GitHubDocumentationWebView2.CanGoBack, Mode=OneWay}" AccessKey="B">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Back"/>
                     <TextBlock x:Uid="WebViewBackButton" Margin="5,0,0,0"/>
@@ -24,7 +24,7 @@
             </Button>
 
             <!-- Forward Button with Icon - Set initially to false until it makes sense to be enabled -->
-            <Button Click="{x:Bind ForwardButton_Click}" IsEnabled="False" x:Name="ForwardButton" AccessKey="F">
+            <Button Click="{x:Bind ForwardButton_Click}" IsEnabled="{x:Bind GitHubDocumentationWebView2.CanGoForward, Mode=OneWay}" AccessKey="F">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Forward"/>
                     <TextBlock x:Uid="WebViewForwardButton" Margin="5,0,0,0"/>
@@ -49,10 +49,8 @@
             </Button>
         </CCToolKit:WrapPanel>
 
-        <!-- WebView2 Control -->
         <WebView2 Grid.Row="1"
                   x:Name="GitHubDocumentationWebView2"
-                  NavigationCompleted="{x:Bind WebView2_NavigationCompleted}"
                   DefaultBackgroundColor="Transparent"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"

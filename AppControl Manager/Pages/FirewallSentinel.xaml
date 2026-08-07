@@ -120,8 +120,7 @@
                         <CCToolKit:WrapPanel Grid.Row="1" HorizontalSpacing="16" VerticalSpacing="16" HorizontalAlignment="Center" XYFocusKeyboardNavigation="Enabled">
 
                             <!-- Default Windows Card -->
-                            <Grid x:Name="DefaultWindowsCard"
-                                  Width="280"
+                            <Grid Width="280"
                                   Height="250"
                                   Padding="12"
                                   CornerRadius="8"
@@ -157,12 +156,11 @@
                                         Grid.Row="2"/>
 
                                 <!-- Overlay container for Neon Border with negative margin to ignore padding -->
-                                <Grid x:Name="DefaultWindowsBorder" Grid.RowSpan="3" Margin="-12" Loaded="{x:Bind Card_Loaded}" IsHitTestVisible="False" />
+                                <Grid Grid.RowSpan="3" Margin="-12" Loaded="{x:Bind Card_Loaded}" IsHitTestVisible="False" />
                             </Grid>
 
                             <!-- Allow Microsoft Card -->
-                            <Grid x:Name="AllowMicrosoftCard"
-                                  Width="280"
+                            <Grid Width="280"
                                   Height="250"
                                   Padding="12"
                                   CornerRadius="8"
@@ -198,12 +196,11 @@
                                         Grid.Row="2"/>
 
                                 <!-- Overlay container for Neon Border with negative margin to ignore padding -->
-                                <Grid x:Name="AllowMicrosoftBorder" Grid.RowSpan="3" Margin="-12" Loaded="{x:Bind Card_Loaded}" IsHitTestVisible="False" />
+                                <Grid Grid.RowSpan="3" Margin="-12" Loaded="{x:Bind Card_Loaded}" IsHitTestVisible="False" />
                             </Grid>
 
                             <!-- Signed and Reputable Card -->
-                            <Grid x:Name="SignedReputableCard"
-                                  Width="280"
+                            <Grid Width="280"
                                   Height="250"
                                   Padding="12"
                                   CornerRadius="8"
@@ -239,7 +236,7 @@
                                         Grid.Row="2"/>
 
                                 <!-- Overlay container for Neon Border with negative margin to ignore padding -->
-                                <Grid x:Name="SignedReputableBorder" Grid.RowSpan="3" Margin="-12" Loaded="{x:Bind Card_Loaded}" IsHitTestVisible="False" />
+                                <Grid Grid.RowSpan="3" Margin="-12" Loaded="{x:Bind Card_Loaded}" IsHitTestVisible="False" />
                             </Grid>
 
                         </CCToolKit:WrapPanel>

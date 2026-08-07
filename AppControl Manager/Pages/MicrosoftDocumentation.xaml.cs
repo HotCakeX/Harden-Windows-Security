@@ -53,24 +53,4 @@ internal sealed partial class MicrosoftDocumentation : Page
 
 	// Event handler for Home button
 	private void HomeButton_Click() => MicrosoftDocumentationWebView2.Source = URLToUse;
-
-	// Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used
-	private void WebView2_NavigationCompleted()
-	{
-		// The following checks are required to prevent any errors when intentionally spam navigating between pages and elements extremely fast
-		try
-		{
-			// Check if the WebView2 control or its CoreWebView2 instance is disposed
-			if (MicrosoftDocumentationWebView2 is { CoreWebView2: not null })
-			{
-				BackButton.IsEnabled = MicrosoftDocumentationWebView2.CanGoBack;
-				ForwardButton.IsEnabled = MicrosoftDocumentationWebView2.CanGoForward;
-			}
-		}
-		catch (ObjectDisposedException ex)
-		{
-			// Log the exception, but avoid crashing the app
-			Logger.Write("WebView2 in Microsoft Documentation page has been disposed: " + ex.Message);
-		}
-	}
 }

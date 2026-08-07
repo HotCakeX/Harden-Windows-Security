@@ -71,24 +71,4 @@ internal sealed partial class GitHubDocumentation : Page
 	/// Event handler for Home button
 	/// </summary>
 	private void HomeButton_Click() => GitHubDocumentationWebView2.Source = URLToUse;
-
-	// Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used
-	private void WebView2_NavigationCompleted()
-	{
-		// The following checks are required to prevent any errors when intentionally spam navigating between pages and elements extremely fast
-		try
-		{
-			// Check if the WebView2 control or its CoreWebView2 instance is disposed
-			if (GitHubDocumentationWebView2 is { CoreWebView2: not null })
-			{
-				BackButton.IsEnabled = GitHubDocumentationWebView2.CanGoBack;
-				ForwardButton.IsEnabled = GitHubDocumentationWebView2.CanGoForward;
-			}
-		}
-		catch (ObjectDisposedException ex)
-		{
-			// Log the exception, but avoid crashing the app
-			Logger.Write("WebView2 in GitHub Documentation Page has been disposed: " + ex.Message);
-		}
-	}
 }

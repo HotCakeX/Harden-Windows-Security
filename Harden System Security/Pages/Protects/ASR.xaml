@@ -226,8 +226,7 @@
                   IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                   RefreshRequested="{x:Bind ViewModel.RetrieveLatest}">
 
-            <ListView x:Name="MainListView"
-                      CornerRadius="10"
+            <ListView CornerRadius="10"
                       BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
                       ScrollViewer.VerticalScrollBarVisibility="Auto"

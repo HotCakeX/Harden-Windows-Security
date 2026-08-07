@@ -2457,7 +2457,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	private static PasswordStrengthEvaluation EvaluatePasswordStrength(ReadOnlySpan<char> password)
 	{
 		if (password.IsEmpty)
-			return new(score: 0, hasMinimumLength: false, hasLowercase: false, hasUppercase: false, hasDigit: false, hasSpace: false, hasSymbol: false, summaryText: GetDefaultPasswordStrengthText(), displayColor: PasswordStrengthNeutralColor);
+			return new(score: 0, hasMinimumLength: false, hasLowercase: false, hasUppercase: false, hasDigit: false, summaryText: GetDefaultPasswordStrengthText(), displayColor: PasswordStrengthNeutralColor);
 		bool hasLowercase = false;
 		bool hasUppercase = false;
 		bool hasDigit = false;
@@ -2539,7 +2539,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 			: missingBonus.Count > 0
 				? string.Concat("Password strength: ", strengthLabel, " (", score.ToString(CultureInfo.InvariantCulture), "/", PasswordStrengthMaximumScore.ToString(CultureInfo.InvariantCulture), "). Meets all required rules. Bonus: add ", FormatPasswordRuleList(missingBonus), " for extra strength.")
 				: string.Concat("Password strength: ", strengthLabel, " (", score.ToString(CultureInfo.InvariantCulture), "/", PasswordStrengthMaximumScore.ToString(CultureInfo.InvariantCulture), "). Meets all required rules and includes both space and symbol.");
-		return new(score: score, hasMinimumLength: hasMinimumLength, hasLowercase: hasLowercase, hasUppercase: hasUppercase, hasDigit: hasDigit, hasSpace: hasSpace, hasSymbol: hasSymbol, summaryText: summaryText, displayColor: displayColor);
+		return new(score: score, hasMinimumLength: hasMinimumLength, hasLowercase: hasLowercase, hasUppercase: hasUppercase, hasDigit: hasDigit, summaryText: summaryText, displayColor: displayColor);
 	}
 
 	private static string FormatPasswordRuleList(List<string> items) => items.Count switch
@@ -2670,15 +2670,13 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 			tokenItem.ClearSensitiveState();
 	}
 
-	private sealed class PasswordStrengthEvaluation(int score, bool hasMinimumLength, bool hasLowercase, bool hasUppercase, bool hasDigit, bool hasSpace, bool hasSymbol, string summaryText, Color displayColor)
+	private sealed class PasswordStrengthEvaluation(int score, bool hasMinimumLength, bool hasLowercase, bool hasUppercase, bool hasDigit, string summaryText, Color displayColor)
 	{
 		internal int Score => score;
 		internal bool HasMinimumLength => hasMinimumLength;
 		internal bool HasLowercase => hasLowercase;
 		internal bool HasUppercase => hasUppercase;
 		internal bool HasDigit => hasDigit;
-		internal bool HasSpace => hasSpace;
-		internal bool HasSymbol => hasSymbol;
 		internal string SummaryText => summaryText;
 		internal Color DisplayColor => displayColor;
 	}

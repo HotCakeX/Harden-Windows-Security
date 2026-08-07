@@ -107,10 +107,9 @@
                                        x:Phase="0"/>
 
                                 <!-- Secondary Information -->
-                                <CCToolKit:WrapPanel x:Name="SecondaryInfoWrapPanel"
-                                              Orientation="Horizontal"
-                                              HorizontalSpacing="16"
-                                              VerticalSpacing="6">
+                                <CCToolKit:WrapPanel Orientation="Horizontal"
+                                                     HorizontalSpacing="16"
+                                                     VerticalSpacing="6">
 
                                     <!-- Version -->
                                     <Grid MinWidth="120">
@@ -216,13 +215,12 @@
                                 </CCToolKit:WrapPanel>
 
                                 <!-- Expandable Details Section -->
-                                <Expander x:Name="DetailsExpander"
-                                      HorizontalAlignment="Stretch"
-                                      HorizontalContentAlignment="Stretch"
-                                      CornerRadius="6"
-                                      Background="{ThemeResource LayerFillColorAltBrush}"
-                                      BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-                                      BorderThickness="1">
+                                <Expander HorizontalAlignment="Stretch"
+                                          HorizontalContentAlignment="Stretch"
+                                          CornerRadius="6"
+                                          Background="{ThemeResource LayerFillColorAltBrush}"
+                                          BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                          BorderThickness="1">
                                     <Expander.Header>
                                         <TextBlock Text="Details"
                                                Style="{ThemeResource CaptionTextBlockStyle}"
@@ -270,7 +268,7 @@
                                         </Grid>
 
                                         <!-- Description -->
-                                        <Grid x:Name="DescriptionGrid">
+                                        <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
@@ -290,7 +288,7 @@
                                         </Grid>
 
                                         <!-- Install Location -->
-                                        <Grid x:Name="InstallLocationGrid">
+                                        <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
@@ -310,7 +308,7 @@
                                         </Grid>
 
                                         <!-- Full Name -->
-                                        <Grid x:Name="FullnameGrid">
+                                        <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
@@ -369,8 +367,7 @@
 
             </Grid.Resources>
 
-            <Border x:Name="AnimatedBorder"
-                    Grid.Row="0"
+            <Border Grid.Row="0"
                     CCToolKit:Effects.Shadow="{StaticResource BorderShadow}"
                     Background="Transparent"
                     BorderThickness="0"

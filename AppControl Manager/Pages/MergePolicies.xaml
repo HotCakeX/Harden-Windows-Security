@@ -147,7 +147,7 @@
 
                                         <TextBlock x:Uid="ViewTheSelectedOtherPolicies" TextWrapping="WrapWholeWords" />
 
-                                        <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.OtherPolicies, Mode=OneWay}" />
+                                        <customUI:ListBoxV2 MinWidth="400" ItemsSource="{x:Bind ViewModel.OtherPolicies, Mode=OneWay}" />
 
                                     </CCToolKit:WrapPanel>
 
@@ -248,7 +248,6 @@
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
                                             <customUI:ListBoxV2 MinWidth="400"
-                                                                SelectionMode="Single"
                                                                 ItemsSource="{x:Bind ViewModel.PoliciesToConvertToAppIDTagging, Mode=OneWay}" />
 
                                         </CCToolKit:WrapPanel>
@@ -320,7 +319,6 @@
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
                                             <customUI:ListBoxV2 MinWidth="400"
-                                                                SelectionMode="Single"
                                                                 ItemsSource="{x:Bind ViewModel.PoliciesForSigningScenarioRemoval, Mode=OneWay}" />
 
                                         </CCToolKit:WrapPanel>

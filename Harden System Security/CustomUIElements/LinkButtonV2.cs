@@ -246,7 +246,7 @@ internal sealed partial class LinkButtonV2 : UserControl, IDisposable, IExplicit
 			// Update the URL on the single shared preview page.
 			_ = (s_sharedPreviewPage?.PreviewUrl = LinkUrl);
 
-			// Use the shared frame in the single shared flyout.			
+			// Use the shared frame in the single shared flyout.
 			_previewFlyout.Content = s_sharedPreviewFrame;
 
 			// Show the shared flyout anchored to this button.

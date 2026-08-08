@@ -160,7 +160,7 @@
 
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.MDEAdvancedHuntingLogs, Mode=OneWay}" />
+                                            <customUI:ListBoxV2 MinWidth="400" ItemsSource="{x:Bind ViewModel.MDEAdvancedHuntingLogs, Mode=OneWay}" />
 
                                         </CCToolKit:WrapPanel>
 

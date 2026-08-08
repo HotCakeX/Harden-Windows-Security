@@ -110,6 +110,35 @@ internal static class NetworkWidgetCard
 	/// </summary>
 	private const int MaximumValueLength = 64;
 
+	private static readonly JsonEncodedText NameSizeProperty = JsonEncodedText.Encode("nameSize"),
+	 TextSizeProperty = JsonEncodedText.Encode("textSize"),
+	 RowSpacingProperty = JsonEncodedText.Encode("rowSpacing"),
+	 PanelSpacingProperty = JsonEncodedText.Encode("panelSpacing"),
+	 HasAdaptersProperty = JsonEncodedText.Encode("hasAdapters"),
+	 NoAdaptersProperty = JsonEncodedText.Encode("noAdapters"),
+	 EmptyMessageProperty = JsonEncodedText.Encode("emptyMessage"),
+	 FirstNameProperty = JsonEncodedText.Encode("firstName"),
+	 FirstMetaProperty = JsonEncodedText.Encode("firstMeta"),
+	 FirstNavigationVisibleProperty = JsonEncodedText.Encode("firstNavigationVisible"),
+	 FirstUploadProperty = JsonEncodedText.Encode("firstUpload"),
+	 FirstDownloadProperty = JsonEncodedText.Encode("firstDownload"),
+	 FirstSentProperty = JsonEncodedText.Encode("firstSent"),
+	 FirstReceivedProperty = JsonEncodedText.Encode("firstReceived"),
+	 SecondPanelVisibleProperty = JsonEncodedText.Encode("secondPanelVisible"),
+	 SecondNameProperty = JsonEncodedText.Encode("secondName"),
+	 SecondMetaProperty = JsonEncodedText.Encode("secondMeta"),
+	 SecondNavigationVisibleProperty = JsonEncodedText.Encode("secondNavigationVisible"),
+	 SecondUploadProperty = JsonEncodedText.Encode("secondUpload"),
+	 SecondDownloadProperty = JsonEncodedText.Encode("secondDownload"),
+	 SecondSentProperty = JsonEncodedText.Encode("secondSent"),
+	 SecondReceivedProperty = JsonEncodedText.Encode("secondReceived"),
+	 DefaultValue = JsonEncodedText.Encode("default"),
+	 MediumValue = JsonEncodedText.Encode("medium"),
+	 LargeValue = JsonEncodedText.Encode("large"),
+	 SmallValue = JsonEncodedText.Encode("small"),
+	 NoneValue = JsonEncodedText.Encode("none"),
+	 EmptyMessageValue = JsonEncodedText.Encode("No network adapter was found on this device.");
+
 	/// <summary>
 	/// The payload of every visible Network widget is rebuilt once per second for as long as the Widgets Board shows
 	/// it, and the provider process stays alive in the background the whole time, so the buffer and the writer that
@@ -139,10 +168,10 @@ internal static class NetworkWidgetCard
 		// rhythm and shrink its text once a second panel has to fit below the first one.
 		bool isLarge = size is WidgetSize.Large;
 
-		string nameSize = isLarge ? "default" : "medium";
-		string textSize = isLarge ? "medium" : "large";
-		string rowSpacing = isLarge ? "small" : "medium";
-		string panelSpacing = isLarge ? "medium" : "none";
+		JsonEncodedText nameSize = isLarge ? DefaultValue : MediumValue;
+		JsonEncodedText textSize = isLarge ? MediumValue : LargeValue;
+		JsonEncodedText rowSpacing = isLarge ? SmallValue : MediumValue;
+		JsonEncodedText panelSpacing = isLarge ? MediumValue : NoneValue;
 
 		bool hasAdapters = first.IsPresent;
 		bool secondPanelVisible = isLarge && second.IsPresent;
@@ -155,31 +184,31 @@ internal static class NetworkWidgetCard
 
 			_writer.WriteStartObject();
 
-			_writer.WriteString("nameSize", nameSize);
-			_writer.WriteString("textSize", textSize);
-			_writer.WriteString("rowSpacing", rowSpacing);
-			_writer.WriteString("panelSpacing", panelSpacing);
+			_writer.WriteString(NameSizeProperty, nameSize);
+			_writer.WriteString(TextSizeProperty, textSize);
+			_writer.WriteString(RowSpacingProperty, rowSpacing);
+			_writer.WriteString(PanelSpacingProperty, panelSpacing);
 
-			_writer.WriteBoolean("hasAdapters", hasAdapters);
-			_writer.WriteBoolean("noAdapters", !hasAdapters);
-			_writer.WriteString("emptyMessage", "No network adapter was found on this device.");
+			_writer.WriteBoolean(HasAdaptersProperty, hasAdapters);
+			_writer.WriteBoolean(NoAdaptersProperty, !hasAdapters);
+			_writer.WriteString(EmptyMessageProperty, EmptyMessageValue);
 
-			_writer.WriteString("firstName", first.Name);
-			WriteMeta("firstMeta", first);
-			_writer.WriteBoolean("firstNavigationVisible", first.AdapterCount > 1);
-			WriteValue("firstUpload", first.Sample.SendBytesPerSecond, Atlas.RateUnits);
-			WriteValue("firstDownload", first.Sample.ReceiveBytesPerSecond, Atlas.RateUnits);
-			WriteValue("firstSent", first.Sample.TotalSentBytes, Atlas.SizeUnits);
-			WriteValue("firstReceived", first.Sample.TotalReceivedBytes, Atlas.SizeUnits);
+			_writer.WriteString(FirstNameProperty, first.Name);
+			WriteMeta(FirstMetaProperty, first);
+			_writer.WriteBoolean(FirstNavigationVisibleProperty, first.AdapterCount > 1);
+			WriteValue(FirstUploadProperty, first.Sample.SendBytesPerSecond, Atlas.RateUnits);
+			WriteValue(FirstDownloadProperty, first.Sample.ReceiveBytesPerSecond, Atlas.RateUnits);
+			WriteValue(FirstSentProperty, first.Sample.TotalSentBytes, Atlas.SizeUnits);
+			WriteValue(FirstReceivedProperty, first.Sample.TotalReceivedBytes, Atlas.SizeUnits);
 
-			_writer.WriteBoolean("secondPanelVisible", secondPanelVisible);
-			_writer.WriteString("secondName", second.Name);
-			WriteMeta("secondMeta", second);
-			_writer.WriteBoolean("secondNavigationVisible", second.AdapterCount > 1);
-			WriteValue("secondUpload", second.Sample.SendBytesPerSecond, Atlas.RateUnits);
-			WriteValue("secondDownload", second.Sample.ReceiveBytesPerSecond, Atlas.RateUnits);
-			WriteValue("secondSent", second.Sample.TotalSentBytes, Atlas.SizeUnits);
-			WriteValue("secondReceived", second.Sample.TotalReceivedBytes, Atlas.SizeUnits);
+			_writer.WriteBoolean(SecondPanelVisibleProperty, secondPanelVisible);
+			_writer.WriteString(SecondNameProperty, second.Name);
+			WriteMeta(SecondMetaProperty, second);
+			_writer.WriteBoolean(SecondNavigationVisibleProperty, second.AdapterCount > 1);
+			WriteValue(SecondUploadProperty, second.Sample.SendBytesPerSecond, Atlas.RateUnits);
+			WriteValue(SecondDownloadProperty, second.Sample.ReceiveBytesPerSecond, Atlas.RateUnits);
+			WriteValue(SecondSentProperty, second.Sample.TotalSentBytes, Atlas.SizeUnits);
+			WriteValue(SecondReceivedProperty, second.Sample.TotalReceivedBytes, Atlas.SizeUnits);
 
 			_writer.WriteEndObject();
 			_writer.Flush();
@@ -193,7 +222,7 @@ internal static class NetworkWidgetCard
 	/// whether the adapter they are looking at is up at all. It must only be called while <see cref="_writerLock"/> is
 	/// held.
 	/// </summary>
-	private static void WriteMeta(string propertyName, in NetworkPanelData panel)
+	private static void WriteMeta(JsonEncodedText propertyName, in NetworkPanelData panel)
 	{
 		if (!panel.IsPresent)
 		{
@@ -225,7 +254,7 @@ internal static class NetworkWidgetCard
 	/// throughput and the traffic of an adapter, and writes it out. It must only be called while
 	/// <see cref="_writerLock"/> is held.
 	/// </summary>
-	private static void WriteValue(string propertyName, double value, string[] units)
+	private static void WriteValue(JsonEncodedText propertyName, double value, string[] units)
 	{
 		double scaled = double.IsFinite(value) && value > 0.0 ? value : 0.0;
 		int unitIndex = 0;

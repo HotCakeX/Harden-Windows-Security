@@ -133,18 +133,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		set => SetValue(ItemsSourceProperty, value);
 	}
 
-	internal IntentCircles()
-	{
-		InitializeComponent();
-
-		HorizontalAlignment = HorizontalAlignment.Left;
-		VerticalAlignment = VerticalAlignment.Center;
-
-		Loaded += IntentCircles_Loaded;
-		Unloaded += IntentCircles_Unloaded;
-		PointerEntered += IntentCircles_PointerEntered;
-		PointerExited += IntentCircles_PointerExited;
-	}
+	internal IntentCircles() => InitializeComponent();
 
 	private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 	{
@@ -244,6 +233,15 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		}
 	}
 
+	private static readonly Intent[] Order = [
+			Intent.Development,
+			Intent.Gaming,
+			Intent.School,
+			Intent.Business,
+			Intent.SpecializedAccessWorkstation,
+			Intent.PrivilegedAccessWorkstation
+	];
+
 	private static List<Intent> ComputeIntentsToShow(IEnumerable<Intent>? source)
 	{
 		if (source == null)
@@ -272,23 +270,12 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 			};
 		}
 
-		// Stable order regardless of input order
-		Intent[] order =
-		[
-			Intent.Development,
-			Intent.Gaming,
-			Intent.School,
-			Intent.Business,
-			Intent.SpecializedAccessWorkstation,
-			Intent.PrivilegedAccessWorkstation
-		];
-
 		List<Intent> result = new(capacity: set.Count);
-		for (int i = 0; i < order.Length; i++)
+		for (int i = 0; i < Order.Length; i++)
 		{
-			if (set.Contains(order[i]))
+			if (set.Contains(Order[i]))
 			{
-				result.Add(order[i]);
+				result.Add(Order[i]);
 			}
 		}
 		return result;
@@ -550,11 +537,6 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 	{
 		try
 		{
-			Loaded -= IntentCircles_Loaded;
-			Unloaded -= IntentCircles_Unloaded;
-			PointerEntered -= IntentCircles_PointerEntered;
-			PointerExited -= IntentCircles_PointerExited;
-
 			foreach (FrameworkElement elem in _circleElements)
 			{
 				DetachPerItemHandlers(elem);

@@ -653,24 +653,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	{
 		try
 		{
-			if (sender is not MenuFlyoutItem menuItem)
-			{
-				return;
-			}
-
-			// Navigate up the visual tree to find the PackagedAppView data context
-			DependencyObject? current = menuItem;
-			PackagedAppView? targetApp = null;
-
-			while (current is not null)
-			{
-				if (current is FrameworkElement element && element.DataContext is PackagedAppView app)
-				{
-					targetApp = app;
-					break;
-				}
-				current = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(current);
-			}
+			PackagedAppView? targetApp = GetPackagedAppFromMenuFlyoutSender(sender);
 
 			if (targetApp is null)
 			{
@@ -1024,9 +1007,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 			bool error = false;
 
-			int failed = 0;
-
-			List<string> successfullAppNames = [];
+			List<string> successfulAppNames = [];
 			List<string> failedAppNames = [];
 
 			foreach (PackagedAppView app in appsToUninstall)
@@ -1035,12 +1016,11 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 
 				if (currentAppError)
 				{
-					failed++;
 					failedAppNames.Add(app.DisplayName);
 				}
 				else
 				{
-					successfullAppNames.Add(app.DisplayName);
+					successfulAppNames.Add(app.DisplayName);
 				}
 
 				if (!error && currentAppError)
@@ -1055,17 +1035,17 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			// Show success only if no errors
 			if (!error)
 			{
-				MainInfoBar.WriteInfo($"Apps that were successfully uninstalled: {string.Join(", ", successfullAppNames)}");
+				MainInfoBar.WriteInfo($"Apps that were successfully uninstalled: {string.Join(", ", successfulAppNames)}");
 				MainInfoBar.WriteSuccess(Atlas.GetStr("AllAppsSuccessfullyUninstalled"));
 			}
 			else
 			{
-				if (successfullAppNames.Count > 0)
-					MainInfoBar.WriteInfo($"Apps that were successfully uninstalled: {string.Join(", ", successfullAppNames)}");
+				if (successfulAppNames.Count > 0)
+					MainInfoBar.WriteInfo($"Apps that were successfully uninstalled: {string.Join(", ", successfulAppNames)}");
 
 				MainInfoBar.WriteInfo($"Apps that could not be uninstalled: {string.Join(", ", failedAppNames)}");
 
-				MainInfoBar.WriteInfo($"Some apps could not be successfully uninstalled. Total: {appsToUninstall.Count} - Failed: {failed} - Successful: {appsToUninstall.Count - failed}. Please view the logs for more information.");
+				MainInfoBar.WriteInfo($"Some apps could not be successfully uninstalled. Total: {appsToUninstall.Count} - Failed: {failedAppNames.Count} - Successful: {appsToUninstall.Count - failedAppNames.Count}. Please view the logs for more information.");
 			}
 		}
 		catch (Exception ex)
@@ -1211,24 +1191,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		{
 			MainInfoBar.IsClosable = false;
 
-			if (sender is not MenuFlyoutItem menuItem)
-			{
-				return;
-			}
-
-			// Navigate up the visual tree to find the PackagedAppView data context
-			DependencyObject? current = menuItem;
-			PackagedAppView? targetApp = null;
-
-			while (current is not null)
-			{
-				if (current is FrameworkElement element && element.DataContext is PackagedAppView app)
-				{
-					targetApp = app;
-					break;
-				}
-				current = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(current);
-			}
+			PackagedAppView? targetApp = GetPackagedAppFromMenuFlyoutSender(sender);
 
 			if (targetApp is null)
 			{
@@ -1277,24 +1240,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		{
 			MainInfoBar.IsClosable = false;
 
-			if (sender is not MenuFlyoutItem menuItem)
-			{
-				return;
-			}
-
-			// Navigate up the visual tree to find the PackagedAppView data context
-			DependencyObject? current = menuItem;
-			PackagedAppView? targetApp = null;
-
-			while (current is not null)
-			{
-				if (current is FrameworkElement element && element.DataContext is PackagedAppView app)
-				{
-					targetApp = app;
-					break;
-				}
-				current = Microsoft.UI.Xaml.Media.VisualTreeHelper.GetParent(current);
-			}
+			PackagedAppView? targetApp = GetPackagedAppFromMenuFlyoutSender(sender);
 
 			if (targetApp is null)
 			{

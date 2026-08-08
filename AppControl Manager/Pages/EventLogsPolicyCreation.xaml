@@ -175,7 +175,7 @@
                                                        Width="310"
                                                        TextWrapping="WrapWholeWords"/>
 
-                                                <customUI:ButtonV2 x:Uid="FileBrowseButton"                                                                   
+                                                <customUI:ButtonV2 x:Uid="FileBrowseButton"
                                                                    Margin="5"
                                                                    Style="{StaticResource AccentButtonStyle}"
                                                                    ObservedData="{x:Bind ViewModel.PolicyToAddLogsTo.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
@@ -230,7 +230,7 @@
                                                            TextWrapping="WrapWholeWords"
                                                            Width="310" />
 
-                                                <customUI:ButtonV2 x:Uid="FileBrowseButton"                                                                   
+                                                <customUI:ButtonV2 x:Uid="FileBrowseButton"
                                                                    Margin="5"
                                                                    Style="{StaticResource AccentButtonStyle}"
                                                                    ObservedData="{x:Bind ViewModel.BasePolicyXMLFile.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
@@ -530,7 +530,7 @@
                     <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"
                                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
 
-                    <SplitButton x:Uid="DataAnalysisButton"                                 
+                    <SplitButton x:Uid="DataAnalysisButton"
                                  IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                  Click="{x:Bind ViewModel.DataAnalysisSplitButton_Click}"
                                  VerticalAlignment="Center">

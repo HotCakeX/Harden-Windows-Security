@@ -2,8 +2,6 @@
     x:Class="AppControlManager.CustomUIElements.ListBoxV2"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <Grid>
         <ListBox MinWidth="{x:Bind MinWidth, Mode=OneWay}"
                  ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
                  SelectionMode="{x:Bind SelectionMode, Mode=OneWay}"
@@ -35,5 +33,4 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-    </Grid>
 </UserControl>

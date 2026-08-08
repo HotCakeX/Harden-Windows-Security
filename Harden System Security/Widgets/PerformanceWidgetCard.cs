@@ -70,6 +70,14 @@ internal static class PerformanceWidgetCard
 
 	// The longest text that a single column weight can produce, which is the total weight itself.
 	private const int MaximumWeightLength = 8;
+	private static readonly JsonEncodedText CpuTemperatureFillProperty = JsonEncodedText.Encode("cpuTemperatureFill"),
+	CpuTemperatureRemainderProperty = JsonEncodedText.Encode("cpuTemperatureRemainder"),
+	CpuUsageFillProperty = JsonEncodedText.Encode("cpuUsageFill"),
+	CpuUsageRemainderProperty = JsonEncodedText.Encode("cpuUsageRemainder"),
+	MemoryFillProperty = JsonEncodedText.Encode("memoryFill"),
+	MemoryRemainderProperty = JsonEncodedText.Encode("memoryRemainder"),
+	StorageTemperatureFillProperty = JsonEncodedText.Encode("storageTemperatureFill"),
+	StorageTemperatureRemainderProperty = JsonEncodedText.Encode("storageTemperatureRemainder");
 
 	// The default Windows accent color, only used if the real accent color cannot be read from the system.
 	// https://learn.microsoft.com/windows/apps/design/style/color
@@ -85,9 +93,7 @@ internal static class PerformanceWidgetCard
 	private const int BarImageWidth = 8;
 	private const int BarImageHeight = 8;
 
-	private static string? _barFillImage;
-	private static string? _barTrackImage;
-	private static readonly Lock _imagesLock = new();
+	private static readonly Lazy<(string Fill, string Track)> BarImages = new(CreateBarImages);
 
 	private static readonly uint[] Crc32Table = BuildCrc32Table();
 
@@ -119,10 +125,10 @@ internal static class PerformanceWidgetCard
 	/// <param name="size">The size that the widget is currently pinned at, which the layout adapts to.</param>
 	internal static string BuildData(PerformanceSnapshot snapshot, WidgetSize size)
 	{
-		bool temperatureAvailable = !double.IsNaN(snapshot.CpuTemperatureCelsius) && !double.IsInfinity(snapshot.CpuTemperatureCelsius);
-		bool cpuUsageAvailable = !double.IsNaN(snapshot.CpuUsagePercent) && !double.IsInfinity(snapshot.CpuUsagePercent);
+		bool temperatureAvailable = double.IsFinite(snapshot.CpuTemperatureCelsius);
+		bool cpuUsageAvailable = double.IsFinite(snapshot.CpuUsagePercent);
 		bool memoryAvailable = snapshot.TotalPhysicalBytes > 0UL;
-		bool storageTemperatureAvailable = !double.IsNaN(snapshot.StorageTemperatureCelsius) && !double.IsInfinity(snapshot.StorageTemperatureCelsius);
+		bool storageTemperatureAvailable = double.IsFinite(snapshot.StorageTemperatureCelsius);
 
 		// The content area of a small widget is only 82 epx tall, which fits 3 metrics at most, so the disk temperature
 		// is the only metric that is dropped there, and the "$when" of its container in the template does exactly that.
@@ -162,10 +168,7 @@ internal static class PerformanceWidgetCard
 
 		// The metrics have to fit into the content area of the pinned size without being clipped, which is why the
 		// smaller the widget is, the smaller its text and the tighter its spacings get.
-		string textSize;
-		string groupSpacing;
-		string barSpacing;
-		string barHeight;
+		string textSize, groupSpacing, barSpacing, barHeight;
 
 		switch (size)
 		{
@@ -196,7 +199,7 @@ internal static class PerformanceWidgetCard
 				}
 		}
 
-		GetBarImages(out string barFillImage, out string barTrackImage);
+		(string barFillImage, string barTrackImage) = BarImages.Value;
 
 		lock (_writerLock)
 		{
@@ -212,17 +215,17 @@ internal static class PerformanceWidgetCard
 			_writer.WriteString("barHeight", barHeight);
 
 			_writer.WriteString("cpuTemperatureValue", temperatureText);
-			WriteBarWeights("cpuTemperatureFill", "cpuTemperatureRemainder", temperaturePercentage);
+			WriteBarWeights(CpuTemperatureFillProperty, CpuTemperatureRemainderProperty, temperaturePercentage);
 
 			_writer.WriteString("cpuUsageValue", cpuUsageText);
-			WriteBarWeights("cpuUsageFill", "cpuUsageRemainder", cpuUsagePercentage);
+			WriteBarWeights(CpuUsageFillProperty, CpuUsageRemainderProperty, cpuUsagePercentage);
 
 			_writer.WriteString("memoryValue", memoryText);
-			WriteBarWeights("memoryFill", "memoryRemainder", memoryPercentage);
+			WriteBarWeights(MemoryFillProperty, MemoryRemainderProperty, memoryPercentage);
 
 			_writer.WriteBoolean("storageTemperatureVisible", storageTemperatureVisible);
 			_writer.WriteString("storageTemperatureValue", storageTemperatureText);
-			WriteBarWeights("storageTemperatureFill", "storageTemperatureRemainder", storageTemperaturePercentage);
+			WriteBarWeights(StorageTemperatureFillProperty, StorageTemperatureRemainderProperty, storageTemperaturePercentage);
 
 			_writer.WriteString("barFillImage", barFillImage);
 			_writer.WriteString("barTrackImage", barTrackImage);
@@ -238,7 +241,7 @@ internal static class PerformanceWidgetCard
 	/// Writes the two relative column weights that make up a single bar. It must only be called while
 	/// <see cref="_writerLock"/> is held.
 	/// </summary>
-	private static void WriteBarWeights(string fillPropertyName, string remainderPropertyName, double percentage)
+	private static void WriteBarWeights(JsonEncodedText fillPropertyName, JsonEncodedText remainderPropertyName, double percentage)
 	{
 		int fillWeight = Math.Clamp((int)Math.Round(percentage * (TotalBarWeight / 100.0)), MinimumBarWeight, MaximumBarWeight);
 
@@ -258,45 +261,27 @@ internal static class PerformanceWidgetCard
 	/// <summary>
 	/// Builds the two solid color images of the bars once per process, because they never change while the app is running.
 	/// </summary>
-	private static void GetBarImages(out string barFillImage, out string barTrackImage)
+	private static (string Fill, string Track) CreateBarImages()
 	{
-		lock (_imagesLock)
+		byte accentRed = FallbackAccentRed;
+		byte accentGreen = FallbackAccentGreen;
+		byte accentBlue = FallbackAccentBlue;
+
+		try
 		{
-			string? cachedBarFillImage = _barFillImage;
-			string? cachedBarTrackImage = _barTrackImage;
-
-			if (cachedBarFillImage is null || cachedBarTrackImage is null)
-			{
-				byte accentRed = FallbackAccentRed;
-				byte accentGreen = FallbackAccentGreen;
-				byte accentBlue = FallbackAccentBlue;
-
-				try
-				{
-					UISettings uiSettings = new();
-
-					// The base accent color is the same shade that Windows itself uses on both the light and the dark theme.
-					Color accentColor = uiSettings.GetColorValue(UIColorType.Accent);
-
-					accentRed = accentColor.R;
-					accentGreen = accentColor.G;
-					accentBlue = accentColor.B;
-				}
-				catch (Exception ex)
-				{
-					Logger.Write(ex);
-				}
-
-				cachedBarFillImage = BuildSolidColorPngDataUri(accentRed, accentGreen, accentBlue, 0xFF);
-				cachedBarTrackImage = BuildSolidColorPngDataUri(TrackGray, TrackGray, TrackGray, TrackAlpha);
-
-				_barFillImage = cachedBarFillImage;
-				_barTrackImage = cachedBarTrackImage;
-			}
-
-			barFillImage = cachedBarFillImage;
-			barTrackImage = cachedBarTrackImage;
+			UISettings uiSettings = new();
+			// The base accent color is the same shade that Windows itself uses on both the light and the dark theme.
+			Color accentColor = uiSettings.GetColorValue(UIColorType.Accent);
+			accentRed = accentColor.R;
+			accentGreen = accentColor.G;
+			accentBlue = accentColor.B;
 		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+
+		return (BuildSolidColorPngDataUri(accentRed, accentGreen, accentBlue, 0xFF), BuildSolidColorPngDataUri(TrackGray, TrackGray, TrackGray, TrackAlpha));
 	}
 
 	/// <summary>
@@ -307,7 +292,7 @@ internal static class PerformanceWidgetCard
 	private static string BuildSolidColorPngDataUri(byte red, byte green, byte blue, byte alpha)
 	{
 		// Every scanline of the image is preceded by its filter type byte, which is zero here because no filtering is used.
-		byte[] rawScanlines = new byte[BarImageHeight * (1 + (BarImageWidth * 4))];
+		Span<byte> rawScanlines = stackalloc byte[BarImageHeight * (1 + (BarImageWidth * 4))];
 
 		int rawOffset = 0;
 
@@ -324,22 +309,19 @@ internal static class PerformanceWidgetCard
 			}
 		}
 
-		byte[] compressedScanlines;
+		using MemoryStream compressedStream = new(rawScanlines.Length);
 
-		using (MemoryStream compressedStream = new(rawScanlines.Length))
+		using (ZLibStream compressor = new(compressedStream, CompressionLevel.Optimal, leaveOpen: true))
 		{
-			using (ZLibStream compressor = new(compressedStream, CompressionLevel.Optimal, true))
-			{
-				compressor.Write(rawScanlines, 0, rawScanlines.Length);
-			}
-
-			compressedScanlines = compressedStream.ToArray();
+			compressor.Write(rawScanlines);
 		}
 
+		ReadOnlySpan<byte> compressedScanlines = compressedStream.GetBuffer().AsSpan(0, checked((int)compressedStream.Length));
+
 		// The image header chunk: width, height, bit depth, color type, compression method, filter method and interlace method.
-		byte[] imageHeader = new byte[13];
-		BinaryPrimitives.WriteUInt32BigEndian(imageHeader.AsSpan(0), BarImageWidth);
-		BinaryPrimitives.WriteUInt32BigEndian(imageHeader.AsSpan(4), BarImageHeight);
+		Span<byte> imageHeader = stackalloc byte[13];
+		BinaryPrimitives.WriteUInt32BigEndian(imageHeader, BarImageWidth);
+		BinaryPrimitives.WriteUInt32BigEndian(imageHeader[4..], BarImageHeight);
 		imageHeader[8] = 8;
 		imageHeader[9] = 6;
 		imageHeader[10] = 0;
@@ -356,7 +338,7 @@ internal static class PerformanceWidgetCard
 		WriteChunk(pngStream, "IDAT"u8, compressedScanlines);
 		WriteChunk(pngStream, "IEND"u8, []);
 
-		return string.Concat("data:image/png;base64,", Convert.ToBase64String(pngStream.ToArray()));
+		return string.Concat("data:image/png;base64,", Convert.ToBase64String(pngStream.GetBuffer(), 0, checked((int)pngStream.Length)));
 	}
 
 	/// <summary>

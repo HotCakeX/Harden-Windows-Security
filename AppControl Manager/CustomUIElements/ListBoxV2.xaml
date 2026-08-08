@@ -68,12 +68,10 @@
                                               PolicyTemplate="{StaticResource PolicyItemTemplate}" />
     </UserControl.Resources>
 
-    <Grid>
-        <ListBox MinWidth="{x:Bind MinWidth, Mode=OneWay}"
-                 ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
-                 ItemTemplateSelector="{StaticResource ListBoxItemTemplateSelector}"
-                 SelectionMode="{x:Bind SelectionMode, Mode=OneWay}"
-                 HorizontalContentAlignment="Stretch">
-        </ListBox>
-    </Grid>
+    <ListBox MinWidth="{x:Bind MinWidth, Mode=OneWay}"
+             ItemsSource="{x:Bind ItemsSource, Mode=OneWay}"
+             ItemTemplateSelector="{StaticResource ListBoxItemTemplateSelector}"
+             SelectionMode="{x:Bind SelectionMode, Mode=OneWay}"
+             HorizontalContentAlignment="Stretch">
+    </ListBox>
 </UserControl>

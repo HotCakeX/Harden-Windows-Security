@@ -142,7 +142,7 @@
                                         </Button.ContentTemplate>
                                     </Button>
                                     <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords"/>
-                                    <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedFiles, Mode=OneWay}"/>
+                                    <customUI:ListBoxV2 MinWidth="400" ItemsSource="{x:Bind ViewModel.SelectedFiles, Mode=OneWay}"/>
                                 </CCToolKit:WrapPanel>
                             </Flyout>
                         </customUI:ButtonV2.Flyout>
@@ -176,7 +176,7 @@
                                         </Button.ContentTemplate>
                                     </Button>
                                     <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords"/>
-                                    <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.SelectedFolders, Mode=OneWay}"/>
+                                    <customUI:ListBoxV2 MinWidth="400" ItemsSource="{x:Bind ViewModel.SelectedFolders, Mode=OneWay}"/>
                                 </CCToolKit:WrapPanel>
                             </Flyout>
                         </customUI:ButtonV2.Flyout>

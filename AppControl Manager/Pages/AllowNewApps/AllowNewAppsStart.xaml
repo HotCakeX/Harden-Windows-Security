@@ -224,7 +224,7 @@
 
                                         <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" Width="400" />
 
-                                        <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.selectedDirectoriesToScan, Mode=OneWay}" />
+                                        <customUI:ListBoxV2 MinWidth="400" ItemsSource="{x:Bind ViewModel.selectedDirectoriesToScan, Mode=OneWay}" />
 
                                     </CCToolKit:WrapPanel>
 

@@ -211,10 +211,10 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 
 		// Perform a case-insensitive search in all relevant fields
 		IEnumerable<VerificationResult> filteredResults = AllVerificationResults.Where(result =>
-			(result.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(result.SourceDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(result.CurrentValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(result.ExpectedValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+			result.FriendlyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+			result.SourceDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+			result.CurrentValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+			result.ExpectedValue.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)
 		);
 
 		VerificationResults.Clear();

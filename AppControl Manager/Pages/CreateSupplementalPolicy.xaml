@@ -588,7 +588,7 @@
 
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFilePaths, Mode=OneWay}" />
+                                            <customUI:ListBoxV2 MinWidth="400" ItemsSource="{x:Bind ViewModel.filesAndFoldersFilePaths, Mode=OneWay}" />
 
                                         </CCToolKit:WrapPanel>
 
@@ -633,7 +633,7 @@
 
                                             <TextBlock x:Uid="ViewSelectedFoldersTextBlock" TextWrapping="WrapWholeWords" />
 
-                                            <customUI:ListBoxV2 MinWidth="400" SelectionMode="Single" ItemsSource="{x:Bind ViewModel.filesAndFoldersFolderPaths, Mode=OneWay}" />
+                                            <customUI:ListBoxV2 MinWidth="400" ItemsSource="{x:Bind ViewModel.filesAndFoldersFolderPaths, Mode=OneWay}" />
 
                                         </CCToolKit:WrapPanel>
 
@@ -876,7 +876,6 @@
                                             <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
 
                                             <customUI:ListBoxV2 MinWidth="400"
-                                                                SelectionMode="Single"
                                                                 ItemsSource="{x:Bind ViewModel.CertificatesBasedCertFilePaths, Mode=OneWay}" />
 
                                         </CCToolKit:WrapPanel>

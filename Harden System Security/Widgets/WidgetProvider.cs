@@ -70,10 +70,10 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 	/// <summary>
 	/// The verbs of the four carousel arrows of the Network widget, of which the lower panel only exists on the large size.
 	/// </summary>
-	private const string NetworkPreviousFirstVerb = "networkPreviousFirst";
-	private const string NetworkNextFirstVerb = "networkNextFirst";
-	private const string NetworkPreviousSecondVerb = "networkPreviousSecond";
-	private const string NetworkNextSecondVerb = "networkNextSecond";
+	private const string NetworkPreviousFirstVerb = "networkPreviousFirst",
+		NetworkNextFirstVerb = "networkNextFirst",
+		NetworkPreviousSecondVerb = "networkPreviousSecond",
+		NetworkNextSecondVerb = "networkNextSecond";
 
 	/// <summary>
 	/// The separator between the two adapters that the custom state of a Network widget remembers.

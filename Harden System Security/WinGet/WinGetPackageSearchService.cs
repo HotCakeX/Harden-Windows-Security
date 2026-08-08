@@ -1131,7 +1131,7 @@ internal static class WinGetPackageSearchService
 		try
 		{
 			IReadOnlyList<PackageInstallerInstalledStatus> packageInstalledStatuses = installedStatusResult.PackageInstalledStatus;
-			List<string> results = [];
+			List<string> results = new(packageInstalledStatuses.Count);
 			for (int packageStatusIndex = 0; packageStatusIndex < packageInstalledStatuses.Count; packageStatusIndex++)
 			{
 				PackageInstallerInstalledStatus packageInstalledStatus = packageInstalledStatuses[packageStatusIndex];

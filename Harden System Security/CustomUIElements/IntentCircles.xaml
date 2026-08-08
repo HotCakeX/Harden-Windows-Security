@@ -3,7 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     MinHeight="24"
-    Background="Transparent">
+    HorizontalAlignment="Left"
+    VerticalAlignment="Center"
+    Background="Transparent"
+    Loaded="{x:Bind IntentCircles_Loaded}"
+    Unloaded="{x:Bind IntentCircles_Unloaded}"
+    PointerEntered="{x:Bind IntentCircles_PointerEntered}"
+    PointerExited="{x:Bind IntentCircles_PointerExited}">
 
     <!--
         A lightweight container to position children on using Canvas.Left for

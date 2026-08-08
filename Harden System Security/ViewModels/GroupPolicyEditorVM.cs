@@ -161,8 +161,8 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 
 		// Perform a case-insensitive search in all relevant fields
 		IEnumerable<RegistryPolicyEntry> filteredResults = AllPolicies.Where(policy =>
-			(policy.KeyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
-			(policy.ValueName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+			policy.KeyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+			policy.ValueName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			policy.ValueDisplay.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
 			(policy.Category is not null && (policy.Category.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||
 			(policy.SubCategory is not null && (policy.SubCategory.ToString()?.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ?? false)) ||

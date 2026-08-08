@@ -16,7 +16,6 @@
 //
 
 using System.Collections;
-using System.Collections.ObjectModel;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using Microsoft.UI.Xaml;
@@ -59,7 +58,7 @@ internal sealed partial class ListBoxV2 : UserControl
 	internal ListBoxV2() => InitializeComponent();
 
 	/// <summary>
-	/// Click handler for the delete button.
+	/// Click handler for the delete button. Removes the item from the bound collection. Handles all collection types currently used by the app.
 	/// </summary>
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void DeleteItem_Click(object sender, RoutedEventArgs e)
@@ -71,62 +70,12 @@ internal sealed partial class ListBoxV2 : UserControl
 		if (tagContent is PolicyFileRepresent itemToRemove && ItemsSource is UniquePolicyFileRepresentObservableCollection collectionToRemoveFrom)
 		{
 			_ = collectionToRemoveFrom.Remove(itemToRemove);
-			return;
 		}
 
 		// Handle string removal
-		if (tagContent is string stringToRemove)
+		else if (tagContent is string stringToRemove && ItemsSource is UniqueStringObservableCollection uniqueCollection)
 		{
-			if (ItemsSource is UniqueStringObservableCollection uniqueStringCollection)
-			{
-				_ = uniqueStringCollection.Remove(stringToRemove);
-				return;
-			}
-
-			if (ItemsSource is ObservableCollection<string> observableStrings)
-			{
-				RemoveFromObservable(observableStrings, stringToRemove);
-				return;
-			}
-
-			// Handle generic IList, assuming contents are strings
-			if (ItemsSource is IList list)
-			{
-				RemoveFromIList(list, stringToRemove);
-			}
-		}
-	}
-
-	/// <summary>
-	/// Removes a string from an ObservableCollection<string>.
-	/// </summary>
-	private static void RemoveFromObservable(ObservableCollection<string> collection, string target)
-	{
-		for (int i = 0; i < collection.Count; i++)
-		{
-			string current = collection[i];
-			if (string.Equals(current, target, StringComparison.OrdinalIgnoreCase))
-			{
-				collection.RemoveAt(i);
-				break;
-			}
-		}
-	}
-
-	/// <summary>
-	/// Removes a matching string from an IList.
-	/// </summary>
-	private static void RemoveFromIList(IList list, string target)
-	{
-		for (int i = 0; i < list.Count; i++)
-		{
-			object? entry = list[i];
-			string? value = entry as string;
-			if (value is not null && string.Equals(value, target, StringComparison.OrdinalIgnoreCase))
-			{
-				list.Remove(entry);
-				break;
-			}
+			_ = uniqueCollection.Remove(stringToRemove);
 		}
 	}
 }

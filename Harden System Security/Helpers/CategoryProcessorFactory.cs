@@ -401,7 +401,7 @@ internal static class CategoryProcessorFactory
 			}
 
 			List<RegistryPolicyEntry> all = ViewModelProvider.ASRVM.ASRPolicyFromJSON;
-			if (all == null || all.Count == 0)
+			if (all.Count == 0)
 			{
 				return;
 			}

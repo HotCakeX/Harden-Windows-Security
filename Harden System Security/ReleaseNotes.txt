@@ -1,9 +1,0 @@
-New features for the Secure Vault
-
-* You can now select picture files containing QR codes of TOTP tokens in order to add them to your Vault. The app will automatically detect the QR code and extract the TOTP secret for you.
-
-* You can now add TOTP tokens to your vault by selecting another open window to be scanned for QR codes.
-
-* You can now select any rectangular area of the screen and scan it for QR codes of TOTP tokens to be added to your Vault.
-
-* All QR decoding and processing is done securely and locally on your device, completely offline, without using any 3rd party dependency. The QR decoding logic built into the Harden System Security app is based on the ISO/IEC 2394:2022 and ISO/IEC 18004:2024 standards. It is capable of decoding all kinds of QR codes, even if they are highly distorted, rotated, partially obscured, stylized or have low visibility. During benchmarking, the QR decoder successfully and accurately decoded QR codes from images that other popular QR code readers failed to process.

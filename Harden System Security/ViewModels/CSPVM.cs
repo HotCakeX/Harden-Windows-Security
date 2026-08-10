@@ -766,7 +766,7 @@ internal sealed partial class CSPVM : ViewModelBase
 			string p = path.Trim();
 
 			if (p.StartsWith("./", StringComparison.Ordinal)) return p;
-			if (p.StartsWith('.')) return "./" + p.AsSpan(1).ToString();
+			if (p.StartsWith('.')) return string.Concat("./", p.AsSpan(1));
 			if (p.StartsWith('/')) return "." + p;
 
 			return "./" + p;

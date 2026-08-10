@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -432,8 +433,15 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 			List<AllFileSigners> possibleExistingSigners = AllCertificatesGrabber.GetAllFileSigners(packagePath);
 
+			int signerCount = possibleExistingSigners.Count;
+
+			foreach (AllFileSigners signer in CollectionsMarshal.AsSpan(possibleExistingSigners))
+			{
+				signer.Dispose();
+			}
+
 			// Only attempt signing if the package doesn't already have signatures
-			if (possibleExistingSigners.Count == 0)
+			if (signerCount == 0)
 			{
 				LLPackageReader.PackageDetails packageDits = LLPackageReader.GetPackageDetails(packagePath);
 

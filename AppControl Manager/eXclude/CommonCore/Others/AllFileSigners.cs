@@ -26,10 +26,26 @@ namespace CommonCore.Others;
 /// </summary>
 internal sealed partial class AllFileSigners(SignedCms signerCertificate, IntPtr chainContext) : IDisposable
 {
+	private bool disposed;
 	internal SignedCms Signer => signerCertificate;
 	internal X509Chain Chain { get; } = chainContext == IntPtr.Zero
 		? new X509Chain()
 		: new X509Chain(chainContext);
 
-	public void Dispose() => Chain.Dispose();
+	public void Dispose()
+	{
+		if (disposed)
+		{
+			return;
+		}
+
+		disposed = true;
+
+		foreach (X509ChainElement element in Chain.ChainElements)
+		{
+			element.Certificate.Dispose();
+		}
+
+		Chain.Dispose();
+	}
 }

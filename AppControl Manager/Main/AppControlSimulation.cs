@@ -360,34 +360,41 @@ internal static class AppControlSimulation
 
 									if (scanSecurityCatalogs && MatchedHashResult is not null)
 									{
-										AllFileSigners CatalogSignerDits = AllCertificatesGrabber.GetAllFileSigners(MatchedHashResult).First();
+										List<AllFileSigners> CatalogSignerDitsList = AllCertificatesGrabber.GetAllFileSigners(MatchedHashResult);
+										try
+										{
+											AllFileSigners CatalogSignerDits = CatalogSignerDitsList.First();
 
-										nint handle = CatalogSignerDits.Chain.ChainElements[0].Certificate.Handle;
+											nint handle = CatalogSignerDits.Chain.ChainElements[0].Certificate.Handle;
 
-										// The file is authorized by a security catalog on the system
-										_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
-											new SimulationOutput(
-												CurrentFilePathObj.Name,
-												SimulationOutputSource.CatalogSigned,
-												true,
-												null,
-												null,
-												null,
-												null,
-												null,
-												null,
-												"Catalog Hash",
-												MatchedHashResult,
-												CryptoAPI.GetNameString(handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
-												CryptoAPI.GetNameString(handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true),
-												CatalogSignerDits.Chain.ChainElements[0].Certificate.NotAfter.ToString(CultureInfo.InvariantCulture),
-												CertificateHelper.GetTBSCertificate(CatalogSignerDits.Chain.ChainElements[0].Certificate),
-												CurrentFilePathObj.FullName
-											));
-
-										// Disposing catalog signer after extracting all needed info to free native chain resources.
-										CatalogSignerDits.Dispose();
-
+											// The file is authorized by a security catalog on the system
+											_ = FinalSimulationResults.TryAdd(CurrentFilePathObj.FullName,
+												new SimulationOutput(
+													CurrentFilePathObj.Name,
+													SimulationOutputSource.CatalogSigned,
+													true,
+													null,
+													null,
+													null,
+													null,
+													null,
+													null,
+													"Catalog Hash",
+													MatchedHashResult,
+													CryptoAPI.GetNameString(handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
+													CryptoAPI.GetNameString(handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true),
+													CatalogSignerDits.Chain.ChainElements[0].Certificate.NotAfter.ToString(CultureInfo.InvariantCulture),
+													CertificateHelper.GetTBSCertificate(CatalogSignerDits.Chain.ChainElements[0].Certificate),
+													CurrentFilePathObj.FullName
+												));
+										}
+										finally
+										{
+											foreach (AllFileSigners signer in CollectionsMarshal.AsSpan(CatalogSignerDitsList))
+											{
+												signer.Dispose();
+											}
+										}
 										// Move to the next file
 										continue;
 									}

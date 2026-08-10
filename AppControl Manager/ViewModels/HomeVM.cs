@@ -354,7 +354,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal string StorageTemperatureChartLinePathData { get; private set => SP(ref field, value); } = DefaultHomeChartPathData;
 	internal string StorageTemperatureChartMinLabel { get; private set => SP(ref field, value); } = "0";
 	internal string StorageTemperatureChartMaxLabel { get; private set => SP(ref field, value); } = "0";
-	internal string HomeChartStartSecondsLabel = $"{HomeChartTimeWindowSeconds} Seconds";
+	internal readonly string HomeChartStartSecondsLabel = $"{HomeChartTimeWindowSeconds} Seconds";
 
 	/// <summary>
 	/// Timer first used as one-shot to align to next minute, then switched to repeating every minute.

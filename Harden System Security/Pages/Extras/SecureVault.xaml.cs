@@ -37,7 +37,13 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
+using Windows.Graphics.Capture;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
 using WinRT;
@@ -73,6 +79,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	private const string VaultPasswordUnlockFailureMessage = "The vault password is incorrect, or the vault file was modified or corrupted.";
 	private const int VaultVersion = 1;
 	private const int RefreshIntervalMilliseconds = 1000;
+	private const string TotpQrImagePickerFilter = "Image files|*.bmp;*.gif;*.heif;*.heic;*.ico;*.jpeg;*.jpg;*.png;*.tif;*.tiff;*.webp";
 	private static readonly TimeSpan AutoLockAfterOneMinuteDuration = TimeSpan.FromMinutes(1D);
 	private const int SaltSizeInBytes = 32;
 	private const int VaultIdSizeInBytes = 32;
@@ -108,7 +115,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	private static readonly Color PasswordStrengthStrongColor = Color.FromArgb(255, 18, 160, 78);
 	private static readonly Color PasswordStrengthVeryStrongColor = Color.FromArgb(255, 5, 150, 105);
 	private static readonly Color PasswordStrengthExcellentColor = Color.FromArgb(255, 2, 132, 199);
-	private readonly DispatcherQueueTimer refreshTimer;
+	private readonly Microsoft.UI.Dispatching.DispatcherQueueTimer refreshTimer;
 	// Stores the vault data key protected in-place with CryptProtectMemory and only accessible to the current process while the vault remains unlocked.
 	// The key is only unprotected for the shortest possible duration immediately around cryptographic operations that require it.
 	private byte[]? currentVaultDataKey;
@@ -130,9 +137,26 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	{
 		RaiseVaultStateProperties();
 		WriteLockedStateGuidance();
+
+		// Receive Snipping Tool capture responses while this page is loaded.
+		App.SnippingToolResponseHandler = HandleSnippingToolResponse;
+
 		_ = DispatcherQueue.TryEnqueue(FocusPrimaryVaultInput);
 	}
 
+	private bool IsQrImageScanInProgress
+	{
+		get; set
+		{
+			if (this.SP(ref field, value))
+			{
+				RaisePropertyChanged(nameof(IsAddButtonEnabled));
+				RaisePropertyChanged(nameof(IsCurrentTotpInputAddEnabled));
+				RaisePropertyChanged(nameof(IsQrImageScanEnabled));
+				RaisePropertyChanged(nameof(IsManualTotpEntryToggleEnabled));
+			}
+		}
+	}
 	private bool HasPasteInputText
 	{
 		get; set
@@ -239,10 +263,12 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 
 	private bool HasVaultFile => File.Exists(TokenStorageFilePath);
 	private bool IsChangeVaultPasswordButtonEnabled => IsVaultUnlocked && currentVaultDataKey is not null;
-	private bool IsAddButtonEnabled => IsVaultUnlocked && !IsManualTotpEntryMode && HasPasteInputText;
-	private bool IsCurrentTotpInputAddEnabled => IsManualTotpEntryMode
+	private bool IsAddButtonEnabled => IsVaultUnlocked && !IsQrImageScanInProgress && !IsManualTotpEntryMode && HasPasteInputText;
+	private bool IsCurrentTotpInputAddEnabled => !IsQrImageScanInProgress && (IsManualTotpEntryMode
 		? IsVaultUnlocked && HasManualSecretInput && !string.IsNullOrWhiteSpace(ManualWebsiteText)
-		: IsAddButtonEnabled;
+		: IsAddButtonEnabled);
+	private bool IsQrImageScanEnabled => IsVaultUnlocked && !IsQrImageScanInProgress;
+	private bool IsManualTotpEntryToggleEnabled => !IsQrImageScanInProgress;
 	private Visibility TokenListVisibility => IsVaultUnlocked ? Visibility.Visible : Visibility.Collapsed;
 	private bool VaultLockedOverlayHitTestVisible => !IsVaultUnlocked;
 	private bool VaultContentIsHitTestVisible => IsVaultUnlocked;
@@ -312,12 +338,14 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 
 	private void Unloaded_Handler()
 	{
+		// Stop routing Snipping Tool responses to this page after it leaves the visual tree.
+		App.SnippingToolResponseHandler = null;
 		// Tear down sensitive state deterministically when the page leaves the visual tree.
 		ApplyLockedState();
 		ClearPasswordInputs();
 	}
 
-	private void RefreshTimer_Tick(DispatcherQueueTimer sender, object args)
+	private void RefreshTimer_Tick(Microsoft.UI.Dispatching.DispatcherQueueTimer sender, object args)
 	{
 		RefreshAllTokens();
 		EvaluateAutoLockAfterInactivity();
@@ -915,7 +943,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		Grid.SetRow(progressText, 3);
 		root.Children.Add(progressText);
 
-		DispatcherQueueTimer holdTimer = DispatcherQueue.CreateTimer();
+		Microsoft.UI.Dispatching.DispatcherQueueTimer holdTimer = DispatcherQueue.CreateTimer();
 		holdTimer.Interval = TimeSpan.FromMilliseconds(16D);
 		DateTimeOffset holdStartTime = DateTimeOffset.MinValue;
 		bool isHolding = false;
@@ -1258,20 +1286,229 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		ManualIssuerText = string.Empty;
 	}
 
-	private void AddPastedTotpEntries()
+	private async void AddTotpEntriesFromQrImages()
 	{
 		if (!IsVaultUnlocked)
 		{
 			MainInfoBar.WriteWarning("Unlock the vault before adding tokens.");
 			return;
 		}
-		string pastedText = PasteInputTextBox.Text;
-		if (string.IsNullOrWhiteSpace(pastedText))
+		if (IsQrImageScanInProgress)
+			return;
+		try
+		{
+			List<string> selectedPaths = FileDialogHelper.ShowMultipleFilePickerDialog(TotpQrImagePickerFilter);
+			if (selectedPaths.Count == 0)
+				return;
+
+			IsQrImageScanInProgress = true;
+
+			MainInfoBar.WriteInfo("Scanning the selected image(s) for QR codes, please wait.");
+
+			List<CommonCore.QR.QrResult> qrResults = await QR.Manage.DecodeAsync(selectedPaths);
+
+			StringBuilder decodedText = new();
+
+			foreach (CommonCore.QR.QrResult qrResult in qrResults)
+			{
+				if (!string.IsNullOrWhiteSpace(qrResult.Text))
+					_ = decodedText.AppendLine(qrResult.Text);
+			}
+
+			if (decodedText.Length == 0)
+			{
+				MainInfoBar.WriteWarning("No readable QR code containing an otpauth://totp URI was found in the selected image files.");
+				return;
+			}
+
+			AddTotpEntries(decodedText.ToString(), clearPasteInput: false);
+
+			MainInfoBar.WriteSuccess("Successfully processed the selected QR images for TOTP tokens.");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsQrImageScanInProgress = false;
+		}
+	}
+
+	private async void AddTotpEntryFromScreenCapture()
+	{
+		if (!IsVaultUnlocked)
+		{
+			MainInfoBar.WriteWarning("Unlock the vault before adding tokens.");
+			return;
+		}
+
+		if (IsQrImageScanInProgress)
+		{
+			return;
+		}
+
+		if (!GraphicsCaptureSession.IsSupported())
+		{
+			MainInfoBar.WriteWarning("Screen capture is not supported on this device.");
+			return;
+		}
+
+		try
+		{
+			GraphicsCapturePicker picker = new();
+
+			WinRT.Interop.InitializeWithWindow.Initialize(picker, Atlas.hWnd);
+
+			GraphicsCaptureItem? captureItem = await picker.PickSingleItemAsync();
+
+			if (captureItem is null) return;
+
+			IsQrImageScanInProgress = true;
+
+			MainInfoBar.WriteInfo("Capturing and scanning the selected screen content, please wait.");
+
+			using SoftwareBitmap screenshot = await QR.Manage.CaptureSingleFrameAsync(captureItem);
+
+			QR.QrResult result = await QR.Manage.DecodeAsync(screenshot, "Screen capture");
+
+			if (string.IsNullOrWhiteSpace(result.Text))
+			{
+				MainInfoBar.WriteWarning("No readable QR code was found in the captured screen content.");
+				return;
+			}
+
+			AddTotpEntries(result.Text, clearPasteInput: false);
+
+			MainInfoBar.WriteSuccess("Successfully processed the captured screen content for a TOTP token.");
+		}
+		catch (TimeoutException)
+		{
+			MainInfoBar.WriteWarning("No screen capture frame became available.");
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsQrImageScanInProgress = false;
+		}
+	}
+
+	/// <summary>
+	/// Launches Snipping Tool protocol version 1.2 in rectangle mode to capture a QR code region.
+	/// https://learn.microsoft.com/en-us/windows/apps/develop/launch/launch-snipping-tool
+	/// </summary>
+	private async void AddTotpEntryFromSnippingTool()
+	{
+		if (!IsVaultUnlocked)
+		{
+			MainInfoBar.WriteWarning("Unlock the vault before adding tokens.");
+			return;
+		}
+		if (IsQrImageScanInProgress) return;
+
+		try
+		{
+			string correlationId = Guid.CreateVersion7().ToString("D");
+			Uri requestUri = new($"ms-screenclip://capture/image?redirect-uri=harden-system-security-snipping://capture-response&user-agent=HardenSystemSecurity&api-version=1.2&x-request-correlation-id={correlationId}&auto-save&rectangle");
+			IsQrImageScanInProgress = true;
+			MainInfoBar.WriteInfo("Select the QR code area in Snipping Tool.");
+			if (!await Launcher.LaunchUriAsync(requestUri))
+			{
+				IsQrImageScanInProgress = false;
+				MainInfoBar.WriteWarning("Snipping Tool could not be launched.");
+			}
+		}
+		catch (Exception ex)
+		{
+			IsQrImageScanInProgress = false;
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Redeems the returned file access token and scans the captured image for a TOTP QR code.
+	/// </summary>
+	private async void HandleSnippingToolResponse(Uri? responseUri)
+	{
+		try
+		{
+			if (!TryGetQueryValue(responseUri, "file-access-token", out string fileAccessToken))
+			{
+				if (TryGetQueryValue(responseUri, "status", out string status))
+				{
+					MainInfoBar.WriteInfo($"Snipping Tool returned status {status} without a file access token.");
+				}
+				else
+				{
+					MainInfoBar.WriteInfo("The Snipping Tool capture response did not contain a file access token.");
+				}
+				return;
+			}
+
+			StorageFile captureFile = await SharedStorageAccessManager.RedeemTokenForFileAsync(fileAccessToken);
+			using IRandomAccessStream stream = await captureFile.OpenAsync(FileAccessMode.Read);
+			BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+			using SoftwareBitmap screenshot = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+			QR.QrResult result = await QR.Manage.DecodeAsync(screenshot, "Snipping Tool capture");
+			if (string.IsNullOrWhiteSpace(result.Text))
+			{
+				MainInfoBar.WriteWarning("No readable QR code was found in the Snipping Tool capture.");
+				return;
+			}
+
+			AddTotpEntries(result.Text, clearPasteInput: false);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			IsQrImageScanInProgress = false;
+		}
+	}
+
+	// Reads and URL-decodes a named value from the Snipping Tool callback query string.
+	private static bool TryGetQueryValue(Uri? uri, string parameterName, out string value)
+	{
+		value = string.Empty;
+		if (uri is null)
+		{
+			return false;
+		}
+
+		foreach (string pair in uri.Query.TrimStart('?').Split('&', StringSplitOptions.RemoveEmptyEntries))
+		{
+			int separatorIndex = pair.IndexOf('=', StringComparison.Ordinal);
+			string name = Uri.UnescapeDataString(separatorIndex < 0 ? pair : pair[..separatorIndex]);
+			if (!string.Equals(name, parameterName, StringComparison.OrdinalIgnoreCase))
+			{
+				continue;
+			}
+			value = Uri.UnescapeDataString(separatorIndex < 0 ? string.Empty : pair[(separatorIndex + 1)..]);
+			return !string.IsNullOrWhiteSpace(value);
+		}
+		return false;
+	}
+
+	private void AddPastedTotpEntries() => AddTotpEntries(PasteInputTextBox.Text, clearPasteInput: true);
+
+	private void AddTotpEntries(string inputText, bool clearPasteInput)
+	{
+		if (!IsVaultUnlocked)
+		{
+			MainInfoBar.WriteWarning("Unlock the vault before adding tokens.");
+			return;
+		}
+		if (string.IsNullOrWhiteSpace(inputText))
 		{
 			MainInfoBar.WriteWarning("No otpauth://totp URI was found in the pasted text.");
 			return;
 		}
-		ReadOnlySpan<char> pastedTextSpan = pastedText.AsSpan();
+		ReadOnlySpan<char> pastedTextSpan = inputText.AsSpan();
 		List<TotpTokenItem> createdTokenItems = new();
 		int addedCount = 0;
 		int skippedCount = 0;
@@ -1314,16 +1551,27 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 				MainInfoBar.WriteWarning("No otpauth://totp URI was found in the pasted text.");
 				return;
 			}
-			PasteInputTextBox.Text = string.Empty;
+
+			if (clearPasteInput)
+			{
+				PasteInputTextBox.Text = string.Empty;
+			}
+
 			RefreshFilteredTokens();
+
 			if (!SaveStoredTokens(null))
+			{
 				return;
+			}
+
 			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, "Added {0} token(s). Skipped {1} duplicate(s).", addedCount, skippedCount));
 		}
 		catch
 		{
 			foreach (TotpTokenItem tokenItem in CollectionsMarshal.AsSpan(createdTokenItems))
+			{
 				tokenItem.ClearSensitiveState();
+			}
 			throw;
 		}
 	}
@@ -2601,6 +2849,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 		RaisePropertyChanged(nameof(IsVaultUnlocked));
 		RaisePropertyChanged(nameof(IsAddButtonEnabled));
 		RaisePropertyChanged(nameof(IsCurrentTotpInputAddEnabled));
+		RaisePropertyChanged(nameof(IsQrImageScanEnabled));
 		RaisePropertyChanged(nameof(TokenListVisibility));
 		RaisePropertyChanged(nameof(IsChangeVaultPasswordButtonEnabled));
 		RaisePropertyChanged(nameof(HasVaultFile));

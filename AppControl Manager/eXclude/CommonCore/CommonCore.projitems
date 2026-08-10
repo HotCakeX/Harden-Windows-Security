@@ -48,6 +48,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Power\PowerPlan.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Printer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ProcessSideChannelIsolation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)QR.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\BinaryProtocol.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QuantumRelay\Helpers.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ServiceManagement.cs" />

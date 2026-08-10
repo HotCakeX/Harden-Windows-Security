@@ -3674,4 +3674,30 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int CoRevokeClassObject(uint dwRegister);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice
+	/// </summary>
+	[LibraryImport("d3d11.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int D3D11CreateDevice(
+		nint pAdapter,
+		int DriverType,
+		nint Software,
+		uint Flags,
+		nint pFeatureLevels,
+		uint FeatureLevels,
+		uint SDKVersion,
+		out nint ppDevice,
+		nint pFeatureLevel,
+		out nint ppImmediateContext);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/windows.graphics.directx.direct3d11.interop/nf-windows-graphics-directx-direct3d11-interop-createdirect3d11devicefromdxgidevice
+	/// </summary>
+	[LibraryImport("d3d11.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CreateDirect3D11DeviceFromDXGIDevice(nint dxgiDevice, out nint graphicsDevice);
+
 }

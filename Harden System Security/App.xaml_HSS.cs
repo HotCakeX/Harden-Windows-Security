@@ -40,6 +40,9 @@ public sealed partial class App : Application
 {
 	private static bool _appNotificationManagerRegistered;
 
+	// Forwards a Snipping Tool protocol response to the currently loaded Secure Vault page.
+	internal static Action<Uri?>? SnippingToolResponseHandler;
+
 	/// <summary>
 	/// Invoked when the application is launched.
 	/// </summary>
@@ -301,6 +304,9 @@ public sealed partial class App : Application
 
 		bool launchToUpdatePageFromNotification = false;
 
+		// Tracks whether this launch was caused by Snipping Tool returning a capture response.
+		bool launchFromSnippingToolResponse = false;
+
 		try
 		{
 			AppActivationArguments? activatedEventArgs = null;
@@ -333,6 +339,9 @@ public sealed partial class App : Application
 
 			launchToUpdatePageFromNotification = IsUpdateNotificationActivation(activatedEventArgs);
 
+			// Detect a Snipping Tool callback so it can be redirected to the primary app instance.
+			launchFromSnippingToolResponse = TryGetSnippingToolResponse(activatedEventArgs, out _);
+
 			try
 			{
 				AppInstance notificationTargetInstance = AppInstance.FindOrRegisterForKey("HardenSystemSecurity.NotificationActivation");
@@ -341,7 +350,7 @@ public sealed partial class App : Application
 				{
 					notificationTargetInstance.Activated += App_Activated;
 				}
-				else if (launchToUpdatePageFromNotification)
+				else if (launchToUpdatePageFromNotification || launchFromSnippingToolResponse)
 				{
 					// the redirect brokers across the integrity boundary because it's package-identity-scoped, not token-scoped.
 					await notificationTargetInstance.RedirectActivationToAsync(activatedEventArgs);
@@ -647,6 +656,24 @@ public sealed partial class App : Application
 		{
 			QueueUpdatePageNavigation();
 		}
+		// Forward redirected Snipping Tool callbacks to the active Secure Vault page on the UI dispatcher.
+		else if (TryGetSnippingToolResponse(args, out Uri? responseUri))
+		{
+			_ = Atlas.AppDispatcher.TryEnqueue(() => SnippingToolResponseHandler?.Invoke(responseUri));
+		}
+	}
+
+	// Validates a protocol activation and extracts this app's Snipping Tool callback URI.
+	private static bool TryGetSnippingToolResponse(AppActivationArguments? args, out Uri? responseUri)
+	{
+		responseUri = null;
+		if (args?.Kind is not ExtendedActivationKind.Protocol || args.Data is not IProtocolActivatedEventArgs protocolArgs ||
+			!string.Equals(protocolArgs.Uri.Scheme, "harden-system-security-snipping", StringComparison.OrdinalIgnoreCase))
+		{
+			return false;
+		}
+		responseUri = protocolArgs.Uri;
+		return true;
 	}
 
 	private static void QueueUpdatePageNavigation()

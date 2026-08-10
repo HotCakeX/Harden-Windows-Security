@@ -42,16 +42,25 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <TextBlock x:Uid="SecureVaultPasteTotpTextBlock"
                            Grid.Column="0"
                            VerticalAlignment="Center"
                            Style="{StaticResource BodyStrongTextBlockStyle}" />
+                <ProgressRing Grid.Column="1"
+                              Width="24"
+                              Height="24"
+                              VerticalAlignment="Center"
+                              IsActive="{x:Bind IsQrImageScanInProgress, Mode=OneWay}"
+                              IsIndeterminate="True"
+                              Visibility="{x:Bind GetVisibleWhenTrue(IsQrImageScanInProgress), Mode=OneWay}" />
                 <ToggleButton x:Uid="SecureVaultManualEntryToggleButton"
-                              Grid.Column="1"
+                              Grid.Column="2"
                               MinWidth="90"
                               Padding="10,4"
                               VerticalAlignment="Center"
+                              IsEnabled="{x:Bind IsManualTotpEntryToggleEnabled, Mode=OneWay}"
                               IsChecked="{x:Bind IsManualTotpEntryMode, Mode=TwoWay}">
                     <ToggleButton.ContentTemplate>
                         <DataTemplate x:DataType="x:String">
@@ -63,7 +72,7 @@
                     </ToggleButton.ContentTemplate>
                 </ToggleButton>
                 <Button x:Uid="SecureVaultVaultActionsButton"
-                        Grid.Column="2"
+                        Grid.Column="3"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Center">
                     <Button.Content>
@@ -134,17 +143,49 @@
                     </Button.Flyout>
                 </Button>
             </Grid>
-            <TextBox x:Uid="SecureVaultPasteInputTextBox"
-                     Grid.Row="2"
-                     x:Name="PasteInputTextBox"
-                     AcceptsReturn="True"
-                     IsEnabled="{x:Bind IsVaultUnlocked, Mode=OneWay}"
-                     IsSpellCheckEnabled="False"
-                     PreviewKeyDown="{x:Bind PasteInputTextBox_PreviewKeyDown}"
-                     TextChanged="{x:Bind PasteInputTextBox_TextChanged}"
-                     MaxHeight="130"
-                     TextWrapping="Wrap"
-                     Visibility="{x:Bind GetVisibleWhenFalse(IsManualTotpEntryMode), Mode=OneWay}" />
+            <Grid Grid.Row="2"
+                  ColumnSpacing="10"
+                  Visibility="{x:Bind GetVisibleWhenFalse(IsManualTotpEntryMode), Mode=OneWay}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Uid="SecureVaultPasteInputTextBox"
+                         Grid.Column="0"
+                         x:Name="PasteInputTextBox"
+                         AcceptsReturn="True"
+                         IsEnabled="{x:Bind IsVaultUnlocked, Mode=OneWay}"
+                         IsSpellCheckEnabled="False"
+                         PreviewKeyDown="{x:Bind PasteInputTextBox_PreviewKeyDown}"
+                         TextChanged="{x:Bind PasteInputTextBox_TextChanged}"
+                         MaxHeight="130"
+                         TextWrapping="Wrap" />
+                <SplitButton Grid.Column="1"
+                             VerticalAlignment="Bottom"
+                             Click="{x:Bind AddTotpEntriesFromQrImages}"
+                             IsEnabled="{x:Bind IsQrImageScanEnabled, Mode=OneWay}">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xED14;" FontSize="16" />
+                        <TextBlock Text="Select QR images" />
+                    </StackPanel>
+                    <SplitButton.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem Click="{x:Bind AddTotpEntryFromScreenCapture}"
+                                            Text="Capture from screen">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE7F4;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                            <MenuFlyoutItem Click="{x:Bind AddTotpEntryFromSnippingTool}"
+                                            Text="Select area from screen">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE722;" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+                        </MenuFlyout>
+                    </SplitButton.Flyout>
+                </SplitButton>
+            </Grid>
             <StackPanel Grid.Row="3"
                         Spacing="8"
                         Visibility="{x:Bind GetVisibleWhenTrue(IsManualTotpEntryMode), Mode=OneWay}">

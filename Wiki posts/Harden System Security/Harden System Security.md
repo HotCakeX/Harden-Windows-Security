@@ -102,6 +102,11 @@ Please feel free to open a discussion if you have any questions about the build 
 
 <br>
 
+> [TIP]\
+> Review and blog by Tharros (Will Dormann): [Locking down Windows Part 1: Harden System Security](https://tharros.com/locking-down-windows-part-1-harden-system-security/)
+
+<br>
+
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/a8eb3942e1b3a71c94a7c8811e4d95a3aa991eb9/Pictures/SVG/Logging.svg" width="35" alt="Comprehensive Logging Capabilities Harden System Security App"> Comprehensive Logging Capabilities
 
 The Harden System Security app includes detailed logging feature that tracks every part of its operations. These logs are helpful for reviewing what actions were taken, making it easier to audit and troubleshoot if necessary. The logs are saved in the following location:

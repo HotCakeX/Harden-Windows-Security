@@ -247,7 +247,10 @@ To achieve the Highest level of Security **at Scale** for Businesses, Enterprise
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/673731848341553152.png" alt="head patting"> Important Considerations
 
-* Avoid using any 3rd party security solutions when using Harden System Security app or App Control for Business. 3rd party solutions are weak, incompatible and unnecessary, **they also increase your attack surface**.
+* Avoid using other 3rd party security solutions when using [the Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) or [App Control for Business](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager). Other solutions can be weak, are incompatible and unnecessary, **they also increase your attack surface**.
+
+> [!NOTE]\
+> To understand why this is true, please take the time and read each app's wiki documentation linked above. For further proof, you are always free to code review, do comparison and ask me any follow up questions you might have.
 
 * Use Virtual machines for any questionable or unsafe software. Use [Windows Sandbox or Hyper-V VM](https://github.com/HotCakeX/Privacy-Anonymity-Compartmentalization).
 

@@ -414,6 +414,32 @@ HSS.exe --cli CheckMSStoreAppUpdate
 
 <br>
 
+## Windows Widgets Support
+
+When you install the Harden System Security app, you will be able to access the [widgets](https://www.microsoft.com/windows/tips/widgets) it provides for the [Windows Widgets board](https://support.microsoft.com/Windows/experience/personalization/stay-up-to-date-with-widgets-in-windows). There are currently 3 available widgets that you can pin:
+
+* Performance: Monitor key system metrics, including CPU temperature, total CPU usage, physical memory usage, and the temperature of SSD. Metrics that are unavailable on the current hardware or operating system are displayed as unavailable. *Updated every 2 seconds, only when the Widgets board is visible*.
+
+* Network: Monitor the real-time upload and download speeds of your network adapters, along with the total amount of data each adapter has sent and received. Use the widget's controls to switch between the physical and virtual network adapters. *Updated every second, only when the Widgets board is visible*.
+
+* App Updates: Check your installed apps and programs for newer available versions. The widget displays each detected app's installed and available versions, and lets you start a new update check or open Harden System Security to manage and install the available updates. 
+
+> [!NOTE]\
+> The widgets run on a different process which only uses 5MB of RAM on average. The real-time monitoring data are only updated when the Windows widgets board is visible, when it is collapsed no data monitoring happens in the background which means 0% CPU usage.
+
+<div align="center">
+
+<img src="https://github.com/HotCakeX/.github/raw/main/Pictures/PNG%20and%20JPG/Widgets/Nettwork%20Windows%20Widgets%20Board.png?raw=true" alt="Windows Widgets" />
+
+<img width="643" height="405" alt="Screenshot 2026-08-02 162609" src="https://github.com/user-attachments/assets/cb3d227c-ecab-4ac5-aac8-aa9d8f12fad9" />
+<img width="643" height="535" alt="Screenshot 2026-08-02 162429" src="https://github.com/user-attachments/assets/afdcb444-811a-4558-97b3-e4db6ea9fa31" />
+<img width="324" height="481" alt="Screenshot 2026-08-02 162852" src="https://github.com/user-attachments/assets/244b170f-0ac8-4cc2-82e5-ce11c0c865b2" />
+<img width="319" height="307" alt="Screenshot 2026-08-02 162737" src="https://github.com/user-attachments/assets/38e55ebb-106b-4cb4-a69c-b6ac9d3c9fba" />
+
+</div>
+
+<br>
+
 ## Under the Hood: Files and Directories Structures Explained
 
 Here is the breakdown of some of the directories and files used by the Harden System Security app.

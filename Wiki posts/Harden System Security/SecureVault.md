@@ -107,6 +107,16 @@ After a vault is created or unlocked, Secure Vault transitions into the main vau
 1. **Paste mode** lets the user add one or more `otpauth://totp/` entries directly from authenticator setup links.
 2. **Manual mode** lets the user create a token by entering the secret and related account details manually.
 
+### Adding TOTP Tokens from QR Codes
+
+When the vault is unlocked and Paste mode is active, the **Select QR images** split button provides three ways to select a QR code and add its TOTP token to Secure Vault.
+
+1. **Select QR images** scans one or more image files selected from the device. The file picker supports `BMP, GIF, HEIF, HEIC, ICO, JPEG, JPG, PNG, TIFF, and WebP` images. Use this option when the QR code has already been saved as an image or when several QR images need to be processed together.
+2. **Capture from screen** opens the Windows screen capture picker. Select the screen, window, or other available capture source that contains the QR code. Secure Vault captures a frame from the selected source, scans it, and adds the decoded TOTP token when a readable QR code is found.
+3. **Select area from screen** lets you draw a box around a QR code shown on your screen. Secure Vault will read the QR code from that selected area and add the account to your vault.
+
+QR import is available only while the vault is unlocked. If the selected content does not contain a readable QR code with a supported TOTP URI, Secure Vault reports the issue without adding a token. Tokens whose secret already exists in the vault are skipped as duplicates.
+
 A search box allows tokens to be filtered quickly by their visible name or notes. This keeps large vaults usable without forcing the user to visually scan every stored entry.
 
 Each token appears as an individual card. A token card presents the current code, the remaining time before rotation, and the core actions for that token. The user can copy the active code, manage notes, or remove the token from the vault.

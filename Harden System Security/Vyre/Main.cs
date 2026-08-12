@@ -1589,7 +1589,7 @@ internal static partial class CabinetArchiveExtractor
 			}
 		}
 
-		private unsafe IntPtr OpenCabinetStream(byte* pszFile, int oflag, int pmode)
+		private IntPtr OpenCabinetStream(byte* pszFile, int oflag, int pmode)
 		{
 			IntPtr syntheticHandle = new(syntheticHandleTable.Count + 1);
 			syntheticHandleTable.Add(syntheticHandle, 0);

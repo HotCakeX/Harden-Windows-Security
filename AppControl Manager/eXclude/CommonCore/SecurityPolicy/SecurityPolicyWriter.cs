@@ -30,7 +30,7 @@ internal static class SecurityPolicyWriter
 	/// This method configures the [Privilege Rights] section equivalent.
 	/// </summary>
 	/// <param name="privilegeRights">Dictionary where key is privilege name and value is array of SIDs/account names</param>
-	internal unsafe static void SetPrivilegeRights(Dictionary<string, string[]> privilegeRights)
+	internal static void SetPrivilegeRights(Dictionary<string, string[]> privilegeRights)
 	{
 		if (privilegeRights.Count == 0)
 		{

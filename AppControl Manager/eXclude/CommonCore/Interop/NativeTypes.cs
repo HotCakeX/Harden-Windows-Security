@@ -64,7 +64,7 @@ internal struct STARTUPINFOEX
 /// https://learn.microsoft.com/windows/win32/api/shellapi/ns-shellapi-notifyicondataw
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct NOTIFYICONDATAW
+internal struct NOTIFYICONDATAW
 {
 	internal uint cbSize;
 	internal IntPtr hWnd;
@@ -87,7 +87,7 @@ internal unsafe struct NOTIFYICONDATAW
 /// https://learn.microsoft.com/windows/win32/api/shellapi/ns-shellapi-shfileinfow
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct SHFILEINFOW
+internal struct SHFILEINFOW
 {
 	internal IntPtr hIcon;
 	internal int iIcon;
@@ -227,7 +227,7 @@ internal struct PerformanceInformation
 /// Using unsafe fixed buffers to match native layout; only fields we need are read.
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct MIB_IFROW
+internal struct MIB_IFROW
 {
 	// MAX_INTERFACE_NAME_LEN is 256 WCHARs
 	private fixed char wszName[256];
@@ -262,7 +262,7 @@ internal unsafe struct MIB_IFROW
 /// https://learn.microsoft.com/windows/win32/api/netioapi/ns-netioapi-mib_if_row2
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct MIB_IF_ROW2
+internal struct MIB_IF_ROW2
 {
 	internal ulong InterfaceLuid; // NET_LUID
 	internal uint InterfaceIndex; // NET_IFINDEX
@@ -946,7 +946,7 @@ internal enum COMPUTER_NAME_FORMAT
 /// https://learn.microsoft.com/windows-hardware/drivers/ddi/ntddstor/ns-ntddstor-_storage_predict_failure
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct STORAGE_PREDICT_FAILURE
+internal struct STORAGE_PREDICT_FAILURE
 {
 	internal uint PredictFailure;
 	internal fixed byte VendorSpecific[512];
@@ -956,7 +956,7 @@ internal unsafe struct STORAGE_PREDICT_FAILURE
 /// https://learn.microsoft.com/windows-hardware/drivers/ddi/ntddstor/ns-ntddstor-_storage_property_query
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct STORAGE_PROPERTY_QUERY
+internal struct STORAGE_PROPERTY_QUERY
 {
 	internal uint PropertyId;
 	internal uint QueryType;
@@ -967,7 +967,7 @@ internal unsafe struct STORAGE_PROPERTY_QUERY
 /// https://learn.microsoft.com/windows-hardware/drivers/ddi/ntddstor/ns-ntddstor-_storage_temperature_data_descriptor
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct STORAGE_TEMPERATURE_DATA_DESCRIPTOR
+internal struct STORAGE_TEMPERATURE_DATA_DESCRIPTOR
 {
 	internal uint Version;
 	internal uint Size;
@@ -1079,7 +1079,7 @@ internal struct CryptProviderData
 /// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-wintrust_signature_settings
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct WINTRUST_SIGNATURE_SETTINGS
+internal struct WINTRUST_SIGNATURE_SETTINGS
 {
 	internal uint cbStruct;   // Size of structure
 	internal uint dwIndex;   // Index of the signature
@@ -1115,7 +1115,7 @@ internal unsafe struct WINTRUST_SIGNATURE_SETTINGS
 /// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-wintrust_file_info
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct WINTRUST_FILE_INFO
+internal struct WINTRUST_FILE_INFO
 {
 	internal uint StructSize;   // Size of structure
 	internal IntPtr FilePath;   // File path pointer (LPCWSTR)
@@ -1145,7 +1145,7 @@ internal unsafe struct WINTRUST_FILE_INFO
 /// https://learn.microsoft.com/windows/win32/api/wintrust/ns-wintrust-wintrust_data
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct WINTRUST_DATA
+internal struct WINTRUST_DATA
 {
 	internal uint StructSize;   // Size of structure
 	internal IntPtr PolicyCallbackData;   // Pointer to policy callback data
@@ -1216,7 +1216,7 @@ internal partial interface IEditionUpgradeManager
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIUnknown
+internal struct RawIUnknown
 {
 	internal IUnknownVtbl* Vtbl;
 }
@@ -1225,7 +1225,7 @@ internal unsafe struct RawIUnknown
 /// https://learn.microsoft.com/windows/win32/api/unknwn/nn-unknwn-iunknown
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IUnknownVtbl
+internal struct IUnknownVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1234,7 +1234,7 @@ internal unsafe struct IUnknownVtbl
 
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIAppxFactory
+internal struct RawIAppxFactory
 {
 	internal IAppxFactoryVtbl* Vtbl;
 }
@@ -1243,7 +1243,7 @@ internal unsafe struct RawIAppxFactory
 /// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxfactory
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IAppxFactoryVtbl
+internal struct IAppxFactoryVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1257,7 +1257,7 @@ internal unsafe struct IAppxFactoryVtbl
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIAppxPackageReader
+internal struct RawIAppxPackageReader
 {
 	internal IAppxPackageReaderVtbl* Vtbl;
 }
@@ -1266,7 +1266,7 @@ internal unsafe struct RawIAppxPackageReader
 /// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxpackagereader
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IAppxPackageReaderVtbl
+internal struct IAppxPackageReaderVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1280,7 +1280,7 @@ internal unsafe struct IAppxPackageReaderVtbl
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIAppxManifestReader
+internal struct RawIAppxManifestReader
 {
 	internal IAppxManifestReaderVtbl* Vtbl;
 }
@@ -1289,7 +1289,7 @@ internal unsafe struct RawIAppxManifestReader
 /// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxmanifestreader
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IAppxManifestReaderVtbl
+internal struct IAppxManifestReaderVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1301,7 +1301,7 @@ internal unsafe struct IAppxManifestReaderVtbl
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIAppxManifestPackageId
+internal struct RawIAppxManifestPackageId
 {
 	internal IAppxManifestPackageIdVtbl* Vtbl;
 }
@@ -1310,7 +1310,7 @@ internal unsafe struct RawIAppxManifestPackageId
 /// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxmanifestpackageid
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IAppxManifestPackageIdVtbl
+internal struct IAppxManifestPackageIdVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1327,7 +1327,7 @@ internal unsafe struct IAppxManifestPackageIdVtbl
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIAppxBlockMapReader
+internal struct RawIAppxBlockMapReader
 {
 	internal IAppxBlockMapReaderVtbl* Vtbl;
 }
@@ -1336,7 +1336,7 @@ internal unsafe struct RawIAppxBlockMapReader
 /// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxblockmapreader
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IAppxBlockMapReaderVtbl
+internal struct IAppxBlockMapReaderVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1350,7 +1350,7 @@ internal unsafe struct IAppxBlockMapReaderVtbl
 
 // IUri (Windows/Urlmon)
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIUri
+internal struct RawIUri
 {
 	internal IUriVtbl* Vtbl;
 }
@@ -1359,7 +1359,7 @@ internal unsafe struct RawIUri
 /// https://learn.microsoft.com/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms775038(v=vs.85)
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IUriVtbl
+internal struct IUriVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1373,7 +1373,7 @@ internal unsafe struct IUriVtbl
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIAppxBundleFactory
+internal struct RawIAppxBundleFactory
 {
 	internal IAppxBundleFactoryVtbl* Vtbl;
 }
@@ -1382,7 +1382,7 @@ internal unsafe struct RawIAppxBundleFactory
 /// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxbundlefactory
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IAppxBundleFactoryVtbl
+internal struct IAppxBundleFactoryVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1394,7 +1394,7 @@ internal unsafe struct IAppxBundleFactoryVtbl
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIAppxBundleReader
+internal struct RawIAppxBundleReader
 {
 	internal IAppxBundleReaderVtbl* Vtbl;
 }
@@ -1403,7 +1403,7 @@ internal unsafe struct RawIAppxBundleReader
 /// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxbundlereader
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IAppxBundleReaderVtbl
+internal struct IAppxBundleReaderVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1417,7 +1417,7 @@ internal unsafe struct IAppxBundleReaderVtbl
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct RawIAppxBundleManifestReader
+internal struct RawIAppxBundleManifestReader
 {
 	internal IAppxBundleManifestReaderVtbl* Vtbl;
 }
@@ -1426,7 +1426,7 @@ internal unsafe struct RawIAppxBundleManifestReader
 /// https://learn.microsoft.com/windows/win32/api/appxpackaging/nn-appxpackaging-iappxbundlemanifestreader
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct IAppxBundleManifestReaderVtbl
+internal struct IAppxBundleManifestReaderVtbl
 {
 	internal delegate* unmanaged[Stdcall]<void*, Guid*, void**, int> QueryInterface;
 	internal delegate* unmanaged[Stdcall]<void*, uint> AddRef;
@@ -1483,7 +1483,7 @@ internal enum FW_POLICY_STORE_FLAGS : uint
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-enum_service_status_processa
 /// </summary>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-internal unsafe struct ENUM_SERVICE_STATUS_PROCESS
+internal struct ENUM_SERVICE_STATUS_PROCESS
 {
 	internal char* lpServiceName;
 	internal char* lpDisplayName;
@@ -1494,7 +1494,7 @@ internal unsafe struct ENUM_SERVICE_STATUS_PROCESS
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-query_service_configw
 /// </summary>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-internal unsafe struct QUERY_SERVICE_CONFIGW
+internal struct QUERY_SERVICE_CONFIGW
 {
 	internal uint dwServiceType;
 	internal uint dwStartType;
@@ -1511,7 +1511,7 @@ internal unsafe struct QUERY_SERVICE_CONFIGW
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_descriptionw
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct SERVICE_DESCRIPTIONW { internal char* lpDescription; }
+internal struct SERVICE_DESCRIPTIONW { internal char* lpDescription; }
 
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_delayed_auto_start_info
@@ -1529,7 +1529,7 @@ internal struct SERVICE_SID_INFO { internal uint dwServiceSidType; }
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_required_privileges_infow
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct SERVICE_REQUIRED_PRIVILEGES_INFOW { internal char* pmszRequiredPrivileges; }
+internal struct SERVICE_REQUIRED_PRIVILEGES_INFOW { internal char* pmszRequiredPrivileges; }
 
 /// <summary>
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_launch_protected_info
@@ -1557,7 +1557,7 @@ internal struct SC_ACTION
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_failure_actionsw
 /// </summary>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-internal unsafe struct SERVICE_FAILURE_ACTIONSW
+internal struct SERVICE_FAILURE_ACTIONSW
 {
 	internal uint dwResetPeriod;
 	internal char* lpRebootMsg;
@@ -1570,7 +1570,7 @@ internal unsafe struct SERVICE_FAILURE_ACTIONSW
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_trigger_info
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct SERVICE_TRIGGER_INFO
+internal struct SERVICE_TRIGGER_INFO
 {
 	internal uint cTriggers;
 	internal SERVICE_TRIGGER* pTriggers;
@@ -1581,7 +1581,7 @@ internal unsafe struct SERVICE_TRIGGER_INFO
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_trigger
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct SERVICE_TRIGGER
+internal struct SERVICE_TRIGGER
 {
 	internal uint dwTriggerType;
 	internal uint dwAction;
@@ -1666,22 +1666,22 @@ internal struct OBJECT_TYPE_LIST
 internal partial interface ISecurityInformation
 {
 	[PreserveSig]
-	unsafe int GetObjectInformation(SI_OBJECT_INFO* pObjectInfo);
+	int GetObjectInformation(SI_OBJECT_INFO* pObjectInfo);
 
 	[PreserveSig]
-	unsafe int GetSecurity(uint RequestedInformation, IntPtr* ppSecurityDescriptor, int fDefault);
+	int GetSecurity(uint RequestedInformation, IntPtr* ppSecurityDescriptor, int fDefault);
 
 	[PreserveSig]
 	int SetSecurity(uint SecurityInformation, IntPtr pSecurityDescriptor);
 
 	[PreserveSig]
-	unsafe int GetAccessRights(Guid* pguidObjectType, uint dwFlags, IntPtr* ppAccess, uint* pcAccesses, uint* piDefaultAccess);
+	int GetAccessRights(Guid* pguidObjectType, uint dwFlags, IntPtr* ppAccess, uint* pcAccesses, uint* piDefaultAccess);
 
 	[PreserveSig]
-	unsafe int MapGeneric(Guid* pguidObjectType, byte* pAceFlags, uint* pMask);
+	int MapGeneric(Guid* pguidObjectType, byte* pAceFlags, uint* pMask);
 
 	[PreserveSig]
-	unsafe int GetInheritTypes(IntPtr* ppInheritTypes, uint* pcInheritTypes);
+	int GetInheritTypes(IntPtr* ppInheritTypes, uint* pcInheritTypes);
 
 	[PreserveSig]
 	int PropertySheetPageCallback(IntPtr hwnd, uint uMsg, uint uPage);
@@ -1711,7 +1711,7 @@ internal partial interface ISecurityInformation2
 internal partial interface ISecurityInformation3
 {
 	[PreserveSig]
-	unsafe int GetFullResourceName(IntPtr* ppszResourceName);
+	int GetFullResourceName(IntPtr* ppszResourceName);
 
 	[PreserveSig]
 	int OpenElevatedEditor(IntPtr hWnd, uint uPage);
@@ -1726,7 +1726,7 @@ internal partial interface ISecurityInformation3
 internal partial interface IEffectivePermission
 {
 	[PreserveSig]
-	unsafe int GetEffectivePermission(
+	int GetEffectivePermission(
 		Guid* pguidObjectType, IntPtr pUserSid, IntPtr pszServerName, IntPtr pSD,
 		IntPtr* ppObjectTypeList, uint* pcObjectTypeListLength,
 		IntPtr* ppGrantedAccessList, uint* pcGrantedAccessListLength);
@@ -1741,7 +1741,7 @@ internal partial interface IEffectivePermission
 internal partial interface ISecurityObjectTypeInfo
 {
 	[PreserveSig]
-	unsafe int GetInheritSource(uint si, IntPtr pACL, IntPtr* ppInheritArray);
+	int GetInheritSource(uint si, IntPtr pACL, IntPtr* ppInheritArray);
 }
 
 /// <summary>
@@ -1976,7 +1976,7 @@ internal struct MIB_UDPROW_OWNER_PID
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct MIB_TCP6ROW_OWNER_PID
+internal struct MIB_TCP6ROW_OWNER_PID
 {
 	internal fixed byte localAddr[16];
 	internal uint localScopeId;
@@ -1989,7 +1989,7 @@ internal unsafe struct MIB_TCP6ROW_OWNER_PID
 }
 
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct MIB_UDP6ROW_OWNER_PID
+internal struct MIB_UDP6ROW_OWNER_PID
 {
 	internal fixed byte localAddr[16];
 	internal uint localScopeId;
@@ -2189,7 +2189,7 @@ internal struct STORAGE_DEVICE_NUMBER
 /// https://learn.microsoft.com/windows/win32/api/winsvc/ns-winsvc-service_notify_2w
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]
-internal unsafe struct SERVICE_NOTIFY
+internal struct SERVICE_NOTIFY
 {
 	internal uint dwVersion;
 	internal IntPtr pfnNotifyCallback;
@@ -2208,7 +2208,7 @@ internal struct WLAN_INTERFACE_INFO_LIST
 }
 
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-internal unsafe struct WLAN_INTERFACE_INFO
+internal struct WLAN_INTERFACE_INFO
 {
 	internal Guid InterfaceGuid;
 	internal fixed char InterfaceDescription[256];
@@ -2223,7 +2223,7 @@ internal struct WLAN_PROFILE_INFO_LIST
 }
 
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-internal unsafe struct WLAN_PROFILE_INFO
+internal struct WLAN_PROFILE_INFO
 {
 	internal fixed char ProfileName[256];
 	internal uint Flags;
@@ -2245,7 +2245,7 @@ internal enum WLAN_INTERFACE_STATE : uint
 /// https://learn.microsoft.com/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc1
 /// </summary>
 [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-internal unsafe struct DXGI_ADAPTER_DESC1
+internal struct DXGI_ADAPTER_DESC1
 {
 	internal fixed char Description[128];
 	internal uint VendorId;

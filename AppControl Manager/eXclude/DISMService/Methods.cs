@@ -30,7 +30,7 @@ internal static class Methods
 	[UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
 	internal static void DismProgressCallbackUnmanaged(uint current, uint total, nint userData) => Program.SendProgressCallback(current, total);
 
-	private static unsafe nint GetDismProgressCallbackPtr() => (nint)(delegate* unmanaged[Stdcall]<uint, uint, nint, void>)&DismProgressCallbackUnmanaged;
+	private static nint GetDismProgressCallbackPtr() => (nint)(delegate* unmanaged[Stdcall]<uint, uint, nint, void>)&DismProgressCallbackUnmanaged;
 
 	// Exposes a precomputed unmanaged function pointer for DISM
 	internal static readonly nint DismProgressCallbackPtr = GetDismProgressCallbackPtr();
@@ -369,7 +369,7 @@ internal static class Methods
 
 	// to add a capability
 	// e.g.: AddCapability("App.StepsRecorder~~~~0.0.1.0", false, null);
-	internal static unsafe OperationExecutionState AddCapability(string capabilityName, bool limitAccess = false, string[]? sourcePaths = null, IntPtr cancelEvent = default)
+	internal static OperationExecutionState AddCapability(string capabilityName, bool limitAccess = false, string[]? sourcePaths = null, IntPtr cancelEvent = default)
 	{
 		// Get a new session if one doesn't already exist
 		InitDISM();

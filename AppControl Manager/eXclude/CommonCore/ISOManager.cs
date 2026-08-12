@@ -2124,7 +2124,7 @@ internal static partial class ISOManager
 
 		[LibraryImport("OLE32", EntryPoint = "CoCreateInstance")]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		internal static unsafe partial int CoCreateInstanceWbemLocator(
+		internal static partial int CoCreateInstanceWbemLocator(
 			in Guid rclsid,
 			IntPtr pUnkOuter,
 			uint dwClsContext,
@@ -2133,7 +2133,7 @@ internal static partial class ISOManager
 
 		[LibraryImport("OLE32")]
 		[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-		internal static unsafe partial int CoSetProxyBlanket(
+		internal static partial int CoSetProxyBlanket(
 			IWbemServices* pProxy,
 			uint dwAuthnSvc,
 			uint dwAuthzSvc,

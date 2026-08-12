@@ -306,7 +306,7 @@ internal static class DataDump
 		}
 	}
 
-	private unsafe static string GetAvailablePhysicalMemory()
+	private static string GetAvailablePhysicalMemory()
 	{
 		try
 		{

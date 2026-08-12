@@ -2009,7 +2009,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Retrieves the embedded Windows product key from the MSDM ACPI firmware table when present.
 	/// </summary>
-	private static unsafe string? TryGetFirmwareEmbeddedProductKey()
+	private static string? TryGetFirmwareEmbeddedProductKey()
 	{
 		const uint ProviderAcpi = 0x41435049; // ACPI
 		const uint TableMsdm = 0x4D44534D; // MSDM

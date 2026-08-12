@@ -181,7 +181,7 @@ internal static partial class GetExtendedFileAttrib
 	/// <param name="locale">Indicates the locale for which the resource string is being requested.</param>
 	/// <param name="resource">Identifies the specific resource string to retrieve from the version information.</param>
 	/// <returns>Returns the localized resource string or null if not found.</returns>
-	private static unsafe string? GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
+	private static string? GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
 	{
 		ReadOnlySpan<string> encodings = [encoding, Cp1252FallbackCode, UnicodeFallbackCode];
 

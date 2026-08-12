@@ -71,7 +71,7 @@ internal static class ProcessSideChannelIsolation
 	/// <summary>
 	/// Applies any missing documented side-channel isolation flags, then returns the effective policy reported by Windows.
 	/// </summary>
-	internal static unsafe ProcessSideChannelIsolationResult ApplyToCurrentProcess()
+	internal static ProcessSideChannelIsolationResult ApplyToCurrentProcess()
 	{
 		uint failedFlags = 0U;
 		StringBuilder failures = new();

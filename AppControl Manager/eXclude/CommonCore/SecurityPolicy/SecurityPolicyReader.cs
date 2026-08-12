@@ -572,7 +572,7 @@ internal static class SecurityPolicyReader
 	/// <summary>
 	/// Opens the LSA Policy handle.
 	/// </summary>
-	private unsafe static IntPtr OpenPolicy()
+	private static IntPtr OpenPolicy()
 	{
 		LSA_OBJECT_ATTRIBUTES objectAttributes = new()
 		{

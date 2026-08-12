@@ -126,7 +126,7 @@ internal sealed partial class MainWindow
 	/// <summary>
 	/// Shows the supported shell-style tray menu with the default OS look.
 	/// </summary>
-	private unsafe void ShowNotificationAreaContextMenu(int cursorX, int cursorY)
+	private void ShowNotificationAreaContextMenu(int cursorX, int cursorY)
 	{
 		IntPtr popupMenuHandle = NativeMethods.CreatePopupMenu();
 
@@ -381,7 +381,7 @@ internal sealed partial class MainWindow
 		}
 	}
 
-	internal unsafe void RemoveNotificationAreaIcon()
+	internal void RemoveNotificationAreaIcon()
 	{
 		if (!_isNotificationAreaIconVisible)
 		{

@@ -530,7 +530,7 @@ internal static partial class CIManager
 		RemovePolicy(policyId);
 	}
 
-	private static unsafe partial class NativeMethods
+	private static partial class NativeMethods
 	{
 		/// <summary>
 		/// Session lifecycle, wraps CodeIntegrity::Management::Start

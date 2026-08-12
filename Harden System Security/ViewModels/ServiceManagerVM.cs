@@ -1336,7 +1336,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		finally { _ = NativeMethods.CloseServiceHandle(scManager); }
 	}
 
-	private static unsafe bool SetDelayedAutoStart(string serviceName, bool isDelayed)
+	private static bool SetDelayedAutoStart(string serviceName, bool isDelayed)
 	{
 		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return false;
@@ -1354,7 +1354,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		finally { _ = NativeMethods.CloseServiceHandle(scManager); }
 	}
 
-	private static unsafe bool SetLaunchProtected(string serviceName, uint launchProtected)
+	private static bool SetLaunchProtected(string serviceName, uint launchProtected)
 	{
 		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return false;
@@ -1693,7 +1693,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		}
 	}
 
-	private unsafe static void WaitForServiceState(string serviceName, uint desiredState, int timeoutMs)
+	private static void WaitForServiceState(string serviceName, uint desiredState, int timeoutMs)
 	{
 		IntPtr scManager = NativeMethods.OpenSCManagerW(null, null, NativeMethods.SC_MANAGER_CONNECT);
 		if (scManager == IntPtr.Zero) return;
@@ -1931,7 +1931,7 @@ internal sealed partial class ServiceSecurityInformation :
 		return unchecked((int)((x & 0x0000FFFF) | (7 << 16) | 0x80000000));
 	}
 
-	private static unsafe void EnableSecurityPrivilege()
+	private static void EnableSecurityPrivilege()
 	{
 		if (NativeMethods.OpenProcessToken(NativeMethods.GetCurrentProcess(), 0x0020 | 0x0008, out IntPtr hToken))
 		{
@@ -2298,5 +2298,5 @@ internal sealed partial class ServiceSecurityInformation :
 	}
 
 	// Return 5023 because the Service is not a File type.
-	public unsafe int GetInheritSource(uint si, IntPtr pACL, IntPtr* ppInheritArray) => HRESULT_FROM_WIN32(5023);
+	public int GetInheritSource(uint si, IntPtr pACL, IntPtr* ppInheritArray) => HRESULT_FROM_WIN32(5023);
 }

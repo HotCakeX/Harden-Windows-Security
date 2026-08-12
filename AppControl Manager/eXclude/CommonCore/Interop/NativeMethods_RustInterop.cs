@@ -21,7 +21,7 @@ namespace CommonCore.Interop;
 
 #pragma warning disable CA5392, CA5393 // Don't need to define it, we're using Direct P/Invoke
 
-internal static unsafe partial class NativeMethods
+internal static partial class NativeMethods
 {
 
 #if DEBUG

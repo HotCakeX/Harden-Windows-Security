@@ -34,7 +34,7 @@ internal static class KernelModeDrivers
 	private static readonly Guid CRYPT_SUBJTYPE_CATALOG_IMAGE = new("DE351A43-8E59-11d0-8C47-00C04FC295EE");
 	private static readonly Guid CRYPT_SUBJTYPE_CTL_IMAGE = new("9BA61D3F-E73A-11d0-8CD2-00C04FC295EE");
 
-	private static readonly unsafe int ImportDescriptorSize = sizeof(IMAGE_IMPORT_DESCRIPTOR);
+	private static readonly int ImportDescriptorSize = sizeof(IMAGE_IMPORT_DESCRIPTOR);
 
 	private const string KernelModeFileExtension = ".sys";
 

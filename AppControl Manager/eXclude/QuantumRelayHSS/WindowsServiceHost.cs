@@ -292,7 +292,7 @@ internal static class WindowsServiceHost
 		_ = NativeMethods.SetServiceStatus(s_statusHandle, ref status);
 	}
 
-	private unsafe static void SetupKillOnJobClose()
+	private static void SetupKillOnJobClose()
 	{
 		try
 		{

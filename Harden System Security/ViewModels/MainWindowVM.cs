@@ -1019,7 +1019,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// <summary>
 	/// Synthesizes the Win + Ctrl + Shift + B shortcut sequence.
 	/// </summary>
-	private static unsafe void SendGraphicsDriverResetShortcutInternal()
+	private static void SendGraphicsDriverResetShortcutInternal()
 	{
 		INPUT[] inputs =
 		[

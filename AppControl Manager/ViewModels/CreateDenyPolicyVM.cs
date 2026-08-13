@@ -44,6 +44,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	internal CreateDenyPolicyVM()
 	{
 		FilesAndFoldersProgressRingValueProgress = new Progress<double>(p => FilesAndFoldersProgressRingValue = p);
+		FilesAndFoldersScanLevelComboBoxSelectedItem = FilesAndFoldersScanLevelsSource[0];
 
 		FilesAndFoldersCancellableButton = new(Atlas.GetStr("CreateDenyPolicyButton/Content"));
 
@@ -137,6 +138,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 	internal bool filesAndFoldersDeployButton { get; set => SP(ref field, value); }
 
+	internal readonly List<ScanLevelsComboBoxType> FilesAndFoldersScanLevelsSource = ScanLevelFallbackCatalog.CreateSource(true);
 	internal ScanLevelsComboBoxType FilesAndFoldersScanLevelComboBoxSelectedItem
 	{
 		get; set
@@ -147,7 +149,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = ScanLevelsSource[0];
+	}
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -347,7 +349,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: FilesAndFoldersScanLevelComboBoxSelectedItem.Level, folderPaths: filesAndFoldersFolderPaths);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: FilesAndFoldersScanLevelComboBoxSelectedItem.Level, folderPaths: filesAndFoldersFolderPaths, fallbackLevels: FilesAndFoldersScanLevelComboBoxSelectedItem.SelectedFallbackLevels);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 

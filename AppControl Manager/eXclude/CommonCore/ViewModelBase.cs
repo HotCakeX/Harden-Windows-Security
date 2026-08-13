@@ -119,43 +119,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	internal protected void OnPropertyChanged(string? propertyName) => PropertyChanged?.Invoke(this, new(propertyName));
 
 	/// <summary>
-	/// Helper to build the fallback chain visual data.
-	/// </summary>
-	private static List<FallbackItem> BuildFallbackChain(params string[] items)
-	{
-		List<FallbackItem> chain = new(items.Length);
-		for (int i = 0; i < items.Length; i++)
-		{
-			chain.Add(new FallbackItem(
-				name: items[i],
-				// Show chevron for all except the last item
-				chevronVisibility: (i < items.Length - 1) ? Visibility.Visible : Visibility.Collapsed));
-		}
-		return chain;
-	}
-
-	internal static readonly List<ScanLevelsComboBoxType> ScanLevelsSource =
-	[
-		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5, BuildFallbackChain("File Publisher", "Publisher", "Hash")),
-		new("File Publisher", ScanLevels.FilePublisher, 4, BuildFallbackChain("Publisher", "Hash")),
-		new("Publisher", ScanLevels.Publisher, 3, BuildFallbackChain("Hash")),
-		new("Hash", ScanLevels.Hash, 5, BuildFallbackChain("No Fallback")),
-		new("File Path", ScanLevels.FilePath, 2, BuildFallbackChain("No Fallback")),
-		new("Wildcard Folder Path", ScanLevels.WildCardFolderPath, 1, BuildFallbackChain("No Fallback")),
-		new("File Name", ScanLevels.FileName, 2, BuildFallbackChain("Hash"))
-	];
-
-	internal static readonly List<ScanLevelsComboBoxType> ScanLevelsSourceForLogs =
-	[
-		new("WHQL File Publisher", ScanLevels.WHQLFilePublisher, 5, BuildFallbackChain("File Publisher", "Publisher", "Hash")),
-		new("File Publisher", ScanLevels.FilePublisher, 4, BuildFallbackChain("Publisher", "Hash")),
-		new("Publisher", ScanLevels.Publisher, 3, BuildFallbackChain("Hash")),
-		new("Hash", ScanLevels.Hash, 5, BuildFallbackChain("No Fallback")),
-		new("File Path", ScanLevels.FilePath, 2, BuildFallbackChain("No Fallback")),
-		new("File Name", ScanLevels.FileName, 2, BuildFallbackChain("Hash"))
-	];
-
-	/// <summary>
 	/// User Activity tracking field. It's static and uses the semaphore below
 	/// Because we don't want to publish activity concurrently and the way this field is disposed of must be synchronized, one thread at a time
 	/// which is being enforced now.

@@ -40,6 +40,7 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	internal MDEAHPolicyCreationVM()
 	{
 		MainInfoBar = new();
+		ScanLevelComboBoxSelectedItem = ScanLevelsSourceForLogs[0];
 
 		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.MDEAdvancedHunting);
 
@@ -166,7 +167,8 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	/// </summary>
 	internal string SelectedBarItemTag { get; set; } = "Local";
 
-	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = ScanLevelsSourceForLogs[0];
+	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSourceForLogs = ScanLevelFallbackCatalog.CreateSource(false);
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Bound to the Date Picker on the UI.
@@ -442,9 +444,7 @@ DeviceEvents
 		DateTime endTime = _analysisCustomRangeEndTime.Value;
 		if (endTime < startTime)
 		{
-			DateTime temporaryTime = startTime;
-			startTime = endTime;
-			endTime = temporaryTime;
+			(endTime, startTime) = (startTime, endTime);
 		}
 		List<FileIdentity> filteredFileIdentities = new(AllFileIdentities.Count);
 
@@ -683,10 +683,15 @@ DeviceEvents
 			await Task.Run(async () =>
 			{
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: ScanLevelComboBoxSelectedItem.Level);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: ScanLevelComboBoxSelectedItem.Level, fallbackLevels: ScanLevelComboBoxSelectedItem.SelectedFallbackLevels);
 
 				// Create a new SiPolicy object with the data package.
 				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);
+
+				// Rule option 18 is required for FilePath rules that target user-writable locations to work.
+				List<OptionType>? rulesToAdd = ScanLevelComboBoxSelectedItem.Level is ScanLevels.FilePath
+					? [OptionType.DisabledRuntimeFilePathRuleProtection]
+					: null;
 
 				switch (SelectedCreationMethod)
 				{
@@ -696,6 +701,9 @@ DeviceEvents
 							{
 								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
 								PolicyToAddLogsTo.PolicyObj = Merger.Merge(PolicyToAddLogsTo.PolicyObj, [policyObj]);
+
+								// Add rule option 18 when the selected scan level created FilePath rules.
+								PolicyToAddLogsTo.PolicyObj = CiRuleOptions.Set(policyObj: PolicyToAddLogsTo.PolicyObj, rulesToAdd: rulesToAdd);
 
 								// Set a new name if it was provided
 								if (!string.IsNullOrWhiteSpace(PolicyNameTextBox))
@@ -762,7 +770,7 @@ DeviceEvents
 								policyObj = SetCiPolicyInfo.Set(policyObj, true, PolicyNameTextBox, BasePolicyXMLFile.PolicyObj.BasePolicyID);
 
 								// Configure policy rule options
-								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
+								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: rulesToAdd);
 
 								// Set policy version
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
@@ -820,7 +828,7 @@ DeviceEvents
 								policyObj = SetCiPolicyInfo.Set(policyObj, true, PolicyNameTextBox, BasePolicyGUID);
 
 								// Configure policy rule options
-								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
+								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: rulesToAdd);
 
 								// Set policy version
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));

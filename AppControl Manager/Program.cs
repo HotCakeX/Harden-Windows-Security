@@ -15,8 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Runtime.CompilerServices;
-
 #if HARDEN_SYSTEM_SECURITY
 namespace HardenSystemSecurity;
 #else
@@ -95,18 +93,6 @@ internal static class Program
 #endif
 
 		// Nothing can run after this, so this should always be at the end.
-		InvokeXamlGeneratedMain(null, args);
+		XamlGeneratedProgram.XamlGeneratedMain();
 	}
-
-	/// <summary>
-	/// UnsafeAccessor shim that binds to the private static.
-	/// </summary>
-	[UnsafeAccessor(UnsafeAccessorKind.StaticMethod, Name = "XamlGeneratedMain")]
-	private static extern void InvokeXamlGeneratedMain(
-#if HARDEN_SYSTEM_SECURITY
-		[UnsafeAccessorType("HardenSystemSecurity.XamlGeneratedProgram")] object? target, string[] args
-#else
-		[UnsafeAccessorType("AppControlManager.XamlGeneratedProgram")] object? target, string[] args
-#endif
-		);
 }

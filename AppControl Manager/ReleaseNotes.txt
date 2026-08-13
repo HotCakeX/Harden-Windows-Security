@@ -1,0 +1,9 @@
+* You can now create File Path rules from the logs collected from any remote system. The logs can be Event Logs (EVTX files) or MDE Advanced Hunting logs. Simply select the "File Path" scan level and the app will create the policy that works on the remote systems seamlessly. Completes a part of the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1181
+
+* Added a new toggle button under the "Actions" button in the Event Logs creation page. This toggle button allows you to choose whether file paths in the logs must be resolved or not: E.g., resolving "\Device\HarddiskVolume3" to "C:\".
+
+* Users can now customize scan and rule creation fallback levels by adding, removing, and reordering them, unlocking many new possibilities and customizations for you. Files or logs are evaluated against the selected primary level and then each configured fallback in the precise chosen order. Completes the last part of the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1181
+
+* Improved memory management in the app.
+
+* Updated numerous dependencies to their latest versions, delivering the newest security fixes, reliability improvements, and quality enhancements.

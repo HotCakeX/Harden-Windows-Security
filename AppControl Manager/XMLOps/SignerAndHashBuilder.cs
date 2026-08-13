@@ -23,6 +23,8 @@ using CommonCore.IntelGathering;
 
 namespace AppControlManager.XMLOps;
 
+#pragma warning disable IDE0010
+
 internal static class SignerAndHashBuilder
 {
 	// Get all of the drive letters on the system
@@ -31,20 +33,9 @@ internal static class SignerAndHashBuilder
 	/// <summary>
 	/// Creates Signer and Hash objects from the input data
 	///
-	/// Types created for Signed Data: FilePublisher, Publisher
-	/// Types created for Unsigned Data: Hash
-	///
-	/// Behavior when the level is set to "FilePublisher":
-	/// FilePublisher Signers are created for files that have the necessary details for a FilePublisher rule
-	/// Publisher Signers are created for files that don't have the necessary details for a FilePublisher rule
-	/// Hashes are created for the unsigned data
-	///
-	/// Behavior when the level is set to "Publisher":
-	/// PublisherSigners are created for all of the Signed files
-	/// Hashes are created for all of the unsigned files
-	///
-	/// Behavior when the level is set to "Hash":
-	/// Hashes are created for all of the files, whether they are signed or unsigned
+	/// FilePublisher rules are created for files that have the necessary details for a FilePublisher rule.
+	/// Publisher rules are created for files that don't have the necessary details for a FilePublisher rule.
+	/// Hash rules can be created for both unsigned or signed data, depending on what the selected level or fallback level(s) are.
 	///
 	/// The output is a single object with nested properties for the Signed data and Hashes
 	///
@@ -60,14 +51,15 @@ internal static class SignerAndHashBuilder
 	/// <param name="data">The Data to be processed. These are the logs selected by the user and contain both signed and unsigned data.</param>
 	/// <param name="level"><see cref="ScanLevels"/></param>
 	/// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g., when sandboxing-like behavior using Macros and AppIDs are used.</param>
+	/// <param name="fallbackLevels">The fallback levels to try, in order, when the primary level cannot be used for a file. Default levels are used when this is null.</param>
 	internal static FileBasedInfoPackage BuildSignerAndHashObjects(
 	List<FileIdentity>? data = null,
 	IReadOnlyCollection<string>? folderPaths = null,
 	HashSet<string>? customFileRulePatterns = null,
 	ScanLevels level = ScanLevels.WHQLFilePublisher,
 	bool publisherToHash = false,
-	List<string>? packageFamilyNames = null
-)
+	List<string>? packageFamilyNames = null,
+	List<ScanLevels>? fallbackLevels = null)
 	{
 		// To store the Signers created with WHQLFilePublisher Level
 		List<WHQLFilePublisherSignerCreator> whqlFilePublisherSigners = [];
@@ -94,7 +86,7 @@ internal static class SignerAndHashBuilder
 		List<FileIdentity> signedWHQLFilePublisherData = [];
 		List<FileIdentity> signedFilePublisherData = [];
 		List<FileIdentity> signedPublisherData = [];
-		List<FileIdentity> unsignedData = [];
+		List<FileIdentity> hashRuleData = [];
 		List<FileIdentity> filePathData = [];
 		IReadOnlyCollection<string> wildCardFilePathData = [];
 		List<string> PFNs = [];
@@ -106,165 +98,20 @@ internal static class SignerAndHashBuilder
 		// Data separation based on the level
 		switch (level)
 		{
-			// If Hash level is used then add everything to the Unsigned data so Hash rules will be created for them
+			// All FileIdentities have Hash so we don't need to consider fallback for this level.
 			case ScanLevels.Hash:
 				{
-
 					Logger.Write(Atlas.GetStr("BuildSignerHashLevelMessage"));
 
 					if (data is not null)
 					{
 						// Assign the entire data to the unsigned Data list
-						unsignedData = data;
+						hashRuleData = data;
 					}
 
 					break;
 				}
-			// If Publisher level is used then add all Signed data to the SignedPublisherData list and Unsigned data to the Hash list
-			case ScanLevels.Publisher:
-				{
-
-					if (data is not null)
-					{
-
-						Logger.Write(Atlas.GetStr("BuildSignerPublisherHashLevelsMessage"));
-
-						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
-						{
-							// If the current data is signed and publisherToHash is not used, which would indicate Hash level rules must be created for Publisher level data
-							// And make sure the file is not ECC Signed
-							if (item.SignatureStatus is SignatureStatus.IsSigned && !publisherToHash && item.IsECCSigned != true)
-							{
-								signedPublisherData.Add(item);
-							}
-							else
-							{
-								// Assign the data to the Hash list
-								unsignedData.Add(item);
-							}
-						}
-					}
-					break;
-				}
-			case ScanLevels.FilePublisher:
-				{
-
-					if (data is not null)
-					{
-
-						// Detect and separate FilePublisher, Publisher and Hash (Unsigned) data if the level is FilePublisher
-
-						Logger.Write(Atlas.GetStr("BuildSignerFilePublisherLevelsMessage"));
-
-						// Loop over each data
-						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
-						{
-							// If the file's version is empty or it has no file attribute, then add it to the Publishers array
-							// because FilePublisher rule cannot be created for it
-							if (item.SignatureStatus is SignatureStatus.IsSigned && item.IsECCSigned != true)
-							{
-								// Get values from the item and check for null, empty or whitespace
-								bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.OriginalFileName) &&
-															string.IsNullOrWhiteSpace(item.InternalName) &&
-															string.IsNullOrWhiteSpace(item.FileDescription) &&
-															string.IsNullOrWhiteSpace(item.ProductName);
-
-								bool hasNoFileVersion = item.FileVersion is null;
-
-								if (hasNoFileAttributes || hasNoFileVersion)
-								{
-									// if PublisherToHash is not used then add it to the Publisher array normally
-									if (!publisherToHash)
-									{
-										signedPublisherData.Add(item);
-									}
-									else
-									{
-										Logger.Write(string.Format(Atlas.GetStr("BuildSignerPublisherToHashMessage"), item.FilePath));
-										// Add the current signed data to Unsigned data array so that Hash rules will be created for it instead
-										unsignedData.Add(item);
-									}
-								}
-								else
-								{
-									// If the file has the required info for a FilePublisher rule level creation, add the data to the FilePublisher list
-									signedFilePublisherData.Add(item);
-								}
-							}
-							else
-							{
-								// Add the data to the Hash list
-								unsignedData.Add(item);
-							}
-						}
-					}
-					break;
-				}
-			case ScanLevels.WHQLFilePublisher:
-				{
-
-					if (data is not null)
-					{
-
-						// Detect and separate WHQLFilePublisher, FilePublisher, Publisher and Hash (Unsigned) data
-
-						Logger.Write(Atlas.GetStr("BuildSignerWHQLFilePublisherLevelsMessage"));
-
-						// Loop over each data
-						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
-						{
-
-							// It can be WHQLFilePublisher, FilePublisher, Publisher at this point
-							if (item.SignatureStatus is SignatureStatus.IsSigned && item.IsECCSigned != true)
-							{
-								// Get values from the item and check for null, empty or whitespace
-								bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.OriginalFileName) &&
-															string.IsNullOrWhiteSpace(item.InternalName) &&
-															string.IsNullOrWhiteSpace(item.FileDescription) &&
-															string.IsNullOrWhiteSpace(item.ProductName);
-
-								bool hasNoFileVersion = item.FileVersion is null;
-
-								// If the file's version is empty or it has no file attribute, then add it to the Publishers array
-								// because WHQLFilePublisher/FilePublisher rules cannot be created for it
-								if (hasNoFileAttributes || hasNoFileVersion)
-								{
-									// if PublisherToHash is not used then add it to the Publisher array normally
-									if (!publisherToHash)
-									{
-										signedPublisherData.Add(item);
-									}
-									else
-									{
-										Logger.Write(string.Format(Atlas.GetStr("BuildSignerPublisherToHashMessage"), item.FilePath));
-										// Add the current signed data to Unsigned data array so that Hash rules will be created for it instead
-										unsignedData.Add(item);
-									}
-								}
-								// If the file has the required info for a WHQL/FilePublisher rule level creation
-								else
-								{
-									// Check for WHQLFilePublisher eligibility
-									if (item.HasWHQLSigner == true)
-									{
-										signedWHQLFilePublisherData.Add(item);
-									}
-									// FilePublisher level
-									else
-									{
-										signedFilePublisherData.Add(item);
-									}
-								}
-							}
-							else
-							{
-								// Add the data to the Hash list
-								unsignedData.Add(item);
-							}
-						}
-					}
-					break;
-				}
+			// All FileIdentities have path so we don't need to consider fallback for this level.
 			case ScanLevels.FilePath:
 				{
 					if (data is not null)
@@ -273,6 +120,7 @@ internal static class SignerAndHashBuilder
 					}
 					break;
 				}
+			// Everything passed to this method for WildCardFolderPath level already has the required data so we don't need to consider fallback for this level.
 			case ScanLevels.WildCardFolderPath:
 				{
 					if (folderPaths is not null)
@@ -281,6 +129,7 @@ internal static class SignerAndHashBuilder
 					}
 					break;
 				}
+			// Everything passed to this method for CustomFileRulePattern level already has the required data so we don't need to consider fallback for this level.
 			case ScanLevels.CustomFileRulePattern:
 				{
 					if (customFileRulePatterns is not null)
@@ -289,6 +138,7 @@ internal static class SignerAndHashBuilder
 					}
 					break;
 				}
+			// Everything passed to this method for PFN level already has the required data so we don't need to consider fallback for this level.
 			case ScanLevels.PFN:
 				{
 					if (packageFamilyNames is not null)
@@ -297,50 +147,141 @@ internal static class SignerAndHashBuilder
 					}
 					break;
 				}
-			case ScanLevels.FileName:
+			// Handle other levels. Fallbacks participate here.
+			default:
 				{
-					if (data is not null)
+					if (data is null)
+						break;
+
+					// Use the caller-supplied fallback order when present (when calls are from the UI elements such as in ViewModels).
+					// Otherwise, preserve the default fallbacks for the selected primary level,
+					// Because not all calls to this method come from the UI, some are from internal functions so they need to use the default fallbacks.
+					List<ScanLevels> configuredFallbackLevels = fallbackLevels ?? ScanLevelFallbackCatalog.GetDefaultLevels(level);
+					List<ScanLevels> levelsToTry = new(1 + configuredFallbackLevels.Count) { level };
+
+					// Do not try the primary level twice or process duplicate fallback levels.
+					// We don't use HashSet here because order is important to enforce the fallback levels.
+					foreach (ScanLevels fallbackLevel in configuredFallbackLevels)
 					{
-						// Loop over each data
-						foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
+						if (fallbackLevel != level && !levelsToTry.Contains(fallbackLevel))
+							levelsToTry.Add(fallbackLevel);
+					}
+
+					// Loop over each data item
+					foreach (FileIdentity item in CollectionsMarshal.AsSpan(data))
+					{
+						// Get values from the item and check for null, empty or whitespace.
+						// Makes the current FileIdentity eligible for these levels: FilePublisher, WHQLFilePublisher, FileName
+						bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.OriginalFileName) &&
+													string.IsNullOrWhiteSpace(item.InternalName) &&
+													string.IsNullOrWhiteSpace(item.FileDescription) &&
+													string.IsNullOrWhiteSpace(item.ProductName);
+
+						// Makes the current FileIdentity eligible for these levels: FilePublisher, WHQLFilePublisher, FileName
+						bool hasNoFileVersion = item.FileVersion is null;
+
+						// Makes the current FileIdentity eligible for these levels: FilePublisher, WHQLFilePublisher, Publisher
+						bool isSigned = item.SignatureStatus is SignatureStatus.IsSigned && item.IsECCSigned != true;
+
+						// Try the primary level followed by each configured fallback level. The first eligible level claims the item.
+						foreach (ScanLevels candidateLevel in CollectionsMarshal.AsSpan(levelsToTry))
 						{
-							// If the file's version is empty or it has no file attribute, then add it to the Hashes array
+							bool levelAssigned = false;
 
-							// Get values from the item and check for null, empty or whitespace
-							bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.OriginalFileName) &&
-														string.IsNullOrWhiteSpace(item.InternalName) &&
-														string.IsNullOrWhiteSpace(item.FileDescription) &&
-														string.IsNullOrWhiteSpace(item.ProductName);
-
-							bool hasNoFileVersion = item.FileVersion is null;
-
-							if (hasNoFileAttributes || hasNoFileVersion)
+							switch (candidateLevel)
 							{
-								// Create hash rules for the file because it doesn't have the necessary file details for a FileName rule.
-								unsignedData.Add(item);
-							}
-							else
-							{
-								// If the file has the required info for a FileName rule level creation, add the data to the fileNameData list
-								fileNameData.Add(item);
+								case ScanLevels.WHQLFilePublisher:
+									{
+										// A WHQLFilePublisher rule requires a signed, non-ECC file with
+										// the necessary file attributes, file version and a WHQL signer.
+										if (isSigned && !hasNoFileAttributes && !hasNoFileVersion && item.HasWHQLSigner == true)
+										{
+											signedWHQLFilePublisherData.Add(item);
+											levelAssigned = true;
+										}
+										break;
+									}
+								case ScanLevels.FilePublisher:
+									{
+										// A FilePublisher rule requires a signed, non-ECC file with the
+										// necessary file attributes and file version.
+										if (isSigned && !hasNoFileAttributes && !hasNoFileVersion)
+										{
+											signedFilePublisherData.Add(item);
+											levelAssigned = true;
+										}
+										break;
+									}
+								case ScanLevels.Publisher:
+									{
+										// A Publisher rule required a signed, non-ECC file
+										// PublisherToHash prevents Publisher rules so processing can continue
+										// to a later configured fallback, normally Hash if defined by user.
+										if (isSigned && !publisherToHash)
+										{
+											signedPublisherData.Add(item);
+											levelAssigned = true;
+										}
+										break;
+									}
+								case ScanLevels.Hash:
+									{
+										// Hash rules can be created for both signed and unsigned files, so no additional checks are needed.
+										hashRuleData.Add(item);
+										levelAssigned = true;
+
+										break;
+									}
+								case ScanLevels.FileName:
+									{
+										// A FileName rule requires at least one file attribute and a file version.
+										if (!hasNoFileAttributes && !hasNoFileVersion)
+										{
+											fileNameData.Add(item);
+											levelAssigned = true;
+										}
+										break;
+									}
+								case ScanLevels.FilePath:
+									{
+										// FilePath fallback rules can be created for all files.
+										filePathData.Add(item);
+										levelAssigned = true;
+										break;
+									}
 							}
 
+							if (levelAssigned)
+								break;
 						}
 					}
 					break;
 				}
-			default:
-				break;
 		}
 
-		Logger.Write(string.Format(Atlas.GetStr("BuildSignerWHQLFilePublisherRulesCountMessage"), signedWHQLFilePublisherData.Count));
-		Logger.Write(string.Format(Atlas.GetStr("BuildSignerFilePublisherRulesCountMessage"), signedFilePublisherData.Count));
-		Logger.Write(string.Format(Atlas.GetStr("BuildSignerPublisherRulesCountMessage"), signedPublisherData.Count));
-		Logger.Write(string.Format(Atlas.GetStr("BuildSignerHashRulesCountMessage"), unsignedData.Count));
-		Logger.Write(string.Format(Atlas.GetStr("BuildSignerFilePathRulesCountMessage"), filePathData.Count));
-		Logger.Write(string.Format(Atlas.GetStr("BuildSignerWildCardFilePathRulesCountMessage"), wildCardFilePathData.Count));
-		Logger.Write(string.Format(Atlas.GetStr("BuildSignerPFNRulesCountMessage"), PFNs.Count));
-		Logger.Write(string.Format(Atlas.GetStr("BuildSignerFileNameRulesCountMessage"), fileNameData.Count));
+		if (signedWHQLFilePublisherData.Count > 0)
+			Logger.Write(string.Format(Atlas.GetStr("BuildSignerWHQLFilePublisherRulesCountMessage"), signedWHQLFilePublisherData.Count));
+
+		if (signedFilePublisherData.Count > 0)
+			Logger.Write(string.Format(Atlas.GetStr("BuildSignerFilePublisherRulesCountMessage"), signedFilePublisherData.Count));
+
+		if (signedPublisherData.Count > 0)
+			Logger.Write(string.Format(Atlas.GetStr("BuildSignerPublisherRulesCountMessage"), signedPublisherData.Count));
+
+		if (hashRuleData.Count > 0)
+			Logger.Write(string.Format(Atlas.GetStr("BuildSignerHashRulesCountMessage"), hashRuleData.Count));
+
+		if (filePathData.Count > 0)
+			Logger.Write(string.Format(Atlas.GetStr("BuildSignerFilePathRulesCountMessage"), filePathData.Count));
+
+		if (wildCardFilePathData.Count > 0)
+			Logger.Write(string.Format(Atlas.GetStr("BuildSignerWildCardFilePathRulesCountMessage"), wildCardFilePathData.Count));
+
+		if (PFNs.Count > 0)
+			Logger.Write(string.Format(Atlas.GetStr("BuildSignerPFNRulesCountMessage"), PFNs.Count));
+
+		if (fileNameData.Count > 0)
+			Logger.Write(string.Format(Atlas.GetStr("BuildSignerFileNameRulesCountMessage"), fileNameData.Count));
 
 
 		Logger.Write(Atlas.GetStr("BuildSignerProcessingWHQLFilePublisherMessage"));
@@ -527,7 +468,7 @@ internal static class SignerAndHashBuilder
 
 		Logger.Write(Atlas.GetStr("BuildSignerProcessingUnsignedHashMessage"));
 
-		foreach (FileIdentity hashData in CollectionsMarshal.AsSpan(unsignedData))
+		foreach (FileIdentity hashData in CollectionsMarshal.AsSpan(hashRuleData))
 		{
 			if (string.IsNullOrWhiteSpace(hashData.SHA256Hash) || string.IsNullOrWhiteSpace(hashData.SHA1Hash) || string.IsNullOrWhiteSpace(hashData.FilePath))
 			{
@@ -553,7 +494,7 @@ internal static class SignerAndHashBuilder
 				filePaths.Add(new FilePathCreator(
 					item.FilePath,
 					"0.0.0.0", // Minimum version of all files allowed by path
-					item.SISigningScenario
+					SSType.UserMode
 					));
 			}
 		}

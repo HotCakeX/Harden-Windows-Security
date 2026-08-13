@@ -6,7 +6,6 @@
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:intelgathering="using:CommonCore.IntelGathering"
-    xmlns:CommonCore="using:CommonCore"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     KeyboardAcceleratorPlacementMode="Hidden">
@@ -14,14 +13,6 @@
     <Page.KeyboardAccelerators>
         <KeyboardAccelerator Key="F5" Invoked="{x:Bind ViewModel.ScanLogs_Click}"/>
     </Page.KeyboardAccelerators>
-
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <customUI:ScanLevelResources />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
 
     <!--
     Never use a ScrollViewer in a page that's gonna have a ListView
@@ -454,9 +445,20 @@
 
                                 <MenuFlyoutSeparator />
 
+                                <ToggleMenuFlyoutItem Text="Resolve File Paths"
+                                                      ToolTipService.ToolTip="Example: changing '\Device\HarddiskVolume3' to 'C:\'"                                                      
+                                                      IsChecked="{x:Bind ViewModel.ResolveFilePaths, Mode=TwoWay}"
+                                                      IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
+                                    <ToggleMenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xF128;"/>
+                                    </ToggleMenuFlyoutItem.Icon>
+                                </ToggleMenuFlyoutItem>
+
+                                <MenuFlyoutSeparator />
+
                                 <ToggleMenuFlyoutItem IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
-                                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                              x:Uid="OnlyIncludeSelectedItemsToggleMenuFlyoutItem">
+                                                      IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                      x:Uid="OnlyIncludeSelectedItemsToggleMenuFlyoutItem">
                                     <ToggleMenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xEA98;"/>
                                     </ToggleMenuFlyoutItem.Icon>
@@ -519,12 +521,10 @@
                                         Date="{x:Bind ViewModel.DatePickerDate, Mode=TwoWay}"
                                         IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}" />
 
-                    <ComboBox x:Uid="ScanLevelComboBox"
-                              IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                              SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
-                              SelectedIndex="0"
-                              ItemsSource="{x:Bind CommonCore:ViewModelBase.ScanLevelsSourceForLogs}"
-                              ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
+                    <customUI:ScanLevelSelector ItemsSource="{x:Bind ViewModel.CustomizableScanLevelsSourceForLogs}"
+                                                SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                                                IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                x:Uid="ScanLevelComboBox" />
 
                     <!-- Columns Selection Button -->
                     <customUI:ColumnSelector ItemsSource="{x:Bind ViewModel.ColumnManager.ColumnSelectionItems, Mode=OneWay}"

@@ -4500,15 +4500,6 @@
 <data name="BuildSignerHashLevelMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: ഹാഷ് തലം മാത്രം ഉപയോഗിക്കുന്നു.</value>
 </data>
-<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: പ്രസാധകർ -> ഹാഷ് തലങ്ങൾ ഉപയോഗിക്കുന്നു.</value>
-</data>
-<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: ഫയൽ പ്രസാധകർ -> പ്രസാധകർ -> ഹാഷ് തലങ്ങൾ ഉപയോഗിക്കുന്നു.</value>
-</data>
-<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: ഫയലിനായുള്ള ഹാഷ് അറേയിലേക്ക് പ്രസാധക നിയമം കൈമാറുന്നു: {0}</value>
-</data>
 <data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: {0} ഫയൽ പ്രസാധക നിയമങ്ങൾ.</value>
 </data>
@@ -5036,9 +5027,6 @@
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>ഘട്ടം 3</value>
-  </data>
-  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
-    <value>BuildSignerAndHashObjects: WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash ലെവലുകൾ ഉപയോഗിക്കുന്നു।</value>
   </data>
   <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
     <value>BuildSignerAndHashObjects: {0} WHQLFilePublisher നിയമങ്ങൾ।</value>

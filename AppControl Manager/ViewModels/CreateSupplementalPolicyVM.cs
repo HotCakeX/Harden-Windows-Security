@@ -45,6 +45,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	internal CreateSupplementalPolicyVM()
 	{
+		FilesAndFoldersScanLevelComboBoxSelectedItem = CustomizableScanLevelsSource[0];
 		FilesAndFoldersProgressRingValueProgress = new Progress<double>(p => FilesAndFoldersProgressRingValue = p);
 		DriverAutoDetectionProgressRingValueProgress = new Progress<double>(p => DriverAutoDetectionProgressRingValue = p);
 
@@ -203,6 +204,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 
 	internal readonly InfoBarSettings FilesAndFoldersInfoBar = new();
 
+	internal readonly List<ScanLevelsComboBoxType> CustomizableScanLevelsSource = ScanLevelFallbackCatalog.CreateSource(true);
 	internal ScanLevelsComboBoxType FilesAndFoldersScanLevelComboBoxSelectedItem
 	{
 		get; set
@@ -213,7 +215,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				FilesAndFoldersBrowseForFilesSettingsCardVisibility = field.Level is ScanLevels.WildCardFolderPath ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
-	} = ScanLevelsSource[0];
+	}
 
 	internal double FilesAndFoldersScalabilityRadialGaugeValue
 	{
@@ -468,7 +470,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: FilesAndFoldersScanLevelComboBoxSelectedItem.Level, folderPaths: filesAndFoldersFolderPaths.UniqueItems);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. LocalFilesResults], level: FilesAndFoldersScanLevelComboBoxSelectedItem.Level, folderPaths: filesAndFoldersFolderPaths.UniqueItems, fallbackLevels: FilesAndFoldersScanLevelComboBoxSelectedItem.SelectedFallbackLevels);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 

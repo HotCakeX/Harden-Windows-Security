@@ -11,14 +11,6 @@
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <customUI:ScanLevelResources />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -652,12 +644,10 @@
                                 </Button.Flyout>
                             </Button>
 
-                            <ComboBox SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
-                                      SelectedIndex="0"
-                                      IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                      ItemsSource="{x:Bind CommonCore:ViewModelBase.ScanLevelsSourceForLogs}"
-                                      x:Uid="ScanLevelComboBox"
-                                      ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
+                            <customUI:ScanLevelSelector ItemsSource="{x:Bind ViewModel.ScanLevelsSourceForLogs}"
+                                                        SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                                                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                        x:Uid="ScanLevelComboBox" />
 
                         </CCToolKit:WrapPanel>
 

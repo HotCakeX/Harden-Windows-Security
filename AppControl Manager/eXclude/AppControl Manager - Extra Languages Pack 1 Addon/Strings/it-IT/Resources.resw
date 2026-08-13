@@ -4500,15 +4500,6 @@ NOTA: questa opzione viene sempre applicata se un qualsiasi criterio UMCI di App
 <data name="BuildSignerHashLevelMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: uso solo del livello Hash.</value>
 </data>
-<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: uso dei livelli Publisher -&gt; Hash.</value>
-</data>
-<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: uso dei livelli FilePublisher -&gt; Publisher -&gt; Hash.</value>
-</data>
-<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: passaggio della regola Publisher all'array di hash per il file: {0}</value>
-</data>
 <data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: {0} regole FilePublisher.</value>
 </data>
@@ -5036,9 +5027,6 @@ NOTA: questa opzione viene sempre applicata se un qualsiasi criterio UMCI di App
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>Passaggio 3</value>
-  </data>
-  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
-    <value>BuildSignerAndHashObjects: uso dei livelli WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash.</value>
   </data>
   <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
     <value>BuildSignerAndHashObjects: {0} regole WHQLFilePublisher.</value>

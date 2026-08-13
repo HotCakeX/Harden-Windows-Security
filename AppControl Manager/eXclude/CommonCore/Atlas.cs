@@ -109,7 +109,7 @@ internal static partial class Atlas
 	/// <summary>
 	/// The User Agent used by the entire app.
 	/// </summary>
-	internal const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 Edg/149.0.0.0";
+	internal const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0";
 
 #if APP_CONTROL_MANAGER
 

@@ -47,7 +47,7 @@ internal static class GetEventLogsData
 	/// <summary>
 	/// Retrieves the Code Integrity events from the local and EVTX files
 	/// </summary>
-	private static HashSet<FileIdentity> CodeIntegrityEventsRetriever(string? EvtxFilePath = null, CancellationToken? cToken = null)
+	private static HashSet<FileIdentity> CodeIntegrityEventsRetriever(string? EvtxFilePath, CancellationToken? cToken, bool ResolveFilePaths)
 	{
 
 		// HashSet to store the output, ensures the data are unique and are time-prioritized
@@ -129,8 +129,8 @@ internal static class GetEventLogsData
 							}
 							else
 							{
-								// Only attempt to resolve path using current system's drives if EVTX files are not being used since they can be from other systems
-								if (EvtxFilePath is null)
+								// Attempt to resolve path using current system's drives
+								if (ResolveFilePaths && EvtxFilePath is null)
 								{
 									FilePath = ResolvePath(FilePath);
 								}
@@ -214,8 +214,8 @@ internal static class GetEventLogsData
 						}
 						else
 						{
-							// Only attempt to resolve path using current system's drives if EVTX files are not being used since they can be from other systems
-							if (EvtxFilePath is null)
+							// Attempt to resolve path using current system's drives
+							if (ResolveFilePaths && EvtxFilePath is null)
 							{
 								FilePath = ResolvePath(FilePath);
 							}
@@ -385,7 +385,6 @@ internal static class GetEventLogsData
 
 					if (FilePath is not null)
 					{
-
 						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
 						if (FilePath.AsSpan().StartsWith("System32", StringComparison.OrdinalIgnoreCase))
 						{
@@ -393,8 +392,8 @@ internal static class GetEventLogsData
 						}
 						else
 						{
-							// Only attempt to resolve path using current system's drives if EVTX files are not being used since they can be from other systems
-							if (EvtxFilePath is null)
+							// Attempt to resolve path using current system's drives
+							if (ResolveFilePaths && EvtxFilePath is null)
 							{
 								FilePath = ResolvePath(FilePath);
 							}
@@ -690,7 +689,7 @@ internal static class GetEventLogsData
 	/// <summary>
 	/// Retrieves the AppLocker events from the local and EVTX files
 	/// </summary>
-	private static HashSet<FileIdentity> AppLockerEventsRetriever(string? EvtxFilePath = null, CancellationToken? cToken = null)
+	private static HashSet<FileIdentity> AppLockerEventsRetriever(string? EvtxFilePath, CancellationToken? cToken)
 	{
 
 		// HashSet to store the output, ensures the data are unique
@@ -783,7 +782,6 @@ internal static class GetEventLogsData
 
 					if (FilePath is not null)
 					{
-
 						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
 						if (FilePath.AsSpan().StartsWith("System32", StringComparison.OrdinalIgnoreCase))
 						{
@@ -890,7 +888,6 @@ internal static class GetEventLogsData
 
 					if (FilePath is not null)
 					{
-
 						// Sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
 						if (FilePath.AsSpan().StartsWith("System32", StringComparison.OrdinalIgnoreCase))
 						{
@@ -1145,7 +1142,7 @@ internal static class GetEventLogsData
 	/// <summary>
 	/// Gets Code Integrity and AppLocker event logs Asynchronously
 	/// </summary>
-	internal static async Task<HashSet<FileIdentity>> GetAppControlEvents(string? CodeIntegrityEvtxFilePath = null, string? AppLockerEvtxFilePath = null, int EventsToCapture = 0, CancellationToken? cToken = null)
+	internal static async Task<HashSet<FileIdentity>> GetAppControlEvents(string? CodeIntegrityEvtxFilePath = null, string? AppLockerEvtxFilePath = null, int EventsToCapture = 0, CancellationToken? cToken = null, bool ResolveFilePaths = true)
 	{
 		using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
@@ -1155,8 +1152,8 @@ internal static class GetEventLogsData
 		if (EventsToCapture == 0)
 		{
 			// Start both tasks in parallel
-			Task<HashSet<FileIdentity>> codeIntegrityTask = Task.Run(() => CodeIntegrityEventsRetriever(CodeIntegrityEvtxFilePath, cToken: cToken));
-			Task<HashSet<FileIdentity>> appLockerTask = Task.Run(() => AppLockerEventsRetriever(AppLockerEvtxFilePath, cToken: cToken));
+			Task<HashSet<FileIdentity>> codeIntegrityTask = Task.Run(() => CodeIntegrityEventsRetriever(CodeIntegrityEvtxFilePath, cToken, ResolveFilePaths));
+			Task<HashSet<FileIdentity>> appLockerTask = Task.Run(() => AppLockerEventsRetriever(AppLockerEvtxFilePath, cToken));
 
 			// Await both tasks to complete
 			HashSet<FileIdentity>[] results = await Task.WhenAll(codeIntegrityTask, appLockerTask);
@@ -1180,13 +1177,13 @@ internal static class GetEventLogsData
 		else if (EventsToCapture == 1)
 		{
 			// Only starts the Code integrity events capture task
-			combinedResult = await Task.Run(() => CodeIntegrityEventsRetriever(CodeIntegrityEvtxFilePath, cToken: cToken));
+			combinedResult = await Task.Run(() => CodeIntegrityEventsRetriever(CodeIntegrityEvtxFilePath, cToken, ResolveFilePaths));
 		}
 
 		else if (EventsToCapture == 2)
 		{
 			// Only starts the AppLocker events capture task
-			combinedResult = await Task.Run(() => AppLockerEventsRetriever(AppLockerEvtxFilePath, cToken: cToken));
+			combinedResult = await Task.Run(() => AppLockerEventsRetriever(AppLockerEvtxFilePath, cToken));
 		}
 
 		Logger.Write(string.Format(

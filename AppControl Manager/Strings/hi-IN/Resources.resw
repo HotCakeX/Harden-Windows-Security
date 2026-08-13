@@ -4500,15 +4500,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
 <data name="BuildSignerHashLevelMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: केवल हैश स्तर का उपयोग किया जा रहा है।</value>
 </data>
-<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: प्रकाशक -&gt; हैश स्तरों का उपयोग किया जा रहा है।</value>
-</data>
-<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: फ़ाइलप्रकाशक -&gt; प्रकाशक -&gt; हैश स्तरों का उपयोग किया जा रहा है।</value>
-</data>
-<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: फ़ाइल के लिए हैश ऐरे में प्रकाशक नियम पास किया जा रहा है: {0}</value>
-</data>
 <data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: {0} फ़ाइलप्रकाशक नियम।</value>
 </data>
@@ -5036,9 +5027,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>चरण 3</value>
-  </data>
-  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
-    <value>BuildSignerAndHashObjects: WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash स्तरों का उपयोग।</value>
   </data>
   <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
     <value>BuildSignerAndHashObjects: {0} WHQLFilePublisher नियम।</value>

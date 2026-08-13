@@ -54,11 +54,7 @@ Only the following [event types](https://learn.microsoft.com/en-us/windows/secur
 
 * **Filter by Date**: Use the calendar to filter the logs based on date they were generated.
 
-* **Deploy policy after creation**: Use this toggle button to tell the application that you want to deploy the policy after creation.
-
 * **Scan Level**: You can choose from different scan levels. [Refer to this page for all the information about them.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide)
-
-* **Only Use Selected Items**: If this button is toggled, only the items in the List View that are highlighted will be added to the Supplemental policy. If this button is not toggled, then everything available in the List View will be added to the Supplemental policy.
 
 * **Export to JSON File**: Use this button to export all of the processed event log entries to a JSON file.
 
@@ -67,6 +63,18 @@ Only the following [event types](https://learn.microsoft.com/en-us/windows/secur
 * **Actions -> Clear Data**: Use this button to clear all of the data that have been processed and displayed.
 
 * **Actions -> Clear System Logs**: Use this button to clear the entire Code Integrity or AppLocker event logs from the system. Keep in mind that this action is irreversible and there will be an additional prompt that needs confirmation before proceeding.
+
+* **Actions -> Only Use Selected Items**: If this button is toggled, only the items in the List View that are highlighted will be added to the Supplemental policy. If this button is not toggled, then everything available in the List View will be added to the Supplemental policy.
+
+* **Actions -> Resolve File Paths** Resolves the file paths of the Code Integrity event log entries to their actual locations on disk. For instance, it resolves `\Device\HarddiskVolume3` to `C:\`.
+
+  * Local logs, resolution disabled: Device paths remain unchanged.
+
+  * Local logs, resolution enabled: Recognized device paths are converted to drive-letter paths.
+
+  * Imported EVTX files, resolution enabled: Not supported. Device paths remain unchanged because imported logs are never resolved against the current system's drive mappings.
+
+  * Imported EVTX files, resolution disabled: Device paths remain unchanged.
 
 * **Analysis**: Use this button to [analyze](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Data-Analysis-in-AppControl-Manager) the data and access the analysis dashboard where you can see detailed charts, visualizations and summaries about your data.
 

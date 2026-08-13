@@ -4500,15 +4500,6 @@
 <data name="BuildSignerHashLevelMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: משתמש ברמת Hash בלבד.</value>
 </data>
-<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: משתמש ברמות Publisher -&gt; Hash.</value>
-</data>
-<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: משתמש ברמות FilePublisher -&gt; Publisher -&gt; Hash.</value>
-</data>
-<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects: מעביר כלל Publisher למערך הגיבוב עבור הקובץ: {0}</value>
-</data>
 <data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects: {0} כללי FilePublisher.</value>
 </data>
@@ -5036,9 +5027,6 @@
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>שלב 3</value>
-  </data>
-  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
-    <value>BuildSignerAndHashObjects: שימוש ברמות WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash.</value>
   </data>
   <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
     <value>BuildSignerAndHashObjects: {0} כללי WHQLFilePublisher.</value>

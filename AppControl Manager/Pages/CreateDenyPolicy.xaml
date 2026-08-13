@@ -8,16 +8,7 @@
     xmlns:CC="using:CommonCore.Others"
     xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:animatedvisuals="using:AnimatedVisuals"
-    xmlns:CommonCore="using:CommonCore"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
-
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <customUI:ScanLevelResources />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
 
     <ScrollView>
 
@@ -649,14 +640,10 @@
                         </CCToolKit:SettingsCard>
 
                         <customUI:SettingsCardV2 x:Uid="SelectScanLevelSettingsCard">
-
-                            <ComboBox ItemsSource="{x:Bind CommonCore:ViewModelBase.ScanLevelsSource}"
-                                      SelectedItem="{x:Bind ViewModel.FilesAndFoldersScanLevelComboBoxSelectedItem, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
-                                      SelectedIndex="0"
-                                      x:Uid="ScanLevelComboBox"
-                                      ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
-
+                            <customUI:ScanLevelSelector ItemsSource="{x:Bind ViewModel.FilesAndFoldersScanLevelsSource}"
+                                                        SelectedItem="{x:Bind ViewModel.FilesAndFoldersScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                                                        IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                                        x:Uid="ScanLevelComboBox" />
                         </customUI:SettingsCardV2>
 
                         <customUI:SettingsCardV2 x:Uid="ScalabilitySettingsCard">

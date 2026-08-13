@@ -42,7 +42,6 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class AllowNewAppsVM : ViewModelBase
 {
-
 	internal readonly EventLogUtility EventLogsUtil;
 	private readonly PolicyEditorVM PolicyEditorViewModel;
 
@@ -54,6 +53,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 		EventLogsUtil = _EventLogUtility;
 		PolicyEditorViewModel = _PolicyEditorVM;
+		ScanLevelComboBoxSelectedItem = ScanLevelsSource[0];
 
 
 		// Initialize Local Files Column Manager
@@ -240,7 +240,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	/// The Enabled/Disabled state of the DeployPolicy button.
 	/// </summary>
 	internal bool DeployPolicyState { get; set => SP(ref field, value); }
-
 
 	internal readonly InfoBarSettings Step1InfoBar = new();
 
@@ -510,7 +509,7 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			await Task.Run(async () =>
 			{
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: ScanLevelComboBoxSelectedItem.Level, folderPaths: selectedDirectoriesToScan);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: [.. fileIdentities.FileIdentitiesInternal], level: ScanLevelComboBoxSelectedItem.Level, folderPaths: selectedDirectoriesToScan, fallbackLevels: ScanLevelComboBoxSelectedItem.SelectedFallbackLevels);
 
 				// Create a new SiPolicy object with the data package.
 				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, Authorization.Allow);
@@ -818,7 +817,8 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	// A Progress<double> so Report() callbacks run on the UI thread
 	private readonly IProgress<double> Step2ProgressRingProgress;
 
-	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = ScanLevelsSource[0];
+	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSource = ScanLevelFallbackCatalog.CreateSource(true);
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); }
 
 
 	/// <summary>

@@ -5,17 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
-    xmlns:CommonCore="using:CommonCore"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
-
-    <Page.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <customUI:ScanLevelResources />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Page.Resources>
 
     <ScrollView>
 
@@ -286,19 +277,16 @@
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.DeployPolicy, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.DeployPolicyState, Mode=OneWay}" x:Uid="DeployAfterCreationButton" />
 
-                        <ComboBox IsEnabled="{x:Bind ViewModel.ScanLevelComboBoxIsEnabled, Mode=OneWay}"
-                                  SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
-                                  ItemsSource="{x:Bind CommonCore:ViewModelBase.ScanLevelsSource}"
-                                  SelectedIndex="0"
-                                  x:Uid="ScanLevelComboBox"
-                                  Header="Scan level"
-                                  Margin="0,0,0,27"
-                                  ItemTemplate="{StaticResource ScanLevelComboBoxTemplate}"/>
-                        <Button
-                            Click="{x:Bind ViewModel.CreatePolicyButton_Click}"
-                            IsEnabled="{x:Bind ViewModel.CreatePolicyButtonIsEnabled, Mode=OneWay}"
-                            x:Uid="AllowNewAppsCreatePolicyButton"
-                            Style="{StaticResource AccentButtonStyle}">
+                        <customUI:ScanLevelSelector ItemsSource="{x:Bind ViewModel.ScanLevelsSource}"
+                                                    SelectedItem="{x:Bind ViewModel.ScanLevelComboBoxSelectedItem, Mode=TwoWay}"
+                                                    IsEnabled="{x:Bind ViewModel.ScanLevelComboBoxIsEnabled, Mode=OneWay}"
+                                                    Margin="0,0,0,27"
+                                                    x:Uid="ScanLevelComboBox" />
+
+                        <Button Click="{x:Bind ViewModel.CreatePolicyButton_Click}"
+                                IsEnabled="{x:Bind ViewModel.CreatePolicyButtonIsEnabled, Mode=OneWay}"
+                                x:Uid="AllowNewAppsCreatePolicyButton"
+                                Style="{StaticResource AccentButtonStyle}">
                             <Button.ContentTemplate>
                                 <DataTemplate x:DataType="x:String">
                                     <StackPanel Orientation="Horizontal" Spacing="8">

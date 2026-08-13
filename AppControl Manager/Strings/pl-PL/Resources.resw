@@ -4500,15 +4500,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="BuildSignerHashLevelMessage" xml:space="preserve">
     <value>BuildSignerAndHashObjects: Używanie tylko poziomu skrótu.</value>
   </data>
-  <data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
-    <value>BuildSignerAndHashObjects: Używanie poziomów Wydawca -&gt; Skrót.</value>
-  </data>
-  <data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
-    <value>BuildSignerAndHashObjects: Używanie poziomów Wydawca Pliku (FilePublisher) -&gt; Wydawca -&gt; Skrót.</value>
-  </data>
-  <data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
-    <value>BuildSignerAndHashObjects: Przekazywanie reguły Wydawcy do tablicy skrótów dla pliku: {0}</value>
-  </data>
   <data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
     <value>BuildSignerAndHashObjects: {0} reguł Wydawcy Pliku (FilePublisher).</value>
   </data>
@@ -5036,9 +5027,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>Krok 3</value>
-  </data>
-  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
-    <value>BuildSignerAndHashObjects: Używanie poziomów WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hash.</value>
   </data>
   <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
     <value>BuildSignerAndHashObjects: {0} reguł WHQLFilePublisher.</value>

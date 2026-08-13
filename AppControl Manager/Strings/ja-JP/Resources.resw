@@ -4500,15 +4500,6 @@
 <data name="BuildSignerHashLevelMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects：Hashレベルのみを使用しています。</value>
 </data>
-<data name="BuildSignerPublisherHashLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects：Publisher -&gt; Hashレベルを使用しています。</value>
-</data>
-<data name="BuildSignerFilePublisherLevelsMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects：FilePublisher -&gt; Publisher -&gt; Hashレベルを使用しています。</value>
-</data>
-<data name="BuildSignerPublisherToHashMessage" xml:space="preserve">
-  <value>BuildSignerAndHashObjects：ファイル{0}のPublisherルールをハッシュ配列に渡しています</value>
-</data>
 <data name="BuildSignerFilePublisherRulesCountMessage" xml:space="preserve">
   <value>BuildSignerAndHashObjects：{0}個のFilePublisherルール。</value>
 </data>
@@ -5036,9 +5027,6 @@
   </data>
     <data name="Step3TextBlock.Text" xml:space="preserve">
     <value>ステップ 3</value>
-  </data>
-  <data name="BuildSignerWHQLFilePublisherLevelsMessage" xml:space="preserve">
-    <value>BuildSignerAndHashObjects：WHQLFilePublisher -&gt; FilePublisher -&gt; Publisher -&gt; Hashレベルを使用しています。</value>
   </data>
   <data name="BuildSignerWHQLFilePublisherRulesCountMessage" xml:space="preserve">
     <value>BuildSignerAndHashObjects：{0}個のWHQLFilePublisherルール。</value>

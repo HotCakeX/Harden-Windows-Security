@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -119,7 +120,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 			ComputerName = mainEvent.DeviceName,
 			UserID = mainEvent.InitiatingProcessAccountName,
 
-			FilePath = mainEvent.FolderPath,
+			FilePath = GetFullFilePath(mainEvent.FolderPath, mainEvent.FileName),
 			FileName = mainEvent.FileName,
 			ProcessName = mainEvent.ProcessName,
 			RequestedSigningLevel = CILogIntel.GetValidatedRequestedSigningLevel(GetIntValue(mainEvent.RequestedSigningLevel)),
@@ -187,6 +188,18 @@ internal static class GetMDEAdvancedHuntingLogsData
 	}
 
 	#region Helper methods to extract values
+
+	/// <summary>
+	/// Combines the MDE FolderPath and FileName columns into the full path used by FileIdentity.
+	/// </summary>
+	private static string? GetFullFilePath(string? folderPath, string? fileName)
+	{
+		if (string.IsNullOrWhiteSpace(folderPath))
+			return fileName;
+		if (string.IsNullOrWhiteSpace(fileName))
+			return folderPath;
+		return Path.Join(folderPath, fileName);
+	}
 
 	/// <summary>
 	/// Method to safely set FileVersion from a nullable string

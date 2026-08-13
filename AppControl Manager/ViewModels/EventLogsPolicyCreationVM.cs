@@ -38,6 +38,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 {
 	internal EventLogsPolicyCreationVM()
 	{
+		ScanLevelComboBoxSelectedItem = CustomizableScanLevelsSourceForLogs[0];
 		// Initialize the column manager with specific definitions for this page
 		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
 		ColumnManager = new ListViewColumnManager<FileIdentity>(
@@ -117,7 +118,8 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	/// </summary>
 	internal bool AreElementsEnabled { get; set => SP(ref field, value); } = true;
 
-	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); } = ScanLevelsSourceForLogs[0];
+	internal readonly List<ScanLevelsComboBoxType> CustomizableScanLevelsSourceForLogs = ScanLevelFallbackCatalog.CreateSource(false);
+	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Bound to the Date Picker on the UI.
@@ -199,6 +201,12 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	internal bool DeployPolicyToggle { get; set => SP(ref field, value); }
 
 	internal bool OnlyIncludeSelectedItemsToggleButton { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Determines whether event log file paths should be resolved to paths on the local system.
+	/// E.g., changing "\Device\HarddiskVolume3" to "C:\".
+	/// </summary>
+	internal bool ResolveFilePaths { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// Applies the date, search, and active analysis range filters to the data grid.
@@ -476,7 +484,8 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			HashSet<FileIdentity> Output = await GetEventLogsData.GetAppControlEvents(
 				CodeIntegrityEvtxFilePath: CodeIntegrityEVTX,
 				AppLockerEvtxFilePath: AppLockerEVTX,
-				cToken: ScanLogsCancellableButton.Cts?.Token
+				cToken: ScanLogsCancellableButton.Cts?.Token,
+				ResolveFilePaths: ResolveFilePaths
 			);
 
 			ScanLogsCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
@@ -610,10 +619,15 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			await Task.Run(async () =>
 			{
 				// Separate the signed and unsigned data
-				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: ScanLevelComboBoxSelectedItem.Level);
+				FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: ScanLevelComboBoxSelectedItem.Level, fallbackLevels: ScanLevelComboBoxSelectedItem.SelectedFallbackLevels);
 
 				// Create a new SiPolicy object with the data package.
 				SiPolicy.SiPolicy policyObj = Master.Initiate(DataPackage, SiPolicyIntel.Authorization.Allow);
+
+				// Rule option 18 is required for FilePath rules that target user-writable locations.
+				List<OptionType>? rulesToAdd = ScanLevelComboBoxSelectedItem.Level is ScanLevels.FilePath
+					? [OptionType.DisabledRuntimeFilePathRuleProtection]
+					: null;
 
 				switch (SelectedCreationMethod)
 				{
@@ -623,6 +637,9 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 							{
 								// Merge the created policy with the user-selected policy which will result in adding the new rules to it
 								PolicyToAddLogsTo.PolicyObj = Merger.Merge(PolicyToAddLogsTo.PolicyObj, [policyObj]);
+
+								// Add rule option 18 when the selected scan level created FilePath rules.
+								PolicyToAddLogsTo.PolicyObj = CiRuleOptions.Set(policyObj: PolicyToAddLogsTo.PolicyObj, rulesToAdd: rulesToAdd);
 
 								// Set a new name if it was provided
 								if (!string.IsNullOrWhiteSpace(PolicyNameTextBox))
@@ -686,7 +703,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								policyObj = SetCiPolicyInfo.Set(policyObj, true, PolicyNameTextBox, BasePolicyXMLFile.PolicyObj.BasePolicyID);
 
 								// Configure policy rule options
-								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
+								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: rulesToAdd);
 
 								// Set policy version
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));
@@ -741,7 +758,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								policyObj = SetCiPolicyInfo.Set(policyObj, true, PolicyNameTextBox, BasePolicyGUID);
 
 								// Configure policy rule options
-								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental);
+								policyObj = CiRuleOptions.Set(policyObj: policyObj, template: CiRuleOptions.PolicyTemplate.Supplemental, rulesToAdd: rulesToAdd);
 
 								// Set policy version
 								policyObj = SetCiPolicyInfo.Set(policyObj, new Version(1, 0, 0, 0));

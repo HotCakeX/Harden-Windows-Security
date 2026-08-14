@@ -6,6 +6,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    xmlns:vm="using:AppControlManager.ViewModels"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollViewer>
@@ -135,11 +136,12 @@
 
                             <CCToolKit:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <customUI:ButtonV2 x:Name="BrowseForXMLPolicyFilesButton"
-                                                   ObservedData="{x:Bind ViewModel.FilesForUnsignedDeployment.Count, Mode=OneWay}"
-                                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                                   Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Click}">
-                                    <customUI:ButtonV2.Content>
+                                <customUI:SplitButtonV3 x:Name="BrowseForXMLPolicyFilesButton"
+                                                        PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect1Command, Mode=OneWay}"
+                                                        ObservedData="{x:Bind ViewModel.FilesForUnsignedDeployment.Count, Mode=OneWay}"
+                                                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                        Click="{x:Bind ViewModel.BrowseForXMLPolicyFilesButton_Click}">
+                                    <customUI:SplitButtonV3.Content>
                                         <CCToolKit:WrapPanel Orientation="Horizontal">
 
                                             <AnimatedIcon Visibility="{x:Bind ViewModel.UnsignedXMLFilesLightAnimatedIconVisibility, Mode=OneWay}"
@@ -154,9 +156,9 @@
                                             <TextBlock x:Uid="BrowseTextBlock" />
 
                                         </CCToolKit:WrapPanel>
-                                    </customUI:ButtonV2.Content>
+                                    </customUI:SplitButtonV3.Content>
 
-                                    <customUI:ButtonV2.Flyout>
+                                    <customUI:SplitButtonV3.DetailsFlyout>
                                         <Flyout x:Name="BrowseForXMLPolicyFilesButton_Flyout">
 
                                             <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -181,9 +183,9 @@
                                             </CCToolKit:WrapPanel>
 
                                         </Flyout>
-                                    </customUI:ButtonV2.Flyout>
+                                    </customUI:SplitButtonV3.DetailsFlyout>
 
-                                </customUI:ButtonV2>
+                                </customUI:SplitButtonV3>
 
                                 <Button HorizontalAlignment="Center"
                                         HorizontalContentAlignment="Center"
@@ -239,11 +241,12 @@
 
                             <CCToolKit:WrapPanel HorizontalSpacing="15" VerticalSpacing="15">
 
-                                <customUI:ButtonV2 x:Name="BrowseForSignedXMLPolicyFilesButton"
-                                                   IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
-                                                   ObservedData="{x:Bind ViewModel.FilesForSignedDeployment.Count, Mode=OneWay}"
-                                                   Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Click}">
-                                    <customUI:ButtonV2.Content>
+                                <customUI:SplitButtonV3 x:Name="BrowseForSignedXMLPolicyFilesButton"
+                                                        PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect2Command, Mode=OneWay}"
+                                                        IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                        ObservedData="{x:Bind ViewModel.FilesForSignedDeployment.Count, Mode=OneWay}"
+                                                        Click="{x:Bind ViewModel.BrowseForSignedXMLPolicyFilesButton_Click}">
+                                    <customUI:SplitButtonV3.Content>
                                         <CCToolKit:WrapPanel Orientation="Horizontal">
 
                                             <AnimatedIcon Visibility="{x:Bind ViewModel.SignedXMLFilesLightAnimatedIconVisibility, Mode=OneWay}"
@@ -258,9 +261,9 @@
                                             <TextBlock x:Uid="BrowseTextBlock" />
 
                                         </CCToolKit:WrapPanel>
-                                    </customUI:ButtonV2.Content>
+                                    </customUI:SplitButtonV3.Content>
 
-                                    <customUI:ButtonV2.Flyout>
+                                    <customUI:SplitButtonV3.DetailsFlyout>
                                         <Flyout x:Name="BrowseForSignedXMLPolicyFilesButton_Flyout">
 
                                             <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -285,9 +288,9 @@
                                             </CCToolKit:WrapPanel>
 
                                         </Flyout>
-                                    </customUI:ButtonV2.Flyout>
+                                    </customUI:SplitButtonV3.DetailsFlyout>
 
-                                </customUI:ButtonV2>
+                                </customUI:SplitButtonV3>
 
                                 <Button HorizontalAlignment="Center"
                                         IsEnabled="{x:Bind ViewModel.DeploySignedXMLButtonIsEnabled, Mode=OneWay}"

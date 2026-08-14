@@ -396,14 +396,15 @@
 
                             <CCToolKit:WrapPanel HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15">
 
-                                <customUI:ButtonV2 x:Uid="SelectPolicyFileToAddRulesToButton"
+                                <customUI:SplitButtonV3 x:Uid="SelectPolicyFileToAddRulesToButton"
                                                    x:Name="SelectPolicyFileToAddRulesToButton"
+                                                   PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect1Command, Mode=OneWay}"
                                                    Margin="15,0,0,0"
                                                    ObservedData="{x:Bind ViewModel.PolicyFileToMergeWith.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                                    Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
                                                    IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
 
-                                    <customUI:ButtonV2.ContentTemplate>
+                                    <customUI:SplitButtonV3.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
 
@@ -417,9 +418,9 @@
                                                 <TextBlock Text="{x:Bind}"/>
                                             </StackPanel>
                                         </DataTemplate>
-                                    </customUI:ButtonV2.ContentTemplate>
+                                    </customUI:SplitButtonV3.ContentTemplate>
 
-                                    <customUI:ButtonV2.Flyout>
+                                    <customUI:SplitButtonV3.DetailsFlyout>
                                         <Flyout x:Name="SelectPolicyFileToAddRulesToButton_FlyOut">
 
                                             <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -444,9 +445,9 @@
                                             </CCToolKit:WrapPanel>
 
                                         </Flyout>
-                                    </customUI:ButtonV2.Flyout>
+                                    </customUI:SplitButtonV3.DetailsFlyout>
 
-                                </customUI:ButtonV2>
+                                </customUI:SplitButtonV3>
 
                             </CCToolKit:WrapPanel>
 

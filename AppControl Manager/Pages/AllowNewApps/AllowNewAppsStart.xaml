@@ -6,6 +6,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
+    xmlns:vm="using:AppControlManager.ViewModels"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollView>
@@ -65,14 +66,15 @@
                                  x:Uid="SupplementalPolicyNameAllowNewAppsTextBox"
                                  IsEnabled="{x:Bind ViewModel.SupplementalPolicyNameTextBoxIsEnabled, Mode=OneWay}" />
 
-                        <customUI:ButtonV2 x:Name="BrowseForXMLPolicyButton"
-                                           IsEnabled="{x:Bind ViewModel.BrowseForXMLPolicyButtonIsEnabled, Mode=OneWay}"
-                                           Click="{x:Bind ViewModel.BrowseForXMLPolicyButton_Click}"
-                                           Margin="0,27,0,0"
-                                           ObservedData="{x:Bind ViewModel.selectedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
-                                           ToolTipService.ToolTip="Click/Tap to choose a Base policy XML file from your device.">
+                        <customUI:SplitButtonV3 x:Name="BrowseForXMLPolicyButton"
+                                                PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect1Command, Mode=OneWay}"
+                                                IsEnabled="{x:Bind ViewModel.BrowseForXMLPolicyButtonIsEnabled, Mode=OneWay}"
+                                                Click="{x:Bind ViewModel.BrowseForXMLPolicyButton_Click}"
+                                                Margin="0,27,0,0"
+                                                ObservedData="{x:Bind ViewModel.selectedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                ToolTipService.ToolTip="Click/Tap to choose a Base policy XML file from your device.">
 
-                            <customUI:ButtonV2.Flyout>
+                            <customUI:SplitButtonV3.DetailsFlyout>
                                 <Flyout x:Name="BrowseForXMLPolicyButton_FlyOut">
 
                                     <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -97,9 +99,9 @@
                                     </CCToolKit:WrapPanel>
 
                                 </Flyout>
-                            </customUI:ButtonV2.Flyout>
+                            </customUI:SplitButtonV3.DetailsFlyout>
 
-                            <customUI:ButtonV2.Content>
+                            <customUI:SplitButtonV3.Content>
                                 <CCToolKit:WrapPanel Orientation="Horizontal">
 
                                     <AnimatedIcon Visibility="{x:Bind ViewModel.BrowseForXMLPolicyButtonLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -111,9 +113,9 @@
                                     <TextBlock x:Uid="BrowseForBasePolicyTextBlock" />
 
                                 </CCToolKit:WrapPanel>
-                            </customUI:ButtonV2.Content>
+                            </customUI:SplitButtonV3.Content>
 
-                        </customUI:ButtonV2>
+                        </customUI:SplitButtonV3>
 
                         <NumberBox x:Uid="LogSizeNumberBox"
                                    IsEnabled="{x:Bind ViewModel.LogSizeNumberBoxIsEnabled, Mode=OneWay}"

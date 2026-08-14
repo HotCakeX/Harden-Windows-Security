@@ -26,12 +26,13 @@
             <ProgressRing IsIndeterminate="True"
                           Visibility="{x:Bind ViewModel.ProgressRingVisibility, Mode=OneWay}"
                           Margin="0,0,5,0"/>
-            <customUI:ButtonV2 x:Uid="ComparePoliciesFirstBrowseButton"
+            <customUI:SplitButtonV3 x:Uid="ComparePoliciesFirstBrowseButton"
                                x:Name="FirstPolicyBrowseButton"
+                               PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect1Command, Mode=OneWay}"
                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                ObservedData="{x:Bind ViewModel.FirstPolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                Click="{x:Bind ViewModel.BrowseForFirstPolicy}">
-                <customUI:ButtonV2.ContentTemplate>
+                <customUI:SplitButtonV3.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <AnimatedIcon Visibility="{x:Bind vm:ViewModelProvider.ComparePoliciesVM.FirstPolicyLightAnimatedIconVisibility, Mode=OneWay}"
@@ -46,8 +47,8 @@
                             <TextBlock Text="{x:Bind}"/>
                         </StackPanel>
                     </DataTemplate>
-                </customUI:ButtonV2.ContentTemplate>
-                <customUI:ButtonV2.Flyout>
+                </customUI:SplitButtonV3.ContentTemplate>
+                <customUI:SplitButtonV3.DetailsFlyout>
                     <Flyout x:Name="FirstPolicyBrowseButton_FlyOut">
                         <CCToolKit:WrapPanel Orientation="Vertical"
                                              HorizontalSpacing="15"
@@ -71,14 +72,15 @@
                                      IsReadOnly="True"/>
                         </CCToolKit:WrapPanel>
                     </Flyout>
-                </customUI:ButtonV2.Flyout>
-            </customUI:ButtonV2>
-            <customUI:ButtonV2 x:Uid="ComparePoliciesSecondBrowseButton"
+                </customUI:SplitButtonV3.DetailsFlyout>
+            </customUI:SplitButtonV3>
+            <customUI:SplitButtonV3 x:Uid="ComparePoliciesSecondBrowseButton"
                                x:Name="SecondPolicyBrowseButton"
+                               PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect2Command, Mode=OneWay}"
                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                                ObservedData="{x:Bind ViewModel.SecondPolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
                                Click="{x:Bind ViewModel.BrowseForSecondPolicy}">
-                <customUI:ButtonV2.ContentTemplate>
+                <customUI:SplitButtonV3.ContentTemplate>
                     <DataTemplate x:DataType="x:String">
                         <StackPanel Orientation="Horizontal" Spacing="8">
                             <AnimatedIcon Visibility="{x:Bind vm:ViewModelProvider.ComparePoliciesVM.SecondPolicyLightAnimatedIconVisibility, Mode=OneWay}"
@@ -93,8 +95,8 @@
                             <TextBlock Text="{x:Bind}"/>
                         </StackPanel>
                     </DataTemplate>
-                </customUI:ButtonV2.ContentTemplate>
-                <customUI:ButtonV2.Flyout>
+                </customUI:SplitButtonV3.ContentTemplate>
+                <customUI:SplitButtonV3.DetailsFlyout>
                     <Flyout x:Name="SecondPolicyBrowseButton_FlyOut">
                         <CCToolKit:WrapPanel Orientation="Vertical"
                                              HorizontalSpacing="15"
@@ -118,8 +120,8 @@
                                      IsReadOnly="True"/>
                         </CCToolKit:WrapPanel>
                     </Flyout>
-                </customUI:ButtonV2.Flyout>
-            </customUI:ButtonV2>
+                </customUI:SplitButtonV3.DetailsFlyout>
+            </customUI:SplitButtonV3>
             <Button x:Uid="ComparePoliciesCompareButton"
                     IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
                     Click="{x:Bind ViewModel.CompareLogic}">

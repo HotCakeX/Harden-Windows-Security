@@ -58,12 +58,13 @@
 
                     <customUI:SettingsCardV3 x:Uid="BrowseForMainPolicyToMergeSettingsCard">
 
-                        <customUI:ButtonV2 x:Uid="GenericBrowseButton"
+                        <customUI:SplitButtonV3 x:Uid="GenericBrowseButton"
                                            x:Name="MainPolicyForMergeBrowseButton"
+                                           PolicySelectionCommand="{x:Bind ViewModel:ViewModelProvider.SidebarVM.SidebarPolicyConnect1Command, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.MainPolicyBrowseButton_Click}"
                                            ObservedData="{x:Bind ViewModel.MainPolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}">
 
-                            <customUI:ButtonV2.ContentTemplate>
+                            <customUI:SplitButtonV3.ContentTemplate>
                                 <DataTemplate x:DataType="x:String">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <AnimatedIcon Visibility="{x:Bind ViewModel:ViewModelProvider.MergePoliciesVM.MainMergePolicyLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -75,9 +76,9 @@
                                         <TextBlock Text="{x:Bind}"/>
                                     </StackPanel>
                                 </DataTemplate>
-                            </customUI:ButtonV2.ContentTemplate>
+                            </customUI:SplitButtonV3.ContentTemplate>
 
-                            <customUI:ButtonV2.Flyout>
+                            <customUI:SplitButtonV3.DetailsFlyout>
                                 <Flyout x:Name="MainPolicyForMergeBrowseButton_FlyOut">
 
                                     <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -102,20 +103,21 @@
                                     </CCToolKit:WrapPanel>
 
                                 </Flyout>
-                            </customUI:ButtonV2.Flyout>
+                            </customUI:SplitButtonV3.DetailsFlyout>
 
-                        </customUI:ButtonV2>
+                        </customUI:SplitButtonV3>
 
                     </customUI:SettingsCardV3>
 
                     <customUI:SettingsCardV3 x:Uid="BrowseForOtherPoliciesToMergeSettingsCard">
 
-                        <customUI:ButtonV2 x:Uid="GenericBrowseButton"
+                        <customUI:SplitButtonV3 x:Uid="GenericBrowseButton"
                                            x:Name="OtherPoliciesForMergeBrowseButton"
+                                           PolicySelectionCommand="{x:Bind ViewModel:ViewModelProvider.SidebarVM.SidebarPolicyConnect2Command, Mode=OneWay}"
                                            Click="{x:Bind ViewModel.OtherPoliciesBrowseButton_Click}"
                                            ObservedData="{x:Bind ViewModel.OtherPolicies.Count, Mode=OneWay}">
 
-                            <customUI:ButtonV2.ContentTemplate>
+                            <customUI:SplitButtonV3.ContentTemplate>
                                 <DataTemplate x:DataType="x:String">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <AnimatedIcon Visibility="{x:Bind ViewModel:ViewModelProvider.MergePoliciesVM.OtherMergePoliciesLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -127,9 +129,9 @@
                                         <TextBlock Text="{x:Bind}"/>
                                     </StackPanel>
                                 </DataTemplate>
-                            </customUI:ButtonV2.ContentTemplate>
+                            </customUI:SplitButtonV3.ContentTemplate>
 
-                            <customUI:ButtonV2.Flyout>
+                            <customUI:SplitButtonV3.DetailsFlyout>
                                 <Flyout x:Name="OtherPoliciesForMergeBrowseButton_FlyOut">
 
                                     <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -152,9 +154,9 @@
                                     </CCToolKit:WrapPanel>
 
                                 </Flyout>
-                            </customUI:ButtonV2.Flyout>
+                            </customUI:SplitButtonV3.DetailsFlyout>
 
-                        </customUI:ButtonV2>
+                        </customUI:SplitButtonV3>
 
                     </customUI:SettingsCardV3>
 
@@ -209,13 +211,14 @@
                             <ProgressRing IsIndeterminate="True"
                                           Visibility="{x:Bind ViewModel.PoliciesToConvertToAppIDTaggingProgressRingVisibility, Mode=OneWay}" />
 
-                            <customUI:ButtonV2 x:Uid="GenericBrowseButton"
+                            <customUI:SplitButtonV3 x:Uid="GenericBrowseButton"
                                                x:Name="AppIDTaggingConversionBrowseButton"
+                                               PolicySelectionCommand="{x:Bind ViewModel:ViewModelProvider.SidebarVM.SidebarPolicyConnect3Command, Mode=OneWay}"
                                                Click="{x:Bind ViewModel.PoliciesToConvertToAppIDTaggingBrowseButton_Click}"
                                                IsEnabled="{x:Bind ViewModel.ConvertToAppIDTaggingElementsAreEnabled, Mode=OneWay}"
                                                ObservedData="{x:Bind ViewModel.PoliciesToConvertToAppIDTagging.Count, Mode=OneWay}">
 
-                                <customUI:ButtonV2.ContentTemplate>
+                                <customUI:SplitButtonV3.ContentTemplate>
                                     <DataTemplate x:DataType="x:String">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <AnimatedIcon Visibility="{x:Bind ViewModel:ViewModelProvider.MergePoliciesVM.AppIDTagConversionPolicyLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -227,9 +230,9 @@
                                             <TextBlock Text="{x:Bind}"/>
                                         </StackPanel>
                                     </DataTemplate>
-                                </customUI:ButtonV2.ContentTemplate>
+                                </customUI:SplitButtonV3.ContentTemplate>
 
-                                <customUI:ButtonV2.Flyout>
+                                <customUI:SplitButtonV3.DetailsFlyout>
                                     <Flyout x:Name="AppIDTaggingConversionBrowseButton_FlyOut">
 
                                         <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -253,9 +256,9 @@
                                         </CCToolKit:WrapPanel>
 
                                     </Flyout>
-                                </customUI:ButtonV2.Flyout>
+                                </customUI:SplitButtonV3.DetailsFlyout>
 
-                            </customUI:ButtonV2>
+                            </customUI:SplitButtonV3>
 
                         </CCToolKit:WrapPanel>
 
@@ -280,13 +283,14 @@
                                 </Button.ContentTemplate>
                             </Button>
 
-                            <customUI:ButtonV2 x:Uid="GenericBrowseButton"
+                            <customUI:SplitButtonV3 x:Uid="GenericBrowseButton"
                                                x:Name="SigningScenarioRemovalBrowseButton"
+                                               PolicySelectionCommand="{x:Bind ViewModel:ViewModelProvider.SidebarVM.SidebarPolicyConnect4Command, Mode=OneWay}"
                                                Click="{x:Bind ViewModel.PoliciesForSigningScenarioRemovalBrowseButton_Click}"
                                                IsEnabled="{x:Bind ViewModel.SigningScenarioRemovalElementsAreEnabled, Mode=OneWay}"
                                                ObservedData="{x:Bind ViewModel.PoliciesForSigningScenarioRemoval.Count, Mode=OneWay}">
 
-                                <customUI:ButtonV2.ContentTemplate>
+                                <customUI:SplitButtonV3.ContentTemplate>
                                     <DataTemplate x:DataType="x:String">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
                                             <AnimatedIcon Visibility="{x:Bind ViewModel:ViewModelProvider.MergePoliciesVM.SigningScenarioRemovalPolicyLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -298,9 +302,9 @@
                                             <TextBlock Text="{x:Bind}"/>
                                         </StackPanel>
                                     </DataTemplate>
-                                </customUI:ButtonV2.ContentTemplate>
+                                </customUI:SplitButtonV3.ContentTemplate>
 
-                                <customUI:ButtonV2.Flyout>
+                                <customUI:SplitButtonV3.DetailsFlyout>
                                     <Flyout x:Name="SigningScenarioRemovalBrowseButton_FlyOut">
 
                                         <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -324,9 +328,9 @@
                                         </CCToolKit:WrapPanel>
 
                                     </Flyout>
-                                </customUI:ButtonV2.Flyout>
+                                </customUI:SplitButtonV3.DetailsFlyout>
 
-                            </customUI:ButtonV2>
+                            </customUI:SplitButtonV3>
 
                             <RadioButtons x:Uid="SigningScenariosRadioButtons"
                                           IsEnabled="{x:Bind ViewModel.SigningScenarioRemovalElementsAreEnabled, Mode=OneWay}"

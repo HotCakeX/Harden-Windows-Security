@@ -18,6 +18,7 @@
 using System.Linq;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Automation.Peers;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using WinRT;
@@ -25,21 +26,18 @@ using WinRT;
 namespace AppControlManager.CustomUIElements;
 
 /// <summary>
-/// A SettingsCard that:
-///  - On RightTapped or Holding (on the card), shows its inner Button.Flyout at the button.
-///  - On RightTapped (on the Button), shows its Flyout at the button.
-/// It has a special use case, for when the setting card hosts a ButtonV2 used for browsing for files/folders.
-///  Flyout opening is delegated to ButtonV2's own logic.
+/// A SettingsCard that delegates click, right-tap, and holding interactions to a hosted ButtonV2 or SplitButtonV3.
 /// </summary>
 internal sealed partial class SettingsCardV3 : SettingsCardV2
 {
-	private Button? _innerButton;
+	private Control? _innerControl;
 
 	internal SettingsCardV3() =>
 		// Wait until Content is applied
 		Loaded += OnLoaded;
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]
+	[DynamicWindowsRuntimeCast(typeof(Control))]
 	[DynamicWindowsRuntimeCast(typeof(Panel))]
 	private void OnLoaded(object? sender, RoutedEventArgs e)
 	{
@@ -47,37 +45,50 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 		// We need to immediately unsubscribe from it so we only hook the event handlers once.
 		Loaded -= OnLoaded;
 
-		// 1) Direct Content is a Button?
-		if (Content is Button btn)
+		// 1) Direct Content is a supported button?
+		if (Content is Control { } control && control is Button or SplitButtonV3)
 		{
-			_innerButton = btn;
+			_innerControl = control;
 		}
-		// 2) Or Content is a Panel containing a Button?
+		// 2) Or Content is a Panel containing a supported button?
 		else if (Content is Panel panel)
 		{
-			_innerButton = panel
+			_innerControl = panel
 				.Children
-				.OfType<Button>()
-				.FirstOrDefault();
+				.OfType<Control>()
+				.FirstOrDefault(item => item is Button or SplitButtonV3);
 		}
 
-		if (_innerButton is null)
-			return;   // no button -> nothing to do
+		if (_innerControl is null)
+			return;   // no supported button -> nothing to do
 
 		// Hook card-level events
+		if (_innerControl is SplitButtonV3)
+			Click += Card_Click;
 		RightTapped += Card_RightTapped;
 		Holding += Card_Holding;
 	}
 
+	private void Card_Click(object sender, RoutedEventArgs e)
+	{
+		if (_innerControl is SplitButtonV3 { IsEnabled: true } splitButtonV3)
+			new SplitButtonAutomationPeer(splitButtonV3).Invoke();
+	}
+
 	private void Card_RightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
-		if (_innerButton is null || !_innerButton.IsEnabled)
+		if (_innerControl is null || !_innerControl.IsEnabled)
 			return;
 
-		// Delegate to ButtonV2 logic
-		if (_innerButton is ButtonV2 buttonV2)
+		// Delegate to the hosted button's own logic.
+		if (_innerControl is ButtonV2 buttonV2)
 		{
 			e.Handled = buttonV2.TryShowFlyout();
+			return;
+		}
+		if (_innerControl is SplitButtonV3 splitButtonV3)
+		{
+			e.Handled = splitButtonV3.TryShowDetailsFlyout();
 			return;
 		}
 
@@ -86,13 +97,18 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 
 	private void Card_Holding(object sender, HoldingRoutedEventArgs e)
 	{
-		if (e.HoldingState != HoldingState.Started || _innerButton is null || !_innerButton.IsEnabled)
+		if (e.HoldingState != HoldingState.Started || _innerControl is null || !_innerControl.IsEnabled)
 			return;
 
-		// Delegate to ButtonV2 logic
-		if (_innerButton is ButtonV2 buttonV2)
+		// Delegate to the hosted button's own logic.
+		if (_innerControl is ButtonV2 buttonV2)
 		{
 			e.Handled = buttonV2.TryShowFlyout();
+			return;
+		}
+		if (_innerControl is SplitButtonV3 splitButtonV3)
+		{
+			e.Handled = splitButtonV3.TryShowDetailsFlyout();
 			return;
 		}
 

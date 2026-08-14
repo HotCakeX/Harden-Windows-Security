@@ -15,13 +15,17 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Windows.Input;
+using AppControlManager.SiPolicy;
 using CommonCore.ToolKits;
+using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
+using Microsoft.UI.Xaml.Media;
 using Windows.UI;
 using WinRT;
 
@@ -277,6 +281,121 @@ internal sealed partial class SplitButtonV2 : SplitButton
 			{
 				Effects.SetShadow(this, _selectedShadow);
 			});
+		}
+		else if (_originalContent is not null)
+		{
+			Content = _originalContent;
+			ClearValue(Effects.ShadowProperty);
+		}
+	}
+}
+
+/// <summary>
+/// A SplitButton with ButtonV2 selection visuals and a lightweight Policies Library picker on its chevron.
+/// </summary>
+internal sealed partial class SplitButtonV3 : SplitButton
+{
+	private object? _originalContent;
+
+	private readonly Flyout _policyPickerFlyout;
+
+	private readonly AttachedCardShadow _selectedShadow = new()
+	{
+		Color = Color.FromArgb(255, 56, 239, 125),
+		Offset = "0",
+		BlurRadius = 20.0,
+		Opacity = 0.95,
+		CornerRadius = 4.0
+	};
+
+	private static readonly DependencyProperty ObservedDataProperty = DependencyProperty.Register(nameof(ObservedData), typeof(object), typeof(SplitButtonV3), new PropertyMetadata(null, OnObservedDataChanged));
+
+	private static readonly DependencyProperty DetailsFlyoutProperty = DependencyProperty.Register(nameof(DetailsFlyout), typeof(FlyoutBase), typeof(SplitButtonV3), new PropertyMetadata(null));
+
+	private static readonly DependencyProperty PolicySelectionCommandProperty = DependencyProperty.Register(nameof(PolicySelectionCommand), typeof(ICommand), typeof(SplitButtonV3), new PropertyMetadata(null));
+
+	public object? ObservedData { get => GetValue(ObservedDataProperty); set => SetValue(ObservedDataProperty, value); }
+
+	public FlyoutBase? DetailsFlyout { [DynamicWindowsRuntimeCast(typeof(FlyoutBase))] get => (FlyoutBase?)GetValue(DetailsFlyoutProperty); set => SetValue(DetailsFlyoutProperty, value); }
+
+	public ICommand? PolicySelectionCommand { get => (ICommand?)GetValue(PolicySelectionCommandProperty); set => SetValue(PolicySelectionCommandProperty, value); }
+
+	private static void OnObservedDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((SplitButtonV3)d).UpdateAppearance();
+
+	internal SplitButtonV3()
+	{
+		PolicyLibraryPicker policyPicker = new();
+
+		policyPicker.PolicySelected += OnPolicySelected;
+
+		_policyPickerFlyout = new Flyout
+		{
+			Placement = FlyoutPlacementMode.Bottom,
+			Content = policyPicker,
+			SystemBackdrop = new MicaBackdrop { Kind = MicaKind.Base }
+		};
+
+		Flyout = _policyPickerFlyout;
+		RightTapped += OnRightTapped_ShowFlyout;
+		Holding += OnHolding_ShowFlyout;
+		Loaded += OnLoaded_ApplyState;
+		Unloaded += OnUnloaded_Cleanup;
+	}
+
+	private void OnLoaded_ApplyState(object sender, RoutedEventArgs e)
+	{
+		_originalContent ??= Content;
+		UpdateAppearance();
+	}
+
+	private void OnPolicySelected(PolicyFileRepresent policy)
+	{
+		if (PolicySelectionCommand?.CanExecute(policy) is true)
+		{
+			_policyPickerFlyout.Hide();
+			PolicySelectionCommand.Execute(policy);
+		}
+	}
+
+	private void OnRightTapped_ShowFlyout(object sender, RightTappedRoutedEventArgs e) => e.Handled = TryShowDetailsFlyout();
+
+	private void OnHolding_ShowFlyout(object sender, HoldingRoutedEventArgs e)
+	{
+		if (e.HoldingState == HoldingState.Started)
+			e.Handled = TryShowDetailsFlyout();
+	}
+
+	internal bool TryShowDetailsFlyout()
+	{
+		if (ContextFlyout is FlyoutBase contextFlyout && !contextFlyout.IsOpen)
+		{
+			contextFlyout.ShowAt(this);
+			return true;
+		}
+		if (DetailsFlyout is FlyoutBase detailsFlyout && !detailsFlyout.IsOpen)
+		{
+			detailsFlyout.ShowAt(this);
+			return true;
+		}
+		return false;
+	}
+
+	private void OnUnloaded_Cleanup(object sender, RoutedEventArgs e) => ClearValue(Effects.ShadowProperty);
+
+	private void UpdateAppearance()
+	{
+		_originalContent ??= Content;
+		bool hasContent = ObservedData switch
+		{
+			string value => !string.IsNullOrEmpty(value),
+			int value => value > 0,
+			long value => value > 0,
+			_ => false
+		};
+		if (hasContent)
+		{
+			Content = Atlas.GetStr("SelectedText");
+			_ = DispatcherQueue.TryEnqueue(DispatcherQueuePriority.Low, () => Effects.SetShadow(this, _selectedShadow));
 		}
 		else if (_originalContent is not null)
 		{

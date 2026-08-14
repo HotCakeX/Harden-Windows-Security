@@ -409,14 +409,15 @@
                                                 VerticalAlignment="Center"
                                                 HorizontalSpacing="15">
 
-                                <customUI:ButtonV2 x:Uid="SelectPolicyFileToAddRulesToButton"
-                                                   x:Name="SelectPolicyFileToAddRulesToButton"
-                                                   Margin="15,0,0,0"
-                                                   ObservedData="{x:Bind ViewModel.PolicyFileToMergeWith.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
-                                                   Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
-                                                   IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
+                                <customUI:SplitButtonV3 x:Uid="SelectPolicyFileToAddRulesToButton"
+                                                        x:Name="SelectPolicyFileToAddRulesToButton"
+                                                        PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect7Command, Mode=OneWay}"
+                                                        Margin="15,0,0,0"
+                                                        ObservedData="{x:Bind ViewModel.PolicyFileToMergeWith.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                        Click="{x:Bind ViewModel.PolicyFileToMergeWithButton_Click}"
+                                                        IsEnabled="{x:Bind ViewModel.PolicyFileToMergeWithPickerButtonIsEnabled, Mode=OneWay}">
 
-                                    <customUI:ButtonV2.ContentTemplate>
+                                    <customUI:SplitButtonV3.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">
                                             <StackPanel Orientation="Horizontal" Spacing="8">
 
@@ -430,9 +431,9 @@
                                                 <TextBlock Text="{x:Bind}"/>
                                             </StackPanel>
                                         </DataTemplate>
-                                    </customUI:ButtonV2.ContentTemplate>
+                                    </customUI:SplitButtonV3.ContentTemplate>
 
-                                    <customUI:ButtonV2.Flyout>
+                                    <customUI:SplitButtonV3.DetailsFlyout>
                                         <Flyout x:Name="SelectPolicyFileToAddRulesToButton_FlyOut">
 
                                             <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -457,9 +458,9 @@
                                             </CCToolKit:WrapPanel>
 
                                         </Flyout>
-                                    </customUI:ButtonV2.Flyout>
+                                    </customUI:SplitButtonV3.DetailsFlyout>
 
-                                </customUI:ButtonV2>
+                                </customUI:SplitButtonV3>
 
                             </CCToolKit:WrapPanel>
 
@@ -655,14 +656,15 @@
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <customUI:ButtonV2 IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
-                                    x:Name="FilesAndFoldersBrowseForBasePolicyButton"
-                                    Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
-                                    x:Uid="PickPolicyFileButton"
-                                    ObservedData="{x:Bind ViewModel.FilesAndFoldersBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
-                                    Click="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyButton_Click}">
+                            <customUI:SplitButtonV3 IsEnabled="{x:Bind ViewModel.FilesAndFoldersElementsAreEnabled, Mode=OneWay}"
+                                                    x:Name="FilesAndFoldersBrowseForBasePolicyButton"
+                                                    PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect1Command, Mode=OneWay}"
+                                                    Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                    x:Uid="PickPolicyFileButton"
+                                                    ObservedData="{x:Bind ViewModel.FilesAndFoldersBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                    Click="{x:Bind ViewModel.FilesAndFoldersBrowseForBasePolicyButton_Click}">
 
-                                <customUI:ButtonV2.Flyout>
+                                <customUI:SplitButtonV3.DetailsFlyout>
                                     <Flyout x:Name="FilesAndFoldersBrowseForBasePolicyButton_FlyOut">
 
                                         <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -690,9 +692,9 @@
                                         </CCToolKit:WrapPanel>
 
                                     </Flyout>
-                                </customUI:ButtonV2.Flyout>
+                                </customUI:SplitButtonV3.DetailsFlyout>
 
-                                <customUI:ButtonV2.Content>
+                                <customUI:SplitButtonV3.Content>
                                     <CCToolKit:WrapPanel Orientation="Horizontal">
 
                                         <AnimatedIcon Visibility="{x:Bind ViewModel.FilesAndFoldersBasePolicyLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -704,9 +706,9 @@
                                         <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </CCToolKit:WrapPanel>
-                                </customUI:ButtonV2.Content>
+                                </customUI:SplitButtonV3.Content>
 
-                            </customUI:ButtonV2>
+                            </customUI:SplitButtonV3>
 
                         </customUI:SettingsCardV3>
 
@@ -891,14 +893,15 @@
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <customUI:ButtonV2 x:Name="CertificatesBrowseForBasePolicyButton"
-                                    Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
-                                    IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
-                                    x:Uid="PickPolicyFileButton"
-                                    ObservedData="{x:Bind ViewModel.CertificatesBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
-                                    Click="{x:Bind ViewModel.CertificatesBrowseForBasePolicyButton_Click}">
+                            <customUI:SplitButtonV3 x:Name="CertificatesBrowseForBasePolicyButton"
+                                                    PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect2Command, Mode=OneWay}"
+                                                    Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                    IsEnabled="{x:Bind ViewModel.CertificatesBasedElementsAreEnabled, Mode=OneWay}"
+                                                    x:Uid="PickPolicyFileButton"
+                                                    ObservedData="{x:Bind ViewModel.CertificatesBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                    Click="{x:Bind ViewModel.CertificatesBrowseForBasePolicyButton_Click}">
 
-                                <customUI:ButtonV2.Flyout>
+                                <customUI:SplitButtonV3.DetailsFlyout>
                                     <Flyout x:Name="CertificatesBrowseForBasePolicyButton_FlyOut">
 
                                         <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -926,9 +929,9 @@
                                         </CCToolKit:WrapPanel>
 
                                     </Flyout>
-                                </customUI:ButtonV2.Flyout>
+                                </customUI:SplitButtonV3.DetailsFlyout>
 
-                                <customUI:ButtonV2.Content>
+                                <customUI:SplitButtonV3.Content>
                                     <CCToolKit:WrapPanel Orientation="Horizontal">
 
                                         <AnimatedIcon Visibility="{x:Bind ViewModel.CertificatesBasePolicyPathLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -940,9 +943,9 @@
                                         <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </CCToolKit:WrapPanel>
-                                </customUI:ButtonV2.Content>
+                                </customUI:SplitButtonV3.Content>
 
-                            </customUI:ButtonV2>
+                            </customUI:SplitButtonV3>
 
                         </customUI:SettingsCardV3>
 
@@ -1035,14 +1038,15 @@
                                                  IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <customUI:ButtonV2 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
-                                    IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
-                                    x:Name="ISGBrowseForBasePolicyButton"
-                                    ObservedData="{x:Bind ViewModel.ISGBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
-                                    Click="{x:Bind ViewModel.ISGBrowseForBasePolicyButton_Click}"
-                                    x:Uid="PickPolicyFileButton">
+                            <customUI:SplitButtonV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                    IsEnabled="{x:Bind ViewModel.ISGElementsAreEnabled, Mode=OneWay}"
+                                                    x:Name="ISGBrowseForBasePolicyButton"
+                                                    PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect3Command, Mode=OneWay}"
+                                                    ObservedData="{x:Bind ViewModel.ISGBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                    Click="{x:Bind ViewModel.ISGBrowseForBasePolicyButton_Click}"
+                                                    x:Uid="PickPolicyFileButton">
 
-                                <customUI:ButtonV2.Flyout>
+                                <customUI:SplitButtonV3.DetailsFlyout>
                                     <Flyout x:Name="ISGBrowseForBasePolicyButton_FlyOut">
 
                                         <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -1067,9 +1071,9 @@
                                         </CCToolKit:WrapPanel>
 
                                     </Flyout>
-                                </customUI:ButtonV2.Flyout>
+                                </customUI:SplitButtonV3.DetailsFlyout>
 
-                                <customUI:ButtonV2.Content>
+                                <customUI:SplitButtonV3.Content>
                                     <CCToolKit:WrapPanel Orientation="Horizontal">
 
                                         <AnimatedIcon Visibility="{x:Bind ViewModel.ISGBasePolicyPathLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -1081,9 +1085,9 @@
                                         <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </CCToolKit:WrapPanel>
-                                </customUI:ButtonV2.Content>
+                                </customUI:SplitButtonV3.Content>
 
-                            </customUI:ButtonV2>
+                            </customUI:SplitButtonV3>
 
                         </customUI:SettingsCardV3>
 
@@ -1198,14 +1202,15 @@
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <customUI:ButtonV2 x:Name="StrictKernelModeBrowseForBasePolicyButton"
-                                    Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
-                                    IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
-                                    x:Uid="PickPolicyFileButton"
-                                    ObservedData="{x:Bind ViewModel.StrictKernelModeBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
-                                    Click="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyButton_Click}">
+                            <customUI:SplitButtonV3 x:Name="StrictKernelModeBrowseForBasePolicyButton"
+                                                    PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect4Command, Mode=OneWay}"
+                                                    Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                    IsEnabled="{x:Bind ViewModel.StrictKernelModeElementsAreEnabled, Mode=OneWay}"
+                                                    x:Uid="PickPolicyFileButton"
+                                                    ObservedData="{x:Bind ViewModel.StrictKernelModeBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                    Click="{x:Bind ViewModel.StrictKernelModeBrowseForBasePolicyButton_Click}">
 
-                                <customUI:ButtonV2.Flyout>
+                                <customUI:SplitButtonV3.DetailsFlyout>
                                     <Flyout x:Name="StrictKernelModeBrowseForBasePolicyButton_FlyOut">
 
                                         <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -1230,9 +1235,9 @@
                                         </CCToolKit:WrapPanel>
 
                                     </Flyout>
-                                </customUI:ButtonV2.Flyout>
+                                </customUI:SplitButtonV3.DetailsFlyout>
 
-                                <customUI:ButtonV2.Content>
+                                <customUI:SplitButtonV3.Content>
                                     <CCToolKit:WrapPanel Orientation="Horizontal">
 
                                         <AnimatedIcon Visibility="{x:Bind ViewModel.StrictKernelModeBasePolicyLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -1244,9 +1249,9 @@
                                         <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </CCToolKit:WrapPanel>
-                                </customUI:ButtonV2.Content>
+                                </customUI:SplitButtonV3.Content>
 
-                            </customUI:ButtonV2>
+                            </customUI:SplitButtonV3>
 
                         </customUI:SettingsCardV3>
 
@@ -1361,14 +1366,15 @@
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <customUI:ButtonV2 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
-                                    IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
-                                    x:Uid="PickPolicyFileButton"
-                                    ObservedData="{x:Bind ViewModel.PFNBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
-                                    x:Name="PFNBrowseForBasePolicyButton"
-                                    Click="{x:Bind ViewModel.PFNBrowseForBasePolicyButton_Click}">
+                            <customUI:SplitButtonV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                    IsEnabled="{x:Bind ViewModel.PFNElementsAreEnabled, Mode=OneWay}"
+                                                    x:Uid="PickPolicyFileButton"
+                                                    ObservedData="{x:Bind ViewModel.PFNBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                    x:Name="PFNBrowseForBasePolicyButton"
+                                                    PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect5Command, Mode=OneWay}"
+                                                    Click="{x:Bind ViewModel.PFNBrowseForBasePolicyButton_Click}">
 
-                                <customUI:ButtonV2.Flyout>
+                                <customUI:SplitButtonV3.DetailsFlyout>
                                     <Flyout x:Name="PFNBrowseForBasePolicyButton_FlyOut">
 
                                         <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -1393,9 +1399,9 @@
                                         </CCToolKit:WrapPanel>
 
                                     </Flyout>
-                                </customUI:ButtonV2.Flyout>
+                                </customUI:SplitButtonV3.DetailsFlyout>
 
-                                <customUI:ButtonV2.Content>
+                                <customUI:SplitButtonV3.Content>
                                     <CCToolKit:WrapPanel Orientation="Horizontal">
 
                                         <AnimatedIcon Visibility="{x:Bind ViewModel.PFNBasePolicyPathLightAnimatedIconVisibility, Mode=OneWay}" Height="20" Margin="0,0,5,0" Width="20">
@@ -1407,9 +1413,9 @@
                                         <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </CCToolKit:WrapPanel>
-                                </customUI:ButtonV2.Content>
+                                </customUI:SplitButtonV3.Content>
 
-                            </customUI:ButtonV2>
+                            </customUI:SplitButtonV3>
 
                         </customUI:SettingsCardV3>
 
@@ -1598,14 +1604,15 @@
                         <customUI:SettingsCardV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
                                                  x:Uid="BasePolicyFileSelectionSettingsCard">
 
-                            <customUI:ButtonV2 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
-                                    IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
-                                    x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton"
-                                    ObservedData="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
-                                    Click="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click}"
-                                    x:Uid="PickPolicyFileButton">
+                            <customUI:SplitButtonV3 Visibility="{x:Bind ViewModel.BasePolicyElementsVisibility, Mode=OneWay}"
+                                                    IsEnabled="{x:Bind ViewModel.CustomFilePathRulesElementsAreEnabled, Mode=OneWay}"
+                                                    x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton"
+                                                    PolicySelectionCommand="{x:Bind vm:ViewModelProvider.SidebarVM.SidebarPolicyConnect6Command, Mode=OneWay}"
+                                                    ObservedData="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedBasePolicy.PolicyIdentifier, Mode=OneWay, FallbackValue=''}"
+                                                    Click="{x:Bind ViewModel.CustomPatternBasedFileRuleBrowseForBasePolicyButton_Click}"
+                                                    x:Uid="PickPolicyFileButton">
 
-                                <customUI:ButtonV2.Flyout>
+                                <customUI:SplitButtonV3.DetailsFlyout>
                                     <Flyout x:Name="CustomPatternBasedFileRuleBrowseForBasePolicyButton_FlyOut">
 
                                         <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
@@ -1630,9 +1637,9 @@
                                         </CCToolKit:WrapPanel>
 
                                     </Flyout>
-                                </customUI:ButtonV2.Flyout>
+                                </customUI:SplitButtonV3.DetailsFlyout>
 
-                                <customUI:ButtonV2.Content>
+                                <customUI:SplitButtonV3.Content>
                                     <CCToolKit:WrapPanel Orientation="Horizontal">
 
                                         <AnimatedIcon Visibility="{x:Bind ViewModel.CustomPatternBasedFileRuleBasePolicyPathLightAnimatedIconVisibility, Mode=OneWay}"
@@ -1645,9 +1652,9 @@
                                         <TextBlock x:Uid="BrowseTextBlock" />
 
                                     </CCToolKit:WrapPanel>
-                                </customUI:ButtonV2.Content>
+                                </customUI:SplitButtonV3.Content>
 
-                            </customUI:ButtonV2>
+                            </customUI:SplitButtonV3>
 
                         </customUI:SettingsCardV3>
 

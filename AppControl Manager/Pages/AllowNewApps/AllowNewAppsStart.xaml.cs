@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using AppControlManager.CustomUIElements;
 using AppControlManager.ViewModels;
 using AppControlManager.WindowComponents;
 using Microsoft.UI.Xaml;
@@ -43,7 +44,7 @@ internal sealed partial class AllowNewAppsStart : Page, IAnimatedIconsManager
 
 	// Exposing more elements to the main page of AllowNewApps since this is a sub-page managed by a 2nd NavigationView
 	internal static Flyout? BrowseForXMLPolicyButton_FlyOutPub;
-	internal static Button? BrowseForXMLPolicyButtonPub;
+	internal static SplitButtonV3? BrowseForXMLPolicyButtonPub;
 
 	public void SetVisibility(Visibility visibility)
 	{

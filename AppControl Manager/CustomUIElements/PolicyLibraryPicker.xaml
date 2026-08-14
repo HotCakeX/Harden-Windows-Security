@@ -2,7 +2,7 @@
 <UserControl
     x:Class="AppControlManager.CustomUIElements.PolicyLibraryPicker"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"   
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:siPolicy="using:AppControlManager.SiPolicy">
 
     <Grid Width="400"

@@ -446,7 +446,7 @@
                                 <MenuFlyoutSeparator />
 
                                 <ToggleMenuFlyoutItem Text="Resolve File Paths"
-                                                      ToolTipService.ToolTip="Example: changing '\Device\HarddiskVolume3' to 'C:\'"                                                      
+                                                      ToolTipService.ToolTip="Example: changing '\Device\HarddiskVolume3' to 'C:\'"
                                                       IsChecked="{x:Bind ViewModel.ResolveFilePaths, Mode=TwoWay}"
                                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}">
                                     <ToggleMenuFlyoutItem.Icon>

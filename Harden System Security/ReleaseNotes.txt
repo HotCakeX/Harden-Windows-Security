@@ -1,1 +1,3 @@
-* Updated numerous dependencies to their latest versions, delivering the newest security fixes, reliability improvements, and quality enhancements.
+* Improved logging compatibility between the Widgets and the main app processes.
+
+* Network Windows Widget now displays more virtual network adapter types available on the system, allowing you to monitor their activity.

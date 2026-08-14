@@ -16,7 +16,6 @@
 //
 
 using System.Windows.Input;
-using AppControlManager.SiPolicy;
 using CommonCore.ToolKits;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Dispatching;
@@ -28,6 +27,10 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Windows.UI;
 using WinRT;
+
+#if APP_CONTROL_MANAGER
+using AppControlManager.SiPolicy;
+#endif
 
 namespace AppControlManager.CustomUIElements;
 
@@ -290,6 +293,8 @@ internal sealed partial class SplitButtonV2 : SplitButton
 	}
 }
 
+#if APP_CONTROL_MANAGER
+
 /// <summary>
 /// A SplitButton with ButtonV2 selection visuals and a lightweight Policies Library picker on its chevron.
 /// </summary>
@@ -404,3 +409,11 @@ internal sealed partial class SplitButtonV3 : SplitButton
 		}
 	}
 }
+
+#else
+// Dummy implementation because Harden System Security app does not use this element.
+internal sealed partial class SplitButtonV3 : SplitButton
+{
+	internal bool TryShowDetailsFlyout() => true;
+}
+#endif

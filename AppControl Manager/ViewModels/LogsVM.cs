@@ -271,7 +271,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 
 	/// <summary>
 	/// Creates a data provider factory for the specified file path.
-	/// Uses StreamBasedFileDataProvider for active log files and MemoryMappedFileDataProvider for inactive files.
+	/// Uses StreamBasedFileDataProvider for active or empty log files and MemoryMappedFileDataProvider for non-empty inactive files.
 	/// </summary>
 	/// <param name="filePath">The path to the log file.</param>
 	/// <returns>A function that creates a data provider for the file.</returns>
@@ -280,13 +280,15 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		{
 			try
 			{
-				// Check if this is the currently active log file being written to
-				bool isActiveLogFile = string.Equals(filePath, Logger.LogFileName, StringComparison.OrdinalIgnoreCase);
+				// Check if this is the currently active log file being written to. A zero-length file cannot be memory-mapped,
+				// and another process, such as the widget provider, can own an active log that is not Logger.LogFileName here.
+				bool useStreamBasedProvider = string.Equals(filePath, Logger.LogFileName, StringComparison.OrdinalIgnoreCase) ||
+					new FileInfo(filePath).Length == 0;
 
-				return isActiveLogFile
-					// Use stream-based provider for the active log file
+				return useStreamBasedProvider
+					// Use stream-based provider for active and empty log files.
 					? new StreamBasedFileDataProvider(filePath)
-					// Use memory-mapped provider for inactive log files
+					// Use memory-mapped provider for non-empty inactive log files.
 					: new MemoryMappedFileDataProvider(filePath);
 			}
 			catch (Exception ex)

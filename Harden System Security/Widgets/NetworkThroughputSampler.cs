@@ -110,15 +110,14 @@ internal sealed unsafe class NetworkThroughputSampler
 	private const uint IfTypeSoftwareLoopback = 24U;
 	private const uint IfTypeTunnel = 131U;
 
-	// The NDIS media types that only the RAS pseudo adapters ("WAN Miniport (...)"), the tunnel pseudo interfaces and
-	// the loopback interface run on. Every one of them exists on a machine whether or not the user ever created a dial
-	// up, a PPPoE or a VPN connection, and none of them is listed by Windows, so the widget hides them as well.
-	// https://learn.microsoft.com/windows/win32/api/netioapi/ns-netioapi-mib_if_row2
+	// The NDIS media types used by the RAS pseudo adapters ("WAN Miniport (...)"), tunnel pseudo interfaces and the
+	// loopback interface. Every one of them exists on a machine whether or not the user ever created a dial-up, PPPoE
+	// or VPN connection, and none of them is listed by Windows, so the widget hides them as well.
+	// https://learn.microsoft.com/windows-hardware/drivers/ddi/ntddndis/ne-ntddndis-_ndis_medium
 	private const int NdisMediumWan = 3;
 	private const int NdisMediumCoWan = 12;
 	private const int NdisMediumTunnel = 15;
 	private const int NdisMediumLoopback = 17;
-	private const int NdisMediumIP = 19;
 
 	// The single bit of the "InterfaceAndOperStatusFlags" bit field of MIB_IF_ROW2 that tells an instance of an NDIS
 	// light weight filter driver apart from a real adapter.
@@ -406,8 +405,8 @@ internal sealed unsafe class NetworkThroughputSampler
 			return false;
 		}
 
-		// The RAS and tunnel pseudo adapters are recognized by the medium that they run on rather than by their name.
-		if (row->MediaType is NdisMediumWan or NdisMediumCoWan or NdisMediumTunnel or NdisMediumLoopback or NdisMediumIP)
+		// The RAS, tunnel and loopback pseudo adapters are recognized by the medium that they run on rather than by name.
+		if (row->MediaType is NdisMediumWan or NdisMediumCoWan or NdisMediumTunnel or NdisMediumLoopback)
 		{
 			return false;
 		}

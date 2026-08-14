@@ -851,6 +851,43 @@ DeviceEvents
 	*/
 
 	/// <summary>
+	/// Retrieves the decrypted value of an encrypted OMA setting from Intune.
+	/// </summary>
+	internal static async Task<string> GetOmaSettingPlainTextValue(
+		AuthenticatedAccounts account,
+		string deviceConfigurationId,
+		string secretReferenceValueId)
+	{
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+		string escapedReferenceId = Uri.EscapeDataString(secretReferenceValueId);
+		Uri requestUri = new($"{GetDeviceConfigurationsURL(account.Environment).OriginalString}/{deviceConfigurationId}/getOmaSettingPlainTextValue(secretReferenceValueId='{escapedReferenceId}')");
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"GetOmaSettingPlainTextValue",
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Get, requestUri);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				return request;
+			});
+
+		string responseContent = await response.Content.ReadAsStringAsync();
+		if (!response.IsSuccessStatusCode)
+		{
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), responseContent));
+		}
+
+		JsonElement root = JsonSerializer.Deserialize(responseContent, MSGraphJsonContext.Default.JsonElement);
+		if (!root.TryGetProperty("value", out JsonElement valueElement) || string.IsNullOrWhiteSpace(valueElement.GetString()))
+		{
+			throw new InvalidOperationException("Intune returned an empty OMA setting value.");
+		}
+
+		return valueElement.GetString()!;
+	}
+
+	/// <summary>
 	/// Retrieves the custom policies available in Intune
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>

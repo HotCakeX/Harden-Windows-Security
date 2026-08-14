@@ -4,6 +4,8 @@
 
 * Users can now customize scan and rule creation fallback levels by adding, removing, and reordering them, unlocking many new possibilities and customizations for you. Files or logs are evaluated against the selected primary level and then each configured fallback in the precise chosen order. Completes the last part of the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1181
 
+* You can now view the full details of Intune-deployed App Control policies in the AppControl Manager app. You can open Intune deployed policies in the Policy Editor with 1 click and save them back to XML or reupload them after modifications.
+
 * Improved memory management in the app.
 
 * Updated numerous dependencies to their latest versions, delivering the newest security fixes, reliability improvements, and quality enhancements.

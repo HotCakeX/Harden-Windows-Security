@@ -539,6 +539,20 @@ internal sealed class OmaSettingBase64(
 	[JsonPropertyName("omaUri")]
 	internal string? OmaUri => omaUri;
 
+	/// <summary>
+	/// Indicates whether Intune encrypted the stored OMA setting value.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("isEncrypted")]
+	internal bool? IsEncrypted { get; set; }
+
+	/// <summary>
+	/// Reference used with getOmaSettingPlainTextValue to retrieve an encrypted setting value.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("secretReferenceValueId")]
+	internal string? SecretReferenceValueId { get; set; }
+
 	[JsonInclude]
 	[JsonPropertyName("fileName")]
 	internal string? FileName => fileName;

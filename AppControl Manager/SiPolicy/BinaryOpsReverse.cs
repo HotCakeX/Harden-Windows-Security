@@ -107,7 +107,7 @@ internal static class BinaryOpsReverse
 	/// Parses the binary .cip file content to reconstruct the SiPolicy C# object.
 	/// Handles all versioned blocks and structure.
 	/// </summary>
-	private static SiPolicy ParseSiPolicy(BinaryReader reader)
+	internal static SiPolicy ParseSiPolicy(BinaryReader reader)
 	{
 		// HEADER PARSING
 		_ = reader.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -924,6 +924,67 @@ internal static class BinaryOpsReverse
 	{
 		ushort* p = (ushort*)&version;
 		return $"{p[Idx0]}.{p[Idx1]}.{p[Idx2]}.{p[Idx3]}";
+	}
+
+	/// <summary>
+	/// Converts in-memory raw or PKCS#7-wrapped CIP content into its <see cref="SiPolicy"/> representation.
+	/// </summary>
+	/// <param name="binaryContent">The exact policy bytes.</param>
+	internal static SiPolicy ConvertBinaryToXmlFile(ReadOnlyMemory<byte> binaryContent)
+	{
+		byte[] cipContent = ExtractCipContent(binaryContent);
+		using MemoryStream memoryStream = new(cipContent, writable: false);
+		using BinaryReader reader = new(memoryStream, Encoding.Unicode, leaveOpen: false);
+		SiPolicy policy = ParseSiPolicy(reader);
+		policy.PolicyTypeID = null;
+		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
+		return CustomDeserialization.DeserializeSiPolicy(null, xmlObj);
+	}
+
+	/// <summary>
+	/// Extracts raw CIP content from in-memory raw or PKCS#7-wrapped policy bytes.
+	/// </summary>
+	/// <param name="binaryContent">The exact policy bytes.</param>
+	internal static byte[] ExtractCipContent(ReadOnlyMemory<byte> binaryContent)
+	{
+		byte[] fileBytes = binaryContent.ToArray();
+		SignedCms signedCms = new();
+		try
+		{
+			signedCms.Decode(fileBytes);
+		}
+		catch (CryptographicException)
+		{
+			return fileBytes;
+
+		}
+		Logger.Write(Atlas.GetStr("LogCIPFileIsSigned"));
+
+		if (!string.Equals(signedCms.ContentInfo.ContentType.Value, CommonCore.Signing.Structure.CodeIntegrityOID, StringComparison.OrdinalIgnoreCase))
+		{
+			throw new InvalidOperationException($"Signed policy content type '{signedCms.ContentInfo.ContentType.Value}' does not match the expected Secure Boot policy OID '{CommonCore.Signing.Structure.CodeIntegrityOID}'.");
+		}
+
+		signedCms.CheckSignature(true);
+
+		byte[] content = signedCms.ContentInfo.Content;
+		if (content.Length == 0)
+		{
+			throw new InvalidOperationException("Signed policy contains no content.");
+		}
+		if (content[0] != 0x04)
+		{
+			return content;
+		}
+		try
+		{
+			AsnReader asnReader = new(content, AsnEncodingRules.DER);
+			return asnReader.ReadOctetString();
+		}
+		catch (AsnContentException ex)
+		{
+			throw new InvalidOperationException("Signed policy content appears to be an ASN.1 OCTET STRING but is malformed.", ex);
+		}
 	}
 
 }

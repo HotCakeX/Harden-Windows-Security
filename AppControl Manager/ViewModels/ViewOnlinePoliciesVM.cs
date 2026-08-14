@@ -74,11 +74,15 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			if (SP(ref field, value))
 			{
 				IsPolicySelected = value is not null;
+				OpenInPolicyEditorVisibility = value is not null && !value.IsManagedInstaller
+					? Visibility.Visible
+					: Visibility.Collapsed;
 			}
 		}
 	}
 
 	internal bool IsPolicySelected { get; set => SP(ref field, value); }
+	internal Visibility OpenInPolicyEditorVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal int ListViewSelectedIndex { get; set => SP(ref field, value); }
 
@@ -96,6 +100,9 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 	// Store all outputs for searching
 	internal readonly List<CiPolicyInfo> AllPoliciesOutput = [];
+
+	// To store the PolicyFileRepresent objects of the retrieved online policies that contain the SiPolicy object decoded from the retreived bytes
+	private readonly Dictionary<string, PolicyFileRepresent> OnlinePolicyRepresentations = new(StringComparer.OrdinalIgnoreCase);
 
 	// The Column Manager Composition
 	internal readonly ListViewColumnManager<CiPolicyInfo> ColumnManager;
@@ -116,6 +123,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 			AllPoliciesOutput.Clear();
 			AllPolicies.Clear();
+			OnlinePolicyRepresentations.Clear();
 
 			if (AuthCompanionCLS.CurrentActiveAccount is null)
 				return;
@@ -134,69 +142,87 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 
 				foreach (Windows10CustomConfiguration item in filteredResults)
 				{
+					OmaSettingBase64? appControlSetting = item.OmaSettings?.FirstOrDefault(setting =>
+						setting.OmaUri?.Contains(@"Vendor/MSFT/ApplicationControl/Policies/", StringComparison.OrdinalIgnoreCase) == true &&
+						setting.OmaUri.EndsWith("/Policy", StringComparison.OrdinalIgnoreCase));
 
-					(bool, CiPolicyInfo?) policyResult = CiPolicyInfo.FromJson(item.Description);
-
-					// If the JSON was successfully deserialized
-					if (policyResult.Item1)
+					if (string.IsNullOrWhiteSpace(item.Id) || appControlSetting is null)
 					{
-
-						if (policyResult.Item2 is null)
-						{
-							throw new InvalidOperationException(
-								Atlas.GetStr("IntunePolicyDeserializedButEmptyMessage"));
-						}
-
-						if (policyResult.Item2.PolicyOptions is not null)
-						{
-
-							List<string> optionsToReplaceWith = [];
-
-							foreach (string item2 in CollectionsMarshal.AsSpan(policyResult.Item2.PolicyOptions))
-							{
-								// Ensure the number has a value in the Enum
-								if (int.TryParse(item2, out int index))
-								{
-									// Cast the number to the enum
-									OptionType option = (OptionType)index;
-
-									// Get the enum member name and add it to the list
-									optionsToReplaceWith.Add(option.ToString());
-								}
-							}
-
-							// Replace the rule options number with their actual string names
-							policyResult.Item2.PolicyOptions = optionsToReplaceWith;
-
-							policyResult.Item2.IntunePolicyObjectID = item.Id;
-
-							AllPolicies.Add(policyResult.Item2);
-							AllPoliciesOutput.Add(policyResult.Item2);
-						}
+						Logger.Write(
+							$"Skipping an invalid Intune App Control policy because its object ID or policy OMA setting is missing. " +
+							$"IntuneObjectID='{item.Id ?? "<null>"}', " +
+							$"DisplayName='{item.DisplayName ?? "<null>"}', " +
+							$"Description='{item.Description ?? "<null>"}', " +
+							$"OmaSettingsCount={item.OmaSettings?.Count ?? 0}.");
+						continue;
 					}
 
-					// If the custom Intune policy doesn't have the necessary details in its description then create an entry with its name only
-					else
+					try
 					{
+						string base64PolicyData;
+						if (appControlSetting.IsEncrypted == true)
+						{
+							if (string.IsNullOrWhiteSpace(appControlSetting.SecretReferenceValueId))
+							{
+								throw new InvalidOperationException("The encrypted OMA setting does not contain a secret reference value ID.");
+							}
+
+							base64PolicyData = await CommonCore.MicrosoftGraph.Main.GetOmaSettingPlainTextValue(
+								AuthCompanionCLS.CurrentActiveAccount,
+								item.Id,
+								appControlSetting.SecretReferenceValueId);
+						}
+						else
+						{
+							base64PolicyData = appControlSetting.Value ?? throw new InvalidOperationException("The OMA setting does not contain a policy value.");
+						}
+
+						byte[] policyBytes = Convert.FromBase64String(base64PolicyData);
+						if (policyBytes.Length < 44)
+						{
+							throw new InvalidOperationException($"The OMA setting payload is too short to be a CIP policy. Decoded length: {policyBytes.Length} bytes.");
+						}
+
+						SiPolicy.SiPolicy policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile((ReadOnlyMemory<byte>)policyBytes);
+						bool isSignedPolicy = !policyObj.Rules.Any(rule => rule.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy);
+						List<string> policyOptions = new(policyObj.Rules.Count);
+						foreach (RuleType rule in CollectionsMarshal.AsSpan(policyObj.Rules))
+						{
+							policyOptions.Add(rule.Item.ToString());
+						}
+
+						Version? version = Version.TryParse(policyObj.VersionEx, out Version? parsedVersion) ? parsedVersion : null;
 						CiPolicyInfo policy = new(
-							policyID: string.Empty,
-							basePolicyID: null,
-							friendlyName: item.DisplayName,
-							version: null,
-							versionString: null,
+							policyID: policyObj.PolicyID.Trim('{', '}'),
+							basePolicyID: policyObj.BasePolicyID.Trim('{', '}'),
+							friendlyName: policyObj.FriendlyName ?? item.DisplayName,
+							version: version,
+							versionString: policyObj.VersionEx,
 							isSystemPolicy: false,
-							isSignedPolicy: false,
+							isSignedPolicy: isSignedPolicy,
 							isOnDisk: false,
 							isEnforced: false,
 							isAuthorized: false,
-							policyOptions: null
-						)
+							policyOptions: policyOptions)
 						{
 							IntunePolicyObjectID = item.Id
 						};
 
+						OnlinePolicyRepresentations.Add(item.Id, new PolicyFileRepresent(policyObj, PolicyFileRepresentKind.CIP));
 						AllPolicies.Add(policy);
 						AllPoliciesOutput.Add(policy);
+					}
+					catch (Exception ex)
+					{
+						Logger.Write(
+							$"Failed to retrieve or decode an Intune App Control policy. " +
+							$"IntuneObjectID='{item.Id}', " +
+							$"DisplayName='{item.DisplayName ?? "<null>"}', " +
+							$"Description='{item.Description ?? "<null>"}', " +
+							$"OmaUri='{appControlSetting.OmaUri ?? "<null>"}', " +
+							$"FileName='{appControlSetting.FileName ?? "<null>"}', " +
+							$"IsEncrypted={appControlSetting.IsEncrypted?.ToString() ?? "<null>"}");
+						Logger.Write(ex);
 					}
 				}
 			}
@@ -229,6 +255,44 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 			}
 
 			await Task.Run(() => ColumnManager.CalculateColumnWidths(AllPolicies));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+		}
+	}
+
+	internal static Visibility GetOpenInPolicyEditorVisibility(bool isManagedInstaller) => isManagedInstaller ? Visibility.Collapsed : Visibility.Visible;
+
+	internal async void OpenSelectedPolicyInPolicyEditor() => await OpenPolicyInPolicyEditor(ListViewSelectedPolicy);
+
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	internal async void OpenPolicyInPolicyEditorFromContext_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is MenuFlyoutItem item && item.DataContext is CiPolicyInfo policy)
+		{
+			await OpenPolicyInPolicyEditor(policy);
+		}
+	}
+
+	private async Task OpenPolicyInPolicyEditor(CiPolicyInfo? selectedPolicy)
+	{
+		if (selectedPolicy is null ||
+			selectedPolicy.IsManagedInstaller ||
+			selectedPolicy.IntunePolicyObjectID is not string intunePolicyObjectID ||
+			!OnlinePolicyRepresentations.TryGetValue(intunePolicyObjectID, out PolicyFileRepresent? policy))
+		{
+			return;
+		}
+
+		try
+		{
+			AreElementsEnabled = false;
+			await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(policy);
 		}
 		catch (Exception ex)
 		{

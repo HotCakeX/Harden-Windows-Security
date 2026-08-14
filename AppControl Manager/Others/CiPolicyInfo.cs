@@ -143,31 +143,6 @@ internal sealed class CiPolicyInfo(
 		 JsonSerializer.Serialize(policy, CiPolicyInfoJsonContext.Default.CiPolicyInfo);
 
 	/// <summary>
-	/// Deserializes a JSON string into a <see cref="CiPolicyInfo"/> instance using source-generated JSON.
-	/// </summary>
-	/// <param name="json">The JSON string to deserialize.</param>
-	/// <returns>A <see cref="CiPolicyInfo"/> instance, or null if deserialization fails.</returns>
-	internal static (bool, CiPolicyInfo?) FromJson(string? json)
-	{
-		if (json is null)
-		{
-			return (false, null);
-		}
-
-		CiPolicyInfo? result;
-		try
-		{
-			result = JsonSerializer.Deserialize(json, CiPolicyInfoJsonContext.Default.CiPolicyInfo);
-		}
-		catch
-		{
-			return (false, null);
-		}
-
-		return (true, result);
-	}
-
-	/// <summary>
 	/// Determines whether the specified object is equal to the current object.
 	/// Two <see cref="CiPolicyInfo"/> instances are considered equal if each non-null property is equal.
 	/// String comparisons are done using ordinal ignore case.

@@ -79,6 +79,22 @@
                     </Button.ContentTemplate>
                 </Button>
 
+                <Button IsEnabled="{x:Bind ViewModel.IsPolicySelected, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.OpenSelectedPolicyInPolicyEditor}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Visibility="{x:Bind ViewModel.OpenInPolicyEditorVisibility, Mode=OneWay}"
+                        x:Uid="OpenInPolicyEditorButton">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE70F;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
                 <!-- View Assignments Button -->
                 <Button IsEnabled="{x:Bind ViewModel.IsPolicySelected, Mode=OneWay}"
                         Click="{x:Bind ViewModel.ViewAssignments_Click}"
@@ -171,6 +187,14 @@
 
                         <Grid.ContextFlyout>
                             <MenuFlyout>
+
+                                <MenuFlyoutItem Text="Open in Policy Editor"
+                                                 Click="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.OpenPolicyInPolicyEditorFromContext_Click}"
+                                                 Visibility="{x:Bind VMs:ViewOnlinePoliciesVM.GetOpenInPolicyEditorVisibility(IsManagedInstaller), Mode=OneWay}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE70F;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
 
                                 <MenuFlyoutItem x:Uid="AssignmentsMenuFlyoutItem" Click="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.ViewAssignmentsFromContext_Click}">
                                     <MenuFlyoutItem.Icon>

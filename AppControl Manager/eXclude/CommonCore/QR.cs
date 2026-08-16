@@ -16,14 +16,12 @@
 //
 
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Graphics.Capture;
 using Windows.Graphics.DirectX;
 using Windows.Graphics.DirectX.Direct3D11;
@@ -36,9 +34,9 @@ namespace CommonCore;
 /// <summary>
 /// Compliant with ISO/IEC 2394:2022 and ISO/IEC 18004:2024 which are the latest versions at the time of developing this code.
 /// </summary>
-internal static class QR
+internal static partial class QR
 {
-	internal static class Manage
+	internal static partial class Manage
 	{
 		internal static async Task<List<QrResult>> DecodeAsync(IEnumerable<string> imagePaths)
 		{
@@ -90,6 +88,31 @@ internal static class QR
 			});
 		}
 
+		internal sealed partial class GeneratedQr(bool[] modules, int moduleCount, int version, int utf8ByteCount, char errorCorrectionLevel, int mask, int maximumPayloadBytes) : IDisposable
+		{
+			private SoftwareBitmap? ownedBitmap = QrEncoder.Render(modules, moduleCount);
+			internal SoftwareBitmap Bitmap => ownedBitmap ?? throw new ObjectDisposedException(nameof(GeneratedQr));
+			internal int Version => version;
+			internal int ModuleCount => moduleCount;
+			internal int Utf8ByteCount => utf8ByteCount;
+			internal char ErrorCorrectionLevel => errorCorrectionLevel;
+			internal int Mask => mask;
+			internal int MaximumPayloadBytes => maximumPayloadBytes;
+			internal SoftwareBitmap TakeBitmap()
+			{
+				SoftwareBitmap result = Bitmap;
+				ownedBitmap = null;
+				return result;
+			}
+			public void Dispose()
+			{
+				ownedBitmap?.Dispose();
+				ownedBitmap = null;
+			}
+		}
+
+		internal static GeneratedQr GenerateWithStatistics(string text, char errorCorrectionLevel) => QrEncoder.Generate(text, errorCorrectionLevel);
+
 		/// <summary>
 		/// Decodes a QR code directly from an uncompressed in-memory bitmap.
 		/// </summary>
@@ -99,6 +122,130 @@ internal static class QR
 			GrayImage image = await Task.Run(() => WinRtImageLoader.Load(softwareBitmap));
 			QrResult result = await Task.Run(() => QrDecoder.Decode(image));
 			return new(sourceName, result.Text, result.Version, result.ErrorCorrectionLevel, result.Mask, Stopwatch.GetElapsedTime(started), null);
+		}
+
+		internal sealed partial class CameraQrCandidate(BooleanMatrix matrix, QrResult result) : IDisposable
+		{
+			private SoftwareBitmap? ownedBitmap = RenderCameraQrCandidate(matrix);
+			internal SoftwareBitmap Bitmap => ownedBitmap ?? throw new ObjectDisposedException(nameof(CameraQrCandidate));
+			internal QrResult Result => result;
+			public void Dispose()
+			{
+				ownedBitmap?.Dispose();
+				ownedBitmap = null;
+			}
+		}
+
+		/// <summary>
+		/// Performs only QR finder detection, perspective grid sampling, and format validation for a camera frame.
+		/// A canonical QR bitmap is returned only after finder detection, perspective sampling, format validation,
+		/// Reed-Solomon correction, and payload decoding have all succeeded.
+		/// </summary>
+		internal static async Task<CameraQrCandidate?> TryExtractCameraQrAsync(SoftwareBitmap softwareBitmap)
+		{
+			return await Task.Run(() =>
+			{
+				GrayImage image = WinRtImageLoader.Load(softwareBitmap);
+				BooleanMatrix adaptive = Binarizer.Binarize(image);
+				CameraQrCandidate? candidate = TryExtractCameraQr(adaptive);
+				if (candidate is not null)
+				{
+					return candidate;
+				}
+				GrayImage invertedImage = ImagePreprocessor.InvertLuminance(image);
+				candidate = TryExtractCameraQr(Binarizer.Binarize(invertedImage));
+				if (candidate is not null)
+				{
+					return candidate;
+				}
+
+				candidate = TryExtractCameraQr(MatrixTransforms.Invert(adaptive, image.Padding));
+				if (candidate is not null)
+				{
+					return candidate;
+				}
+				ReadOnlySpan<byte> cameraThresholds = [96, 128, 160, 192, 224];
+				foreach (byte threshold in cameraThresholds)
+				{
+					BooleanMatrix binary = ImagePreprocessor.Threshold(image, threshold);
+					candidate = TryExtractCameraQr(binary);
+					if (candidate is not null)
+					{
+						return candidate;
+					}
+				}
+				return null;
+			});
+		}
+
+		private static CameraQrCandidate? TryExtractCameraQr(BooleanMatrix binary)
+		{
+			foreach ((Finder topLeft, Finder topRight, Finder bottomLeft) in FinderDetector.FindTriples(binary))
+			{
+				BooleanMatrix[] sampledMatrices;
+				try
+				{
+					sampledMatrices = GridSampler.SampleCandidates(binary, topLeft, topRight, bottomLeft);
+				}
+				catch (Exception exception) when (exception is QrException or ArithmeticException)
+				{
+					continue;
+				}
+				foreach (BooleanMatrix sampledMatrix in sampledMatrices)
+				{
+					foreach (BooleanMatrix orientedMatrix in MatrixTransforms.Orientations(sampledMatrix))
+					{
+						if (!MatrixParser.HasValidFormatInformation(orientedMatrix))
+						{
+							continue;
+						}
+						try
+						{
+							QrResult result = MatrixParser.Decode(orientedMatrix);
+							if (result.Text is { Length: > 0 })
+							{
+								return new CameraQrCandidate(orientedMatrix, result);
+							}
+						}
+						catch (Exception exception) when (exception is QrException or ArithmeticException)
+						{
+						}
+					}
+				}
+			}
+			return null;
+		}
+
+		private static SoftwareBitmap RenderCameraQrCandidate(BooleanMatrix matrix)
+		{
+			const int pixelsPerModule = 8;
+			const int quietZoneModules = 4;
+			int outputDimension = (matrix.Width + quietZoneModules * 2) * pixelsPerModule;
+			byte[] pixels = GC.AllocateUninitializedArray<byte>(checked(outputDimension * outputDimension * 4));
+			Array.Fill(pixels, byte.MaxValue);
+			int offset = quietZoneModules * pixelsPerModule;
+			for (int moduleY = 0; moduleY < matrix.Height; moduleY++)
+			{
+				for (int moduleX = 0; moduleX < matrix.Width; moduleX++)
+				{
+					if (!matrix[moduleX, moduleY])
+					{
+						continue;
+					}
+					int firstX = offset + moduleX * pixelsPerModule;
+					int firstY = offset + moduleY * pixelsPerModule;
+					for (int pixelY = 0; pixelY < pixelsPerModule; pixelY++)
+					{
+						int row = ((firstY + pixelY) * outputDimension + firstX) * 4;
+						Array.Clear(pixels, row, pixelsPerModule * 4);
+						for (int pixelX = 0; pixelX < pixelsPerModule; pixelX++)
+						{
+							pixels[row + pixelX * 4 + 3] = byte.MaxValue;
+						}
+					}
+				}
+			}
+			return SoftwareBitmap.CreateCopyFromBuffer(pixels.AsBuffer(), BitmapPixelFormat.Bgra8, outputDimension, outputDimension, BitmapAlphaMode.Premultiplied);
 		}
 
 		// https://learn.microsoft.com/en-us/windows/apps/develop/media-authoring-processing/screen-capture
@@ -282,6 +429,466 @@ internal static class QR
 		internal double CenterY => Top + (Height - 1) / 2.0;
 	}
 
+	private static class QrEncoder
+	{
+		private const int PixelsPerModule = 8;
+		private const int QuietZoneModules = 4;
+
+		internal static Manage.GeneratedQr Generate(string text, char errorCorrectionLevel)
+		{
+			int errorCorrectionIndex = GetErrorCorrectionIndex(errorCorrectionLevel);
+			byte[] payload = Encoding.UTF8.GetBytes(text);
+			int version = SelectVersion(payload.Length, errorCorrectionIndex);
+			int size = 17 + version * 4;
+			int rawCodewords = GetRawCodewords(version);
+			int blockCount = GetBlockCount(version, errorCorrectionIndex);
+			int errorCorrectionLength = GetErrorCorrectionLength(version, errorCorrectionIndex);
+			int dataCodewords = rawCodewords - blockCount * errorCorrectionLength;
+			byte[] data = CreateDataCodewords(payload, version, dataCodewords);
+			byte[] codewords = AddErrorCorrectionAndInterleave(data, rawCodewords, blockCount, errorCorrectionLength);
+			bool[] functionModules = new bool[size * size];
+			bool[] baseModules = new bool[size * size];
+			DrawFunctionPatterns(baseModules, functionModules, version, size, errorCorrectionIndex);
+			DrawCodewords(baseModules, functionModules, codewords, size);
+			int bestMask = 0;
+			int bestPenalty = int.MaxValue;
+			bool[] bestModules = [];
+			for (int mask = 0; mask < 8; mask++)
+			{
+				bool[] candidate = (bool[])baseModules.Clone();
+				ApplyMask(candidate, functionModules, size, mask);
+				DrawFormatBits(candidate, functionModules, size, mask, errorCorrectionIndex);
+				int penalty = GetPenaltyScore(candidate, size);
+				if (penalty < bestPenalty)
+				{
+					bestPenalty = penalty;
+					bestMask = mask;
+					bestModules = candidate;
+				}
+			}
+			int maximumVersionDataCodewords = GetRawCodewords(40) - GetBlockCount(40, errorCorrectionIndex) * GetErrorCorrectionLength(40, errorCorrectionIndex);
+			int maximumPayloadBytes = GetMaximumPayloadBytes(40, maximumVersionDataCodewords);
+			return new Manage.GeneratedQr(bestModules, size, version, payload.Length, errorCorrectionLevel, bestMask, maximumPayloadBytes);
+		}
+
+		private static int SelectVersion(int byteCount, int errorCorrectionIndex)
+		{
+			for (int version = 1; version <= 40; version++)
+			{
+				int capacityBits = (GetRawCodewords(version) - GetBlockCount(version, errorCorrectionIndex) * GetErrorCorrectionLength(version, errorCorrectionIndex)) * 8;
+				int countBits = version <= 9 ? 8 : 16;
+				int requiredBits = 4 + 8 + 4 + countBits + byteCount * 8;
+				if (byteCount < (1 << Math.Min(countBits, 30)) && requiredBits <= capacityBits)
+				{
+					return version;
+				}
+			}
+			throw new ArgumentException("The text is too large for a QR code.", nameof(byteCount));
+		}
+
+		private static int GetMaximumPayloadBytes(int version, int dataCodewords)
+		{
+			int characterCountBits = version <= 9 ? 8 : 16;
+			return Math.Max(0, (dataCodewords * 8 - 4 - 8 - 4 - characterCountBits) / 8);
+		}
+
+		private static byte[] CreateDataCodewords(byte[] payload, int version, int dataCodewords)
+		{
+			List<bool> bits = new(dataCodewords * 8);
+			AppendBits(bits, 0x7, 4);
+			AppendBits(bits, 26, 8);
+			AppendBits(bits, 0x4, 4);
+			AppendBits(bits, payload.Length, version <= 9 ? 8 : 16);
+			foreach (byte value in payload)
+			{
+				AppendBits(bits, value, 8);
+			}
+			int capacity = dataCodewords * 8;
+			int terminator = Math.Min(4, capacity - bits.Count);
+			AppendBits(bits, 0, terminator);
+			while ((bits.Count & 7) != 0)
+			{
+				bits.Add(false);
+			}
+			byte[] result = new byte[dataCodewords];
+			for (int index = 0; index < bits.Count; index++)
+			{
+				if (bits[index])
+				{
+					result[index >> 3] |= (byte)(1 << (7 - (index & 7)));
+				}
+			}
+			for (int index = bits.Count >> 3; index < result.Length; index++)
+			{
+				result[index] = (index - (bits.Count >> 3) & 1) == 0 ? (byte)0xEC : (byte)0x11;
+			}
+			return result;
+		}
+
+		private static void AppendBits(List<bool> bits, int value, int count)
+		{
+			for (int shift = count - 1; shift >= 0; shift--)
+			{
+				bits.Add(((value >> shift) & 1) != 0);
+			}
+		}
+
+		private static byte[] AddErrorCorrectionAndInterleave(byte[] data, int rawCodewords, int blockCount, int errorCorrectionLength)
+		{
+			int shortBlockLength = rawCodewords / blockCount;
+			int longBlockCount = rawCodewords % blockCount;
+			int shortBlockCount = blockCount - longBlockCount;
+			int shortDataLength = shortBlockLength - errorCorrectionLength;
+			byte[][] blocks = new byte[blockCount][];
+			byte[][] errorCorrectionBlocks = new byte[blockCount][];
+			byte[] divisor = CreateReedSolomonDivisor(errorCorrectionLength);
+			int dataOffset = 0;
+			for (int block = 0; block < blockCount; block++)
+			{
+				int dataLength = shortDataLength + (block >= shortBlockCount ? 1 : 0);
+				blocks[block] = data.AsSpan(dataOffset, dataLength).ToArray();
+				dataOffset += dataLength;
+				errorCorrectionBlocks[block] = CalculateReedSolomonRemainder(blocks[block], divisor);
+			}
+			byte[] result = new byte[rawCodewords];
+			int output = 0;
+			for (int index = 0; index <= shortDataLength; index++)
+			{
+				for (int block = 0; block < blockCount; block++)
+				{
+					if (index < blocks[block].Length)
+					{
+						result[output++] = blocks[block][index];
+					}
+				}
+			}
+			for (int index = 0; index < errorCorrectionLength; index++)
+			{
+				for (int block = 0; block < blockCount; block++)
+				{
+					result[output++] = errorCorrectionBlocks[block][index];
+				}
+			}
+			return result;
+		}
+
+		private static byte[] CreateReedSolomonDivisor(int degree)
+		{
+			byte[] result = new byte[degree];
+			result[^1] = 1;
+			byte root = 1;
+			for (int index = 0; index < degree; index++)
+			{
+				for (int coefficient = 0; coefficient < result.Length; coefficient++)
+				{
+					result[coefficient] = (byte)ReedSolomon.Multiply(result[coefficient], root);
+					if (coefficient + 1 < result.Length)
+					{
+						result[coefficient] ^= result[coefficient + 1];
+					}
+				}
+				root = (byte)ReedSolomon.Multiply(root, 2);
+			}
+			return result;
+		}
+
+		private static byte[] CalculateReedSolomonRemainder(byte[] data, byte[] divisor)
+		{
+			byte[] result = new byte[divisor.Length];
+			foreach (byte value in data)
+			{
+				byte factor = (byte)(value ^ result[0]);
+				Array.Copy(result, 1, result, 0, result.Length - 1);
+				result[^1] = 0;
+				for (int index = 0; index < result.Length; index++)
+				{
+					result[index] ^= (byte)ReedSolomon.Multiply(divisor[index], factor);
+				}
+			}
+			return result;
+		}
+
+		private static void DrawFunctionPatterns(bool[] modules, bool[] functionModules, int version, int size, int errorCorrectionIndex)
+		{
+			for (int index = 0; index < size; index++)
+			{
+				SetFunctionModule(modules, functionModules, size, 6, index, (index & 1) == 0);
+				SetFunctionModule(modules, functionModules, size, index, 6, (index & 1) == 0);
+			}
+			DrawFinderPattern(modules, functionModules, size, 3, 3);
+			DrawFinderPattern(modules, functionModules, size, size - 4, 3);
+			DrawFinderPattern(modules, functionModules, size, 3, size - 4);
+			int[] alignmentCenters = GetAlignmentCenters(version);
+			foreach (int y in alignmentCenters)
+			{
+				foreach (int x in alignmentCenters)
+				{
+					if ((x == 6 && y == 6) || (x == 6 && y == size - 7) || (x == size - 7 && y == 6))
+					{
+						continue;
+					}
+					DrawAlignmentPattern(modules, functionModules, size, x, y);
+				}
+			}
+			DrawFormatBits(modules, functionModules, size, 0, errorCorrectionIndex);
+			DrawVersion(modules, functionModules, version, size);
+		}
+
+		private static void DrawFinderPattern(bool[] modules, bool[] functionModules, int size, int centerX, int centerY)
+		{
+			for (int y = -4; y <= 4; y++)
+			{
+				for (int x = -4; x <= 4; x++)
+				{
+					int distance = Math.Max(Math.Abs(x), Math.Abs(y));
+					SetFunctionModule(modules, functionModules, size, centerX + x, centerY + y, distance != 2 && distance != 4);
+				}
+			}
+		}
+
+		private static void DrawAlignmentPattern(bool[] modules, bool[] functionModules, int size, int centerX, int centerY)
+		{
+			for (int y = -2; y <= 2; y++)
+			{
+				for (int x = -2; x <= 2; x++)
+				{
+					SetFunctionModule(modules, functionModules, size, centerX + x, centerY + y, Math.Max(Math.Abs(x), Math.Abs(y)) != 1);
+				}
+			}
+		}
+
+		private static void DrawFormatBits(bool[] modules, bool[] functionModules, int size, int mask, int errorCorrectionIndex)
+		{
+			int data = GetFormatBits(errorCorrectionIndex) << 3 | mask;
+			int remainder = data << 10;
+			for (int bit = 14; bit >= 10; bit--)
+			{
+				if (((remainder >> bit) & 1) != 0)
+				{
+					remainder ^= 0x537 << (bit - 10);
+				}
+			}
+			int bits = ((data << 10) | remainder) ^ 0x5412;
+			for (int index = 0; index <= 5; index++) SetFunctionModule(modules, functionModules, size, 8, index, GetBit(bits, index));
+			SetFunctionModule(modules, functionModules, size, 8, 7, GetBit(bits, 6));
+			SetFunctionModule(modules, functionModules, size, 8, 8, GetBit(bits, 7));
+			SetFunctionModule(modules, functionModules, size, 7, 8, GetBit(bits, 8));
+			for (int index = 9; index < 15; index++) SetFunctionModule(modules, functionModules, size, 14 - index, 8, GetBit(bits, index));
+			for (int index = 0; index < 8; index++) SetFunctionModule(modules, functionModules, size, size - 1 - index, 8, GetBit(bits, index));
+			for (int index = 8; index < 15; index++) SetFunctionModule(modules, functionModules, size, 8, size - 15 + index, GetBit(bits, index));
+			SetFunctionModule(modules, functionModules, size, 8, size - 8, true);
+		}
+
+		private static void DrawVersion(bool[] modules, bool[] functionModules, int version, int size)
+		{
+			if (version < 7) return;
+			int remainder = version << 12;
+			for (int bit = 17; bit >= 12; bit--)
+			{
+				if (((remainder >> bit) & 1) != 0) remainder ^= 0x1F25 << (bit - 12);
+			}
+			int bits = version << 12 | remainder;
+			for (int index = 0; index < 18; index++)
+			{
+				bool dark = GetBit(bits, index);
+				int x = size - 11 + index % 3;
+				int y = index / 3;
+				SetFunctionModule(modules, functionModules, size, x, y, dark);
+				SetFunctionModule(modules, functionModules, size, y, x, dark);
+			}
+		}
+
+		private static void DrawCodewords(bool[] modules, bool[] functionModules, byte[] codewords, int size)
+		{
+			int bitIndex = 0;
+			for (int right = size - 1; right >= 1; right -= 2)
+			{
+				if (right == 6) right--;
+				for (int vertical = 0; vertical < size; vertical++)
+				{
+					int y = ((right + 1) & 2) == 0 ? size - 1 - vertical : vertical;
+					for (int offset = 0; offset < 2; offset++)
+					{
+						int x = right - offset;
+						if (!functionModules[y * size + x] && bitIndex < codewords.Length * 8)
+						{
+							modules[y * size + x] = GetBit(codewords[bitIndex >> 3], 7 - (bitIndex & 7));
+							bitIndex++;
+						}
+					}
+				}
+			}
+		}
+
+		private static void ApplyMask(bool[] modules, bool[] functionModules, int size, int mask)
+		{
+			for (int y = 0; y < size; y++)
+			{
+				for (int x = 0; x < size; x++)
+				{
+					if (!functionModules[y * size + x] && Mask(mask, x, y)) modules[y * size + x] = !modules[y * size + x];
+				}
+			}
+		}
+
+		private static bool Mask(int mask, int x, int y) => mask switch
+		{
+			0 => ((x + y) & 1) == 0,
+			1 => (y & 1) == 0,
+			2 => x % 3 == 0,
+			3 => (x + y) % 3 == 0,
+			4 => ((x / 3 + y / 2) & 1) == 0,
+			5 => x * y % 2 + x * y % 3 == 0,
+			6 => ((x * y % 2 + x * y % 3) & 1) == 0,
+			_ => (((x + y) % 2 + x * y % 3) & 1) == 0
+		};
+
+		private static int GetPenaltyScore(bool[] modules, int size)
+		{
+			int result = 0;
+			for (int y = 0; y < size; y++) result += GetRunPenalty(modules, size, y * size, 1);
+			for (int x = 0; x < size; x++) result += GetRunPenalty(modules, size, x, size);
+			for (int y = 0; y < size - 1; y++)
+			{
+				for (int x = 0; x < size - 1; x++)
+				{
+					bool value = modules[y * size + x];
+					if (value == modules[y * size + x + 1] && value == modules[(y + 1) * size + x] && value == modules[(y + 1) * size + x + 1]) result += 3;
+				}
+			}
+			int dark = modules.Count(static value => value);
+			result += Math.Abs(dark * 20 - modules.Length * 10) / modules.Length * 10;
+			return result;
+		}
+
+		private static int GetRunPenalty(bool[] modules, int size, int start, int step)
+		{
+			int result = 0;
+			bool color = modules[start];
+			int run = 1;
+			for (int index = 1; index < size; index++)
+			{
+				bool next = modules[start + index * step];
+				if (next == color) run++;
+				else
+				{
+					if (run >= 5) result += run - 2;
+					color = next;
+					run = 1;
+				}
+			}
+			if (run >= 5) result += run - 2;
+			return result;
+		}
+
+		private static void SetFunctionModule(bool[] modules, bool[] functionModules, int size, int x, int y, bool dark)
+		{
+			// Finder separators intentionally probe one module outside the matrix at the three outer corners.
+			if (x < 0 || x >= size || y < 0 || y >= size) return;
+			modules[y * size + x] = dark;
+			functionModules[y * size + x] = true;
+		}
+
+		private static bool GetBit(int value, int index) => ((value >> index) & 1) != 0;
+
+		private static int[] GetAlignmentCenters(int version)
+		{
+			if (version == 1) return [];
+			int count = version / 7 + 2;
+			int step = version == 32 ? 26 : (version * 4 + count * 2 + 1) / (count * 2 - 2) * 2;
+			int[] result = new int[count];
+			result[0] = 6;
+			for (int index = count - 1, position = version * 4 + 10; index >= 1; index--, position -= step) result[index] = position;
+			return result;
+		}
+
+		private static int GetRawCodewords(int version)
+		{
+			int result = (16 * version + 128) * version + 64;
+			if (version >= 2)
+			{
+				int align = version / 7 + 2;
+				result -= (25 * align - 10) * align - 55;
+				if (version >= 7) result -= 36;
+			}
+			return result / 8;
+		}
+
+		private static int GetErrorCorrectionIndex(char level) => level switch
+		{
+			'L' => 0,
+			'M' => 1,
+			'Q' => 2,
+			'H' => 3,
+			_ => throw new ArgumentOutOfRangeException(nameof(level))
+		};
+
+		private static int GetFormatBits(int errorCorrectionIndex) => errorCorrectionIndex switch
+		{
+			0 => 1,
+			1 => 0,
+			2 => 3,
+			3 => 2,
+			_ => throw new ArgumentOutOfRangeException(nameof(errorCorrectionIndex))
+		};
+
+		private static int GetErrorCorrectionLength(int version, int errorCorrectionIndex)
+		{
+			ReadOnlySpan<byte> values = errorCorrectionIndex switch
+			{
+				0 => [7, 10, 15, 20, 26, 18, 20, 24, 30, 18, 20, 24, 26, 30, 22, 24, 28, 30, 28, 28, 28, 28, 30, 30, 26, 28, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+				1 => [10, 16, 26, 18, 24, 16, 18, 22, 22, 26, 30, 22, 22, 24, 24, 28, 28, 26, 26, 26, 26, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28],
+				2 => [13, 22, 18, 26, 18, 24, 18, 22, 20, 24, 28, 26, 24, 20, 30, 24, 28, 28, 26, 30, 28, 30, 30, 30, 30, 28, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+				3 => [17, 28, 22, 16, 22, 28, 26, 26, 24, 28, 24, 28, 22, 24, 24, 30, 28, 28, 26, 28, 30, 24, 30, 30, 30, 30, 26, 28, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30],
+				_ => throw new ArgumentOutOfRangeException(nameof(errorCorrectionIndex))
+			};
+			return values[version - 1];
+		}
+
+		private static int GetBlockCount(int version, int errorCorrectionIndex)
+		{
+			ReadOnlySpan<byte> values = errorCorrectionIndex switch
+			{
+				0 => [1, 1, 1, 1, 1, 2, 2, 2, 2, 4, 4, 4, 4, 4, 6, 6, 6, 6, 7, 8, 8, 9, 9, 10, 12, 12, 12, 13, 14, 15, 16, 17, 18, 19, 19, 20, 21, 22, 24, 25],
+				1 => [1, 1, 1, 2, 2, 4, 4, 4, 5, 5, 5, 8, 9, 9, 10, 10, 11, 13, 14, 16, 17, 17, 18, 20, 21, 23, 25, 26, 28, 29, 31, 33, 35, 37, 38, 40, 43, 45, 47, 49],
+				2 => [1, 1, 2, 2, 4, 4, 6, 6, 8, 8, 8, 10, 12, 16, 12, 17, 16, 18, 21, 20, 23, 23, 25, 27, 29, 34, 34, 35, 38, 40, 43, 45, 48, 51, 53, 56, 59, 62, 65, 68],
+				3 => [1, 1, 2, 4, 4, 4, 5, 6, 8, 8, 11, 11, 16, 16, 18, 16, 19, 21, 25, 25, 25, 34, 30, 32, 35, 37, 40, 42, 45, 48, 51, 54, 57, 60, 63, 66, 70, 74, 77, 81],
+				_ => throw new ArgumentOutOfRangeException(nameof(errorCorrectionIndex))
+			};
+			return values[version - 1];
+		}
+
+		internal static SoftwareBitmap Render(bool[] modules, int size)
+		{
+			int dimension = (size + QuietZoneModules * 2) * PixelsPerModule;
+			byte[] pixels = new byte[checked(dimension * dimension * 4)];
+			Array.Fill(pixels, byte.MaxValue);
+			int offset = QuietZoneModules * PixelsPerModule;
+			for (int moduleY = 0; moduleY < size; moduleY++)
+			{
+				for (int moduleX = 0; moduleX < size; moduleX++)
+				{
+					if (!modules[moduleY * size + moduleX]) continue;
+					int firstX = offset + moduleX * PixelsPerModule;
+					int firstY = offset + moduleY * PixelsPerModule;
+					for (int y = 0; y < PixelsPerModule; y++)
+					{
+						int row = ((firstY + y) * dimension + firstX) * 4;
+						for (int x = 0; x < PixelsPerModule; x++)
+						{
+							int pixel = row + x * 4;
+							pixels[pixel] = 0;
+							pixels[pixel + 1] = 0;
+							pixels[pixel + 2] = 0;
+							pixels[pixel + 3] = byte.MaxValue;
+						}
+					}
+				}
+			}
+			return SoftwareBitmap.CreateCopyFromBuffer(pixels.AsBuffer(), BitmapPixelFormat.Bgra8, dimension, dimension, BitmapAlphaMode.Premultiplied);
+		}
+	}
+
 	private static class QrDecoder
 	{
 		internal static readonly byte[] s_thresholds = [80, 100, 120, 140, 160, 180, 200, 220];
@@ -316,6 +923,18 @@ internal static class QR
 			}
 
 			List<string> failures = [with(64)];
+			GrayImage invertedImage = ImagePreprocessor.InvertLuminance(image);
+			QrResult? invertedResult = TryDecodeThresholdPreflight(invertedImage);
+			if (invertedResult is not null)
+			{
+				return invertedResult;
+			}
+			invertedResult = QrDecoderHelpers.TryDecodeBinarizations(invertedImage, "original-luminance inverted", failures);
+			if (invertedResult is not null)
+			{
+				return invertedResult;
+			}
+
 			for (int scale = 1; scale <= 3; scale++)
 			{
 				GrayImage scaled = scale == 1 ? image : ImagePreprocessor.ScaleBilinear(image, scale);
@@ -611,7 +1230,7 @@ internal static class QR
 					{
 						int pixelX = Math.Clamp((int)Math.Floor(left + (moduleX + 0.5) * moduleWidth), 0, image.Width - 1);
 						int pixelY = Math.Clamp((int)Math.Floor(top + (moduleY + 0.5) * moduleHeight), 0, image.Height - 1);
-						modules[moduleY, moduleX] = image.Pixels[pixelY * image.Width + pixelX] > 160;
+						modules[moduleX, moduleY] = image.Pixels[pixelY * image.Width + pixelX] > 160;
 					}
 				}
 				try
@@ -967,7 +1586,7 @@ internal static class QR
 					{
 						for (int offsetX = -2; offsetX <= 2; offsetX++)
 						{
-							modules[centerY + offsetY, centerX + offsetX] = Math.Max(Math.Abs(offsetX), Math.Abs(offsetY)) is 0 or 2;
+							modules[centerX + offsetX, centerY + offsetY] = Math.Max(Math.Abs(offsetX), Math.Abs(offsetY)) is 0 or 2;
 						}
 					}
 				}
@@ -989,7 +1608,7 @@ internal static class QR
 					}
 
 					bool inside = offsetX >= 0 && offsetX < 7 && offsetY >= 0 && offsetY < 7;
-					modules[y, x] = inside && (offsetX is 0 or 6 || offsetY is 0 or 6 || (offsetX is >= 2 and <= 4 && offsetY is >= 2 and <= 4));
+					modules[x, y] = inside && (offsetX is 0 or 6 || offsetY is 0 or 6 || (offsetX is >= 2 and <= 4 && offsetY is >= 2 and <= 4));
 				}
 			}
 		}
@@ -1051,21 +1670,23 @@ internal static class QR
 				}
 				foreach (BooleanMatrix modules in sampledMatrices)
 				{
-					try
+					foreach (BooleanMatrix orientedModules in MatrixTransforms.Orientations(modules))
 					{
-						QrResult result = MatrixParser.Decode(modules);
-						if (result.Text is not { Length: > 0 })
+						try
 						{
-							throw new QrException("Decoded payload is empty.");
+							QrResult result = MatrixParser.Decode(orientedModules);
+							if (result.Text is not { Length: > 0 })
+							{
+								throw new QrException("Decoded payload is empty.");
+							}
+							return result;
 						}
-
-						return result;
-					}
-					catch (Exception exception) when (exception is QrException or ArithmeticException)
-					{
-						if (failures.Count < 16)
+						catch (Exception exception) when (exception is QrException or ArithmeticException)
 						{
-							failures.Add($"Candidate {candidateIndex + 1}, {modules.Width}x{modules.Height}: {exception.Message}");
+							if (failures.Count < 16)
+							{
+								failures.Add($"Candidate {candidateIndex + 1}, {modules.Width}x{modules.Height}: {exception.Message}");
+							}
 						}
 					}
 				}
@@ -1129,6 +1750,27 @@ internal static class QR
 			return new GrayImage(width, height, source.Padding * scale, pixels, colorDistance);
 		}
 
+		internal static GrayImage InvertLuminance(GrayImage image)
+		{
+			byte[] pixels = new byte[image.Pixels.Length];
+			byte[] colorDistance = new byte[image.ColorDistance.Length];
+			Array.Fill(pixels, byte.MaxValue);
+			Array.Fill(colorDistance, byte.MaxValue);
+			int right = image.Width - image.Padding;
+			int bottom = image.Height - image.Padding;
+			for (int y = image.Padding; y < bottom; y++)
+			{
+				int row = y * image.Width;
+				for (int x = image.Padding; x < right; x++)
+				{
+					int index = row + x;
+					pixels[index] = (byte)(255 - image.Pixels[index]);
+					colorDistance[index] = (byte)(255 - image.ColorDistance[index]);
+				}
+			}
+			return new GrayImage(image.Width, image.Height, image.Padding, pixels, colorDistance);
+		}
+
 		internal static BooleanMatrix Threshold(GrayImage image, byte threshold)
 		{
 			BooleanMatrix result = new(image.Width, image.Height);
@@ -1146,6 +1788,43 @@ internal static class QR
 
 	private static class MatrixTransforms
 	{
+		internal static IEnumerable<BooleanMatrix> Orientations(BooleanMatrix source)
+		{
+			BooleanMatrix current = source;
+			for (int rotation = 0; rotation < 4; rotation++)
+			{
+				yield return current;
+				yield return MirrorHorizontal(current);
+				current = RotateClockwise(current);
+			}
+		}
+
+		private static BooleanMatrix RotateClockwise(BooleanMatrix source)
+		{
+			BooleanMatrix result = new(source.Height, source.Width);
+			for (int y = 0; y < source.Height; y++)
+			{
+				for (int x = 0; x < source.Width; x++)
+				{
+					result[source.Height - 1 - y, x] = source[x, y];
+				}
+			}
+			return result;
+		}
+
+		private static BooleanMatrix MirrorHorizontal(BooleanMatrix source)
+		{
+			BooleanMatrix result = new(source.Width, source.Height);
+			for (int y = 0; y < source.Height; y++)
+			{
+				for (int x = 0; x < source.Width; x++)
+				{
+					result[source.Width - 1 - x, y] = source[x, y];
+				}
+			}
+			return result;
+		}
+
 		internal static BooleanMatrix Invert(BooleanMatrix source, int padding)
 		{
 			BooleanMatrix result = new(source.Width, source.Height);
@@ -1162,7 +1841,7 @@ internal static class QR
 		}
 	}
 
-	private sealed class BooleanMatrix
+	internal sealed class BooleanMatrix
 	{
 		private readonly bool[] _bits;
 		internal BooleanMatrix(int width, int height)
@@ -1393,7 +2072,7 @@ internal static class QR
 				}
 			}
 
-			candidates = [.. candidates.Where(static finder => finder.Count >= 2).OrderByDescending(static finder => finder.Count).Take(24)];
+			candidates = [.. candidates.OrderByDescending(static finder => finder.Count).Take(48)];
 			List<((Finder, Finder, Finder) Triple, double Score)> triples = [];
 			for (int i = 0; i < candidates.Count - 2; i++)
 			{
@@ -1417,7 +2096,7 @@ internal static class QR
 				}
 			}
 
-			return triples.OrderBy(static item => item.Score).Take(16).Select(static item => item.Triple);
+			return triples.OrderBy(static item => item.Score).Take(32).Select(static item => item.Triple);
 		}
 
 		private static bool IsPattern(int[] r)
@@ -1599,9 +2278,24 @@ internal static class QR
 
 		private static BooleanMatrix SampleVersion(BooleanMatrix image, Finder tl, Finder tr, Finder bl, int dimension, bool centerOnly)
 		{
-			PointD br = new(tr.X + bl.X - tl.X, tr.Y + bl.Y - tl.Y);
-			PointD[] source = [new(3.5, 3.5), new(dimension - 3.5, 3.5), new(dimension - 3.5, dimension - 3.5), new(3.5, dimension - 3.5)];
-			PointD[] target = [new(tl.X, tl.Y), new(tr.X, tr.Y), br, new(bl.X, bl.Y)];
+			double horizontalModuleX = (tr.X - tl.X) / (dimension - 7.0);
+			double horizontalModuleY = (tr.Y - tl.Y) / (dimension - 7.0);
+			double verticalModuleX = (bl.X - tl.X) / (dimension - 7.0);
+			double verticalModuleY = (bl.Y - tl.Y) / (dimension - 7.0);
+			PointD fourthTarget;
+			PointD fourthSource;
+			if (dimension > 21 && TryFindAlignmentPattern(image, tl, horizontalModuleX, horizontalModuleY, verticalModuleX, verticalModuleY, dimension, out PointD alignment))
+			{
+				fourthTarget = alignment;
+				fourthSource = new PointD(dimension - 6.5, dimension - 6.5);
+			}
+			else
+			{
+				fourthTarget = new PointD(tr.X + bl.X - tl.X, tr.Y + bl.Y - tl.Y);
+				fourthSource = new PointD(dimension - 3.5, dimension - 3.5);
+			}
+			PointD[] source = [new(3.5, 3.5), new(dimension - 3.5, 3.5), fourthSource, new(3.5, dimension - 3.5)];
+			PointD[] target = [new(tl.X, tl.Y), new(tr.X, tr.Y), fourthTarget, new(bl.X, bl.Y)];
 			double[] transform = Homography.Compute(source, target);
 			BooleanMatrix result = new(dimension, dimension);
 			for (int y = 0; y < dimension; y++)
@@ -1612,6 +2306,77 @@ internal static class QR
 				}
 			}
 			return result;
+		}
+
+		private static bool TryFindAlignmentPattern(BooleanMatrix image, Finder topLeft, double horizontalX, double horizontalY, double verticalX, double verticalY, int dimension, out PointD alignment)
+		{
+			double moduleSize = (Math.Sqrt(horizontalX * horizontalX + horizontalY * horizontalY) + Math.Sqrt(verticalX * verticalX + verticalY * verticalY)) / 2.0;
+			double offset = dimension - 10.0;
+			double predictedX = topLeft.X + offset * horizontalX + offset * verticalX;
+			double predictedY = topLeft.Y + offset * horizontalY + offset * verticalY;
+			int radius = Math.Max(4, (int)Math.Ceiling(moduleSize * 6.0));
+			int step = Math.Max(1, (int)Math.Floor(moduleSize / 2.0));
+			int bestScore = int.MaxValue;
+			PointD best = default;
+			for (int y = (int)Math.Round(predictedY) - radius; y <= (int)Math.Round(predictedY) + radius; y += step)
+			{
+				for (int x = (int)Math.Round(predictedX) - radius; x <= (int)Math.Round(predictedX) + radius; x += step)
+				{
+					int score = ScoreAlignmentPattern(image, x, y, horizontalX, horizontalY, verticalX, verticalY);
+					if (score < bestScore)
+					{
+						bestScore = score;
+						best = new PointD(x, y);
+					}
+				}
+			}
+			alignment = best;
+			return bestScore <= 5;
+		}
+
+		private static int ScoreAlignmentPattern(BooleanMatrix image, int centerX, int centerY, double horizontalX, double horizontalY, double verticalX, double verticalY)
+		{
+			int score = 0;
+			for (int moduleY = -2; moduleY <= 2; moduleY++)
+			{
+				for (int moduleX = -2; moduleX <= 2; moduleX++)
+				{
+					double sampleX = centerX + moduleX * horizontalX + moduleY * verticalX;
+					double sampleY = centerY + moduleX * horizontalY + moduleY * verticalY;
+					bool expectedDark = Math.Max(Math.Abs(moduleX), Math.Abs(moduleY)) is 0 or 2;
+					if (SampleNeighborhood(image, sampleX, sampleY) != expectedDark)
+					{
+						score++;
+					}
+				}
+			}
+			return score;
+		}
+
+		private static bool SampleNeighborhood(BooleanMatrix image, double x, double y)
+		{
+			int centerX = (int)Math.Round(x);
+			int centerY = (int)Math.Round(y);
+			int dark = 0;
+			int valid = 0;
+			for (int offsetY = -1; offsetY <= 1; offsetY++)
+			{
+				for (int offsetX = -1; offsetX <= 1; offsetX++)
+				{
+					int pixelX = centerX + offsetX;
+					int pixelY = centerY + offsetY;
+					if ((uint)pixelX >= (uint)image.Width || (uint)pixelY >= (uint)image.Height)
+					{
+						continue;
+					}
+					if (image[pixelX, pixelY])
+					{
+						dark++;
+					}
+					valid++;
+				}
+			}
+			return valid > 0 && dark * 2 >= valid;
 		}
 
 		private static bool SampleModule(BooleanMatrix image, double[] transform, int moduleX, int moduleY, bool centerOnly)

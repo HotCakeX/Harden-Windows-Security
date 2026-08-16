@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:HardenSystemSecurity"
     xmlns:WindowComponents="using:AppControlManager.WindowComponents"
+    xmlns:HSSWindowComponents="using:HardenSystemSecurity.WindowComponents"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:animatedvisuals="using:AnimatedVisuals"
@@ -737,6 +738,31 @@
                                 </Border>
                                 <ScrollViewer Grid.Row="1" Padding="12,0,12,12" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                                     <StackPanel Spacing="10" XYFocusKeyboardNavigation="Enabled">
+                                        <Button Style="{StaticResource SidebarCommandButtonStyle}"
+                                                Click="{x:Bind HSSWindowComponents:QRCodeManagerWindow.Show}">
+                                            <Button.Content>
+                                                <Border Style="{StaticResource SidebarCommandCardBorderStyle}">
+                                                    <Grid ColumnSpacing="12">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <FontIcon Glyph="&#xED14;"
+                                                                  FontFamily="Segoe Fluent Icons"
+                                                                  Foreground="#60A5FA"
+                                                                  Style="{StaticResource SidebarCommandFontIconStyle}"/>
+                                                        <StackPanel Grid.Column="1"
+                                                                    Spacing="2"
+                                                                    VerticalAlignment="Center">
+                                                            <TextBlock Text="QR Code Manager"
+                                                                       Style="{StaticResource SidebarCommandTitleTextBlockStyle}"/>
+                                                            <TextBlock Text="Decode a QR code from an image or screen capture"
+                                                                       Style="{StaticResource SidebarCommandDescriptionTextBlockStyle}"/>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </Button.Content>
+                                        </Button>
                                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}" Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}" Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}" IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
                                         <Button x:Uid="ResetGraphicsDriverButton"
                                                 Style="{StaticResource SidebarCommandButtonStyle}"

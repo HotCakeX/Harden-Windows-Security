@@ -79,7 +79,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	private const string VaultPasswordUnlockFailureMessage = "The vault password is incorrect, or the vault file was modified or corrupted.";
 	private const int VaultVersion = 1;
 	private const int RefreshIntervalMilliseconds = 1000;
-	private const string TotpQrImagePickerFilter = "Image files|*.bmp;*.gif;*.heif;*.heic;*.ico;*.jpeg;*.jpg;*.png;*.tif;*.tiff;*.webp";
+	internal const string TotpQrImagePickerFilter = "Image files|*.bmp;*.gif;*.heif;*.heic;*.ico;*.jpeg;*.jpg;*.png;*.tif;*.tiff;*.webp";
 	private static readonly TimeSpan AutoLockAfterOneMinuteDuration = TimeSpan.FromMinutes(1D);
 	private const int SaltSizeInBytes = 32;
 	private const int VaultIdSizeInBytes = 32;
@@ -1472,7 +1472,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 	}
 
 	// Reads and URL-decodes a named value from the Snipping Tool callback query string.
-	private static bool TryGetQueryValue(Uri? uri, string parameterName, out string value)
+	internal static bool TryGetQueryValue(Uri? uri, string parameterName, out string value)
 	{
 		value = string.Empty;
 		if (uri is null)

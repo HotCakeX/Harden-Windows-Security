@@ -771,6 +771,7 @@ internal sealed partial class SecureVault : Page, CommonCore.UI.IPageHeaderProvi
 			ApplyLockedState();
 			ClearPasswordInputs();
 			LockedInfoBar.WriteSuccess("Imported the selected vault. Enter its password to unlock it.");
+			_ = DispatcherQueue.TryEnqueue(FocusPrimaryVaultInput);
 		}
 		catch (Exception ex)
 		{

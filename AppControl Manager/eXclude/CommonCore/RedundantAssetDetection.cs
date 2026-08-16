@@ -23,6 +23,7 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.IncrementalCollection;
@@ -110,10 +111,245 @@ internal static class RedundantAssetDetection
 		internal readonly uint Height => height;
 	}
 
+	private sealed class ExactVisualImage(ulong fileSizeBytes, uint width, uint height, string pixelDigest)
+	{
+		internal ulong FileSizeBytes => fileSizeBytes;
+		internal uint Width => width;
+		internal uint Height => height;
+		internal string PixelDigest => pixelDigest;
+	}
+
+	private sealed class DecodedVisualImage(uint width, uint height, ReadOnlyMemory<byte> pixels)
+	{
+		internal uint Width => width;
+		internal uint Height => height;
+		internal ReadOnlyMemory<byte> Pixels => pixels;
+	}
+
 	/// <summary>
-	/// Finds duplicate images in the specified directories and files.
+	/// Selects the duplicate-detection algorithm. The perceptual path is used for every threshold except exactly 100.
+	/// The exact visual path is completely separate.
 	/// </summary>
-	internal static async Task<DuplicateScanResult> Find(
+	internal static Task<DuplicateScanResult> Find(
+		List<string>? filesToSearch,
+		List<string>? directoriesToSearch,
+		IProgress<double> progress,
+		OriginalSelectionStrategy selectionStrategy,
+		double similarityThreshold = 90)
+		=> similarityThreshold == 100.0
+			? FindExactVisualMatches(filesToSearch, directoriesToSearch, progress, selectionStrategy)
+			: FindPerceptualMatches(filesToSearch, directoriesToSearch, progress, selectionStrategy, similarityThreshold);
+
+	/// <summary>
+	/// Decodes the first frame into the normalized visual representation used by the exact path.
+	/// </summary>
+	private static async Task<DecodedVisualImage> DecodeNormalizedVisualImage(string filePath)
+	{
+		StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
+		using IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.Read);
+		BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+		PixelDataProvider pixelData = await decoder.GetPixelDataAsync(
+			BitmapPixelFormat.Bgra8,
+			BitmapAlphaMode.Straight,
+			new BitmapTransform(),
+			ExifOrientationMode.RespectExifOrientation,
+			ColorManagementMode.ColorManageToSRgb);
+		byte[] pixels = pixelData.DetachPixelData();
+
+		// RGB data is invisible when alpha is zero, so normalize it before hashing or comparison.
+		for (int i = 0; i < pixels.Length; i += 4)
+		{
+			if (pixels[i + 3] == 0)
+			{
+				pixels[i] = 0;
+				pixels[i + 1] = 0;
+				pixels[i + 2] = 0;
+			}
+		}
+
+		return new DecodedVisualImage(decoder.OrientedPixelWidth, decoder.OrientedPixelHeight, pixels);
+	}
+
+	/// <summary>
+	/// Finds images whose normalized displayed pixels are exactly equal. This method is used only
+	/// when the similarity threshold is exactly 100 and does not use the perceptual dHash path.
+	/// Full pixel buffers are temporary. Only compact digests and metadata survive the first pass.
+	/// Animated image formats are intentionally compared by the decoder's first frame only.
+	/// </summary>
+	private static async Task<DuplicateScanResult> FindExactVisualMatches(
+		List<string>? filesToSearch,
+		List<string>? directoriesToSearch,
+		IProgress<double> progress,
+		OriginalSelectionStrategy selectionStrategy)
+	{
+		Stopwatch sw = Stopwatch.StartNew();
+		(IEnumerable<string> filePaths, int fileCount) = FileUtility.GetFilesFast(
+			directoriesToSearch,
+			filesToSearch,
+			Extensions,
+			null);
+		if (fileCount == 0)
+		{
+			return new DuplicateScanResult();
+		}
+
+		Logger.Write($"Found {fileCount} images. Processing exact visual matches...");
+		ConcurrentDictionary<string, ExactVisualImage> fileData = new(
+			concurrencyLevel: Environment.ProcessorCount,
+			capacity: fileCount,
+			comparer: StringComparer.OrdinalIgnoreCase);
+		int processedCount = 0;
+
+		await Parallel.ForEachAsync(filePaths, new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount }, async (filePath, ct) =>
+		{
+			try
+			{
+				DecodedVisualImage decoded = await DecodeNormalizedVisualImage(filePath);
+				string pixelDigest = Convert.ToHexString(SHA256.HashData(decoded.Pixels.Span));
+				ExactVisualImage processed = new(
+					fileSizeBytes: (ulong)new FileInfo(filePath).Length,
+					width: decoded.Width,
+					height: decoded.Height,
+					pixelDigest: pixelDigest);
+				_ = fileData.TryAdd(filePath, processed);
+			}
+			catch { }
+
+			int current = Interlocked.Increment(ref processedCount);
+			progress.Report((double)current / fileCount * 100.0);
+		});
+
+		// The digest is only a candidate filter. It reduces comparisons without being trusted as
+		// proof of equality. Every reported duplicate is still verified with direct pixel comparison.
+		Dictionary<(uint Width, uint Height, string PixelDigest), List<string>> candidateBuckets = new(fileData.Count);
+		foreach (KeyValuePair<string, ExactVisualImage> item in fileData)
+		{
+			(uint Width, uint Height, string PixelDigest) key = (item.Value.Width, item.Value.Height, item.Value.PixelDigest);
+			if (!candidateBuckets.TryGetValue(key, out List<string>? bucket))
+			{
+				bucket = [];
+				candidateBuckets.Add(key, bucket);
+			}
+			bucket.Add(item.Key);
+		}
+
+		List<List<string>> exactGroups = [];
+		foreach (List<string> candidateBucket in candidateBuckets.Values)
+		{
+			if (candidateBucket.Count <= 1) continue;
+
+			// Partition the digest bucket by authoritative pixel equality. This also preserves
+			// correctness in the theoretical event that different pixels share the same digest.
+			List<string> unassigned = new(candidateBucket);
+			while (unassigned.Count > 0)
+			{
+				string referencePath = unassigned[0];
+				unassigned.RemoveAt(0);
+				DecodedVisualImage reference = await DecodeNormalizedVisualImage(referencePath);
+				List<string> exactGroup = new(candidateBucket.Count) { referencePath };
+
+				for (int i = unassigned.Count - 1; i >= 0; i--)
+				{
+					string candidatePath = unassigned[i];
+					DecodedVisualImage candidate = await DecodeNormalizedVisualImage(candidatePath);
+					bool isExactMatch = reference.Width == candidate.Width &&
+						reference.Height == candidate.Height &&
+						reference.Pixels.Span.SequenceEqual(candidate.Pixels.Span);
+					if (isExactMatch)
+					{
+						exactGroup.Add(candidatePath);
+						unassigned.RemoveAt(i);
+					}
+				}
+
+				if (exactGroup.Count > 1)
+				{
+					exactGroups.Add(exactGroup);
+				}
+			}
+		}
+
+		DuplicateScanResult result = new() { TotalProcessed = fileData.Count };
+		static ulong ComputeArea(DuplicateFile file) => (ulong)file.ImageWidth * file.ImageHeight;
+		static int CompareExtensions(DuplicateFile a, DuplicateFile b)
+		{
+			bool aIsPng = a.FilePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase);
+			bool bIsPng = b.FilePath.EndsWith(".png", StringComparison.OrdinalIgnoreCase);
+			bool aIsJpg = a.FilePath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || a.FilePath.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+			bool bIsJpg = b.FilePath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) || b.FilePath.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+			if (aIsPng && bIsJpg) return -1;
+			if (bIsPng && aIsJpg) return 1;
+			return 0;
+		}
+
+		foreach (List<string> group in exactGroups)
+		{
+			List<DuplicateFile> allFiles = new(group.Count);
+			foreach (string path in CollectionsMarshal.AsSpan(group))
+			{
+				if (fileData.TryGetValue(path, out ExactVisualImage? metadata))
+				{
+					allFiles.Add(new DuplicateFile(path, Path.GetFileName(path), metadata.FileSizeBytes, metadata.Width, metadata.Height));
+				}
+			}
+
+			switch (selectionStrategy)
+			{
+				case OriginalSelectionStrategy.BiggestFileSize:
+					allFiles.Sort((a, b) =>
+					{
+						int cmp = b.FileSizeBytes.CompareTo(a.FileSizeBytes);
+						if (cmp != 0) return cmp;
+						cmp = ComputeArea(b).CompareTo(ComputeArea(a));
+						return cmp != 0 ? cmp : CompareExtensions(a, b);
+					});
+					break;
+				case OriginalSelectionStrategy.SmallestFileSize:
+					allFiles.Sort((a, b) =>
+					{
+						int cmp = a.FileSizeBytes.CompareTo(b.FileSizeBytes);
+						if (cmp != 0) return cmp;
+						cmp = ComputeArea(b).CompareTo(ComputeArea(a));
+						return cmp != 0 ? cmp : CompareExtensions(a, b);
+					});
+					break;
+				case OriginalSelectionStrategy.BiggestResolution:
+					allFiles.Sort((a, b) =>
+					{
+						int cmp = ComputeArea(b).CompareTo(ComputeArea(a));
+						if (cmp != 0) return cmp;
+						cmp = b.FileSizeBytes.CompareTo(a.FileSizeBytes);
+						return cmp != 0 ? cmp : CompareExtensions(a, b);
+					});
+					break;
+				case OriginalSelectionStrategy.SmallestResolution:
+					allFiles.Sort((a, b) =>
+					{
+						int cmp = ComputeArea(a).CompareTo(ComputeArea(b));
+						if (cmp != 0) return cmp;
+						cmp = b.FileSizeBytes.CompareTo(a.FileSizeBytes);
+						return cmp != 0 ? cmp : CompareExtensions(a, b);
+					});
+					break;
+				default:
+					break;
+			}
+
+			List<DuplicateFile> duplicates = allFiles.GetRange(1, allFiles.Count - 1);
+			RangedObservableCollection<DuplicateFile> duplicatesCollection = new(duplicates);
+			result.Groups.Add(new DuplicateGroup(allFiles[0], duplicatesCollection));
+			result.DuplicateCount += duplicatesCollection.Count;
+		}
+
+		sw.Stop();
+		Logger.Write($"Exact visual scan complete in {sw.Elapsed.TotalSeconds:F2} seconds. Total files: {result.TotalProcessed}. Duplicates found: {result.DuplicateCount}.");
+		return result;
+	}
+
+	/// <summary>
+	/// Perceptual dHash implementation used for every threshold other than exactly 100.
+	/// </summary>
+	private static async Task<DuplicateScanResult> FindPerceptualMatches(
 		List<string>? filesToSearch,
 		List<string>? directoriesToSearch,
 		IProgress<double> progress,

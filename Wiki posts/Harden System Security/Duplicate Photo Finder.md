@@ -80,7 +80,7 @@ You have full control over how you want to clean up the duplicates.
 
 * **Delete Individual Duplicates:** Click the "Delete" button under any specific duplicate image to remove it.
 * **Delete All Duplicates in Group:** A single button under the Original image allows you to delete all associated duplicates at once.
-* **Auto Delete All Duplicates:** Found under the "Actions" menu, this will automatically iterate through all found groups and delete every duplicate file, leaving only the originals.
+* **Auto Delete All Duplicates:** Found under the "Actions" menu, this will automatically iterate through all found groups and delete every duplicate file, leaving only the originals selected by the chosen **Keep Original** strategy. With **Biggest Resolution** selected, if matching images have the same resolution, the image with the larger on-disk file size is kept and the others are deleted, if two images have the same resolution and file size, the app will keep the lossless PNG format over the JPG/JPEG format (when the formats are either PNG or JPG/JPEG).
 * **Delete Original File:** If you decide you don't want the original file either, you can right-click (or use the context menu) on the Original image's thumbnail to delete it. This will remove the original file from your disk and dismiss the group from the results, but it will safely leave the duplicates untouched in case you want to manage them differently.
 
 ### Undo Last Deletion

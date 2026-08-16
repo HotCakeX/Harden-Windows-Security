@@ -59,7 +59,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Text="Choose one or more images, select screen content, capture a region, or scan with the camera."
@@ -177,8 +177,9 @@
             <TextBox x:Name="DecodedTextBox"
                      Grid.Row="3"
                      AcceptsReturn="True"
-                     IsReadOnly="True"                     
+                     IsReadOnly="True"
                      PlaceholderText="Decoded QR text appears here."
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                      TextWrapping="Wrap"/>
             <Button x:Name="CopyButton"
                     Grid.Row="4"

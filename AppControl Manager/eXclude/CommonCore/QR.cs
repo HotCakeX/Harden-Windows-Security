@@ -2073,7 +2073,8 @@ internal static partial class QR
 			}
 
 			candidates = [.. candidates.OrderByDescending(static finder => finder.Count).Take(48)];
-			List<((Finder, Finder, Finder) Triple, double Score)> triples = [];
+			List<((Finder, Finder, Finder) Triple, double Score)> strictTriples = [];
+			List<((Finder, Finder, Finder) Triple, double Score)> perspectiveTriples = [];
 			for (int i = 0; i < candidates.Count - 2; i++)
 			{
 				for (int j = i + 1; j < candidates.Count - 1; j++)
@@ -2085,20 +2086,29 @@ internal static partial class QR
 						double b = Distance(ordered[0], ordered[2]);
 						double c = Distance(ordered[1], ordered[2]);
 						double module = (ordered[0].Module + ordered[1].Module + ordered[2].Module) / 3.0;
-						double cross = Math.Abs((ordered[1].X - ordered[0].X) * (ordered[2].X - ordered[0].X) + (ordered[1].Y - ordered[0].Y) * (ordered[2].Y - ordered[0].Y));
-						if (a < module * 10 || b < module * 10 || Math.Abs(a - b) > Math.Max(a, b) * 0.25 || Math.Abs(c * c - a * a - b * b) > c * c * 0.25 || cross > a * b * 0.25)
+						double dot = Math.Abs((ordered[1].X - ordered[0].X) * (ordered[2].X - ordered[0].X) + (ordered[1].Y - ordered[0].Y) * (ordered[2].Y - ordered[0].Y));
+						double legDifference = Math.Abs(a - b);
+						double longestLeg = Math.Max(a, b);
+
+						if (a >= module * 10 && b >= module * 10 && legDifference <= longestLeg * 0.25 && dot <= a * b * 0.25)
 						{
+							strictTriples.Add(((ordered[0], ordered[1], ordered[2]), legDifference + dot / longestLeg));
 							continue;
 						}
 
-						triples.Add(((ordered[0], ordered[1], ordered[2]), Math.Abs(a - b) + cross / Math.Max(a, b)));
+						// Strong perspective can make the finder-center legs substantially different in image space.
+						// These candidates run only after the original strict set and still require full QR validation.
+						if (a >= module * 8 && b >= module * 8 && legDifference <= longestLeg * 0.65 && dot <= a * b * 0.45 && c >= longestLeg * 0.90)
+						{
+							perspectiveTriples.Add(((ordered[0], ordered[1], ordered[2]), legDifference + dot / longestLeg));
+						}
 					}
 				}
 			}
 
-			return triples.OrderBy(static item => item.Score).Take(32).Select(static item => item.Triple);
+			return strictTriples.OrderBy(static item => item.Score).Take(32).Select(static item => item.Triple)
+				.Concat(perspectiveTriples.OrderBy(static item => item.Score).Take(32).Select(static item => item.Triple));
 		}
-
 		private static bool IsPattern(int[] r)
 		{
 			int total = r[0] + r[1] + r[2] + r[3] + r[4];
@@ -2259,14 +2269,15 @@ internal static partial class QR
 			foreach (int version in versions)
 			{
 				int dimension = 17 + 4 * version;
-				try
+				AddSampleCandidate(image, tl, tr, bl, dimension, false, true, candidates, failures);
+				AddSampleCandidate(image, tl, tr, bl, dimension, true, true, candidates, failures);
+
+				// A blurred image can create a false alignment-pattern match. Finder-only sampling is
+				// an additional candidate and never replaces the existing alignment-based candidates.
+				if (dimension > 21)
 				{
-					candidates.Add(SampleVersion(image, tl, tr, bl, dimension, false));
-					candidates.Add(SampleVersion(image, tl, tr, bl, dimension, true));
-				}
-				catch (Exception exception) when (exception is QrException or ArithmeticException)
-				{
-					failures.Add($"{dimension}x{dimension}: {exception.GetType().Name}: {exception.Message}");
+					AddSampleCandidate(image, tl, tr, bl, dimension, false, false, candidates, failures);
+					AddSampleCandidate(image, tl, tr, bl, dimension, true, false, candidates, failures);
 				}
 			}
 			if (candidates.Count == 0)
@@ -2276,7 +2287,19 @@ internal static partial class QR
 			return [.. candidates];
 		}
 
-		private static BooleanMatrix SampleVersion(BooleanMatrix image, Finder tl, Finder tr, Finder bl, int dimension, bool centerOnly)
+		private static void AddSampleCandidate(BooleanMatrix image, Finder tl, Finder tr, Finder bl, int dimension, bool centerOnly, bool useAlignmentPattern, List<BooleanMatrix> candidates, List<string> failures)
+		{
+			try
+			{
+				candidates.Add(SampleVersion(image, tl, tr, bl, dimension, centerOnly, useAlignmentPattern));
+			}
+			catch (Exception exception) when (exception is QrException or ArithmeticException)
+			{
+				failures.Add($"{dimension}x{dimension}, {(centerOnly ? "center" : "majority")}, {(useAlignmentPattern ? "alignment" : "finder-only")}: {exception.GetType().Name}: {exception.Message}");
+			}
+		}
+
+		private static BooleanMatrix SampleVersion(BooleanMatrix image, Finder tl, Finder tr, Finder bl, int dimension, bool centerOnly, bool useAlignmentPattern)
 		{
 			double horizontalModuleX = (tr.X - tl.X) / (dimension - 7.0);
 			double horizontalModuleY = (tr.Y - tl.Y) / (dimension - 7.0);
@@ -2284,7 +2307,7 @@ internal static partial class QR
 			double verticalModuleY = (bl.Y - tl.Y) / (dimension - 7.0);
 			PointD fourthTarget;
 			PointD fourthSource;
-			if (dimension > 21 && TryFindAlignmentPattern(image, tl, horizontalModuleX, horizontalModuleY, verticalModuleX, verticalModuleY, dimension, out PointD alignment))
+			if (useAlignmentPattern && dimension > 21 && TryFindAlignmentPattern(image, tl, horizontalModuleX, horizontalModuleY, verticalModuleX, verticalModuleY, dimension, out PointD alignment))
 			{
 				fourthTarget = alignment;
 				fourthSource = new PointD(dimension - 6.5, dimension - 6.5);
@@ -3126,6 +3149,8 @@ internal static partial class QR
 	private static class PayloadDecoder
 	{
 		private const string Alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:";
+		private static readonly Encoding s_cp437 = CreateCodePageEncoding(437);
+		private static readonly Encoding s_big5 = CreateCodePageEncoding(950);
 
 		internal static string Decode(byte[] data, int version)
 		{
@@ -3295,14 +3320,20 @@ internal static partial class QR
 
 		private static Encoding EncodingForEci(int eci) => eci switch
 		{
+			0 or 2 => s_cp437,
 			1 or 3 => Encoding.Latin1,
-			2 or 170 => Encoding.ASCII,
 			25 => Encoding.BigEndianUnicode,
 			26 => Encoding.UTF8,
-			27 => Encoding.ASCII,
-			28 => new System.Text.UnicodeEncoding(true, true, true),
+			27 or 170 => Encoding.ASCII,
+			28 => s_big5,
 			_ => throw new QrException($"Unsupported ECI assignment {eci} without an external code-page provider.")
 		};
+
+		private static Encoding CreateCodePageEncoding(int codePage)
+		{
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+			return Encoding.GetEncoding(codePage, EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback);
+		}
 
 		private static void DecodeKanjiAsEscapedBytes(BitReader bits, int count, StringBuilder output)
 		{

@@ -622,7 +622,8 @@ internal sealed partial class QRCodeManagerWindow : Window, IDisposable
 		}
 		catch (Exception ex)
 		{
-			MainInfoBar.WriteError(ex);
+			Logger.Write(ex);
+			MainInfoBar.WriteWarning("Failed to decode the QR code from the Snipping Tool capture. See logs for details.");
 		}
 		finally
 		{

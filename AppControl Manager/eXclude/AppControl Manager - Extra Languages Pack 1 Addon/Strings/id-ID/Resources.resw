@@ -967,9 +967,6 @@ CATATAN: Opsi ini selalu ditegakkan jika ada kebijakan App Control UMCI yang men
   <data name="UpdateCheckError" xml:space="preserve">
     <value>Terjadi kesalahan saat memeriksa pembaruan.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Memerlukan Windows 11 24H2 atau yang lebih baru</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>Terapkan Kebijakan Tidak Ditandatangani</value>
   </data>

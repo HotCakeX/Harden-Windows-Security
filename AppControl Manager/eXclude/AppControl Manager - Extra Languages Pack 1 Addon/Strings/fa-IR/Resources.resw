@@ -967,9 +967,6 @@
   <data name="UpdateCheckError" xml:space="preserve">
     <value>هنگام بررسی به‌روزرسانی خطایی رخ داد.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>به Windows 11 24H2 یا جدیدتر نیاز دارد</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>استقرار خط‌مشی امضانشده</value>
   </data>

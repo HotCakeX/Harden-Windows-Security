@@ -967,9 +967,6 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
   <data name="UpdateCheckError" xml:space="preserve">
     <value>An error occurred while checking for update.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Requires Windows 11 24H2 or later</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>Deploy Unsigned Policy</value>
   </data>

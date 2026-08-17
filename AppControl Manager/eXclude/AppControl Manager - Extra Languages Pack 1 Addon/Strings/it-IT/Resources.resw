@@ -967,9 +967,6 @@ NOTA: questa opzione viene sempre applicata se un qualsiasi criterio UMCI di App
   <data name="UpdateCheckError" xml:space="preserve">
     <value>Si è verificato un errore durante la verifica degli aggiornamenti.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Richiede Windows 11 24H2 o versione successiva</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>Distribuisci criterio non firmato</value>
   </data>

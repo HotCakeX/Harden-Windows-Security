@@ -230,7 +230,7 @@
             <TextBox x:Name="CreatorTextBox"
                      Grid.Row="1"
                      AcceptsReturn="True"
-                     MaxHeight="180"                     
+                     MaxHeight="180"
                      PlaceholderText="Enter text or a URL"
                      TextChanged="{x:Bind CreatorTextBox_TextChanged}"
                      TextWrapping="Wrap"/>
@@ -238,7 +238,7 @@
                     Background="White"
                     BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                     BorderThickness="1"
-                    CornerRadius="8"                    
+                    CornerRadius="8"
                     Padding="16">
                 <Grid>
                     <Image x:Name="CreatedQrImage"

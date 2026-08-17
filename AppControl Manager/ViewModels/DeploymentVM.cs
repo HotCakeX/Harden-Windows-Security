@@ -44,16 +44,6 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 		AuthCompanionCLS = new(UpdateButtonsStates, MainInfoBar, AuthenticationContext.Intune);
 
-		if (Atlas.IsOlderThan24H2)
-		{
-			DeploySignedXMLButtonIsEnabled = false;
-			DeploySignedXMLButtonContentTextBlock = Atlas.GetStr("RequiresWindows1124H2");
-		}
-		else
-		{
-			DeploySignedXMLButtonIsEnabled = true;
-		}
-
 		// Initialize Local Only Tool Gradients
 		LinearGradientBrush orangeGradient = CreateGradientBrush(Colors.Orange, Colors.OrangeRed);
 		LocalOnlyBorderBrush = orangeGradient;
@@ -93,7 +83,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 
 	public AuthenticationCompanion AuthCompanionCLS { get; }
 
-	internal bool DeploySignedXMLButtonIsEnabled { get; set => SP(ref field, value); }
+	internal bool DeploySignedXMLButtonIsEnabled { get; set => SP(ref field, value); } = true;
 
 	/// <summary>
 	/// When true, policies will be deployed to Intune instead of the local system.

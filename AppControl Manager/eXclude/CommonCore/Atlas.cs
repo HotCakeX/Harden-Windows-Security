@@ -89,9 +89,6 @@ internal static partial class Atlas
 	// Path to the Intune hardening policies
 	internal static readonly string HardeningPoliciesPath = Path.Join(AppContext.BaseDirectory, "Resources", "Intune Files", "Hardening Policies");
 
-	// Determine whether the current OS is older than 24H2
-	internal static readonly bool IsOlderThan24H2 = Environment.OSVersion.Version < new Version(10, 0, 26100, 0);
-
 	// The namespace of the App Control policies
 	internal const string SiPolicyNamespace = "urn:schemas-microsoft-com:sipolicy";
 

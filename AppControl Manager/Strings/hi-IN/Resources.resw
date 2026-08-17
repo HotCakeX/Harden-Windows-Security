@@ -967,9 +967,6 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="UpdateCheckError" xml:space="preserve">
     <value>अपडेट की जांच करते समय एक त्रुटि हुई।</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Windows 11 24H2 या बाद का आवश्यक है</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>असाइन की गई नीति तैनात करें</value>
   </data>

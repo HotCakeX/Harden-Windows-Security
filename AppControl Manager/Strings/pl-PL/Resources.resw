@@ -967,9 +967,6 @@ UWAGA: Ta opcja jest zawsze wymuszana, jeśli jakakolwiek zasada UMCI Kontroli A
   <data name="UpdateCheckError" xml:space="preserve">
     <value>Wystąpił błąd podczas sprawdzania aktualizacji.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Wymaga systemu Windows 11 24H2 lub nowszego</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>Wdróż niepodpisane zasady</value>
   </data>

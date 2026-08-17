@@ -967,9 +967,6 @@
   <data name="UpdateCheckError" xml:space="preserve">
     <value>เกิดข้อผิดพลาดขณะตรวจสอบการอัปเดต</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>ต้องใช้ Windows 11 24H2 หรือใหม่กว่า</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>ปรับใช้นโยบายที่ไม่ได้ลงนาม</value>
   </data>

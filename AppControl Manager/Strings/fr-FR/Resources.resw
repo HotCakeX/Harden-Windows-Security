@@ -967,9 +967,6 @@
   <data name="UpdateCheckError" xml:space="preserve">
     <value>Une erreur s'est produite lors de la recherche de mise à jour.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Nécessite Windows 11 24H2 ou une version ultérieure</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>Déployer une stratégie non signée</value>
   </data>

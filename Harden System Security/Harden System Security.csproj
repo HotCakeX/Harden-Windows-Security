@@ -343,7 +343,7 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Assets\MCP\manifest.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Resources\AttackSurfaceReductionRules.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>

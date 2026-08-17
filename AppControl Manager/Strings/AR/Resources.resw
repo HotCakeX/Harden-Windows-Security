@@ -967,9 +967,6 @@
   <data name="UpdateCheckError" xml:space="preserve">
     <value>حدث خطأ أثناء التحقق من التحديث.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>يتطلب Windows 11 24H2 أو أحدث</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>نشر سياسة غير موقعة</value>
   </data>

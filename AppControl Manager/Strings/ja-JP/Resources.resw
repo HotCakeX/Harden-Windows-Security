@@ -967,9 +967,6 @@
   <data name="UpdateCheckError" xml:space="preserve">
     <value>更新の確認中にエラーが発生しました。</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Windows 11 24H2 以降が必要です</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>未署名ポリシーの展開</value>
   </data>

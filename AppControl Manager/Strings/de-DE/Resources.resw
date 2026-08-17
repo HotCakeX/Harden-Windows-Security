@@ -967,9 +967,6 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="UpdateCheckError" xml:space="preserve">
     <value>Beim Suchen nach einem Update ist ein Fehler aufgetreten.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Erfordert Windows 11 24H2 oder höher</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>Nicht signierte Richtlinie bereitstellen</value>
   </data>

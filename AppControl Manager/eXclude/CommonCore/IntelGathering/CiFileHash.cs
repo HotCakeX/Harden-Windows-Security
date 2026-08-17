@@ -508,11 +508,6 @@ internal static class CiFileHash
 	/// <exception cref="InvalidOperationException"></exception>
 	private static unsafe (string?, string?) GetFlatHash(string fileName)
 	{
-		if (Atlas.IsOlderThan24H2)
-		{
-			return (null, null);
-		}
-
 		string? SHA3_512Hash = null;
 		string? SHA3_384Hash = null;
 

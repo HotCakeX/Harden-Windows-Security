@@ -967,9 +967,6 @@ NOTA: Esta opción siempre se aplica si alguna directiva UMCI de App Control la 
   <data name="UpdateCheckError" xml:space="preserve">
     <value>Ocurrió un error al buscar actualizaciones.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Requiere Windows 11 24H2 o posterior</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>Implementar Directiva Sin Firmar</value>
   </data>

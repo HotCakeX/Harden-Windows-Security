@@ -967,9 +967,6 @@
   <data name="UpdateCheckError" xml:space="preserve">
     <value>Παρουσιάστηκε σφάλμα κατά τον έλεγχο για ενημέρωση.</value>
   </data>
-  <data name="RequiresWindows1124H2" xml:space="preserve">
-    <value>Απαιτεί Windows 11 24H2 ή νεότερη</value>
-  </data>
   <data name="DeployUnsignedPolicy" xml:space="preserve">
     <value>Ανάπτυξη Μη Υπογεγραμμένης Πολιτικής</value>
   </data>

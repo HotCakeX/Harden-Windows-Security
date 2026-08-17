@@ -33,6 +33,7 @@
   xmlns:appdata="http://schemas.microsoft.com/appx/manifest/appdata/windows10"
   xmlns:trustedlaunch="http://schemas.microsoft.com/appx/manifest/trustedlaunch/windows10"
   IgnorableNamespaces="mp uap uap3 uap17 desktop desktop5 com virtualization appdata trustedlaunch">
+  <!-- IgnorableNamespaces are evaluated during package creation and installation/registration so any optional feature's namespace should be added to it as long as the app can properly function without it. -->
 
   <Identity
     Name="VioletHansen.AppControlManager"
@@ -64,6 +65,7 @@
 
   </Properties>
 
+  <!-- Must match Windows SDK major versions: https://learn.microsoft.com/en-us/windows/apps/windows-sdk/#support-and-servicing -->
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.26100.0" MaxVersionTested="10.0.28000.0" />
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.26100.0" MaxVersionTested="10.0.28000.0" />
@@ -89,6 +91,7 @@
   -->
 
   <Applications>
+    <!-- https://learn.microsoft.com/en-us/windows/msix/desktop/desktop-to-uwp-behind-the-scenes#types-of-desktop-app -->
     <Application Id="App"
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$" uap18:TrustLevel="mediumIL" uap18:RuntimeBehavior="packagedClassicApp">

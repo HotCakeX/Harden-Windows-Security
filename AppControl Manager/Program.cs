@@ -82,13 +82,23 @@ internal static class Program
 		_launchArguments = args;
 
 #if HARDEN_SYSTEM_SECURITY
-		// The Widgets Board launches the app with this argument in order to activate the widget provider COM server.
-		// It is a completely headless code path that must never reach the XAML application startup.
-		// The COM runtime can supply additional ones such as "-Embedding" but we don't need them.
-		if (args.Length >= 1 && string.Equals(args[0], Widgets.WidgetProviderHost.ComServerArgument, StringComparison.OrdinalIgnoreCase))
+		if (args.Length >= 1)
 		{
-			Widgets.WidgetProviderHost.Run();
-			Environment.Exit(0);
+			// The Widgets Board launches the app with this argument in order to activate the widget provider COM server.
+			// It is a completely headless code path that must never reach the XAML application startup.
+			// The COM runtime can supply additional ones such as "-Embedding" but we don't need them.
+			if (string.Equals(args[0], Widgets.WidgetProviderHost.ComServerArgument, StringComparison.OrdinalIgnoreCase))
+			{
+				Widgets.WidgetProviderHost.Run();
+				Environment.Exit(0);
+			}
+
+			// MCP is a headless stdio protocol path and must run before WinUI initialization.
+			if (string.Equals(args[0], "--mcp", StringComparison.OrdinalIgnoreCase))
+			{
+				MCP.McpServer.RunAsync().GetAwaiter().GetResult();
+				return;
+			}
 		}
 #endif
 

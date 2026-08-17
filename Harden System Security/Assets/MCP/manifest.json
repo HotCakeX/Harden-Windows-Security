@@ -1,0 +1,214 @@
+{
+    // https://github.com/modelcontextprotocol/mcpb/blob/main/MANIFEST.md
+    "manifest_version": "0.3",
+    "name": "Harden-System-Security-MCP",
+    "version": "1.0.0",
+    "description": "MCP tools provided by the Harden System Security app.",
+    "long_description": "The Harden System Security app provides many useful and secure features that are normally accessible via the graphical user interface. The following MCP tools allow you to use them in agentic workflows.",
+    "author": {
+        "name": "Violet Hansen",
+        "email": "spynetgirl@outlook.com",
+        "url": "https://github.com/HotCakeX/Harden-Windows-Security"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/HotCakeX/Harden-Windows-Security.git"
+    },
+    "homepage": "https://github.com/HotCakeX/Harden-Windows-Security",
+    "documentation": "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security",
+    "support": "https://github.com/HotCakeX/Harden-Windows-Security/issues",
+    "server": {
+        "type": "binary",
+        "entry_point": "HardenSystemSecurity.exe",
+        "mcp_config": {
+            "command": "HardenSystemSecurity.exe",
+            "args": [
+                "--mcp"
+            ]
+        }
+    },
+    "tools": [
+        {
+            "name": "decode_qr",
+            "description": "Decodes a QR code from an existing local image path or exact base64 image bytes. Never invent, infer, or construct a temporary path for a chat attachment. If a verified existing path or exact base64 bytes are unavailable, do not call this tool and ask the user to provide the original absolute path or save the attachment to disk first.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "image_path": {
+                        "type": "string",
+                        "description": "Verified absolute path of an image that already exists on disk. Never guess a path for a dragged or pasted chat attachment."
+                    },
+                    "image_base64": {
+                        "type": "string",
+                        "description": "Exact base64-encoded bytes supplied by the host. Never synthesize base64 from visual context."
+                    }
+                },
+                "anyOf": [
+                    {
+                        "required": [
+                            "image_path"
+                        ]
+                    },
+                    {
+                        "required": [
+                            "image_base64"
+                        ]
+                    }
+                ],
+                "additionalProperties": false
+            }
+        },
+        {
+            "name": "create_qr",
+            "description": "Creates a PNG QR code image from text and returns the generated image.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "description": "Text to encode in the QR code."
+                    },
+                    "error_correction_level": {
+                        "type": "string",
+                        "description": "QR error correction level. Defaults to M.",
+                        "enum": [
+                            "L",
+                            "M",
+                            "Q",
+                            "H"
+                        ],
+                        "default": "M"
+                    }
+                },
+                "required": [
+                    "text"
+                ],
+                "additionalProperties": false
+            }
+        },
+        {
+            "name": "check_file_reputation",
+            "description": "Checks the Microsoft Defender SmartScreen or Smart App Control file reputation verdict for an existing local file path.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "file_path": {
+                        "type": "string",
+                        "description": "Absolute path of an existing local file whose reputation should be checked."
+                    }
+                },
+                "required": [
+                    "file_path"
+                ],
+                "additionalProperties": false
+            }
+        }
+    ],
+    "tools_generated": false,
+    "keywords": [
+        "api",
+        "automation",
+        "QR",
+        "Security",
+        "Windows",
+        "Harden System Security"
+    ],
+    "license": "MIT",
+    "_meta": {
+        "com.microsoft.windows": {
+            "static_responses": {
+                "initialize": {
+                    "protocolVersion": "2025-06-18",
+                    "capabilities": {
+                        "tools": {
+                            "listChanged": false
+                        }
+                    },
+                    "serverInfo": {
+                        "name": "Harden System Security",
+                        "version": "1.0.0"
+                    }
+                },
+                "tools/list": {
+                    "tools": [
+                        {
+                            "name": "decode_qr",
+                            "description": "Decodes a QR code from an existing local image path or exact base64 image bytes. Never invent, infer, or construct a temporary path for a chat attachment. If a verified existing path or exact base64 bytes are unavailable, do not call this tool and ask the user to provide the original absolute path or save the attachment to disk first.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "image_path": {
+                                        "type": "string",
+                                        "description": "Verified absolute path of an image that already exists on disk. Never guess a path for a dragged or pasted chat attachment."
+                                    },
+                                    "image_base64": {
+                                        "type": "string",
+                                        "description": "Exact base64-encoded bytes supplied by the host. Never synthesize base64 from visual context."
+                                    }
+                                },
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "image_path"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "image_base64"
+                                        ]
+                                    }
+                                ],
+                                "additionalProperties": false
+                            }
+                        },
+                        {
+                            "name": "create_qr",
+                            "description": "Creates a PNG QR code image from text and returns the generated image.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "text": {
+                                        "type": "string",
+                                        "description": "Text to encode in the QR code."
+                                    },
+                                    "error_correction_level": {
+                                        "type": "string",
+                                        "description": "QR error correction level. Defaults to M.",
+                                        "enum": [
+                                            "L",
+                                            "M",
+                                            "Q",
+                                            "H"
+                                        ],
+                                        "default": "M"
+                                    }
+                                },
+                                "required": [
+                                    "text"
+                                ],
+                                "additionalProperties": false
+                            }
+                        },
+                        {
+                            "name": "check_file_reputation",
+                            "description": "Checks the Microsoft Defender SmartScreen or Smart App Control file reputation verdict for an existing local file path.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "file_path": {
+                                        "type": "string",
+                                        "description": "Absolute path of an existing local file whose reputation should be checked."
+                                    }
+                                },
+                                "required": [
+                                    "file_path"
+                                ],
+                                "additionalProperties": false
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

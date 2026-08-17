@@ -17,6 +17,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -112,6 +113,37 @@ internal static partial class QR
 		}
 
 		internal static GeneratedQr GenerateWithStatistics(string text, char errorCorrectionLevel) => QrEncoder.Generate(text, errorCorrectionLevel);
+
+		/// <summary>
+		/// Generates a PNG-encoded QR image.
+		/// </summary>
+		internal static async Task<byte[]> GeneratePngAsync(string text, char errorCorrectionLevel)
+		{
+			using GeneratedQr generatedQr = GenerateWithStatistics(text, errorCorrectionLevel);
+			using SoftwareBitmap bitmap = generatedQr.TakeBitmap();
+			using InMemoryRandomAccessStream stream = new();
+			BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, stream);
+			encoder.SetSoftwareBitmap(bitmap);
+			await encoder.FlushAsync();
+			stream.Seek(0);
+			using Stream input = stream.AsStreamForRead();
+			using MemoryStream output = stream.Size <= int.MaxValue ? new MemoryStream((int)stream.Size) : new MemoryStream();
+			await input.CopyToAsync(output);
+			return output.ToArray();
+		}
+
+		/// <summary>
+		/// Decodes a QR code from encoded image bytes without exposing decoder implementation details.
+		/// </summary>
+		internal static async Task<QrResult> DecodeAsync(byte[] encodedImage, string sourceName = "In-memory encoded image")
+		{
+			using InMemoryRandomAccessStream stream = new();
+			_ = await stream.WriteAsync(encodedImage.AsBuffer());
+			stream.Seek(0);
+			BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+			using SoftwareBitmap bitmap = await decoder.GetSoftwareBitmapAsync(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+			return await DecodeAsync(bitmap, sourceName);
+		}
 
 		/// <summary>
 		/// Decodes a QR code directly from an uncompressed in-memory bitmap.
@@ -262,7 +294,10 @@ internal static partial class QR
 				{
 					using Direct3D11CaptureFrame frame = sender.TryGetNextFrame();
 					SoftwareBitmap bitmap = await SoftwareBitmap.CreateCopyFromSurfaceAsync(frame.Surface, BitmapAlphaMode.Premultiplied);
-					_ = source.TrySetResult(bitmap);
+					if (!source.TrySetResult(bitmap))
+					{
+						bitmap.Dispose();
+					}
 				}
 				catch (Exception exception)
 				{

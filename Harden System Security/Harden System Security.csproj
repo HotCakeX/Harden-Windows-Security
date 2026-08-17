@@ -342,6 +342,9 @@
         <Content Include="QuantumRelayHSS.exe">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Assets\MCP\manifest.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
         <Content Include="Resources\AttackSurfaceReductionRules.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

@@ -125,11 +125,24 @@
           </com:ComServer>
         </com:Extension>
 
+        <!-- Windows on-device agent registry registration for the packaged MCP server. -->
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="com.microsoft.windows.ai.mcpServer"
+                             Id="HardenSystemSecurityMcpServer"
+                             DisplayName="Harden System Security MCP Server"
+                             PublicFolder="Assets\MCP"
+                             Description = "Access the features of the Harden System Security app via MCP and use them in agentic workflows." >
+            <uap3:Properties>
+              <Registration>manifest.json</Registration>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
         <!-- Widgets Board widget provider registration -->
         <uap3:Extension Category="windows.appExtension">
           <uap3:AppExtension Name="com.microsoft.windows.widgets"
                              DisplayName="Harden System Security"
-                             Id="HardenSystemSecurityWidgetProvider">
+                             Id="HardenSystemSecurityWidgetProvider"
+                             Description = "Features of the Harden System Security app exposed to the Windows Widgets Board." >
             <uap3:Properties>
               <WidgetProvider>
                 <ProviderIcons>

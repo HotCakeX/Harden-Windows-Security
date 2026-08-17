@@ -281,7 +281,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.WindowsPackageManager.ComInterop" Version="1.30.80-preview" />
+        <PackageReference Include="Microsoft.WindowsPackageManager.ComInterop" Version="1.30.100-preview" />
         <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.11" />
 
     </ItemGroup>

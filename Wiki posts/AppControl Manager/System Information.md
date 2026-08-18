@@ -113,6 +113,8 @@ Use the <img src="https://raw.githubusercontent.com/HotCakeX/.github/7ac3898730b
 
 * **Assignments**: Use this button to view the assignments of the currently selected policy and remove each assignment if needed.
 
+* **Open in the Policy Editor**: Open the selected online policy in [the Policy Editor](https://github.com/HotCakeX/Harden-Windows-Security/wiki/PolicyEditor) where you can view all of its details, modify it and save it to a file. This is very useful to know what rules are included in the remotely deployed policies.
+
 <br>
 
 <div align="center">

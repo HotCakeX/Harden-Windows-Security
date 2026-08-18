@@ -440,6 +440,59 @@ When you install the Harden System Security app, you will be able to access the 
 
 <br>
 
+## MCP Server
+
+The Harden System Security app includes native built-in MCP Server that offers many of its features to AI models for agentic workflows. Here are some of them:
+
+* Checking file reputation based on Microsoft Defender SmartScreen or Smart App Control.
+
+* Creating QR code images from any texts
+
+* Decoding QR images from files
+
+You can use them in the Visual Studio Code by simply [adding a new MCP Server](https://code.visualstudio.com/blogs/2025/05/12/agent-mode-meets-mcp) stdio: `HSS.exe --mcp`
+
+
+<br>
+
+<div align="center">
+
+<img alt="image" src="https://github.com/user-attachments/assets/61ddb258-f5cc-43cd-b929-2dff3f52276a" />
+
+<img alt="image" src="https://github.com/user-attachments/assets/42f5620f-d5e7-49f6-b4af-6d52d786ce7c" />
+
+</div>
+
+<br>
+
+After that, you can natively and seamlessly access and use the Harden System Security's features in your AI workloads.
+
+<br>
+
+<div align="center">
+
+### Agentic on-device QR Code Creation
+
+<img alt="image" src="https://github.com/user-attachments/assets/f597b1e2-8bd6-4f6b-bc70-b60a3f7b1093" />
+
+<img alt="image" src="https://github.com/user-attachments/assets/624a69b9-fceb-4e9d-a99e-e85cf3d646fb" />
+
+### Agentic on-device QR Decoder
+
+<img alt="image" src="https://github.com/user-attachments/assets/3cd831ad-4f3e-45f3-8f30-21d109efb9ae" />
+
+<img alt="image" src="https://github.com/user-attachments/assets/5b4f2da9-bade-4d19-8b91-abc484aef3fe" />
+
+### Microsoft Defender Cloud Verdicts Retrieval via Agentic Workflow
+
+<img alt="image" src="https://github.com/user-attachments/assets/a6eb7776-1d29-4de8-9cf4-d4055083eabf" />
+
+<img alt="image" src="https://github.com/user-attachments/assets/0f080cfa-d208-463f-a5a3-0ff67926f65a" />
+
+</div>
+
+<br>
+
 ## Under the Hood: Files and Directories Structures Explained
 
 Here is the breakdown of some of the directories and files used by the Harden System Security app.

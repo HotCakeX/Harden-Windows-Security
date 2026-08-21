@@ -94,3 +94,31 @@ Use this section to convert all of your XML files to CIP binaries files in bulk.
 </div>
 
 <br>
+
+## Managed Installers
+
+<div align="center">
+
+<img alt="Managed Installer in AppControl Manager" src="https://github.com/user-attachments/assets/e656a1ac-8ec5-4d83-a314-7dbb58bc8356" />
+
+</div>
+
+<br>
+
+This section allows you to create [Managed Installer](https://learn.microsoft.com/windows/security/application-security/application-control/app-control-for-business/design/configure-authorized-apps-deployed-with-a-managed-installer) rules for your system. Managed Installers are used to allow applications to install other applications without requiring to modify the existing App Control policies. This is particularly useful in enterprise environments where software deployment is managed centrally, and you want to ensure that only authorized installers can add new applications to the system.
+
+One of the best candidates to be designated as Managed Installer is [the Intune Management Extension](https://learn.microsoft.com/intune/device-management/tools/management-extension-windows), which is responsible for deploying applications and updates in an Intune-managed environment. By configuring the Intune Management Extension as a Managed Installer, you can ensure that it has the necessary permissions to install applications without being blocked by the deployed App Control policies.
+
+AppControl Manager provides a user-friendly interface to create custom Managed Installer rules. Simply browse for the executable of the program you wish to designate as a Managed Installer, and the application will automatically scan it and provide you with options to create the appropriate rule.
+
+The combobox offers 3 rule types based on the available metadata:
+
+1. Publisher (Only available if the selected file is signed and has the required file metadata such as Product Name and Original File Name)
+2. Hash (The most secure option but if the Managed Installer executable itself changes or gets updated, you will need to recreate the Managed installer rule.)
+3. Path (The least secure option)
+
+You can have more than 1 Managed Installer rules on the same system. AppControl Manager offers a refresh button that scans the system for existing Managed Installer rules and updates the list accordingly. You then have the option to delete individual Managed Installer rules or clear all of them at once, if you need to.
+
+AppControl Manager automatically takes care of starting or stopping any relevant Windows services that are required for the Managed Installer rules to work properly.
+
+<br>

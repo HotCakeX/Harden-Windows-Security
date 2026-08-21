@@ -400,14 +400,12 @@ public sealed partial class App : Application
 							}
 						case ViewModelBase.LaunchProtocolActions.FileSignature:
 							{
-								ViewFileCertificatesVM vm = ViewModelProvider.ViewFileCertificatesVM;
-								await vm.OpenInViewFileCertificatesVM(_activationFilePath);
+								await ViewModelProvider.ViewFileCertificatesVM.OpenInViewFileCertificatesVM(_activationFilePath);
 								break;
 							}
 						case ViewModelBase.LaunchProtocolActions.FileHashes:
 							{
-								GetCIHashesVM vm = ViewModelProvider.GetCIHashesVM;
-								await vm.OpenInGetCIHashes(_activationFilePath);
+								await ViewModelProvider.GetCIHashesVM.OpenInGetCIHashes(_activationFilePath);
 								break;
 							}
 						case ViewModelBase.LaunchProtocolActions.DeployRMMAuditPolicy:

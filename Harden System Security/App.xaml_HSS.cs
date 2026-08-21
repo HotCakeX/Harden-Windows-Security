@@ -70,8 +70,7 @@ public sealed partial class App : Application
 		Type? PageTypeToNavTo = null;
 
 		// CLI import/export arguments
-		string? _cliImportPath = null;
-		string? _cliExportPath = null;
+		string? _cliImportPath = null, _cliExportPath = null;
 		bool _cliModeFull = true; // --mode defaults to full; partial sets this false
 
 		/// <summary>
@@ -112,8 +111,7 @@ public sealed partial class App : Application
 			if (!string.IsNullOrWhiteSpace(_activationFilePath))
 			{
 				// Properly quote the file path for command line parsing (double embedded quotes if any).
-				string safePath = _activationFilePath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase);
-				parts.Add($"--file=\"{safePath}\"");
+				parts.Add($"--file=\"{_activationFilePath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase)}\"");
 			}
 
 			// Navigation arguments
@@ -125,13 +123,11 @@ public sealed partial class App : Application
 			// Include import/export specific arguments
 			if (!string.IsNullOrWhiteSpace(_cliImportPath))
 			{
-				string safeImport = _cliImportPath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase);
-				parts.Add($"--in=\"{safeImport}\"");
+				parts.Add($"--in=\"{_cliImportPath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase)}\"");
 			}
 			if (!string.IsNullOrWhiteSpace(_cliExportPath))
 			{
-				string safeExport = _cliExportPath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase);
-				parts.Add($"--out=\"{safeExport}\"");
+				parts.Add($"--out=\"{_cliExportPath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase)}\"");
 			}
 			parts.Add($"--mode={(_cliModeFull ? "full" : "partial")}");
 
@@ -167,75 +163,60 @@ public sealed partial class App : Application
 			}
 
 			// Parse CLI: preset index (0,1,2)
-			string? presetArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--preset=", StringComparison.OrdinalIgnoreCase));
-			if (presetArg is not null)
+			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--preset=", StringComparison.OrdinalIgnoreCase)) is string presetArg)
 			{
 				string raw = presetArg["--preset=".Length..].Trim();
-				if (int.TryParse(raw, out int idx) && idx >= 0 && idx <= 2)
-				{
-					_cliPresetIndex = idx;
-					requireAdminPrivilege = true;
-				}
-				else
+				if (!int.TryParse(raw, out int idx) || idx < 0 || idx > 2)
 				{
 					Logger.Write("--preset must be 0 (Basic), 1 (Recommended), or 2 (Complete).");
 					Environment.Exit(2);
 					return;
 				}
+				_cliPresetIndex = idx;
+				requireAdminPrivilege = true;
 			}
 
 			// Parse CLI: device usage intent
-			string? intentArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--intent=", StringComparison.OrdinalIgnoreCase));
-			if (intentArg is not null)
+			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--intent=", StringComparison.OrdinalIgnoreCase)) is string intentArg)
 			{
 				string rawIntent = intentArg["--intent=".Length..].Trim();
-				if (Enum.TryParse(rawIntent, true, out Intent parsedIntent))
-				{
-					_cliDeviceIntent = parsedIntent;
-					requireAdminPrivilege = true;
-				}
-				else
+				if (!Enum.TryParse(rawIntent, true, out Intent parsedIntent))
 				{
 					Logger.Write("Error: --intent value was not valid.");
 					Environment.Exit(2);
 					return;
 				}
+				_cliDeviceIntent = parsedIntent;
+				requireAdminPrivilege = true;
 			}
 
-			string? opArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--op=", StringComparison.OrdinalIgnoreCase));
-			if (opArg is not null)
+			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--op=", StringComparison.OrdinalIgnoreCase)) is string opArg)
 			{
 				// Store raw operation text; validation is done via enum parsing below.
 				_cliOperation = opArg["--op=".Length..].Trim();
 			}
 
 			// Look for our key
-			string? fileArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase));
-
-			if (fileArg is not null)
+			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--file=", StringComparison.OrdinalIgnoreCase)) is string fileArg)
 			{
 				string filePath = fileArg["--file=".Length..].Trim('"');
 
-				if (!string.IsNullOrWhiteSpace(filePath))
+				if (File.Exists(filePath))
 				{
-					if (File.Exists(filePath))
-					{
-						Logger.Write($"Parsed File: {filePath}");
-						_activationFilePath = filePath;
+					Logger.Write($"Parsed File: {filePath}");
+					_activationFilePath = filePath;
 
-						// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-						requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true);
-					}
-					else
-					{
-						Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
-					}
+					// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+					requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true);
+				}
+				else
+				{
+					Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
 				}
 			}
 
 			// Parse navigation restoration arguments
-			string? navTagArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--navtag=", StringComparison.OrdinalIgnoreCase));
-			if (navTagArg is not null)
+			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--navtag=", StringComparison.OrdinalIgnoreCase)) is string navTagArg)
 			{
 				string rawTag = navTagArg["--navtag=".Length..].Trim();
 				if (!string.IsNullOrWhiteSpace(rawTag))
@@ -245,20 +226,16 @@ public sealed partial class App : Application
 					{
 						Logger.Write($"{rawTag} is not a valid page tag.");
 					}
-					else
+					// If the page requires elevation, we must ask for it.
+					else if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
 					{
-						// If the page requires elevation, we must ask for it.
-						if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
-						{
-							requireAdminPrivilege = true;
-						}
+						requireAdminPrivilege = true;
 					}
 				}
 			}
 
 			// Parse import/export specific arguments
-			string? inArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--in=", StringComparison.OrdinalIgnoreCase));
-			if (inArg is not null)
+			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--in=", StringComparison.OrdinalIgnoreCase)) is string inArg)
 			{
 				string rawIn = inArg["--in=".Length..].Trim().Trim('"');
 				if (!string.IsNullOrWhiteSpace(rawIn))
@@ -269,8 +246,7 @@ public sealed partial class App : Application
 				}
 			}
 
-			string? outArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--out=", StringComparison.OrdinalIgnoreCase));
-			if (outArg is not null)
+			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--out=", StringComparison.OrdinalIgnoreCase)) is string outArg)
 			{
 				string rawOut = outArg["--out=".Length..].Trim().Trim('"');
 				if (!string.IsNullOrWhiteSpace(rawOut))
@@ -280,24 +256,17 @@ public sealed partial class App : Application
 				}
 			}
 
-			string? modeArg = ArgsLines.FirstOrDefault(a => a.StartsWith("--mode=", StringComparison.OrdinalIgnoreCase));
-			if (modeArg is not null)
+			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--mode=", StringComparison.OrdinalIgnoreCase)) is string modeArg)
 			{
 				string rawMode = modeArg["--mode=".Length..].Trim();
-				if (string.Equals(rawMode, "full", StringComparison.OrdinalIgnoreCase))
-				{
-					_cliModeFull = true;
-				}
-				else if (string.Equals(rawMode, "partial", StringComparison.OrdinalIgnoreCase))
-				{
-					_cliModeFull = false;
-				}
-				else
+				bool isFull = string.Equals(rawMode, "full", StringComparison.OrdinalIgnoreCase);
+				if (!isFull && !string.Equals(rawMode, "partial", StringComparison.OrdinalIgnoreCase))
 				{
 					Logger.Write("Error: --mode must be 'full' or 'partial'.");
 					Environment.Exit(2);
 					return;
 				}
+				_cliModeFull = isFull;
 			}
 		}
 
@@ -376,7 +345,7 @@ public sealed partial class App : Application
 						{
 							foreach (IStorageItem item in fileActivatedArgs.Files)
 							{
-								if (item.Path is not null && File.Exists(item.Path))
+								if (File.Exists(item.Path))
 								{
 									// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
 									requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: item.Path, readAndWrite: true);
@@ -444,8 +413,6 @@ public sealed partial class App : Application
 				// If a CLI preset operation is requested, execute it headlessly.
 				if (_cliPresetIndex.HasValue)
 				{
-					int presetIndex = _cliPresetIndex.Value;
-
 					// Validate the operation
 					if (!Enum.TryParse(_cliOperation, true, out MUnitOperation opEnum))
 					{
@@ -454,10 +421,10 @@ public sealed partial class App : Application
 						return;
 					}
 
-					Logger.Write($"Running preset {presetIndex} with operation '{opEnum}'...");
+					Logger.Write($"Running preset {_cliPresetIndex.Value} with operation '{opEnum}'...");
 
 					// Run the command
-					await ViewModelProvider.ProtectVM.RunPresetFromCliAsync(presetIndex, opEnum);
+					await ViewModelProvider.ProtectVM.RunPresetFromCliAsync(_cliPresetIndex.Value, opEnum);
 
 					Logger.Write("Operation completed.");
 				}
@@ -466,8 +433,7 @@ public sealed partial class App : Application
 				else if (_cliDeviceIntent.HasValue)
 				{
 					// Require --op and only support Apply for intents for now
-					if (string.IsNullOrWhiteSpace(_cliOperation) ||
-						!Enum.TryParse(_cliOperation, true, out MUnitOperation opEnum) ||
+					if (!Enum.TryParse(_cliOperation, true, out MUnitOperation opEnum) ||
 						opEnum != MUnitOperation.Apply)
 					{
 						Logger.Write("Error: --intent requires '--op=Apply'.");

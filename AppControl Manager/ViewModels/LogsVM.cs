@@ -36,7 +36,7 @@ namespace AppControlManager.ViewModels;
 
 internal sealed partial class LogsVM : ViewModelBase, IDisposable
 {
-	private const string LogFilePattern = $"{Atlas.AppName}_Logs_*.txt";
+	private const string LogFilePattern = $"{Logger.AppName}_Logs_*.txt";
 	internal static readonly char[] LineSeparators = ['\r', '\n'];
 	private const int PageSize = 50;
 
@@ -232,7 +232,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	{
 		try
 		{
-			IOrderedEnumerable<FileInfo> logFiles = Directory.GetFiles(Atlas.LogsDirectory, LogFilePattern)
+			IOrderedEnumerable<FileInfo> logFiles = Directory.GetFiles(Logger.LogsDirectory, LogFilePattern)
 				.Select(static f => new FileInfo(f))
 				.OrderByDescending(static f => f.CreationTime);
 
@@ -537,7 +537,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	{
 		try
 		{
-			await OpenFileInDefaultFileHandler(Atlas.LogsDirectory);
+			await OpenFileInDefaultFileHandler(Logger.LogsDirectory);
 		}
 		catch (Exception ex)
 		{

@@ -83,13 +83,6 @@ internal static partial class Atlas
 	// Storing the path to User Config JSON file in the app's folder in the Program Files
 	internal static readonly string UserConfigJson = Path.Join(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
 
-#if HARDEN_SYSTEM_SECURITY
-	internal const string AppName = "HardenSystemSecurity";
-#endif
-#if APP_CONTROL_MANAGER
-	internal const string AppName = "AppControlManager";
-#endif
-
 	/// <summary>
 	/// Package Family Name of the application
 	/// </summary>
@@ -139,23 +132,6 @@ internal static partial class Atlas
 	/// Convert it to a normal Version object
 	/// </summary>
 	internal static readonly Version currentAppVersion = new(Package.Current.Id.Version.Major, Package.Current.Id.Version.Minor, Package.Current.Id.Version.Build, Package.Current.Id.Version.Revision);
-
-#if APP_CONTROL_MANAGER
-	/// <summary>
-	/// The directory where the logs will be stored
-	/// </summary>
-	internal static readonly string LogsDirectory = IsElevated ?
-		Path.Join(UserConfigDir, "Logs") :
-		Path.Join(Path.GetTempPath(), $"{AppName}Logs");
-#endif
-
-#if HARDEN_SYSTEM_SECURITY
-	/// <summary>
-	/// The directory where the logs will be stored
-	/// </summary>
-	internal static readonly string LogsDirectory = Path.Join(Path.GetTempPath(), $"{AppName}Logs");
-#endif
-
 
 	internal static readonly Lazy<char[]> InvalidFileNameChars = new(Path.GetInvalidFileNameChars, LazyThreadSafetyMode.None);
 

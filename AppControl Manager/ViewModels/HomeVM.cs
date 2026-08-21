@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -32,7 +31,6 @@ using System.Xml.Linq;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Pages;
 using CommonCore.Hardware;
-using CommonCore.Others;
 using CommonCore.Power;
 using CommonCore.ThermalMonitors;
 using Microsoft.UI.Dispatching;

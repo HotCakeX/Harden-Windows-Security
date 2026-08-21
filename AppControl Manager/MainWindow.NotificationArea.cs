@@ -17,14 +17,12 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using CommonCore.Interop;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Windows.ApplicationModel;
 using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.Graphics;
 
 #if APP_CONTROL_MANAGER
 using AppControlManager.ViewModels;

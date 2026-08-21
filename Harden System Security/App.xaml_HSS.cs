@@ -30,7 +30,6 @@ using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.BadgeNotifications;
 using Windows.ApplicationModel.Activation;
 using Windows.Storage;
-using WinRT;
 
 namespace HardenSystemSecurity;
 
@@ -316,7 +315,7 @@ public sealed partial class App : Application
 				if (AppNotificationManager.IsSupported() && !_appNotificationManagerRegistered)
 				{
 					// This must happen before GetActivatedEventArgs for notification activations.
-					AppNotificationManager.Default.NotificationInvoked += App_NotificationInvoked;
+					AppNotificationManager.Default.NotificationInvoked += AppUpdate.App_NotificationInvoked;
 					AppNotificationManager.Default.Register();
 					_appNotificationManagerRegistered = true;
 				}
@@ -337,7 +336,7 @@ public sealed partial class App : Application
 			catch { }
 #endif
 
-			launchToUpdatePageFromNotification = IsUpdateNotificationActivation(activatedEventArgs);
+			launchToUpdatePageFromNotification = AppUpdate.IsUpdateNotificationActivation(activatedEventArgs);
 
 			// Detect a Snipping Tool callback so it can be redirected to the primary app instance.
 			launchFromSnippingToolResponse = TryGetSnippingToolResponse(activatedEventArgs, out _);
@@ -607,54 +606,11 @@ public sealed partial class App : Application
 		AppUpdate.CheckAtStartup();
 	}
 
-	[DynamicWindowsRuntimeCast(typeof(AppNotificationActivatedEventArgs))]
-	private static bool IsUpdateNotificationActivation(AppActivationArguments? activationArguments)
-	{
-		if (activationArguments is null)
-		{
-			return false;
-		}
-
-		if (activationArguments.Data is AppNotificationActivatedEventArgs appNotificationArgs)
-		{
-			bool isUpdateAction = appNotificationArgs.Arguments.TryGetValue(AppUpdate.UpdateNotificationActionKey, out string? action) &&
-				string.Equals(action, AppUpdate.UpdateNotificationActionValue, StringComparison.OrdinalIgnoreCase);
-
-			return isUpdateAction ||
-				(!string.IsNullOrWhiteSpace(appNotificationArgs.Argument) &&
-				appNotificationArgs.Argument.Contains($"{AppUpdate.UpdateNotificationActionKey}={AppUpdate.UpdateNotificationActionValue}", StringComparison.OrdinalIgnoreCase));
-		}
-
-		if (activationArguments.Data is IToastNotificationActivatedEventArgs toastNotificationArgs)
-		{
-			return !string.IsNullOrWhiteSpace(toastNotificationArgs.Argument) &&
-				toastNotificationArgs.Argument.Contains($"{AppUpdate.UpdateNotificationActionKey}={AppUpdate.UpdateNotificationActionValue}", StringComparison.OrdinalIgnoreCase);
-		}
-
-		return false;
-	}
-
-	private static void App_NotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs args)
-	{
-		bool isUpdateAction = args.Arguments.TryGetValue(AppUpdate.UpdateNotificationActionKey, out string? action) &&
-			string.Equals(action, AppUpdate.UpdateNotificationActionValue, StringComparison.OrdinalIgnoreCase);
-
-		if (!isUpdateAction && !string.IsNullOrWhiteSpace(args.Argument))
-		{
-			isUpdateAction = args.Argument.Contains($"{AppUpdate.UpdateNotificationActionKey}={AppUpdate.UpdateNotificationActionValue}", StringComparison.OrdinalIgnoreCase);
-		}
-
-		if (isUpdateAction)
-		{
-			QueueUpdatePageNavigation();
-		}
-	}
-
 	private static void App_Activated(object? sender, AppActivationArguments args)
 	{
-		if (IsUpdateNotificationActivation(args))
+		if (AppUpdate.IsUpdateNotificationActivation(args))
 		{
-			QueueUpdatePageNavigation();
+			AppUpdate.QueueUpdatePageNavigation();
 		}
 		// Forward redirected Snipping Tool callbacks to the active Secure Vault page on the UI dispatcher.
 		else if (TryGetSnippingToolResponse(args, out Uri? responseUri))
@@ -674,26 +630,5 @@ public sealed partial class App : Application
 		}
 		responseUri = protocolArgs.Uri;
 		return true;
-	}
-
-	private static void QueueUpdatePageNavigation()
-	{
-		bool wasQueued = Atlas.AppDispatcher.TryEnqueue(async () =>
-		{
-			try
-			{
-				MainWindow?.Activate();
-				await ViewModelProvider.NavigationService.Navigate(typeof(Pages.UpdatePage), null);
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
-		});
-
-		if (!wasQueued)
-		{
-			Logger.Write("Failed to queue update page navigation from notification activation.");
-		}
 	}
 }

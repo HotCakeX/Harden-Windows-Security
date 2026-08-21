@@ -46,24 +46,43 @@ internal static class Logger
 	internal static bool CliRequested;
 #pragma warning restore CS0649
 
-	/// <summary>
-	/// Called from the App class during app initialization to set up the logging system.
-	/// </summary>
-	internal static void Configure(string logsDirectory, string appName)
+#if HARDEN_SYSTEM_SECURITY
+	internal const string AppName = "HardenSystemSecurity";
+#else
+	internal const string AppName = "AppControlManager";
+#endif
+
+#if APP_CONTROL_MANAGER
+	internal static readonly string LogsDirectory = Atlas.IsElevated ?
+		Path.Join(Atlas.UserConfigDir, "Logs") :
+		Path.Join(Path.GetTempPath(), $"{AppName}Logs");
+#else
+	internal static readonly string LogsDirectory = Path.Join(Path.GetTempPath(), $"{AppName}Logs");
+#endif
+
+	private static readonly Lazy<(string LogFileName, Channel<string> LogChannel)> _state = new(static () =>
 	{
 		// Create the Logs directory if it doesn't exist, won't do anything if it exists
-		_ = Directory.CreateDirectory(logsDirectory);
+		_ = Directory.CreateDirectory(LogsDirectory);
 
 		// Check the size of the directory and clear it if it exceeds 1000 MB
 		// To ensure the logs directory doesn't get too big
-		if (GetDirectorySize(logsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
+		if (GetDirectorySize(LogsDirectory) > 1000 * 1024 * 1024) // 1000 MB in bytes
 		{
 			// Empty the directory while retaining the most recent file
-			EmptyDirectory(logsDirectory);
+			EmptyDirectory(LogsDirectory);
 		}
 
-		LogFileName = Path.Join(logsDirectory, $"{appName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
+		string LogFileName = Path.Join(LogsDirectory, $"{AppName}_Logs_{DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt");
 
+		// The log channel for high-performance asynchronous logging
+		Channel<string> logChannel = Channel.CreateUnbounded<string>(new UnboundedChannelOptions
+		{
+			SingleReader = true,
+			AllowSynchronousContinuations = false
+		});
+
+		StreamWriter _streamWriter;
 		FileStream? fileStream = null;
 
 		try
@@ -97,31 +116,23 @@ internal static class Logger
 		{
 			// Asynchronously enumerates all available log messages from the channel.
 			// The ReadAllAsync method ensures that the loop waits for new entries if none are available.
-			await foreach (string log in _logChannel.Reader.ReadAllAsync())
+			await foreach (string log in logChannel.Reader.ReadAllAsync())
 			{
 				await _streamWriter.WriteLineAsync(log);
 			}
 		});
-	}
+
+#if HARDEN_SYSTEM_SECURITY || APP_CONTROL_MANAGER
+		_ = logChannel.Writer.TryWrite($"{DateTime.Now}: {string.Format(Atlas.GetStr("AppStartupMessage"), Environment.Version)}");
+#endif
+
+		return (LogFileName, logChannel);
+	});
 
 	/// <summary>
 	/// The Logs file path
 	/// </summary>
-	internal static string LogFileName { get; private set; } = null!;
-
-	/// <summary>
-	/// The log channel for high-performance asynchronous logging
-	/// </summary>
-	private static readonly Channel<string> _logChannel = Channel.CreateUnbounded<string>(new UnboundedChannelOptions
-	{
-		SingleReader = true,
-		AllowSynchronousContinuations = false
-	});
-
-	/// <summary>
-	/// The StreamWriter used for writing to the log file
-	/// </summary>
-	private static StreamWriter _streamWriter = null!;
+	internal static string LogFileName => _state.Value.LogFileName;
 
 	/// <summary>
 	/// Write the log to the file
@@ -135,7 +146,7 @@ internal static class Logger
 
 		// Enqueue the log message for asynchronous writing
 		// The channel is unbounded and is not completed during app lifetime, so TryWrite is expected to succeed.
-		_ = _logChannel.Writer.TryWrite(logEntry);
+		_ = _state.Value.LogChannel.Writer.TryWrite(logEntry);
 	}
 
 	// Overload that takes in Exceptions
@@ -147,7 +158,7 @@ internal static class Logger
 			Console.Error.WriteLine(logEntry);
 
 		// Enqueue the log message for asynchronous writing
-		_ = _logChannel.Writer.TryWrite(logEntry);
+		_ = _state.Value.LogChannel.Writer.TryWrite(logEntry);
 	}
 
 	private static long GetDirectorySize(string directoryPath)

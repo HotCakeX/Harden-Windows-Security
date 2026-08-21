@@ -56,9 +56,6 @@ internal static class WidgetProviderHost
 	/// </summary>
 	internal static void Run()
 	{
-		// Initialize logging system
-		Logger.Configure(logsDirectory: Atlas.LogsDirectory, appName: Atlas.AppName);
-
 		// The app's entry point is single threaded apartment because of XAML, but an out of process COM server that has no
 		// message pump has to live in the multi threaded apartment, so the whole server runs on a dedicated MTA thread.
 		Thread comServerThread = new(RunComServer)

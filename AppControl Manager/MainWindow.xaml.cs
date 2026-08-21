@@ -42,7 +42,6 @@ using Microsoft.UI.Composition;
 using WinRT;
 using System.ComponentModel;
 using Windows.UI.ViewManagement;
-using Microsoft.Win32;
 using Microsoft.UI.Content;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml.Controls.Primitives;

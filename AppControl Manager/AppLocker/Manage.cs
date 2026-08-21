@@ -27,7 +27,6 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using AppControlManager.Others;
-using CommonCore.Interop;
 
 namespace AppControlManager.AppLocker;
 

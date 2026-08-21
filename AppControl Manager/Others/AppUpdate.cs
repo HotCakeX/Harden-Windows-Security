@@ -19,6 +19,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Services.Store;
 using Microsoft.Windows.BadgeNotifications;
+using Microsoft.Windows.AppNotifications;
+using WinRT;
+using Microsoft.Windows.AppLifecycle;
+using Windows.ApplicationModel.Activation;
 
 #if HARDEN_SYSTEM_SECURITY
 using AppControlManager.Others;
@@ -162,4 +166,67 @@ internal static class AppUpdate
 		});
 	}
 
+	internal static void QueueUpdatePageNavigation()
+	{
+		bool wasQueued = Atlas.AppDispatcher.TryEnqueue(async () =>
+		{
+			try
+			{
+				App.MainWindow?.Activate();
+				await ViewModelProvider.NavigationService.Navigate(typeof(Pages.UpdatePage), null);
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		});
+
+		if (!wasQueued)
+		{
+			Logger.Write("Failed to queue update page navigation from notification activation.");
+		}
+	}
+
+	internal static void App_NotificationInvoked(AppNotificationManager sender, AppNotificationActivatedEventArgs args)
+	{
+		bool isUpdateAction = args.Arguments.TryGetValue(UpdateNotificationActionKey, out string? action) &&
+			string.Equals(action, UpdateNotificationActionValue, StringComparison.OrdinalIgnoreCase);
+
+		if (!isUpdateAction && !string.IsNullOrWhiteSpace(args.Argument))
+		{
+			isUpdateAction = args.Argument.Contains($"{UpdateNotificationActionKey}={UpdateNotificationActionValue}", StringComparison.OrdinalIgnoreCase);
+		}
+
+		if (isUpdateAction)
+		{
+			QueueUpdatePageNavigation();
+		}
+	}
+
+	[DynamicWindowsRuntimeCast(typeof(AppNotificationActivatedEventArgs))]
+	internal static bool IsUpdateNotificationActivation(AppActivationArguments? activationArguments)
+	{
+		if (activationArguments is null)
+		{
+			return false;
+		}
+
+		if (activationArguments.Data is AppNotificationActivatedEventArgs appNotificationArgs)
+		{
+			bool isUpdateAction = appNotificationArgs.Arguments.TryGetValue(UpdateNotificationActionKey, out string? action) &&
+				string.Equals(action, UpdateNotificationActionValue, StringComparison.OrdinalIgnoreCase);
+
+			return isUpdateAction ||
+				(!string.IsNullOrWhiteSpace(appNotificationArgs.Argument) &&
+				appNotificationArgs.Argument.Contains($"{UpdateNotificationActionKey}={UpdateNotificationActionValue}", StringComparison.OrdinalIgnoreCase));
+		}
+
+		if (activationArguments.Data is IToastNotificationActivatedEventArgs toastNotificationArgs)
+		{
+			return !string.IsNullOrWhiteSpace(toastNotificationArgs.Argument) &&
+				toastNotificationArgs.Argument.Contains($"{UpdateNotificationActionKey}={UpdateNotificationActionValue}", StringComparison.OrdinalIgnoreCase);
+		}
+
+		return false;
+	}
 }

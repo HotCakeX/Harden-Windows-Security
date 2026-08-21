@@ -72,9 +72,6 @@ public sealed partial class App : Application
 		// Detect and set the language of the application.
 		SettingsVM.SetLanguageOnStartup();
 
-		// Initialize logging system
-		Logger.Configure(logsDirectory: Atlas.LogsDirectory, appName: Atlas.AppName);
-
 		// Log the results of side-channel mitigation application.
 		if (Atlas.Settings.ApplySideChannelIsolationMitigationsOnStartup)
 		{
@@ -91,8 +88,6 @@ public sealed partial class App : Application
 
 		// Subscribe to UnobservedTaskException events
 		TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
-
-		Logger.Write(string.Format(Atlas.GetStr("AppStartupMessage"), Environment.Version));
 
 		// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/VersionInfo/VersionInfo.md
 		// This line would require us to add "Microsoft.WindowsAppSDK.Runtime" NuGet package as dependency which would add an extra 20MB size to the whole package.

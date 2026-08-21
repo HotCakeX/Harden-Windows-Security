@@ -68,6 +68,8 @@ Only the following [event types](https://learn.microsoft.com/en-us/windows/secur
 
 * **Query Examples**: Use this button to view example queries that generate standard logs compatible with the AppControl Manager. If you ever want to submit the Advanced Hunting queries directly in the Defender XDR, you can use the copy button next to each query and paste it in the portal.
 
+* **Query Time Range**: Open the expander menu to reveal this option. Use it to define the time range for the query that will be sent to the MDE Advanced Hunting API. By default there is no time range defined, which means that the query will retrieve all the logs available in your tenant.
+
 <br>
 
 ### Create Tab

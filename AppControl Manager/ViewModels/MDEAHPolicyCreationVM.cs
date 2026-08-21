@@ -20,6 +20,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
@@ -232,6 +233,15 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 	}
 
 	internal string? DeviceNameTextBox { get; set => SPT(ref field, value); }
+
+	/// <summary>
+	/// Optional first calendar date to include in the MDE Advanced Hunting query.
+	/// </summary>
+	internal DateTimeOffset? MDEQueryStartDate { get; set => SP(ref field, value); }
+	/// <summary>
+	/// Optional last calendar date to include in the MDE Advanced Hunting query.
+	/// </summary>
+	internal DateTimeOffset? MDEQueryEndDate { get; set => SP(ref field, value); }
 
 	/// <summary>
 	/// Calculates the maximum required width for each column (including header text)
@@ -922,7 +932,7 @@ DeviceEvents
 			AreElementsEnabled = false;
 
 			// Retrieve the MDE Advanced Hunting data as a JSON string
-			string? result = await CommonCore.MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(DeviceNameTextBox, AuthCompanionCLS.CurrentActiveAccount);
+			string? result = await CommonCore.MicrosoftGraph.Main.RunMDEAdvancedHuntingQuery(DeviceNameTextBox, MDEQueryStartDate, MDEQueryEndDate, AuthCompanionCLS.CurrentActiveAccount);
 
 			// If there were results
 			if (result is not null)
@@ -1102,5 +1112,17 @@ DeviceEvents
 
 		// Navigate to the analysis page
 		await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Analysis.MDEAdvancedHunting), null);
+	}
+
+	/// <summary>
+	/// Inverts the selection of the ListView.
+	/// </summary>
+	internal void InvertListViewSelection()
+	{
+		ListView? listView = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting);
+		if (listView is ListViewV2 listViewV2)
+		{
+			listViewV2.InvertSelection();
+		}
 	}
 }

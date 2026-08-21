@@ -658,50 +658,94 @@
 
             <Expander.Content>
 
-                <!-- Property Filter Section -->
+                <StackPanel Spacing="10">
+                    <!-- Optional time range for the MDE Advanced Hunting query. -->
+                    <Grid HorizontalAlignment="Center"
+                          Visibility="{x:Bind ViewModel.IsCloudSelected, Mode=OneWay}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0"
+                                Margin="0,0,0,-1"
+                                Padding="10,5"
+                                HorizontalAlignment="Center"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1,1,1,0"
+                                CornerRadius="6,6,0,0"
+                                Canvas.ZIndex="1">
+                            <TextBlock FontWeight="SemiBold"
+                                       Text="Query Time range"/>
+                        </Border>
+                        <Border Grid.Row="1"
+                                Padding="12"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8">
+                            <CCToolKit:WrapPanel HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"
+                                                 HorizontalSpacing="12"
+                                                 Orientation="Horizontal"
+                                                 VerticalSpacing="8">
+                                <CalendarDatePicker Date="{x:Bind ViewModel.MDEQueryStartDate, Mode=TwoWay}"
+                                                    Header="Starting date"
+                                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                    PlaceholderText="Pick a date"/>
+                                <CalendarDatePicker Date="{x:Bind ViewModel.MDEQueryEndDate, Mode=TwoWay}"
+                                                    Header="Ending date"
+                                                    IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
+                                                    PlaceholderText="Pick a date"/>
+                            </CCToolKit:WrapPanel>
+                        </Border>
+                    </Grid>
 
-                <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
+                    <!-- Property Filter Section -->
 
-                    <TextBlock Text="Property Filter:" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                    <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
 
-                    <ComboBox ItemsSource="{x:Bind CommonCore:ViewModelBase.PropertyFilterItems.Value}"
+                        <TextBlock Text="Property Filter:" VerticalAlignment="Center" FontWeight="SemiBold"/>
+
+                        <ComboBox ItemsSource="{x:Bind CommonCore:ViewModelBase.PropertyFilterItems.Value}"
                               SelectedItem="{x:Bind ViewModel.SelectedPropertyFilter, Mode=TwoWay}"
                               MinWidth="200"
                               PlaceholderText="Select a property..."
                               ToolTipService.ToolTip="Select a property to filter by"/>
 
-                    <TextBox Text="{x:Bind ViewModel.PropertyFilterValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        <TextBox Text="{x:Bind ViewModel.PropertyFilterValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              MinWidth="200"
                              PlaceholderText="Enter filter value..."
                              ToolTipService.ToolTip="Enter the value to filter the selected property by"/>
 
-                    <Button Click="{x:Bind ViewModel.ClearPropertyFilter}"
+                        <Button Click="{x:Bind ViewModel.ClearPropertyFilter}"
                             x:Uid="ResetFiltersButton">
-                        <Button.ContentTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <FontIcon Glyph="&#xE711;" FontSize="16"/>
-                                    <TextBlock Text="{x:Bind}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </Button.ContentTemplate>
-                    </Button>
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE711;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
 
-                    <Button Click="{x:Bind ViewModel.ExportToJsonButton_Click}"
+                        <Button Click="{x:Bind ViewModel.ExportToJsonButton_Click}"
                             IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                             x:Uid="ExportToJSONButton">
-                        <Button.ContentTemplate>
-                            <DataTemplate x:DataType="x:String">
-                                <StackPanel Orientation="Horizontal" Spacing="8">
-                                    <FontIcon Glyph="&#xE96A;" FontSize="16"/>
-                                    <TextBlock Text="{x:Bind}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </Button.ContentTemplate>
-                    </Button>
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE96A;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
 
-                </CCToolKit:WrapPanel>
+                    </CCToolKit:WrapPanel>
 
+                </StackPanel>
             </Expander.Content>
         </Expander>
 
@@ -791,6 +835,13 @@
                                 <MenuFlyoutItem x:Uid="DeleteRow" Click="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.ListViewFlyoutMenuDelete_Click}">
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE74D;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
+                                <MenuFlyoutItem Text="Invert selection"
+                                                Click="{x:Bind VMs:ViewModelProvider.MDEAHPolicyCreationVM.InvertListViewSelection}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8AB;" />
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 

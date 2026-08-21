@@ -472,7 +472,7 @@ internal sealed class CiSigner(string signerID)
 	internal string SignerId => signerID;
 }
 
-internal sealed class Signer(string id, string name, CertRoot certRoot)
+internal sealed class Signer(string id, CertRoot certRoot)
 {
 	internal CertRoot CertRoot => certRoot;
 
@@ -488,7 +488,7 @@ internal sealed class Signer(string id, string name, CertRoot certRoot)
 
 	internal List<ArtifactRuleRef>? ArtifactRuleRef { get; set; }
 
-	internal string Name { get; set; } = name;
+	internal string? Name { get; set; }
 
 	internal string ID { get; set; } = id;
 

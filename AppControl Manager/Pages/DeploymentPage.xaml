@@ -5,8 +5,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:CC="using:CommonCore"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:vm="using:AppControlManager.ViewModels"
+    xmlns:appLocker="using:AppControlManager.AppLocker"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <ScrollViewer>
@@ -307,6 +309,16 @@
                             </CCToolKit:WrapPanel>
                         </StackPanel>
 
+                        <CCToolKit:SettingsExpander.ItemsHeader>
+                            <customUI:InfoBarV2 BorderThickness="0"
+                                                CornerRadius="0"
+                                                IsIconVisible="True"
+                                                Message="Secure Boot is not enabled. Enable Secure Boot before relying on a signed policy for boot-chain protection."
+                                                IsOpen="{x:Bind CC:KUSER_SHARED_DATA.IsSecureBootDisabled}"
+                                                IsClosable="False"
+                                                Severity="Warning"/>
+                        </CCToolKit:SettingsExpander.ItemsHeader>
+
                         <CCToolKit:SettingsExpander.Items>
 
                             <customUI:SettingsCardV2 x:Uid="SignOnlyNoDeploySettingsCard"
@@ -495,8 +507,219 @@
 
                 </CCToolKit:SettingsCard>
 
-            </StackPanel>
+                <!-- AppLocker Managed Installer -->
+                <Border BorderBrush="{x:Bind ViewModel.DeploymentHighlightBorderBrush, Mode=OneWay}"
+                        BorderThickness="0.8"
+                        CornerRadius="4"
+                        Margin="0,4,0,4">
+                    <StackPanel Padding="10"
+                                Spacing="8">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="&#xE72E;"
+                                      FontSize="24"
+                                      Foreground="{x:Bind ViewModel.DeploymentHeaderForeground, Mode=OneWay}"
+                                      VerticalAlignment="Center"/>
+                            <StackPanel Grid.Column="1"
+                                        Spacing="3">
+                                <TextBlock Text="Managed Installers"
+                                           FontSize="20"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Text="Create, apply, and review Managed Installer rules"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Grid>
 
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.AppLockerInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.AppLockerInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.AppLockerInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.AppLockerInfoBar.IsClosable, Mode=OneWay}"/>
+
+                        <Border Padding="16"
+                                CornerRadius="8"
+                                Background="{ThemeResource LayerFillColorAltBrush}">
+                            <StackPanel Spacing="12">
+                                <TextBlock Text="Add a Managed Installer"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"/>
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Selected executable" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{x:Bind ViewModel.SelectedManagedInstallerPath, Mode=OneWay}"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                    </StackPanel>
+                                    <Button Grid.Column="1"
+                                            Click="{x:Bind ViewModel.BrowseForManagedInstallerExecutable_Click}">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE8E5;"/>
+                                            <TextBlock Text="Select EXE"/>
+                                        </StackPanel>
+                                    </Button>
+                                </Grid>
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox Header="Rule name"
+                                             Text="{x:Bind ViewModel.ManagedInstallerRuleName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <ComboBox Grid.Column="1"
+                                              Header="Rule type"
+                                              SelectedIndex="{x:Bind ViewModel.ManagedInstallerSelectedRuleIndex, Mode=TwoWay}">
+                                        <ComboBoxItem Content="Path"
+                                                      IsEnabled="{x:Bind ViewModel.ManagedInstallerPathRuleAvailable, Mode=OneWay}"/>
+                                        <ComboBoxItem Content="Hash"
+                                                      IsEnabled="{x:Bind ViewModel.ManagedInstallerHashRuleAvailable, Mode=OneWay}"/>
+                                        <ComboBoxItem Content="Publisher"
+                                                      IsEnabled="{x:Bind ViewModel.ManagedInstallerPublisherRuleAvailable, Mode=OneWay}"/>
+                                    </ComboBox>
+                                </Grid>
+                                <Grid ColumnSpacing="12" RowSpacing="8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBlock Text="Hash" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.SelectedManagedInstallerHash, Mode=OneWay}" FontFamily="Consolas" TextWrapping="Wrap"/>
+                                    <TextBlock Grid.Row="1" Text="Publisher" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{x:Bind ViewModel.SelectedManagedInstallerPublisher, Mode=OneWay}" TextWrapping="Wrap"/>
+                                    <TextBlock Grid.Row="2" Text="Product" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Row="2" Grid.Column="1" Text="{x:Bind ViewModel.SelectedManagedInstallerProduct, Mode=OneWay}" TextWrapping="Wrap"/>
+                                    <TextBlock Grid.Row="3" Text="Binary" FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Row="3" Grid.Column="1" Text="{x:Bind ViewModel.SelectedManagedInstallerBinary, Mode=OneWay}" TextWrapping="Wrap"/>
+                                </Grid>
+                                <Button HorizontalAlignment="Right"
+                                        IsEnabled="{x:Bind ViewModel.CanApplyManagedInstaller, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.ApplyManagedInstaller_Click}">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE74E;"/>
+                                        <TextBlock Text="Apply Managed Installer"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+
+                        <Grid ColumnSpacing="12"
+                              Margin="0,4,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="Current Policy"
+                                           FontSize="18"
+                                           FontWeight="SemiBold"/>
+                                <TextBlock Text="{x:Bind ViewModel.ManagedInstallerCountText, Mode=OneWay}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                            <DropDownButton Grid.Column="1"
+                                            Content="Options">
+                                <DropDownButton.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE712;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DropDownButton.ContentTemplate>
+                                <DropDownButton.Flyout>
+                                    <MenuFlyout Placement="Bottom">
+                                        <MenuFlyoutItem Text="Refresh"
+                                                        Click="{x:Bind ViewModel.RefreshManagedInstallerPolicy}"
+                                                        ToolTipService.ToolTip="Refresh the Managed Installer policy">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE72C;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Clear Policy"
+                                                        ToolTipService.ToolTip="Clear the entire AppLocker and Managed Installer policy"
+                                                        Click="{x:Bind ViewModel.ClearManagedInstallerPolicy_Click}">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE74D;" />
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                    </MenuFlyout>
+                                </DropDownButton.Flyout>
+                            </DropDownButton>
+                        </Grid>
+
+                        <ListView ItemsSource="{x:Bind ViewModel.ManagedInstallerPolicy.Rules, Mode=OneWay}"
+                                  SelectionMode="None"
+                                  MaxHeight="420">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="appLocker:ManagedInstallerRuleInfo">
+                                    <Border Padding="10"
+                                            Margin="0,0,0,6"
+                                            CornerRadius="8"
+                                            BorderThickness="1"
+                                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                        <StackPanel Spacing="4">
+                                            <Grid ColumnSpacing="10">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{x:Bind Name}"                                                          
+                                                           Style="{StaticResource SubtitleTextBlockStyle}"                                                          
+                                                           TextWrapping="Wrap"/>
+                                                <Border Grid.Column="1"
+                                                        Padding="8,4"
+                                                        CornerRadius="10"
+                                                        Background="{ThemeResource AccentFillColorSecondaryBrush}"
+                                                        VerticalAlignment="Center">
+                                                    <TextBlock Text="{x:Bind RuleTypeText}"
+                                                               FontSize="12"/>
+                                                </Border>
+                                                <Button Grid.Column="2"
+                                                        Tag="{x:Bind}"
+                                                        ToolTipService.ToolTip="Delete this Managed Installer"
+                                                        VerticalAlignment="Center"
+                                                        Click="{x:Bind vm:ViewModelProvider.DeploymentVM.DeleteManagedInstaller_Click}">
+                                                    <FontIcon Glyph="&#xE74D;"/>
+                                                </Button>
+                                            </Grid>
+                                            <StackPanel Height="{x:Bind PathSectionHeight}">
+                                                <TextBlock Text="Path" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{x:Bind Path}" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                            <StackPanel Height="{x:Bind HashSectionHeight}">
+                                                <TextBlock Text="Authenticode hash" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{x:Bind HashData}" FontFamily="Consolas" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{x:Bind SourceFileName}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                            </StackPanel>
+                                            <StackPanel Height="{x:Bind PublisherSectionHeight}"
+                                                        Spacing="3">
+                                                <TextBlock Text="Publisher" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{x:Bind PublisherName}" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{x:Bind ProductName}" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{x:Bind BinaryName}" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{x:Bind VersionRange}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
         </Grid>
     </ScrollViewer>
 </Page>

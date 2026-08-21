@@ -476,10 +476,10 @@ internal static partial class Merger
 				// Create the new signer element
 				Signer newSigner = new(
 					id: newSignerID,
-					name: signer.Name,
 					certRoot: signer.CertRoot
 					)
 				{
+					Name = signer.Name,
 					CertEKU = signer.CertEKU,
 					CertIssuer = signer.CertIssuer,
 					CertPublisher = signer.CertPublisher,
@@ -589,11 +589,11 @@ internal static partial class Merger
 			{
 				// Create the new signer element
 				Signer newSigner = new(
-					name: signer.Name,
 					id: newSignerID,
 					certRoot: signer.CertRoot
 					)
 				{
+					Name = signer.Name,
 					CertEKU = signer.CertEKU,
 					CertIssuer = signer.CertIssuer,
 					CertPublisher = signer.CertPublisher,
@@ -677,11 +677,11 @@ internal static partial class Merger
 		{
 			// Create the new signer element
 			Signer newSigner = new(
-				name: signer.Name,
 				id: newSignerID,
 				certRoot: signer.CertRoot
 				)
 			{
+				Name = signer.Name,
 				CertEKU = signer.CertEKU,
 				CertIssuer = signer.CertIssuer,
 				CertPublisher = signer.CertPublisher,
@@ -752,11 +752,11 @@ internal static partial class Merger
 		{
 			// Create the new signer element
 			Signer newSigner = new(
-				name: signer.Name,
 				id: newSignerID,
 				certRoot: signer.CertRoot
 				)
 			{
+				Name = signer.Name,
 				CertEKU = signer.CertEKU,
 				CertIssuer = signer.CertIssuer,
 				CertPublisher = signer.CertPublisher,
@@ -817,10 +817,10 @@ internal static partial class Merger
 				// Create the new signer element
 				Signer newSigner = new(
 					id: newSignerID,
-					name: possibleSupplementalPolicySigner.Name,
 					certRoot: possibleSupplementalPolicySigner.CertRoot
 					)
 				{
+					Name = possibleSupplementalPolicySigner.Name,
 					CertEKU = possibleSupplementalPolicySigner.CertEKU,
 					CertIssuer = possibleSupplementalPolicySigner.CertIssuer,
 					CertPublisher = possibleSupplementalPolicySigner.CertPublisher,
@@ -858,10 +858,10 @@ internal static partial class Merger
 				// Create the new signer element
 				Signer newSigner = new(
 					id: newSignerID,
-					name: possibleUpdatePolicySigner.Name,
 					certRoot: possibleUpdatePolicySigner.CertRoot
 					)
 				{
+					Name = possibleUpdatePolicySigner.Name,
 					CertEKU = possibleUpdatePolicySigner.CertEKU,
 					CertIssuer = possibleUpdatePolicySigner.CertIssuer,
 					CertPublisher = possibleUpdatePolicySigner.CertPublisher,

@@ -580,15 +580,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	*/
 
-	/*
-	//This is already retrieved by m_AppWindow in the class, keeping it just in case
-	private static AppWindow GetAppWindowForCurrentWindow()
-	{
-		WindowId windowId = Win32Interop.GetWindowIdFromWindow(Atlas.hWnd);
-		return AppWindow.GetFromWindowId(windowId);
-	}
-	*/
-
 	/// <summary>
 	/// Event handler for the global NavigationView location change event
 	/// </summary>

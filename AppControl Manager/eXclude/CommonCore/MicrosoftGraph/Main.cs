@@ -312,44 +312,18 @@ internal static class Main
 
 	/// <summary>
 	/// Performs an Advanced Hunting query using Microsoft Defender for Endpoint
-	/// Accepts a device name as an optional parameter for filtering
+	/// Accepts optional device-name and calendar-date filters.
 	/// </summary>
+	/// <exception cref="ArgumentException"></exception>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static async Task<string?> RunMDEAdvancedHuntingQuery(string? deviceName, AuthenticatedAccounts? account)
+	internal static async Task<string?> RunMDEAdvancedHuntingQuery(string? deviceName, DateTimeOffset? startDate, DateTimeOffset? endDate, AuthenticatedAccounts? account)
 	{
 		if (account is null) return null;
-
-		string? output = null;
 
 		// Obtain a valid access token (silent refresh if needed)
 		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
 
-		QueryPayload queryPayload;
-
-		if (string.IsNullOrWhiteSpace(deviceName))
-		{
-			// Defining the query
-			queryPayload = new(
-				query: """
-DeviceEvents
-| where ActionType startswith "AppControlCodeIntegrity"
-   or ActionType startswith "AppControlCIScriptBlocked"
-   or ActionType startswith "AppControlCIScriptAudited"
-"""
-			);
-		}
-		else
-		{
-			queryPayload = new(
-				query: $"""
-DeviceEvents
-| where (ActionType startswith "AppControlCodeIntegrity"
-    or ActionType startswith "AppControlCIScriptBlocked"
-    or ActionType startswith "AppControlCIScriptAudited")
-    and DeviceName == "{deviceName}"
-"""
-			);
-		}
+		QueryPayload queryPayload = new(BuildMDEAdvancedHuntingQuery(deviceName, startDate, endDate));
 
 		string jsonPayload = JsonSerializer.Serialize(queryPayload, MSGraphJsonContext.Default.QueryPayload);
 
@@ -363,12 +337,11 @@ DeviceEvents
 				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 				return request;
-			}
-		);
+			});
 
 		if (response.IsSuccessStatusCode)
 		{
-			output = await response.Content.ReadAsStringAsync();
+			string output = await response.Content.ReadAsStringAsync();
 			Logger.Write(Atlas.GetStr("MDEAdvancedHuntingQuerySuccessfulMessage"));
 
 			return output;
@@ -386,6 +359,72 @@ DeviceEvents
 				errorContent));
 		}
 	}
+
+	/// <summary>
+	/// Builds the KQL while preserving the default query when no optional filters are configured.
+	/// </summary>
+	private static string BuildMDEAdvancedHuntingQuery(string? deviceName, DateTimeOffset? startDate, DateTimeOffset? endDate)
+	{
+		// If device name, start date and end date are not used, return the default query.
+		bool hasDeviceName = !string.IsNullOrWhiteSpace(deviceName);
+		if (!hasDeviceName && !startDate.HasValue && !endDate.HasValue)
+		{
+			return """
+DeviceEvents
+| where ActionType startswith "AppControlCodeIntegrity"
+   or ActionType startswith "AppControlCIScriptBlocked"
+   or ActionType startswith "AppControlCIScriptAudited"
+""";
+		}
+
+		DateTime? startUtc = startDate.HasValue ? GetLocalCalendarDateStartUtc(startDate.Value) : null;
+		DateTime? endExclusiveUtc = endDate.HasValue ? GetLocalCalendarDateStartUtc(endDate.Value.AddDays(1)) : null;
+		if (startUtc.HasValue && endExclusiveUtc.HasValue && startUtc.Value >= endExclusiveUtc.Value)
+		{
+			throw new ArgumentException("The MDE query start date must not be later than the end date.");
+		}
+
+		StringBuilder queryBuilder = new(384);
+
+		_ = queryBuilder.AppendLine("DeviceEvents");
+
+		if (startUtc.HasValue)
+		{
+			_ = queryBuilder.Append("| where Timestamp >= datetime(")
+				.Append(startUtc.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture))
+				.AppendLine(")");
+		}
+		if (endExclusiveUtc.HasValue)
+		{
+			_ = queryBuilder.Append("| where Timestamp < datetime(")
+				.Append(endExclusiveUtc.Value.ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ", System.Globalization.CultureInfo.InvariantCulture))
+				.AppendLine(")");
+		}
+
+		_ = queryBuilder.AppendLine("| where (ActionType startswith \"AppControlCodeIntegrity\"")
+			.AppendLine("    or ActionType startswith \"AppControlCIScriptBlocked\"")
+			.Append("    or ActionType startswith \"AppControlCIScriptAudited\")");
+
+		if (hasDeviceName)
+		{
+			_ = queryBuilder.Append("\n    and DeviceName == \"")
+				.Append(EscapeKqlStringLiteral(deviceName!))
+				.Append('"');
+		}
+
+		_ = queryBuilder.AppendLine();
+
+		return queryBuilder.ToString();
+	}
+
+	private static DateTime GetLocalCalendarDateStartUtc(DateTimeOffset selectedDate)
+	{
+		DateTime localDate = DateTime.SpecifyKind(selectedDate.Date, DateTimeKind.Unspecified);
+		return TimeZoneInfo.ConvertTimeToUtc(localDate, TimeZoneInfo.Local);
+	}
+
+	private static string EscapeKqlStringLiteral(string value) =>
+		value.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal);
 
 	/// <summary>
 	/// Fetches the M365/Entra ID groups.
@@ -1544,7 +1583,7 @@ DeviceEvents
 
 		if (response.IsSuccessStatusCode)
 		{
-			Logger.Write($"Deleted managed installer policy {policyId}");
+			Logger.Write($"Deleted Managed Installer policy {policyId}");
 		}
 		else
 		{

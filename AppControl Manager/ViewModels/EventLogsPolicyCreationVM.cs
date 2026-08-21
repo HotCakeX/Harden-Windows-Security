@@ -21,6 +21,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -967,5 +968,17 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 		// Navigate to the analysis page
 		await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Analysis.EventLogs), null);
+	}
+
+	/// <summary>
+	/// Inverts the selection of the ListView.
+	/// </summary>
+	internal void InvertListViewSelection()
+	{
+		ListView? listView = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Event_Logs);
+		if (listView is ListViewV2 listViewV2)
+		{
+			listViewV2.InvertSelection();
+		}
 	}
 }

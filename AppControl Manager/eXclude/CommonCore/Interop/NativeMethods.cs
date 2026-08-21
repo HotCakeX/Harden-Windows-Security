@@ -2592,11 +2592,67 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-sysallocstringlen
+	/// </summary>
+	[LibraryImport("oleaut32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr SysAllocStringLen(char* source, uint length);
+
+
+	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-sysfreestring
 	/// </summary>
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[LibraryImport("oleaut32.dll")]
 	internal static partial void SysFreeString(IntPtr bstrStr);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-sysstringlen
+	/// </summary>
+	[LibraryImport("oleaut32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint SysStringLen(IntPtr value);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-safearraygetlbound
+	/// </summary>
+	[LibraryImport("oleaut32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SafeArrayGetLBound(IntPtr safeArray, uint dimension, int* lowerBound);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-safearraygetubound
+	/// </summary>
+	[LibraryImport("oleaut32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SafeArrayGetUBound(IntPtr safeArray, uint dimension, int* upperBound);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-safearrayaccessdata
+	/// </summary>
+	[LibraryImport("oleaut32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SafeArrayAccessData(IntPtr safeArray, IntPtr* data);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-safearrayunaccessdata
+	/// </summary>
+	[LibraryImport("oleaut32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SafeArrayUnaccessData(IntPtr safeArray);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/oleauto/nf-oleauto-safearraydestroy
+	/// </summary>
+	[LibraryImport("oleaut32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SafeArrayDestroy(IntPtr safeArray);
 
 
 	/// <summary>

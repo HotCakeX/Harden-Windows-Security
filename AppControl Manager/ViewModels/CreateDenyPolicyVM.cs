@@ -20,6 +20,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
@@ -1284,6 +1285,18 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	}
 
 	#endregion
+
+	/// <summary>
+	/// Inverts the selection of the Files and Folders scan results ListView.
+	/// </summary>
+	internal void InvertFilesAndFoldersSelection()
+	{
+		ListView? listView = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults);
+		if (listView is ListViewV2 listViewV2)
+		{
+			listViewV2.InvertSelection();
+		}
+	}
 
 	internal void _OpenInFileExplorer() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.DenyPolicy_FilesAndFolders_ScanResults);
 	internal void _OpenInFileExplorerShortCut(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

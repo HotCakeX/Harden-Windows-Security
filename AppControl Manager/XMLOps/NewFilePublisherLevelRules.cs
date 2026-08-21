@@ -99,13 +99,13 @@ internal static class NewFilePublisherLevelRules
 
 				Signer newSigner = new(
 					id: signerID,
-					name: signerData.IntermediateCertName,
 					certRoot: new CertRoot
 					(
 						type: CertEnumType.TBS,
 						value: Convert.FromHexString(signerData.IntermediateCertTBS)
 					))
 				{
+					Name = signerData.IntermediateCertName,
 					CertPublisher = new CertPublisher(value: signerData.LeafCertName),
 					FileAttribRef = [new FileAttribRef(ruleID: FileAttribID)]
 				};
@@ -205,13 +205,13 @@ internal static class NewFilePublisherLevelRules
 
 				Signer newSigner = new(
 					id: signerID,
-					name: signerData.IntermediateCertName,
 					certRoot: new CertRoot
 					(
 						type: CertEnumType.TBS,
 						value: Convert.FromHexString(signerData.IntermediateCertTBS)
 					))
 				{
+					Name = signerData.IntermediateCertName,
 					CertPublisher = new CertPublisher(value: signerData.LeafCertName),
 					FileAttribRef = [new FileAttribRef(ruleID: FileAttribID)]
 				};

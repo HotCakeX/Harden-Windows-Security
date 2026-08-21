@@ -224,6 +224,13 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
+                                <MenuFlyoutItem Text="Invert selection"
+                                                Click="{x:Bind VMs:ViewModelProvider.CreateDenyPolicyVM.InvertFilesAndFoldersSelection}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8AB;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                
                                 <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.CreateDenyPolicyVM.LVController.CopySelectedRows}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.CreateDenyPolicyVM.LVController.CopySelectedRows}"/>

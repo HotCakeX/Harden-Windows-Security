@@ -22,6 +22,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.Pages;
@@ -694,6 +695,18 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		finally
 		{
 			FilesAndFoldersElementsAreEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Inverts the selection of the Files and Folders scan results ListView.
+	/// </summary>
+	internal void InvertFilesAndFoldersSelection()
+	{
+		ListView? listView = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.SupplementalPolicy_FilesAndFolders_ScanResults);
+		if (listView is ListViewV2 listViewV2)
+		{
+			listViewV2.InvertSelection();
 		}
 	}
 
@@ -1762,6 +1775,18 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		catch (Exception ex)
 		{
 			StrictKernelModeInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
+	/// Inverts the selection of the Strict Kernel Mode scan results ListView.
+	/// </summary>
+	internal void InvertStrictKernelModeSelection()
+	{
+		ListView? listView = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.SupplementalPolicy_StrictKernelMode_ScanResults);
+		if (listView is ListViewV2 listViewV2)
+		{
+			listViewV2.InvertSelection();
 		}
 	}
 

@@ -32,7 +32,7 @@ internal static class ConfigureISGServices
 	/// </summary>
 	/// <param name="serviceName">The short name of the service.</param>
 	/// <param name="startType">Desired start type.</param>
-	private static void SetServiceStartType(string serviceName, ServiceStartType startType)
+	internal static void SetServiceStartType(string serviceName, ServiceStartType startType)
 	{
 		IntPtr scmHandle = NativeMethods.OpenSCManagerW(null, null, CommonCore.ServiceManagement.SC_MANAGER_ALL_ACCESS);
 
@@ -88,9 +88,54 @@ internal static class ConfigureISGServices
 	}
 
 	/// <summary>
+	/// Stops a Windows service.
+	/// </summary>
+	/// <param name="serviceName">The short name of the service.</param>
+	internal static void StopService(string serviceName)
+	{
+		IntPtr scmHandle = NativeMethods.OpenSCManagerW(null, null, CommonCore.ServiceManagement.SC_MANAGER_ALL_ACCESS);
+		if (scmHandle == IntPtr.Zero)
+		{
+			int error = Marshal.GetLastPInvokeError();
+			throw new IOException($"OpenSCManagerW failed with the error code: {error}");
+		}
+		try
+		{
+			IntPtr serviceHandle = NativeMethods.OpenServiceW(scmHandle, serviceName, NativeMethods.SERVICE_STOP);
+			if (serviceHandle == IntPtr.Zero)
+			{
+				int error = Marshal.GetLastPInvokeError();
+				throw new IOException($"OpenServiceW failed for '{serviceName}' with the error code: {error}");
+			}
+			try
+			{
+				SERVICE_STATUS status = new();
+				if (!NativeMethods.ControlService(serviceHandle, NativeMethods.SERVICE_CONTROL_STOP, ref status))
+				{
+					int error = Marshal.GetLastPInvokeError();
+					if (error == 1062) // ERROR_SERVICE_NOT_ACTIVE
+					{
+						Logger.Write($"Service '{serviceName}' is already stopped.");
+						return;
+					}
+					throw new IOException($"ControlService failed for '{serviceName}' with the error code: {error}");
+				}
+			}
+			finally
+			{
+				_ = NativeMethods.CloseServiceHandle(serviceHandle);
+			}
+		}
+		finally
+		{
+			_ = NativeMethods.CloseServiceHandle(scmHandle);
+		}
+	}
+
+	/// <summary>
 	/// Available service start types.
 	/// </summary>
-	private enum ServiceStartType : uint
+	internal enum ServiceStartType : uint
 	{
 		Boot = 0x00000000,
 		System = 0x00000001,

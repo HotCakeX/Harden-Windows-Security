@@ -598,8 +598,8 @@ internal static class BinaryOpsReverse
 
 		// ID is populated later in the calling method ParseSiPolicy.
 		// The binary format stores custom roots as self-signed signer roots and well-known roots as small IDs.
-		string signerName = ind == 0
-			? "Custom"
+		string? signerName = ind == 0
+			? null
 			: certValue[0] switch
 			{
 				3 => "CN=Microsoft Authenticode Root Authority, O=MSFT, C=US",
@@ -622,9 +622,12 @@ internal static class BinaryOpsReverse
 				20 => "AuthRoot.STL",
 				21 => "CN=Microsoft OEM Root Certificate Authority 2017",
 				22 => "CN=Microsoft Identity Verification Root Certificate Authority 2020, O=Microsoft Corporation, C=US",
-				_ => string.Empty
+				_ => null
 			};
-		Signer signer = new(id: string.Empty, name: signerName, certRoot: certRoot);
+		Signer signer = new(id: string.Empty, certRoot: certRoot)
+		{
+			Name = signerName
+		};
 
 		uint ekuRefCount = reader.ReadUInt32();
 		signer.CertEKU = new((int)ekuRefCount);

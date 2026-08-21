@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\NativeTypes_ExploitMitigation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interop\WinMsg.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)KUSER_SHARED_DATA.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\ComJsonDeserializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Others\FirewallRule.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Atlas.cs" />

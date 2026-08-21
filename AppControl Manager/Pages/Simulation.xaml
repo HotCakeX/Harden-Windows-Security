@@ -413,6 +413,13 @@
 
                                 </MenuFlyoutSubItem>
 
+                                <MenuFlyoutItem Text="Invert selection"
+                                                Click="{x:Bind vm:ViewModelProvider.SimulationVM.InvertListViewSelection}">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon Glyph="&#xE8AB;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+
                                 <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind vm:ViewModelProvider.SimulationVM.CopySelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
                                         <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind vm:ViewModelProvider.SimulationVM.CopySelectedPolicies_Click}"/>

@@ -16,10 +16,12 @@
 //
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using AppControlManager.AppLocker;
 using AppControlManager.CustomUIElements;
 using AppControlManager.Others;
 using AppControlManager.Pages;
@@ -671,4 +673,201 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 		// Dispose the AuthenticationCompanion which implements IDisposable
 		AuthCompanionCLS.Dispose();
 	}
+
+	#region AppLocker Managed Installer
+
+	internal readonly InfoBarSettings AppLockerInfoBar = new();
+
+	// Bound to the ListView's ItemsSource that displays all of the Managed Installers.
+	internal ManagedInstallerPolicyDocument ManagedInstallerPolicy { get; set => SP(ref field, value); } = new(AppLocker.Manage.EmptyAppLockerPolicyXMLContent, []);
+
+	private ManagedInstallerFileAnalysis? SelectedManagedInstallerFile;
+
+	internal string ManagedInstallerRuleName
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				CanApplyManagedInstaller = SelectedManagedInstallerFile is not null && ManagedInstallerSelectedRuleIndex >= 0 && !string.IsNullOrWhiteSpace(field);
+			}
+		}
+	} = "Managed Installer";
+
+	internal int ManagedInstallerSelectedRuleIndex
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				CanApplyManagedInstaller = SelectedManagedInstallerFile is not null && field >= 0 && !string.IsNullOrWhiteSpace(ManagedInstallerRuleName);
+			}
+		}
+	} = -1;
+
+	internal bool ManagedInstallerPathRuleAvailable { get; set => SP(ref field, value); }
+	internal bool ManagedInstallerHashRuleAvailable { get; set => SP(ref field, value); }
+	internal bool ManagedInstallerPublisherRuleAvailable { get; set => SP(ref field, value); }
+	internal bool CanApplyManagedInstaller { get; set => SP(ref field, value); }
+	internal string ManagedInstallerCountText { get; set => SP(ref field, value); } = "0 Managed Installers";
+	internal string SelectedManagedInstallerPath { get; set => SP(ref field, value); } = "No executable selected";
+	internal string SelectedManagedInstallerHash { get; set => SP(ref field, value); } = "Unavailable";
+	internal string SelectedManagedInstallerPublisher { get; set => SP(ref field, value); } = "Unavailable";
+	internal string SelectedManagedInstallerProduct { get; set => SP(ref field, value); } = "Unavailable";
+	internal string SelectedManagedInstallerBinary { get; set => SP(ref field, value); } = "Unavailable";
+
+	internal void RefreshManagedInstallerPolicy()
+	{
+		try
+		{
+			SetManagedInstallerPolicy(Manage.List());
+		}
+		catch (Exception ex)
+		{
+			AppLockerInfoBar.WriteError(ex);
+		}
+	}
+
+	private void SetManagedInstallerPolicy(ManagedInstallerPolicyDocument policy)
+	{
+		ManagedInstallerPolicy = policy;
+		ManagedInstallerCountText = string.Concat(policy.Rules.Count.ToString(CultureInfo.CurrentCulture), " Managed Installer(s)");
+	}
+
+	private static async Task<bool> ConfirmClearAppLockerPoliciesAsync()
+	{
+		using ContentDialogV2 dialog = new()
+		{
+			Title = "Clear all AppLocker policies?",
+			Content = "This will clear all existing AppLocker and Managed Installer policies. This action cannot be undone. Do you want to continue?",
+			PrimaryButtonText = "Clear Policies",
+			CloseButtonText = "Cancel",
+			DefaultButton = ContentDialogButton.Close
+		};
+		return await dialog.ShowAsync() is ContentDialogResult.Primary;
+	}
+
+	[DynamicWindowsRuntimeCast(typeof(Button))]
+	internal async void DeleteManagedInstaller_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is not Button { Tag: ManagedInstallerRuleInfo rule })
+		{
+			return;
+		}
+
+		try
+		{
+			// We don't want to leave any AppLocker policy on the system if there is no Managed Installer rule in them.
+			// So if this is the last Managed Installe rule, clear the entire AppLocker policy instead.
+			if (ManagedInstallerPolicy.Rules.Count is 1)
+			{
+				if (!await ConfirmClearAppLockerPoliciesAsync())
+				{
+					return;
+				}
+
+				await Manage.ClearAsync();
+
+				RefreshManagedInstallerPolicy();
+			}
+			else
+			{
+				SetManagedInstallerPolicy(await Manage.DeleteAsync(rule.RuleId));
+			}
+			AppLockerInfoBar.WriteSuccess(string.Concat("Removed Managed Installer '", rule.Name, "'."));
+		}
+		catch (Exception ex)
+		{
+			AppLockerInfoBar.WriteError(ex);
+			RefreshManagedInstallerPolicy();
+		}
+	}
+
+	internal void BrowseForManagedInstallerExecutable_Click()
+	{
+		try
+		{
+			string? selectedFile = FileDialogHelper.ShowFilePickerDialog("Executable files|*.exe");
+			if (selectedFile is null)
+			{
+				return;
+			}
+
+			SelectedManagedInstallerFile = Manage.AnalyzeInstaller(selectedFile);
+			ManagedInstallerPathRuleAvailable = SelectedManagedInstallerFile.PathAvailable;
+			ManagedInstallerHashRuleAvailable = SelectedManagedInstallerFile.HashAvailable;
+			ManagedInstallerPublisherRuleAvailable = SelectedManagedInstallerFile.PublisherAvailable;
+			SelectedManagedInstallerPath = SelectedManagedInstallerFile.FilePath;
+			SelectedManagedInstallerHash = SelectedManagedInstallerFile.HashAvailable ? SelectedManagedInstallerFile.Hash : "Unavailable";
+			SelectedManagedInstallerPublisher = SelectedManagedInstallerFile.PublisherAvailable ? SelectedManagedInstallerFile.PublisherName : "Unavailable";
+			SelectedManagedInstallerProduct = SelectedManagedInstallerFile.PublisherAvailable ? SelectedManagedInstallerFile.ProductName : "Unavailable";
+			SelectedManagedInstallerBinary = SelectedManagedInstallerFile.PublisherAvailable ? SelectedManagedInstallerFile.BinaryName : "Unavailable";
+			ManagedInstallerSelectedRuleIndex = SelectedManagedInstallerFile.PublisherAvailable ? 2 : SelectedManagedInstallerFile.HashAvailable ? 1 : SelectedManagedInstallerFile.PathAvailable ? 0 : -1;
+		}
+		catch (Exception ex)
+		{
+			AppLockerInfoBar.WriteError(ex);
+		}
+	}
+
+	internal async void ApplyManagedInstaller_Click()
+	{
+		if (SelectedManagedInstallerFile is null || ManagedInstallerSelectedRuleIndex < 0)
+		{
+			AppLockerInfoBar.WriteWarning("Select an executable and an available rule type first.");
+			return;
+		}
+
+		try
+		{
+			using ContentDialogV2 dialog = new()
+			{
+				Title = "Replace the current AppLocker policy?",
+				Content = "Applying this Managed Installer policy will clear and overwrite any existing AppLocker policy with a new policy that contains only the Managed Installer configuration. Do you want to continue?",
+				PrimaryButtonText = "Apply policy",
+				CloseButtonText = "Cancel",
+				DefaultButton = ContentDialogButton.Close
+			};
+			if (await dialog.ShowAsync() is not ContentDialogResult.Primary)
+			{
+				return;
+			}
+
+			ManagedInstallerRuleType ruleType = ManagedInstallerSelectedRuleIndex switch
+			{
+				0 => ManagedInstallerRuleType.Path,
+				1 => ManagedInstallerRuleType.Hash,
+				2 => ManagedInstallerRuleType.Publisher,
+				_ => throw new InvalidOperationException("The selected rule type is invalid.")
+			};
+			ManagedInstallerPolicyDocument policy = Manage.Create(SelectedManagedInstallerFile.FilePath, ManagedInstallerRuleName, ruleType);
+			await Manage.SetAsync(policy);
+			RefreshManagedInstallerPolicy();
+			AppLockerInfoBar.WriteSuccess("The Managed Installer policy was applied successfully.");
+		}
+		catch (Exception ex)
+		{
+			AppLockerInfoBar.WriteError(ex);
+		}
+	}
+
+	internal async void ClearManagedInstallerPolicy_Click()
+	{
+		try
+		{
+			if (!await ConfirmClearAppLockerPoliciesAsync())
+			{
+				return;
+			}
+			await Manage.ClearAsync();
+			RefreshManagedInstallerPolicy();
+			AppLockerInfoBar.WriteSuccess("The AppLocker Managed Installer policy was cleared.");
+		}
+		catch (Exception ex)
+		{
+			AppLockerInfoBar.WriteError(ex);
+		}
+	}
+
+	#endregion AppLocker Managed Installer
 }

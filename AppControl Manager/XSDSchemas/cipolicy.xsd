@@ -386,7 +386,7 @@
 	<xs:simpleType name="SigningScenarioIDsType">
 		<xs:annotation>
 			<xs:documentation>
-				Multiple ID_SIGNINGSCENARIO_ separated by ','
+				Multiple ID_SIGNINGSCENARIO_ seperated by ','
 			</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
@@ -990,7 +990,7 @@
 				<xs:element ref="FileAttribRef" minOccurs="0" maxOccurs="10000000"/>
 				<xs:element ref="ArtifactRuleRef" minOccurs="0" maxOccurs="10000000"/>
 			</xs:sequence>
-			<xs:attribute name="Name" type="SignerNameType" use="required" />
+			<xs:attribute name="Name" type="SignerNameType" use="optional" />
 			<xs:attribute name="ID" type="SignerIdType" use="required" />
 			<xs:attribute name="SignTimeAfter" type="SignTimeType" use="optional" />
 		</xs:complexType>

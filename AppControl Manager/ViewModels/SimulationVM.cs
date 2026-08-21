@@ -23,6 +23,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
@@ -579,4 +580,15 @@ internal sealed partial class SimulationVM : ViewModelBase
 
 	#endregion
 
+	/// <summary>
+	/// Inverts the selection of the ListView.
+	/// </summary>
+	internal void InvertListViewSelection()
+	{
+		ListView? listView = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Simulation);
+		if (listView is ListViewV2 listViewV2)
+		{
+			listViewV2.InvertSelection();
+		}
+	}
 }

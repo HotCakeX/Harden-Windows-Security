@@ -209,7 +209,6 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 						};
 
 						OnlinePolicyRepresentations.Add(item.Id, new PolicyFileRepresent(policyObj, PolicyFileRepresentKind.CIP));
-						AllPolicies.Add(policy);
 						AllPoliciesOutput.Add(policy);
 					}
 					catch (Exception ex)
@@ -250,9 +249,10 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 					IsManagedInstaller = true
 				};
 
-				AllPolicies.Add(miPolicy);
 				AllPoliciesOutput.Add(miPolicy);
 			}
+
+			AllPolicies.AddRange(AllPoliciesOutput);
 
 			await Task.Run(() => ColumnManager.CalculateColumnWidths(AllPolicies));
 		}

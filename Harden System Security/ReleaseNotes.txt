@@ -1,11 +1,1 @@
-* Improved logging compatibility between the Widgets and the main app processes.
-
-* Network Windows Widget now displays more virtual network adapter types available on the system, allowing you to monitor their activity.
-
-* Added a new option to the Sidebar called QR Code Manager. It offers 2 main features: creating QR codes or reading them.
-
-    * Creating: You can create QR codes for any text, URL, contact information and so on. The created QR code can be saved as an image in multiple formats or shared directly from the app by copying it to clipboard or using drag and drop. You can customize different aspects of the QR code and view advanced details about it that change in real time.
-
-    * Reading: You can read QR codes from one or more image files in bulk, from other open windows, from parts of your screen but snipping or from your webcam's live feed. When using webcam, you will be asked for permission before the app can access it, your privacy is respected.
-
-    * Safety and privacy: safety and privacy are 2 of the most important things and why I created these features in the first place from scratch. All features are completely offline and are processed on your device, that means you can decode or create QR codes from sensitive materials and they will never leave your device. The app does not store any data from the QR codes you create or read and no online service or 3rd party library is ever used (protected from prevalent supply-chain attacks).
+* Updated dependencies to the latest versions.

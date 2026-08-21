@@ -62,13 +62,13 @@ internal static class NewPublisherLevelRules
 
 				Signer newSigner = new(
 					id: SignerID,
-					name: signerData.IntermediateCertName,
 					certRoot: new CertRoot
 					(
 						type: CertEnumType.TBS,
 						value: Convert.FromHexString(signerData.IntermediateCertTBS)
 					))
 				{
+					Name = signerData.IntermediateCertName,
 					CertPublisher = new CertPublisher(value: signerData.LeafCertName)
 				};
 
@@ -127,13 +127,13 @@ internal static class NewPublisherLevelRules
 
 				Signer newSigner = new(
 					id: SignerID,
-					name: signerData.IntermediateCertName,
 					certRoot: new CertRoot
 					(
 						type: CertEnumType.TBS,
 						value: Convert.FromHexString(signerData.IntermediateCertTBS)
 					))
 				{
+					Name = signerData.IntermediateCertName,
 					CertPublisher = new CertPublisher(value: signerData.LeafCertName)
 				};
 

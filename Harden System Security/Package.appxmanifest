@@ -47,6 +47,16 @@
     <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
     <Description>ms-resource:AppDescription</Description>
     <Logo>Assets\StoreLogo.png</Logo>
+    <!--
+    TrustedLaunch means the packaged app runs with the package's identity but OTHERS can't run using this identity.
+    e.g. a mediumIL process clones our process token and CreateProcessWithToken(dupetoken, "app-your-base-are-belong-to-us.exe")
+
+    Also blocks using Invoke-CommandInDesktopPackage to run arbitrary exes with some packge's identity
+    Invoke-CommandInDesktopPackage -PackageFamilyName BankOfAmerica_1234567890abc -Command c:\maliceinc\muahmuahmuah.exe and such would fail.
+    
+    This also enforces Code Integrity Guard by the Kernel -> Only Microsoft can sign this app.
+    Even fully-locally-trusted Self-signed certificates cannot sign and deploy this app because it will lead to Code Integrity/Operational event 3033 when user attempts to launch the app.
+    -->
     <trustedlaunch:TrustedLaunch>true</trustedlaunch:TrustedLaunch>
     <uap10:PackageIntegrity>
       <uap10:Content Enforcement="on" />
@@ -70,7 +80,9 @@
 
   </Properties>
 
-  <!-- Must match Windows SDK major versions: https://learn.microsoft.com/en-us/windows/apps/windows-sdk/#support-and-servicing -->
+  <!-- https://learn.microsoft.com/en-us/windows/apps/windows-sdk/#support-and-servicing -->
+  <!-- https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-f-targetdevicefamily#examples -->
+  <!-- "Windows.Universal" includes all device types. We only define other device types explicitly if we want to set a more restrict Min/Max versions for them. -->
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26100.0" />
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26100.0" />

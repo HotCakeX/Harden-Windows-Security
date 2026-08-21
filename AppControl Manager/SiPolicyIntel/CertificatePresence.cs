@@ -31,8 +31,7 @@ internal static class CertificatePresence
 	/// The reason we don't need to check signature of the deployed signed cip files in the EFI partition is because
 	/// The user-selected XML policy's ID is already checked against the deployed signed policies and that provides the necessary signing details in the XML.
 	/// </summary>
-	/// <param name="kind">The source of the policyObject and where it was created from.</param>
-	internal static bool InferCertificatePresence(SiPolicy.SiPolicy policyObject, string certificatePath, string certCN, SiPolicy.PolicyFileRepresentKind kind)
+	internal static bool InferCertificatePresence(SiPolicy.SiPolicy policyObject, string certificatePath, string certCN)
 	{
 		// Create a certificate object from the .cer file
 		using X509Certificate2 CertObject = X509CertificateLoader.LoadCertificateFromFile(certificatePath);
@@ -72,29 +71,15 @@ internal static class CertificatePresence
 					// Get the string value of the CertRoot which is the TBS Hash
 					string certRootTBS = Convert.ToHexString(signerForUpdateSigner.CertRoot.Value.Span);
 
-					if (kind is PolicyFileRepresentKind.CIP)
+					// Compare the selected certificate's TBS hash with the TBS hash of the signer which is the cert Root value
+					// Also compare the Signer's name with the selected certificate's Common Name if it has one.
+					// If the SiPolicy object was created from a CIP file, it would have empty string or null for Signer Name since it is not included in the CIP binary file.
+					// Signer name itself is optional according to the schema.
+					if (string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase) &&
+						(string.IsNullOrEmpty(signerForUpdateSigner.Name) ||
+						 string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase)))
 					{
-						if (
-							// Compare the selected certificate's TBS hash with the TBS hash of the signer which is the cert Root value
-							string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase)
-
-							// We could also compare the Signer's name with the selected certificate's Common Name
-							// But if the SiPolicy object was created from a CIP file, it would have empty string for Signer Name since it is not included in the CIP binary file.
-							// && string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase)
-							)
-						{
-							return true;
-						}
-					}
-					else
-					{
-						// Compare the selected certificate's TBS hash with the TBS hash of the signer which is the cert Root value
-						// Also compare the Signer's name with the selected certificate's Common Name
-						if (string.Equals(CertTBS, certRootTBS, StringComparison.OrdinalIgnoreCase) &&
-							string.Equals(CertCommonName, signerForUpdateSigner.Name, StringComparison.OrdinalIgnoreCase))
-						{
-							return true;
-						}
+						return true;
 					}
 				}
 			}

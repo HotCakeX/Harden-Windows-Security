@@ -126,13 +126,13 @@ internal static class NewWHQLFilePublisherLevelRules
 
 				Signer newSigner = new(
 					id: signerID,
-					name: signerData.IntermediateCertName,
 					certRoot: new CertRoot
 					(
 						type: CertEnumType.TBS,
 						value: Convert.FromHexString(signerData.IntermediateCertTBS)
 					))
 				{
+					Name = signerData.IntermediateCertName,
 					CertEKU = [new CertEKU(id: EKUID)],
 					CertOemID = new CertOemID(value: signerData.Opus),
 					FileAttribRef = [new FileAttribRef(ruleID: FileAttribID)]
@@ -254,13 +254,13 @@ internal static class NewWHQLFilePublisherLevelRules
 
 				Signer newSigner = new(
 					id: signerID,
-					name: signerData.IntermediateCertName,
 					certRoot: new CertRoot
 					(
 						type: CertEnumType.TBS,
 						value: Convert.FromHexString(signerData.IntermediateCertTBS)
 					))
 				{
+					Name = signerData.IntermediateCertName,
 					CertEKU = [new CertEKU(id: EKUID)],
 					CertOemID = new CertOemID(value: signerData.Opus),
 					FileAttribRef = [new FileAttribRef(ruleID: FileAttribID)]

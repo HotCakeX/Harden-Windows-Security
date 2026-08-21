@@ -548,7 +548,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 
 								policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(cipFilePathToDecode);
 
-								if (!CertificatePresence.InferCertificatePresence(policyObj, CertPath, CertCN, PolicyFileRepresentKind.CIP))
+								if (!CertificatePresence.InferCertificatePresence(policyObj, CertPath, CertCN))
 								{
 									throw new InvalidOperationException("The selected certificate is not for the signed policy you're trying to remove. Please select the correct certificate file and common name.");
 								}

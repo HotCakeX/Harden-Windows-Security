@@ -839,7 +839,7 @@ internal static class CustomDeserialization
 			throw new InvalidOperationException($"{Atlas.GetStr("SignerDupIDValidationError")}: {id}");
 
 		// Retrieve Name
-		string name = string.Empty;
+		string? name = null;
 		if (elem.HasAttribute("Name"))
 			name = elem.GetAttribute("Name");
 
@@ -851,7 +851,10 @@ internal static class CustomDeserialization
 				type: ConvertStringToCertEnumType(certRootElem.GetAttribute("Type")),
 				value: ConvertHexStringToByteArray(certRootElem.GetAttribute("Value")));
 
-		Signer signer = new(id, name, certRoot);
+		Signer signer = new(id, certRoot)
+		{
+			Name = name
+		};
 
 		if (elem.HasAttribute("SignTimeAfter"))
 		{

@@ -57,12 +57,14 @@ internal static class NewCertificateSignerRules
 
 			Signer newSigner = new(
 				id: SignerID,
-				name: signer.SignerName,
 				certRoot: new CertRoot
 				(
 					type: CertEnumType.TBS,
 					value: Convert.FromHexString(signer.TBS)
-				));
+				))
+			{
+				Name = signer.SignerName
+			};
 
 			policyObj.Signers.Add(newSigner);
 

@@ -172,7 +172,12 @@ internal static class CustomSerialization
 			{
 				XmlElement signerElement = xmlDoc.CreateElement("Signer", Atlas.SiPolicyNamespace);
 				signerElement.SetAttribute("ID", signer.ID);
-				signerElement.SetAttribute("Name", signer.Name);
+
+				if (!string.IsNullOrEmpty(signer.Name))
+				{
+					signerElement.SetAttribute("Name", signer.Name);
+				}
+
 				if (signer.SignTimeAfter is not null && signer.SignTimeAfter.Value != DateTime.MinValue)
 					signerElement.SetAttribute("SignTimeAfter", signer.SignTimeAfter.Value.ToString("o"));
 

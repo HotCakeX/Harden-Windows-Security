@@ -48,9 +48,11 @@ internal static class AddSigningDetails
 
 		Signer updatePolicySigner = new(
 			id: $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
-			name: CertCommonName,
 			certRoot: certRoot
-		);
+		)
+		{
+			Name = CertCommonName
+		};
 
 		UpdatePolicySigner updatePolicySigner1 = new(signerID: updatePolicySigner.ID);
 
@@ -62,9 +64,11 @@ internal static class AddSigningDetails
 		{
 			Signer supplementalPolicySigner = new(
 				id: $"ID_SIGNER_S_{Guid.CreateVersion7().ToString("N").ToUpperInvariant()}",
-				name: CertCommonName,
 				certRoot: certRoot
-			);
+			)
+			{
+				Name = CertCommonName
+			};
 
 			// Only add the SupplementalPolicySigner if the policy is not a SupplementalPolicy
 			// Because only Base policies can have that

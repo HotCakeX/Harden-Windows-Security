@@ -38,7 +38,7 @@ namespace AppControlManager.Others;
 /// <param name="hasEKU">Indicates whether the signer has enhanced key usages defined.</param>
 internal sealed class SignerX(
 	string id,
-	string name,
+	string? name,
 	string certRoot,
 	string? certPublisher,
 	string? certIssuer,
@@ -53,7 +53,7 @@ internal sealed class SignerX(
 	)
 {
 	internal string ID => id;
-	internal string Name => name;
+	internal string? Name => name;
 	internal string CertRoot => certRoot;
 	internal string? CertPublisher => certPublisher;
 	internal string? CertIssuer => certIssuer;

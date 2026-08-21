@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -26,6 +27,8 @@ internal sealed partial class ListViewV2 : ListView
 {
 	// A counter to prevent SelectionChanged event from firing twice when right-clicking on an unselected row (when on internal programmatic selects)
 	private int _skipSelectionChangedCount;
+	// Prevents bulk selection operations from triggering smooth scrolling for every changed item.
+	private bool _isBulkSelectionChange;
 
 	/// <summary>
 	/// When set in XAML, this key will be used for to register/unregister the ScrollViewer inside of the ListView and the ListView itself.
@@ -74,6 +77,11 @@ internal sealed partial class ListViewV2 : ListView
 	{
 		try
 		{
+			// Bulk selection changes must not start smooth scrolling for each changed item.
+			if (_isBulkSelectionChange)
+			{
+				return;
+			}
 			// Skip if this was triggered by our RightTapped selection
 			if (_skipSelectionChangedCount > 0)
 			{
@@ -166,6 +174,38 @@ internal sealed partial class ListViewV2 : ListView
 	/// Whenever we navigate away from a page that contains the ListView, this event will be fired.
 	/// </summary>
 	private void OnUnloaded(object? sender, RoutedEventArgs e) => ListViewHelper.Unregister(RegistryKey, this);
+
+	/// <summary>
+	/// Replaces the current selection with every currently unselected item, offering invert selection feature.
+	/// </summary>
+	internal void InvertSelection()
+	{
+		if (SelectionMode is ListViewSelectionMode.None or ListViewSelectionMode.Single || Items.Count is 0)
+		{
+			return;
+		}
+		HashSet<object> previouslySelectedItems = new(SelectedItems.Count);
+		foreach (object selectedItem in SelectedItems)
+		{
+			_ = previouslySelectedItems.Add(selectedItem);
+		}
+		_isBulkSelectionChange = true;
+		try
+		{
+			SelectedItems.Clear();
+			foreach (object item in Items)
+			{
+				if (!previouslySelectedItems.Contains(item))
+				{
+					SelectedItems.Add(item);
+				}
+			}
+		}
+		finally
+		{
+			_isBulkSelectionChange = false;
+		}
+	}
 
 	/// <summary>
 	/// Suppresses the SelectionChanged handler from performing smooth centering

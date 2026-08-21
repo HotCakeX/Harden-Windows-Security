@@ -356,7 +356,7 @@ internal sealed partial class SigningDetailsDialogForRemoval : ContentDialogV2
 
 				await Task.Run(() =>
 				{
-					certIsUpdatePolicySigner = CertificatePresence.InferCertificatePresence(policyObject, certFilePath, certCN, SiPolicy.PolicyFileRepresentKind.XML);
+					certIsUpdatePolicySigner = CertificatePresence.InferCertificatePresence(policyObject, certFilePath, certCN);
 				});
 
 				if (!certIsUpdatePolicySigner)

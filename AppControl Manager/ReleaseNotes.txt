@@ -1,0 +1,13 @@
+* You can now designate other programs as Managed Installers, that means anything those programs install will be automatically authorized to execute and run on the system. "Managed Installer" rule option needs to exist in your base policy before this feature can be used. This feature was one of the community's top requests that is now available in the Deployment page. https://github.com/HotCakeX/Harden-Windows-Security/discussions/971
+
+* Improved the app security by enabling Trusted Launch. It enforces Code Integrity Guard on the entire app. It also means that this app runs with the package's identity but others can't run using this identity.
+
+* The online policies in the System Information page now display better.
+
+* You can now make inverse selection in the list views that display data via the newly added right-click option, offering an easier and different way to manipulate the data and make selections.
+
+* Updated dependencies to the latest versions.
+
+* Added a warning in the Deployment page for the Signed policy deployment section when Secure Boot is not enabled on the system, completes the following request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1195
+
+* Added MDE Advanced Hunting query time range control, completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1194

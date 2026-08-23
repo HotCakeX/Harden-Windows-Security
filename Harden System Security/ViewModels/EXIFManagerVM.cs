@@ -248,7 +248,7 @@ internal sealed partial class EXIFManagerVM : ViewModelBase
 	/// </summary>
 	internal async void RemoveAll_Click()
 	{
-		if (string.IsNullOrEmpty(SelectedFilePath) || !File.Exists(SelectedFilePath))
+		if (!File.Exists(SelectedFilePath))
 		{
 			return;
 		}

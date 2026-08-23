@@ -1286,7 +1286,7 @@ DeviceEvents
 	{
 		if (account is null) return null;
 
-		if (string.IsNullOrEmpty(jsonFilePath) || !File.Exists(jsonFilePath))
+		if (!File.Exists(jsonFilePath))
 		{
 			throw new ArgumentException("Policy JSON file path is invalid or does not exist.", nameof(jsonFilePath));
 		}

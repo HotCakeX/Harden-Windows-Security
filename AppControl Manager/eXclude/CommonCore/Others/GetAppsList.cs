@@ -59,7 +59,7 @@ internal static class GetAppsList
 	/// <returns>Tuple containing width and height, or (0,0) if unable to read</returns>
 	private static (int width, int height) GetImageDimensions(string filePath)
 	{
-		if (filePath is not { Length: > 0 } || !File.Exists(filePath))
+		if (!File.Exists(filePath))
 			return (0, 0);
 
 		try

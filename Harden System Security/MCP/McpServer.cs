@@ -342,7 +342,7 @@ internal static class McpServer
 		try
 		{
 			string? filePath = GetOptionalString(arguments, "file_path");
-			if (string.IsNullOrWhiteSpace(filePath) || !Path.IsPathFullyQualified(filePath) || !File.Exists(filePath))
+			if (!File.Exists(filePath) || !Path.IsPathFullyQualified(filePath))
 			{
 				return ToolExecutionResult.Error(MissingFilePathMessage);
 			}

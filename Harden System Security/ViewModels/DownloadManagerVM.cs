@@ -2631,10 +2631,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			return;
 		}
 
-		if (File.Exists(checkpoint.FinalFilePath))
-		{
-			DeleteFileIfExists(checkpoint.FinalFilePath);
-		}
+		DeleteFileIfExists(checkpoint.FinalFilePath);
 
 		File.Move(checkpoint.TemporaryFilePath, checkpoint.FinalFilePath, overwrite: true);
 		ApplyMarkOfTheWebIfNeeded(checkpoint.FinalFilePath, checkpoint.SourceUrl);
@@ -2717,7 +2714,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 			foreach (DownloadHistoryRecord record in CollectionsMarshal.AsSpan(records))
 			{
-				bool fileExists = !string.IsNullOrWhiteSpace(record.FilePath) && File.Exists(record.FilePath);
+				bool fileExists = File.Exists(record.FilePath);
 				DownloadState state = record.State switch
 				{
 					DownloadState.Queued or DownloadState.Running or DownloadState.Interrupted or DownloadState.Failed when fileExists => DownloadState.Completed,

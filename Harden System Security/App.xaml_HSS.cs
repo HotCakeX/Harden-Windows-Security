@@ -37,8 +37,6 @@ namespace HardenSystemSecurity;
 
 public sealed partial class App : Application
 {
-	private static bool _appNotificationManagerRegistered;
-
 	// Forwards a Snipping Tool protocol response to the currently loaded Secure Vault page.
 	internal static Action<Uri?>? SnippingToolResponseHandler;
 
@@ -111,7 +109,7 @@ public sealed partial class App : Application
 			if (!string.IsNullOrWhiteSpace(_activationFilePath))
 			{
 				// Properly quote the file path for command line parsing (double embedded quotes if any).
-				parts.Add($"--file=\"{_activationFilePath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase)}\"");
+				parts.Add($"--file=\"{_activationFilePath.Replace("\"", "\"\"")}\"");
 			}
 
 			// Navigation arguments
@@ -123,13 +121,13 @@ public sealed partial class App : Application
 			// Include import/export specific arguments
 			if (!string.IsNullOrWhiteSpace(_cliImportPath))
 			{
-				parts.Add($"--in=\"{_cliImportPath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase)}\"");
+				parts.Add($"--in=\"{_cliImportPath.Replace("\"", "\"\"")}\"");
 			}
 			if (!string.IsNullOrWhiteSpace(_cliExportPath))
 			{
-				parts.Add($"--out=\"{_cliExportPath.Replace("\"", "\"\"", StringComparison.OrdinalIgnoreCase)}\"");
+				parts.Add($"--out=\"{_cliExportPath.Replace("\"", "\"\"")}\"");
 			}
-			parts.Add($"--mode={(_cliModeFull ? "full" : "partial")}");
+			parts.Add(_cliModeFull ? "--mode=full" : "--mode=partial");
 
 			return string.Join(' ', parts);
 		}
@@ -137,14 +135,14 @@ public sealed partial class App : Application
 		void ParseArgs(string[] ArgsLines)
 		{
 			// Detect console request and attach/allocate a console.
-			Logger.CliRequested = ArgsLines.Any(a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
+			int cliIndex = Array.FindIndex(ArgsLines, static a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
+			Logger.CliRequested = cliIndex >= 0;
 			if (Logger.CliRequested)
 			{
 				ConsoleHelper.AttachOrAllocate();
 				Logger.Write("Harden System Security - CLI mode");
 
 				// Extract a single-token action right after --cli if provided
-				int cliIndex = Array.FindIndex(ArgsLines, a => string.Equals(a, "--cli", StringComparison.OrdinalIgnoreCase));
 				if (cliIndex >= 0 && cliIndex + 1 < ArgsLines.Length)
 				{
 					string possibleAction = ArgsLines[cliIndex + 1];
@@ -153,8 +151,8 @@ public sealed partial class App : Application
 					{
 						_cliAction = possibleAction;
 						// Elevation required for both actions
-						if (string.Equals(_cliAction, "ExportReport", StringComparison.OrdinalIgnoreCase) ||
-							string.Equals(_cliAction, "ImportReport", StringComparison.OrdinalIgnoreCase))
+						if (string.Equals(possibleAction, "ExportReport", StringComparison.OrdinalIgnoreCase) ||
+							string.Equals(possibleAction, "ImportReport", StringComparison.OrdinalIgnoreCase))
 						{
 							requireAdminPrivilege = true;
 						}
@@ -165,12 +163,10 @@ public sealed partial class App : Application
 			// Parse CLI: preset index (0,1,2)
 			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--preset=", StringComparison.OrdinalIgnoreCase)) is string presetArg)
 			{
-				string raw = presetArg["--preset=".Length..].Trim();
-				if (!int.TryParse(raw, out int idx) || idx < 0 || idx > 2)
+				if (!int.TryParse(presetArg.AsSpan("--preset=".Length).Trim(), out int idx) || idx < 0 || idx > 2)
 				{
 					Logger.Write("--preset must be 0 (Basic), 1 (Recommended), or 2 (Complete).");
 					Environment.Exit(2);
-					return;
 				}
 				_cliPresetIndex = idx;
 				requireAdminPrivilege = true;
@@ -179,12 +175,10 @@ public sealed partial class App : Application
 			// Parse CLI: device usage intent
 			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--intent=", StringComparison.OrdinalIgnoreCase)) is string intentArg)
 			{
-				string rawIntent = intentArg["--intent=".Length..].Trim();
-				if (!Enum.TryParse(rawIntent, true, out Intent parsedIntent))
+				if (!Enum.TryParse(intentArg.AsSpan("--intent=".Length).Trim(), true, out Intent parsedIntent))
 				{
 					Logger.Write("Error: --intent value was not valid.");
 					Environment.Exit(2);
-					return;
 				}
 				_cliDeviceIntent = parsedIntent;
 				requireAdminPrivilege = true;
@@ -258,22 +252,19 @@ public sealed partial class App : Application
 
 			if (ArgsLines.FirstOrDefault(a => a.StartsWith("--mode=", StringComparison.OrdinalIgnoreCase)) is string modeArg)
 			{
-				string rawMode = modeArg["--mode=".Length..].Trim();
-				bool isFull = string.Equals(rawMode, "full", StringComparison.OrdinalIgnoreCase);
-				if (!isFull && !string.Equals(rawMode, "partial", StringComparison.OrdinalIgnoreCase))
+				ReadOnlySpan<char> rawMode = modeArg.AsSpan("--mode=".Length).Trim();
+				bool isFull = rawMode.Equals("full", StringComparison.OrdinalIgnoreCase);
+				if (!isFull && !rawMode.Equals("partial", StringComparison.OrdinalIgnoreCase))
 				{
 					Logger.Write("Error: --mode must be 'full' or 'partial'.");
 					Environment.Exit(2);
-					return;
 				}
 				_cliModeFull = isFull;
 			}
 		}
 
-		bool launchToUpdatePageFromNotification = false;
-
-		// Tracks whether this launch was caused by Snipping Tool returning a capture response.
-		bool launchFromSnippingToolResponse = false;
+		// Tracks whether this launch was caused by an update notification or Snipping Tool returning a capture response.
+		bool launchToUpdatePageFromNotification = false, launchFromSnippingToolResponse = false;
 
 		try
 		{
@@ -281,12 +272,11 @@ public sealed partial class App : Application
 
 			try
 			{
-				if (AppNotificationManager.IsSupported() && !_appNotificationManagerRegistered)
+				if (AppNotificationManager.IsSupported())
 				{
 					// This must happen before GetActivatedEventArgs for notification activations.
 					AppNotificationManager.Default.NotificationInvoked += AppUpdate.App_NotificationInvoked;
 					AppNotificationManager.Default.Register();
-					_appNotificationManagerRegistered = true;
 				}
 			}
 			catch (Exception ex)
@@ -323,7 +313,6 @@ public sealed partial class App : Application
 					// the redirect brokers across the integrity boundary because it's package-identity-scoped, not token-scoped.
 					await notificationTargetInstance.RedirectActivationToAsync(activatedEventArgs);
 					Environment.Exit(0);
-					return;
 				}
 			}
 			catch (Exception ex)
@@ -339,32 +328,29 @@ public sealed partial class App : Application
 				{
 					Logger.Write(Atlas.GetStr("FileActivationDetectedMessage"));
 
-					if (activatedEventArgs.Data is IFileActivatedEventArgs fileActivatedArgs)
+					if (activatedEventArgs.Data is not IFileActivatedEventArgs fileActivatedArgs)
 					{
-						if (fileActivatedArgs.Files.Count > 0)
-						{
-							foreach (IStorageItem item in fileActivatedArgs.Files)
-							{
-								if (File.Exists(item.Path))
-								{
-									// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-									requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: item.Path, readAndWrite: true);
-
-									// Store ephemeral activation context
-									_activationFilePath = item.Path;
-
-									break;
-								}
-							}
-						}
-						else
-						{
-							Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
-						}
+						Logger.Write(Atlas.GetStr("FileActivationNoArgumentsMessage"));
+					}
+					else if (fileActivatedArgs.Files.Count == 0)
+					{
+						Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
 					}
 					else
 					{
-						Logger.Write(Atlas.GetStr("FileActivationNoArgumentsMessage"));
+						foreach (IStorageItem item in fileActivatedArgs.Files)
+						{
+							if (File.Exists(item.Path))
+							{
+								// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+								requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: item.Path, readAndWrite: true);
+
+								// Store ephemeral activation context
+								_activationFilePath = item.Path;
+
+								break;
+							}
+						}
 					}
 				}
 				else if (!launchToUpdatePageFromNotification)
@@ -418,7 +404,6 @@ public sealed partial class App : Application
 					{
 						Logger.Write("Error: --op value was not valid.");
 						Environment.Exit(2);
-						return;
 					}
 
 					Logger.Write($"Running preset {_cliPresetIndex.Value} with operation '{opEnum}'...");
@@ -438,7 +423,6 @@ public sealed partial class App : Application
 					{
 						Logger.Write("Error: --intent requires '--op=Apply'.");
 						Environment.Exit(2);
-						return;
 					}
 
 					if (_cliDeviceIntent.Value == Intent.All)
@@ -465,7 +449,6 @@ public sealed partial class App : Application
 						{
 							Logger.Write("Error: ExportReport requires --out=FILEPATH");
 							Environment.Exit(2);
-							return;
 						}
 
 						await Traverse.Generator.GenerateTraverseData(_cliExportPath);
@@ -477,13 +460,11 @@ public sealed partial class App : Application
 						{
 							Logger.Write("Error: ImportReport requires --in=FILEPATH");
 							Environment.Exit(2);
-							return;
 						}
 
 						await Traverse.Importer.ImportAndApplyAsync(
 							filePath: _cliImportPath,
-							synchronizeExact: _cliModeFull
-							);
+							synchronizeExact: _cliModeFull);
 					}
 					else if (string.Equals(_cliAction, "CheckMSStoreAppUpdate", StringComparison.OrdinalIgnoreCase))
 					{
@@ -493,19 +474,16 @@ public sealed partial class App : Application
 					{
 						Logger.Write($"Error: Unknown CLI action '{_cliAction}'.");
 						Environment.Exit(2);
-						return;
 					}
 				}
 
 				// When CLI was requested, the GUI should not be loaded. If no valid CLI operation was requested, just exit.
 				Environment.Exit(0);
-				return;
 			}
 			catch (Exception ex)
 			{
 				Logger.Write(ex);
 				Environment.Exit(1);
-				return;
 			}
 		}
 
@@ -515,7 +493,7 @@ public sealed partial class App : Application
 
 		NavigationService.RestoreWindowSize(MainWindow.AppWindow); // Restore window size on startup
 		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Atlas.Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
-		MainWindow.Closed += Window_Closed;  // Assign event handler for the window closed
+		MainWindow.Closed += static (_, _) => AppCleanUp();  // Assign event handler for the window closed
 		MainWindow.Activate();
 
 		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
@@ -562,10 +540,10 @@ public sealed partial class App : Application
 			CustomUIElements.AppWindowBorderCustomization.StartAnimatedFrame();
 		}
 		// If the user has set a custom color for the app window border, apply it
-		else if (!string.IsNullOrEmpty(Atlas.Settings.CustomAppWindowsBorder))
+		else if (!string.IsNullOrEmpty(Atlas.Settings.CustomAppWindowsBorder) &&
+			RGBHEX.ToRGB(Atlas.Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
 		{
-			if (RGBHEX.ToRGB(Atlas.Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
-				CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
+			CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
 		}
 
 		// Startup update check

@@ -892,7 +892,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 		ProcessStartInfo processStartInfo = new()
 		{
 			FileName = "explorer.exe",
-			Arguments = !string.IsNullOrWhiteSpace(sandboxConfigurationPath) && File.Exists(sandboxConfigurationPath)
+			Arguments = File.Exists(sandboxConfigurationPath)
 				? $"/select,\"{sandboxConfigurationPath}\""
 				: $"\"{SandboxConfigurationDirectory}\"",
 			UseShellExecute = true

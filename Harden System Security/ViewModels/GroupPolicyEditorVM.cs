@@ -691,7 +691,7 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 			return;
 		}
 
-		if (string.IsNullOrEmpty(SelectedFile) || !File.Exists(SelectedFile))
+		if (!File.Exists(SelectedFile))
 		{
 			MainInfoBar.WriteWarning("No policy file is selected.");
 			return;

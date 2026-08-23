@@ -117,7 +117,7 @@ public sealed partial class App : Application
 			Logger.Write(ex);
 		}
 
-		// Subscribing to ProcessExit because Window_Closed doesn't run when "Application.Current.Exit();" is used.
+		// Subscribing to ProcessExit because Window Closed doesn't run when "Application.Current.Exit();" is used.
 		AppDomain.CurrentDomain.ProcessExit += static (_, _) => AppCleanUp();
 	}
 
@@ -184,11 +184,6 @@ public sealed partial class App : Application
 		// Show error dialog to the user
 		await ShowErrorDialogAsync(ex);
 	}
-
-	/// <summary>
-	/// Event handler for when the window is closed.
-	/// </summary>
-	private static void Window_Closed(object sender, WindowEventArgs e) => AppCleanUp();
 
 	/// <summary>
 	/// Logics to run when the app is being closed.

@@ -37,8 +37,6 @@ namespace AppControlManager;
 
 public sealed partial class App : Application
 {
-	private static bool _appNotificationManagerRegistered;
-
 	/// <summary>
 	/// Invoked when the application is launched.
 	/// </summary>
@@ -63,8 +61,7 @@ public sealed partial class App : Application
 
 		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
 
-		string? _activationAction = null;
-		string? _activationFilePath = null;
+		string? _activationAction = null, _activationFilePath = null;
 		bool _activationIsFileActivation = false;
 
 		// Determines whether the session must prompt for UAC to elevate or not
@@ -95,23 +92,15 @@ public sealed partial class App : Application
 			if (!string.IsNullOrWhiteSpace(_activationFilePath))
 			{
 				// Properly quote the file path for command line parsing (double embedded quotes if any).
-				string safePath = _activationFilePath.Replace("\"", "\"\"");
-				parts.Add($"--file=\"{safePath}\"");
+				parts.Add($"--file=\"{_activationFilePath.Replace("\"", "\"\"")}\"");
 			}
 
-			if (parts.Count == 0)
-			{
-				return null;
-			}
-
-			return string.Join(' ', parts);
+			return parts.Count == 0 ? null : string.Join(' ', parts);
 		}
 
 		void ParseArgs(string[]? ArgsLines, string? ArgLine)
 		{
-			string? actionArg = null;
-			string? fileArg = null;
-			string? navTagArg = null;
+			string? actionArg = null, fileArg = null, navTagArg = null;
 
 			// Look for our two keys
 			if (!string.IsNullOrWhiteSpace(ArgLine))
@@ -119,14 +108,8 @@ public sealed partial class App : Application
 				Match match = Regex1().Match(ArgLine);
 				if (match.Success)
 				{
-					if (match.Groups[1].Success)
-					{
-						actionArg = match.Groups[1].Value.Trim();
-					}
-					if (match.Groups[2].Success)
-					{
-						fileArg = match.Groups[2].Value;
-					}
+					actionArg = match.Groups[1].Value.Trim();
+					fileArg = match.Groups[2].Success ? match.Groups[2].Value : null;
 				}
 			}
 			else if (ArgsLines is not null)
@@ -157,10 +140,10 @@ public sealed partial class App : Application
 						_activationFilePath = filePath;
 
 						// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-						requireAdminPrivilege = string.Equals(Path.GetExtension(filePath), ".xml", StringComparison.OrdinalIgnoreCase)
-							? !FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: true)
-							: // If the file extension is not XML then it's not something we write back to so it's ok if we just have read access to the file.
-							!FileAccessCheck.IsFileAccessible(filePath: filePath, readAndWrite: false);
+						// If the file extension is not XML then it's not something we write back to so it's ok if we just have read access to the file.
+						requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(
+							filePath: filePath,
+							readAndWrite: string.Equals(Path.GetExtension(filePath), ".xml", StringComparison.OrdinalIgnoreCase));
 					}
 				}
 
@@ -184,13 +167,10 @@ public sealed partial class App : Application
 					{
 						Logger.Write($"{rawTag} is not a valid page tag.");
 					}
-					else
+					// If the page requires elevation, we must ask for it.
+					else if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
 					{
-						// If the page requires elevation, we must ask for it.
-						if (!ViewModelProvider.MainWindowVM.UnelevatedPages.Contains(PageTypeToNavTo))
-						{
-							requireAdminPrivilege = true;
-						}
+						requireAdminPrivilege = true;
 					}
 				}
 			}
@@ -204,12 +184,11 @@ public sealed partial class App : Application
 
 			try
 			{
-				if (AppNotificationManager.IsSupported() && !_appNotificationManagerRegistered)
+				if (AppNotificationManager.IsSupported())
 				{
 					// This must happen before GetActivatedEventArgs for notification activations.
 					AppNotificationManager.Default.NotificationInvoked += AppUpdate.App_NotificationInvoked;
 					AppNotificationManager.Default.Register();
-					_appNotificationManagerRegistered = true;
 				}
 			}
 			catch (Exception ex)
@@ -242,7 +221,6 @@ public sealed partial class App : Application
 				{
 					await notificationTargetInstance.RedirectActivationToAsync(activatedEventArgs);
 					Environment.Exit(0);
-					return;
 				}
 			}
 			catch (Exception ex)
@@ -254,52 +232,38 @@ public sealed partial class App : Application
 			{
 				Logger.Write($"ExtendedActivationKind: {activatedEventArgs.Kind}");
 
-				/*
-				Windows.ApplicationModel.Activation.LaunchActivatedEventArgs launchArgs = (Windows.ApplicationModel.Activation.LaunchActivatedEventArgs)activatedEventArgs.Data;
-				string passed = launchArgs.Arguments;
-				Logger.Write($"Arguments: {passed}");
-				*/
-
 				if (activatedEventArgs.Kind is ExtendedActivationKind.File)
 				{
 					Logger.Write(Atlas.GetStr("FileActivationDetectedMessage"));
 
-					if (activatedEventArgs.Data is IFileActivatedEventArgs fileActivatedArgs)
+					if (activatedEventArgs.Data is not IFileActivatedEventArgs fileActivatedArgs)
 					{
-						if (fileActivatedArgs.Files.Count > 0)
-						{
-							foreach (IStorageItem item in fileActivatedArgs.Files)
-							{
-								if (item.Path is not null && File.Exists(item.Path))
-								{
-									// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
-									if (string.Equals(Path.GetExtension(item.Path), ".xml", StringComparison.OrdinalIgnoreCase))
-									{
-										requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: item.Path, readAndWrite: true);
-									}
-									else
-									{
-										// If the file extension is not XML then it's not something we write back to so it's ok if we just have read access to the file.
-										requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(filePath: item.Path, readAndWrite: false);
-									}
-
-									// Store ephemeral activation context
-									_activationFilePath = item.Path;
-									_activationIsFileActivation = true;
-
-									// We can only process one XML/CIP file for now
-									break;
-								}
-							}
-						}
-						else
-						{
-							Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
-						}
+						Logger.Write(Atlas.GetStr("FileActivationNoArgumentsMessage"));
+					}
+					else if (fileActivatedArgs.Files.Count == 0)
+					{
+						Logger.Write(Atlas.GetStr("FileActivationNoObjectsMessage"));
 					}
 					else
 					{
-						Logger.Write(Atlas.GetStr("FileActivationNoArgumentsMessage"));
+						foreach (IStorageItem item in fileActivatedArgs.Files)
+						{
+							if (File.Exists(item.Path))
+							{
+								// If the selected file is not accessible with the privileges the app is currently running with, prompt for elevation
+								// If the file extension is not XML then it's not something we write back to so it's ok if we just have read access to the file.
+								requireAdminPrivilege = !FileAccessCheck.IsFileAccessible(
+									filePath: item.Path,
+									readAndWrite: string.Equals(Path.GetExtension(item.Path), ".xml", StringComparison.OrdinalIgnoreCase));
+
+								// Store ephemeral activation context
+								_activationFilePath = item.Path;
+								_activationIsFileActivation = true;
+
+								// We can only process one XML/CIP file for now
+								break;
+							}
+						}
 					}
 				}
 				else if (activatedEventArgs.Kind is ExtendedActivationKind.Protocol)
@@ -351,7 +315,7 @@ public sealed partial class App : Application
 
 		NavigationService.RestoreWindowSize(MainWindow.AppWindow); // Restore window size on startup
 		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Atlas.Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
-		MainWindow.Closed += Window_Closed;  // Assign event handler for the window closed event
+		MainWindow.Closed += static (_, _) => AppCleanUp();  // Assign event handler for the window closed event
 		MainWindow.Activate();
 
 		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
@@ -452,10 +416,10 @@ public sealed partial class App : Application
 			CustomUIElements.AppWindowBorderCustomization.StartAnimatedFrame();
 		}
 		// If the user has set a custom color for the app window border, apply it
-		else if (!string.IsNullOrEmpty(Atlas.Settings.CustomAppWindowsBorder))
+		else if (!string.IsNullOrEmpty(Atlas.Settings.CustomAppWindowsBorder) &&
+			RGBHEX.ToRGB(Atlas.Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
 		{
-			if (RGBHEX.ToRGB(Atlas.Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
-				CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
+			CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
 		}
 
 		// Startup update check

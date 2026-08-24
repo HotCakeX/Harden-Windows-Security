@@ -1,1 +1,7 @@
+* Improved the file enumeration by implementing heuristics to find valid PE files that use non-standard extensions, fixing the following GitHub issue and any other similar issues: https://github.com/HotCakeX/Harden-Windows-Security/issues/1196
+
+    * This change is available when you scan files during Supplemental or Deny policy creation, or when using the "Allow New Apps" workflow, or when performing a Simulation. No extra user action is required.
+
+    * Some of the examples of valid executables with non-standard extensions include: .node, .pyd, .prm, .deploy and many more which are now all supported by the AppControl Manager. They can have signatures and be allowed via signer rules.
+
 * Improved the CLI experience.

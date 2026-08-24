@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Buffers.Binary;
 using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
@@ -23,6 +24,7 @@ using System.IO;
 using System.IO.Enumeration;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Win32.SafeHandles;
 
 namespace CommonCore.Others;
 
@@ -150,6 +152,79 @@ internal static class FileUtility
 	}.ToFrozenSet(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
+	/// Determines whether a file with an unrecognized extension has the minimum structural requirements of a PE image.
+	/// Only the DOS header and the fixed part of the NT headers are read to keep this fallback path fast.
+	/// It does not inspect or restrict the COFF Machine field so it will return true for valid PE images of any architecture (x86, x64, ARM, etc.).
+	/// </summary>
+	private static bool IsPortableExecutable(string filePath)
+	{
+		try
+		{
+			using SafeFileHandle fileHandle = File.OpenHandle(
+				filePath,
+				FileMode.Open,
+				FileAccess.Read,
+				FileShare.ReadWrite | FileShare.Delete,
+				FileOptions.RandomAccess);
+
+			long fileLength = RandomAccess.GetLength(fileHandle);
+			if (fileLength < 90)
+			{
+				return false;
+			}
+
+			Span<byte> dosHeader = stackalloc byte[64];
+			if (RandomAccess.Read(fileHandle, dosHeader, 0) != dosHeader.Length ||
+				BinaryPrimitives.ReadUInt16LittleEndian(dosHeader) != 0x5A4D)
+			{
+				return false;
+			}
+
+			int ntHeaderOffset = BinaryPrimitives.ReadInt32LittleEndian(dosHeader[0x3C..]);
+			if (ntHeaderOffset < dosHeader.Length || ntHeaderOffset > fileLength - 26)
+			{
+				return false;
+			}
+
+			Span<byte> ntHeaders = stackalloc byte[26];
+			if (RandomAccess.Read(fileHandle, ntHeaders, ntHeaderOffset) != ntHeaders.Length ||
+				BinaryPrimitives.ReadUInt32LittleEndian(ntHeaders) != 0x00004550)
+			{
+				return false;
+			}
+
+			ushort numberOfSections = BinaryPrimitives.ReadUInt16LittleEndian(ntHeaders[6..]);
+			ushort sizeOfOptionalHeader = BinaryPrimitives.ReadUInt16LittleEndian(ntHeaders[20..]);
+			ushort characteristics = BinaryPrimitives.ReadUInt16LittleEndian(ntHeaders[22..]);
+			ushort optionalHeaderMagic = BinaryPrimitives.ReadUInt16LittleEndian(ntHeaders[24..]);
+
+			// The Windows loader supports PE images with 1 through 96 sections.
+			// https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-image_file_header
+			if (numberOfSections is 0 or > 96 ||
+				sizeOfOptionalHeader < 2 ||
+				(characteristics & 0x0002) is 0 ||
+				optionalHeaderMagic is not (0x010B or 0x020B))
+			{
+				return false;
+			}
+
+			long sectionTableEnd = ntHeaderOffset + 24L + sizeOfOptionalHeader + (numberOfSections * 40L);
+			bool result = sectionTableEnd <= fileLength;
+#if DEBUG
+			if (result)
+			{
+				Logger.Write($"File '{filePath}' has an unrecognized extension but is a valid PE image.");
+			}
+#endif
+			return result;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
+	/// <summary>
 	/// A flexible and fast method that can accept directory paths and file paths as input and return file paths that are compliant with App Control policies.
 	/// It supports custom extensions to filter by as well.
 	/// </summary>
@@ -170,6 +245,10 @@ internal static class FileUtility
 		FrozenSet<string> extensions = extensionsToFilterBy is { Length: > 0 }
 			? extensionsToFilterBy.ToFrozenSet(StringComparer.OrdinalIgnoreCase)
 			: AppControlExtensions;
+
+		// Only inspect file contents for PE images when using the default App Control extensions.
+		// Don't want to waste time inspecting file contents when the user/caller has provided their own specific custom extensions to filter by.
+		bool usePeValidation = extensionsToFilterBy is null;
 
 		// If custom extensions are provided, use them and make them case-insensitive
 
@@ -196,9 +275,9 @@ internal static class FileUtility
 				tasks.Add(Task.Run(() =>
 				{
 
-					FileSystemEnumerable<FileSystemInfo> enumeration = new(
+					FileSystemEnumerable<string> enumeration = new(
 							directory,
-							(ref entry) => entry.ToFileSystemInfo(),
+							(ref entry) => entry.ToFullPath(),
 							NonRecurseEnumeration)
 					{
 						ShouldIncludePredicate = (ref entry) =>
@@ -209,17 +288,14 @@ internal static class FileUtility
 								return false;
 							}
 
-							// Make sure the file has the correct extension
-							if (lookup.Contains(Path.GetExtension(entry.FileName)))
-							{
-								return true;
-							}
-
-							return false;
+							// Find valid PE files that are candidate for Windows image loading and App Control evaluation.
+							// First use the zero-allocation file extension checking fast path, only inspect file contents when the extension is unknown
+							// This solves valid PEs with custom file extensions: https://github.com/HotCakeX/Harden-Windows-Security/issues/1196 
+							return lookup.Contains(Path.GetExtension(entry.FileName)) || (usePeValidation && IsPortableExecutable(entry.ToFullPath()));
 						}
 					};
 
-					using IEnumerator<FileSystemInfo> enumerator = enumeration.GetEnumerator();
+					using IEnumerator<string> enumerator = enumeration.GetEnumerator();
 					while (true)
 					{
 						cToken?.ThrowIfCancellationRequested();
@@ -234,7 +310,7 @@ internal static class FileUtility
 								// If we reach the end of the enumeration, we break out of the loop
 								break;
 							}
-							bc.Add(enumerator.Current.FullName);
+							bc.Add(enumerator.Current);
 						}
 						catch { }
 					}
@@ -272,9 +348,9 @@ internal static class FileUtility
 					tasks.Add(Task.Run(() =>
 					{
 
-						FileSystemEnumerable<FileSystemInfo> enumeration = new(
+						FileSystemEnumerable<string> enumeration = new(
 							subDirectory.FullName,
-							(ref entry) => entry.ToFileSystemInfo(),
+							(ref entry) => entry.ToFullPath(),
 							RecursiveEnumeration)
 						{
 							ShouldIncludePredicate = (ref entry) =>
@@ -285,17 +361,14 @@ internal static class FileUtility
 									return false;
 								}
 
-								// Make sure the file has the correct extension
-								if (lookup.Contains(Path.GetExtension(entry.FileName)))
-								{
-									return true;
-								}
-
-								return false;
+								// Find valid PE files that are candidate for Windows image loading and App Control evaluation.
+								// First use the zero-allocation file extension checking fast path, only inspect file contents when the extension is unknown
+								// This solves valid PEs with custom file extensions: https://github.com/HotCakeX/Harden-Windows-Security/issues/1196 
+								return lookup.Contains(Path.GetExtension(entry.FileName)) || (usePeValidation && IsPortableExecutable(entry.ToFullPath()));
 							}
 						};
 
-						using IEnumerator<FileSystemInfo> subEnumerator = enumeration.GetEnumerator();
+						using IEnumerator<string> subEnumerator = enumeration.GetEnumerator();
 						while (true)
 						{
 							cToken?.ThrowIfCancellationRequested();
@@ -306,7 +379,7 @@ internal static class FileUtility
 								{
 									break;
 								}
-								bc.Add(subEnumerator.Current.FullName);
+								bc.Add(subEnumerator.Current);
 							}
 							catch { }
 						}
@@ -332,7 +405,7 @@ internal static class FileUtility
 			{
 				cToken?.ThrowIfCancellationRequested();
 
-				if (extensions.Contains(Path.GetExtension(file)))
+				if (extensions.Contains(Path.GetExtension(file)) || (usePeValidation && IsPortableExecutable(file)))
 				{
 					bc.Add(file);
 				}

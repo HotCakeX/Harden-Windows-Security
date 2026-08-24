@@ -78,7 +78,7 @@ public sealed partial class App : Application
 		/// </summary>
 		string? BuildRelaunchArguments()
 		{
-			List<string> parts = new(capacity: 2);
+			List<string> parts = new(capacity: 3);
 
 			if (!string.IsNullOrWhiteSpace(_activationAction))
 			{
@@ -93,6 +93,12 @@ public sealed partial class App : Application
 			{
 				// Properly quote the file path for command line parsing (double embedded quotes if any).
 				parts.Add($"--file=\"{_activationFilePath.Replace("\"", "\"\"")}\"");
+			}
+
+			// Preserve the requested navigation page across elevation.
+			if (!string.IsNullOrWhiteSpace(_cliNavTag))
+			{
+				parts.Add($"--navtag={_cliNavTag}");
 			}
 
 			return parts.Count == 0 ? null : string.Join(' ', parts);
@@ -346,48 +352,41 @@ public sealed partial class App : Application
 			}
 		}
 		// If there is/was activation through protocol/CLI/context menu (action-based)
-		else if (!string.IsNullOrWhiteSpace(_activationAction))
+		else if (Enum.TryParse(_activationAction, true, out ViewModelBase.LaunchProtocolActions parsedAction))
 		{
 			try
 			{
-				if (Enum.TryParse(_activationAction, true, out ViewModelBase.LaunchProtocolActions parsedAction))
+				switch (parsedAction)
 				{
-					switch (parsedAction)
-					{
-						case ViewModelBase.LaunchProtocolActions.PolicyEditor:
+					case ViewModelBase.LaunchProtocolActions.PolicyEditor:
+						{
+							if (_activationFilePath is not null)
 							{
-								if (_activationFilePath is not null)
-								{
-									await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(PolicyEditorVM.ParseFilePathAsPolicyRepresent(_activationFilePath));
-								}
-								break;
+								await ViewModelProvider.PolicyEditorVM.OpenInPolicyEditor(PolicyEditorVM.ParseFilePathAsPolicyRepresent(_activationFilePath));
 							}
-						case ViewModelBase.LaunchProtocolActions.FileSignature:
-							{
-								await ViewModelProvider.ViewFileCertificatesVM.OpenInViewFileCertificatesVM(_activationFilePath);
-								break;
-							}
-						case ViewModelBase.LaunchProtocolActions.FileHashes:
-							{
-								await ViewModelProvider.GetCIHashesVM.OpenInGetCIHashes(_activationFilePath);
-								break;
-							}
-						case ViewModelBase.LaunchProtocolActions.DeployRMMAuditPolicy:
-						case ViewModelBase.LaunchProtocolActions.DeployRMMBlockPolicy:
-							{
-								await ViewModelProvider.CreatePolicyVM.OpenInCreatePolicy(parsedAction);
-								break;
-							}
-						default:
-							{
-								await InitialNav();
-								break;
-							}
-					}
-				}
-				else
-				{
-					await InitialNav();
+							break;
+						}
+					case ViewModelBase.LaunchProtocolActions.FileSignature:
+						{
+							await ViewModelProvider.ViewFileCertificatesVM.OpenInViewFileCertificatesVM(_activationFilePath);
+							break;
+						}
+					case ViewModelBase.LaunchProtocolActions.FileHashes:
+						{
+							await ViewModelProvider.GetCIHashesVM.OpenInGetCIHashes(_activationFilePath);
+							break;
+						}
+					case ViewModelBase.LaunchProtocolActions.DeployRMMAuditPolicy:
+					case ViewModelBase.LaunchProtocolActions.DeployRMMBlockPolicy:
+						{
+							await ViewModelProvider.CreatePolicyVM.OpenInCreatePolicy(parsedAction);
+							break;
+						}
+					default:
+						{
+							await InitialNav();
+							break;
+						}
 				}
 			}
 			catch (Exception ex)

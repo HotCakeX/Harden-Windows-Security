@@ -117,7 +117,7 @@ public sealed partial class App : Application
 			Logger.Write(ex);
 		}
 
-		// Subscribing to ProcessExit because Window Closed doesn't run when "Application.Current.Exit();" is used.
+		// Subscribing to ProcessExit. It is triggered when Application.Current.Exit(); is called or during normal managed process shutdown.
 		AppDomain.CurrentDomain.ProcessExit += static (_, _) => AppCleanUp();
 	}
 
@@ -158,7 +158,7 @@ public sealed partial class App : Application
 	/// Exposes the main application window as a static property. It retrieves the window from the current application
 	/// instance.
 	/// </summary>
-	internal static MainWindow? MainWindow { get; private set; }
+	internal static MainWindow? MainWindow { get; set; }
 
 	/// <summary>
 	/// Event handler for unhandled exceptions.
@@ -192,37 +192,9 @@ public sealed partial class App : Application
 	{
 		if (Interlocked.Exchange(ref CleanUpHappened, 1) == 1) return;
 
-		try
-		{
-			// Stop any active custom border
-			CustomUIElements.AppWindowBorderCustomization.StopAnimatedFrameForAppShutdown();
-		}
-		catch { }
-
-		if (MainWindow is not null)
-		{
-			try
-			{
-				// Get the current size of the window
-				SizeInt32 size = MainWindow.AppWindow.Size;
-
-				// Save to window width and height to the app settings
-				Atlas.Settings.MainWindowWidth = size.Width;
-				Atlas.Settings.MainWindowHeight = size.Height;
-
-				WINDOWPLACEMENT windowPlacement = new();
-
-				// Check if the window is maximized
-				_ = NativeMethods.GetWindowPlacement(Atlas.hWnd, ref windowPlacement);
-
-				// Save the maximized status of the window before closing to the app settings
-				Atlas.Settings.MainWindowIsMaximized = windowPlacement.showCmd is ShowWindowCommands.SW_SHOWMAXIMIZED;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(string.Format(Atlas.GetStr("WindowSizeSaveErrorMessage"), ex.Message));
-			}
-		}
+#if DEBUG
+		Logger.Write("App is closing. Performing cleanup operations...");
+#endif
 
 		// Dispose of disposable ViewModels on App exit
 		ViewModelProvider.DisposeCreatedViewModels();
@@ -244,7 +216,7 @@ public sealed partial class App : Application
 			try
 			{
 				// Ensure we're on the UI thread before showing the dialog
-				await MainWindow.DispatcherQueue.EnqueueAsync(async () =>
+				await Atlas.AppDispatcher.EnqueueAsync(async () =>
 				{
 					using AppControlManager.CustomUIElements.ContentDialogV2 errorDialog = new()
 					{

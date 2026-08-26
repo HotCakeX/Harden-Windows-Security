@@ -21,6 +21,47 @@ using System.Runtime.InteropServices.Marshalling;
 namespace CommonCore.Interop;
 
 /// <summary>
+/// https://learn.microsoft.com/windows/win32/api/setupapi/ns-setupapi-sp_device_interface_data
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SP_DEVICE_INTERFACE_DATA
+{
+	internal uint Size;
+	internal Guid InterfaceClassGuid;
+	internal uint Flags;
+	internal nuint Reserved;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-system_battery_state
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SYSTEM_BATTERY_STATE
+{
+	internal byte AcOnLine;
+	internal byte BatteryPresent;
+	internal byte Charging;
+	internal byte Discharging;
+	internal byte Spare1;
+	internal byte Spare2;
+	internal byte Spare3;
+	internal byte Tag;
+	internal uint MaxCapacity;
+	internal uint RemainingCapacity;
+	internal int Rate;
+	internal uint EstimatedTime;
+	internal uint DefaultAlert1;
+	internal uint DefaultAlert2;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal readonly struct EMI_CHANNEL_MEASUREMENT_DATA
+{
+	internal readonly ulong AbsoluteEnergy;
+	internal readonly ulong AbsoluteTime;
+}
+
+/// <summary>
 /// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-token_privileges
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]

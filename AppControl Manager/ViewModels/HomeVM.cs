@@ -297,16 +297,28 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				if (value)
 				{
-					_liveGraphsWindow ??= new HomeLiveGraphsWindow(this);
-					_liveGraphsWindow.Activate();
-					_isLiveGraphsTelemetryActive = true;
-					StartSharedTelemetryIfNeeded();
+					OpenLiveGraphsWindow(null);
 				}
 				else
 				{
 					_liveGraphsWindow?.Close();
 				}
 			}
+		}
+	}
+
+	/// <summary>
+	/// Opens the complete Live System Intelligence window or one requested chart overlay.
+	/// </summary>
+	internal void OpenLiveGraphsWindow(string? chartTarget)
+	{
+		_liveGraphsWindow ??= new HomeLiveGraphsWindow(this);
+		_liveGraphsWindow.Activate();
+		_isLiveGraphsTelemetryActive = true;
+		StartSharedTelemetryIfNeeded();
+		if (!string.IsNullOrEmpty(chartTarget))
+		{
+			_liveGraphsWindow.OpenDirectChartPopout(chartTarget);
 		}
 	}
 #endif

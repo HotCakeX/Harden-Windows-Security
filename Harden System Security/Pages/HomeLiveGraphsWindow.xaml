@@ -463,6 +463,110 @@
                                 </Grid>
                             </Border>
                         </Grid>
+                        <Grid x:Name="TotalSystemPowerCardFrame" Width="554" Height="368" Margin="0,0,14,14">
+                            <Border x:Name="TotalSystemPowerCardGlowReceiver" CornerRadius="34" Opacity="0.30" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#66FFA6C9" Offset="0" />
+                                        <GradientStop Color="#00202020" Offset="0.48" />
+                                        <GradientStop Color="#66FFD7A8" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="30" Margin="10" Opacity="0.18" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="#66FFD7A8" Offset="0" />
+                                        <GradientStop Color="#00101010" Offset="0.58" />
+                                        <GradientStop Color="#66FFA6C9" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="TotalSystemPowerCard" CornerRadius="10" Padding="12" Margin="24" Width="506" Height="320" Background="#D9141022" BorderBrush="#26FFFFFF" BorderThickness="1">
+                                <Grid RowSpacing="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="TotalSystemPowerGraphRow" Height="236" />
+                                        <RowDefinition x:Name="TotalSystemPowerGraphFooterRow" Height="24" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <TextBlock x:Name="TotalSystemPowerChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 W" />
+                                        <ToggleButton x:Name="TotalSystemPowerTitleToggleButton"
+                                                      ToolTipService.ToolTip="Click or tap to pop out"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Padding="8,2"
+                                                      Checked="{x:Bind OnChartTitleToggled}"
+                                                      Unchecked="{x:Bind OnChartTitleToggled}">
+                                            <TextBlock Text="Total system power"
+                                                       FontWeight="SemiBold"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="NoWrap" />
+                                        </ToggleButton>
+                                        <TextBlock x:Name="TotalSystemPowerValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="Unavailable" />
+                                    </Grid>
+                                    <customUI:HomeLiveLineGraph x:Name="TotalSystemPowerLiveGraph"
+                                                                    Grid.Row="1"
+                                                                    EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="Total system power" ValueUnit="W" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="False" FixedMaximum="0" StrokeColor="#FFFFA6C9" GridColor="#FFFFD7A8" />
+                                    <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
+                                        <TextBlock x:Name="TotalSystemPowerChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 W" />
+                                        <TextBlock x:Name="TotalSystemPowerChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <Grid x:Name="BatteryDischargeCardFrame" Width="554" Height="368" Margin="0,0,14,14">
+                            <Border x:Name="BatteryDischargeCardGlowReceiver" CornerRadius="34" Opacity="0.30" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#66C9B6FF" Offset="0" />
+                                        <GradientStop Color="#00202020" Offset="0.48" />
+                                        <GradientStop Color="#66B8F2E6" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border CornerRadius="30" Margin="10" Opacity="0.18" IsHitTestVisible="False">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                                        <GradientStop Color="#66B8F2E6" Offset="0" />
+                                        <GradientStop Color="#00101010" Offset="0.58" />
+                                        <GradientStop Color="#66C9B6FF" Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="BatteryDischargeCard" CornerRadius="10" Padding="12" Margin="24" Width="506" Height="320" Background="#D9141022" BorderBrush="#26FFFFFF" BorderThickness="1">
+                                <Grid RowSpacing="8">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition x:Name="BatteryDischargeGraphRow" Height="236" />
+                                        <RowDefinition x:Name="BatteryDischargeGraphFooterRow" Height="24" />
+                                    </Grid.RowDefinitions>
+                                    <Grid>
+                                        <TextBlock x:Name="BatteryDischargeChartMaxLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 W" />
+                                        <ToggleButton x:Name="BatteryDischargeTitleToggleButton"
+                                                      ToolTipService.ToolTip="Click or tap to pop out"
+                                                      HorizontalAlignment="Center"
+                                                      VerticalAlignment="Center"
+                                                      Padding="8,2"
+                                                      Checked="{x:Bind OnChartTitleToggled}"
+                                                      Unchecked="{x:Bind OnChartTitleToggled}">
+                                            <TextBlock Text="Battery discharge"
+                                                       FontWeight="SemiBold"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="NoWrap" />
+                                        </ToggleButton>
+                                        <TextBlock x:Name="BatteryDischargeValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="Unavailable" />
+                                    </Grid>
+                                    <customUI:HomeLiveLineGraph x:Name="BatteryDischargeLiveGraph"
+                                                                    Grid.Row="1"
+                                                                    EffectiveMaximumChanged="{x:Bind OnEffectiveMaximumChanged}" PrimarySeriesName="Battery discharge" ValueUnit="W" UseFixedMinimum="True" FixedMinimum="0" UseFixedMaximum="False" FixedMaximum="0" StrokeColor="#FFC9B6FF" GridColor="#FFB8F2E6" />
+                                    <Grid Grid.Row="2" MinHeight="24" VerticalAlignment="Stretch">
+                                        <TextBlock x:Name="BatteryDischargeChartMinLabelTextBlock" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="0 W" />
+                                        <TextBlock x:Name="BatteryDischargeChartStartSecondsLabelTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="11" TextTrimming="CharacterEllipsis" Text="{x:Bind ViewModel.HomeChartStartSecondsLabel}" />
+                                    </Grid>
+                                </Grid>
+                            </Border>
+                        </Grid>
                     </VariableSizedWrapGrid>
                     <!-- Separator -->
                     <Grid Margin="0,4,14,0" HorizontalAlignment="Stretch">

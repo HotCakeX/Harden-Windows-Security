@@ -361,7 +361,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		if (_isDisposed) return;
 
 		// Update loading state on UI thread
-		_ = App.MainWindow?.DispatcherQueue.TryEnqueue(() =>
+		_ = Atlas.AppDispatcher.TryEnqueue(() =>
 		{
 			if (!_isDisposed)
 			{

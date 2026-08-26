@@ -67,7 +67,6 @@ internal static class AppWindowBorderCustomization
 	/// </summary>
 	private static bool AppWindowSubscribed;
 
-
 	private static bool IsStopping;
 
 	/// <summary>
@@ -105,7 +104,6 @@ internal static class AppWindowBorderCustomization
 			LastPresenterState = initPresenter.State;
 		}
 
-		Timer.Stop();
 		Timer.Interval = FrameInterval;
 		Timer.Start();
 	}
@@ -144,18 +142,8 @@ internal static class AppWindowBorderCustomization
 		// Unsubscribe from AppWindow changes if we had subscribed.
 		if (AppWindowSubscribed)
 		{
-			try
-			{
-				App.MainWindow?.AppWindow.Changed -= AppWindow_Changed;
-			}
-			catch (Exception ex)
-			{
-				Logger.Write($"Exception while removing AppWindow.Changed handler: {ex}", LogTypeIntel.Error);
-			}
-			finally
-			{
-				AppWindowSubscribed = false;
-			}
+			App.MainWindow?.AppWindow.Changed -= AppWindow_Changed;
+			AppWindowSubscribed = false;
 		}
 
 		ResetBorderColor(); // Make sure the border won't have the last color in the cycle when we stop.
@@ -313,8 +301,8 @@ internal static class AppWindowBorderCustomization
 	/// </summary>
 	internal static void StopAnimatedFrameForAppShutdown()
 	{
-		// Quick exit if nothing active.
 		if (!IsStarted && Timer is null)
+			// Quick exit if nothing is active.
 			return;
 
 		if (IsStopping)
@@ -325,32 +313,18 @@ internal static class AppWindowBorderCustomization
 
 		if (Timer is not null)
 		{
-			try
+			if (Timer.IsRunning)
 			{
-				if (Timer.IsRunning)
-				{
-					Timer.Stop();
-				}
-				Timer.Tick -= TickHandler;
+				Timer.Stop();
 			}
-			catch { }
-			finally
-			{
-				Timer = null;
-			}
+			Timer.Tick -= TickHandler;
+			Timer = null;
 		}
 
 		if (AppWindowSubscribed)
 		{
-			try
-			{
-				App.MainWindow?.AppWindow.Changed -= AppWindow_Changed;
-			}
-			catch { }
-			finally
-			{
-				AppWindowSubscribed = false;
-			}
+			App.MainWindow?.AppWindow.Changed -= AppWindow_Changed;
+			AppWindowSubscribed = false;
 		}
 
 		IsStopping = false;

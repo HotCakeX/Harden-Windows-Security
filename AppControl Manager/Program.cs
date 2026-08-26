@@ -78,9 +78,6 @@ internal static class Program
 			Environment.Exit(0);
 		}
 
-		// Assign the launch arguments to the static property so that they can be accessed from anywhere in the application.
-		_launchArguments = args;
-
 #if HARDEN_SYSTEM_SECURITY
 		if (args.Length >= 1)
 		{
@@ -101,6 +98,9 @@ internal static class Program
 			}
 		}
 #endif
+
+		// Assign the launch arguments to the static property so that they can be accessed from the OnLaunched method.
+		_launchArguments = args;
 
 		// Nothing can run after this, so this should always be at the end.
 		XamlGeneratedProgram.XamlGeneratedMain();

@@ -199,6 +199,9 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		// Subscribe to the AppWindow Closing event
 		AppWindow.Closing += AppWindow_Closing;
 
+		// Subscribe to the Window Closed event		
+		Closed += MainWindow_Closed;
+
 		// Subscribe to the system-wide theme changes triggered when user changes color/theme in Windows personalization settings
 		UISettingInstance.ColorValuesChanged += SystemWideThemeChangedEventHandler;
 
@@ -207,6 +210,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 		// Set the initial App Theme based on the user's settings
 		OnAppThemeChanged(null, new(Atlas.Settings.AppTheme));
+
+		MainWindowVM.SetCaptionButtonsFlowDirection(Enum.Parse<FlowDirection>(Atlas.Settings.ApplicationGlobalFlowDirection));
+		NavigationService.RestoreWindowSize(AppWindow); // Restore window size on startup
+		ViewModel.OnIconsStylesChanged(Atlas.Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
 
 #if APP_CONTROL_MANAGER
 
@@ -229,6 +236,56 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 #endif
 
+	}
+
+	private void MainWindow_Closed(object sender, WindowEventArgs args)
+	{
+		RemoveAcrylicController();
+
+		NavigationBackgroundManager.NavViewBackgroundChange -= OnNavigationBackgroundChanged;
+		NavigationViewLocationManager.NavigationViewLocationChanged -= OnNavigationViewLocationChanged;
+		AppThemeManager.AppThemeChanged -= OnAppThemeChanged;
+		UISettingInstance.ColorValuesChanged -= SystemWideThemeChangedEventHandler;
+
+		try
+		{
+			// Stop any active custom border
+			CustomUIElements.AppWindowBorderCustomization.StopAnimatedFrameForAppShutdown();
+		}
+		catch { }
+
+		try
+		{
+			// Get the current size of the window
+			SizeInt32 size = AppWindow.Size;
+
+			// Save to window width and height to the app settings
+			Atlas.Settings.MainWindowWidth = size.Width;
+			Atlas.Settings.MainWindowHeight = size.Height;
+
+			WINDOWPLACEMENT windowPlacement = new();
+
+			// Check if the window is maximized
+			_ = NativeMethods.GetWindowPlacement(Atlas.hWnd, ref windowPlacement);
+
+			// Save the maximized status of the window before closing to the app settings
+			Atlas.Settings.MainWindowIsMaximized = windowPlacement.showCmd is ShowWindowCommands.SW_SHOWMAXIMIZED;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(string.Format(Atlas.GetStr("WindowSizeSaveErrorMessage"), ex.Message));
+		}
+		finally
+		{
+			if (ReferenceEquals(App.MainWindow, this))
+			{
+				App.MainWindow = null;
+			}
+
+			RootGridPub = null;
+			CustomAcrylicWithPictureBackdropHostPub = null;
+			Instance = null;
+		}
 	}
 
 	private void OnSizeChanged(object sender, WindowSizeChangedEventArgs args)
@@ -279,27 +336,15 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	private async void CloseWindow_Click()
 	{
-		// If we should always ask for confirmation
-		if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 0)
+		if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 0 ||
+			(ViewModel.AppSettings.AppCloseConfirmationBehavior == 1 && TaskTracking.AppNeedsCloseConfirmation))
 		{
-			// Do nothing and let the flow continue
+			await AskForConfirmation(Close);
 		}
-		// If we should automatically/conditionally ask for confirmation
-		else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 1)
+		else
 		{
-			if (!TaskTracking.AppNeedsCloseConfirmation)
-			{
-				return;
-			}
+			Close();
 		}
-		// If we should never ask for confirmation
-		else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 2)
-		{
-			return;
-		}
-
-		// Close without re-triggering the cancelable AppWindow.Closing event loop
-		await AskForConfirmation(Application.Current.Exit);
 	}
 
 	private async void NavigateToSettings() => await Nav.Navigate(typeof(Pages.Settings));
@@ -628,7 +673,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	{
 		if (ViewModel.AcrylicController is not null || ViewModel.ConfigurationSource is not null)
 		{
-			Closed -= Window_Closed;
 			ViewModel.AcrylicController?.Dispose();
 			ViewModel.AcrylicController = null;
 			Activated -= Window_Activated;
@@ -684,7 +728,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 				acrylicController = null;
 
 				Activated += Window_Activated;
-				Closed += Window_Closed;
 
 				// Needed to null this since it's bound to the XAML in UI.
 				ViewModel.SystemBackDropStyle = null;
@@ -755,8 +798,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		_ = (ViewModel.ConfigurationSource?.IsInputActive = true);
 		args.Handled = true; // Doesn't look good when AcrylicThin is in use so we never set input as inactive.
 	}
-
-	private void Window_Closed(object sender, WindowEventArgs args) => RemoveAcrylicController();
 
 	#endregion
 
@@ -924,21 +965,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// </summary>
 	private async void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
 	{
-		// If we should always ask for confirmation
-		if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 0)
-		{
-			// Do nothing and let the flow continue
-		}
-		// If we should automatically/conditionally ask for confirmation
-		else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 1)
-		{
-			if (!TaskTracking.AppNeedsCloseConfirmation)
-			{
-				return;
-			}
-		}
-		// If we should never ask for confirmation
-		else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 2)
+		// If confirmation is never required, or automatic confirmation is selected and no activity requires confirmation,
+		// allow the existing close operation to continue without showing a confirmation dialog.
+		if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 2 ||
+			(ViewModel.AppSettings.AppCloseConfirmationBehavior == 1 && !TaskTracking.AppNeedsCloseConfirmation))
 		{
 			return;
 		}
@@ -947,7 +977,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		args.Cancel = true;
 
 		// Close without re-triggering the cancelable AppWindow.Closing event loop
-		await AskForConfirmation(Application.Current.Exit);
+		await AskForConfirmation(Close);
 	}
 
 	/// <summary>

@@ -44,21 +44,6 @@ public sealed partial class App : Application
 	[DynamicWindowsRuntimeCast(typeof(ProtocolActivatedEventArgs))]
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 	{
-		// Register the Jump List tasks
-		/*
-		_ = Task.Run(async () =>
-		{
-			try
-			{
-				await Taskbar.JumpListMgr.RegisterJumpListTasksAsync();
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
-		});
-		*/
-
 		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
 
 		string? _activationAction = null, _activationFilePath = null;
@@ -316,12 +301,6 @@ public sealed partial class App : Application
 		}
 
 		MainWindow = new MainWindow();
-
-		MainWindowVM.SetCaptionButtonsFlowDirection(string.Equals(Atlas.Settings.ApplicationGlobalFlowDirection, "LeftToRight", StringComparison.OrdinalIgnoreCase) ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
-
-		NavigationService.RestoreWindowSize(MainWindow.AppWindow); // Restore window size on startup
-		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Atlas.Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
-		MainWindow.Closed += static (_, _) => AppCleanUp();  // Assign event handler for the window closed event
 		MainWindow.Activate();
 
 		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!

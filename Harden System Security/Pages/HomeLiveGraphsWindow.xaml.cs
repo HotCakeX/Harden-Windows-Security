@@ -103,7 +103,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	private const int HomeLiveMetricTimeWindowSeconds = 60;
 	private const int HomeLiveMetricUpdateIntervalSeconds = 2;
 	private const int HomeLiveMetricMaxSamples = (HomeLiveMetricTimeWindowSeconds / HomeLiveMetricUpdateIntervalSeconds) + 1;
-	private const int ChartCount = 7;
+	private const int ChartCount = 9;
 	private const double AvailableWidthReserve = 18.0;
 	private const float LiveGraphCardElevation = 32.0f;
 	private const double LiveGraphCardGlowBleed = 24.0;
@@ -139,6 +139,9 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	private readonly List<double> _systemMemoryUtilizationSamples = new(HomeLiveMetricMaxSamples);
 	private readonly List<double> _cpuUsageSamples = new(HomeLiveMetricMaxSamples);
 	private readonly List<double> _networkUsageChartSamples = new(HomeLiveMetricMaxSamples);
+	private readonly List<double> _totalSystemPowerWattsSamples = new(HomeLiveMetricMaxSamples);
+	private readonly List<double> _batteryDischargeWattsSamples = new(HomeLiveMetricMaxSamples);
+	private readonly List<EnergyMeterDevice> _energyMeterDevices = new();
 	private readonly bool _isGraphLayoutReady;
 	private bool _diskActivityCountersInitialized;
 	private LiveGraphSize _currentGraphSize = LiveGraphSize.Medium;
@@ -186,7 +189,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	}
 
 	[DynamicWindowsRuntimeCast(typeof(TextBlock))]
-	private void OpenChartPopout(ToggleButton titleToggle)
+	private void OpenChartPopout(ToggleButton titleToggle, bool closeHostOnClose = false)
 	{
 		if (_chartPopouts.ContainsKey(titleToggle))
 		{
@@ -241,13 +244,75 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		InputNonClientPointerSource nonClientPointerSource = InputNonClientPointerSource.GetForWindowId(popoutWindow.AppWindow.Id);
 		windowRoot.SizeChanged += (_, sizeArgs) => SetPopoutWindowRegions(nonClientPointerSource, windowRoot, titleToggle, sizeArgs.NewSize);
 
-		popoutWindow.AppWindow.SetIcon(@"Assets\AppIcon.ico");
+		string iconPath = CommonCore.Taskbar.JumpListMgr.GetLiveSystemIntelligenceIconPath(GetChartTarget(titleToggle)) ?? @"Assets\AppIcon.ico";
+		popoutWindow.AppWindow.SetIcon(iconPath);
+		popoutWindow.AppWindow.SetTaskbarIcon(iconPath);
 
 		ChartPopoutState state = new(popoutWindow, frame, card, windowRoot, placeholder);
 		_chartPopouts.Add(titleToggle, state);
-		popoutWindow.Closed += (_, _) => RestoreChart(titleToggle, state);
+		popoutWindow.Closed += (_, _) =>
+		{
+			// Restore the chart to its original host and remove the closed pop-out from tracking.
+			RestoreChart(titleToggle, state);
+
+			// Jump List requests use a temporary host window that should close after its Final chart pop-out closes.
+			if (closeHostOnClose)
+			{
+				// Defer the check until the current pop-out closure and chart restoration have completed.
+				_ = DispatcherQueue.TryEnqueue(() =>
+				{
+					// Close the temporary host only when no chart pop-out windows remain.
+					if (_chartPopouts.Count == 0)
+					{
+						Close();
+					}
+				});
+			}
+		};
 		popoutWindow.Activate();
 	}
+
+	/// <summary>
+	/// Opens one chart as the only visible window for a direct jump-list launch.
+	/// </summary>
+	internal void OpenDirectChartPopout(string chartTarget)
+	{
+		AppWindow.Hide(); // Immediately hide the main Live System Intelligence window since this is a popup-only overlay window.
+		ToggleButton? titleToggle = GetChartTitleToggle(chartTarget);
+		if (titleToggle is null)
+		{
+			return;
+		}
+
+		// Direct chart launches do not need dashboard-only visual effects.
+		ChartAnimationsToggleSwitch.IsOn = false;
+		AnimatedBackgroundLayer.Opacity = 0.0;
+		ApplySelectedBackgroundType();
+		OpenChartPopout(titleToggle, closeHostOnClose: true);
+		titleToggle.IsChecked = true;
+	}
+
+	private string GetChartTarget(ToggleButton titleToggle) => titleToggle switch
+	{
+		ToggleButton toggle when ReferenceEquals(toggle, CpuTemperatureTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.CpuTemperatureTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, CpuUsageTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.CpuUsageTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, StorageTemperatureTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.StorageTemperatureTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, NetworkUsageTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.NetworkUsageTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, SystemMemoryUtilizationTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.SystemMemoryTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, DiskActivityTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.DiskActivityTarget,
+		_ => string.Empty
+	};
+
+	private ToggleButton? GetChartTitleToggle(string chartTarget) => chartTarget switch
+	{
+		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.CpuTemperatureTarget, StringComparison.OrdinalIgnoreCase) => CpuTemperatureTitleToggleButton,
+		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.CpuUsageTarget, StringComparison.OrdinalIgnoreCase) => CpuUsageTitleToggleButton,
+		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.StorageTemperatureTarget, StringComparison.OrdinalIgnoreCase) => StorageTemperatureTitleToggleButton,
+		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.NetworkUsageTarget, StringComparison.OrdinalIgnoreCase) => NetworkUsageTitleToggleButton,
+		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.SystemMemoryTarget, StringComparison.OrdinalIgnoreCase) => SystemMemoryUtilizationTitleToggleButton,
+		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.DiskActivityTarget, StringComparison.OrdinalIgnoreCase) => DiskActivityTitleToggleButton,
+		_ => null
+	};
 
 	private static void SetPopoutWindowRegions(InputNonClientPointerSource nonClientPointerSource, FrameworkElement windowRoot, FrameworkElement interactiveElement, Size size)
 	{
@@ -300,6 +365,14 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		if (ReferenceEquals(titleToggle, NetworkUsageTitleToggleButton))
 		{
 			return (NetworkUsageCardFrame, NetworkUsageCard, NetworkUsageGraphRow);
+		}
+		if (ReferenceEquals(titleToggle, TotalSystemPowerTitleToggleButton))
+		{
+			return (TotalSystemPowerCardFrame, TotalSystemPowerCard, TotalSystemPowerGraphRow);
+		}
+		if (ReferenceEquals(titleToggle, BatteryDischargeTitleToggleButton))
+		{
+			return (BatteryDischargeCardFrame, BatteryDischargeCard, BatteryDischargeGraphRow);
 		}
 		foreach (KeyValuePair<string, GpuChartState> chartStatePair in _gpuChartStates)
 		{
@@ -360,6 +433,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		_liveMetricsTimer.Start();
 		InitializeSensorsMonitoring();
 		OnHeartPrivacyWindowInitialized();
+		InitializeEnergyMeters();
 	}
 
 	private void InitializeHomeTitleBadge()
@@ -586,6 +660,8 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		ApplyLiveGraphCardDepth(CpuUsageCard, CpuUsageCardGlowReceiver);
 		ApplyLiveGraphCardDepth(DiskActivityCard, DiskActivityCardGlowReceiver);
 		ApplyLiveGraphCardDepth(NetworkUsageCard, NetworkUsageCardGlowReceiver);
+		ApplyLiveGraphCardDepth(TotalSystemPowerCard, TotalSystemPowerCardGlowReceiver);
+		ApplyLiveGraphCardDepth(BatteryDischargeCard, BatteryDischargeCardGlowReceiver);
 	}
 
 	private static void ApplyLiveGraphCardDepth(Border card, UIElement shadowReceiver)
@@ -645,6 +721,8 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		AppRamChartMaxLabelTextBlock.Text = FormatMemoryRangeLabel(AppRamLiveGraph.EffectiveMaximum.ToString("0.##", CultureInfo.InvariantCulture));
 		StorageTemperatureChartMaxLabelTextBlock.Text = FormatTemperatureRangeLabel(StorageTemperatureLiveGraph.EffectiveMaximum.ToString("0.##", CultureInfo.InvariantCulture));
 		CpuTemperatureChartMaxLabelTextBlock.Text = FormatTemperatureRangeLabel(CpuTemperatureLiveGraph.EffectiveMaximum.ToString("0.##", CultureInfo.InvariantCulture));
+		TotalSystemPowerChartMaxLabelTextBlock.Text = TotalSystemPowerLiveGraph.EffectiveMaximum.ToString("0.##", CultureInfo.InvariantCulture) + " W";
+		BatteryDischargeChartMaxLabelTextBlock.Text = BatteryDischargeLiveGraph.EffectiveMaximum.ToString("0.##", CultureInfo.InvariantCulture) + " W";
 	}
 
 	private void OnBackgroundOpacitySliderValueChanged(object sender, RangeBaseValueChangedEventArgs args)
@@ -839,6 +917,11 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		RemoveAnimatedTesseractBackground();
 		CloseCpuUsageCounters();
 		CloseDiskActivityCounters();
+		foreach (EnergyMeterDevice device in _energyMeterDevices)
+		{
+			device.Dispose();
+		}
+		_energyMeterDevices.Clear();
 
 		CloseGpuCounters();
 	}
@@ -858,6 +941,83 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		UpdateSystemMemoryUtilization();
 		UpdateCpuUsage();
 		UpdateNetworkUsage(firstNetworkSample);
+		UpdateTotalSystemPowerUsage();
+		UpdateBatteryDischarge();
+	}
+
+	private void InitializeEnergyMeters()
+	{
+		try
+		{
+			_energyMeterDevices.AddRange(EnergyMeterDevice.Enumerate());
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	private void UpdateTotalSystemPowerUsage()
+	{
+		try
+		{
+			double totalWatts = 0.0;
+			bool hasMeasurement = false;
+			foreach (EnergyMeterDevice device in _energyMeterDevices)
+			{
+				if (device.TryReadTotalAveragePower(out double deviceWatts))
+				{
+					totalWatts += deviceWatts;
+					hasMeasurement = true;
+				}
+			}
+			if (!hasMeasurement)
+			{
+				TotalSystemPowerValueTextBlock.Text = "Unavailable";
+				return;
+			}
+			TotalSystemPowerValueTextBlock.Text = totalWatts.ToString("0.###", CultureInfo.InvariantCulture) + " W";
+			AddLiveMetricSample(_totalSystemPowerWattsSamples, totalWatts);
+			TotalSystemPowerLiveGraph.Samples = _totalSystemPowerWattsSamples;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			TotalSystemPowerValueTextBlock.Text = "Unavailable";
+		}
+	}
+
+	private void UpdateBatteryDischarge()
+	{
+		try
+		{
+			SYSTEM_BATTERY_STATE batteryState = default;
+			int status = GetSystemBatteryState(ref batteryState);
+			if (status != 0 || batteryState.BatteryPresent == 0 || batteryState.Rate == int.MinValue)
+			{
+				BatteryDischargeValueTextBlock.Text = "Unavailable";
+				return;
+			}
+			double dischargeWatts = batteryState.Discharging != 0 && batteryState.Rate < 0
+				? -(double)batteryState.Rate / 1000.0
+				: 0.0;
+			BatteryDischargeValueTextBlock.Text = dischargeWatts.ToString("0.###", CultureInfo.InvariantCulture) + " W";
+			AddLiveMetricSample(_batteryDischargeWattsSamples, dischargeWatts);
+			BatteryDischargeLiveGraph.Samples = _batteryDischargeWattsSamples;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			BatteryDischargeValueTextBlock.Text = "Unavailable";
+		}
+	}
+
+	private static unsafe int GetSystemBatteryState(ref SYSTEM_BATTERY_STATE batteryState)
+	{
+		fixed (SYSTEM_BATTERY_STATE* batteryStatePointer = &batteryState)
+		{
+			return NativeMethods.CallNtPowerInformation(5, null, 0U, batteryStatePointer, (uint)sizeof(SYSTEM_BATTERY_STATE));
+		}
 	}
 
 	private void UpdateSystemMemoryUtilization()
@@ -1117,9 +1277,9 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		LiveGraphsWrapGrid.ItemWidth = settings.ItemWidth;
 		LiveGraphsWrapGrid.ItemHeight = settings.ItemHeight;
 		LiveGraphsWrapGrid.MaximumRowsOrColumns = columns;
-		ReadOnlySpan<Grid> cardFrames = [AppRamCardFrame, SystemMemoryUtilizationCardFrame, StorageTemperatureCardFrame, CpuTemperatureCardFrame, CpuUsageCardFrame, DiskActivityCardFrame, NetworkUsageCardFrame];
-		ReadOnlySpan<Border> cards = [AppRamCard, SystemMemoryUtilizationCard, StorageTemperatureCard, CpuTemperatureCard, CpuUsageCard, DiskActivityCard, NetworkUsageCard];
-		ReadOnlySpan<RowDefinition> graphRows = [AppRamGraphRow, SystemMemoryUtilizationGraphRow, StorageTemperatureGraphRow, CpuTemperatureGraphRow, CpuUsageGraphRow, DiskActivityGraphRow, NetworkUsageGraphRow];
+		ReadOnlySpan<Grid> cardFrames = [AppRamCardFrame, SystemMemoryUtilizationCardFrame, StorageTemperatureCardFrame, CpuTemperatureCardFrame, CpuUsageCardFrame, DiskActivityCardFrame, NetworkUsageCardFrame, TotalSystemPowerCardFrame, BatteryDischargeCardFrame];
+		ReadOnlySpan<Border> cards = [AppRamCard, SystemMemoryUtilizationCard, StorageTemperatureCard, CpuTemperatureCard, CpuUsageCard, DiskActivityCard, NetworkUsageCard, TotalSystemPowerCard, BatteryDischargeCard];
+		ReadOnlySpan<RowDefinition> graphRows = [AppRamGraphRow, SystemMemoryUtilizationGraphRow, StorageTemperatureGraphRow, CpuTemperatureGraphRow, CpuUsageGraphRow, DiskActivityGraphRow, NetworkUsageGraphRow, TotalSystemPowerGraphRow, BatteryDischargeGraphRow];
 		for (int index = 0; index < cards.Length; index++)
 		{
 			cardFrames[index].Width = settings.CardWidth + (LiveGraphCardGlowBleed * 2.0);
@@ -1140,7 +1300,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 
 	private void ApplyFooterHeight(double footerHeight)
 	{
-		ReadOnlySpan<RowDefinition> footerRows = [AppRamGraphFooterRow, SystemMemoryUtilizationGraphFooterRow, StorageTemperatureGraphFooterRow, CpuTemperatureGraphFooterRow, CpuUsageGraphFooterRow, DiskActivityGraphFooterRow, NetworkUsageGraphFooterRow];
+		ReadOnlySpan<RowDefinition> footerRows = [AppRamGraphFooterRow, SystemMemoryUtilizationGraphFooterRow, StorageTemperatureGraphFooterRow, CpuTemperatureGraphFooterRow, CpuUsageGraphFooterRow, DiskActivityGraphFooterRow, NetworkUsageGraphFooterRow, TotalSystemPowerGraphFooterRow, BatteryDischargeGraphFooterRow];
 		for (int index = 0; index < footerRows.Length; index++)
 		{
 			footerRows[index].Height = new GridLength(footerHeight);
@@ -1155,7 +1315,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 
 	private void ApplyRangeLabelFontSize(double fontSize)
 	{
-		ReadOnlySpan<TextBlock> textBlocks = [AppRamChartMinLabelTextBlock, AppRamChartMaxLabelTextBlock, AppRamChartStartSecondsLabelTextBlock, SystemMemoryUtilizationChartMinLabelTextBlock, SystemMemoryUtilizationChartMaxLabelTextBlock, SystemMemoryUtilizationChartStartSecondsLabelTextBlock, StorageTemperatureChartMinLabelTextBlock, StorageTemperatureChartMaxLabelTextBlock, StorageTemperatureChartStartSecondsLabelTextBlock, CpuTemperatureChartMinLabelTextBlock, CpuTemperatureChartMaxLabelTextBlock, CpuTemperatureChartStartSecondsLabelTextBlock, CpuUsageChartMinLabelTextBlock, CpuUsageChartMaxLabelTextBlock, CpuUsageChartStartSecondsLabelTextBlock, DiskActivityMinLabelTextBlock, DiskActivityMaxLabelTextBlock, DiskActivityStartSecondsLabelTextBlock, NetworkUsageChartMinLabelTextBlock, NetworkUsageChartMaxLabelTextBlock, NetworkUsageChartStartSecondsLabelTextBlock];
+		ReadOnlySpan<TextBlock> textBlocks = [AppRamChartMinLabelTextBlock, AppRamChartMaxLabelTextBlock, AppRamChartStartSecondsLabelTextBlock, SystemMemoryUtilizationChartMinLabelTextBlock, SystemMemoryUtilizationChartMaxLabelTextBlock, SystemMemoryUtilizationChartStartSecondsLabelTextBlock, StorageTemperatureChartMinLabelTextBlock, StorageTemperatureChartMaxLabelTextBlock, StorageTemperatureChartStartSecondsLabelTextBlock, CpuTemperatureChartMinLabelTextBlock, CpuTemperatureChartMaxLabelTextBlock, CpuTemperatureChartStartSecondsLabelTextBlock, CpuUsageChartMinLabelTextBlock, CpuUsageChartMaxLabelTextBlock, CpuUsageChartStartSecondsLabelTextBlock, DiskActivityMinLabelTextBlock, DiskActivityMaxLabelTextBlock, DiskActivityStartSecondsLabelTextBlock, NetworkUsageChartMinLabelTextBlock, NetworkUsageChartMaxLabelTextBlock, NetworkUsageChartStartSecondsLabelTextBlock, TotalSystemPowerChartMinLabelTextBlock, TotalSystemPowerChartMaxLabelTextBlock, TotalSystemPowerChartStartSecondsLabelTextBlock, BatteryDischargeChartMinLabelTextBlock, BatteryDischargeChartMaxLabelTextBlock, BatteryDischargeChartStartSecondsLabelTextBlock];
 		for (int index = 0; index < textBlocks.Length; index++)
 		{
 			textBlocks[index].FontSize = fontSize;
@@ -3572,4 +3732,232 @@ internal sealed partial class HomeLiveGraphsWindow
 		_ => "Accuracy is unknown. If the heading looks wrong, rotate the device slowly to let Windows recalibrate the magnetometer."
 	};
 
+}
+
+internal sealed unsafe partial class EnergyMeterDevice : IDisposable
+{
+	private const uint ErrorNoMoreItems = 259U;
+	private const uint PicowattHours = 0U;
+	private const double HundredNanosecondsPerHour = 36_000_000_000.0;
+	private const double PicowattHoursToWattHours = 1.0e-12;
+	private static readonly Guid EnergyMeterInterfaceGuid = new("45BD8344-7ED6-49CF-A440-C276C933B053");
+	private IntPtr _handle;
+	private readonly int _channelCount;
+	private EMI_CHANNEL_MEASUREMENT_DATA[]? _previousMeasurements;
+
+	private EnergyMeterDevice(IntPtr handle, int channelCount)
+	{
+		_handle = handle;
+		_channelCount = channelCount;
+	}
+
+	internal static List<EnergyMeterDevice> Enumerate()
+	{
+		List<EnergyMeterDevice> devices = new(1);
+		Guid interfaceGuid = EnergyMeterInterfaceGuid;
+		IntPtr deviceInfoSet = NativeMethods.SetupDiGetClassDevsW(in interfaceGuid, IntPtr.Zero, IntPtr.Zero, 0x12U);
+		if (deviceInfoSet == NativeMethods.INVALID_HANDLE_VALUE)
+		{
+			return devices;
+		}
+		try
+		{
+			for (uint index = 0U; ; index++)
+			{
+				SP_DEVICE_INTERFACE_DATA interfaceData = new() { Size = (uint)sizeof(SP_DEVICE_INTERFACE_DATA) };
+				if (!NativeMethods.SetupDiEnumDeviceInterfaces(deviceInfoSet, IntPtr.Zero, in interfaceGuid, index, ref interfaceData))
+				{
+					if ((uint)Marshal.GetLastPInvokeError() == ErrorNoMoreItems)
+					{
+						break;
+					}
+					continue;
+				}
+				EnergyMeterDevice? device = null;
+				try
+				{
+					device = TryOpen(deviceInfoSet, ref interfaceData);
+					if (device is not null)
+					{
+						devices.Add(device);
+						device = null;
+					}
+				}
+				finally
+				{
+					device?.Dispose();
+				}
+			}
+		}
+		catch
+		{
+			foreach (EnergyMeterDevice device in devices)
+			{
+				device.Dispose();
+			}
+			throw;
+		}
+		finally
+		{
+			_ = NativeMethods.SetupDiDestroyDeviceInfoList(deviceInfoSet);
+		}
+		return devices;
+	}
+
+	internal bool TryReadTotalAveragePower(out double totalWatts)
+	{
+		totalWatts = 0.0;
+		EMI_CHANNEL_MEASUREMENT_DATA[] currentMeasurements = new EMI_CHANNEL_MEASUREMENT_DATA[_channelCount];
+
+		fixed (EMI_CHANNEL_MEASUREMENT_DATA* measurementBuffer = currentMeasurements)
+		{
+			uint bufferSize = checked((uint)(_channelCount * sizeof(EMI_CHANNEL_MEASUREMENT_DATA)));
+			uint bytesReturned = 0U;
+			if (!NativeMethods.DeviceIoControl(_handle, 0x0022400CU, null, 0U, measurementBuffer, bufferSize, ref bytesReturned, IntPtr.Zero) || bytesReturned < bufferSize)
+			{
+				return false;
+			}
+		}
+
+		EMI_CHANNEL_MEASUREMENT_DATA[]? previousMeasurements = _previousMeasurements;
+		_previousMeasurements = currentMeasurements;
+
+		if (previousMeasurements is null)
+		{
+			return false;
+		}
+
+		for (int index = 0; index < currentMeasurements.Length; index++)
+		{
+			EMI_CHANNEL_MEASUREMENT_DATA current = currentMeasurements[index];
+			EMI_CHANNEL_MEASUREMENT_DATA previous = previousMeasurements[index];
+			if (current.AbsoluteEnergy < previous.AbsoluteEnergy || current.AbsoluteTime <= previous.AbsoluteTime)
+			{
+				return false;
+			}
+			ulong energyDeltaPicowattHours = current.AbsoluteEnergy - previous.AbsoluteEnergy;
+			ulong timeDelta = current.AbsoluteTime - previous.AbsoluteTime;
+			totalWatts += energyDeltaPicowattHours * HundredNanosecondsPerHour * PicowattHoursToWattHours / timeDelta;
+		}
+		return true;
+	}
+
+	public void Dispose()
+	{
+		IntPtr handle = Interlocked.Exchange(ref _handle, IntPtr.Zero);
+
+		if (handle != IntPtr.Zero && handle != NativeMethods.INVALID_HANDLE_VALUE)
+		{
+			_ = NativeMethods.CloseHandle(handle);
+		}
+	}
+
+	private static EnergyMeterDevice? TryOpen(IntPtr deviceInfoSet, ref SP_DEVICE_INTERFACE_DATA interfaceData)
+	{
+		_ = NativeMethods.SetupDiGetDeviceInterfaceDetailW(deviceInfoSet, ref interfaceData, null, 0U, out uint requiredSize, IntPtr.Zero);
+		if (requiredSize == 0U)
+		{
+			return null;
+		}
+
+		byte* detailBuffer = (byte*)NativeMemory.AllocZeroed(requiredSize);
+		IntPtr handle = IntPtr.Zero;
+		try
+		{
+			*(uint*)detailBuffer = IntPtr.Size == 8 ? 8U : 6U;
+			if (!NativeMethods.SetupDiGetDeviceInterfaceDetailW(deviceInfoSet, ref interfaceData, detailBuffer, requiredSize, out _, IntPtr.Zero))
+			{
+				return null;
+			}
+			string devicePath = new((char*)(detailBuffer + 4));
+
+			handle = NativeMethods.CreateFileW(devicePath, 0x80000000U, 0x3U, IntPtr.Zero, 3U, 0U, IntPtr.Zero);
+
+			if (handle == NativeMethods.INVALID_HANDLE_VALUE)
+			{
+				return null;
+			}
+
+			int channelCount = ReadAndValidateChannelCount(handle);
+
+			if (channelCount <= 0)
+			{
+				return null;
+			}
+
+			EnergyMeterDevice device = new(handle, channelCount);
+			handle = IntPtr.Zero;
+
+			return device;
+		}
+		finally
+		{
+			if (handle != IntPtr.Zero && handle != NativeMethods.INVALID_HANDLE_VALUE)
+			{
+				_ = NativeMethods.CloseHandle(handle);
+			}
+			NativeMemory.Free(detailBuffer);
+		}
+	}
+
+	private static int ReadAndValidateChannelCount(IntPtr handle)
+	{
+		ushort version = 0;
+		uint versionBytesReturned = 0U;
+		bool versionSucceeded = NativeMethods.DeviceIoControl(handle, 0x00224000U, null, 0U, &version, sizeof(ushort), ref versionBytesReturned, IntPtr.Zero);
+		version = Volatile.Read(ref version);
+		if (!versionSucceeded || versionBytesReturned != sizeof(ushort) || version is not (1 or 2))
+		{
+			return 0;
+		}
+
+		uint metadataSize = 0U;
+		uint sizeBytesReturned = 0U;
+		bool metadataSizeSucceeded = NativeMethods.DeviceIoControl(handle, 0x00224004U, null, 0U, &metadataSize, sizeof(uint), ref sizeBytesReturned, IntPtr.Zero);
+		metadataSize = Volatile.Read(ref metadataSize);
+		if (!metadataSizeSucceeded || sizeBytesReturned != sizeof(uint) || metadataSize == 0U || metadataSize > 1024U * 1024U)
+		{
+			return 0;
+		}
+
+		byte* metadata = (byte*)NativeMemory.AllocZeroed(metadataSize);
+		try
+		{
+			uint metadataBytesReturned = 0U;
+			if (!NativeMethods.DeviceIoControl(handle, 0x00224008U, null, 0U, metadata, metadataSize, ref metadataBytesReturned, IntPtr.Zero))
+			{
+				return 0;
+			}
+			if (version == 1)
+			{
+				return metadataBytesReturned >= 72U && *(uint*)metadata == PicowattHours ? 1 : 0;
+			}
+			if (metadataBytesReturned < 68U)
+			{
+				return 0;
+			}
+
+			ushort channelCount = *(ushort*)(metadata + 66);
+			uint offset = 68U;
+			for (int index = 0; index < channelCount; index++)
+			{
+				if (offset > metadataBytesReturned || metadataBytesReturned - offset < 6U || *(uint*)(metadata + offset) != PicowattHours)
+				{
+					return 0;
+				}
+
+				ushort nameSize = *(ushort*)(metadata + offset + 4);
+				if ((nameSize & 1) != 0 || nameSize > metadataBytesReturned - offset - 6U)
+				{
+					return 0;
+				}
+				offset = checked(offset + 6U + nameSize);
+			}
+			return channelCount;
+		}
+		finally
+		{
+			NativeMemory.Free(metadata);
+		}
+	}
 }

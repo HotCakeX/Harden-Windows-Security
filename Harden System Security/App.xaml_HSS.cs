@@ -39,6 +39,7 @@ public sealed partial class App : Application
 {
 	// Forwards a Snipping Tool protocol response to the currently loaded Secure Vault page.
 	internal static Action<Uri?>? SnippingToolResponseHandler;
+	private static AppInstance? _activationInstance;
 
 	/// <summary>
 	/// Invoked when the application is launched.
@@ -46,6 +47,12 @@ public sealed partial class App : Application
 	/// <param name="args">Details about the launch request and process.</param>
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 	{
+		// Extract the requested Live System Intelligence window or chart target when the app is launched from a Jump List item.
+		string? liveSystemIntelligenceLaunchTarget = CommonCore.Taskbar.JumpListMgr.GetLiveSystemIntelligenceLaunchTarget(Program.GetLaunchArguments());
+
+		// Register the Jump List Items
+		await CommonCore.Taskbar.JumpListMgr.EnsureJumpListAsync();
+
 		// Ephemeral activation path used only during this launch session
 		string? _activationFilePath = null;
 
@@ -302,16 +309,16 @@ public sealed partial class App : Application
 
 			try
 			{
-				AppInstance notificationTargetInstance = AppInstance.FindOrRegisterForKey("HardenSystemSecurity.NotificationActivation");
+				_activationInstance = AppInstance.FindOrRegisterForKey("HardenSystemSecurity.NotificationActivation");
 
-				if (notificationTargetInstance.IsCurrent)
+				if (_activationInstance.IsCurrent)
 				{
-					notificationTargetInstance.Activated += App_Activated;
+					_activationInstance.Activated += App_Activated;
 				}
-				else if (launchToUpdatePageFromNotification || launchFromSnippingToolResponse)
+				else if (launchToUpdatePageFromNotification || launchFromSnippingToolResponse || liveSystemIntelligenceLaunchTarget is not null)
 				{
 					// the redirect brokers across the integrity boundary because it's package-identity-scoped, not token-scoped.
-					await notificationTargetInstance.RedirectActivationToAsync(activatedEventArgs);
+					await _activationInstance.RedirectActivationToAsync(activatedEventArgs);
 					Environment.Exit(0);
 				}
 			}
@@ -487,13 +494,13 @@ public sealed partial class App : Application
 			}
 		}
 
+		if (liveSystemIntelligenceLaunchTarget is not null)
+		{
+			ViewModelProvider.HomeVM.OpenLiveGraphsWindow(liveSystemIntelligenceLaunchTarget);
+			return;
+		}
+
 		MainWindow = new MainWindow();
-
-		MainWindowVM.SetCaptionButtonsFlowDirection(Enum.Parse<FlowDirection>(Atlas.Settings.ApplicationGlobalFlowDirection));
-
-		NavigationService.RestoreWindowSize(MainWindow.AppWindow); // Restore window size on startup
-		ViewModelProvider.NavigationService.mainWindowVM.OnIconsStylesChanged(Atlas.Settings.IconsStyle); // Set the initial Icons styles based on the user's settings
-		MainWindow.Closed += static (_, _) => AppCleanUp();  // Assign event handler for the window closed
 		MainWindow.Activate();
 
 		// If the app was forcefully exited previously while there was a badge being displayed on the taskbar icon we have to remove it on app startup otherwise it will be there!
@@ -552,7 +559,13 @@ public sealed partial class App : Application
 
 	private static void App_Activated(object? sender, AppActivationArguments args)
 	{
-		if (AppUpdate.IsUpdateNotificationActivation(args))
+		// Handle Live System Intelligence chart launch requests from Jump List items.
+		if (args.Data is ILaunchActivatedEventArgs launchArgs &&
+			CommonCore.Taskbar.JumpListMgr.GetLiveSystemIntelligenceLaunchTarget(launchArgs.Arguments.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries)) is string chartTarget)
+		{
+			_ = Atlas.AppDispatcher.TryEnqueue(() => ViewModelProvider.HomeVM.OpenLiveGraphsWindow(chartTarget));
+		}
+		else if (AppUpdate.IsUpdateNotificationActivation(args))
 		{
 			AppUpdate.QueueUpdatePageNavigation();
 		}

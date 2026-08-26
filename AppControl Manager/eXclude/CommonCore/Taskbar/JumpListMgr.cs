@@ -25,24 +25,83 @@ namespace CommonCore.Taskbar;
 /// </summary>
 internal static class JumpListMgr
 {
-	internal static async Task RegisterJumpListTasksAsync()
+	private const string LiveSystemIntelligenceArgument = "--live-system-intelligence";
+	internal const string CpuTemperatureTarget = "cpu-temperature", CpuUsageTarget = "cpu-usage", StorageTemperatureTarget = "storage-temperature",
+		NetworkUsageTarget = "network-usage", SystemMemoryTarget = "system-memory", DiskActivityTarget = "disk-activity";
+
+	private static readonly (string Target, string DisplayName, string Logo)[] LiveSystemIntelligenceTargets =
+	[
+		(CpuTemperatureTarget, "CPU Temperature", "CPUTemp"),
+		(CpuUsageTarget, "CPU Usage", "CPU"),
+		(StorageTemperatureTarget, "Storage Temperature", "Temperature"),
+		(NetworkUsageTarget, "Network Usage", "Network"),
+		(SystemMemoryTarget, "RAM Usage", "RAM"),
+		(DiskActivityTarget, "Disk Activity", "SSD")
+	];
+
+	/// <summary>
+	/// Gets the requested Live System Intelligence target from the first launch argument.
+	/// </summary>
+	internal static string? GetLiveSystemIntelligenceLaunchTarget(string[] args) =>
+		args.Length == 0 || !string.Equals(args[0], LiveSystemIntelligenceArgument, StringComparison.OrdinalIgnoreCase)
+			? null
+			: args.Length > 1 ? args[1] : string.Empty;
+
+	// The same file name but with .ico extension is used for taskbar icon and with .png extension is used for JumpList logo icon.
+	internal static string? GetLiveSystemIntelligenceIconPath(string target)
+	{
+		foreach ((string itemTarget, string _, string logo) in LiveSystemIntelligenceTargets)
+		{
+			if (string.Equals(target, itemTarget, StringComparison.OrdinalIgnoreCase))
+			{
+				return $@"Assets\External\{logo}.ico";
+			}
+		}
+		return null;
+	}
+
+	/// <summary>
+	/// Rebuilds the app jump list with the Live System Intelligence window targets.
+	/// </summary>
+	internal static async Task EnsureJumpListAsync()
 	{
 		if (!JumpList.IsSupported())
 		{
-			Logger.Write(Atlas.GetStr("JumpListNotSupportedMessage"));
 			return;
 		}
+		try
+		{
+			JumpList jumpList = await JumpList.LoadCurrentAsync();
+			jumpList.SystemGroupKind = JumpListSystemGroupKind.None;
+			jumpList.Items.Clear();
 
-		JumpList jumpList = await JumpList.LoadCurrentAsync();
-		jumpList.Items.Clear();
+			// Create the Live System Intelligence entry in the JumpList
+			JumpListItem dashboardItem = JumpListItem.CreateWithArguments(
+				LiveSystemIntelligenceArgument,
+				"Live System Intelligence");
 
-		// Defining the task entries
+			dashboardItem.Description = "Open Live System Intelligence";
+			dashboardItem.Logo = new Uri("ms-appx:///Assets/Square44x44Logo.targetsize-48.png");
+			jumpList.Items.Add(dashboardItem);
 
-		JumpListItem OpenPolicyEditor = JumpListItem.CreateWithArguments("task=Deploy-MS-KMCI-Block-Rules", "Deploy Latest Kernel-Mode Blocklist");
-		OpenPolicyEditor.Description = "Deploys the latest Microsoft Recommended Drivers Blocklist on the system, replacing any existing non-system one.";
-		jumpList.Items.Add(OpenPolicyEditor);
+			// Create the individual target entries in the JumpList for overlay charts
+			foreach ((string target, string displayName, string logo) in LiveSystemIntelligenceTargets)
+			{
+				JumpListItem item = JumpListItem.CreateWithArguments(
+					$"{LiveSystemIntelligenceArgument} {target}",
+					displayName);
 
-		// Apply it
-		await jumpList.SaveAsync();
+				item.GroupName = "Live System Intelligence Widgets";
+				item.Description = $"Open {displayName}";
+				item.Logo = new Uri($"ms-appx:///Assets/External/{logo}.png");
+				jumpList.Items.Add(item);
+			}
+
+			await jumpList.SaveAsync();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
 	}
 }

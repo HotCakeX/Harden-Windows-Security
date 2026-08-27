@@ -4,3 +4,5 @@
     * System UUID: Identifies the overall system using a firmware-generated UUID.
     * Baseboard Serial Number: Identifies the motherboard installed in the device.
     * Chassis Serial Number / Asset Tag: Identifies the device enclosure and shows its inventory tag, if one has been assigned.
+
+* Fixed a bug where one of the app's components would not load correctly on certain system architectures.

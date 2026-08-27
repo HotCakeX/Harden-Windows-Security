@@ -337,7 +337,7 @@
     <Import Project="eXclude\CommonCore\CommonCore.projitems" Label="Shared" />
 
     <!-- Build ComManager only when its executable is missing from the CppInterop directory. -->
-    <Target Name="EnsureComManagerExecutable" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildProjectDirectory)\CppInterop\ComManager.exe')">
+    <Target Name="EnsureComManagerExecutable" BeforeTargets="PrepareForBuild" Condition="'$(HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds)' != 'true' AND !Exists('$(MSBuildProjectDirectory)\CppInterop\ComManager.exe')">
         <PropertyGroup>
 
             <!-- Resolve all paths from this project so the target is independent of the current working directory. -->

@@ -366,6 +366,8 @@ function Build_ACM {
     $ErrorActionPreference = 'Stop'
     $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
+    $env:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds = 'true'
+
     Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1 -Force
 
     [System.String]$script:AppControlManagerDirectory

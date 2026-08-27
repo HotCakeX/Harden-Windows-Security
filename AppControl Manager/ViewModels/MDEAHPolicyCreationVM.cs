@@ -511,8 +511,6 @@ DeviceEvents
 	/// </summary>
 	internal async void ScanLogs_Click()
 	{
-		bool error = false;
-
 		try
 		{
 			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Collapsed;
@@ -531,6 +529,12 @@ DeviceEvents
 			FileIdentities.Clear();
 			AllFileIdentities.Clear();
 
+			if (MDEAdvancedHuntingLogs.Count == 0)
+			{
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoMDEAdvancedHuntingLogProvided"));
+				return;
+			}
+
 			// Grab the App Control Logs
 			await Task.Run(() =>
 			{
@@ -538,13 +542,6 @@ DeviceEvents
 				// Ensures the data are unique and are time-prioritized.
 				// NOTE: the GetMDEAdvancedHuntingLogsData.Retrieve method already uses a signature-based HashSet.
 				FileIdentityTimeBasedHashSet Output = new();
-
-				if (MDEAdvancedHuntingLogs.Count == 0)
-				{
-					throw new InvalidOperationException(
-						Atlas.GetStr("NoMDEAdvancedHuntingLogProvided")
-					);
-				}
 
 				using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
@@ -588,10 +585,11 @@ DeviceEvents
 				// Navigate to the analysis page
 				await ViewModelProvider.NavigationService.Navigate(typeof(Pages.Analysis.MDEAdvancedHunting), null);
 			}
+
+			MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs"));
 		}
 		catch (Exception ex)
 		{
-			error = true;
 			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorScanningMDEAdvancedHuntingCsvLogs"));
 		}
 		finally
@@ -601,12 +599,6 @@ DeviceEvents
 			// Stop displaying the Progress Ring
 			ScanLogsProgressRingIsActive = false;
 			ScanLogsProgressRingVisibility = Visibility.Collapsed;
-
-			if (!error)
-			{
-				MainInfoBar.WriteSuccess(Atlas.GetStr("SuccessfullyCompletedScanningMDEAdvancedHuntingCsvLogs"));
-			}
-
 			MainInfoBar.IsClosable = true;
 		}
 	}
@@ -626,8 +618,6 @@ DeviceEvents
 	/// </summary>
 	internal async void CreatePolicyButton_Click(SplitButton sender, SplitButtonClickEventArgs args)
 	{
-		bool Error = false;
-
 		// Empty the class variable that stores the policy file path
 		FinalSupplementalPolicy = null;
 
@@ -643,16 +633,14 @@ DeviceEvents
 
 			if (FileIdentities.Count is 0)
 			{
-				throw new InvalidOperationException(
-					Atlas.GetStr("NoLogsErrorMessage")
-				);
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoLogsErrorMessage"));
+				return;
 			}
 
 			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
 			{
-				throw new InvalidOperationException(
-					Atlas.GetStr("NoPolicyCreationOptionSelectedErrorMessage")
-				);
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoPolicyCreationOptionSelectedErrorMessage"));
+				return;
 			}
 
 			MainInfoBar.IsClosable = false;
@@ -879,31 +867,26 @@ DeviceEvents
 						}
 				}
 			});
+
+			MainInfoBar.WriteSuccess(string.Format(
+					Atlas.GetStr("SuccessfullyCreatedSupplementalPolicyMessage"),
+					PolicyNameTextBox
+				));
+
+			OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
 		}
 		catch (Exception ex)
 		{
-			Error = true;
 			MainInfoBar.WriteError(ex, Atlas.GetStr("ErrorCreatingSupplementalPolicyMessage"));
 		}
 		finally
 		{
 			AreElementsEnabled = true;
-
 			MainInfoBar.IsClosable = true;
 
 			// Display the progress ring on the ScanLogs button
 			ScanLogsProgressRingIsActive = false;
 			ScanLogsProgressRingVisibility = Visibility.Collapsed;
-
-			if (!Error)
-			{
-				MainInfoBar.WriteSuccess(string.Format(
-					Atlas.GetStr("SuccessfullyCreatedSupplementalPolicyMessage"),
-					PolicyNameTextBox
-				));
-
-				OpenInPolicyEditorInfoBarActionButtonVisibility = Visibility.Visible;
-			}
 		}
 	}
 

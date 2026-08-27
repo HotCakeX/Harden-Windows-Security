@@ -8,3 +8,7 @@
 * Updated dependencies to the latest versions.
 
 * Fixed a bug where one of the app's components would not load correctly on certain system architectures.
+
+* In the MDE Advanced Hunting page, the messages displayed when no results are found or no file is selected are clearer now.
+
+* Improved file enumeration speed.

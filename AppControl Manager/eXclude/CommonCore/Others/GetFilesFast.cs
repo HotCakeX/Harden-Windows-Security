@@ -224,6 +224,74 @@ internal static class FileUtility
 		}
 	}
 
+	private static bool IsPortableExecutable(string filePath, long length)
+	{
+		try
+		{
+			long fileLength = length;
+			if (fileLength < 90)
+			{
+				return false;
+			}
+
+			using SafeFileHandle fileHandle = File.OpenHandle(
+				filePath,
+				FileMode.Open,
+				FileAccess.Read,
+				FileShare.ReadWrite | FileShare.Delete,
+				FileOptions.RandomAccess);
+
+			Span<byte> dosHeader = stackalloc byte[64];
+			if (RandomAccess.Read(fileHandle, dosHeader, 0) != dosHeader.Length ||
+				BinaryPrimitives.ReadUInt16LittleEndian(dosHeader) != 0x5A4D)
+			{
+				return false;
+			}
+
+			int ntHeaderOffset = BinaryPrimitives.ReadInt32LittleEndian(dosHeader[0x3C..]);
+			if (ntHeaderOffset < dosHeader.Length || ntHeaderOffset > fileLength - 26)
+			{
+				return false;
+			}
+
+			Span<byte> ntHeaders = stackalloc byte[26];
+			if (RandomAccess.Read(fileHandle, ntHeaders, ntHeaderOffset) != ntHeaders.Length ||
+				BinaryPrimitives.ReadUInt32LittleEndian(ntHeaders) != 0x00004550)
+			{
+				return false;
+			}
+
+			ushort numberOfSections = BinaryPrimitives.ReadUInt16LittleEndian(ntHeaders[6..]);
+			ushort sizeOfOptionalHeader = BinaryPrimitives.ReadUInt16LittleEndian(ntHeaders[20..]);
+			ushort characteristics = BinaryPrimitives.ReadUInt16LittleEndian(ntHeaders[22..]);
+			ushort optionalHeaderMagic = BinaryPrimitives.ReadUInt16LittleEndian(ntHeaders[24..]);
+
+			// The Windows loader supports PE images with 1 through 96 sections.
+			// https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-image_file_header
+			if (numberOfSections is 0 or > 96 ||
+				sizeOfOptionalHeader < 2 ||
+				(characteristics & 0x0002) is 0 ||
+				optionalHeaderMagic is not (0x010B or 0x020B))
+			{
+				return false;
+			}
+
+			long sectionTableEnd = ntHeaderOffset + 24L + sizeOfOptionalHeader + (numberOfSections * 40L);
+			bool result = sectionTableEnd <= fileLength;
+#if DEBUG
+			if (result)
+			{
+				Logger.Write($"File '{filePath}' has an unrecognized extension but is a valid PE image.");
+			}
+#endif
+			return result;
+		}
+		catch
+		{
+			return false;
+		}
+	}
+
 	/// <summary>
 	/// A flexible and fast method that can accept directory paths and file paths as input and return file paths that are compliant with App Control policies.
 	/// It supports custom extensions to filter by as well.
@@ -291,7 +359,7 @@ internal static class FileUtility
 							// Find valid PE files that are candidate for Windows image loading and App Control evaluation.
 							// First use the zero-allocation file extension checking fast path, only inspect file contents when the extension is unknown
 							// This solves valid PEs with custom file extensions: https://github.com/HotCakeX/Harden-Windows-Security/issues/1196
-							return lookup.Contains(Path.GetExtension(entry.FileName)) || (usePeValidation && IsPortableExecutable(entry.ToFullPath()));
+							return lookup.Contains(Path.GetExtension(entry.FileName)) || (usePeValidation && IsPortableExecutable(entry.ToFullPath(), entry.Length));
 						}
 					};
 
@@ -364,7 +432,7 @@ internal static class FileUtility
 								// Find valid PE files that are candidate for Windows image loading and App Control evaluation.
 								// First use the zero-allocation file extension checking fast path, only inspect file contents when the extension is unknown
 								// This solves valid PEs with custom file extensions: https://github.com/HotCakeX/Harden-Windows-Security/issues/1196
-								return lookup.Contains(Path.GetExtension(entry.FileName)) || (usePeValidation && IsPortableExecutable(entry.ToFullPath()));
+								return lookup.Contains(Path.GetExtension(entry.FileName)) || (usePeValidation && IsPortableExecutable(entry.ToFullPath(), entry.Length));
 							}
 						};
 

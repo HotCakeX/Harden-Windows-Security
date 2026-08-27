@@ -584,14 +584,14 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 			if (FileIdentities.Count is 0)
 			{
-				throw new InvalidOperationException(
-					Atlas.GetStr("NoLogsUseScanButtonMessage"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("NoLogsUseScanButtonMessage"));
+				return;
 			}
 
 			if (PolicyToAddLogsTo is null && BasePolicyXMLFile is null && BasePolicyGUID is null)
 			{
-				throw new InvalidOperationException(
-					Atlas.GetStr("MustSelectOptionMessage"));
+				MainInfoBar.WriteWarning(Atlas.GetStr("MustSelectOptionMessage"));
+				return;
 			}
 
 			// All of the File Identities that will be used to put in the policy XML file

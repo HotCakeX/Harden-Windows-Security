@@ -1,7 +1,6 @@
-* Added Windows Jump List support for quick and direct launch of the app to the Live System Intelligence window or any of the individual system metric charts/widgets. That means you can now right-click on the app's icon on taskbar or Start Menu and select to display only the live CPU usage widget, CPU temp widget, RAM usage widget, Network usage widget, Disk activity widget, Disk temperature widget and so on. All widgets/charts can be now displayed solo, using minimal system resources and updated in real-time. This is a great way to monitor your system performance while gaming or working on other tasks without having to open the full app window.
+* You can now view the following additional information about your system on the Home page without needing to use any other software or tools:
 
-* You can now only have the Live System Intelligence window open. Closing the main app window no longer means full app close. Other windows that belong to the app will stay open and you can continue using them. The full app close and process exit only happens when all windows that belong to the app are closed, making the app more agile and modular.
-
-* Added 2 new system metric charts/widgets to the Live System Intelligence window: Total System Power displays the total power consumption of your system in real-time in Watts, only for hardware that expose the information. The Battery Discharge displays the battery usage in Watts whenever your device runs on battery power only. You can pin these on your desktop just like every other widget in order to monitor your system metrics.
-
-* Updated dependencies to the latest version.
+    * System Serial Number: Identifies the computer as reported by its firmware.
+    * System UUID: Identifies the overall system using a firmware-generated UUID.
+    * Baseboard Serial Number: Identifies the motherboard installed in the device.
+    * Chassis Serial Number / Asset Tag: Identifies the device enclosure and shows its inventory tag, if one has been assigned.

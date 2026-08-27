@@ -1,1 +1,8 @@
 * Updated dependencies to the latest versions.
+
+* You can now view the following additional information about your system on the Home page without needing to use any other software or tools:
+
+    * System Serial Number: Identifies the computer as reported by its firmware.
+    * System UUID: Identifies the overall system using a firmware-generated UUID.
+    * Baseboard Serial Number: Identifies the motherboard installed in the device.
+    * Chassis Serial Number / Asset Tag: Identifies the device enclosure and shows its inventory tag, if one has been assigned.

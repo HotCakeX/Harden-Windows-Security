@@ -847,6 +847,113 @@
                             </Grid>
                         </Border>
 
+                        <!-- SYSTEM SERIAL NUMBER -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE8A5;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               Text="System Serial Number"/>
+                                </StackPanel>
+                                <ScrollViewer Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled"
+                                              IsVerticalRailEnabled="True"
+                                              VerticalScrollBarVisibility="Visible"
+                                              VerticalScrollMode="Enabled">
+                                    <TextBlock Width="240"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.SystemSerialText, Mode=OneWay}"
+                                               IsTextSelectionEnabled="True"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+
+                        <!-- SYSTEM UUID -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE8A5;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               Text="System UUID"/>
+                                </StackPanel>
+                                <ScrollViewer Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled"
+                                              IsVerticalRailEnabled="True"
+                                              VerticalScrollBarVisibility="Visible"
+                                              VerticalScrollMode="Enabled">
+                                    <TextBlock Width="240"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.SystemUuidText, Mode=OneWay}"
+                                               IsTextSelectionEnabled="True"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+
+                        <!-- BASEBOARD SERIAL NUMBER -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE950;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               Text="Baseboard Serial Number"/>
+                                </StackPanel>
+                                <ScrollViewer Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled"
+                                              IsVerticalRailEnabled="True"
+                                              VerticalScrollBarVisibility="Visible"
+                                              VerticalScrollMode="Enabled">
+                                    <TextBlock Width="240"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.BaseboardSerialText, Mode=OneWay}"
+                                               IsTextSelectionEnabled="True"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
+
+                        <!-- CHASSIS SERIAL / ASSET TAG -->
+                        <Border Style="{StaticResource OverviewCardBorderStyle}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xE950;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               Text="Chassis Serial / Asset Tag"/>
+                                </StackPanel>
+                                <ScrollViewer Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              HorizontalScrollMode="Disabled"
+                                              IsVerticalRailEnabled="True"
+                                              VerticalScrollBarVisibility="Visible"
+                                              VerticalScrollMode="Enabled">
+                                    <TextBlock Width="240"
+                                               Style="{StaticResource CardBodyTextStyle}"
+                                               Text="{x:Bind ViewModel.ChassisIdentityText, Mode=OneWay}"
+                                               IsTextSelectionEnabled="True"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
                     </ItemsControl>
 
                     <!-- spacer between sections -->

@@ -170,6 +170,14 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			{
 				Logger.Write(ex);
 			}
+			try
+			{
+				GetSmbiosIdentity();
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
 
 			try
 			{
@@ -287,6 +295,10 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal string ComputerNameText { get; private set => SP(ref field, value); } = DefaultText;
 	internal string SystemInfoText { get; private set => SP(ref field, value); } = DefaultText;
 	internal string ActivationStatusSummaryText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string SystemSerialText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string SystemUuidText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string BaseboardSerialText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string ChassisIdentityText { get; private set => SP(ref field, value); } = DefaultText;
 
 #if HARDEN_SYSTEM_SECURITY
 	internal bool IsLiveGraphsWindowOpen
@@ -2843,4 +2855,156 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		StopSharedTelemetryIfUnused();
 		_publicIpLookupLock.Dispose();
 	}
+
+	/// <summary>
+	/// Reads the SMBIOS Type 1 system serial and UUID, Type 2 baseboard serial,
+	/// and Type 3 chassis serial and asset tag from the raw SMBIOS table.
+	/// </summary>
+	private void GetSmbiosIdentity()
+	{
+		const uint RawSmbiosProvider = 0x52534D42;
+		uint tableSize = NativeMethods.GetSystemFirmwareTable(RawSmbiosProvider, 0, IntPtr.Zero, 0);
+		if (tableSize < 8 || tableSize > 1_000_000)
+		{
+			(SystemSerialText, SystemUuidText, BaseboardSerialText, ChassisIdentityText) = ("Unavailable", "Unavailable", "Unavailable", "Unavailable");
+			return;
+		}
+
+		byte[] table = new byte[tableSize];
+
+		fixed (byte* tablePointer = table)
+		{
+			if (NativeMethods.GetSystemFirmwareTable(RawSmbiosProvider, 0, (IntPtr)tablePointer, tableSize) != tableSize)
+			{
+				(SystemSerialText, SystemUuidText, BaseboardSerialText, ChassisIdentityText) = ("Unavailable", "Unavailable", "Unavailable", "Unavailable");
+				return;
+			}
+		}
+
+		byte majorVersion = table[1];
+		byte minorVersion = table[2];
+		int tableEnd = Math.Min(table.Length, 8 + checked((int)BitConverter.ToUInt32(table, 4)));
+		string systemSerial = "Unavailable";
+		string systemUuid = "Unavailable";
+		string baseboardSerial = "Unavailable";
+		string chassisIdentity = "Unavailable";
+
+		for (int structureOffset = 8; structureOffset + 4 <= tableEnd;)
+		{
+			byte structureType = table[structureOffset];
+			int formattedLength = table[structureOffset + 1];
+
+			if (formattedLength < 4 || structureOffset + formattedLength > tableEnd)
+			{
+				break;
+			}
+
+			int stringsStart = structureOffset + formattedLength;
+			int stringsEnd = FindStringSetEnd(table, stringsStart, tableEnd);
+
+			if (stringsEnd < 0)
+			{
+				break;
+			}
+
+			switch (structureType)
+			{
+				case 1 when formattedLength >= 24:
+					systemSerial = GetSmbiosString(table, stringsStart, stringsEnd, table[structureOffset + 7]);
+					systemUuid = FormatSmbiosUuid(table.AsSpan(structureOffset + 8, 16), majorVersion, minorVersion);
+					break;
+				case 2 when formattedLength >= 8:
+					baseboardSerial = GetSmbiosString(table, stringsStart, stringsEnd, table[structureOffset + 7]);
+					break;
+				case 3 when formattedLength >= 9:
+					string serial = GetSmbiosString(table, stringsStart, stringsEnd, table[structureOffset + 7]);
+					string assetTag = GetSmbiosString(table, stringsStart, stringsEnd, table[structureOffset + 8]);
+					chassisIdentity = string.IsNullOrWhiteSpace(assetTag) ? serial : $"Serial: {serial} | Asset tag: {assetTag}";
+					break;
+				default:
+					break;
+			}
+			structureOffset = stringsEnd + 2;
+			if (structureType == 127)
+			{
+				break;
+			}
+		}
+
+		(SystemSerialText, SystemUuidText, BaseboardSerialText, ChassisIdentityText) = (NormalizeIdentifier(systemSerial), systemUuid, NormalizeIdentifier(baseboardSerial), NormalizeIdentifier(chassisIdentity));
+	}
+
+	/// <summary>
+	/// Rejects unavailable UUID values and applies the SMBIOS version-specific byte order.
+	/// SMBIOS 2.6 and newer store the first three UUID fields in little-endian order.
+	/// </summary>
+	private static string FormatSmbiosUuid(ReadOnlySpan<byte> bytes, byte majorVersion, byte minorVersion)
+	{
+		if (IsRepeatedByte(bytes, 0x00) || IsRepeatedByte(bytes, 0xFF))
+		{
+			return "Unavailable";
+		}
+
+		if (majorVersion > 2 || (majorVersion == 2 && minorVersion >= 6))
+		{
+			return new Guid(bytes).ToString("D");
+		}
+
+		string hex = Convert.ToHexString(bytes);
+
+		return $"{hex[..8]}-{hex[8..12]}-{hex[12..16]}-{hex[16..20]}-{hex[20..]}".ToLowerInvariant();
+	}
+
+	private static bool IsRepeatedByte(ReadOnlySpan<byte> bytes, byte value)
+	{
+		foreach (byte item in bytes)
+		{
+			if (item != value)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private static int FindStringSetEnd(byte[] table, int start, int end)
+	{
+		for (int index = start; index + 1 < end; index++)
+		{
+			if (table[index] == 0 && table[index + 1] == 0)
+			{
+				return index;
+			}
+		}
+		return -1;
+	}
+
+	private static string GetSmbiosString(byte[] table, int start, int end, byte requestedIndex)
+	{
+		if (requestedIndex == 0)
+		{
+			return string.Empty;
+		}
+
+		int currentIndex = 1;
+		int itemStart = start;
+
+		for (int position = start; position <= end; position++)
+		{
+			if (position != end && table[position] != 0)
+			{
+				continue;
+			}
+			if (currentIndex == requestedIndex)
+			{
+				return Encoding.UTF8.GetString(table, itemStart, position - itemStart).Trim();
+			}
+			currentIndex++;
+			itemStart = position + 1;
+		}
+
+		return string.Empty;
+	}
+
+	private static string NormalizeIdentifier(string value) => string.IsNullOrWhiteSpace(value) ? "Unavailable" : value;
 }

@@ -366,8 +366,6 @@ function Build_ACM {
     $ErrorActionPreference = 'Stop'
     $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-    $env:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds = 'true'
-
     Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1 -Force
 
     [System.String]$script:AppControlManagerDirectory
@@ -762,11 +760,11 @@ function Build_ACM {
 
     # Generate for X64 architecture
     dotnet clean 'AppControl Manager.csproj' --configuration Release
-    dotnet build 'AppControl Manager.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64
+    dotnet build 'AppControl Manager.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
-    dotnet msbuild 'AppControl Manager.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
+    dotnet msbuild 'AppControl Manager.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging x64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
@@ -777,11 +775,11 @@ function Build_ACM {
 
     # Generate for ARM64 architecture
     dotnet clean 'AppControl Manager.csproj' --configuration Release
-    dotnet build 'AppControl Manager.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64
+    dotnet build 'AppControl Manager.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64 /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 
-    dotnet msbuild 'AppControl Manager.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-arm64 /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
+    dotnet msbuild 'AppControl Manager.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-arm64 /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging ARM64 AppControl Manager project. Exit Code: $LASTEXITCODE") }
 

@@ -548,8 +548,6 @@ function Build_HSS {
     $ErrorActionPreference = 'Stop'
     $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
-    $env:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds = 'true'
-
     Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' -Name 'LongPathsEnabled' -Value 1 -Force
 
     [System.String]$script:HardenSystemSecurityDirectory
@@ -990,11 +988,11 @@ function Build_HSS {
 
     # Generate for X64 architecture
     dotnet clean 'Harden System Security.csproj' --configuration Release
-    dotnet build 'Harden System Security.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64
+    dotnet build 'Harden System Security.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
-    dotnet msbuild 'Harden System Security.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog
+    dotnet msbuild 'Harden System Security.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging x64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
@@ -1008,11 +1006,11 @@ function Build_HSS {
 
     # Generate for ARM64 architecture
     dotnet clean 'Harden System Security.csproj' --configuration Release
-    dotnet build 'Harden System Security.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64
+    dotnet build 'Harden System Security.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64 /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
-    dotnet msbuild 'Harden System Security.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-arm64 /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog
+    dotnet msbuild 'Harden System Security.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-arm64 /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging ARM64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 

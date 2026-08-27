@@ -26,8 +26,6 @@ jobs:
       DRAFT_RELEASE_ID: ${{ steps.find_draft_release.outputs.DRAFT_RELEASE_ID }}
       DRAFT_RELEASE_TAG: ${{ steps.find_draft_release.outputs.DRAFT_RELEASE_TAG }}
       PACKAGE_VERSION: ${{ steps.main_buildOp.outputs.PACKAGE_VERSION }}
-      MSIXBundle_PATH: ${{ steps.main_buildOp.outputs.MSIXBundle_PATH }}
-      MSIXBundle_NAME: ${{ steps.main_buildOp.outputs.MSIXBundle_NAME }}
       X64MSBuildLog_PATH: ${{ steps.main_buildOp.outputs.X64MSBuildLog_PATH }}
       ARM64MSBuildLog_PATH: ${{ steps.main_buildOp.outputs.ARM64MSBuildLog_PATH }}
       X64Symbol_PATH: ${{ steps.main_buildOp.outputs.X64Symbol_PATH }}
@@ -730,23 +728,20 @@ jobs:
               [System.String]$FinalBundleFileName = "Harden System Security_$versionX64.msixbundle"
               #endregion
 
-              # Creating the directory where the MSIX packages will be copied to
               [System.String]$MSIXBundleOutput = [System.IO.Directory]::CreateDirectory([System.IO.Path]::Combine($script:HardenSystemSecurityDirectory, 'MSIXBundleOutput')).FullName
 
-              [System.IO.File]::Copy($FinalMSIXX64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXX64Name), $true)
+              [System.String]$StagedX64MSIXPath = [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXX64Name)
+              [System.String]$StagedARM64MSIXPath = [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXARM64Name)
+              [System.String]$StagedResourceMSIXPath = [System.IO.Path]::Combine($MSIXBundleOutput, $ExtraLanguagesPack1MSIXPathName)
 
-              [System.IO.File]::Copy($FinalMSIXARM64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXARM64Name), $true)
+              [System.IO.File]::Copy($FinalMSIXX64Path, $StagedX64MSIXPath, $true)
+              [System.IO.File]::Copy($FinalMSIXARM64Path, $StagedARM64MSIXPath, $true)
+              [System.IO.File]::Copy($ExtraLanguagesPack1MSIXPath, $StagedResourceMSIXPath, $true)
 
-              [System.IO.File]::Copy($ExtraLanguagesPack1MSIXPath, [System.IO.Path]::Combine($MSIXBundleOutput, $ExtraLanguagesPack1MSIXPathName), $true)
-
-              # The path to the final MSIX Bundle file
-              [System.String]$MSIXBundle = [System.IO.Path]::Combine($MSIXBundleOutput, $FinalBundleFileName)
-
-              # https://learn.microsoft.com/windows/win32/appxpkg/make-appx-package--makeappx-exe-#to-create-a-package-bundle-using-a-directory-structure
-              . $MakeAppxPath bundle /d $MSIXBundleOutput /p $MSIXBundle /o /v
-
-              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("MakeAppx failed creating the MSIXBundle. Exit Code: $LASTEXITCODE") }
-
+              Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "X64_MSIX_PATH=$StagedX64MSIXPath"
+              Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64_MSIX_PATH=$StagedARM64MSIXPath"
+              Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "RESOURCE_MSIX_PATH=$StagedResourceMSIXPath"
+              Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "FINAL_BUNDLE_NAME=$FinalBundleFileName"
               #Endregion
 
               Write-Host -Object "X64 MSIX File Path: $FinalMSIXX64Path" -ForegroundColor Green
@@ -757,8 +752,6 @@ jobs:
               Write-Host -Object "ARM64 MSIX File Name: $FinalMSIXARM64Name" -ForegroundColor Cyan
               Write-Host -Object "ARM64 Symbols: $FinalMSIXARM64SymbolPath" -ForegroundColor Cyan
 
-              Write-Host -Object "MSIX Bundle File Path: $MSIXBundle" -ForegroundColor Yellow
-              Write-Host -Object "MSIX Bundle File Name: $FinalBundleFileName" -ForegroundColor Yellow
 
               if ($Workflow) {
 
@@ -771,8 +764,6 @@ jobs:
                   Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "PACKAGE_VERSION=$MSIXVersion"
 
                   # Saving the details for the MSIX Bundle file
-                  Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "MSIXBundle_PATH=$MSIXBundle"
-                  Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "MSIXBundle_NAME=$FinalBundleFileName"
 
                   # Saving the details of the log files
                   Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "X64MSBuildLog_PATH=$((Resolve-Path -Path .\X64MSBuildLog.binlog).Path)"
@@ -786,16 +777,6 @@ jobs:
                   Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_PATH=$FinalMSIXARM64SymbolPath"
                   Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "ARM64Symbol_NAME=$FinalMSIXARM64SymbolName"
 
-                  # https://github.com/microsoft/sbom-tool
-                  # Generating SBOM
-                  Invoke-WebRequest -Uri 'https://github.com/microsoft/sbom-tool/releases/latest/download/sbom-tool-win-x64.exe' -OutFile "${Env:RUNNER_TEMP}\sbom-tool.exe"
-
-                  # https://github.com/microsoft/sbom-tool/blob/main/docs/sbom-tool-arguments.md
-                  . "${Env:RUNNER_TEMP}\sbom-tool.exe" generate -b $MSIXBundleOutput -bc .\ -pn 'Harden System Security' -ps 'Violet Hansen' -pv $MSIXVersion -nsb 'https://github.com/HotCakeX/Harden-Windows-Security' -V Verbose -gt true -li true -pm true -D true -lto 80
-
-                  # Saving the details of the SBOM file
-                  Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value "SBOM_PATH=$MSIXBundleOutput/_manifest/spdx_2.2/manifest.spdx.json"
-                  Add-Content -Path ($env:GITHUB_ENV, $env:GITHUB_OUTPUT) -Value 'SBOM_NAME=manifest.spdx.json'
               }
 
               if ($null -ne $Stopwatch) {
@@ -824,204 +805,195 @@ jobs:
           # Build_HSS -DownloadRepo $false -InstallDeps $false -Workflow $false -UpdateWorkLoads $false
 
 
-      - name: Create MSIXBundle verification tool and unsigned inventory
+      - name: Unpack architecture MSIX files and create signing ZIP
+        id: prepare_signing
         shell: pwsh
         run: |
           Set-StrictMode -Version 3.0
           $ErrorActionPreference = 'Stop'
 
-          [string]$VerificationScript = Join-Path -Path $env:RUNNER_TEMP -ChildPath 'Verify-MsixBundlePayload.ps1'
-          @'
-          param(
-              [Parameter(Mandatory)]
-              [ValidateSet('Create', 'Compare')]
-              [string]$Mode,
-
-              [Parameter(Mandatory)]
-              [string]$BundlePath,
-
-              [Parameter(Mandatory)]
-              [string]$ManifestPath,
-
-              [string]$BaselineManifestPath
-          )
-
-          Set-StrictMode -Version 3.0
-          $ErrorActionPreference = 'Stop'
-
-          function Test-PackageInfrastructureFile {
-              param([Parameter(Mandatory)][string]$RelativePath)
-
-              [string]$NormalizedPath = $RelativePath.Replace('\\', '/')
-              return $NormalizedPath -match '(^|/)(AppxSignature\\.p7x|AppxBlockMap\\.xml|\\[Content_Types\\]\\.xml|CodeIntegrity\\.cat)$'
+          [string]$MakeAppxPath = Get-ChildItem -Path 'C:\Program Files (x86)\Windows Kits\10\bin' -Filter makeappx.exe -File -Recurse |
+            Where-Object { $_.Directory.Name.Equals('x64', [System.StringComparison]::OrdinalIgnoreCase) } |
+            Sort-Object -Property FullName -Descending |
+            Select-Object -First 1 -ExpandProperty FullName
+          if ([System.String]::IsNullOrWhiteSpace($MakeAppxPath)) {
+              throw 'MakeAppx.exe was not found.'
           }
 
-          function Expand-ZipSafely {
-              param(
-                  [Parameter(Mandatory)][string]$ArchivePath,
-                  [Parameter(Mandatory)][string]$DestinationPath
-              )
+          [string]$WorkRoot = Join-Path -Path '${{ runner.temp }}' -ChildPath 'HSSSigningWork'
+          [string]$PackageDirectory = Join-Path -Path $WorkRoot -ChildPath 'Packages'
+          [string]$UnpackedDirectory = Join-Path -Path $WorkRoot -ChildPath 'Unpacked'
+          [string]$SigningDirectory = Join-Path -Path $WorkRoot -ChildPath 'SigningPayload'
+          [void][System.IO.Directory]::CreateDirectory($PackageDirectory)
+          [void][System.IO.Directory]::CreateDirectory($UnpackedDirectory)
+          [void][System.IO.Directory]::CreateDirectory((Join-Path -Path $SigningDirectory -ChildPath 'x64'))
+          [void][System.IO.Directory]::CreateDirectory((Join-Path -Path $SigningDirectory -ChildPath 'arm64'))
 
-              [System.IO.DirectoryInfo]$Destination = [System.IO.Directory]::CreateDirectory($DestinationPath)
-              [string]$DestinationRoot = $Destination.FullName.TrimEnd([System.IO.Path]::DirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar
-              [System.IO.Compression.ZipArchive]$Archive = [System.IO.Compression.ZipFile]::OpenRead($ArchivePath)
-              try {
-                  foreach ($Entry in $Archive.Entries) {
-                      [string]$TargetPath = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine($Destination.FullName, $Entry.FullName))
-                      if (!$TargetPath.StartsWith($DestinationRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-                          throw "Unsafe archive entry: $($Entry.FullName)"
-                      }
-
-                      if ([System.String]::IsNullOrEmpty($Entry.Name)) {
-                          [void][System.IO.Directory]::CreateDirectory($TargetPath)
-                          continue
-                      }
-
-                      [string]$TargetDirectory = [System.IO.Path]::GetDirectoryName($TargetPath)
-                      [void][System.IO.Directory]::CreateDirectory($TargetDirectory)
-                      [System.IO.Stream]$EntryStream = $Entry.Open()
-                      [System.IO.FileStream]$OutputStream = [System.IO.File]::Create($TargetPath)
-                      try {
-                          $EntryStream.CopyTo($OutputStream)
-                      }
-                      finally {
-                          $OutputStream.Dispose()
-                          $EntryStream.Dispose()
-                      }
+          if ('${{ inputs.artifact_source }}'.Equals('Download', [System.StringComparison]::OrdinalIgnoreCase)) {
+              & $MakeAppxPath unbundle /p '${{ env.MSIXBundle_PATH }}' /d $PackageDirectory /o
+              if ($LASTEXITCODE -ne 0) {
+                  throw "MakeAppx failed to unbundle the downloaded MSIXBundle. Exit code: $LASTEXITCODE"
+              }
+              [string]$FinalBundleName = '${{ env.MSIXBundle_NAME }}'
+          }
+          else {
+              foreach ($SourcePackage in @($env:X64_MSIX_PATH, $env:ARM64_MSIX_PATH, $env:RESOURCE_MSIX_PATH)) {
+                  if ([System.String]::IsNullOrWhiteSpace($SourcePackage) -or ![System.IO.File]::Exists($SourcePackage)) {
+                      throw "A required built MSIX file was not found: $SourcePackage"
                   }
+                  [System.IO.File]::Copy($SourcePackage, (Join-Path -Path $PackageDirectory -ChildPath ([System.IO.Path]::GetFileName($SourcePackage))), $true)
               }
-              finally {
-                  $Archive.Dispose()
-              }
+              [string]$FinalBundleName = $env:FINAL_BUNDLE_NAME
           }
 
-          function Get-PackageInventory {
-              param([Parameter(Mandatory)][string]$PackagePath)
+          [System.IO.FileInfo[]]$X64Packages = @(Get-ChildItem -LiteralPath $PackageDirectory -Filter '*.msix' -File | Where-Object { $_.Name -match '_x64\.msix$' })
+          [System.IO.FileInfo[]]$ARM64Packages = @(Get-ChildItem -LiteralPath $PackageDirectory -Filter '*.msix' -File | Where-Object { $_.Name -match '_arm64\.msix$' })
+          if ($X64Packages.Count -ne 1 -or $ARM64Packages.Count -ne 1) {
+              throw "Expected exactly one x64 MSIX and one ARM64 MSIX. Found x64=$($X64Packages.Count), ARM64=$($ARM64Packages.Count)."
+          }
 
-              [string]$Root = Join-Path -Path $env:RUNNER_TEMP -ChildPath ('msix-inventory-' + [System.Guid]::NewGuid().ToString('N'))
-              Expand-ZipSafely -ArchivePath $PackagePath -DestinationPath $Root
+          [string]$X64Unpacked = Join-Path -Path $UnpackedDirectory -ChildPath 'x64'
+          [string]$ARM64Unpacked = Join-Path -Path $UnpackedDirectory -ChildPath 'arm64'
+          & $MakeAppxPath unpack /p $X64Packages[0].FullName /d $X64Unpacked /o
+          if ($LASTEXITCODE -ne 0) { throw "MakeAppx failed to unpack x64 MSIX. Exit code: $LASTEXITCODE" }
+          & $MakeAppxPath unpack /p $ARM64Packages[0].FullName /d $ARM64Unpacked /o
+          if ($LASTEXITCODE -ne 0) { throw "MakeAppx failed to unpack ARM64 MSIX. Exit code: $LASTEXITCODE" }
 
-              [System.Collections.Generic.List[object]]$Items = [System.Collections.Generic.List[object]]::new()
-              [System.Collections.Generic.Queue[object]]$Packages = [System.Collections.Generic.Queue[object]]::new()
-              $Packages.Enqueue([pscustomobject]@{ Path = $Root; LogicalName = [System.IO.Path]::GetFileName($PackagePath) })
-
-              while ($Packages.Count -gt 0) {
-                  [object]$Package = $Packages.Dequeue()
-                  [System.IO.FileInfo[]]$Files = [System.IO.Directory]::GetFiles($Package.Path, '*', [System.IO.SearchOption]::AllDirectories) | ForEach-Object { [System.IO.FileInfo]::new($_) }
-
-                  foreach ($File in $Files) {
-                      [string]$RelativePath = [System.IO.Path]::GetRelativePath($Package.Path, $File.FullName).Replace('\\', '/')
-                      [string]$LogicalPath = "$($Package.LogicalName)!/$RelativePath"
-
-                      if ($File.Extension.Equals('.msix', [System.StringComparison]::OrdinalIgnoreCase) -or $File.Extension.Equals('.appx', [System.StringComparison]::OrdinalIgnoreCase)) {
-                          [string]$NestedRoot = Join-Path -Path $env:RUNNER_TEMP -ChildPath ('msix-nested-' + [System.Guid]::NewGuid().ToString('N'))
-                          Expand-ZipSafely -ArchivePath $File.FullName -DestinationPath $NestedRoot
-                          $Packages.Enqueue([pscustomobject]@{ Path = $NestedRoot; LogicalName = $LogicalPath })
-                          continue
-                      }
-
-                      if (Test-PackageInfrastructureFile -RelativePath $RelativePath) {
-                          continue
-                      }
-
-                      if ($File.Extension.Equals('.exe', [System.StringComparison]::OrdinalIgnoreCase) -or $File.Extension.Equals('.dll', [System.StringComparison]::OrdinalIgnoreCase)) {
-                          [object]$FileInformation = Get-AppLockerFileInformation -Path $File.FullName
-                          [string]$AuthenticodeHash = ([string]$FileInformation.Hash).Replace('SHA256 0x', '', [System.StringComparison]::OrdinalIgnoreCase)
-                          if ([System.String]::IsNullOrWhiteSpace($AuthenticodeHash)) {
-                              throw "Get-AppLockerFileInformation did not return an Authenticode SHA-256 hash for $LogicalPath"
-                          }
-
-                          $Items.Add([pscustomobject]@{
-                              Path = $LogicalPath
-                              Kind = 'PE'
-                              Hash = $AuthenticodeHash
-                          })
-                      }
-                      else {
-                          $Items.Add([pscustomobject]@{
-                              Path = $LogicalPath
-                              Kind = 'File'
-                              Hash = (Get-FileHash -LiteralPath $File.FullName -Algorithm SHA512).Hash
-                          })
-                      }
+          [string[]]$TargetNames = @('DISMService.exe', 'QuantumRelayHSS.exe', 'HardenSystemSecurity.exe')
+          [System.Collections.Generic.List[object]]$UnsignedHashes = [System.Collections.Generic.List[object]]::new(6)
+          foreach ($Architecture in @('x64', 'arm64')) {
+              [string]$SourceRoot = Join-Path -Path $UnpackedDirectory -ChildPath $Architecture
+              [string]$SigningRoot = Join-Path -Path $SigningDirectory -ChildPath $Architecture
+              foreach ($TargetName in $TargetNames) {
+                  [string]$SourcePath = Join-Path -Path $SourceRoot -ChildPath $TargetName
+                  if (![System.IO.File]::Exists($SourcePath)) {
+                      throw "Required file was not found at the MSIX root: $SourcePath"
                   }
-              }
-
-              return @($Items | Sort-Object -Property Path)
-          }
-
-          [object[]]$CurrentInventory = @(Get-PackageInventory -PackagePath $BundlePath)
-          $CurrentInventory | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $ManifestPath -Encoding utf8NoBOM
-
-          if ($Mode.Equals('Compare', [System.StringComparison]::Ordinal)) {
-              if ([System.String]::IsNullOrWhiteSpace($BaselineManifestPath)) {
-                  throw 'BaselineManifestPath is required in Compare mode.'
-              }
-
-              [object[]]$BaselineInventory = @(Get-Content -LiteralPath $BaselineManifestPath -Raw | ConvertFrom-Json)
-              [string]$BaselineJson = $BaselineInventory | ConvertTo-Json -Depth 4 -Compress
-              [string]$CurrentJson = $CurrentInventory | ConvertTo-Json -Depth 4 -Compress
-              if (!$BaselineJson.Equals($CurrentJson, [System.StringComparison]::Ordinal)) {
-                  Compare-Object -ReferenceObject $BaselineInventory -DifferenceObject $CurrentInventory -Property Path, Kind, Hash | Format-Table -AutoSize
-                  throw 'The signed MSIXBundle payload does not match the unsigned payload.'
+                  [object]$FileInformation = Get-AppLockerFileInformation -Path $SourcePath
+                  [string]$AuthenticodeHash = ([string]$FileInformation.Hash) -replace '^SHA256\s+0x', ''
+                  if ([System.String]::IsNullOrWhiteSpace($AuthenticodeHash)) {
+                      throw "Get-AppLockerFileInformation did not return an Authenticode hash for $SourcePath"
+                  }
+                  $UnsignedHashes.Add([pscustomobject]@{
+                      Path = "$Architecture/$TargetName"
+                      Hash = $AuthenticodeHash.ToUpperInvariant()
+                  })
+                  [System.IO.File]::Copy($SourcePath, (Join-Path -Path $SigningRoot -ChildPath $TargetName), $true)
               }
           }
-          '@ | Set-Content -LiteralPath $VerificationScript -Encoding utf8NoBOM
 
-          & $VerificationScript -Mode Create -BundlePath '${{ env.MSIXBundle_PATH }}' -ManifestPath '${{ runner.temp }}\HSS-unsigned-inventory.json'
+          [string]$UnsignedHashPath = Join-Path -Path $WorkRoot -ChildPath 'UnsignedAuthenticodeHashes.json'
+          $UnsignedHashes | Sort-Object -Property Path | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath $UnsignedHashPath -Encoding utf8NoBOM
 
-      - name: Upload unsigned MSIXBundle for SignPath and workflow artifacts
-        id: upload_unsigned_bundle
+          [string]$SigningZipPath = Join-Path -Path $WorkRoot -ChildPath 'HSS-SigningPayload.zip'
+          Compress-Archive -Path (Join-Path -Path $SigningDirectory -ChildPath '*') -DestinationPath $SigningZipPath -CompressionLevel NoCompression -Force
+
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "HSS_SIGNING_WORK_ROOT=$WorkRoot"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "HSS_PACKAGE_DIRECTORY=$PackageDirectory"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "HSS_UNPACKED_DIRECTORY=$UnpackedDirectory"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "HSS_SIGNING_ZIP_PATH=$SigningZipPath"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "HSS_UNSIGNED_HASH_PATH=$UnsignedHashPath"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "HSS_X64_MSIX_NAME=$($X64Packages[0].Name)"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "HSS_ARM64_MSIX_NAME=$($ARM64Packages[0].Name)"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "HSS_FINAL_BUNDLE_NAME=$FinalBundleName"
+
+      - name: Upload signing ZIP for SignPath
+        id: upload_unsigned_signing_zip
         uses: actions/upload-artifact@v7
         with:
-          name: HSS-Unsigned-MSIXBundle
-          path: ${{ env.MSIXBundle_PATH }}
+          path: ${{ env.HSS_SIGNING_ZIP_PATH }}
           archive: false
 
       - name: Submit SignPath signing request
         uses: signpath/github-action-submit-signing-request@v2
         with:
           api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-          organization-id: "02d844d7-0e90-469c-adf0-93bfc29512d1"
+          organization-id: ${{ secrets.SIGNPATH_ORGANIZATION_ID }}
           project-slug: ${{ secrets.SIGNPATH_HSS_PROJECT_SLUG }}
           signing-policy-slug: ${{ secrets.SIGNPATH_HSS_SIGNING_POLICY_SLUG }}
           artifact-configuration-slug: ${{ secrets.SIGNPATH_HSS_ARTIFACT_CONFIGURATION_SLUG }}
-          github-artifact-id: ${{ steps.upload_unsigned_bundle.outputs.artifact-id }}
+          github-artifact-id: ${{ steps.upload_unsigned_signing_zip.outputs.artifact-id }}
           wait-for-completion: true
           output-artifact-directory: ${{ runner.temp }}\SignPathSigned
           skip-decompress: true
 
-      - name: Verify signed MSIXBundle payload
+      - name: Verify signed files and rebuild MSIXBundle
         shell: pwsh
         run: |
           Set-StrictMode -Version 3.0
           $ErrorActionPreference = 'Stop'
 
-          [string]$SignedBundlePath = Join-Path -Path '${{ runner.temp }}\SignPathSigned' -ChildPath '${{ env.MSIXBundle_NAME }}'
-          if (![System.IO.File]::Exists($SignedBundlePath)) {
-              throw "The signed MSIXBundle was not found at $SignedBundlePath"
+          [System.IO.FileInfo[]]$SignedArchives = @(Get-ChildItem -LiteralPath '${{ runner.temp }}\SignPathSigned' -Filter '*.zip' -File -Recurse)
+          if ($SignedArchives.Count -ne 1) {
+              throw "Expected exactly one signed ZIP from SignPath, but found $($SignedArchives.Count)."
           }
 
-          & '${{ runner.temp }}\Verify-MsixBundlePayload.ps1' -Mode Compare -BundlePath $SignedBundlePath -ManifestPath '${{ runner.temp }}\HSS-signed-inventory.json' -BaselineManifestPath '${{ runner.temp }}\HSS-unsigned-inventory.json'
-
-          [string]$SignToolPath = Get-ChildItem -Path 'C:\Program Files (x86)\Windows Kits\10\bin' -Filter signtool.exe -File -Recurse |
-              Where-Object { $_.Directory.Name.Equals('x64', [System.StringComparison]::OrdinalIgnoreCase) } |
-              Sort-Object -Property FullName -Descending |
-              Select-Object -First 1 -ExpandProperty FullName
-          if ([System.String]::IsNullOrWhiteSpace($SignToolPath)) {
-              throw 'SignTool.exe was not found.'
+          [string]$SignedExtractPath = Join-Path -Path $env:HSS_SIGNING_WORK_ROOT -ChildPath 'SignedPayload'
+          Expand-Archive -LiteralPath $SignedArchives[0].FullName -DestinationPath $SignedExtractPath -Force
+          [object[]]$UnsignedHashes = @(Get-Content -LiteralPath $env:HSS_UNSIGNED_HASH_PATH -Raw | ConvertFrom-Json)
+          [hashtable]$ExpectedHashes = @{}
+          foreach ($UnsignedHash in $UnsignedHashes) {
+              $ExpectedHashes[[string]$UnsignedHash.Path] = [string]$UnsignedHash.Hash
           }
 
-          & $SignToolPath verify /pa /all /v $SignedBundlePath
-          if ($LASTEXITCODE -ne 0) {
-              throw "The signed MSIXBundle signature is invalid. Exit code: $LASTEXITCODE"
+          [string[]]$TargetNames = @('DISMService.exe', 'QuantumRelayHSS.exe', 'HardenSystemSecurity.exe')
+          foreach ($Architecture in @('x64', 'arm64')) {
+              foreach ($TargetName in $TargetNames) {
+                  [string]$RelativePath = "$Architecture/$TargetName"
+                  [string]$SignedPath = Join-Path -Path (Join-Path -Path $SignedExtractPath -ChildPath $Architecture) -ChildPath $TargetName
+                  if (![System.IO.File]::Exists($SignedPath)) {
+                      throw "Signed file is missing: $RelativePath"
+                  }
+                  [object]$FileInformation = Get-AppLockerFileInformation -Path $SignedPath
+                  [string]$SignedHash = (([string]$FileInformation.Hash) -replace '^SHA256\s+0x', '').ToUpperInvariant()
+                  if (!$ExpectedHashes.ContainsKey($RelativePath) -or !$SignedHash.Equals($ExpectedHashes[$RelativePath], [System.StringComparison]::OrdinalIgnoreCase)) {
+                      throw "Authenticode hash mismatch for $RelativePath"
+                  }
+                  [object]$Signature = Get-AuthenticodeSignature -LiteralPath $SignedPath
+                  if ($null -eq $Signature.SignerCertificate) {
+                      throw "No Authenticode signature was found for $RelativePath"
+                  }
+                  [string]$DestinationPath = Join-Path -Path (Join-Path -Path $env:HSS_UNPACKED_DIRECTORY -ChildPath $Architecture) -ChildPath $TargetName
+                  [System.IO.File]::Copy($SignedPath, $DestinationPath, $true)
+              }
           }
 
-          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SIGNED_MSIXBundle_PATH=$SignedBundlePath"
+          [System.IO.FileInfo[]]$UnexpectedSignedFiles = @(Get-ChildItem -LiteralPath $SignedExtractPath -File -Recurse | Where-Object { $_.Name -notin $TargetNames })
+          if ($UnexpectedSignedFiles.Count -ne 0) {
+              throw "The signed ZIP contains unexpected files: $($UnexpectedSignedFiles.FullName -join ', ')"
+          }
 
-      - name: Upload signed MSIXBundle as workflow artifact
+          [string]$MakeAppxPath = Get-ChildItem -Path 'C:\Program Files (x86)\Windows Kits\10\bin' -Filter makeappx.exe -File -Recurse |
+            Where-Object { $_.Directory.Name.Equals('x64', [System.StringComparison]::OrdinalIgnoreCase) } |
+            Sort-Object -Property FullName -Descending |
+            Select-Object -First 1 -ExpandProperty FullName
+          if ([System.String]::IsNullOrWhiteSpace($MakeAppxPath)) { throw 'MakeAppx.exe was not found.' }
+
+          foreach ($Architecture in @('x64', 'arm64')) {
+              [string]$PackageRoot = Join-Path -Path $env:HSS_UNPACKED_DIRECTORY -ChildPath $Architecture
+              foreach ($FootprintFile in @('AppxSignature.p7x', 'AppxBlockMap.xml', '[Content_Types].xml')) {
+                  Remove-Item -LiteralPath (Join-Path -Path $PackageRoot -ChildPath $FootprintFile) -Force -ErrorAction SilentlyContinue
+              }
+          }
+
+          [string]$X64PackagePath = Join-Path -Path $env:HSS_PACKAGE_DIRECTORY -ChildPath $env:HSS_X64_MSIX_NAME
+          [string]$ARM64PackagePath = Join-Path -Path $env:HSS_PACKAGE_DIRECTORY -ChildPath $env:HSS_ARM64_MSIX_NAME
+          Remove-Item -LiteralPath $X64PackagePath -Force
+          Remove-Item -LiteralPath $ARM64PackagePath -Force
+          & $MakeAppxPath pack /d (Join-Path -Path $env:HSS_UNPACKED_DIRECTORY -ChildPath 'x64') /p $X64PackagePath /h SHA256 /o
+          if ($LASTEXITCODE -ne 0) { throw "MakeAppx failed to repack x64 MSIX. Exit code: $LASTEXITCODE" }
+          & $MakeAppxPath pack /d (Join-Path -Path $env:HSS_UNPACKED_DIRECTORY -ChildPath 'arm64') /p $ARM64PackagePath /h SHA256 /o
+          if ($LASTEXITCODE -ne 0) { throw "MakeAppx failed to repack ARM64 MSIX. Exit code: $LASTEXITCODE" }
+
+          [string]$FinalBundlePath = Join-Path -Path $env:HSS_SIGNING_WORK_ROOT -ChildPath $env:HSS_FINAL_BUNDLE_NAME
+          & $MakeAppxPath bundle /d $env:HSS_PACKAGE_DIRECTORY /p $FinalBundlePath /o /v
+          if ($LASTEXITCODE -ne 0) { throw "MakeAppx failed to create the final MSIXBundle. Exit code: $LASTEXITCODE" }
+
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value "SIGNED_MSIXBundle_PATH=$FinalBundlePath"
+
+      - name: Upload rebuilt MSIXBundle as workflow artifact
         uses: actions/upload-artifact@v7
         with:
-          name: HSS-Signed-MSIXBundle
+          name: HSS-Rebuilt-MSIXBundle
           path: ${{ env.SIGNED_MSIXBundle_PATH }}
           archive: false

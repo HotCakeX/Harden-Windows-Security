@@ -1234,7 +1234,9 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			CpuTemperatureLiveGraph,
 			CpuUsageLiveGraph,
 			DiskActivityLiveGraph,
-			NetworkUsageLiveGraph
+			NetworkUsageLiveGraph,
+			TotalSystemPowerLiveGraph,
+			BatteryDischargeLiveGraph
 		];
 
 		for (int index = 0; index < liveGraphs.Length; index++)

@@ -300,6 +300,8 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		ToggleButton toggle when ReferenceEquals(toggle, NetworkUsageTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.NetworkUsageTarget,
 		ToggleButton toggle when ReferenceEquals(toggle, SystemMemoryUtilizationTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.SystemMemoryTarget,
 		ToggleButton toggle when ReferenceEquals(toggle, DiskActivityTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.DiskActivityTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, TotalSystemPowerTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.TotalSystemPowerTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, BatteryDischargeTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.BatteryDischargeTarget,
 		_ => string.Empty
 	};
 
@@ -311,6 +313,8 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.NetworkUsageTarget, StringComparison.OrdinalIgnoreCase) => NetworkUsageTitleToggleButton,
 		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.SystemMemoryTarget, StringComparison.OrdinalIgnoreCase) => SystemMemoryUtilizationTitleToggleButton,
 		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.DiskActivityTarget, StringComparison.OrdinalIgnoreCase) => DiskActivityTitleToggleButton,
+		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.TotalSystemPowerTarget, StringComparison.OrdinalIgnoreCase) => TotalSystemPowerTitleToggleButton,
+		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.BatteryDischargeTarget, StringComparison.OrdinalIgnoreCase) => BatteryDischargeTitleToggleButton,
 		_ => null
 	};
 

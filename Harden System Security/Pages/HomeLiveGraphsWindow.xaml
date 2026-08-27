@@ -498,7 +498,7 @@
                                                       Padding="8,2"
                                                       Checked="{x:Bind OnChartTitleToggled}"
                                                       Unchecked="{x:Bind OnChartTitleToggled}">
-                                            <TextBlock Text="Total system power"
+                                            <TextBlock Text="Total System Power"
                                                        FontWeight="SemiBold"
                                                        TextAlignment="Center"
                                                        TextWrapping="NoWrap" />
@@ -550,7 +550,7 @@
                                                       Padding="8,2"
                                                       Checked="{x:Bind OnChartTitleToggled}"
                                                       Unchecked="{x:Bind OnChartTitleToggled}">
-                                            <TextBlock Text="Battery discharge"
+                                            <TextBlock Text="Battery Discharge"
                                                        FontWeight="SemiBold"
                                                        TextAlignment="Center"
                                                        TextWrapping="NoWrap" />

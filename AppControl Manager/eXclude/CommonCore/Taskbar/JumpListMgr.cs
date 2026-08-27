@@ -27,7 +27,8 @@ internal static class JumpListMgr
 {
 	private const string LiveSystemIntelligenceArgument = "--live-system-intelligence";
 	internal const string CpuTemperatureTarget = "cpu-temperature", CpuUsageTarget = "cpu-usage", StorageTemperatureTarget = "storage-temperature",
-		NetworkUsageTarget = "network-usage", SystemMemoryTarget = "system-memory", DiskActivityTarget = "disk-activity";
+		NetworkUsageTarget = "network-usage", SystemMemoryTarget = "system-memory", DiskActivityTarget = "disk-activity",
+		TotalSystemPowerTarget = "total-system-power", BatteryDischargeTarget = "battery-discharge";
 
 	private static readonly (string Target, string DisplayName, string Logo)[] LiveSystemIntelligenceTargets =
 	[
@@ -36,7 +37,9 @@ internal static class JumpListMgr
 		(StorageTemperatureTarget, "Storage Temperature", "Temperature"),
 		(NetworkUsageTarget, "Network Usage", "Network"),
 		(SystemMemoryTarget, "RAM Usage", "RAM"),
-		(DiskActivityTarget, "Disk Activity", "SSD")
+		(DiskActivityTarget, "Disk Activity", "SSD"),
+		(TotalSystemPowerTarget, "Total System Power", "Power"),
+		(BatteryDischargeTarget, "Battery Discharge", "Battery")
 	];
 
 	/// <summary>

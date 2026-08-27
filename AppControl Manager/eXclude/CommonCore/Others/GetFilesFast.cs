@@ -290,7 +290,7 @@ internal static class FileUtility
 
 							// Find valid PE files that are candidate for Windows image loading and App Control evaluation.
 							// First use the zero-allocation file extension checking fast path, only inspect file contents when the extension is unknown
-							// This solves valid PEs with custom file extensions: https://github.com/HotCakeX/Harden-Windows-Security/issues/1196 
+							// This solves valid PEs with custom file extensions: https://github.com/HotCakeX/Harden-Windows-Security/issues/1196
 							return lookup.Contains(Path.GetExtension(entry.FileName)) || (usePeValidation && IsPortableExecutable(entry.ToFullPath()));
 						}
 					};
@@ -363,7 +363,7 @@ internal static class FileUtility
 
 								// Find valid PE files that are candidate for Windows image loading and App Control evaluation.
 								// First use the zero-allocation file extension checking fast path, only inspect file contents when the extension is unknown
-								// This solves valid PEs with custom file extensions: https://github.com/HotCakeX/Harden-Windows-Security/issues/1196 
+								// This solves valid PEs with custom file extensions: https://github.com/HotCakeX/Harden-Windows-Security/issues/1196
 								return lookup.Contains(Path.GetExtension(entry.FileName)) || (usePeValidation && IsPortableExecutable(entry.ToFullPath()));
 							}
 						};

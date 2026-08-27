@@ -676,8 +676,8 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Text="{x:Bind Name}"                                                          
-                                                           Style="{StaticResource SubtitleTextBlockStyle}"                                                          
+                                                <TextBlock Text="{x:Bind Name}"
+                                                           Style="{StaticResource SubtitleTextBlockStyle}"
                                                            TextWrapping="Wrap"/>
                                                 <Border Grid.Column="1"
                                                         Padding="8,4"

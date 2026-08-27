@@ -199,7 +199,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		// Subscribe to the AppWindow Closing event
 		AppWindow.Closing += AppWindow_Closing;
 
-		// Subscribe to the Window Closed event		
+		// Subscribe to the Window Closed event
 		Closed += MainWindow_Closed;
 
 		// Subscribe to the system-wide theme changes triggered when user changes color/theme in Windows personalization settings

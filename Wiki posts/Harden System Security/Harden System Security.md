@@ -422,7 +422,7 @@ When you install the Harden System Security app, you will be able to access the 
 
 * Network: Monitor the real-time upload and download speeds of your network adapters, along with the total amount of data each adapter has sent and received. Use the widget's controls to switch between the physical and virtual network adapters. *Updated every second, only when the Widgets board is visible*.
 
-* App Updates: Check your installed apps and programs for newer available versions. The widget displays each detected app's installed and available versions, and lets you start a new update check or open Harden System Security to manage and install the available updates. 
+* App Updates: Check your installed apps and programs for newer available versions. The widget displays each detected app's installed and available versions, and lets you start a new update check or open Harden System Security to manage and install the available updates.
 
 > [!NOTE]\
 > The widgets run on a different process which only uses 5MB of RAM on average. The real-time monitoring data are only updated when the Windows widgets board is visible, when it is collapsed no data monitoring happens in the background which means 0% CPU usage.

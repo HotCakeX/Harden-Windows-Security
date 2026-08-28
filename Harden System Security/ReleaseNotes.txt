@@ -1,0 +1,3 @@
+* Fixed a problem with DISMAPI.
+
+* Temporarily disabled the MCP server features until an OS compatibility issue is resolved regarding Trust Launch.

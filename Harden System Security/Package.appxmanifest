@@ -57,7 +57,8 @@
     This also enforces Code Integrity Guard by the Kernel -> Only Microsoft can sign this app.
     Even fully-locally-trusted Self-signed certificates cannot sign and deploy this app because it will lead to Code Integrity/Operational event 3033 when user attempts to launch the app.
     -->
-    <trustedlaunch:TrustedLaunch>true</trustedlaunch:TrustedLaunch>
+    <!-- Incompatible with DISMAPI usage workaround currently used. -->
+    <!-- <trustedlaunch:TrustedLaunch>true</trustedlaunch:TrustedLaunch> -->
     <uap10:PackageIntegrity>
       <uap10:Content Enforcement="on" />
     </uap10:PackageIntegrity>
@@ -143,6 +144,7 @@
         </com:Extension>
 
         <!-- Windows on-device agent registry registration for the packaged MCP server. -->
+        <!--
         <uap3:Extension Category="windows.appExtension">
           <uap3:AppExtension Name="com.microsoft.windows.ai.mcpServer"
                              Id="HardenSystemSecurityMcpServer"
@@ -154,6 +156,8 @@
             </uap3:Properties>
           </uap3:AppExtension>
         </uap3:Extension>
+        -->
+
         <!-- Widgets Board widget provider registration -->
         <uap3:Extension Category="windows.appExtension">
           <uap3:AppExtension Name="com.microsoft.windows.widgets"

@@ -89,13 +89,6 @@ internal static class Program
 				Widgets.WidgetProviderHost.Run();
 				Environment.Exit(0);
 			}
-
-			// MCP is a headless stdio protocol path and must run before WinUI initialization.
-			if (string.Equals(args[0], "--mcp", StringComparison.OrdinalIgnoreCase))
-			{
-				MCP.McpServer.RunAsync().GetAwaiter().GetResult();
-				return;
-			}
 		}
 #endif
 

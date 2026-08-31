@@ -47,8 +47,24 @@ public sealed partial class App : Application
 	/// <param name="args">Details about the launch request and process.</param>
 	protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
 	{
+		string[] launchArguments = Program.GetLaunchArguments();
+		if (launchArguments.Length == 4 &&
+			string.Equals(launchArguments[0], "--mcp-protect-worker", StringComparison.OrdinalIgnoreCase) &&
+			int.TryParse(launchArguments[3], out int presetIndex))
+		{
+			await MCP.McpServer.RunProtectWorkerAsync(launchArguments[1], launchArguments[2], presetIndex);
+			Environment.Exit(0);
+		}
+		if (launchArguments.Length >= 1 && string.Equals(launchArguments[0], "--mcp", StringComparison.OrdinalIgnoreCase))
+		{
+			using Stream input = Console.OpenStandardInput();
+			using Stream output = Console.OpenStandardOutput();
+			await MCP.McpServer.RunAsync(input, output);
+			Environment.Exit(0);
+		}
+
 		// Extract the requested Live System Intelligence window or chart target when the app is launched from a Jump List item.
-		string? liveSystemIntelligenceLaunchTarget = CommonCore.Taskbar.JumpListMgr.GetLiveSystemIntelligenceLaunchTarget(Program.GetLaunchArguments());
+		string? liveSystemIntelligenceLaunchTarget = CommonCore.Taskbar.JumpListMgr.GetLiveSystemIntelligenceLaunchTarget(launchArguments);
 
 		// Register the Jump List Items
 		await CommonCore.Taskbar.JumpListMgr.EnsureJumpListAsync();
@@ -415,8 +431,12 @@ public sealed partial class App : Application
 
 					Logger.Write($"Running preset {_cliPresetIndex.Value} with operation '{opEnum}'...");
 
-					// Run the command
-					await ViewModelProvider.ProtectVM.RunPresetFromCliAsync(_cliPresetIndex.Value, opEnum);
+					// Run the command and fail the CLI invocation when the operation did not complete.
+					ProtectVM.PresetOperationResult result = await ViewModelProvider.ProtectVM.RunPresetFromCliAsync(_cliPresetIndex.Value, opEnum);
+					if (!result.Succeeded)
+					{
+						throw new InvalidOperationException($"Preset operation '{opEnum}' did not complete.");
+					}
 
 					Logger.Write("Operation completed.");
 				}

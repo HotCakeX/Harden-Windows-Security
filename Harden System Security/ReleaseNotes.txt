@@ -1,3 +1,17 @@
-* Fixed a problem with DISMAPI.
+# MCP Server for AI Workflows
 
-* Temporarily disabled the MCP server features until an OS compatibility issue is resolved regarding Trust Launch.
+Created a dedicated app that offers MCP Server capabilities through the Harden System Security app. It is very lightweight (only 1 MB package size) and can be installed from the Microsoft Store: https://apps.microsoft.com/detail/9P3BDTHKR7KS
+
+It depends on the main Harden System Security app to be installed in order to function. It acts as a relay between AI models (such as GPT or Grok) and the Harden System Security app, allowing users to leverage AI capabilities while maintaining system security.
+
+You can add the MCP Server to the Visual Studio Code, GitHub Copilot app and any other program that supports MCP Server integration.
+
+Once the apps are installed, you can ask the AI models to Harden your Windows by applying security measures, Verify the security hardening of your Windows and receive secure score with details, and/or remove them.
+
+You can also ask the AIs to create QR code from any texts, or decode QR images.
+
+You can ask the AIs to provide the Microsoft Defender cloud verdicts of the executable files to find out if they are safe or not.
+
+All of these features are run offline through the Harden System Security app, ensuring that your data remains private and secure. The MCP Server acts as a bridge, allowing AI models to interact with the Harden System Security app without exposing sensitive information to external servers.
+
+A lot more features will be usable in AI/agentic workflows in the future.

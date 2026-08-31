@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>HardenSystemSecurityMCP</RootNamespace>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <StartupObject>HardenSystemSecurityMCP.Program</StartupObject>
+        <EnableMsixTooling>true</EnableMsixTooling>
+        <Version>$(FileVersion)</Version>
+        <FileVersion>1.0.1.0</FileVersion>
+        <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+        <AssemblyName>HardenSystemSecurityMCP</AssemblyName>
+        <AssemblyProduct>Harden System Security MCP Server</AssemblyProduct>
+        <AssemblyTitle>Harden System Security MCP Server</AssemblyTitle>
+        <AssemblyDescription>MCP Server for the Harden System Security app</AssemblyDescription>
+        <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
+        <Copyright>© 2024-Present</Copyright>
+        <Title>Harden System Security MCP Server</Title>
+        <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+        <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+        <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
+        <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+        <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+        <GenerateTestArtifacts>True</GenerateTestArtifacts>
+        <AppxBundle>Never</AppxBundle>
+        <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
+        <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+        <DefaultLanguage>en-US</DefaultLanguage>
+        <NuGetAudit>true</NuGetAudit>
+        <NuGetAuditMode>all</NuGetAuditMode>
+        <NuGetAuditLevel>low</NuGetAuditLevel>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <RunAnalyzers>true</RunAnalyzers>
+        <PublishTrimmed>True</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <PublishAot>True</PublishAot>
+        <OptimizationPreference>Size</OptimizationPreference>
+        <StackTraceSupport>false</StackTraceSupport>
+        <MetricsSupport>false</MetricsSupport>
+        <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+        <Http3Support>false</Http3Support>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Manifest Include="$(ApplicationManifest)" />
+        <ProjectCapability Include="Msix" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Assets\**\*">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260610101">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>

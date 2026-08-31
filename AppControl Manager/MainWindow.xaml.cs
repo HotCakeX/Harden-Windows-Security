@@ -572,6 +572,9 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		RectInt32 menuRect = MainWindowVM.CalculatePixelRect(HamburgerMenuButton, scale);
 		RectInt32 searchRect = MainWindowVM.CalculatePixelRect(TitleBarSearchBox, scale);
 		RectInt32 elevationButtonRect = MainWindowVM.CalculatePixelRect(ElevationContextSwitchButton, scale);
+#if HARDEN_SYSTEM_SECURITY
+		RectInt32 mcpServerAppTitleBarButtonRect = MainWindowVM.CalculatePixelRect(MCPServerAppTitleBarButton, scale);
+#endif
 		RectInt32 intuneCheckInButtonRect = MainWindowVM.CalculatePixelRect(IntuneCheckInTitleBarButton, scale);
 		RectInt32 notificationAreaButtonRect = MainWindowVM.CalculatePixelRect(MinimizeToNotificationAreaButton, scale);
 		RectInt32 sidebarRect = MainWindowVM.CalculatePixelRect(SidebarButton, scale);
@@ -584,6 +587,9 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			backRect = MainWindowVM.FlipHorizontally(backRect, windowWidthPx);
 			menuRect = MainWindowVM.FlipHorizontally(menuRect, windowWidthPx);
 			searchRect = MainWindowVM.FlipHorizontally(searchRect, windowWidthPx);
+#if HARDEN_SYSTEM_SECURITY
+			mcpServerAppTitleBarButtonRect = MainWindowVM.FlipHorizontally(mcpServerAppTitleBarButtonRect, windowWidthPx);
+#endif
 			elevationButtonRect = MainWindowVM.FlipHorizontally(elevationButtonRect, windowWidthPx);
 			intuneCheckInButtonRect = MainWindowVM.FlipHorizontally(intuneCheckInButtonRect, windowWidthPx);
 			notificationAreaButtonRect = MainWindowVM.FlipHorizontally(notificationAreaButtonRect, windowWidthPx);
@@ -593,11 +599,17 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		InputNonClientPointerSource nonClient = InputNonClientPointerSource.GetForWindowId(AppWindow.Id);
 
 		nonClient.ClearRegionRects(NonClientRegionKind.Passthrough);
-
+#if HARDEN_SYSTEM_SECURITY
+		nonClient.SetRegionRects(
+			NonClientRegionKind.Passthrough,
+			[backRect, menuRect, searchRect, mcpServerAppTitleBarButtonRect, elevationButtonRect, intuneCheckInButtonRect, notificationAreaButtonRect, sidebarRect]
+		);
+#else
 		nonClient.SetRegionRects(
 			NonClientRegionKind.Passthrough,
 			[backRect, menuRect, searchRect, elevationButtonRect, intuneCheckInButtonRect, notificationAreaButtonRect, sidebarRect]
 		);
+#endif
 	}
 
 	/*

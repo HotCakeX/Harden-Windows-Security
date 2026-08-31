@@ -12,6 +12,11 @@
     <Platform Solution="*|ARM64" Project="arm64" />
     <Platform Solution="*|x64" Project="x64" />
   </Project>
+  <Project Path="../AppControl Manager/eXclude/HardenSystemSecurityMCP/HardenSystemSecurityMCP.csproj">
+    <Platform Solution="*|ARM64" Project="arm64" />
+    <Platform Solution="*|x64" Project="x64" />
+    <Deploy />
+  </Project>
   <Project Path="Harden System Security.csproj">
     <Platform Solution="*|ARM64" Project="ARM64" />
     <Platform Solution="*|x64" Project="x64" />

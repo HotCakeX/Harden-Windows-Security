@@ -38,7 +38,7 @@
   <Identity
     Name="VioletHansen.HardenSystemSecurity"
     Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
-    Version="1.0.84.0" />
+    Version="1.0.85.0" />
 
   <mp:PhoneIdentity PhoneProductId="74d36aa3-e613-41ec-808e-c5d051224316" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
@@ -46,19 +46,7 @@
     <DisplayName>Harden System Security</DisplayName>
     <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
     <Description>ms-resource:AppDescription</Description>
-    <Logo>Assets\StoreLogo.png</Logo>
-    <!--
-    TrustedLaunch means the packaged app runs with the package's identity but OTHERS can't run using this identity.
-    e.g. a mediumIL process clones our process token and CreateProcessWithToken(dupetoken, "app-your-base-are-belong-to-us.exe")
-
-    Also blocks using Invoke-CommandInDesktopPackage to run arbitrary exes with some packge's identity
-    Invoke-CommandInDesktopPackage -PackageFamilyName BankOfAmerica_1234567890abc -Command c:\maliceinc\muahmuahmuah.exe and such would fail.
-
-    This also enforces Code Integrity Guard by the Kernel -> Only Microsoft can sign this app.
-    Even fully-locally-trusted Self-signed certificates cannot sign and deploy this app because it will lead to Code Integrity/Operational event 3033 when user attempts to launch the app.
-    -->
-    <!-- Incompatible with DISMAPI usage workaround currently used. -->
-    <!-- <trustedlaunch:TrustedLaunch>true</trustedlaunch:TrustedLaunch> -->
+    <Logo>Assets\StoreLogo.png</Logo>   
     <uap10:PackageIntegrity>
       <uap10:Content Enforcement="on" />
     </uap10:PackageIntegrity>
@@ -142,21 +130,6 @@
             </com:ExeServer>
           </com:ComServer>
         </com:Extension>
-
-        <!-- Windows on-device agent registry registration for the packaged MCP server. -->
-        <!--
-        <uap3:Extension Category="windows.appExtension">
-          <uap3:AppExtension Name="com.microsoft.windows.ai.mcpServer"
-                             Id="HardenSystemSecurityMcpServer"
-                             DisplayName="Harden System Security MCP Server"
-                             PublicFolder="Assets\MCP"
-                             Description = "Access the features of the Harden System Security app via MCP and use them in agentic workflows." >
-            <uap3:Properties>
-              <Registration>manifest.json</Registration>
-            </uap3:Properties>
-          </uap3:AppExtension>
-        </uap3:Extension>
-        -->
 
         <!-- Widgets Board widget provider registration -->
         <uap3:Extension Category="windows.appExtension">

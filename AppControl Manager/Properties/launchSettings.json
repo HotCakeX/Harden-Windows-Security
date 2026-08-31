@@ -1,12 +1,16 @@
 {
-  "profiles": {
-    "AppControl Manager (Package)": {
-      "commandName": "MsixPackage",
-      "nativeDebugging": true,
-      "remoteDebugEnabled": false
-    },
-    "AppControl Manager (Unpackaged)": {
-      "commandName": "Project"
+    /* https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/single-project-msix?tabs=csharp#step-2-edit-the-application-project-settings */
+    "profiles": {
+        "AppControl Manager (Package)": {
+            "commandName": "MsixPackage",
+            "nativeDebugging": true, /* Enable debugging for managed and native code together, also known as mixed-mode debugging. */
+            "remoteDebugEnabled": false, /* Indicates that the debugger should attach to a process on a remote machine. */
+            "commandLineArgs": "", /* Command line arguments to pass to the app. */
+            "alwaysReinstallApp": false, /* Uninstall and then reinstall the app. All information about the app state is deleted. */
+            "allowLocalNetworkLoopbackProperty": true, /* Allow the app to make network calls to the device it is installed on. */
+            "authenticationMode": "Windows", /* The authentication scheme to use when connecting to the remote machine. */
+            "doNotLaunchApp": false, /* Do not launch the app, but debug my code when it starts. */
+            "remoteDebugMachine": "" /* The name of the remote machine. */
+        }
     }
-  }
 }

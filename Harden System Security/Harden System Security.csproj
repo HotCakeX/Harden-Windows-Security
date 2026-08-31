@@ -67,7 +67,7 @@
         <AssemblyName>HardenSystemSecurity</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>1.0.84.0</FileVersion>
+        <FileVersion>1.0.85.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <AssemblyProduct>HardenSystemSecurity</AssemblyProduct>
         <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
@@ -270,7 +270,7 @@
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.22.0" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4129.50" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4191.47" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
@@ -340,9 +340,6 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="QuantumRelayHSS.exe">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-        <Content Include="Assets\MCP\manifest.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Resources\AttackSurfaceReductionRules.json">

@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap5="http://schemas.microsoft.com/appx/manifest/uap/windows10/5"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:uap17="http://schemas.microsoft.com/appx/manifest/uap/windows10/17"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:trustedlaunch="http://schemas.microsoft.com/appx/manifest/trustedlaunch/windows10"
+  xmlns:uap18="http://schemas.microsoft.com/appx/manifest/uap/windows10/18"
+  IgnorableNamespaces="mp uap uap3 uap5 uap10 rescap uap18">
+
+  <Identity
+    Name="VioletHansen.MCPServerforHardenSystemSecurity"
+    Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
+    Version="1.0.1.0" />
+
+  <mp:PhoneIdentity PhoneProductId="05b0157d-d6ce-447f-b157-9f24322273a1" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
+
+  <Properties>
+    <DisplayName>MCP Server for Harden System Security</DisplayName>
+    <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
+    <Description>Use the Harden System Security's various features in agentic workflows through this MCP Server.</Description>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <!--
+    TrustedLaunch means the packaged app runs with the package's identity but OTHERS can't run using this identity.
+    e.g. a mediumIL process clones our process token and CreateProcessWithToken(dupetoken, "app-your-base-are-belong-to-us.exe")
+
+    Also blocks using Invoke-CommandInDesktopPackage to run arbitrary exes with some packge's identity
+    Invoke-CommandInDesktopPackage -PackageFamilyName BankOfAmerica_1234567890abc -Command c:\maliceinc\muahmuahmuah.exe and such would fail.
+
+    This also enforces Code Integrity Guard by the Kernel -> Only Microsoft can sign this app.
+    Even fully-locally-trusted Self-signed certificates cannot sign and deploy this app because it will lead to Code Integrity/Operational event 3033 when user attempts to launch the app.
+    -->
+    <trustedlaunch:TrustedLaunch>true</trustedlaunch:TrustedLaunch>
+    <uap10:PackageIntegrity>
+      <uap10:Content Enforcement="on" />
+    </uap10:PackageIntegrity>
+    <uap17:UpdateWhileInUse>defer</uap17:UpdateWhileInUse>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26100.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="x-generate"/>
+  </Resources>
+
+  <Applications>
+    <Application Id="McpServer"
+      Executable="HardenSystemSecurityMCP.exe"
+      EntryPoint="Windows.FullTrustApplication"
+      uap10:SupportsMultipleInstances="true"
+      uap18:TrustLevel="mediumIL"
+      uap18:RuntimeBehavior="packagedClassicApp">
+      <uap:VisualElements
+        DisplayName="Harden System Security MCP Server"
+        Description="This is the MCP server for the Harden System Security app. You need to install the main app before using this. You can use it to access various features of the Harden System Security app in agentic workflows."
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
+        AppListEntry="none">
+        <uap:DefaultTile Square71x71Logo="Assets\SmallTile.png" Wide310x150Logo="Assets\WideTile.png" Square310x310Logo="Assets\LargeTile.png"/>
+        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png"/>
+      </uap:VisualElements>
+
+      <Extensions>
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="com.microsoft.windows.ai.mcpServer"
+                             Id="HardenSystemSecurityMcpServer"
+                             DisplayName="Harden System Security MCP Server"
+                             PublicFolder="Assets\MCP"
+                             Description="Use various features of the Harden System Security app in agentic workflows.">
+            <uap3:Properties>
+              <Registration>manifest.json</Registration>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
+
+        <uap5:Extension Category="windows.appExecutionAlias"
+                        Executable="HardenSystemSecurityMCP.exe"
+                        EntryPoint="Windows.FullTrustApplication"
+                        uap10:RuntimeBehavior="packagedClassicApp">
+          <uap5:AppExecutionAlias uap10:Subsystem="console">
+            <uap5:ExecutionAlias Alias="HSSMCP.exe" />
+          </uap5:AppExecutionAlias>
+        </uap5:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>

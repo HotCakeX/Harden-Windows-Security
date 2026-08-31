@@ -19,12 +19,10 @@
     "support": "https://github.com/HotCakeX/Harden-Windows-Security/issues",
     "server": {
         "type": "binary",
-        "entry_point": "HardenSystemSecurity.exe",
+        "entry_point": "HardenSystemSecurityMCP.exe",
         "mcp_config": {
-            "command": "HardenSystemSecurity.exe",
-            "args": [
-                "--mcp"
-            ]
+            "command": "HSSMCP.exe",
+            "args": []
         }
     },
     "tools": [
@@ -43,18 +41,6 @@
                         "description": "Exact base64-encoded bytes supplied by the host. Never synthesize base64 from visual context."
                     }
                 },
-                "anyOf": [
-                    {
-                        "required": [
-                            "image_path"
-                        ]
-                    },
-                    {
-                        "required": [
-                            "image_base64"
-                        ]
-                    }
-                ],
                 "additionalProperties": false
             }
         },
@@ -102,6 +88,92 @@
                 ],
                 "additionalProperties": false
             }
+        },
+        {
+            "name": "verify_security_hardening",
+            "description": "Verifies the selected Harden System Security preset with administrator privileges and returns minimal category progress and the final compliance score.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "preset": {
+                        "type": "string",
+                        "description": "Security hardening preset to verify.",
+                        "enum": [
+                            "basic",
+                            "recommended",
+                            "complete"
+                        ]
+                    }
+                },
+                "required": [
+                    "preset"
+                ],
+                "additionalProperties": false
+            }
+        },
+        {
+            "name": "apply_security_hardening",
+            "description": "Applies the selected Harden System Security preset with administrator privileges.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "preset": {
+                        "type": "string",
+                        "enum": [
+                            "basic",
+                            "recommended",
+                            "complete"
+                        ]
+                    },
+                    "confirmed": {
+                        "type": "boolean",
+                        "description": "Must be true only after explicit user approval."
+                    }
+                },
+                "required": [
+                    "preset",
+                    "confirmed"
+                ],
+                "additionalProperties": false
+            },
+            "annotations": {
+                "readOnlyHint": false,
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "openWorldHint": false
+            }
+        },
+        {
+            "name": "remove_security_hardening",
+            "description": "Removes the selected Harden System Security preset with administrator privileges and can reduce protection.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "preset": {
+                        "type": "string",
+                        "enum": [
+                            "basic",
+                            "recommended",
+                            "complete"
+                        ]
+                    },
+                    "confirmed": {
+                        "type": "boolean",
+                        "description": "Must be true only after explicit user approval."
+                    }
+                },
+                "required": [
+                    "preset",
+                    "confirmed"
+                ],
+                "additionalProperties": false
+            },
+            "annotations": {
+                "readOnlyHint": false,
+                "destructiveHint": true,
+                "idempotentHint": false,
+                "openWorldHint": false
+            }
         }
     ],
     "tools_generated": false,
@@ -125,7 +197,7 @@
                         }
                     },
                     "serverInfo": {
-                        "name": "Harden System Security",
+                        "name": "Harden System Security MCP",
                         "version": "1.0.0"
                     }
                 },
@@ -146,18 +218,6 @@
                                         "description": "Exact base64-encoded bytes supplied by the host. Never synthesize base64 from visual context."
                                     }
                                 },
-                                "anyOf": [
-                                    {
-                                        "required": [
-                                            "image_path"
-                                        ]
-                                    },
-                                    {
-                                        "required": [
-                                            "image_base64"
-                                        ]
-                                    }
-                                ],
                                 "additionalProperties": false
                             }
                         },
@@ -204,6 +264,92 @@
                                     "file_path"
                                 ],
                                 "additionalProperties": false
+                            }
+                        },
+                        {
+                            "name": "verify_security_hardening",
+                            "description": "Verifies the selected Harden System Security preset with administrator privileges and returns minimal category progress and the final compliance score.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "preset": {
+                                        "type": "string",
+                                        "description": "Security hardening preset to verify.",
+                                        "enum": [
+                                            "basic",
+                                            "recommended",
+                                            "complete"
+                                        ]
+                                    }
+                                },
+                                "required": [
+                                    "preset"
+                                ],
+                                "additionalProperties": false
+                            }
+                        },
+                        {
+                            "name": "apply_security_hardening",
+                            "description": "Applies the selected Harden System Security preset with administrator privileges.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "preset": {
+                                        "type": "string",
+                                        "enum": [
+                                            "basic",
+                                            "recommended",
+                                            "complete"
+                                        ]
+                                    },
+                                    "confirmed": {
+                                        "type": "boolean",
+                                        "description": "Must be true only after explicit user approval."
+                                    }
+                                },
+                                "required": [
+                                    "preset",
+                                    "confirmed"
+                                ],
+                                "additionalProperties": false
+                            },
+                            "annotations": {
+                                "readOnlyHint": false,
+                                "destructiveHint": true,
+                                "idempotentHint": false,
+                                "openWorldHint": false
+                            }
+                        },
+                        {
+                            "name": "remove_security_hardening",
+                            "description": "Removes the selected Harden System Security preset with administrator privileges and can reduce protection.",
+                            "inputSchema": {
+                                "type": "object",
+                                "properties": {
+                                    "preset": {
+                                        "type": "string",
+                                        "enum": [
+                                            "basic",
+                                            "recommended",
+                                            "complete"
+                                        ]
+                                    },
+                                    "confirmed": {
+                                        "type": "boolean",
+                                        "description": "Must be true only after explicit user approval."
+                                    }
+                                },
+                                "required": [
+                                    "preset",
+                                    "confirmed"
+                                ],
+                                "additionalProperties": false
+                            },
+                            "annotations": {
+                                "readOnlyHint": false,
+                                "destructiveHint": true,
+                                "idempotentHint": false,
+                                "openWorldHint": false
                             }
                         }
                     ]

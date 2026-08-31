@@ -35,6 +35,16 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class ProtectVM : ViewModelBase
 {
+	/// <summary>
+	/// Aggregate compliance statistics produced by a completed preset verification.
+	/// </summary>
+	internal readonly record struct PresetVerificationResult(int Categories, int Total, int Compliant, int NonCompliant, double Percentage);
+
+	/// <summary>
+	/// Outcome of a preset operation, including verification statistics when applicable.
+	/// </summary>
+	internal readonly record struct PresetOperationResult(bool Succeeded, PresetVerificationResult? Verification);
+
 	internal ProtectVM()
 	{
 		_ = IsVM(); // Do not wait
@@ -1266,15 +1276,20 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// </summary>
 	/// <param name="operation">The operation to perform</param>
 	/// <param name="button">The cancellable button handling this operation</param>
-	private async Task ExecuteSelectedCategoriesOperation(MUnitOperation operation, AnimatedCancellableButtonInitializer button)
+	private async Task<PresetOperationResult> ExecuteSelectedCategoriesOperation(
+		MUnitOperation operation,
+		AnimatedCancellableButtonInitializer button,
+		Func<int, int, string, Task>? progress = null)
 	{
 		if (ProtectionCategoriesListItemsSourceSelectedItems.Count == 0)
 		{
 			MainInfoBar.WriteWarning("No categories selected. Please select at least one category to process.");
-			return;
+			return default;
 		}
 
 		bool errorsOccurred = false;
+		PresetVerificationResult? verificationResult = null;
+		PresetOperationResult operationResult = default;
 
 		try
 		{
@@ -1323,6 +1338,19 @@ internal sealed partial class ProtectVM : ViewModelBase
 					// Update progress
 					processedCategories++;
 					MainInfoBar.WriteInfo($"{operationText} category {processedCategories}/{totalCategories}: {selectedCategory.Title}");
+					if (progress is not null)
+					{
+						try
+						{
+							await progress(processedCategories, totalCategories, selectedCategory.Title);
+						}
+						catch (Exception ex)
+						{
+							// Progress delivery is optional and must not stop or partially apply a protection operation.
+							Logger.Write(ex);
+							progress = null;
+						}
+					}
 
 					// Get selected sub-categories for this category (only checked ones)
 					List<SubCategories> selectedSubCategories = GetSelectedSubCategoriesFromData(selectedCategory);
@@ -1404,6 +1432,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 					VerificationCompliant = compliant;
 					VerificationNonCompliant = total - compliant;
 					VerificationPercentage = total > 0 ? (double)compliant / total * 100.0 : 0.0;
+					verificationResult = new(totalCategories, VerificationTotal, VerificationCompliant, VerificationNonCompliant, VerificationPercentage);
 
 					// Trigger update for the string property
 					OnPropertyChanged(nameof(VerificationPercentageString));
@@ -1423,6 +1452,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 					attributionText: toastAttribution,
 					group: "Protection Operations",
 					soundEvent: AppNotificationSoundEvent.SMS);
+
+				operationResult = new(true, verificationResult);
 			}
 		}
 		catch (OperationCanceledException)
@@ -1452,6 +1483,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 			ElementsAreEnabled = true;
 			CurrentRunningOperation = RunningOperation.None;
 		}
+		return operationResult;
 	}
 
 	private static List<SubCategories> GetSelectedSubCategoriesFromData(ProtectionCategoryListViewItem categoryItem)
@@ -1472,14 +1504,17 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Programmatically runs the same pipeline as the UI for a given preset index and operation.
 	/// </summary>
-	internal async Task RunPresetFromCliAsync(int presetIndex, HardenSystemSecurity.Helpers.MUnitOperation operation)
+	internal async Task<PresetOperationResult> RunPresetFromCliAsync(
+		int presetIndex,
+		HardenSystemSecurity.Helpers.MUnitOperation operation,
+		Func<int, int, string, Task>? progress = null)
 	{
 		// This setter triggers GenerateCategories and the same selection logic the UI uses.
 		ProtectionPresetsSelectedIndex = presetIndex;
 
 		// Run the exact same pipeline as the UI buttons.
 		// Passing ApplySelectedCancellableButton just to satisfy the method signature, it has no effect on CLI operation.
-		await ExecuteSelectedCategoriesOperation(operation, ApplySelectedCancellableButton);
+		return await ExecuteSelectedCategoriesOperation(operation, ApplySelectedCancellableButton, progress);
 	}
 
 	/// <summary>

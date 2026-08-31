@@ -442,7 +442,9 @@ When you install the Harden System Security app, you will be able to access the 
 
 ## MCP Server
 
-The Harden System Security app includes native built-in MCP Server that offers many of its features to AI models for agentic workflows. Here are some of them:
+The Harden System Security app offers native MCP Server through a [companion app available on the Microsoft Store](https://apps.microsoft.com/detail/9P3BDTHKR7KS). Here are some of the features of the app you can use via MCP in agentic workflows:
+
+* Applying, Verifying and Removing security measures of the system.
 
 * Checking file reputation based on Microsoft Defender SmartScreen or Smart App Control.
 
@@ -450,8 +452,7 @@ The Harden System Security app includes native built-in MCP Server that offers m
 
 * Decoding QR images from files
 
-You can use them in the Visual Studio Code by simply [adding a new MCP Server](https://code.visualstudio.com/blogs/2025/05/12/agent-mode-meets-mcp) stdio: `HSS.exe --mcp`
-
+You can use them in the Visual Studio Code by simply [adding a new MCP Server](https://code.visualstudio.com/blogs/2025/05/12/agent-mode-meets-mcp) stdio: `HSSMCP.exe`. The same can be done in the GitHub Copilot app and any other application that can use MCP Servers.
 
 <br>
 

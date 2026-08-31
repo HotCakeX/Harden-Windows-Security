@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="HardenSystemSecurity.WindowComponents.MCPServerAppFlyoutButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Button x:Name="FlyoutButton"
+            Width="40"
+            Height="40"
+            Padding="0"
+            Background="Transparent"
+            BorderThickness="0"            
+            ToolTipService.ToolTip="MCP Server Companion App">
+        <Button.Content>
+            <FontIcon Glyph="&#xEAB7;"
+                      FontSize="18" />
+        </Button.Content>
+        <Button.Flyout>
+            <Flyout Placement="BottomEdgeAlignedRight">
+                <StackPanel Width="280"
+                            Spacing="12">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="MCP Server"
+                                   Style="{StaticResource SubtitleTextBlockStyle}"
+                                   TextWrapping="WrapWholeWords" />
+                        <TextBlock Text="Install the MCP Server companion app in order to use the Harden System Security app's features in agentic workflows."
+                                   Style="{StaticResource BodyTextBlockStyle}"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   TextWrapping="WrapWholeWords" />
+                    </StackPanel>
+                    <HyperlinkButton NavigateUri="https://apps.microsoft.com/detail/9P3BDTHKR7KS"
+                                     HorizontalAlignment="Stretch"
+                                     HorizontalContentAlignment="Stretch"
+                                     Padding="0"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     CornerRadius="8"
+                                     AutomationProperties.Name="Open the app in Microsoft Store">
+                        <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="8"
+                                Padding="12">
+                            <Image Source="ms-appx:///Assets/Others/MCPServerAppIcon.png"
+                                   Height="112"
+                                   Stretch="Uniform"
+                                   AutomationProperties.Name="MCP Server app image" />
+                        </Border>
+                    </HyperlinkButton>
+                    <Button HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Style="{StaticResource AccentButtonStyle}"
+                            Content="View in Microsoft Store"
+                            AutomationProperties.Name="View in Microsoft Store"
+                            Click="{x:Bind OpenApp_Click}" />
+                </StackPanel>
+            </Flyout>
+        </Button.Flyout>
+    </Button>
+</UserControl>

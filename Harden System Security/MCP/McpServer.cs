@@ -499,7 +499,7 @@ internal static class McpServer
 		using CancellationTokenSource connectionTimeout = new(TimeSpan.FromSeconds(60));
 		await pipe.WaitForConnectionAsync(connectionTimeout.Token).ConfigureAwait(false);
 		using StreamReader reader = new(pipe, new UTF8Encoding(false), false, 1024, leaveOpen: true);
-		StreamWriter writer = new(pipe, new UTF8Encoding(false), 1024, leaveOpen: true) { AutoFlush = true };
+		using StreamWriter writer = new(pipe, new UTF8Encoding(false), 1024, leaveOpen: true) { AutoFlush = true };
 		string? authentication = await reader.ReadLineAsync().ConfigureAwait(false);
 
 		// Keep the one-shot elevated worker blocked until this server validates its per-launch nonce.
@@ -508,7 +508,6 @@ internal static class McpServer
 		await writer.WriteLineAsync(authenticated ? "A|1" : "A|0").ConfigureAwait(false);
 		if (!authenticated)
 		{
-			DisposePipeWriter(writer);
 			throw new InvalidOperationException("The elevated Protect operation worker could not be authenticated.");
 		}
 		while (await reader.ReadLineAsync().ConfigureAwait(false) is string line)
@@ -557,40 +556,29 @@ internal static class McpServer
 		await using NamedPipeClientStream pipe = new(".", $"{ProtectOperationPipePrefix}{channelId}", PipeDirection.InOut, PipeOptions.Asynchronous);
 		await pipe.ConnectAsync(60000);
 		using StreamReader reader = new(pipe, new UTF8Encoding(false), false, 1024, leaveOpen: true);
-		StreamWriter writer = new(pipe, new UTF8Encoding(false), 1024, leaveOpen: true) { AutoFlush = true };
-		try
-		{
-			await writer.WriteLineAsync(nonce);
-			string? acknowledgement = await reader.ReadLineAsync();
-			if (!string.Equals(acknowledgement, "A|1", StringComparison.OrdinalIgnoreCase))
-			{
-				return;
-			}
-			Task progress(int current, int total, string category) =>
-				writer.WriteLineAsync($"P|{current}|{total}|{Convert.ToBase64String(Encoding.UTF8.GetBytes(category))}");
-			ProtectVM.PresetOperationResult result = await ViewModelProvider.ProtectVM.RunPresetFromCliAsync(presetIndex, operation, progress);
-			if (!result.Succeeded)
-			{
-				throw new InvalidOperationException($"Security hardening {operation.ToString().ToLowerInvariant()} did not complete.");
-			}
-			if (operation is Helpers.MUnitOperation.Verify)
-			{
-				ProtectVM.PresetVerificationResult verification = result.Verification
-					?? throw new InvalidOperationException("Security hardening verification did not return a result.");
-				await writer.WriteLineAsync($"R|{verification.Categories}|{verification.Total}|{verification.Compliant}|{verification.NonCompliant}|{verification.Percentage.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
-				return;
-			}
-			await writer.WriteLineAsync($"O|{operation}");
-		}
-		finally
-		{
-			DisposePipeWriter(writer);
-		}
-	}
+		using StreamWriter writer = new(pipe, new UTF8Encoding(false), 1024, leaveOpen: true) { AutoFlush = true };
 
-	private static void DisposePipeWriter(StreamWriter writer)
-	{
-		try { writer.Dispose(); } catch { }
+		await writer.WriteLineAsync(nonce);
+		string? acknowledgement = await reader.ReadLineAsync();
+		if (!string.Equals(acknowledgement, "A|1", StringComparison.OrdinalIgnoreCase))
+		{
+			return;
+		}
+		Task progress(int current, int total, string category) =>
+			writer.WriteLineAsync($"P|{current}|{total}|{Convert.ToBase64String(Encoding.UTF8.GetBytes(category))}");
+		ProtectVM.PresetOperationResult result = await ViewModelProvider.ProtectVM.RunPresetFromCliAsync(presetIndex, operation, progress);
+		if (!result.Succeeded)
+		{
+			throw new InvalidOperationException($"Security hardening {operation.ToString().ToLowerInvariant()} did not complete.");
+		}
+		if (operation is Helpers.MUnitOperation.Verify)
+		{
+			ProtectVM.PresetVerificationResult verification = result.Verification
+				?? throw new InvalidOperationException("Security hardening verification did not return a result.");
+			await writer.WriteLineAsync($"R|{verification.Categories}|{verification.Total}|{verification.Compliant}|{verification.NonCompliant}|{verification.Percentage.ToString(System.Globalization.CultureInfo.InvariantCulture)}");
+			return;
+		}
+		await writer.WriteLineAsync($"O|{operation}");
 	}
 
 	private static Func<int, int, string, Task>? CreateProgressCallback(

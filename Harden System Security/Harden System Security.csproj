@@ -233,6 +233,7 @@
         <Compile Include="..\AppControl Manager\CustomUIElements\ColumnSelector.xaml.cs" Link="CustomUIElements\ColumnSelector.xaml.cs" />
         <Compile Include="..\AppControl Manager\CustomUIElements\GraphAuthPanel.xaml.cs" Link="CustomUIElements\GraphAuthPanel.xaml.cs" />
         <Compile Include="..\AppControl Manager\CustomUIElements\IntuneCheckInButton.xaml.cs" Link="CustomUIElements\IntuneCheckInButton.xaml.cs" />
+        <Compile Include="..\AppControl Manager\CustomUIElements\FeatureHighlightsCarouselDialog.xaml.cs" Link="CustomUIElements\FeatureHighlightsCarouselDialog.xaml.cs" />
 
         <!-- For Home Page's Carousel -->
         <Compile Include="..\AppControl Manager\CustomUIElements\HomePageCarousel\Lights\AmbLight.cs" Link="CustomUIElements\HomePageCarousel\Lights\AmbLight.cs" />

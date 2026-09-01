@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="AppControlManager.CustomUIElements.FeatureHighlightsCarouselDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Loaded="{x:Bind FeatureHighlightsCarouselDialog_Loaded}"
+    Opened="{x:Bind FeatureHighlightsCarouselDialog_Opened}"
+    AutomationProperties.Name="Feature highlights"
+    Background="Transparent"
+    BorderThickness="0"
+    FlowDirection="LeftToRight"
+    MaxHeight="5000"
+    MaxWidth="5000"
+    Padding="0">
+    <ContentDialog.Resources>
+        <Style x:Key="CarouselNameStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="40" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style x:Key="CarouselDescriptionStyle" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style x:Key="CarouselSeeMoreButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#ACFFFFFF" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="FontSize" Value="13.333" />
+            <Setter Property="Foreground" Value="#FF000000" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="MinHeight" Value="0" />
+            <Setter Property="MinWidth" Value="0" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Padding" Value="20,10" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter x:Name="SeeMorePresenter"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          CornerRadius="{TemplateBinding CornerRadius}"
+                                          Foreground="{TemplateBinding Foreground}">
+                            <ContentPresenter.BackgroundTransition>
+                                <BrushTransition Duration="0:0:0.5" />
+                            </ContentPresenter.BackgroundTransition>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Normal" />
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="SeeMorePresenter.Background" Value="#FFFFFFFF" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="SeeMorePresenter.Background" Value="#FFFFFFFF" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Target="SeeMorePresenter.Opacity" Value="0.5" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </ContentPresenter>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="CarouselArrowButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#93FFFFFF" />
+            <Setter Property="BorderBrush" Value="#BD000000" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Foreground" Value="#FF000000" />
+            <Setter Property="Height" Value="35" />
+            <Setter Property="Margin" Value="5,0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="UseSystemFocusVisuals" Value="True" />
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <ContentPresenter x:Name="ArrowPresenter"
+                                          Padding="{TemplateBinding Padding}"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Center"
+                                          AutomationProperties.AccessibilityView="Raw"
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          CornerRadius="{TemplateBinding CornerRadius}"
+                                          Foreground="{TemplateBinding Foreground}"
+                                          RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter.RenderTransform>
+                                <ScaleTransform x:Name="ArrowScaleTransform"
+                                                ScaleX="1"
+                                                ScaleY="1" />
+                            </ContentPresenter.RenderTransform>
+                            <ContentPresenter.BackgroundTransition>
+                                <BrushTransition Duration="0:0:0.3" />
+                            </ContentPresenter.BackgroundTransition>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.3" />
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArrowScaleTransform.ScaleX" Value="1" />
+                                            <Setter Target="ArrowScaleTransform.ScaleY" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="PointerOver">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArrowPresenter.Background" Value="#FFFFFFFF" />
+                                            <Setter Target="ArrowPresenter.BorderBrush" Value="#BDFFFFFF" />
+                                            <Setter Target="ArrowScaleTransform.ScaleX" Value="1.1" />
+                                            <Setter Target="ArrowScaleTransform.ScaleY" Value="1.1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Pressed">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArrowPresenter.Background" Value="#FFFFFFFF" />
+                                            <Setter Target="ArrowPresenter.BorderBrush" Value="#BDFFFFFF" />
+                                            <Setter Target="ArrowScaleTransform.ScaleX" Value="1.02" />
+                                            <Setter Target="ArrowScaleTransform.ScaleY" Value="1.02" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Disabled">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArrowPresenter.Opacity" Value="0.5" />
+                                            <Setter Target="ArrowScaleTransform.ScaleX" Value="1" />
+                                            <Setter Target="ArrowScaleTransform.ScaleY" Value="1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                                <VisualStateGroup x:Name="FocusStates">
+                                    <VisualStateGroup.Transitions>
+                                        <VisualTransition GeneratedDuration="0:0:0.3" />
+                                    </VisualStateGroup.Transitions>
+                                    <VisualState x:Name="Focused">
+                                        <VisualState.Setters>
+                                            <Setter Target="ArrowPresenter.Background" Value="#FFFFFFFF" />
+                                            <Setter Target="ArrowPresenter.BorderBrush" Value="#BDFFFFFF" />
+                                            <Setter Target="ArrowScaleTransform.ScaleX" Value="1.1" />
+                                            <Setter Target="ArrowScaleTransform.ScaleY" Value="1.1" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState x:Name="Unfocused" />
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </ContentPresenter>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </ContentDialog.Resources>
+    <ContentDialog.Template>
+        <ControlTemplate TargetType="ContentDialog">
+            <Border x:Name="Container">
+                <Grid x:Name="LayoutRoot">
+                    <Rectangle x:Name="SmokeLayerBackground"
+                               Fill="{ThemeResource ContentDialogSmokeFill}" />
+                    <Border x:Name="BackgroundElement"
+                            Width="872"
+                            Height="448"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            IsHitTestVisible="False" />
+                    <ContentPresenter x:Name="Content"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      HorizontalContentAlignment="Center"
+                                      VerticalContentAlignment="Center"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      ContentTransitions="{TemplateBinding ContentTransitions}" />
+                </Grid>
+            </Border>
+        </ControlTemplate>
+    </ContentDialog.Template>
+    <Grid Width="872"
+          Height="448"
+          HorizontalAlignment="Center"
+          VerticalAlignment="Center">
+        <Canvas x:Name="SlideCanvas"
+                Width="800"
+                Height="400"
+                Margin="36,24,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Background="Transparent"
+                Translation="0,0,32">
+            <Grid x:Name="Slide0"
+                  Width="800"
+                  Height="400"
+                  Canvas.Left="0"
+                  Canvas.Top="0">
+                <Border BackgroundSizing="InnerBorderEdge"
+                        CornerRadius="20">
+                    <Border.Background>
+                        <ImageBrush AlignmentX="Center"
+                                    AlignmentY="Center"
+                                    ImageSource="{x:Bind Highlights[0].ImageSource}"
+                                    Stretch="UniformToFill" />
+                    </Border.Background>
+                </Border>
+                <StackPanel x:Name="Slide0Content"
+                            Width="270"
+                            Margin="100,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <Grid x:Name="Slide0NameHost">
+                        <TextBlock x:Name="Slide0NameSource"
+                                   Foreground="{x:Bind Highlights[0].TextForeground}"
+                                   Style="{StaticResource CarouselNameStyle}"
+                                   Text="{x:Bind Highlights[0].Title}" />
+                    </Grid>
+                    <Grid x:Name="Slide0DescriptionHost"
+                          Margin="0,10,0,20">
+                        <TextBlock x:Name="Slide0DescriptionSource"
+                                   Foreground="{x:Bind Highlights[0].TextForeground}"
+                                   Style="{StaticResource CarouselDescriptionStyle}"
+                                   Text="{x:Bind Highlights[0].Description}" />
+                    </Grid>
+                    <Grid x:Name="Slide0ButtonHost">
+                        <Button x:Name="Slide0ButtonSource"
+                                AutomationProperties.Name="Learn more"
+                                Click="{x:Bind SeeMoreButton_Click}"
+                                Content="Learn more"
+                                Style="{StaticResource CarouselSeeMoreButtonStyle}"
+                                Tag="{x:Bind Highlights[0].Destination}" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="Slide1"
+                  Width="800"
+                  Height="400"
+                  Canvas.Left="0"
+                  Canvas.Top="0">
+                <Border BackgroundSizing="InnerBorderEdge"
+                        CornerRadius="20">
+                    <Border.Background>
+                        <ImageBrush AlignmentX="Center"
+                                    AlignmentY="Center"
+                                    ImageSource="{x:Bind Highlights[1].ImageSource}"
+                                    Stretch="UniformToFill" />
+                    </Border.Background>
+                </Border>
+                <StackPanel x:Name="Slide1Content"
+                            Width="270"
+                            Margin="100,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <Grid x:Name="Slide1NameHost">
+                        <TextBlock x:Name="Slide1NameSource"
+                                   Foreground="{x:Bind Highlights[1].TextForeground}"
+                                   Style="{StaticResource CarouselNameStyle}"
+                                   Text="{x:Bind Highlights[1].Title}" />
+                    </Grid>
+                    <Grid x:Name="Slide1DescriptionHost"
+                          Margin="0,10,0,20">
+                        <TextBlock x:Name="Slide1DescriptionSource"
+                                   Foreground="{x:Bind Highlights[1].TextForeground}"
+                                   Style="{StaticResource CarouselDescriptionStyle}"
+                                   Text="{x:Bind Highlights[1].Description}" />
+                    </Grid>
+                    <Grid x:Name="Slide1ButtonHost">
+                        <Button x:Name="Slide1ButtonSource"
+                                AutomationProperties.Name="Learn more"
+                                Click="{x:Bind SeeMoreButton_Click}"
+                                Content="Learn more"
+                                Style="{StaticResource CarouselSeeMoreButtonStyle}"
+                                Tag="{x:Bind Highlights[1].Destination}" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="Slide2"
+                  Width="200"
+                  Height="250"
+                  Canvas.Left="400"
+                  Canvas.Top="75">
+                <Border BackgroundSizing="InnerBorderEdge"
+                        CornerRadius="20">
+                    <Border.Background>
+                        <ImageBrush AlignmentX="Center"
+                                    AlignmentY="Center"
+                                    ImageSource="{x:Bind Highlights[2].ImageSource}"
+                                    Stretch="UniformToFill" />
+                    </Border.Background>
+                </Border>
+                <StackPanel x:Name="Slide2Content"
+                            Width="270"
+                            Margin="100,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <Grid x:Name="Slide2NameHost">
+                        <TextBlock x:Name="Slide2NameSource"
+                                   Foreground="{x:Bind Highlights[2].TextForeground}"
+                                   Style="{StaticResource CarouselNameStyle}"
+                                   Text="{x:Bind Highlights[2].Title}" />
+                    </Grid>
+                    <Grid x:Name="Slide2DescriptionHost"
+                          Margin="0,10,0,20">
+                        <TextBlock x:Name="Slide2DescriptionSource"
+                                   Foreground="{x:Bind Highlights[2].TextForeground}"
+                                   Style="{StaticResource CarouselDescriptionStyle}"
+                                   Text="{x:Bind Highlights[2].Description}" />
+                    </Grid>
+                    <Grid x:Name="Slide2ButtonHost">
+                        <Button x:Name="Slide2ButtonSource"
+                                AutomationProperties.Name="Learn more"
+                                Click="{x:Bind SeeMoreButton_Click}"
+                                Content="Learn more"
+                                Style="{StaticResource CarouselSeeMoreButtonStyle}"
+                                Tag="{x:Bind Highlights[2].Destination}" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="Slide3"
+                  Width="200"
+                  Height="250"
+                  Canvas.Left="620"
+                  Canvas.Top="75">
+                <Border BackgroundSizing="InnerBorderEdge"
+                        CornerRadius="20">
+                    <Border.Background>
+                        <ImageBrush AlignmentX="Center"
+                                    AlignmentY="Center"
+                                    ImageSource="{x:Bind Highlights[3].ImageSource}"
+                                    Stretch="UniformToFill" />
+                    </Border.Background>
+                </Border>
+                <StackPanel x:Name="Slide3Content"
+                            Width="270"
+                            Margin="100,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                    <Grid x:Name="Slide3NameHost">
+                        <TextBlock x:Name="Slide3NameSource"
+                                   Foreground="{x:Bind Highlights[3].TextForeground}"
+                                   Style="{StaticResource CarouselNameStyle}"
+                                   Text="{x:Bind Highlights[3].Title}" />
+                    </Grid>
+                    <Grid x:Name="Slide3DescriptionHost"
+                          Margin="0,10,0,20">
+                        <TextBlock x:Name="Slide3DescriptionSource"
+                                   Foreground="{x:Bind Highlights[3].TextForeground}"
+                                   Style="{StaticResource CarouselDescriptionStyle}"
+                                   Text="{x:Bind Highlights[3].Description}" />
+                    </Grid>
+                    <Grid x:Name="Slide3ButtonHost">
+                        <Button x:Name="Slide3ButtonSource"
+                                AutomationProperties.Name="Learn more"
+                                Click="{x:Bind SeeMoreButton_Click}"
+                                Content="Learn more"
+                                Style="{StaticResource CarouselSeeMoreButtonStyle}"
+                                Tag="{x:Bind Highlights[3].Destination}" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+            <StackPanel Canvas.Left="360"
+                        Canvas.Top="345"
+                        Canvas.ZIndex="10"
+                        Orientation="Horizontal"
+                        Spacing="20">
+                <Button AutomationProperties.Name="Previous slide"
+                        Click="{x:Bind PreviousButton_Click}"
+                        Content="◁"
+                        Padding="0,0,3,0"
+                        Style="{StaticResource CarouselArrowButtonStyle}" />
+                <Button AutomationProperties.Name="Next slide"
+                        Click="{x:Bind NextButton_Click}"
+                        Content="▷"
+                        Padding="3,0,0,0"
+                        Style="{StaticResource CarouselArrowButtonStyle}" />
+            </StackPanel>
+        </Canvas>
+    </Grid>
+</ContentDialog>

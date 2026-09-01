@@ -1,4 +1,8 @@
-# MCP Server for AI Workflows
+## Feature Highlights Carousel
+
+Added a new Feature Highlights carousel showcasing prominent app capabilities through an interactive visual experience. The carousel opens automatically on first launch and remains accessible anytime from the main window toolbar.
+
+## MCP Server for AI Workflows
 
 Created a dedicated app that offers MCP Server capabilities through the Harden System Security app. It is very lightweight (only 1 MB package size) and can be installed from the Microsoft Store: https://apps.microsoft.com/detail/9P3BDTHKR7KS
 

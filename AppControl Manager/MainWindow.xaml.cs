@@ -349,6 +349,23 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	private async void NavigateToSettings() => await Nav.Navigate(typeof(Pages.Settings));
 
+	private async void DisplayFeatureHighlightsCarousel_FirstAppLaunch()
+	{
+		if (!ViewModel.AppSettings.FeatureHighlightsCarouselShownAutomatically)
+		{
+			await DisplayFeatureHighlightsCarousel();
+			ViewModel.AppSettings.FeatureHighlightsCarouselShownAutomatically = true;
+		}
+	}
+
+	private async void FeatureHighlightsCarouselButton_Click() => await DisplayFeatureHighlightsCarousel();
+
+	private static async Task DisplayFeatureHighlightsCarousel()
+	{
+		using FeatureHighlightsCarouselDialog dialog = new();
+		_ = await dialog.ShowAsync();
+	}
+
 	private static readonly FlyoutShowOptions SC_MOUSEMENUFlyoutShowOptions = new()
 	{
 		Position = new Point(0, 15),
@@ -572,6 +589,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		RectInt32 menuRect = MainWindowVM.CalculatePixelRect(HamburgerMenuButton, scale);
 		RectInt32 searchRect = MainWindowVM.CalculatePixelRect(TitleBarSearchBox, scale);
 		RectInt32 elevationButtonRect = MainWindowVM.CalculatePixelRect(ElevationContextSwitchButton, scale);
+		RectInt32 featureHighlightsCarouselButtonRect = MainWindowVM.CalculatePixelRect(FeatureHighlightsCarouselButton, scale);
 #if HARDEN_SYSTEM_SECURITY
 		RectInt32 mcpServerAppTitleBarButtonRect = MainWindowVM.CalculatePixelRect(MCPServerAppTitleBarButton, scale);
 #endif
@@ -587,6 +605,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			backRect = MainWindowVM.FlipHorizontally(backRect, windowWidthPx);
 			menuRect = MainWindowVM.FlipHorizontally(menuRect, windowWidthPx);
 			searchRect = MainWindowVM.FlipHorizontally(searchRect, windowWidthPx);
+			featureHighlightsCarouselButtonRect = MainWindowVM.FlipHorizontally(featureHighlightsCarouselButtonRect, windowWidthPx);
 #if HARDEN_SYSTEM_SECURITY
 			mcpServerAppTitleBarButtonRect = MainWindowVM.FlipHorizontally(mcpServerAppTitleBarButtonRect, windowWidthPx);
 #endif
@@ -602,12 +621,12 @@ internal sealed partial class MainWindow : Window, INPCImplant
 #if HARDEN_SYSTEM_SECURITY
 		nonClient.SetRegionRects(
 			NonClientRegionKind.Passthrough,
-			[backRect, menuRect, searchRect, mcpServerAppTitleBarButtonRect, elevationButtonRect, intuneCheckInButtonRect, notificationAreaButtonRect, sidebarRect]
+			[backRect, menuRect, searchRect, featureHighlightsCarouselButtonRect, mcpServerAppTitleBarButtonRect, elevationButtonRect, intuneCheckInButtonRect, notificationAreaButtonRect, sidebarRect]
 		);
 #else
 		nonClient.SetRegionRects(
 			NonClientRegionKind.Passthrough,
-			[backRect, menuRect, searchRect, elevationButtonRect, intuneCheckInButtonRect, notificationAreaButtonRect, sidebarRect]
+			[backRect, menuRect, searchRect, featureHighlightsCarouselButtonRect, elevationButtonRect, intuneCheckInButtonRect, notificationAreaButtonRect, sidebarRect]
 		);
 #endif
 	}

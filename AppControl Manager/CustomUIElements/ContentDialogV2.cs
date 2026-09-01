@@ -64,8 +64,9 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	private bool _backgroundBorderSizeHooked;  // Ensures we hook only once
 
 	// To track the currently open Content Dialog across the app.
-	// ContentDialogV2 must always be used across the app. Normal ContentDialog should never be used.
-	private static ContentDialogV2? CurrentlyOpenContentDialog;
+	// ContentDialogV2 must always be used across the app.
+	// Normal ContentDialog should never be used unless a fully custom templated content dialog is being needed.
+	private static ContentDialog? CurrentlyOpenContentDialog;
 
 	// Static cached shadow instance for performance
 	private static readonly AttachedCardShadow CachedShadow = new()
@@ -332,10 +333,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 			_shadowApplied = false;
 
 			// Clear static reference to allow this dialog to be garbage collected
-			if (ReferenceEquals(CurrentlyOpenContentDialog, this))
-			{
-				CurrentlyOpenContentDialog = null;
-			}
+			UnregisterContentDialog(this);
 
 			// Clean up event handlers to prevent memory leaks
 			CleanupEventHandlers();
@@ -1416,20 +1414,41 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	/// When dialogs are rapidly opened and closed, the previous dialog might not be fully closed yet when we try to open a new one,
 	/// causing a COM exception.
 	/// The error occurs at base.ShowAsync() which calls the underlying WinUI ContentDialog.ShowAsync() method.
-	///	That's why we Hide/Close and then dispose of the previous ContentDialogV2 before showing a new one.
+	/// That's why the app-wide registration closes the previous ContentDialog before showing a new one.
 	/// </summary>
 	internal new IAsyncOperation<ContentDialogResult> ShowAsync()
 	{
-		// Since only 1 content dialog can be displayed at a time, we close any currently active ones before showing the new one.
-		if (CurrentlyOpenContentDialog is ContentDialogV2 dialog)
+		RegisterContentDialog(this);
+		return base.ShowAsync();
+	}
+
+	/// <summary>
+	/// Registers any app-owned ContentDialog and closes the previously registered dialog, if necessary.
+	/// Specialized dialogs with custom templates use this method without inheriting ContentDialogV2.
+	/// </summary>
+	internal static void RegisterContentDialog(ContentDialog dialog)
+	{
+		if (CurrentlyOpenContentDialog is ContentDialog currentlyOpenDialog &&
+			!ReferenceEquals(currentlyOpenDialog, dialog))
 		{
+#if DEBUG
 			Logger.Write("A Content Dialog is already open, closing it first before displaying the new one");
-			dialog.Hide();
-			dialog.Dispose();
+#endif
+			currentlyOpenDialog.Hide();
 		}
 
-		CurrentlyOpenContentDialog = this;
-		return base.ShowAsync();
+		CurrentlyOpenContentDialog = dialog;
+	}
+
+	/// <summary>
+	/// Clears the app-wide dialog registration only when it still belongs to the supplied dialog.
+	/// </summary>
+	internal static void UnregisterContentDialog(ContentDialog dialog)
+	{
+		if (ReferenceEquals(CurrentlyOpenContentDialog, dialog))
+		{
+			CurrentlyOpenContentDialog = null;
+		}
 	}
 
 	/// <summary>
@@ -1502,10 +1521,7 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 				}
 
 				// Clear static reference if still pointing to this instance
-				if (ReferenceEquals(CurrentlyOpenContentDialog, this))
-				{
-					CurrentlyOpenContentDialog = null;
-				}
+				UnregisterContentDialog(this);
 
 				// Clear visual tree references
 				_shadowContainer = null;

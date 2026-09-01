@@ -359,6 +359,9 @@ internal static class SettingsBackupRestoreSerializer
 		CreateBoolean(nameof(Main.ApplySideChannelIsolationMitigationsOnStartup),
 			settings => settings.ApplySideChannelIsolationMitigationsOnStartup,
 			(settings, value) => settings.ApplySideChannelIsolationMitigationsOnStartup = value),
+		CreateBoolean(nameof(Main.FeatureHighlightsCarouselShownAutomatically),
+			settings => settings.FeatureHighlightsCarouselShownAutomatically,
+			(settings, value) => settings.FeatureHighlightsCarouselShownAutomatically = value),
 
 		];
 

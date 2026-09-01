@@ -127,6 +127,7 @@ internal sealed partial class Main : ViewModelBase
 		BackdropBlurBrushTintColor = ReadValue(nameof(BackdropBlurBrushTintColor), BackdropBlurBrushTintColor);
 		BackdropBlurBrushBlurAmount = ReadValue(nameof(BackdropBlurBrushBlurAmount), BackdropBlurBrushBlurAmount);
 		ApplySideChannelIsolationMitigationsOnStartup = ReadValue(nameof(ApplySideChannelIsolationMitigationsOnStartup), ApplySideChannelIsolationMitigationsOnStartup);
+		FeatureHighlightsCarouselShownAutomatically = ReadValue(nameof(FeatureHighlightsCarouselShownAutomatically), FeatureHighlightsCarouselShownAutomatically);
 	}
 
 	/// <summary>
@@ -1103,6 +1104,21 @@ internal sealed partial class Main : ViewModelBase
 		}
 	} = DefaultCustomBrushAppPackageBackgroundPicture;
 
+
+	/// <summary>
+	/// Whether the feature highlights carousel has already been displayed automatically for this app installation.
+	/// Happens only one time after the app is installed.
+	/// </summary>
+	internal bool FeatureHighlightsCarouselShownAutomatically
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(FeatureHighlightsCarouselShownAutomatically), field);
+			}
+		}
+	}
 
 	/// <summary>
 	/// Whether the app should apply process side-channel isolation mitigations on startup.

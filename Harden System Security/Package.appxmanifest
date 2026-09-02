@@ -46,7 +46,7 @@
     <DisplayName>Harden System Security</DisplayName>
     <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
     <Description>ms-resource:AppDescription</Description>
-    <Logo>Assets\StoreLogo.png</Logo>   
+    <Logo>Assets\StoreLogo.png</Logo>
     <uap10:PackageIntegrity>
       <uap10:Content Enforcement="on" />
     </uap10:PackageIntegrity>
@@ -259,6 +259,20 @@
             <desktop:ExecutionAlias Alias="HSS.exe" />
           </uap3:AppExecutionAlias>
         </uap3:Extension>
+
+        <!-- Runs the app when the user signs in so that it can put the Windows top bar on the desktop. -->
+        <!-- It is declared as disabled so that it never changes anything for the users that do not ask for it. The app enables it via the StartupTask class only after the user opts in. -->
+        <!-- The parameter is what tells the app that this particular launch came from the startup task, since the OS starts the executable of a packaged desktop app without any of its own arguments. -->
+        <!-- This Task is automatically registered upon package installation. App does not need to run first for this to be registered. -->
+        <!-- https://learn.microsoft.com/uwp/schemas/appxpackage/uapmanifestschema/element-uap5-startuptask -->
+        <uap5:Extension Category="windows.startupTask"
+                        Executable="HardenSystemSecurity.exe"
+                        EntryPoint="Windows.FullTrustApplication"
+                        uap10:Parameters="--windows-top-bar">
+          <uap5:StartupTask TaskId="HardenSystemSecurityWindowsTopBar"
+                            Enabled="false"
+                            DisplayName="Harden System Security Top Bar" />
+        </uap5:Extension>
 
         <!-- POL File Association -->
         <uap:Extension Category="windows.fileTypeAssociation">

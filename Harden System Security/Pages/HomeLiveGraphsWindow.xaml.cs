@@ -244,7 +244,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		InputNonClientPointerSource nonClientPointerSource = InputNonClientPointerSource.GetForWindowId(popoutWindow.AppWindow.Id);
 		windowRoot.SizeChanged += (_, sizeArgs) => SetPopoutWindowRegions(nonClientPointerSource, windowRoot, titleToggle, sizeArgs.NewSize);
 
-		string iconPath = CommonCore.Taskbar.JumpListMgr.GetLiveSystemIntelligenceIconPath(GetChartTarget(titleToggle)) ?? @"Assets\AppIcon.ico";
+		string iconPath = HardenSystemSecurity.WindowComponents.JumpListMgr.GetLiveSystemIntelligenceIconPath(GetChartTarget(titleToggle)) ?? @"Assets\AppIcon.ico";
 		popoutWindow.AppWindow.SetIcon(iconPath);
 		popoutWindow.AppWindow.SetTaskbarIcon(iconPath);
 
@@ -294,27 +294,27 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 
 	private string GetChartTarget(ToggleButton titleToggle) => titleToggle switch
 	{
-		ToggleButton toggle when ReferenceEquals(toggle, CpuTemperatureTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.CpuTemperatureTarget,
-		ToggleButton toggle when ReferenceEquals(toggle, CpuUsageTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.CpuUsageTarget,
-		ToggleButton toggle when ReferenceEquals(toggle, StorageTemperatureTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.StorageTemperatureTarget,
-		ToggleButton toggle when ReferenceEquals(toggle, NetworkUsageTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.NetworkUsageTarget,
-		ToggleButton toggle when ReferenceEquals(toggle, SystemMemoryUtilizationTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.SystemMemoryTarget,
-		ToggleButton toggle when ReferenceEquals(toggle, DiskActivityTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.DiskActivityTarget,
-		ToggleButton toggle when ReferenceEquals(toggle, TotalSystemPowerTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.TotalSystemPowerTarget,
-		ToggleButton toggle when ReferenceEquals(toggle, BatteryDischargeTitleToggleButton) => CommonCore.Taskbar.JumpListMgr.BatteryDischargeTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, CpuTemperatureTitleToggleButton) => HardenSystemSecurity.WindowComponents.JumpListMgr.CpuTemperatureTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, CpuUsageTitleToggleButton) => HardenSystemSecurity.WindowComponents.JumpListMgr.CpuUsageTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, StorageTemperatureTitleToggleButton) => HardenSystemSecurity.WindowComponents.JumpListMgr.StorageTemperatureTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, NetworkUsageTitleToggleButton) => HardenSystemSecurity.WindowComponents.JumpListMgr.NetworkUsageTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, SystemMemoryUtilizationTitleToggleButton) => HardenSystemSecurity.WindowComponents.JumpListMgr.SystemMemoryTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, DiskActivityTitleToggleButton) => HardenSystemSecurity.WindowComponents.JumpListMgr.DiskActivityTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, TotalSystemPowerTitleToggleButton) => HardenSystemSecurity.WindowComponents.JumpListMgr.TotalSystemPowerTarget,
+		ToggleButton toggle when ReferenceEquals(toggle, BatteryDischargeTitleToggleButton) => HardenSystemSecurity.WindowComponents.JumpListMgr.BatteryDischargeTarget,
 		_ => string.Empty
 	};
 
 	private ToggleButton? GetChartTitleToggle(string chartTarget) => chartTarget switch
 	{
-		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.CpuTemperatureTarget, StringComparison.OrdinalIgnoreCase) => CpuTemperatureTitleToggleButton,
-		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.CpuUsageTarget, StringComparison.OrdinalIgnoreCase) => CpuUsageTitleToggleButton,
-		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.StorageTemperatureTarget, StringComparison.OrdinalIgnoreCase) => StorageTemperatureTitleToggleButton,
-		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.NetworkUsageTarget, StringComparison.OrdinalIgnoreCase) => NetworkUsageTitleToggleButton,
-		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.SystemMemoryTarget, StringComparison.OrdinalIgnoreCase) => SystemMemoryUtilizationTitleToggleButton,
-		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.DiskActivityTarget, StringComparison.OrdinalIgnoreCase) => DiskActivityTitleToggleButton,
-		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.TotalSystemPowerTarget, StringComparison.OrdinalIgnoreCase) => TotalSystemPowerTitleToggleButton,
-		string target when string.Equals(target, CommonCore.Taskbar.JumpListMgr.BatteryDischargeTarget, StringComparison.OrdinalIgnoreCase) => BatteryDischargeTitleToggleButton,
+		string target when string.Equals(target, HardenSystemSecurity.WindowComponents.JumpListMgr.CpuTemperatureTarget, StringComparison.OrdinalIgnoreCase) => CpuTemperatureTitleToggleButton,
+		string target when string.Equals(target, HardenSystemSecurity.WindowComponents.JumpListMgr.CpuUsageTarget, StringComparison.OrdinalIgnoreCase) => CpuUsageTitleToggleButton,
+		string target when string.Equals(target, HardenSystemSecurity.WindowComponents.JumpListMgr.StorageTemperatureTarget, StringComparison.OrdinalIgnoreCase) => StorageTemperatureTitleToggleButton,
+		string target when string.Equals(target, HardenSystemSecurity.WindowComponents.JumpListMgr.NetworkUsageTarget, StringComparison.OrdinalIgnoreCase) => NetworkUsageTitleToggleButton,
+		string target when string.Equals(target, HardenSystemSecurity.WindowComponents.JumpListMgr.SystemMemoryTarget, StringComparison.OrdinalIgnoreCase) => SystemMemoryUtilizationTitleToggleButton,
+		string target when string.Equals(target, HardenSystemSecurity.WindowComponents.JumpListMgr.DiskActivityTarget, StringComparison.OrdinalIgnoreCase) => DiskActivityTitleToggleButton,
+		string target when string.Equals(target, HardenSystemSecurity.WindowComponents.JumpListMgr.TotalSystemPowerTarget, StringComparison.OrdinalIgnoreCase) => TotalSystemPowerTitleToggleButton,
+		string target when string.Equals(target, HardenSystemSecurity.WindowComponents.JumpListMgr.BatteryDischargeTarget, StringComparison.OrdinalIgnoreCase) => BatteryDischargeTitleToggleButton,
 		_ => null
 	};
 

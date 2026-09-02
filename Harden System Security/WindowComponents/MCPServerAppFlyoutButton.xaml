@@ -8,7 +8,7 @@
             Height="40"
             Padding="0"
             Background="Transparent"
-            BorderThickness="0"            
+            BorderThickness="0"
             ToolTipService.ToolTip="MCP Server Companion App">
         <Button.Content>
             <FontIcon Glyph="&#xEAB7;"

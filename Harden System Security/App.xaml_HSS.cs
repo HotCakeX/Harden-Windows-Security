@@ -23,7 +23,6 @@ using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Others;
 using HardenSystemSecurity.ViewModels;
-using HardenSystemSecurity.WindowComponents;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using Microsoft.Windows.AppNotifications;
@@ -63,11 +62,29 @@ public sealed partial class App : Application
 			Environment.Exit(0);
 		}
 
+		// Whether Windows started the app at sign in through the startup task of the package, which it only does to
+		// put the Windows top bar on the desktop.
+		if (launchArguments.Length >= 1 && string.Equals(launchArguments[0], CustomUIElements.WindowsTopBar.TopBarStartupManager.WindowsTopBarLaunchArgument, StringComparison.OrdinalIgnoreCase))
+		{
+			// Windows started the app at sign in only to put the bar on the desktop, so no main window is created and
+			// the bar becomes the only thing that this session ever shows.
+			CustomUIElements.WindowsTopBar.TopBar.Launch();
+
+			// Another instance of the app may already own the only bar that the desktop is allowed to have, in which
+			// case this session has nothing left to show and must not linger on as a process without any window.
+			if (!CustomUIElements.WindowsTopBar.TopBar.IsOpen)
+			{
+				Environment.Exit(0);
+			}
+
+			return;
+		}
+
 		// Extract the requested Live System Intelligence window or chart target when the app is launched from a Jump List item.
-		string? liveSystemIntelligenceLaunchTarget = CommonCore.Taskbar.JumpListMgr.GetLiveSystemIntelligenceLaunchTarget(launchArguments);
+		string? liveSystemIntelligenceLaunchTarget = WindowComponents.JumpListMgr.GetLiveSystemIntelligenceLaunchTarget(launchArguments);
 
 		// Register the Jump List Items
-		await CommonCore.Taskbar.JumpListMgr.EnsureJumpListAsync();
+		await WindowComponents.JumpListMgr.EnsureJumpListAsync();
 
 		// Ephemeral activation path used only during this launch session
 		string? _activationFilePath = null;
@@ -581,7 +598,7 @@ public sealed partial class App : Application
 	{
 		// Handle Live System Intelligence chart launch requests from Jump List items.
 		if (args.Data is ILaunchActivatedEventArgs launchArgs &&
-			CommonCore.Taskbar.JumpListMgr.GetLiveSystemIntelligenceLaunchTarget(launchArgs.Arguments.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries)) is string chartTarget)
+			WindowComponents.JumpListMgr.GetLiveSystemIntelligenceLaunchTarget(launchArgs.Arguments.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries)) is string chartTarget)
 		{
 			_ = Atlas.AppDispatcher.TryEnqueue(() => ViewModelProvider.HomeVM.OpenLiveGraphsWindow(chartTarget));
 		}

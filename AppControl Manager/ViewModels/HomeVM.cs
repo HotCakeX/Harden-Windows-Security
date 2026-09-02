@@ -333,6 +333,17 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 			_liveGraphsWindow.OpenDirectChartPopout(chartTarget);
 		}
 	}
+
+	/// <summary>
+	/// Opens the Windows top bar when it is not already open.
+	/// </summary>
+	internal void OpenWindowsTopBar()
+	{
+		if (!HardenSystemSecurity.CustomUIElements.WindowsTopBar.TopBar.IsOpen)
+		{
+			HardenSystemSecurity.CustomUIElements.WindowsTopBar.TopBar.Launch();
+		}
+	}
 #endif
 
 	private static readonly Uri CloudflareTraceUri = new("https://www.cloudflare.com/cdn-cgi/trace");

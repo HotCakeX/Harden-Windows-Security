@@ -3799,4 +3799,45 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int CallNtPowerInformation(int informationLevel, void* inputBuffer, uint inputBufferLength, void* outputBuffer, uint outputBufferLength);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-createroundrectrgn
+	/// </summary>
+	[LibraryImport("gdi32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr CreateRoundRectRgn(int x1, int y1, int x2, int y2, int w, int h);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-createrectrgn
+	/// </summary>
+	[LibraryImport("gdi32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr CreateRectRgn(int x1, int y1, int x2, int y2);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-combinergn
+	/// </summary>
+	[LibraryImport("gdi32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CombineRgn(IntPtr hrgnDst, IntPtr hrgnSrc1, IntPtr hrgnSrc2, int iMode);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setwindowrgn
+	/// The system takes the ownership of the region when this method succeeds, so the region must not be deleted afterwards.
+	/// </summary>
+	[LibraryImport("user32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SetWindowRgn(IntPtr hWnd, IntPtr hRgn, [MarshalAs(UnmanagedType.Bool)] bool bRedraw);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getdpiforwindow
+	/// </summary>
+	[LibraryImport("user32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetDpiForWindow(IntPtr hWnd);
+
 }

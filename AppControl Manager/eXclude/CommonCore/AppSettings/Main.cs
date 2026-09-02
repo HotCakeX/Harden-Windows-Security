@@ -128,6 +128,10 @@ internal sealed partial class Main : ViewModelBase
 		BackdropBlurBrushBlurAmount = ReadValue(nameof(BackdropBlurBrushBlurAmount), BackdropBlurBrushBlurAmount);
 		ApplySideChannelIsolationMitigationsOnStartup = ReadValue(nameof(ApplySideChannelIsolationMitigationsOnStartup), ApplySideChannelIsolationMitigationsOnStartup);
 		FeatureHighlightsCarouselShownAutomatically = ReadValue(nameof(FeatureHighlightsCarouselShownAutomatically), FeatureHighlightsCarouselShownAutomatically);
+		WindowsTopBarNotchStyle = ReadValue(nameof(WindowsTopBarNotchStyle), WindowsTopBarNotchStyle);
+		WindowsTopBarLaunchAtStartup = ReadValue(nameof(WindowsTopBarLaunchAtStartup), WindowsTopBarLaunchAtStartup);
+		WindowsTopBarOpenOnHover = ReadValue(nameof(WindowsTopBarOpenOnHover), WindowsTopBarOpenOnHover);
+		WindowsTopBarAlwaysOnTop = ReadValue(nameof(WindowsTopBarAlwaysOnTop), WindowsTopBarAlwaysOnTop);
 	}
 
 	/// <summary>
@@ -1133,5 +1137,64 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	}
+
+	/// <summary>
+	/// The shape that the Windows top bar takes while it is collapsed into its notch.
+	/// </summary>
+	internal int WindowsTopBarNotchStyle
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarNotchStyle), field);
+			}
+		}
+	} // 0 = Standard, 1 = Compact
+
+	/// <summary>
+	/// Whether the Windows top bar should be put on the desktop when the user signs in to Windows.
+	/// This only mirrors the state of the startup task of the package, which the operating system owns, so the state
+	/// that the OS reports always wins over this value.
+	/// </summary>
+	internal bool WindowsTopBarLaunchAtStartup
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarLaunchAtStartup), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether the Windows top bar expands as soon as the pointer travels over it.
+	/// When it is off the bar only expands once its notch is clicked or tapped.
+	/// </summary>
+	internal bool WindowsTopBarOpenOnHover
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarOpenOnHover), field);
+			}
+		}
+	} = true;
+
+	/// <summary>
+	/// Whether the Windows top bar stays above every other window on the desktop.
+	/// </summary>
+	internal bool WindowsTopBarAlwaysOnTop
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarAlwaysOnTop), field);
+			}
+		}
+	} = true;
 
 }

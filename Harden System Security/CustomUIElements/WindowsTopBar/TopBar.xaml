@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="HardenSystemSecurity.CustomUIElements.WindowsTopBar.TopBar"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CC="using:CommonCore"
+    Title="Top Bar"
+    Closed="{x:Bind OnWindowClosed}">
+
+    <!-- The top bar is a border-less always on top window that is docked to the top center edge of the display.
+         The window itself is resized on every animation frame and its silhouette is clipped by a rounded window
+         region, so the visual tree below never needs to be re-laid out while the bar expands or retracts.
+         The whole client area is painted with the color of the bar so that no lighter pixel of the window itself
+         can ever show up along the edges that the region clips.
+         The theme of the bar follows the theme of the app, so every brush below is a theme resource and the two
+         opaque backgrounds are assigned from the code behind whenever the effective theme changes. -->
+    <Grid x:Name="RootGrid"
+          PointerEntered="{x:Bind OnRootPointerEntered}"
+          PointerExited="{x:Bind OnRootPointerExited}"
+          PointerPressed="{x:Bind OnRootPointerPressed}"
+          DragEnter="{x:Bind OnFoldersPanelDragEnter}"
+          DragOver="{x:Bind OnFoldersPanelDragOver}"
+          DragLeave="{x:Bind OnFoldersPanelDragLeave}"
+          Drop="{x:Bind OnFoldersPanelDrop}">
+
+        <!-- The chrome of the bar. It carries no stroke at all and its corner radius is animated together with the window region.
+             Only the two bottom corners are ever rounded, because the two top ones are docked against the top edge of the display. -->
+        <Border x:Name="BarBorder"
+                BorderThickness="0"
+                CornerRadius="0,0,17,17"/>
+
+        <!-- The content that is visible while the bar is collapsed into the notch. -->
+        <StackPanel x:Name="CollapsedHost"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal"
+                    Spacing="10"
+                    IsHitTestVisible="False">
+            <FontIcon x:Name="CollapsedGlyph"
+                      Glyph="&#xEC50;"
+                      FontSize="14"
+                      VerticalAlignment="Center"
+                      Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+            <TextBlock x:Name="CollapsedLabel"
+                       FontSize="12"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center"
+                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+            <FontIcon x:Name="CollapsedChevron"
+                      Glyph="&#xE70D;"
+                      FontSize="10"
+                      VerticalAlignment="Center"
+                      Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+        </StackPanel>
+
+        <!-- The content that is visible while the bar is expanded. Its width drives the expanded window width, so
+             switching to a view whose content is wider or narrower animates the window to the new width. -->
+        <StackPanel x:Name="ExpandedHost"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Top"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    Opacity="0"
+                    IsHitTestVisible="False">
+
+            <!-- Selects the active view. The views are offered as a vertical list of radio items,
+                 so however many of them there are the bar always spends the very same width on the switcher.
+                 The radio items share a single group, which is what keeps exactly one of the views selected at a time.
+                 The menu is not constrained to the root bounds because the bar itself is only as tall as the notch. -->
+            <Button x:Name="ViewSwitcherButton"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    MinWidth="0"
+                    CornerRadius="14"
+                    VerticalAlignment="Center">
+                <Button.Flyout>
+                    <MenuFlyout x:Name="ViewSwitcherMenu"
+                                Placement="Bottom"
+                                ShouldConstrainToRootBounds="False">
+                        <RadioMenuFlyoutItem x:Name="AppsViewMenuItem"
+                                             GroupName="TopBarViewSwitcher"
+                                             Click="{x:Bind OnAppsViewButtonClick}">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xECAA;"/>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem x:Name="FoldersViewMenuItem"
+                                             GroupName="TopBarViewSwitcher"
+                                             Click="{x:Bind OnFoldersViewButtonClick}">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8B7;"/>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem x:Name="PerformanceViewMenuItem"
+                                             GroupName="TopBarViewSwitcher"
+                                             Click="{x:Bind OnPerformanceViewButtonClick}">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE9D9;"/>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem x:Name="ClocksViewMenuItem"
+                                             GroupName="TopBarViewSwitcher"
+                                             Click="{x:Bind OnClocksViewButtonClick}">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE823;"/>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem x:Name="NetworkQualityViewMenuItem"
+                                             GroupName="TopBarViewSwitcher"
+                                             Click="{x:Bind OnNetworkQualityViewButtonClick}">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE968;"/>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                    </MenuFlyout>
+                </Button.Flyout>
+                <FontIcon Glyph="&#xE8A9;"
+                          FontSize="12"/>
+            </Button>
+
+            <Border Width="1"
+                    Height="56"
+                    VerticalAlignment="Center"
+                    Background="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+            <!-- Only one of the views below is ever visible, and the visible one dictates the width of the bar.
+                 The views are hosted inside a scroll viewer whose largest width is capped to whatever the display can
+                 take, so a view that holds more entries than the display fits scrolls sideways instead of making the
+                 bar grow past the edges of the display. -->
+            <ScrollViewer x:Name="ViewsScrollViewer"
+                          VerticalAlignment="Center"
+                          HorizontalScrollMode="Enabled"
+                          HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollMode="Disabled"
+                          VerticalScrollBarVisibility="Disabled"
+                          IsVerticalRailEnabled="False"
+                          ZoomMode="Disabled">
+                <Grid x:Name="ViewsHost"
+                      VerticalAlignment="Center">
+
+                    <!-- The application tiles are generated in the code behind from the entries of the bar. -->
+                    <StackPanel x:Name="AppsPanel"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+
+                    <!-- The pinned folder tiles are generated in the code behind from the entries of the bar. -->
+                    <StackPanel x:Name="FoldersPanel"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Visibility="Collapsed"/>
+
+                    <!-- Every metric of the live system intelligence page, laid out over two compact rows. -->
+                    <Grid x:Name="PerformancePanel"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Visibility="Collapsed"
+                          RowSpacing="2"
+                          ColumnSpacing="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="0"
+                                    Width="86"
+                                    Spacing="1">
+                            <TextBlock x:Name="CpuUsageCaption"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="CpuUsageValue"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="1"
+                                    Width="86"
+                                    Spacing="1">
+                            <TextBlock x:Name="CpuTemperatureCaption"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="CpuTemperatureValue"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="2"
+                                    Width="86"
+                                    Spacing="1">
+                            <TextBlock x:Name="MemoryCaption"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="MemoryValue"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="3"
+                                    Width="86"
+                                    Spacing="1">
+                            <TextBlock x:Name="StorageTemperatureCaption"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="StorageTemperatureValue"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="4"
+                                    Width="118"
+                                    Spacing="1">
+                            <TextBlock x:Name="DiskActivityCaption"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="DiskActivityValue"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="4"
+                                    Width="118"
+                                    Spacing="1">
+                            <TextBlock x:Name="NetworkCaption"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="NetworkValue"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="0"
+                                    Width="86"
+                                    Spacing="1">
+                            <TextBlock x:Name="SystemPowerCaption"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="SystemPowerValue"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="1"
+                                    Width="86"
+                                    Spacing="1">
+                            <TextBlock x:Name="BatteryDischargeCaption"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="BatteryDischargeValue"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="2"
+                                    Width="86"
+                                    Spacing="1">
+                            <TextBlock x:Name="AppMemoryCaption"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock x:Name="AppMemoryValue"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- The world clocks are generated in the code behind from the entries of the bar. -->
+                    <StackPanel x:Name="ClocksPanel"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="4"
+                                Visibility="Collapsed"/>
+                    <Grid x:Name="NetworkQualityPanel"
+                          Width="626"
+                          Height="58"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          ColumnSpacing="8"
+                          Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="190"/>
+                            <ColumnDefinition Width="210"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0"
+                                    Spacing="3"
+                                    VerticalAlignment="Center">
+                            <ComboBox x:Name="NetworkQualityDestinationBox"
+                                      Width="190"
+                                      Height="32"
+                                      IsEditable="True"
+                                      PlaceholderText="IP address or domain"
+                                      DropDownOpened="{x:Bind OnNetworkQualityDestinationDropDownOpened}"
+                                      DropDownClosed="{x:Bind OnNetworkQualityDestinationDropDownClosed}">
+                                <x:String>1.1.1.1</x:String>
+                                <x:String>8.8.8.8</x:String>
+                                <x:String>bing.com</x:String>
+                                <x:String>google.com</x:String>
+                                <x:String>x.com</x:String>
+                            </ComboBox>
+                            <TextBlock x:Name="NetworkQualityStatusText"
+                                       FontSize="9"
+                                       Text="Ready"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                        <Grid Grid.Column="1"
+                              RowSpacing="1"
+                              ColumnSpacing="8">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="NetworkQualityCurrentValue" Grid.Row="0" Grid.Column="0" FontSize="10" Text="Current: --"/>
+                            <TextBlock x:Name="NetworkQualityAverageValue" Grid.Row="0" Grid.Column="1" FontSize="10" Text="Average: --"/>
+                            <TextBlock x:Name="NetworkQualityJitterValue" Grid.Row="1" Grid.Column="0" FontSize="10" Text="Jitter: --"/>
+                            <TextBlock x:Name="NetworkQualityLossValue" Grid.Row="1" Grid.Column="1" FontSize="10" Text="Loss: --"/>
+                            <TextBlock x:Name="NetworkQualityLowValue" Grid.Row="2" Grid.Column="0" FontSize="10" Text="Low: --"/>
+                            <TextBlock x:Name="NetworkQualityHighValue" Grid.Row="2" Grid.Column="1" FontSize="10" Text="High: --"/>
+                        </Grid>
+                        <StackPanel x:Name="NetworkQualityGraphPanel"
+                                    Grid.Column="2"
+                                    Height="48"
+                                    Orientation="Horizontal"
+                                    Spacing="2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"/>
+                        <Button x:Name="NetworkQualityStartStopButton"
+                                Grid.Column="3"
+                                Width="52"
+                                Height="28"
+                                Padding="4,0"
+                                Content="Start"
+                                Click="{x:Bind OnNetworkQualityStartStopButtonClick}"/>
+                    </Grid>
+                </Grid>
+            </ScrollViewer>
+
+            <Border Width="1"
+                    Height="56"
+                    VerticalAlignment="Center"
+                    Background="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+
+            <!-- Adds a new entry to the active view. It is hidden for the view that has nothing to add to. -->
+            <Button x:Name="AddButton"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    MinWidth="0"
+                    CornerRadius="14"
+                    VerticalAlignment="Center"
+                    Click="{x:Bind OnAddButtonClick}">
+                <FontIcon Glyph="&#xE710;"
+                          FontSize="12"/>
+            </Button>
+
+            <!-- Carries every general option of the bar. The options are offered as a vertical list.
+                 The menu is the one that stays open while the pointer is over it, which is what lets several options be
+                 flipped in a row without the menu closing after each of them. -->
+            <Button x:Name="SettingsButton"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    MinWidth="0"
+                    CornerRadius="14"
+                    VerticalAlignment="Center">
+                <Button.Flyout>
+                    <customUI:MenuFlyoutV2 x:Name="SettingsMenu"
+                                           Placement="Bottom"
+                                           ShouldConstrainToRootBounds="False">
+                        <ToggleMenuFlyoutItem x:Name="NotchStyleMenuItem"
+                                              Click="{x:Bind OnNotchStyleToggleClick}">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE73F;"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem x:Name="OpenOnHoverMenuItem"
+                                              IsChecked="{x:Bind CC:Atlas.Settings.WindowsTopBarOpenOnHover, Mode=TwoWay}">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE962;"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem x:Name="AlwaysOnTopMenuItem"
+                                              Click="{x:Bind OnAlwaysOnTopMenuItemClick}">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE840;"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem x:Name="PinMenuItem"
+                                              Click="{x:Bind OnPinToggleClick}">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE718;"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <MenuFlyoutSeparator/>
+                        <ToggleMenuFlyoutItem x:Name="StartupMenuItem"
+                                              Click="{x:Bind OnStartupToggleClick}">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE7E8;"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                    </customUI:MenuFlyoutV2>
+                </Button.Flyout>
+                <FontIcon Glyph="&#xE713;"
+                          FontSize="12"/>
+            </Button>
+
+            <Button x:Name="CloseButton"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    MinWidth="0"
+                    CornerRadius="14"
+                    VerticalAlignment="Center"
+                    Click="{x:Bind OnCloseButtonClick}">
+                <FontIcon Glyph="&#xE711;"
+                          FontSize="12"/>
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

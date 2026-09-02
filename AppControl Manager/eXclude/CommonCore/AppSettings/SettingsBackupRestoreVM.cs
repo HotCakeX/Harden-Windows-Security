@@ -363,6 +363,11 @@ internal static class SettingsBackupRestoreSerializer
 			settings => settings.FeatureHighlightsCarouselShownAutomatically,
 			(settings, value) => settings.FeatureHighlightsCarouselShownAutomatically = value),
 
+		CreateInt(nameof(Main.WindowsTopBarNotchStyle), "Integer in range 0-1", 0, 1, settings => settings.WindowsTopBarNotchStyle, (settings, value) => settings.WindowsTopBarNotchStyle = value),
+		CreateBoolean(nameof(Main.WindowsTopBarLaunchAtStartup), settings => settings.WindowsTopBarLaunchAtStartup, (settings, value) => settings.WindowsTopBarLaunchAtStartup = value),
+		CreateBoolean(nameof(Main.WindowsTopBarOpenOnHover), settings => settings.WindowsTopBarOpenOnHover, (settings, value) => settings.WindowsTopBarOpenOnHover = value),
+		CreateBoolean(nameof(Main.WindowsTopBarAlwaysOnTop), settings => settings.WindowsTopBarAlwaysOnTop, (settings, value) => settings.WindowsTopBarAlwaysOnTop = value),
+
 		];
 
 	internal static byte[] Export(Main settings)

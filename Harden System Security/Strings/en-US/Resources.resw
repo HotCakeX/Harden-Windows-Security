@@ -7778,4 +7778,116 @@ Thumbprint: {3}</value>
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Manage settings related to notifications and notices.</value>
   </data>
+  <!--NEW-->
+  <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Show the bar on the top edge of the display which offers many features and unlocks new possibilities for you.</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Show the bar on the top edge of the display which offers many features and unlocks new possibilities for you.</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>Keep the top bar expanded</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>Close the top bar</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>Add a new entry to this view</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>Apps</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>Folders</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>Performance</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>Clocks</value>
+  </data>
+  <data name="TopBarRemoveMenuItem" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="TopBarMetricCpuUsage" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="TopBarMetricCpuTemperature" xml:space="preserve">
+    <value>CPU Temp</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>Memory</value>
+  </data>
+  <data name="TopBarMetricStorageTemperature" xml:space="preserve">
+    <value>Drive Temp</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>Disk R / W</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>Network Down / Up</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>Power</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>Battery</value>
+  </data>
+  <data name="TopBarMetricAppMemory" xml:space="preserve">
+    <value>App RAM</value>
+  </data>
+  <data name="TopBarMetricUnavailable" xml:space="preserve">
+    <value>—</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>Time zone</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>Add clock</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>Switch between the standard and the compact notch</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>Show the top bar when you sign in to Windows</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>Starting the top bar when you sign in was turned off outside of this app. To turn it back on, use the Startup apps page of the Settings app or the Startup tab of Task Manager.</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>Starting the top bar when you sign in is turned off by a policy of this device, so it cannot be changed here.</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>Windows did not report whether the top bar can be started when you sign in, so this cannot be changed right now.</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>Choose what the top bar shows</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>Options of the top bar</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>Compact notch</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>Open on hover</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>Open the top bar as soon as the pointer moves over it instead of only when you click or tap the notch</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>Always on top</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>Keep the top bar above every other window</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>Keep expanded</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>Start with Windows</value>
+  </data>
 </root>

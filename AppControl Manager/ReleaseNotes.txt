@@ -1,1 +1,3 @@
-Added a new Feature Highlights carousel showcasing prominent app capabilities through an interactive visual experience. The carousel opens automatically on first launch and remains accessible anytime from the main window toolbar.
+* Added a new Feature Highlights carousel showcasing prominent app capabilities through an interactive visual experience. The carousel opens automatically on first launch and remains accessible anytime from the main window toolbar.
+
+* Updated dependencies to the latest versions.

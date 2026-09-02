@@ -135,6 +135,21 @@
                                 <FontIcon Glyph="&#xEB44;"/>
                             </ToggleButton>
                         </Border>
+                        <Border BorderThickness="1" CornerRadius="6">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                    <GradientStop Color="#03001e" Offset="0.0"/>
+                                    <GradientStop Color="#7303c0" Offset="0.4"/>
+                                    <GradientStop Color="#ec38bc" Offset="0.8"/>
+                                    <GradientStop Color="#fdeff9" Offset="1.0"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <Button x:Uid="WindowsTopBarButton"
+                                    VerticalAlignment="Center"
+                                    Click="{x:Bind ViewModel.OpenWindowsTopBar}">
+                                <FontIcon Glyph="&#xEAD8;"/>
+                            </Button>
+                        </Border>
                     </CCToolKit:WrapPanel>
 
                     <!-- Using ItemsControl with a VariableSizedWrapGrid to allow direct XAML content and wrap layout -->

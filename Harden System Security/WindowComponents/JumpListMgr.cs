@@ -18,7 +18,7 @@
 using System.Threading.Tasks;
 using Windows.UI.StartScreen;
 
-namespace CommonCore.Taskbar;
+namespace HardenSystemSecurity.WindowComponents;
 
 /// <summary>
 /// https://learn.microsoft.com/uwp/api/windows.ui.startscreen.jumplistitem
@@ -77,6 +77,14 @@ internal static class JumpListMgr
 			JumpList jumpList = await JumpList.LoadCurrentAsync();
 			jumpList.SystemGroupKind = JumpListSystemGroupKind.None;
 			jumpList.Items.Clear();
+
+			// Create the Windows top bar entry in the JumpList.
+			JumpListItem topBarItem = JumpListItem.CreateWithArguments(
+				CustomUIElements.WindowsTopBar.TopBarStartupManager.WindowsTopBarLaunchArgument,
+				"Windows Top Bar");
+			topBarItem.Description = "Display the Windows top bar";
+			topBarItem.Logo = new Uri("ms-appx:///Assets/Square44x44Logo.targetsize-48.png");
+			jumpList.Items.Add(topBarItem);
 
 			// Create the Live System Intelligence entry in the JumpList
 			JumpListItem dashboardItem = JumpListItem.CreateWithArguments(

@@ -484,7 +484,9 @@ internal sealed partial class FeatureHighlightsCarouselDialog : ContentDialog, I
 
 	}
 
-	internal readonly record struct SlideVisualState(
+	// Changed from "readonly record struct"
+	// See https://github.com/microsoft/CsWinRT/issues/2546
+	internal sealed record SlideVisualState(
 		double Left,
 		double Top,
 		double Width,

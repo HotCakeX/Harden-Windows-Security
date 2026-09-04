@@ -172,6 +172,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Icons\Main.ico" />
+    <Image Include="Icons\BlockViaPath.ico" />
     <Image Include="Icons\GetFileHash.ico" />
     <Image Include="Icons\PolicyEditor.ico" />
     <Image Include="Icons\ViewFileCert.ico" />

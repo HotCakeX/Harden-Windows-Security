@@ -182,7 +182,8 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		FileSignature = 1,
 		FileHashes = 2,
 		DeployRMMAuditPolicy = 3,
-		DeployRMMBlockPolicy = 4
+		DeployRMMBlockPolicy = 4,
+		BlockFolderViaPath = 5
 	}
 
 	/// <summary>

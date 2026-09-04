@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AppControlManager.Others;
@@ -47,6 +48,7 @@ public sealed partial class App : Application
 		// About single instancing: https://learn.microsoft.com/windows/apps/windows-app-sdk/migrate-to-windows-app-sdk/guides/applifecycle#single-instanced-apps
 
 		string? _activationAction = null, _activationFilePath = null;
+		List<string> _activationFolderPaths = [];
 		bool _activationIsFileActivation = false;
 
 		// Determines whether the session must prompt for UAC to elevate or not
@@ -57,13 +59,49 @@ public sealed partial class App : Application
 		Type? PageTypeToNavTo = null;
 
 		/// <summary>
+		/// Quotes a command line argument value according to the standard Windows command line parsing rules
+		/// (the same rules used by CommandLineToArgvW and the .NET runtime when populating the Main method's args):
+		/// backslashes immediately before a double quote, or before the closing quote, must be doubled and embedded double quotes escaped with a backslash.
+		/// Without this, paths ending in a backslash such as drive roots (I:\) would escape the closing quote and swallow the arguments that follow them.
+		/// </summary>
+		static string Quote(string value)
+		{
+			StringBuilder sb = new(value.Length + 2);
+			_ = sb.Append('"');
+			int backslashes = 0;
+			foreach (char c in value)
+			{
+				if (c == '\\')
+				{
+					backslashes++;
+					continue;
+				}
+				if (c == '"')
+				{
+					// 2n+1 backslashes followed by a quote produce n backslashes and a literal quote.
+					_ = sb.Append('\\', backslashes * 2 + 1);
+					backslashes = 0;
+					_ = sb.Append('"');
+					continue;
+				}
+				_ = sb.Append('\\', backslashes);
+				backslashes = 0;
+				_ = sb.Append(c);
+			}
+			// 2n backslashes followed by the closing quote produce n backslashes and keep the quote as the delimiter.
+			_ = sb.Append('\\', backslashes * 2);
+			_ = sb.Append('"');
+			return sb.ToString();
+		}
+
+		/// <summary>
 		/// Builds the argument string to pass to the elevated instance so that it can re-create the original launch intent without persisting anything.
 		/// File activation is converted into a PolicyEditor action since the app only supports handling .CIP/XML files from File explorer at the moment.
 		/// If in the future more file types are supported we can detect type based on file extension and implement different behaviors.
 		/// </summary>
 		string? BuildRelaunchArguments()
 		{
-			List<string> parts = new(capacity: 3);
+			List<string> parts = new(capacity: 3 + _activationFolderPaths.Count);
 
 			if (!string.IsNullOrWhiteSpace(_activationAction))
 			{
@@ -76,8 +114,13 @@ public sealed partial class App : Application
 
 			if (!string.IsNullOrWhiteSpace(_activationFilePath))
 			{
-				// Properly quote the file path for command line parsing (double embedded quotes if any).
-				parts.Add($"--file=\"{_activationFilePath.Replace("\"", "\"\"")}\"");
+				// Properly quote the file path for command line parsing.
+				parts.Add($"--file={Quote(_activationFilePath)}");
+			}
+
+			foreach (string folderPath in _activationFolderPaths)
+			{
+				parts.Add($"--folder={Quote(folderPath)}");
 			}
 
 			// Preserve the requested navigation page across elevation.
@@ -119,6 +162,20 @@ public sealed partial class App : Application
 				{
 					Logger.Write($"Parsed Action: {action}");
 					_activationAction = action;
+				}
+
+				if (string.Equals(action, nameof(ViewModelBase.LaunchProtocolActions.BlockFolderViaPath), StringComparison.OrdinalIgnoreCase))
+				{
+					if (ArgsLines is not null)
+					{
+						foreach (string folderArg in ArgsLines.Where(a => a.StartsWith("--folder=", StringComparison.OrdinalIgnoreCase)))
+						{
+							string folderPath = folderArg["--folder=".Length..].Trim('"');
+							if (!string.IsNullOrWhiteSpace(folderPath))
+								_activationFolderPaths.Add(folderPath);
+						}
+					}
+					requireAdminPrivilege = true;
 				}
 
 				// File is optional
@@ -353,6 +410,11 @@ public sealed partial class App : Application
 					case ViewModelBase.LaunchProtocolActions.FileHashes:
 						{
 							await ViewModelProvider.GetCIHashesVM.OpenInGetCIHashes(_activationFilePath);
+							break;
+						}
+					case ViewModelBase.LaunchProtocolActions.BlockFolderViaPath:
+						{
+							await ViewModelProvider.CreateDenyPolicyVM.OpenInCreateDenyPolicy(_activationFolderPaths);
 							break;
 						}
 					case ViewModelBase.LaunchProtocolActions.DeployRMMAuditPolicy:

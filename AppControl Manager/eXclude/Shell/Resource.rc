@@ -60,6 +60,8 @@ IDI_ICON3               ICON                    "Icons\\ViewFileCert.ico"
 
 IDI_ICON4               ICON                    "Icons\\GetFileHash.ico"
 
+IDI_ICON5               ICON                    "Icons\\BlockViaPath.ico"
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 

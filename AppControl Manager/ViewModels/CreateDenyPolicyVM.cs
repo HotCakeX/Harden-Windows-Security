@@ -225,10 +225,16 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	internal readonly AnimatedCancellableButtonInitializer FilesAndFoldersCancellableButton;
 
 	/// <summary>
-	/// Main button's event handler for files and folders Deny policy creation
+	/// Main button's event handler for files and folders Deny policy creation.
+	/// </summary>
+	internal async void CreateFilesAndFoldersDenyPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) =>
+		await CreateFilesAndFoldersDenyPolicyButton(sender, e);
+
+	/// <summary>
+	/// Core logic for files and folders deny policy creation.
 	/// </summary>
 	[DynamicWindowsRuntimeCast(typeof(UIElement))]
-	internal async void CreateFilesAndFoldersDenyPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+	private async Task CreateFilesAndFoldersDenyPolicyButton(object? sender, Microsoft.UI.Xaml.RoutedEventArgs? e)
 	{
 		FilesAndFoldersSettingsExpanderIsExpanded = true;
 
@@ -391,7 +397,8 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 				// Assign the created policy to the Sidebar
 				await ViewModelProvider.MainWindowVM.AssignToSidebar(_FilesAndFoldersDenyPolicyPath);
 
-				MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
+				if (sender is not null)
+					MainWindow.TriggerTransferIconAnimationStatic((UIElement)sender);
 
 				FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();
 
@@ -454,6 +461,53 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 
 			FilesAndFoldersElementsAreEnabled = true;
 		}
+	}
+
+	/// <summary>
+	/// Opens the Create Deny Policy page and pre-populates all selected folders for wildcard folder path rules.
+	/// </summary>
+	internal async Task OpenInCreateDenyPolicy(IReadOnlyList<string> folderPaths)
+	{
+		await ViewModelProvider.NavigationService.Navigate(typeof(CreateDenyPolicy), null);
+
+		// We are creating a new policy, not adding to an existing one
+		OperationModeComboBoxSelectedIndex = 0;
+
+		// Set the level to WildCardFolderPath
+		foreach (ScanLevelsComboBoxType level in FilesAndFoldersScanLevelsSource)
+		{
+			if (level.Level is ScanLevels.WildCardFolderPath)
+			{
+				FilesAndFoldersScanLevelComboBoxSelectedItem = level;
+				break;
+			}
+		}
+
+		// Add all the user-provided folder paths to the local variable.
+		foreach (string folderPath in folderPaths)
+		{
+			filesAndFoldersFolderPaths.Add(folderPath);
+		}
+
+		FilesAndFoldersSettingsExpanderIsExpanded = true;
+
+		// Policy name creation
+		if (folderPaths.Count == 1)
+		{
+			string path = Path.TrimEndingDirectorySeparator(folderPaths[0]);
+			string name = Path.GetFileName(path);
+			filesAndFoldersDenyPolicyName = $"Block {(!string.IsNullOrWhiteSpace(name) ? name : path)}";
+		}
+		else
+		{
+			filesAndFoldersDenyPolicyName = $"Block {folderPaths.Count} Locations";
+		}
+
+		// Set the policy to be deployed
+		filesAndFoldersDeployButton = true;
+
+		// Create and deploy the policy.
+		await CreateFilesAndFoldersDenyPolicyButton(null, null);
 	}
 
 	/// <summary>

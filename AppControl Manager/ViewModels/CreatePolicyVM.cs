@@ -718,6 +718,8 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 						await RMMBlockingPolicyCreateButton_Private(null);
 						break;
 					}
+
+				case LaunchProtocolActions.BlockFolderViaPath:
 				case LaunchProtocolActions.PolicyEditor:
 				case LaunchProtocolActions.FileSignature:
 				case LaunchProtocolActions.FileHashes:

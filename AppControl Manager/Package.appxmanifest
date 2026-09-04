@@ -32,7 +32,7 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:appdata="http://schemas.microsoft.com/appx/manifest/appdata/windows10"
   xmlns:trustedlaunch="http://schemas.microsoft.com/appx/manifest/trustedlaunch/windows10"
-  IgnorableNamespaces="mp uap uap3 uap17 desktop desktop5 com virtualization appdata trustedlaunch">
+  IgnorableNamespaces="mp uap uap3 uap17 desktop desktop5 desktop10 com virtualization appdata trustedlaunch">
   <!-- IgnorableNamespaces are evaluated during package creation and installation/registration so any optional feature's namespace should be added to it as long as the app can properly function without it. -->
 
   <Identity
@@ -164,6 +164,14 @@
             <desktop4:ItemType Type="*">
               <desktop4:Verb Id="ACMOptions" Clsid="AF39E5CF-0FDA-4333-BD25-B87D43A71CCA" />
             </desktop4:ItemType>
+            <!-- Making it available for folders so the context menu appears when right-clicking a directory.-->
+            <desktop5:ItemType Type="Directory">
+              <desktop5:Verb Id="ACMOptions" Clsid="AF39E5CF-0FDA-4333-BD25-B87D43A71CCA" />
+            </desktop5:ItemType>
+            <!-- Making it available for drives so the context menu appears when right-clicking a drive. -->
+            <desktop10:ItemType Type="Drive">
+              <desktop10:Verb Id="ACMOptions" Clsid="AF39E5CF-0FDA-4333-BD25-B87D43A71CCA" />
+            </desktop10:ItemType>
           </desktop4:FileExplorerContextMenus>
         </desktop4:Extension>
         <com:Extension Category="windows.comServer">

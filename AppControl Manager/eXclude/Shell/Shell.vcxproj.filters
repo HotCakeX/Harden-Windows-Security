@@ -33,6 +33,9 @@
     <Image Include="Icons\Main.ico">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Icons\BlockViaPath.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
     <Image Include="Icons\GetFileHash.ico">
       <Filter>Resource Files</Filter>
     </Image>

@@ -1,1 +1,15 @@
-* Fixed an issue as a workaround for a bug in the Microsoft's CsWinRT component, more info here: https://github.com/microsoft/CsWinRT/issues/2546
+## Changes in the Intune Page
+
+* You can now select and deploy multiple policy configurations at the same time, in addition to being able to do it one by one as before.
+
+* You can now remove all Intune policy configurations at the same time, in addition to being able to do it one by one as before.
+
+* You can now click/tap on each hardening category and go to its details page. This is a newly designed area where you can see assignments for each hardening category you've deployed to Intune. You can view how many devices each hardening category applies to, add new assignments such as "All Devices" or "All Users" virtual groups, or remove any of the existing assignments individually or all at once (with confirmation).
+
+## Changes in the TopBar
+
+* You can now select a Companion for the TopBar from the 5 available highly detailed animations. They are only displayed when the TopBar is expanded and do not consume any resources whatsoever when the TopBar is collapsed or no companion is selected: Null Cat, Pris Matrix, Pop Forge, Bunny and Squirrel.
+
+* When switching between different views, the TopBar no longer automatically closes unless you click/tap on somewhere intentionally.
+
+* Reduced the system usages of the TopBar. 0% CPU usage and 0% GPU usage when it is collapsed but displayed as a notch.

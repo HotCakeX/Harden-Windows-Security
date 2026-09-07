@@ -120,6 +120,19 @@
                           FontSize="12"/>
             </Button>
 
+            <!-- Animated companion. Replacing its content unloads the previous
+                 self-contained animation control, which releases its render resources. -->
+            <ContentControl x:Name="CompanionHost"
+                            Width="72"
+                            Height="64"
+                            Padding="0"
+                            Background="{x:Null}"
+                            BorderThickness="0"
+                            HorizontalContentAlignment="Stretch"
+                            VerticalContentAlignment="Stretch"
+                            VerticalAlignment="Center"
+                            IsHitTestVisible="False"/>
+
             <Border Width="1"
                     Height="56"
                     VerticalAlignment="Center"
@@ -451,6 +464,30 @@
                                 <FontIcon Glyph="&#xE718;"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
+                        <MenuFlyoutSeparator/>
+                        <MenuFlyoutSubItem x:Name="CompanionMenuItem">
+                            <MenuFlyoutSubItem.Icon>
+                                <FontIcon Glyph="&#xEA86;"/>
+                            </MenuFlyoutSubItem.Icon>
+                            <RadioMenuFlyoutItem x:Name="NoCompanionMenuItem"
+                                                 GroupName="TopBarCompanion"
+                                                 Click="{x:Bind OnNoCompanionClick}"/>
+                            <RadioMenuFlyoutItem x:Name="PrisMatrixCompanionMenuItem"
+                                                 GroupName="TopBarCompanion"
+                                                 Click="{x:Bind OnPrisMatrixCompanionClick}"/>
+                            <RadioMenuFlyoutItem x:Name="NullCatCompanionMenuItem"
+                                                 GroupName="TopBarCompanion"
+                                                 Click="{x:Bind OnNullCatCompanionClick}"/>
+                            <RadioMenuFlyoutItem x:Name="BunnyCompanionMenuItem"
+                                                 GroupName="TopBarCompanion"
+                                                 Click="{x:Bind OnBunnyCompanionClick}"/>
+                            <RadioMenuFlyoutItem x:Name="SquirrelCompanionMenuItem"
+                                                 GroupName="TopBarCompanion"
+                                                 Click="{x:Bind OnSquirrelCompanionClick}"/>
+                            <RadioMenuFlyoutItem x:Name="PopForgeCompanionMenuItem"
+                                                 GroupName="TopBarCompanion"
+                                                 Click="{x:Bind OnPopForgeCompanionClick}"/>
+                        </MenuFlyoutSubItem>
                         <MenuFlyoutSeparator/>
                         <ToggleMenuFlyoutItem x:Name="StartupMenuItem"
                                               Click="{x:Bind OnStartupToggleClick}">

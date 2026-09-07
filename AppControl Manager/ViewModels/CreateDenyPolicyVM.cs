@@ -228,13 +228,13 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// Main button's event handler for files and folders Deny policy creation.
 	/// </summary>
 	internal async void CreateFilesAndFoldersDenyPolicyButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) =>
-		await CreateFilesAndFoldersDenyPolicyButton(sender, e);
+		await CreateFilesAndFoldersDenyPolicyButton(sender);
 
 	/// <summary>
 	/// Core logic for files and folders deny policy creation.
 	/// </summary>
 	[DynamicWindowsRuntimeCast(typeof(UIElement))]
-	private async Task CreateFilesAndFoldersDenyPolicyButton(object? sender, Microsoft.UI.Xaml.RoutedEventArgs? e)
+	private async Task CreateFilesAndFoldersDenyPolicyButton(object? sender)
 	{
 		FilesAndFoldersSettingsExpanderIsExpanded = true;
 
@@ -507,7 +507,7 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		filesAndFoldersDeployButton = true;
 
 		// Create and deploy the policy.
-		await CreateFilesAndFoldersDenyPolicyButton(null, null);
+		await CreateFilesAndFoldersDenyPolicyButton(null);
 	}
 
 	/// <summary>

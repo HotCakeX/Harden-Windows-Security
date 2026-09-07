@@ -46,7 +46,7 @@ internal sealed class FallbackItem(string name, Visibility chevronVisibility, Sc
 
 internal sealed class FallbackRow
 {
-	internal ObservableCollection<FallbackItem> Items { get; } = [];
+	internal readonly ObservableCollection<FallbackItem> Items = [];
 }
 
 internal sealed partial class ScanLevelFallbackOption(

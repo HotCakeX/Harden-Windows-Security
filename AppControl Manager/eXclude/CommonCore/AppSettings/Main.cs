@@ -43,14 +43,16 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	internal event EventHandler<bool>? EncryptPoliciesLibraryChanged;
 
+	/// <summary>
+	/// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/applicationdata/ApplicationData.md
+	/// </summary>
 	private readonly ApplicationDataContainer _localSettings;
 
 	internal Main(ApplicationDataContainer LocalSettings) : this(LocalSettings, true)
 	{
 	}
 
-	// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/applicationdata/ApplicationData.md
-	internal static Main CreateDefaultSettingsSnapshot() => new(ApplicationData.GetDefault().LocalSettings, false);
+	internal static Main CreateDefaultSettingsSnapshot() => new(Atlas.Settings._localSettings, false);
 
 	private Main(ApplicationDataContainer LocalSettings, bool loadPersistedValues)
 	{

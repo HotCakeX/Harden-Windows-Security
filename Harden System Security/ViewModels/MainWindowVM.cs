@@ -59,7 +59,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.Extras.DownloadManagerSettings),
 		typeof(Pages.SandboxMaker),
 		typeof(Pages.Extras.SecureVault),
-		typeof(AppControlManager.Pages.SettingsBackupRestore)
+		typeof(AppControlManager.Pages.SettingsBackupRestore),
+		typeof(Pages.IntunePolicyDetails)
 		];
 
 

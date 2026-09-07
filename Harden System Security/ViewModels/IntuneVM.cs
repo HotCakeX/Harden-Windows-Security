@@ -20,9 +20,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using AppControlManager.CustomUIElements;
 using AppControlManager.Pages;
 using AppControlManager.ViewModels;
 using CommonCore.MicrosoftGraph;
+using HardenSystemSecurity.Pages;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinRT;
@@ -102,25 +105,25 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 
 	private void CalculateColumnWidths()
 	{
-		double maxWidth1 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("NameHeader/Text"));
-		double maxWidth2 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("DescriptionHeader/Text"));
-		double maxWidth3 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("PlatformsHeader/Text"));
-		double maxWidth4 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("TechnologiesHeader/Text"));
-		double maxWidth5 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("SettingCountHeader/Text"));
-		double maxWidth6 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("CreatedHeader/Text"));
-		double maxWidth7 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("ModifiedHeader/Text"));
-		double maxWidth8 = CommonCore.Others.ListViewHelper.MeasureText(Atlas.GetStr("IDHeader/Text"));
+		double maxWidth1 = ListViewHelper.MeasureText(Atlas.GetStr("NameHeader/Text"));
+		double maxWidth2 = ListViewHelper.MeasureText(Atlas.GetStr("DescriptionHeader/Text"));
+		double maxWidth3 = ListViewHelper.MeasureText(Atlas.GetStr("PlatformsHeader/Text"));
+		double maxWidth4 = ListViewHelper.MeasureText(Atlas.GetStr("TechnologiesHeader/Text"));
+		double maxWidth5 = ListViewHelper.MeasureText(Atlas.GetStr("SettingCountHeader/Text"));
+		double maxWidth6 = ListViewHelper.MeasureText(Atlas.GetStr("CreatedHeader/Text"));
+		double maxWidth7 = ListViewHelper.MeasureText(Atlas.GetStr("ModifiedHeader/Text"));
+		double maxWidth8 = ListViewHelper.MeasureText(Atlas.GetStr("IDHeader/Text"));
 
 		foreach (DeviceManagementConfigurationPolicy item in Policies)
 		{
-			maxWidth1 = CommonCore.Others.ListViewHelper.MeasureText(item.Name, maxWidth1);
-			maxWidth2 = CommonCore.Others.ListViewHelper.MeasureText(item.Description, maxWidth2);
-			maxWidth3 = CommonCore.Others.ListViewHelper.MeasureText(item.Platforms, maxWidth3);
-			maxWidth4 = CommonCore.Others.ListViewHelper.MeasureText(item.Technologies, maxWidth4);
-			maxWidth5 = CommonCore.Others.ListViewHelper.MeasureText(item.SettingCount?.ToString(), maxWidth5);
-			maxWidth6 = CommonCore.Others.ListViewHelper.MeasureText(item.CreatedDateTime?.ToString(), maxWidth6);
-			maxWidth7 = CommonCore.Others.ListViewHelper.MeasureText(item.LastModifiedDateTime?.ToString(), maxWidth7);
-			maxWidth8 = CommonCore.Others.ListViewHelper.MeasureText(item.Id, maxWidth8);
+			maxWidth1 = ListViewHelper.MeasureText(item.Name, maxWidth1);
+			maxWidth2 = ListViewHelper.MeasureText(item.Description, maxWidth2);
+			maxWidth3 = ListViewHelper.MeasureText(item.Platforms, maxWidth3);
+			maxWidth4 = ListViewHelper.MeasureText(item.Technologies, maxWidth4);
+			maxWidth5 = ListViewHelper.MeasureText(item.SettingCount?.ToString(), maxWidth5);
+			maxWidth6 = ListViewHelper.MeasureText(item.CreatedDateTime?.ToString(), maxWidth6);
+			maxWidth7 = ListViewHelper.MeasureText(item.LastModifiedDateTime?.ToString(), maxWidth7);
+			maxWidth8 = ListViewHelper.MeasureText(item.Id, maxWidth8);
 		}
 
 		ColumnWidth1 = new(maxWidth1);
@@ -148,7 +151,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	private void ApplyFilters()
 	{
 		ScrollViewer? sv =
-			CommonCore.Others.ListViewHelper.GetScrollViewerFromCache(CommonCore.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
+			ListViewHelper.GetScrollViewerFromCache(ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
 		double? savedHorizontal = sv?.HorizontalOffset;
 
 		string? term = SearchKeyword?.Trim();
@@ -184,40 +187,25 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	internal async void SelectGroups_Click()
 	{
 		// Assign the current signed in account to the ViewModel to make it available for usage.
-		AppControlManager.ViewModels.IntuneDeploymentDetailsVM.TargetAccount = AuthCompanionCLS.CurrentActiveAccount;
+		IntuneDeploymentDetailsVM.TargetAccount = AuthCompanionCLS.CurrentActiveAccount;
 
 		await ViewModelProvider.NavigationService.Navigate(typeof(IntuneDeploymentDetails), null);
 	}
 
 	/// <summary>
-	/// Retrieve non-custom device configuration policies from Microsoft Graph and populate the ListView.
+	/// Event handler for the UI.
 	/// </summary>
 	internal async void RetrievePolicies_Click()
 	{
-		if (AuthCompanionCLS.CurrentActiveAccount is null)
-		{
-			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
-			return;
-		}
-
 		try
 		{
 			AreElementsEnabled = false;
 			MainInfoBar.IsClosable = false;
 
-			// Fetch data
-			List<DeviceManagementConfigurationPolicy> result = await Main.RetrieveConfigurationPolicies(AuthCompanionCLS.CurrentActiveAccount);
-
-			Policies.Clear();
-			AllPolicies.Clear();
-
-			Policies.AddRange(result);
-			AllPolicies.AddRange(result);
-
-			CalculateColumnWidths();
-			SearchKeyword = null;
-
-			MainInfoBar.WriteSuccess(Atlas.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
+			if (await RetrievePolicies())
+			{
+				MainInfoBar.WriteSuccess(Atlas.GetStr("DeviceConfigurationsRetrievedSuccessfullyMessage"));
+			}
 		}
 		catch (Exception ex)
 		{
@@ -231,14 +219,59 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	}
 
 	/// <summary>
-	/// Items source for the hardening policies ComboBox.
+	/// Retrieve non-custom device configuration policies from Microsoft Graph and populate the ListView.
+	/// </summary>
+	internal async Task<bool> RetrievePolicies()
+	{
+		if (AuthCompanionCLS.CurrentActiveAccount is null)
+		{
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
+			return false;
+		}
+
+		// Fetch data
+		List<DeviceManagementConfigurationPolicy> result = await Main.RetrieveConfigurationPolicies(AuthCompanionCLS.CurrentActiveAccount);
+
+		Policies.Clear();
+		AllPolicies.Clear();
+
+		Policies.AddRange(result);
+		AllPolicies.AddRange(result);
+
+		CalculateColumnWidths();
+		SearchKeyword = null;
+
+		return true;
+	}
+
+	/// <summary>
+	/// Items source for the hardening policies ListView.
 	/// </summary>
 	internal readonly ObservableCollection<IntunePolicyFileItem> PolicyFiles = [];
 
 	/// <summary>
-	/// Selected file in the ComboBox.
+	/// The policy files selected by the multi-select ListView.
 	/// </summary>
-	internal IntunePolicyFileItem? SelectedPolicyFile { get; set => SP(ref field, value); }
+	internal readonly ObservableCollection<IntunePolicyFileItem> SelectedPolicyFiles = [];
+
+	internal void PolicyFiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		foreach (object item in e.RemovedItems)
+		{
+			if (item is IntunePolicyFileItem policyFile)
+			{
+				_ = SelectedPolicyFiles.Remove(policyFile);
+			}
+		}
+
+		foreach (object item in e.AddedItems)
+		{
+			if (item is IntunePolicyFileItem policyFile && !SelectedPolicyFiles.Contains(policyFile))
+			{
+				SelectedPolicyFiles.Add(policyFile);
+			}
+		}
+	}
 
 	/// <summary>
 	/// Loads JSON files from app directory.
@@ -255,12 +288,6 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 				string name = Path.GetFileNameWithoutExtension(path); // strip .json from display name
 				PolicyFiles.Add(new IntunePolicyFileItem(name, path));
 			}
-
-			// Auto select first
-			if (PolicyFiles.Count > 0)
-			{
-				SelectedPolicyFile = PolicyFiles[0];
-			}
 		}
 		catch (Exception ex)
 		{
@@ -269,7 +296,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	}
 
 	/// <summary>
-	/// Deploys the selected policy JSON (from the ComboBox) to Intune and assigns selected groups.
+	/// Deploys every policy selected in the flyout and assigns the selected groups to each created policy.
 	/// </summary>
 	internal async void DeploySelectedPolicy_Click()
 	{
@@ -279,9 +306,9 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 			return;
 		}
 
-		if (SelectedPolicyFile is null)
+		if (SelectedPolicyFiles.Count is 0)
 		{
-			MainInfoBar.WriteWarning("Please select a policy JSON file first.");
+			MainInfoBar.WriteWarning("Please select at least one policy configuration first.");
 			return;
 		}
 
@@ -290,32 +317,34 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 			AreElementsEnabled = false;
 			MainInfoBar.IsClosable = false;
 
-			// Create the configuration policy from JSON
-			string? createdPolicyId = await Main.CreateConfigurationPolicyFromJson(
-				AuthCompanionCLS.CurrentActiveAccount,
-				SelectedPolicyFile.FullPath);
+			MainInfoBar.WriteInfo("Deploying the selected policies, please wait.");
 
-			// Assign selected groups (if any) to the created policy
-			if (!string.IsNullOrEmpty(createdPolicyId) && IntuneDeploymentDetailsVM.SelectedIntuneGroups.Count > 0)
+			// Extract group IDs from selected groups
+			List<string> groupIds = new(IntuneDeploymentDetailsVM.SelectedIntuneGroups.Count);
+			foreach (IntuneGroupItemListView group in IntuneDeploymentDetailsVM.SelectedIntuneGroups)
 			{
-				// Extract group IDs from selected groups
-				List<string> groupIds = IntuneDeploymentDetailsVM.SelectedIntuneGroups.Select(g => g.GroupID).ToList();
-
-				await Main.AssignConfigurationPolicyToGroups(
-					AuthCompanionCLS.CurrentActiveAccount,
-					createdPolicyId,
-					groupIds);
-
-				MainInfoBar.WriteSuccess("Selected groups were successfully assigned to the deployed policy.");
+				groupIds.Add(group.GroupID);
 			}
 
-			if (!string.IsNullOrEmpty(createdPolicyId))
+			int deployed = 0;
+			foreach (IntunePolicyFileItem policyFile in SelectedPolicyFiles)
 			{
-				MainInfoBar.WriteSuccess(string.Format("Successfully deployed policy. ID: {0}", createdPolicyId));
+				// Create the configuration policy from JSON
+				string? createdPolicyId = await Main.CreateConfigurationPolicyFromJson(AuthCompanionCLS.CurrentActiveAccount, policyFile.FullPath);
+				if (string.IsNullOrEmpty(createdPolicyId))
+				{
+					continue;
+				}
+				if (groupIds.Count > 0)
+				{
+					await Main.AssignConfigurationPolicyToGroups(AuthCompanionCLS.CurrentActiveAccount, createdPolicyId, groupIds);
+				}
+				deployed++;
 			}
+			MainInfoBar.WriteSuccess($"Successfully deployed {deployed} selected policies.");
 
-			// Refresh the list after deployment
-			RetrievePolicies_Click();
+			// Refresh the list after deployments
+			_ = await RetrievePolicies();
 		}
 		catch (Exception ex)
 		{
@@ -357,7 +386,7 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 			MainInfoBar.WriteSuccess("Policy deleted successfully.");
 
 			// Refresh the list after deletion
-			RetrievePolicies_Click();
+			_ = await RetrievePolicies();
 		}
 		catch (Exception ex)
 		{
@@ -369,6 +398,254 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 			MainInfoBar.IsClosable = true;
 		}
 	}
+
+	/// <summary>
+	/// Deletes every policy currently present in the complete tenant policy collection.
+	/// </summary>
+	internal async void DeleteAllPolicies_Click()
+	{
+		if (AuthCompanionCLS.CurrentActiveAccount is null)
+		{
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
+			return;
+		}
+		if (AllPolicies.Count is 0)
+		{
+			MainInfoBar.WriteWarning("There are no policies to delete.");
+			return;
+		}
+
+		try
+		{
+			AreElementsEnabled = false;
+			MainInfoBar.IsClosable = false;
+
+			MainInfoBar.WriteInfo("Deleting the selected policies, please wait.");
+
+			int deleted = 0;
+			foreach (DeviceManagementConfigurationPolicy policy in AllPolicies)
+			{
+				if (string.IsNullOrWhiteSpace(policy.Id))
+				{
+					continue;
+				}
+				await Main.DeleteConfigurationPolicy(AuthCompanionCLS.CurrentActiveAccount, policy.Id);
+				deleted++;
+			}
+			MainInfoBar.WriteSuccess($"Deleted {deleted} policy item(s).");
+
+			// Refresh the list after deletions
+			_ = await RetrievePolicies();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			AreElementsEnabled = true;
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	#region Policy Details - When user clicks on each item in the main list view.
+
+	internal DeviceManagementConfigurationPolicy? PolicyDetailsPolicy { get; set => SP(ref field, value); }
+
+	internal readonly ObservableCollection<PolicyAssignmentDisplay> PolicyDetailsAssignments = [];
+
+	internal bool PolicyDetailsIsLoading { get; set => SP(ref field, value); }
+
+	internal bool PolicyDetailsActionsEnabled { get; set => SP(ref field, value); } = true;
+
+	internal bool IsPolicyDetailsWideLayout { get; set => SP(ref field, value); } = true;
+
+	internal bool IsPolicyDetailsCompactLayout { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Updates which deferred responsive assignment layout is loaded.
+	/// </summary>
+	internal void SetPolicyDetailsLayout(bool useWideLayout)
+	{
+		if (IsPolicyDetailsWideLayout == useWideLayout)
+		{
+			return;
+		}
+
+		IsPolicyDetailsWideLayout = useWideLayout;
+		IsPolicyDetailsCompactLayout = !useWideLayout;
+	}
+
+	internal async void OpenPolicyDetails_Click(object sender, ItemClickEventArgs e)
+	{
+		if (e.ClickedItem is not DeviceManagementConfigurationPolicy policy || string.IsNullOrEmpty(policy.Id))
+		{
+			return;
+		}
+		PolicyDetailsAssignments.Clear();
+		PolicyDetailsPolicy = policy;
+		PolicyDetailsActionsEnabled = false;
+		try
+		{
+			await ViewModelProvider.NavigationService.Navigate(typeof(IntunePolicyDetails), null);
+			await LoadPolicyDetailsAsync(policy);
+		}
+		finally
+		{
+			PolicyDetailsActionsEnabled = true;
+		}
+	}
+
+	internal async void RefreshPolicyDetails_Click()
+	{
+		if (PolicyDetailsPolicy is null || !PolicyDetailsActionsEnabled)
+		{
+			return;
+		}
+
+		try
+		{
+			PolicyDetailsActionsEnabled = false;
+			await LoadPolicyDetailsAsync(PolicyDetailsPolicy);
+		}
+		finally
+		{
+			PolicyDetailsActionsEnabled = true;
+		}
+	}
+
+	[DynamicWindowsRuntimeCast(typeof(Button))]
+	internal async void RemovePolicyAssignment_Click(object sender, RoutedEventArgs e)
+	{
+		if (sender is not Button { Tag: PolicyAssignmentDisplay assignment } ||
+			PolicyDetailsPolicy is null ||
+			string.IsNullOrEmpty(PolicyDetailsPolicy.Id) ||
+			string.IsNullOrEmpty(assignment.AssignmentId) ||
+			AuthCompanionCLS.CurrentActiveAccount is null)
+		{
+			return;
+		}
+		try
+		{
+			PolicyDetailsActionsEnabled = false;
+			PolicyDetailsIsLoading = true;
+			await Main.DeleteConfigurationPolicyAssignment(
+				AuthCompanionCLS.CurrentActiveAccount,
+				PolicyDetailsPolicy.Id,
+				assignment.AssignmentId);
+			await LoadPolicyDetailsAsync(PolicyDetailsPolicy);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			PolicyDetailsIsLoading = false;
+			PolicyDetailsActionsEnabled = true;
+		}
+	}
+
+	internal async void RemoveAllPolicyAssignments_Click()
+	{
+		// Don't display the confirmation check if there are no assignments
+		if (PolicyDetailsPolicy is null || PolicyDetailsAssignments.Count is 0)
+		{
+			return;
+		}
+
+		using ContentDialogV2 dialog = new()
+		{
+			Title = "Remove All Assignments?",
+			Content = $"This will remove all assignments from '{PolicyDetailsPolicy.Name}'. This action cannot be undone.",
+			PrimaryButtonText = "Remove All",
+			CloseButtonText = "Cancel",
+			DefaultButton = ContentDialogButton.Close
+		};
+
+		if (await dialog.ShowAsync() is ContentDialogResult.Primary)
+		{
+			await UpdatePolicyAssignmentsAsync(null);
+		}
+	}
+
+	internal async void AddAllUsersPolicyAssignment_Click() =>
+		await UpdatePolicyAssignmentsAsync("#microsoft.graph.allLicensedUsersAssignmentTarget");
+
+	internal async void AddAllDevicesPolicyAssignment_Click() =>
+		await UpdatePolicyAssignmentsAsync("#microsoft.graph.allDevicesAssignmentTarget");
+
+	/// <summary>
+	/// Adds one virtual target or clears all targets while disabling assignment actions until the operation completes.
+	/// </summary>
+	private async Task UpdatePolicyAssignmentsAsync(string? targetType)
+	{
+		if (PolicyDetailsPolicy is null ||
+			string.IsNullOrEmpty(PolicyDetailsPolicy.Id) ||
+			AuthCompanionCLS.CurrentActiveAccount is null)
+		{
+			return;
+		}
+
+		try
+		{
+			PolicyDetailsActionsEnabled = false;
+			PolicyDetailsIsLoading = true;
+			if (targetType is null)
+			{
+				await Main.RemoveAllConfigurationPolicyAssignments(
+					AuthCompanionCLS.CurrentActiveAccount,
+					PolicyDetailsPolicy.Id);
+			}
+			else
+			{
+				await Main.AddConfigurationPolicyVirtualAssignment(
+					AuthCompanionCLS.CurrentActiveAccount,
+					PolicyDetailsPolicy.Id,
+					targetType);
+			}
+
+			await LoadPolicyDetailsAsync(PolicyDetailsPolicy);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			PolicyDetailsIsLoading = false;
+			PolicyDetailsActionsEnabled = true;
+		}
+	}
+
+	private async Task LoadPolicyDetailsAsync(DeviceManagementConfigurationPolicy policy)
+	{
+		if (AuthCompanionCLS.CurrentActiveAccount is null || string.IsNullOrEmpty(policy.Id))
+		{
+			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
+			return;
+		}
+		try
+		{
+			PolicyDetailsIsLoading = true;
+			List<PolicyAssignmentDisplay> assignments = await Main.RetrieveConfigurationPolicyAssignmentImpacts(AuthCompanionCLS.CurrentActiveAccount, policy.Id);
+			PolicyDetailsAssignments.Clear();
+			foreach (PolicyAssignmentDisplay assignment in assignments)
+			{
+				PolicyDetailsAssignments.Add(assignment);
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			PolicyDetailsIsLoading = false;
+		}
+	}
+
+	#endregion
 
 	#region Copy
 
@@ -394,12 +671,12 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	/// </summary>
 	internal void CopySelectedPolicies_Click()
 	{
-		ListView? lv = CommonCore.Others.ListViewHelper.GetListViewFromCache(CommonCore.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
 
 		if (lv is null || lv.SelectedItems.Count == 0)
 			return;
 
-		CommonCore.Others.ListViewHelper.ConvertRowToText<DeviceManagementConfigurationPolicy>(lv.SelectedItems, DeviceManagementConfigurationPolicyPropertyMappings);
+		ListViewHelper.ConvertRowToText<DeviceManagementConfigurationPolicy>(lv.SelectedItems, DeviceManagementConfigurationPolicyPropertyMappings);
 	}
 
 	/// <summary>
@@ -411,14 +688,14 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 		if (sender is not MenuFlyoutItem mfi || mfi.Tag is not string key)
 			return;
 
-		ListView? lv = CommonCore.Others.ListViewHelper.GetListViewFromCache(CommonCore.Others.ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
+		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.OnlineIntuneDeviceConfigs);
 
 		if (lv is null)
 			return;
 
 		if (DeviceManagementConfigurationPolicyPropertyMappings.TryGetValue(key, out (string Label, Func<DeviceManagementConfigurationPolicy, object?> Getter) map))
 		{
-			CommonCore.Others.ListViewHelper.CopyToClipboard<DeviceManagementConfigurationPolicy>(ci => map.Getter(ci)?.ToString(), lv);
+			ListViewHelper.CopyToClipboard<DeviceManagementConfigurationPolicy>(ci => map.Getter(ci)?.ToString(), lv);
 		}
 	}
 

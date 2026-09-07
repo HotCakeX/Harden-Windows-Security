@@ -297,6 +297,8 @@ internal sealed partial class TopBar : Window
 	private bool _isViewSwitchAnimating;
 	private bool _isWidthTransitionAnimating;
 	private bool _isRenderHookAttached;
+	private bool _isExpandedHostAttached;
+	private readonly int _expandedHostIndex;
 	private bool _isPinned;
 	private bool _isFolderDragInProgress;
 	private bool _doesFolderDragContainFolders;
@@ -312,6 +314,10 @@ internal sealed partial class TopBar : Window
 	private TopBar()
 	{
 		InitializeComponent();
+		// Remember the generated position of the expanded subtree so it can be removed while
+		// the notch is collapsed and restored in the same place before the next expansion.
+		_expandedHostIndex = RootGrid.Children.IndexOf(ExpandedHost);
+		_isExpandedHostAttached = true;
 
 		// The bar is not a regular window so it must not show up in the task bar or in the task switcher.
 		AppWindow.IsShownInSwitchers = false;
@@ -350,6 +356,13 @@ internal sealed partial class TopBar : Window
 		AlwaysOnTopMenuItem.Text = Atlas.GetStr("TopBarAlwaysOnTopMenuItem");
 		PinMenuItem.Text = Atlas.GetStr("TopBarPinMenuItem");
 		StartupMenuItem.Text = Atlas.GetStr("TopBarStartupMenuItem");
+		CompanionMenuItem.Text = "Top Bar companion";
+		NoCompanionMenuItem.Text = "None";
+		PrisMatrixCompanionMenuItem.Text = "PrisMatrix";
+		NullCatCompanionMenuItem.Text = "NullCat";
+		BunnyCompanionMenuItem.Text = "Bunny";
+		SquirrelCompanionMenuItem.Text = "Squirrel";
+		PopForgeCompanionMenuItem.Text = "PopForge";
 
 		AlwaysOnTopMenuItem.IsChecked = Atlas.Settings.WindowsTopBarAlwaysOnTop;
 
@@ -387,6 +400,7 @@ internal sealed partial class TopBar : Window
 		RebuildAppTiles();
 		RebuildFolderTiles();
 		RebuildClocks();
+		ApplyCompanion(_configuration.Companion);
 
 		SetActiveView(TopBarView.Apps, animate: false);
 
@@ -408,6 +422,7 @@ internal sealed partial class TopBar : Window
 
 		RefreshDisplayMetrics();
 		ApplyState(0.0);
+		DetachExpandedHost();
 	}
 
 	/// <summary>
@@ -1156,14 +1171,6 @@ internal sealed partial class TopBar : Window
 		{
 			_openFlyoutCount--;
 		}
-
-		// The pointer may well have ended up outside of the bar while the flyout was open, so the bar retracts unless
-		// it is pinned, exactly like it would have done when the pointer left it.
-		if (_openFlyoutCount == 0 && !_isPinned && !_isClosed)
-		{
-			_retractionTimer.Stop();
-			_retractionTimer.Start();
-		}
 	}
 
 	/// <summary>
@@ -1257,6 +1264,55 @@ internal sealed partial class TopBar : Window
 	private void OnClocksViewButtonClick() => SetActiveView(TopBarView.Clocks, animate: true);
 
 	private void OnNetworkQualityViewButtonClick() => SetActiveView(TopBarView.NetworkQuality, animate: true);
+
+	/// <summary>
+	/// Replaces the small animation beside the active view and persists the selection.
+	/// Assigning new content unloads the previous self-contained control, which stops its render loop
+	/// and releases its resources.
+	/// </summary>
+	private void SetCompanion(TopBarCompanion companion)
+	{
+		if (_configuration.Companion == companion)
+		{
+			return;
+		}
+
+		_configuration.Companion = companion;
+		TopBarConfigurationManager.Save(_configuration);
+		ApplyCompanion(companion);
+	}
+
+	private void ApplyCompanion(TopBarCompanion companion)
+	{
+		CompanionHost.Content = companion switch
+		{
+			TopBarCompanion.PrisMatrix => new PrisMatrixAnimation(),
+			TopBarCompanion.NullCat => new NullCatAnimation(),
+			TopBarCompanion.Bunny => new BunnyAnimation(),
+			TopBarCompanion.Squirrel => new SquirrelAnimation(),
+			TopBarCompanion.PopForge => new PopForgeAnimation(),
+			_ => null
+		};
+		CompanionHost.Visibility = companion == TopBarCompanion.None ? Visibility.Collapsed : Visibility.Visible;
+		NoCompanionMenuItem.IsChecked = companion == TopBarCompanion.None;
+		PrisMatrixCompanionMenuItem.IsChecked = companion == TopBarCompanion.PrisMatrix;
+		NullCatCompanionMenuItem.IsChecked = companion == TopBarCompanion.NullCat;
+		BunnyCompanionMenuItem.IsChecked = companion == TopBarCompanion.Bunny;
+		SquirrelCompanionMenuItem.IsChecked = companion == TopBarCompanion.Squirrel;
+		PopForgeCompanionMenuItem.IsChecked = companion == TopBarCompanion.PopForge;
+	}
+
+	private void OnNoCompanionClick() => SetCompanion(TopBarCompanion.None);
+
+	private void OnPrisMatrixCompanionClick() => SetCompanion(TopBarCompanion.PrisMatrix);
+
+	private void OnNullCatCompanionClick() => SetCompanion(TopBarCompanion.NullCat);
+
+	private void OnBunnyCompanionClick() => SetCompanion(TopBarCompanion.Bunny);
+
+	private void OnSquirrelCompanionClick() => SetCompanion(TopBarCompanion.Squirrel);
+
+	private void OnPopForgeCompanionClick() => SetCompanion(TopBarCompanion.PopForge);
 
 	/// <summary>
 	/// Adds a new entry to the view that is currently on display.
@@ -1527,7 +1583,7 @@ internal sealed partial class TopBar : Window
 
 		try
 		{
-			_ = Process.Start(new ProcessStartInfo
+			using Process? launchedProcess = Process.Start(new ProcessStartInfo
 			{
 				FileName = target,
 				UseShellExecute = true
@@ -2154,9 +2210,46 @@ internal sealed partial class TopBar : Window
 	/// <summary>
 	/// Begins an animation towards the supplied amount of the expansion, starting from wherever the bar currently is.
 	/// </summary>
+	private void AttachExpandedHost()
+	{
+		if (_isExpandedHostAttached || _isClosed)
+		{
+			return;
+		}
+
+		int insertionIndex = Math.Clamp(_expandedHostIndex, 0, RootGrid.Children.Count);
+		RootGrid.Children.Insert(insertionIndex, ExpandedHost);
+		_isExpandedHostAttached = true;
+	}
+
+	/// <summary>
+	/// Removes the complete expanded subtree from the live XAML tree. This raises Unloaded on every
+	/// descendant, including the selected companion, instead of merely making the subtree transparent.
+	/// </summary>
+	private void DetachExpandedHost()
+	{
+		if (!_isExpandedHostAttached)
+		{
+			return;
+		}
+
+		_ = RootGrid.Children.Remove(ExpandedHost);
+		_isExpandedHostAttached = false;
+	}
+
 	private void StartAnimation(double targetProgress)
 	{
-		if (_isClosed || Math.Abs(targetProgress - _progress) < ProgressEpsilon)
+		if (_isClosed)
+		{
+			return;
+		}
+
+		if (targetProgress > 0.0)
+		{
+			AttachExpandedHost();
+		}
+
+		if (Math.Abs(targetProgress - _progress) < ProgressEpsilon)
 		{
 			return;
 		}
@@ -2221,7 +2314,8 @@ internal sealed partial class TopBar : Window
 
 			_progress = _animationStartProgress + ((_animationTargetProgress - _animationStartProgress) * easedProgress);
 
-			if (linearProgress >= 1.0)
+			bool animationCompleted = linearProgress >= 1.0;
+			if (animationCompleted)
 			{
 				_progress = _animationTargetProgress;
 				_isExpansionAnimating = false;
@@ -2231,6 +2325,10 @@ internal sealed partial class TopBar : Window
 			}
 
 			ApplyState(_progress);
+			if (animationCompleted && _animationTargetProgress <= 0.0)
+			{
+				DetachExpandedHost();
+			}
 		}
 		else
 		{
@@ -2328,8 +2426,7 @@ internal sealed partial class TopBar : Window
 	}
 
 	/// <summary>
-	/// Retracts a bar that was opened by touch once the user taps away from it, which is the only signal that a touch
-	/// driven bar gets that the user is done with it.
+	/// Retracts the bar when its window is deactivated by a click or tap elsewhere.
 	/// </summary>
 	private void OnWindowActivated(object sender, WindowActivatedEventArgs e)
 	{
@@ -2338,7 +2435,13 @@ internal sealed partial class TopBar : Window
 			return;
 		}
 
-		if (!_isTouchInteraction || _isPinned || _openFlyoutCount > 0 || _isClosed)
+		// MenuFlyoutV2 remains open after a selection, so explicitly dismiss it when the user clicks elsewhere.
+		if (SettingsMenu.IsOpen)
+		{
+			SettingsMenu.Hide();
+		}
+
+		if (_isPinned || _isClosed)
 		{
 			return;
 		}
@@ -2668,6 +2771,7 @@ internal sealed partial class TopBar : Window
 	private void OnWindowClosed()
 	{
 		_isClosed = true;
+		DetachExpandedHost();
 		StopNetworkQualityTest();
 
 		DetachRenderHook();

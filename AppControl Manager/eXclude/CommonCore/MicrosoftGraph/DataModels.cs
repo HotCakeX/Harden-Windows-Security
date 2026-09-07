@@ -491,20 +491,36 @@ internal sealed class PolicyAssignmentTarget(string? oDataType, string? groupId)
 /// <summary>
 /// Class used to display assignment info in the UI.
 /// </summary>
-internal sealed class PolicyAssignmentDisplay(string name, string type, string? targetId, string? assignmentId)
+internal sealed class PolicyAssignmentDisplay(
+	string name,
+	string type,
+	string? targetId,
+	string? assignmentId,
+	int userCount = 0,
+	int deviceCount = 0)
 {
 	internal string Name => name;
 	internal string Type => type;
 
 	/// <summary>
-	/// The ID of the Group/User/Device (Display purposes)
+	/// The ID of the Group/User/Device (Display purposes).
 	/// </summary>
 	internal string? TargetId => targetId;
 
 	/// <summary>
-	/// The ID of the Assignment Object itself (Required for deletion)
+	/// The ID of the assignment object itself.
 	/// </summary>
 	internal string? AssignmentId => assignmentId;
+
+	/// <summary>
+	/// Number of transitive user members represented by this assignment target.
+	/// </summary>
+	internal int UserCount => userCount;
+
+	/// <summary>
+	/// Number of managed devices belonging to those users, plus directly targeted device members.
+	/// </summary>
+	internal int DeviceCount => deviceCount;
 
 	internal Visibility IdVisibility => string.IsNullOrEmpty(targetId) ? Visibility.Collapsed : Visibility.Visible;
 }

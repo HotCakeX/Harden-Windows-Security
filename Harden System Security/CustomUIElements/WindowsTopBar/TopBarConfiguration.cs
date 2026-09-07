@@ -36,6 +36,19 @@ internal enum TopBarView
 }
 
 /// <summary>
+/// The companion animation displayed beside the active Top Bar view.
+/// </summary>
+internal enum TopBarCompanion
+{
+	None = 0,
+	PrisMatrix = 1,
+	NullCat = 2,
+	Bunny = 3,
+	Squirrel = 4,
+	PopForge = 5
+}
+
+/// <summary>
 /// A single launchable application of the top bar.
 /// </summary>
 internal sealed class TopBarAppEntry
@@ -100,6 +113,8 @@ internal sealed class TopBarConfiguration
 	public List<TopBarFolderEntry> Folders { get; set; } = [];
 
 	public List<TopBarClockEntry> Clocks { get; set; } = [];
+
+	public TopBarCompanion Companion { get; set; } = TopBarCompanion.None;
 }
 
 /// <summary>
@@ -107,6 +122,7 @@ internal sealed class TopBarConfiguration
 /// </summary>
 [JsonSourceGenerationOptions(WriteIndented = true)]
 [JsonSerializable(typeof(TopBarConfiguration))]
+[JsonSerializable(typeof(TopBarCompanion))]
 internal sealed partial class TopBarConfigurationJsonContext : JsonSerializerContext
 {
 }
@@ -139,6 +155,8 @@ internal static class TopBarConfigurationManager
 	/// </summary>
 	private static TopBarConfiguration CreateDefaultConfiguration() => new()
 	{
+		Companion = TopBarCompanion.PrisMatrix,
+
 		Apps =
 		[
 			new TopBarAppEntry { DisplayName = "Settings", Glyph = "\uE713", LaunchTarget = "ms-settings:" },
@@ -221,13 +239,13 @@ internal static class TopBarConfigurationManager
 	private static string GetConfigurationFilePath()
 	{
 		using ApplicationData applicationData = ApplicationData.GetDefault();
-		return Path.Combine(applicationData.LocalPath, ConfigurationFileName);
+		return Path.Join(applicationData.LocalPath, ConfigurationFileName);
 	}
 
 	private static string GetTemporaryConfigurationFilePath()
 	{
 		using ApplicationData applicationData = ApplicationData.GetDefault();
-		return Path.Combine(applicationData.LocalPath, TemporaryConfigurationFileName);
+		return Path.Join(applicationData.LocalPath, TemporaryConfigurationFileName);
 	}
 
 	private static void TryDeleteTemporaryConfigurationFile(string temporaryFilePath)

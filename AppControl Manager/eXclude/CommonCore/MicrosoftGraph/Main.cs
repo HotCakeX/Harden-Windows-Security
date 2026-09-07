@@ -181,8 +181,11 @@ internal static class Main
 		// Scopes required to create and assign device configurations for Intune
 		// https://learn.microsoft.com/graph/permissions-reference
 		{ AuthenticationContext.Intune, [
-		"Group.ReadWrite.All", // For Groups enumeration, deletion and addition.
-		"DeviceManagementConfiguration.ReadWrite.All", // For uploading and removing policies and scripts.
+		"Group.ReadWrite.All", // For Groups enumeration, deletion, addition and transitive membership reads.
+		"User.Read.All", // For resolving All Users and user members of assignment targets.
+		"Device.Read.All", // For resolving device members of assignment targets.
+		"DeviceManagementManagedDevices.Read.All", // For associating Intune managed devices with users and Entra devices.
+		"DeviceManagementConfiguration.ReadWrite.All", // For uploading, assigning and removing policies.
 		"DeviceManagementScripts.ReadWrite.All" // AppLocker Managed Installer policy read/write
 		]},
 
@@ -1400,6 +1403,480 @@ DeviceEvents
 			throw new InvalidOperationException(string.Format(
 				Atlas.GetStr("ErrorDetailsMessage"),
 				responseContent));
+		}
+	}
+
+	/// <summary>
+	/// Retrieves Settings Catalog assignments and calculates the users and managed devices represented by each target.
+	/// Group member counts are transitive. Device counts include managed devices associated with member users and
+	/// managed devices that are direct device members of the group.
+	/// </summary>
+	internal static async Task<List<PolicyAssignmentDisplay>> RetrieveConfigurationPolicyAssignmentImpacts(
+		AuthenticatedAccounts account,
+		string policyId)
+	{
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+		// Retrieve the Intune managed-device inventory once. Each assignment target reuses this snapshot
+		// when translating Entra user and device membership into the managed-device count shown in the UI.
+		List<(string Id, string? UserId, string? AzureAdDeviceId)> managedDevices = await RetrieveManagedDeviceAssignmentRecords(
+			accessToken,
+			account.Environment);
+		Uri assignmentsUri = new($"{GetGraphBaseUrl(account.Environment)}/beta/deviceManagement/configurationPolicies/{policyId}/assignments");
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"RetrieveConfigurationPolicyAssignmentImpacts",
+			() => CreateAuthorizedGetRequest(assignmentsUri, accessToken));
+		string content = await response.Content.ReadAsStringAsync();
+		if (!response.IsSuccessStatusCode)
+		{
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), content));
+		}
+		PolicyAssignmentResponse? parsed = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.PolicyAssignmentResponse);
+		if (parsed?.Value is null)
+		{
+			return [];
+		}
+		// Listing every licensed user is comparatively expensive and is needed only for the All Users
+		// virtual target, so avoid that Graph request when the policy does not contain that assignment.
+		bool needsAllUsers = parsed.Value.Any(static assignment =>
+			string.Equals(assignment.Target.ODataType, "#microsoft.graph.allLicensedUsersAssignmentTarget", StringComparison.OrdinalIgnoreCase));
+		HashSet<string> licensedUserIds = needsAllUsers
+			? await RetrieveLicensedUserIds(accessToken, account.Environment)
+			: new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+		// Resolve independent assignment targets concurrently. The final array maintains the same order
+		// as the task list while avoiding serial group membership and display-name requests.
+		List<Task<PolicyAssignmentDisplay>> tasks = new(parsed.Value.Count);
+		foreach (PolicyAssignmentObject assignment in parsed.Value)
+		{
+			tasks.Add(BuildAssignmentImpact(
+				assignment,
+				managedDevices,
+				licensedUserIds,
+				accessToken,
+				account.Environment));
+		}
+		PolicyAssignmentDisplay[] results = await Task.WhenAll(tasks);
+		return new List<PolicyAssignmentDisplay>(results);
+	}
+
+	private static async Task<PolicyAssignmentDisplay> BuildAssignmentImpact(
+		PolicyAssignmentObject assignment,
+		List<(string Id, string? UserId, string? AzureAdDeviceId)> managedDevices,
+		HashSet<string> licensedUserIds,
+		string accessToken,
+		AzureCloudInstance environment)
+	{
+		string? targetType = assignment.Target.ODataType;
+		if (string.Equals(targetType, "#microsoft.graph.allLicensedUsersAssignmentTarget", StringComparison.OrdinalIgnoreCase))
+		{
+			// All Users represents licensed users. Its device impact is the subset of the managed-device
+			// inventory whose primary user ID belongs to that licensed-user set.
+			int deviceCount = CountManagedDevicesForUsers(managedDevices, licensedUserIds);
+			return new PolicyAssignmentDisplay("All Users", "All licensed users", null, assignment.Id, licensedUserIds.Count, deviceCount);
+		}
+		if (string.Equals(targetType, "#microsoft.graph.allDevicesAssignmentTarget", StringComparison.OrdinalIgnoreCase))
+		{
+			// All Devices uses the complete managed-device inventory. Count distinct non-empty primary
+			// user IDs so a user with multiple managed devices contributes one user to the displayed total.
+			HashSet<string> associatedUsers = new(StringComparer.OrdinalIgnoreCase);
+			foreach ((string _, string? UserId, string? _) in managedDevices)
+			{
+				if (!string.IsNullOrEmpty(UserId))
+				{
+					_ = associatedUsers.Add(UserId);
+				}
+			}
+			return new PolicyAssignmentDisplay("All Devices", "All managed devices", null, assignment.Id, associatedUsers.Count, managedDevices.Count);
+		}
+		if (string.Equals(targetType, "#microsoft.graph.groupAssignmentTarget", StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(targetType, "#microsoft.graph.exclusionGroupAssignmentTarget", StringComparison.OrdinalIgnoreCase))
+		{
+			bool excluded = string.Equals(targetType, "#microsoft.graph.exclusionGroupAssignmentTarget", StringComparison.OrdinalIgnoreCase);
+			string groupId = assignment.Target.GroupId ?? string.Empty;
+			(string Name, HashSet<string> UserIds, HashSet<string> DeviceIds) = await RetrieveGroupAssignmentMembers(
+				accessToken,
+				environment,
+				groupId);
+			// A group can target users, devices, or both. A managed device is represented when its primary
+			// user is a transitive user member or its Entra device ID is a transitive device member.
+			// The HashSet prevents one managed device from being counted twice when both conditions match.
+			HashSet<string> matchingManagedDeviceIds = new(StringComparer.OrdinalIgnoreCase);
+			foreach ((string Id, string? UserId, string? AzureAdDeviceId) in managedDevices)
+			{
+				if ((!string.IsNullOrEmpty(UserId) && UserIds.Contains(UserId)) ||
+					(!string.IsNullOrEmpty(AzureAdDeviceId) && DeviceIds.Contains(AzureAdDeviceId)))
+				{
+					_ = matchingManagedDeviceIds.Add(Id);
+				}
+			}
+			return new PolicyAssignmentDisplay(
+				Name,
+				excluded ? "Excluded group" : "Included group",
+				groupId,
+				assignment.Id,
+				UserIds.Count,
+				matchingManagedDeviceIds.Count);
+		}
+		return new PolicyAssignmentDisplay("Unknown target", targetType ?? "Unknown", assignment.Target.GroupId, assignment.Id);
+	}
+
+	/// <summary>
+	/// Counts managed devices whose primary user belongs to the supplied user-ID set.
+	/// Devices without a primary user are intentionally excluded from user-targeted impact counts.
+	/// </summary>
+	private static int CountManagedDevicesForUsers(
+		List<(string Id, string? UserId, string? AzureAdDeviceId)> managedDevices,
+		HashSet<string> userIds)
+	{
+		int count = 0;
+		foreach ((string _, string? UserId, string? _) in managedDevices)
+		{
+			if (!string.IsNullOrEmpty(UserId) && userIds.Contains(UserId))
+			{
+				count++;
+			}
+		}
+		return count;
+	}
+
+	/// <summary>
+	/// Retrieves the minimal managed-device fields required to correlate assignment membership.
+	/// Pagination is followed so impact counts are calculated from the complete managed-device inventory.
+	/// </summary>
+	private static async Task<List<(string Id, string? UserId, string? AzureAdDeviceId)>> RetrieveManagedDeviceAssignmentRecords(
+		string accessToken,
+		AzureCloudInstance environment)
+	{
+		List<(string Id, string? UserId, string? AzureAdDeviceId)> results = [];
+		string? nextLink = $"{GetGraphBaseUrl(environment)}/v1.0/deviceManagement/managedDevices?$select=id,userId,azureADDeviceId&$top=999";
+		while (!string.IsNullOrEmpty(nextLink))
+		{
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"RetrieveManagedDeviceAssignmentRecords",
+				() => CreateAuthorizedGetRequest(new Uri(nextLink), accessToken));
+			string content = await response.Content.ReadAsStringAsync();
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), content));
+			}
+			JsonElement root = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.JsonElement);
+			if (root.TryGetProperty("value", out JsonElement values))
+			{
+				foreach (JsonElement item in values.EnumerateArray())
+				{
+					string? id = item.TryGetProperty("id", out JsonElement idElement) ? idElement.GetString() : null;
+					if (!string.IsNullOrEmpty(id))
+					{
+						string? userId = item.TryGetProperty("userId", out JsonElement userIdElement) ? userIdElement.GetString() : null;
+						string? azureAdDeviceId = item.TryGetProperty("azureADDeviceId", out JsonElement deviceIdElement) ? deviceIdElement.GetString() : null;
+						results.Add((id, userId, azureAdDeviceId));
+					}
+				}
+			}
+			nextLink = root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement) ? nextLinkElement.GetString() : null;
+		}
+		return results;
+	}
+
+	/// <summary>
+	/// Retrieves every licensed Entra user ID for the Intune All Users virtual assignment target.
+	/// </summary>
+	private static async Task<HashSet<string>> RetrieveLicensedUserIds(string accessToken, AzureCloudInstance environment)
+	{
+		HashSet<string> results = new(StringComparer.OrdinalIgnoreCase);
+		string? nextLink = $"{GetGraphBaseUrl(environment)}/v1.0/users?$select=id,assignedLicenses&$top=999";
+		while (!string.IsNullOrEmpty(nextLink))
+		{
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"RetrieveLicensedUserIds",
+				() => CreateAuthorizedGetRequest(new Uri(nextLink), accessToken));
+			string content = await response.Content.ReadAsStringAsync();
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), content));
+			}
+			JsonElement root = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.JsonElement);
+			if (root.TryGetProperty("value", out JsonElement values))
+			{
+				foreach (JsonElement item in values.EnumerateArray())
+				{
+					if (item.TryGetProperty("assignedLicenses", out JsonElement licenses) && licenses.GetArrayLength() > 0 &&
+						item.TryGetProperty("id", out JsonElement idElement) && !string.IsNullOrEmpty(idElement.GetString()))
+					{
+						_ = results.Add(idElement.GetString()!);
+					}
+				}
+			}
+			nextLink = root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement) ? nextLinkElement.GetString() : null;
+		}
+		return results;
+	}
+
+	/// <summary>
+	/// Resolves a group's display name and flattens nested membership into distinct user and device ID sets.
+	/// The device set stores Entra device IDs because that is the value exposed by managedDevice.azureADDeviceId.
+	/// </summary>
+	private static async Task<(string Name, HashSet<string> UserIds, HashSet<string> DeviceIds)> RetrieveGroupAssignmentMembers(
+		string accessToken,
+		AzureCloudInstance environment,
+		string groupId)
+	{
+		string groupName = groupId;
+		using (HttpResponseMessage groupResponse = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"RetrieveGroupAssignmentName",
+			() => CreateAuthorizedGetRequest(new Uri($"{GetGroupsUrl(environment)}/{groupId}?$select=displayName"), accessToken)))
+		{
+			if (groupResponse.IsSuccessStatusCode)
+			{
+				string groupContent = await groupResponse.Content.ReadAsStringAsync();
+				JsonElement groupRoot = JsonSerializer.Deserialize(groupContent, MSGraphJsonContext.Default.JsonElement);
+				groupName = groupRoot.TryGetProperty("displayName", out JsonElement displayName) ? displayName.GetString() ?? groupId : groupId;
+			}
+		}
+		// Separate user object IDs from Entra device IDs because each identifier participates in a
+		// different correlation rule when managed-device impact is calculated.
+		HashSet<string> userIds = new(StringComparer.OrdinalIgnoreCase);
+		HashSet<string> deviceIds = new(StringComparer.OrdinalIgnoreCase);
+		string? nextLink = $"{GetGroupsUrl(environment)}/{groupId}/transitiveMembers?$select=id,deviceId&$top=999";
+		while (!string.IsNullOrEmpty(nextLink))
+		{
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"RetrieveGroupAssignmentMembers",
+				() => CreateAuthorizedGetRequest(new Uri(nextLink), accessToken));
+			string content = await response.Content.ReadAsStringAsync();
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), content));
+			}
+			JsonElement root = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.JsonElement);
+			if (root.TryGetProperty("value", out JsonElement values))
+			{
+				foreach (JsonElement member in values.EnumerateArray())
+				{
+					string? type = member.TryGetProperty("@odata.type", out JsonElement typeElement) ? typeElement.GetString() : null;
+					if (string.Equals(type, "#microsoft.graph.user", StringComparison.OrdinalIgnoreCase) && member.TryGetProperty("id", out JsonElement userId))
+					{
+						_ = userIds.Add(userId.GetString() ?? string.Empty);
+					}
+					else if (string.Equals(type, "#microsoft.graph.device", StringComparison.OrdinalIgnoreCase) && member.TryGetProperty("deviceId", out JsonElement deviceId))
+					{
+						_ = deviceIds.Add(deviceId.GetString() ?? string.Empty);
+					}
+				}
+			}
+			nextLink = root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement) ? nextLinkElement.GetString() : null;
+		}
+		_ = userIds.Remove(string.Empty);
+		_ = deviceIds.Remove(string.Empty);
+		return (groupName, userIds, deviceIds);
+	}
+
+	/// <summary>
+	/// Creates the repeated authenticated JSON GET request used by the assignment-impact helpers.
+	/// The retry helper owns request disposal after each attempt, so every retry receives a new request.
+	/// </summary>
+	private static HttpRequestMessage CreateAuthorizedGetRequest(Uri uri, string accessToken)
+	{
+		HttpRequestMessage request = new(HttpMethod.Get, uri);
+		request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+		request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+		return request;
+	}
+
+	/// <summary>
+	/// Removes one direct assignment from a Settings Catalog configuration policy.
+	/// Settings Catalog assignments do not expose an individual DELETE route, so the policy's assign action
+	/// is called with every current assignment except the selected assignment.
+	/// </summary>
+	internal static async Task DeleteConfigurationPolicyAssignment(
+		AuthenticatedAccounts account,
+		string policyId,
+		string assignmentId)
+	{
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+		string configurationPolicyUrl = $"{GetGraphBaseUrl(account.Environment)}/beta/deviceManagement/configurationPolicies/{policyId}";
+		Uri assignmentsUri = new($"{configurationPolicyUrl}/assignments");
+
+		// Retrieve the complete current assignment objects first. Reposting all remaining targets preserves
+		// included groups, excluded groups, virtual targets, and any assignment-filter properties.
+		using HttpResponseMessage assignmentsResponse = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"RetrieveConfigurationPolicyAssignmentsForRemoval",
+			() => CreateAuthorizedGetRequest(assignmentsUri, accessToken));
+		string assignmentsContent = await assignmentsResponse.Content.ReadAsStringAsync();
+		if (!assignmentsResponse.IsSuccessStatusCode)
+		{
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), assignmentsContent));
+		}
+
+		JsonElement root = JsonSerializer.Deserialize(assignmentsContent, MSGraphJsonContext.Default.JsonElement);
+		if (!root.TryGetProperty("value", out JsonElement assignments))
+		{
+			throw new InvalidOperationException("Intune did not return the current configuration policy assignments.");
+		}
+
+		bool assignmentFound = false;
+		using MemoryStream payloadStream = new();
+		using (Utf8JsonWriter writer = new(payloadStream))
+		{
+			writer.WriteStartObject();
+			writer.WritePropertyName("assignments");
+			writer.WriteStartArray();
+
+			foreach (JsonElement assignment in assignments.EnumerateArray())
+			{
+				string? currentAssignmentId = assignment.TryGetProperty("id", out JsonElement idElement)
+					? idElement.GetString()
+					: null;
+				if (string.Equals(currentAssignmentId, assignmentId, StringComparison.OrdinalIgnoreCase))
+				{
+					assignmentFound = true;
+					continue;
+				}
+
+				if (assignment.TryGetProperty("target", out JsonElement target))
+				{
+					writer.WriteStartObject();
+					writer.WritePropertyName("target");
+					target.WriteTo(writer);
+					writer.WriteEndObject();
+				}
+			}
+
+			writer.WriteEndArray();
+			writer.WriteEndObject();
+		}
+
+		if (!assignmentFound)
+		{
+			throw new InvalidOperationException("The selected configuration policy assignment no longer exists.");
+		}
+
+		string jsonPayload = Encoding.UTF8.GetString(payloadStream.ToArray());
+		Uri assignUri = new($"{configurationPolicyUrl}/assign");
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"DeleteConfigurationPolicyAssignment",
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Post, assignUri);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+				return request;
+			});
+		if (!response.IsSuccessStatusCode)
+		{
+			string content = await response.Content.ReadAsStringAsync();
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), content));
+		}
+	}
+
+	/// <summary>
+	/// Removes every assignment from a Settings Catalog configuration policy through its assign action.
+	/// </summary>
+	internal static async Task RemoveAllConfigurationPolicyAssignments(
+		AuthenticatedAccounts account,
+		string policyId) =>
+		await PostConfigurationPolicyAssignments(
+			account,
+			policyId,
+			"{\"assignments\":[]}",
+			"RemoveAllConfigurationPolicyAssignments");
+
+	/// <summary>
+	/// Adds an All Users or All Devices target while preserving every current assignment target.
+	/// </summary>
+	internal static async Task AddConfigurationPolicyVirtualAssignment(
+		AuthenticatedAccounts account,
+		string policyId,
+		string targetType)
+	{
+		if (!string.Equals(targetType, "#microsoft.graph.allLicensedUsersAssignmentTarget", StringComparison.OrdinalIgnoreCase) &&
+			!string.Equals(targetType, "#microsoft.graph.allDevicesAssignmentTarget", StringComparison.OrdinalIgnoreCase))
+		{
+			throw new ArgumentException("The assignment target type must represent All Users or All Devices.", nameof(targetType));
+		}
+
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+		string policyUrl = $"{GetGraphBaseUrl(account.Environment)}/beta/deviceManagement/configurationPolicies/{policyId}";
+		using HttpResponseMessage assignmentsResponse = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"RetrieveConfigurationPolicyAssignmentsForAddition",
+			() => CreateAuthorizedGetRequest(new Uri($"{policyUrl}/assignments"), accessToken));
+		string assignmentsContent = await assignmentsResponse.Content.ReadAsStringAsync();
+		if (!assignmentsResponse.IsSuccessStatusCode)
+		{
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), assignmentsContent));
+		}
+
+		JsonElement root = JsonSerializer.Deserialize(assignmentsContent, MSGraphJsonContext.Default.JsonElement);
+		if (!root.TryGetProperty("value", out JsonElement assignments))
+		{
+			throw new InvalidOperationException("Intune did not return the current configuration policy assignments.");
+		}
+
+		foreach (JsonElement assignment in assignments.EnumerateArray())
+		{
+			if (assignment.TryGetProperty("target", out JsonElement existingTarget) &&
+				existingTarget.TryGetProperty("@odata.type", out JsonElement existingType) &&
+				string.Equals(existingType.GetString(), targetType, StringComparison.OrdinalIgnoreCase))
+			{
+				return;
+			}
+		}
+
+		using MemoryStream payloadStream = new();
+		using (Utf8JsonWriter writer = new(payloadStream))
+		{
+			writer.WriteStartObject();
+			writer.WritePropertyName("assignments");
+			writer.WriteStartArray();
+			foreach (JsonElement assignment in assignments.EnumerateArray())
+			{
+				if (assignment.TryGetProperty("target", out JsonElement target))
+				{
+					writer.WriteStartObject();
+					writer.WritePropertyName("target");
+					target.WriteTo(writer);
+					writer.WriteEndObject();
+				}
+			}
+			writer.WriteStartObject();
+			writer.WritePropertyName("target");
+			writer.WriteStartObject();
+			writer.WriteString("@odata.type", targetType);
+			writer.WriteEndObject();
+			writer.WriteEndObject();
+			writer.WriteEndArray();
+			writer.WriteEndObject();
+		}
+
+		string jsonPayload = Encoding.UTF8.GetString(payloadStream.ToArray());
+		await PostConfigurationPolicyAssignments(account, policyId, jsonPayload, "AddConfigurationPolicyVirtualAssignment");
+	}
+
+	/// <summary>
+	/// Posts a complete Settings Catalog assignment set because the assign action replaces the current targets.
+	/// </summary>
+	private static async Task PostConfigurationPolicyAssignments(
+		AuthenticatedAccounts account,
+		string policyId,
+		string jsonPayload,
+		string operationName)
+	{
+		string accessToken = await GetValidAccessTokenAsync(account, CancellationToken.None);
+		Uri assignUri = new($"{GetGraphBaseUrl(account.Environment)}/beta/deviceManagement/configurationPolicies/{policyId}/assign");
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			operationName,
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Post, assignUri);
+				request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				request.Content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+				return request;
+			});
+		if (!response.IsSuccessStatusCode)
+		{
+			string content = await response.Content.ReadAsStringAsync();
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), content));
 		}
 	}
 

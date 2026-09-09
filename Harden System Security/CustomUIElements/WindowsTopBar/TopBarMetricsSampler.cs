@@ -503,7 +503,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 		return description;
 	}
 
-	private bool TryCollectProcesses()
+	private unsafe bool TryCollectProcesses()
 	{
 		const int SystemProcessInformation = 5;
 		const int StatusInfoLengthMismatch = unchecked((int)0xC0000004);

@@ -2054,7 +2054,7 @@ internal sealed partial class HomeLiveGraphsWindow
 	private static string CreateGpuDxgiAdapterGroupKey(DXGI_ADAPTER_DESC1 adapterDescription) =>
 		"dxgi_" + adapterDescription.VendorId.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.DeviceId.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.SubSysId.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.Revision.ToString("X8", CultureInfo.InvariantCulture) + "_" + adapterDescription.DedicatedVideoMemory.ToString("X", CultureInfo.InvariantCulture);
 
-	private static string GetDxgiAdapterDescription(DXGI_ADAPTER_DESC1 adapterDescription) =>
+	private static unsafe string GetDxgiAdapterDescription(DXGI_ADAPTER_DESC1 adapterDescription) =>
 		new string(adapterDescription.Description).TrimEnd('\0');
 
 	private unsafe static void ReleaseComObject(IntPtr comObject)

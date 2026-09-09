@@ -1,0 +1,1 @@
+* Updated major dependencies to the latest versions.

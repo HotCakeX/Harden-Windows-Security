@@ -320,7 +320,7 @@ internal static class Methods
 	/// <summary>
 	/// PCWSTR -> string conversion
 	/// </summary>
-	private static string PtrToStringUniSafe(IntPtr ptr)
+	private static unsafe string PtrToStringUniSafe(IntPtr ptr)
 	{
 		if (ptr == IntPtr.Zero)
 			return string.Empty;

@@ -376,6 +376,7 @@
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
     <MainPackageIdentityName>VioletHansen.HardenSystemSecurity</MainPackageIdentityName>
+    <MainPackageIdentityName>VioletHansen.MCPServerforHardenSystemSecurity</MainPackageIdentityName>
   </AccountPackageIdentityNames>
   <PackageInfoList LandingUrl="https://devcenterapi.dce.mp.microsoft.com/dashboard/Application?appId=9PNG1JDDTGP8" />
 </StoreAssociation>

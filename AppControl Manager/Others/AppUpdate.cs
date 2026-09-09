@@ -150,7 +150,7 @@ internal static class AppUpdate
 	/// </summary>
 	internal static void CheckAtStartup()
 	{
-		_ = Task.Run(async () =>
+		_ = Task.Run(static async () =>
 		{
 			try
 			{
@@ -168,7 +168,7 @@ internal static class AppUpdate
 
 	internal static void QueueUpdatePageNavigation()
 	{
-		bool wasQueued = Atlas.AppDispatcher.TryEnqueue(async () =>
+		bool wasQueued = Atlas.AppDispatcher.TryEnqueue(static async () =>
 		{
 			try
 			{

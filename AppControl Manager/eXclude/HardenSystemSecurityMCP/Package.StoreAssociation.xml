@@ -361,23 +361,14 @@
     <Language Code="zu-za" InMinimumRequirementSet="true" />
   </SupportedLocales>
   <ProductReservedInfo>
-    <MainPackageIdentityName>VioletHansen.HardenSystemSecurity</MainPackageIdentityName>
+    <MainPackageIdentityName>VioletHansen.MCPServerforHardenSystemSecurity</MainPackageIdentityName>
     <ReservedNames>
-      <ReservedName>Harden System Security</ReservedName>
-      <ReservedName>Harden System Security | Leicht, Schnell, Unerbittlich</ReservedName>
-      <ReservedName>Harden System Security | Ελαφρύ, Γρήγορο, Αμείλικτο</ReservedName>
-      <ReservedName>Harden System Security | Lekkie, Szybkie, Nieustępliwe</ReservedName>
-      <ReservedName>Harden System Security | Liviano, Rápido, Implacable</ReservedName>
-      <ReservedName>Harden System Security | קל, מהיר, בלתי מתפשר</ReservedName>
-      <ReservedName>Harden System Security | हल्का, तेज, अथक</ReservedName>
-      <ReservedName>Harden System Security | ലഘുവായ, വേഗമേറിയ, അടങ്ങാത്ത</ReservedName>
-      <ReservedName>Harden System Security | خفيف، سريع، بلا هوادة</ReservedName>
-      <ReservedName>Harden System Security | Rapide, sécurisé et fiable</ReservedName>
+      <ReservedName>MCP Server for Harden System Security</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
     <MainPackageIdentityName>VioletHansen.AppControlManager</MainPackageIdentityName>
-    <MainPackageIdentityName>VioletHansen.MCPServerforHardenSystemSecurity</MainPackageIdentityName>
+    <MainPackageIdentityName>VioletHansen.HardenSystemSecurity</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://devcenterapi.dce.mp.microsoft.com/dashboard/Application?appId=9P7GGFL7DX57" />
+  <PackageInfoList LandingUrl="https://devcenterapi.dce.mp.microsoft.com/dashboard/Application?appId=9P3BDTHKR7KS" />
 </StoreAssociation>

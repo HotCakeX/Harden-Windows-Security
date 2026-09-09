@@ -1939,6 +1939,21 @@ dotnet_diagnostic.CA5380.severity = none
 # IDE0180: Use tuple to swap values
 dotnet_diagnostic.IDE0180.severity = error
 
+# SYSLIB1063: Unnecessary marshalling info was provided and can be removed.
+dotnet_diagnostic.SYSLIB1063.severity = error
+
+# CA1517: Use 'ReadOnlySpan<T>' or 'ReadOnlyMemory<T>' instead of 'Span<T>' or 'Memory<T>'
+dotnet_diagnostic.CA1517.severity = error
+
+# CA2028: Avoid redundant 'Regex.IsMatch' call before 'Regex.Match'
+dotnet_diagnostic.CA2028.severity = error
+
+# CA2026: Prefer JsonElement.Parse over JsonDocument.Parse().RootElement
+dotnet_diagnostic.CA2026.severity = error
+
+# CA2027: Cancel Task.Delay after Task.WhenAny completes
+dotnet_diagnostic.CA2027.severity = error
+
 # All Code quality rule configuration options: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/code-quality-rule-options
 # Using these in groups only adds moderate amount of extra time during compilation
 # Group 1 - with 16 cores/64GB RAM, takes roughly 10 minutes to compile Harden System Security project. If "copy_analysis" is used too, it'll take 1 hour to compile the AppControl Manager project.

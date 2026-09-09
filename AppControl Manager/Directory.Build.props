@@ -61,7 +61,7 @@
        <!-- https://learn.microsoft.com/dotnet/core/extensions/configuration-generator -->
        <EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
        <!-- https://learn.microsoft.com/dotnet/csharp/language-reference/compiler-options/advanced#subsystemversion -->
-       <SubsystemVersion>6.04</SubsystemVersion>
+       <SubsystemVersion>10.0</SubsystemVersion>
        <!-- https://learn.microsoft.com/dotnet/csharp/language-reference/compiler-options/security#highentropyva -->
        <HighEntropyVA>true</HighEntropyVA>
        <!-- https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#optimizeimplicitlytriggeredbuild -->

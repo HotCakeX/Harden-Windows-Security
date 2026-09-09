@@ -28,7 +28,7 @@ namespace AppControlManager.XMLOps;
 internal static class SignerAndHashBuilder
 {
 	// Get all of the drive letters on the system
-	private static readonly HashSet<string?> DriveLetters = DriveLetterMapper.GetGlobalRootDrives().Select(x => x.DriveLetter).ToHashSet(StringComparer.OrdinalIgnoreCase);
+	private static readonly HashSet<string?> DriveLetters = DriveLetterMapper.GetGlobalRootDrives().Select(static x => x.DriveLetter).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
 	/// Creates Signer and Hash objects from the input data

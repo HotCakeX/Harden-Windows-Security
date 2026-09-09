@@ -30,41 +30,41 @@ internal static class ViewModelProvider
 {
 	// Core dependencies \\
 
-	private static readonly Lazy<EventLogUtility> _eventLogUtility = new(() => new(), LazyThreadSafetyMode.PublicationOnly);
+	private static readonly Lazy<EventLogUtility> _eventLogUtility = new(static () => new(), LazyThreadSafetyMode.PublicationOnly);
 
 	// View Models \\
-	private static readonly Lazy<SidebarVM> _sidebarVM = new(() => new(), false);
-	private static readonly Lazy<ViewCurrentPoliciesVM> _viewCurrentPoliciesVM = new(() => new(), false);
-	private static readonly Lazy<SettingsVM> _settingsVM = new(() => new(), false);
-	private static readonly Lazy<MergePoliciesVM> _mergePoliciesVM = new(() => new(), false);
-	private static readonly Lazy<ComparePoliciesVM> _comparePoliciesVM = new(() => new(), false);
-	private static readonly Lazy<ConfigurePolicyRuleOptionsVM> _configurePolicyRuleOptionsVM = new(() => new(), false);
-	private static readonly Lazy<CreateDenyPolicyVM> _createDenyPolicyVM = new(() => new(), false);
-	private static readonly Lazy<CreateSupplementalPolicyVM> _createSupplementalPolicyVM = new(() => new(), false);
-	private static readonly Lazy<EventLogsPolicyCreationVM> _eventLogsPolicyCreationVM = new(() => new(), false);
-	private static readonly Lazy<SimulationVM> _simulationVM = new(() => new(), false);
-	private static readonly Lazy<MDEAHPolicyCreationVM> _mdeahPolicyCreationVM = new(() => new(), false);
-	private static readonly Lazy<ViewFileCertificatesVM> _viewFileCertificatesVM = new(() => new(), false);
-	private static readonly Lazy<CreatePolicyVM> _createPolicyVM = new(() => new(), false);
-	private static readonly Lazy<DeploymentVM> _deploymentVM = new(() => new(), false);
-	private static readonly Lazy<UpdateVM> _updateVM = new(() => new(), false);
-	private static readonly Lazy<ValidatePolicyVM> _validatePolicyVM = new(() => new(), false);
-	private static readonly Lazy<CodeIntegrityInfoVM> _codeIntegrityInfoVM = new(() => new(), false);
-	private static readonly Lazy<GetCIHashesVM> _getCIHashesVM = new(() => new(), false);
-	private static readonly Lazy<BuildNewCertificateVM> _buildNewCertificateVM = new(() => new(), false);
-	private static readonly Lazy<GetSecurePolicySettingsVM> _getSecurePolicySettingsVM = new(() => new(), false);
-	private static readonly Lazy<LogsVM> _logsVM = new(() => new(), false);
-	private static readonly Lazy<IntuneDeploymentDetailsVM> _intuneDeploymentDetailsVM = new(() => new(), false);
-	private static readonly Lazy<HomeVM> _homeVM = new(() => new(), false);
+	private static readonly Lazy<SidebarVM> _sidebarVM = new(static () => new(), false);
+	private static readonly Lazy<ViewCurrentPoliciesVM> _viewCurrentPoliciesVM = new(static () => new(), false);
+	private static readonly Lazy<SettingsVM> _settingsVM = new(static () => new(), false);
+	private static readonly Lazy<MergePoliciesVM> _mergePoliciesVM = new(static () => new(), false);
+	private static readonly Lazy<ComparePoliciesVM> _comparePoliciesVM = new(static () => new(), false);
+	private static readonly Lazy<ConfigurePolicyRuleOptionsVM> _configurePolicyRuleOptionsVM = new(static () => new(), false);
+	private static readonly Lazy<CreateDenyPolicyVM> _createDenyPolicyVM = new(static () => new(), false);
+	private static readonly Lazy<CreateSupplementalPolicyVM> _createSupplementalPolicyVM = new(static () => new(), false);
+	private static readonly Lazy<EventLogsPolicyCreationVM> _eventLogsPolicyCreationVM = new(static () => new(), false);
+	private static readonly Lazy<SimulationVM> _simulationVM = new(static () => new(), false);
+	private static readonly Lazy<MDEAHPolicyCreationVM> _mdeahPolicyCreationVM = new(static () => new(), false);
+	private static readonly Lazy<ViewFileCertificatesVM> _viewFileCertificatesVM = new(static () => new(), false);
+	private static readonly Lazy<CreatePolicyVM> _createPolicyVM = new(static () => new(), false);
+	private static readonly Lazy<DeploymentVM> _deploymentVM = new(static () => new(), false);
+	private static readonly Lazy<UpdateVM> _updateVM = new(static () => new(), false);
+	private static readonly Lazy<ValidatePolicyVM> _validatePolicyVM = new(static () => new(), false);
+	private static readonly Lazy<CodeIntegrityInfoVM> _codeIntegrityInfoVM = new(static () => new(), false);
+	private static readonly Lazy<GetCIHashesVM> _getCIHashesVM = new(static () => new(), false);
+	private static readonly Lazy<BuildNewCertificateVM> _buildNewCertificateVM = new(static () => new(), false);
+	private static readonly Lazy<GetSecurePolicySettingsVM> _getSecurePolicySettingsVM = new(static () => new(), false);
+	private static readonly Lazy<LogsVM> _logsVM = new(static () => new(), false);
+	private static readonly Lazy<IntuneDeploymentDetailsVM> _intuneDeploymentDetailsVM = new(static () => new(), false);
+	private static readonly Lazy<HomeVM> _homeVM = new(static () => new(), false);
 	// View Models with Dependencies \\
-	private static readonly Lazy<PolicyEditorVM> _policyEditorVM = new(() => new(), false);
-	private static readonly Lazy<AllowNewAppsVM> _allowNewAppsVM = new(() => new(EventLogUtility, PolicyEditorVM), false);
-	private static readonly Lazy<MainWindowVM> _mainWindowVM = new(() => new(), false);
-	private static readonly Lazy<NavigationService> _navigationService = new(() => new(MainWindowVM, SidebarVM), false);
-	private static readonly Lazy<ViewOnlinePoliciesVM> _viewOnlinePoliciesVM = new(() => new(), false);
-	private static readonly Lazy<FirewallSentinelVM> _firewallSentinelVM = new(() => new(), false);
-	private static readonly Lazy<SystemShutdownInfoDialogVM> _systemShutdownInfoDialogVM = new(() => new(), false);
-	private static readonly Lazy<SettingsBackupRestoreVM> _settingsBackupRestore = new(() => new(), false);
+	private static readonly Lazy<PolicyEditorVM> _policyEditorVM = new(static () => new(), false);
+	private static readonly Lazy<AllowNewAppsVM> _allowNewAppsVM = new(static () => new(EventLogUtility, PolicyEditorVM), false);
+	private static readonly Lazy<MainWindowVM> _mainWindowVM = new(static () => new(), false);
+	private static readonly Lazy<NavigationService> _navigationService = new(static () => new(MainWindowVM, SidebarVM), false);
+	private static readonly Lazy<ViewOnlinePoliciesVM> _viewOnlinePoliciesVM = new(static () => new(), false);
+	private static readonly Lazy<FirewallSentinelVM> _firewallSentinelVM = new(static () => new(), false);
+	private static readonly Lazy<SystemShutdownInfoDialogVM> _systemShutdownInfoDialogVM = new(static () => new(), false);
+	private static readonly Lazy<SettingsBackupRestoreVM> _settingsBackupRestore = new(static () => new(), false);
 	// Core Dependencies \\
 	internal static EventLogUtility EventLogUtility => _eventLogUtility.Value;
 

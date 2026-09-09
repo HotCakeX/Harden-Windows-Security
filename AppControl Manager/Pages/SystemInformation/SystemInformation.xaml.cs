@@ -35,7 +35,7 @@ internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeade
 
 			// Set the "ViewCurrentPolicies" item as selected in the NavigationView
 			SystemInformationNavigation.SelectedItem = SystemInformationNavigation.MenuItems.OfType<NavigationViewItem>()
-				.First(item => string.Equals(item.Tag.ToString(), "ViewCurrentPolicies", StringComparison.OrdinalIgnoreCase));
+				.First(static item => string.Equals(item.Tag.ToString(), "ViewCurrentPolicies", StringComparison.OrdinalIgnoreCase));
 		}
 		else
 		{
@@ -44,7 +44,7 @@ internal sealed partial class SystemInformation : Page, CommonCore.UI.IPageHeade
 
 			// Set the "ViewOnlinePolicies" item as selected in the NavigationView
 			SystemInformationNavigation.SelectedItem = SystemInformationNavigation.MenuItems.OfType<NavigationViewItem>()
-				.First(item => string.Equals(item.Tag.ToString(), "ViewOnlinePolicies", StringComparison.OrdinalIgnoreCase));
+				.First(static item => string.Equals(item.Tag.ToString(), "ViewOnlinePolicies", StringComparison.OrdinalIgnoreCase));
 		}
 	}
 

@@ -662,7 +662,7 @@ internal sealed partial class ASRVM : ViewModelBase
 	{
 		await RetrieveLatest_Internal();
 
-		return new(items: AllASRRules) { Score = AllASRRules.Count(x => x.State == ASRRuleState.Block) };
+		return new(items: AllASRRules) { Score = AllASRRules.Count(static x => x.State == ASRRuleState.Block) };
 	}
 
 	/// <summary>

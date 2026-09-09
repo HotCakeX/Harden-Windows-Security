@@ -43,29 +43,29 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
 		ColumnManager = new ListViewColumnManager<FileCertificateInfoCol>(
 		[
-			new("SignerNumber", "SignerNumberHeader/Text", x => x.SignerNumber.ToString()),
-			new("Type", "TypeHeader/Text", x => x.Type.ToString()),
-			new("SubjectCN", "SubjectCommonNameHeader/Text", x => x.SubjectCN),
-			new("IssuerCN", "IssuerCommonNameHeader/Text", x => x.IssuerCN),
-			new("NotBefore", "NotBeforeHeader/Text", x => x.NotBefore.ToString()),
-			new("NotAfter", "NotAfterHeader/Text", x => x.NotAfter.ToString()),
-			new("HashingAlgorithm", "HashingAlgorithmHeader/Text", x => x.HashingAlgorithm),
-			new("SerialNumber", "SerialNumberHeader/Text", x => x.SerialNumber),
-			new("Thumbprint", "ThumbprintHeader/Text", x => x.Thumbprint),
-			new("TBSHash", "TBSHashHeader/Text", x => x.TBSHash),
-			new("OIDs", "ExtensionOIDsHeader/Text", x => x.OIDs),
-			new("Version", "VersionHeader/Text", x => x.Version?.ToString()),
-			new("HasPrivateKey", "HasPrivateKeyHeader/Text", x => x.HasPrivateKey?.ToString()),
-			new("Archived", "ArchivedHeader/Text", x => x.Archived?.ToString()),
-			new("CertificatePolicies", "CertificatePoliciesHeader/Text", x => x.CertificatePolicies),
-			new("AuthorityInformationAccess", "AuthorityInformationAccessHeader/Text", x => x.AuthorityInformationAccess),
-			new("CRLDistributionPoints", "CRLDistributionPointsHeader/Text", x => x.CRLDistributionPoints),
-			new("BasicConstraints", "BasicConstraintsHeader/Text", x => x.BasicConstraints),
-			new("KeyUsage", "KeyUsageHeader/Text", x => x.KeyUsage),
-			new("AuthorityKeyIdentifier", "AuthorityKeyIdentifierHeader/Text", x => x.AuthorityKeyIdentifier),
-			new("SubjectKeyIdentifier", "SubjectKeyIdentifierHeader/Text", x => x.SubjectKeyIdentifier),
-			new("RawDataLength", "RawDataLengthHeader/Text", x => x.RawDataLength.ToString()),
-			new("PublicKeyLength", "PublicKeyLengthHeader/Text", x => x.PublicKeyLength.ToString())
+			new("SignerNumber", "SignerNumberHeader/Text", static x => x.SignerNumber.ToString()),
+			new("Type", "TypeHeader/Text", static x => x.Type.ToString()),
+			new("SubjectCN", "SubjectCommonNameHeader/Text", static x => x.SubjectCN),
+			new("IssuerCN", "IssuerCommonNameHeader/Text", static x => x.IssuerCN),
+			new("NotBefore", "NotBeforeHeader/Text", static x => x.NotBefore.ToString()),
+			new("NotAfter", "NotAfterHeader/Text", static x => x.NotAfter.ToString()),
+			new("HashingAlgorithm", "HashingAlgorithmHeader/Text", static x => x.HashingAlgorithm),
+			new("SerialNumber", "SerialNumberHeader/Text", static x => x.SerialNumber),
+			new("Thumbprint", "ThumbprintHeader/Text", static x => x.Thumbprint),
+			new("TBSHash", "TBSHashHeader/Text", static x => x.TBSHash),
+			new("OIDs", "ExtensionOIDsHeader/Text", static x => x.OIDs),
+			new("Version", "VersionHeader/Text", static x => x.Version?.ToString()),
+			new("HasPrivateKey", "HasPrivateKeyHeader/Text", static x => x.HasPrivateKey?.ToString()),
+			new("Archived", "ArchivedHeader/Text", static x => x.Archived?.ToString()),
+			new("CertificatePolicies", "CertificatePoliciesHeader/Text", static x => x.CertificatePolicies),
+			new("AuthorityInformationAccess", "AuthorityInformationAccessHeader/Text", static x => x.AuthorityInformationAccess),
+			new("CRLDistributionPoints", "CRLDistributionPointsHeader/Text", static x => x.CRLDistributionPoints),
+			new("BasicConstraints", "BasicConstraintsHeader/Text", static x => x.BasicConstraints),
+			new("KeyUsage", "KeyUsageHeader/Text", static x => x.KeyUsage),
+			new("AuthorityKeyIdentifier", "AuthorityKeyIdentifierHeader/Text", static x => x.AuthorityKeyIdentifier),
+			new("SubjectKeyIdentifier", "SubjectKeyIdentifierHeader/Text", static x => x.SubjectKeyIdentifier),
+			new("RawDataLength", "RawDataLengthHeader/Text", static x => x.RawDataLength.ToString()),
+			new("PublicKeyLength", "PublicKeyLengthHeader/Text", static x => x.PublicKeyLength.ToString())
 		]);
 
 		// To adjust the initial width of the columns, giving them nice paddings.
@@ -187,29 +187,29 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<FileCertificateInfoCol, object?> Getter)> FileCertificateInfoColPropertyMappings
 		= new Dictionary<string, (string Label, Func<FileCertificateInfoCol, object?> Getter)>
 		{
-			{ "SignerNumber",      (Atlas.GetStr("SignerNumberHeader/Text") + ": ",      fc => fc.SignerNumber) },
-			{ "Type",              (Atlas.GetStr("TypeHeader/Text") + ": ",              fc => fc.Type) },
-			{ "SubjectCN",         (Atlas.GetStr("SubjectCommonNameHeader/Text") + ": ", fc => fc.SubjectCN) },
-			{ "IssuerCN",          (Atlas.GetStr("IssuerCommonNameHeader/Text") + ": ",  fc => fc.IssuerCN) },
-			{ "NotBefore",         (Atlas.GetStr("NotBeforeHeader/Text") + ": ",         fc => fc.NotBefore) },
-			{ "NotAfter",          (Atlas.GetStr("NotAfterHeader/Text") + ": ",          fc => fc.NotAfter) },
-			{ "HashingAlgorithm",  (Atlas.GetStr("HashingAlgorithmHeader/Text") + ": ",  fc => fc.HashingAlgorithm) },
-			{ "SerialNumber",      (Atlas.GetStr("SerialNumberHeader/Text") + ": ",      fc => fc.SerialNumber) },
-			{ "Thumbprint",        (Atlas.GetStr("ThumbprintHeader/Text") + ": ",        fc => fc.Thumbprint) },
-			{ "TBSHash",           (Atlas.GetStr("TBSHashHeader/Text") + ": ",           fc => fc.TBSHash) },
-			{ "OIDs",              (Atlas.GetStr("ExtensionOIDsHeader/Text") + ": ",     fc => fc.OIDs) },
-			{ "Version",           (Atlas.GetStr("VersionHeader/Text") + ": ",           fc => fc.Version) },
-			{ "HasPrivateKey",     (Atlas.GetStr("HasPrivateKeyHeader/Text") + ": ",     fc => fc.HasPrivateKey) },
-			{ "Archived",          (Atlas.GetStr("ArchivedHeader/Text") + ": ",          fc => fc.Archived) },
-			{ "CertificatePolicies",(Atlas.GetStr("CertificatePoliciesHeader/Text") + ": ", fc => fc.CertificatePolicies) },
-			{ "AuthorityInformationAccess", (Atlas.GetStr("AuthorityInformationAccessHeader/Text") + ": ", fc => fc.AuthorityInformationAccess) },
-			{ "CRLDistributionPoints", (Atlas.GetStr("CRLDistributionPointsHeader/Text") + ": ", fc => fc.CRLDistributionPoints) },
-			{ "BasicConstraints",  (Atlas.GetStr("BasicConstraintsHeader/Text") + ": ",  fc => fc.BasicConstraints) },
-			{ "KeyUsage",          (Atlas.GetStr("KeyUsageHeader/Text") + ": ",          fc => fc.KeyUsage) },
-			{ "AuthorityKeyIdentifier", (Atlas.GetStr("AuthorityKeyIdentifierHeader/Text") + ": ", fc => fc.AuthorityKeyIdentifier) },
-			{ "SubjectKeyIdentifier", (Atlas.GetStr("SubjectKeyIdentifierHeader/Text") + ": ", fc => fc.SubjectKeyIdentifier) },
-			{ "RawDataLength",     (Atlas.GetStr("RawDataLengthHeader/Text") + ": ",     fc => fc.RawDataLength) },
-			{ "PublicKeyLength",   (Atlas.GetStr("PublicKeyLengthHeader/Text") + ": ",   fc => fc.PublicKeyLength) }
+			{ "SignerNumber",      (Atlas.GetStr("SignerNumberHeader/Text") + ": ",      static fc => fc.SignerNumber) },
+			{ "Type",              (Atlas.GetStr("TypeHeader/Text") + ": ",              static fc => fc.Type) },
+			{ "SubjectCN",         (Atlas.GetStr("SubjectCommonNameHeader/Text") + ": ", static fc => fc.SubjectCN) },
+			{ "IssuerCN",          (Atlas.GetStr("IssuerCommonNameHeader/Text") + ": ",  static fc => fc.IssuerCN) },
+			{ "NotBefore",         (Atlas.GetStr("NotBeforeHeader/Text") + ": ",         static fc => fc.NotBefore) },
+			{ "NotAfter",          (Atlas.GetStr("NotAfterHeader/Text") + ": ",          static fc => fc.NotAfter) },
+			{ "HashingAlgorithm",  (Atlas.GetStr("HashingAlgorithmHeader/Text") + ": ",  static fc => fc.HashingAlgorithm) },
+			{ "SerialNumber",      (Atlas.GetStr("SerialNumberHeader/Text") + ": ",      static fc => fc.SerialNumber) },
+			{ "Thumbprint",        (Atlas.GetStr("ThumbprintHeader/Text") + ": ",        static fc => fc.Thumbprint) },
+			{ "TBSHash",           (Atlas.GetStr("TBSHashHeader/Text") + ": ",           static fc => fc.TBSHash) },
+			{ "OIDs",              (Atlas.GetStr("ExtensionOIDsHeader/Text") + ": ",     static fc => fc.OIDs) },
+			{ "Version",           (Atlas.GetStr("VersionHeader/Text") + ": ",           static fc => fc.Version) },
+			{ "HasPrivateKey",     (Atlas.GetStr("HasPrivateKeyHeader/Text") + ": ",     static fc => fc.HasPrivateKey) },
+			{ "Archived",          (Atlas.GetStr("ArchivedHeader/Text") + ": ",          static fc => fc.Archived) },
+			{ "CertificatePolicies",(Atlas.GetStr("CertificatePoliciesHeader/Text") + ": ", static fc => fc.CertificatePolicies) },
+			{ "AuthorityInformationAccess", (Atlas.GetStr("AuthorityInformationAccessHeader/Text") + ": ", static fc => fc.AuthorityInformationAccess) },
+			{ "CRLDistributionPoints", (Atlas.GetStr("CRLDistributionPointsHeader/Text") + ": ", static fc => fc.CRLDistributionPoints) },
+			{ "BasicConstraints",  (Atlas.GetStr("BasicConstraintsHeader/Text") + ": ",  static fc => fc.BasicConstraints) },
+			{ "KeyUsage",          (Atlas.GetStr("KeyUsageHeader/Text") + ": ",          static fc => fc.KeyUsage) },
+			{ "AuthorityKeyIdentifier", (Atlas.GetStr("AuthorityKeyIdentifierHeader/Text") + ": ", static fc => fc.AuthorityKeyIdentifier) },
+			{ "SubjectKeyIdentifier", (Atlas.GetStr("SubjectKeyIdentifierHeader/Text") + ": ", static fc => fc.SubjectKeyIdentifier) },
+			{ "RawDataLength",     (Atlas.GetStr("RawDataLengthHeader/Text") + ": ",     static fc => fc.RawDataLength) },
+			{ "PublicKeyLength",   (Atlas.GetStr("PublicKeyLengthHeader/Text") + ": ",   static fc => fc.PublicKeyLength) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	[WinRT.DynamicWindowsRuntimeCast(typeof(Button))]
@@ -570,9 +570,9 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			thumbprint: cert.Thumbprint,
 			tBSHash: CertificateHelper.GetTBSCertificate(cert),
 			oIDs: string.Join(", ", cert.Extensions
-					.Select(ext =>
+					.Select(static ext =>
 						ext.Oid is not null ? $"{ext.Oid.Value} ({ext.Oid.FriendlyName})" : ext.Oid?.Value)
-					.Where(oid => !string.IsNullOrWhiteSpace(oid))),
+					.Where(static oid => !string.IsNullOrWhiteSpace(oid))),
 			version: cert.Version,
 			hasPrivateKey: cert.HasPrivateKey,
 			archived: cert.Archived,

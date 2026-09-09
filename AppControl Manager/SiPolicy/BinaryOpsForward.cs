@@ -1137,7 +1137,7 @@ internal static partial class BinaryOpsForward
 
 			// Direct SiPolicy callers can bypass XML deserialization, so enforce the same policy-level constraints here before writing binary.
 			bool unsignedPolicy = (policyOptionFlags & (uint)OptionType.EnabledUnsignedSystemIntegrityPolicy) != 0;
-			bool allowSupplementalPolicies = policyData.Rules.Any(rule => rule.Item == OptionType.EnabledAllowSupplementalPolicies);
+			bool allowSupplementalPolicies = policyData.Rules.Any(static rule => rule.Item == OptionType.EnabledAllowSupplementalPolicies);
 			if (!unsignedPolicy && (policyData.UpdatePolicySigners is null || policyData.UpdatePolicySigners.Count == 0))
 			{
 				throw new InvalidOperationException(string.Format(Atlas.GetStr("PolicyNeedsSigningButNoUpdateSigner"), OptionType.EnabledUnsignedSystemIntegrityPolicy));

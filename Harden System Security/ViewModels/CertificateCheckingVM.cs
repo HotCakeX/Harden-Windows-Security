@@ -280,13 +280,13 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<NonStlRootCert, object?> Getter)> NonStlRootCertPropertyMappings
 		= new Dictionary<string, (string Label, Func<NonStlRootCert, object?> Getter)>
 		{
-			{ "StoreLocation", (Atlas.GetStr("StoreLocationHeader/Text"), cert => cert.StoreLocationString) },
-			{ "StoreName", (Atlas.GetStr("StoreNameHeader/Text"), cert => cert.StoreNameString) },
-			{ "Subject", (Atlas.GetStr("SubjectHeader/Text"), cert => cert.Subject) },
-			{ "Issuer", (Atlas.GetStr("IssuerHeader/Text"), cert => cert.Issuer) },
-			{ "Thumbprint", (Atlas.GetStr("ThumbprintHeader/Text"), cert => cert.LeafThumbprintSha1) },
-			{ "RootSubject", (Atlas.GetStr("RootSubjectHeader/Text"), cert => cert.RootSubject) },
-			{ "RootSha256", (Atlas.GetStr("RootSha256Header/Text"), cert => cert.RootSha256Hex) }
+			{ "StoreLocation", (Atlas.GetStr("StoreLocationHeader/Text"), static cert => cert.StoreLocationString) },
+			{ "StoreName", (Atlas.GetStr("StoreNameHeader/Text"), static cert => cert.StoreNameString) },
+			{ "Subject", (Atlas.GetStr("SubjectHeader/Text"), static cert => cert.Subject) },
+			{ "Issuer", (Atlas.GetStr("IssuerHeader/Text"), static cert => cert.Issuer) },
+			{ "Thumbprint", (Atlas.GetStr("ThumbprintHeader/Text"), static cert => cert.LeafThumbprintSha1) },
+			{ "RootSubject", (Atlas.GetStr("RootSubjectHeader/Text"), static cert => cert.RootSubject) },
+			{ "RootSha256", (Atlas.GetStr("RootSha256Header/Text"), static cert => cert.RootSha256Hex) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]

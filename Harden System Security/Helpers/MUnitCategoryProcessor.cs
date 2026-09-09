@@ -113,13 +113,13 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 		List<MUnit> result = [];
 
 		// Keep MUnits with no JsonPolicyId (non-Registry/GP based, those from security baselines) as they don't have this conflict type.
-		IEnumerable<MUnit> nonJsonMUnits = mUnits.Where(m => m.JsonPolicyId is null);
+		IEnumerable<MUnit> nonJsonMUnits = mUnits.Where(static m => m.JsonPolicyId is null);
 		result.AddRange(nonJsonMUnits);
 
 		// Process Registry/GP based MUnits
 		IEnumerable<IGrouping<string, MUnit>> jsonGroups = mUnits
-			.Where(m => m.JsonPolicyId is not null)
-			.GroupBy(m => m.JsonPolicyId!, StringComparer.OrdinalIgnoreCase);
+			.Where(static m => m.JsonPolicyId is not null)
+			.GroupBy(static m => m.JsonPolicyId!, StringComparer.OrdinalIgnoreCase);
 
 		foreach (IGrouping<string, MUnit> group in jsonGroups)
 		{
@@ -132,7 +132,7 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 
 			// Conflict detected.
 			// Prefer items with a SubCategory (Specific) over those without (Generic).
-			List<MUnit> specificItems = group.Where(m => m.SubCategory is not null).ToList();
+			List<MUnit> specificItems = group.Where(static m => m.SubCategory is not null).ToList();
 
 			if (specificItems.Count > 0)
 			{

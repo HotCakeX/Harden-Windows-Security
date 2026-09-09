@@ -129,7 +129,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			category: Categories.MicrosoftDefender,
 			name: Atlas.GetStr("EnablingRestorePointScan-MSDefender"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "DisableRestorePoint"))
 				{
@@ -139,7 +139,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set DisableRestorePoint false");
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "DisableRestorePoint"))
 				{
@@ -156,7 +156,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				return false;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "DisableRestorePoint"))
 				{
@@ -180,7 +180,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			category: Categories.MicrosoftDefender,
 			name: Atlas.GetStr("AllowSwitchToAsyncInspection-MSDefender"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "AllowSwitchToAsyncInspection"))
 				{
@@ -190,7 +190,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AllowSwitchToAsyncInspection true");
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "AllowSwitchToAsyncInspection"))
 				{
@@ -207,7 +207,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				return false;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "AllowSwitchToAsyncInspection"))
 				{
@@ -228,7 +228,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			category: Categories.MicrosoftDefender,
 			name: Atlas.GetStr("EnableConvertWarnToBlock-MSDefender"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "EnableConvertWarnToBlock"))
 				{
@@ -238,7 +238,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set EnableConvertWarnToBlock true");
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "EnableConvertWarnToBlock"))
 				{
@@ -255,7 +255,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				return false;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "EnableConvertWarnToBlock"))
 				{
@@ -279,7 +279,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			category: Categories.MicrosoftDefender,
 			name: Atlas.GetStr("BruteForceProtectionLocalNetworkBlocking-MSDefender"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "BruteForceProtectionLocalNetworkBlocking"))
 				{
@@ -289,7 +289,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi bool ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set BruteForceProtectionLocalNetworkBlocking true");
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "BruteForceProtectionLocalNetworkBlocking"))
 				{
@@ -306,7 +306,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				return false;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "BruteForceProtectionLocalNetworkBlocking"))
 				{
@@ -330,7 +330,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			category: Categories.MicrosoftDefender,
 			name: Atlas.GetStr("AddOneDriveDirsToCFA-MSDefender"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "ControlledFolderAccessProtectedFolders"))
 				{
@@ -342,7 +342,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				if (oneDriveDirs.Count > 0)
 				{
 					// Wrap them with double quotes and separate them with a space
-					string oneDriveDirsFinal = string.Join(" ", oneDriveDirs.Select(item => $"\"{item}\""));
+					string oneDriveDirsFinal = string.Join(" ", oneDriveDirs.Select(static item => $"\"{item}\""));
 
 					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, $"wmi stringarray ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Add ControlledFolderAccessProtectedFolders {oneDriveDirsFinal}");
 				}
@@ -359,7 +359,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			category: Categories.MicrosoftDefender,
 			name: Atlas.GetStr("EnableMandatoryASLR-MSDefender"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				Result systemResult = AddMitigationsToSystem(
 					null,
@@ -375,7 +375,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				Result<AppMitigations> systemPolicyResult = GetSystemPolicy();
 				if (!systemPolicyResult.IsSuccess)
@@ -387,7 +387,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				return system.Aslr.ForceRelocateImages == OPTIONVALUE.ON;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				Result systemResult = AddMitigationsToSystem(
 					[MitigationOptions.ForceRelocateImages],
@@ -425,7 +425,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			category: Categories.MicrosoftDefender,
 			name: Atlas.GetStr("SetNXBit-MSDefender"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				BCDManager.SetNxElement(3);
 
@@ -438,12 +438,12 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				return BCDManager.GetNxElement() == 3;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				// Set it back to the default value.
 				BCDManager.SetNxElement(0);
@@ -468,7 +468,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			category: Categories.MicrosoftDefender,
 			name: Atlas.GetStr("ApplyMandatoryASLRExcl-MSDefender"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				// Collect all of the ASLR-Incompatible files.
 				HashSet<string> results = BinarySecurityAnalyzer.GetASLRIncompatibleExes();
@@ -492,7 +492,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				}
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				// Collect all of the ASLR-Incompatible files.
 				HashSet<string> results = BinarySecurityAnalyzer.GetASLRIncompatibleExes();
@@ -559,7 +559,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			category: Categories.MicrosoftDefender,
 			name: Atlas.GetStr("BetaUpdateChannels-MSDefender"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "EngineUpdatesChannel"))
 				{
@@ -574,7 +574,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set PlatformUpdatesChannel 2");
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "EngineUpdatesChannel"))
 				{
@@ -595,7 +595,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				return false;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "EngineUpdatesChannel"))
 				{
@@ -627,18 +627,18 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				category: Categories.MicrosoftDefender,
 				name: Atlas.GetStr("EnableMDAVSandboxMode-MSDefender"),
 
-				applyStrategy: new DefaultApply(() =>
+				applyStrategy: new DefaultApply(static () =>
 				{
 					Environment.SetEnvironmentVariable(Name, Value, EnvironmentVariableTarget.Machine);
 				}),
 
-				verifyStrategy: new DefaultVerify(() =>
+				verifyStrategy: new DefaultVerify(static () =>
 				{
 					string? current = Environment.GetEnvironmentVariable(Name, EnvironmentVariableTarget.Machine);
 					return string.Equals(current, Value, StringComparison.OrdinalIgnoreCase);
 				}),
 
-				removeStrategy: new DefaultRemove(() =>
+				removeStrategy: new DefaultRemove(static () =>
 				{
 					Environment.SetEnvironmentVariable(Name, null, EnvironmentVariableTarget.Machine);
 				}),
@@ -862,8 +862,8 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<Exclusions, object?> Getter)> _exclusionsMappings =
 		new Dictionary<string, (string Label, Func<Exclusions, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "Target",     (Atlas.GetStr("TargetHeader/Text"),  v => v.Target) },
-			{ "Source",     (Atlas.GetStr("SourceHeader/Text"),  v => v.SourceFriendlyName) }
+			{ "Target",     (Atlas.GetStr("TargetHeader/Text"),  static v => v.Target) },
+			{ "Source",     (Atlas.GetStr("SourceHeader/Text"),  static v => v.SourceFriendlyName) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	#region Sort

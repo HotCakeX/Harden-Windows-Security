@@ -157,7 +157,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// Firewall related policies to apply to the system.
 	/// </summary>
-	private static readonly Lazy<List<RegistryPolicyEntry>> FirewallPolicies = new(() =>
+	private static readonly Lazy<List<RegistryPolicyEntry>> FirewallPolicies = new(static () =>
 	{
 		List<RegistryPolicyEntry> policies = [];
 
@@ -1588,19 +1588,19 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	private static readonly FrozenDictionary<string, (string Label, Func<FirewallEvent, object?> Getter)> FirewallEventsColumnMappings = new Dictionary<string, (string Label, Func<FirewallEvent, object?> Getter)>()
 			{
-				{ "TimeCreated", (Atlas.GetStr("TimeCreatedHeader/Text"), x => x.TimeCreated) },
-				{ "Application", ("Application", x => x.Application) },
-				{ "Direction", ("Direction", x => x.Direction) },
-				{ "Protocol", ("Protocol", x => x.Protocol) },
-				{ "SourceAddress", ("Source Address", x => x.SourceAddress) },
-				{ "SourcePort", ("Source Port", x => x.SourcePort) },
-				{ "DestAddress", ("Destination Address", x => x.DestAddress) },
-				{ "DestPort", ("Destination Port", x => x.DestPort) },
-				{ "ProcessId", ("Process ID", x => x.ProcessId) },
-				{ "FilterOrigin", ("Filter Origin", x => x.FilterOrigin) },
-				{ "UserID", ("User ID", x => x.UserID) },
-				{ "LayerName", ("Layer Name", x => x.LayerName) },
-				{ "Interface", ("Interface", x => x.Interface) }
+				{ "TimeCreated", (Atlas.GetStr("TimeCreatedHeader/Text"), static x => x.TimeCreated) },
+				{ "Application", ("Application", static x => x.Application) },
+				{ "Direction", ("Direction", static x => x.Direction) },
+				{ "Protocol", ("Protocol", static x => x.Protocol) },
+				{ "SourceAddress", ("Source Address", static x => x.SourceAddress) },
+				{ "SourcePort", ("Source Port", static x => x.SourcePort) },
+				{ "DestAddress", ("Destination Address", static x => x.DestAddress) },
+				{ "DestPort", ("Destination Port", static x => x.DestPort) },
+				{ "ProcessId", ("Process ID", static x => x.ProcessId) },
+				{ "FilterOrigin", ("Filter Origin", static x => x.FilterOrigin) },
+				{ "UserID", ("User ID", static x => x.UserID) },
+				{ "LayerName", ("Layer Name", static x => x.LayerName) },
+				{ "Interface", ("Interface", static x => x.Interface) }
 			}.ToFrozenDictionary();
 
 	internal void BlockedPacketsListViewFlyoutMenuCopy_Click()
@@ -1632,7 +1632,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		{
 			FirewallEventsSectionElementsAreEnabled = false;
 
-			await Task.Run(() =>
+			await Task.Run(static () =>
 			{
 				AUDIT_POLICY_INFORMATION auditPolicy = new()
 				{
@@ -1664,7 +1664,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 		{
 			FirewallEventsSectionElementsAreEnabled = false;
 
-			await Task.Run(() =>
+			await Task.Run(static () =>
 			{
 				AUDIT_POLICY_INFORMATION auditPolicy = new()
 				{

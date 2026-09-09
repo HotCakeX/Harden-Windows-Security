@@ -50,7 +50,7 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 		Volume = volume;
 
 		// Get the full list of volumes and filter out non-removable drives.
-		RemovableDrives = [.. volumesList.Where(x => x.VolumeType is VolumeType.Removable && !string.IsNullOrWhiteSpace(x.MountPoint))];
+		RemovableDrives = [.. volumesList.Where(static x => x.VolumeType is VolumeType.Removable && !string.IsNullOrWhiteSpace(x.MountPoint))];
 
 		SelectedRemovableDrive = RemovableDrives.FirstOrDefault();
 

@@ -49,12 +49,12 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
 		ColumnManager = new ListViewColumnManager<CiPolicyInfo>(
 		[
-			new("PolicyID", "PolicyIDHeader/Text", x => x.PolicyID),
-			new("BasePolicyID", "BasePolicyIDHeader/Text", x => x.BasePolicyID),
-			new("FriendlyName", "FriendlyNameHeader/Text", x => x.FriendlyName),
-			new("Version", "VersionHeader/Text", x => x.VersionString),
-			new("IsSignedPolicy", "IsSignedPolicyHeader/Text", x => x.IsSignedPolicy.ToString()),
-			new("PolicyOptions", "PolicyOptionsHeader/Text", x => x.PolicyOptionsDisplay)
+			new("PolicyID", "PolicyIDHeader/Text", static x => x.PolicyID),
+			new("BasePolicyID", "BasePolicyIDHeader/Text", static x => x.BasePolicyID),
+			new("FriendlyName", "FriendlyNameHeader/Text", static x => x.FriendlyName),
+			new("Version", "VersionHeader/Text", static x => x.VersionString),
+			new("IsSignedPolicy", "IsSignedPolicyHeader/Text", static x => x.IsSignedPolicy.ToString()),
+			new("PolicyOptions", "PolicyOptionsHeader/Text", static x => x.PolicyOptionsDisplay)
 		]);
 
 		// To adjust the initial width of the columns, giving them nice paddings.

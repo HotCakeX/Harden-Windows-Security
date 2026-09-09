@@ -381,15 +381,15 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 		query = SelectedSortIndex == 1
 			? IsSortDescending
-				? query.OrderByDescending(x => x.Item.CurrentState, StringComparer.OrdinalIgnoreCase).ThenBy(x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
-				: query.OrderBy(x => x.Item.CurrentState, StringComparer.OrdinalIgnoreCase).ThenBy(x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
+				? query.OrderByDescending(static x => x.Item.CurrentState, StringComparer.OrdinalIgnoreCase).ThenBy(static x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
+				: query.OrderBy(static x => x.Item.CurrentState, StringComparer.OrdinalIgnoreCase).ThenBy(static x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
 			: SelectedSortIndex == 2
 				? IsSortDescending
-				? query.OrderByDescending(x => x.Item.StartType, StringComparer.OrdinalIgnoreCase).ThenBy(x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
-				: query.OrderBy(x => x.Item.StartType, StringComparer.OrdinalIgnoreCase).ThenBy(x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
+				? query.OrderByDescending(static x => x.Item.StartType, StringComparer.OrdinalIgnoreCase).ThenBy(static x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
+				: query.OrderBy(static x => x.Item.StartType, StringComparer.OrdinalIgnoreCase).ThenBy(static x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
 				: IsSortDescending
-				? query.OrderByDescending(x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
-				: query.OrderBy(x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase);
+				? query.OrderByDescending(static x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase)
+				: query.OrderBy(static x => x.Item.ServiceName, StringComparer.OrdinalIgnoreCase);
 
 		return query.ToList();
 	}
@@ -739,7 +739,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		FilterGroupVM group = new(name);
 
 		// Sort the filters descending by count frequency
-		foreach (KeyValuePair<string, int> kvp in counts.OrderByDescending(x => x.Value))
+		foreach (KeyValuePair<string, int> kvp in counts.OrderByDescending(static x => x.Value))
 		{
 			FilterItemVM item = new(kvp.Key, kvp.Value)
 			{
@@ -760,13 +760,13 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		FilteredServices.Clear();
 
 		// Retrieve the allowed items currently toggled active
-		HashSet<string> allowedCompanies = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Company", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedStatuses = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Status", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedStartTypes = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Start Type", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedServiceTypes = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Service Type", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedErrorControls = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Error Control", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedLaunchProtected = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Launch Protected", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedServiceFlags = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Service Flags", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedCompanies = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Company", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedStatuses = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Status", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedStartTypes = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Start Type", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedServiceTypes = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Service Type", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedErrorControls = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Error Control", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedLaunchProtected = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Launch Protected", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedServiceFlags = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Service Flags", StringComparison.OrdinalIgnoreCase)));
 
 		string query = SearchText?.Trim() ?? string.Empty;
 		bool hasQuery = !string.IsNullOrWhiteSpace(query);
@@ -1181,13 +1181,13 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 
 	private bool ServicePassesCurrentFilter(ServiceItemViewModel service)
 	{
-		HashSet<string> allowedCompanies = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Company", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedStatuses = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Status", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedStartTypes = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Start Type", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedServiceTypes = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Service Type", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedErrorControls = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Error Control", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedLaunchProtected = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Launch Protected", StringComparison.OrdinalIgnoreCase)));
-		HashSet<string> allowedServiceFlags = GetAllowed(FilterGroups.FirstOrDefault(g => string.Equals(g.GroupName, "Service Flags", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedCompanies = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Company", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedStatuses = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Status", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedStartTypes = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Start Type", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedServiceTypes = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Service Type", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedErrorControls = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Error Control", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedLaunchProtected = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Launch Protected", StringComparison.OrdinalIgnoreCase)));
+		HashSet<string> allowedServiceFlags = GetAllowed(FilterGroups.FirstOrDefault(static g => string.Equals(g.GroupName, "Service Flags", StringComparison.OrdinalIgnoreCase)));
 
 		string query = SearchText?.Trim() ?? string.Empty;
 		bool hasQuery = !string.IsNullOrWhiteSpace(query);
@@ -1586,7 +1586,7 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		try
 		{
 			uint access = controlCode == 0 ? NativeMethods.SERVICE_START : NativeMethods.SERVICE_STOP;
-			if (controlCode == NativeMethods.SERVICE_CONTROL_PAUSE || controlCode == NativeMethods.SERVICE_CONTROL_CONTINUE)
+			if (controlCode is NativeMethods.SERVICE_CONTROL_PAUSE or NativeMethods.SERVICE_CONTROL_CONTINUE)
 				access = NativeMethods.SERVICE_PAUSE_CONTINUE;
 
 			IntPtr hService = NativeMethods.OpenServiceW(scManager, serviceName, access | NativeMethods.SERVICE_QUERY_STATUS);

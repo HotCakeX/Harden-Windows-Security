@@ -153,7 +153,7 @@ internal static class SupplementalForSelf
 
 		Allow? appControlAllowRule = (policyObj.FileRules?
 		.OfType<Allow>()
-		.FirstOrDefault(fa => string.Equals(fa.PackageFamilyName, "ToBeDetermined", StringComparison.OrdinalIgnoreCase))) ??
+		.FirstOrDefault(static fa => string.Equals(fa.PackageFamilyName, "ToBeDetermined", StringComparison.OrdinalIgnoreCase))) ??
 		throw new InvalidOperationException("Required allow directive absent. Supplemental binding withheld.");
 
 		// Replace the placeholder value in the policy file with the app's real PFN.

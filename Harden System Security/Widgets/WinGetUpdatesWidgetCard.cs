@@ -75,7 +75,7 @@ internal static class WinGetUpdatesWidgetCard
 	/// The Adaptive Card template, which is read from the JSON file (that ships with the app) only once per process because the file never changes
 	/// while the app is running and because only the data payload differs between the updates.
 	/// </summary>
-	internal static readonly Lazy<string> Template = new(() => File.ReadAllText(Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "WinGetUpdatesWidgetCard.json")));
+	internal static readonly Lazy<string> Template = new(static () => File.ReadAllText(Path.Join(AppContext.BaseDirectory, "Resources", "Widgets", "WinGetUpdatesWidgetCard.json")));
 
 	/// <summary>
 	/// The image of the card, encoded as a "data:" URI, which is read from the PNG file of the app package only once per process.

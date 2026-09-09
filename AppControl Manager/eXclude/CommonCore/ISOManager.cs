@@ -268,7 +268,7 @@ internal static partial class ISOManager
 			}
 
 			// Sort by Offset ascending - first is BOOT (~2GB), next is DATA (~8GB), last is Remaining Space (if exists)
-			partitions.Sort((a, b) => a.Offset.CompareTo(b.Offset));
+			partitions.Sort(static (a, b) => a.Offset.CompareTo(b.Offset));
 
 			PartitionDriveLetterInfo bootPartition = partitions[0];
 			PartitionDriveLetterInfo dataPartition = partitions[1];

@@ -118,7 +118,7 @@ internal static partial class StyleExtensions
 			return;
 		}
 
-		ResourceDictionary? existingResourceDictionary = mergedDictionaries.FirstOrDefault(c => c is StyleExtensionResourceDictionary);
+		ResourceDictionary? existingResourceDictionary = mergedDictionaries.FirstOrDefault(static c => c is StyleExtensionResourceDictionary);
 		if (existingResourceDictionary != null)
 		{
 			// Remove the existing resource dictionary

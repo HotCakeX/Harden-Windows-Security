@@ -367,7 +367,7 @@ internal partial class SettingsExpander
 	 nameof(IsExpanded),
 	 typeof(bool),
 	 typeof(SettingsExpander),
-	 new PropertyMetadata(defaultValue: false, (d, e) => ((SettingsExpander)d).OnIsExpandedPropertyChanged((bool)e.NewValue)));
+	 new PropertyMetadata(defaultValue: false, static (d, e) => ((SettingsExpander)d).OnIsExpandedPropertyChanged((bool)e.NewValue)));
 
 	/// <summary>
 	/// Gets or sets the Header.

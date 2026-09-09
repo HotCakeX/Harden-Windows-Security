@@ -180,7 +180,7 @@ internal static class SSHConfigurations
 		int initialCount = configLines.Count;
 
 		// Remove all lines that start with "MACs ", keeping the rest intact
-		_ = configLines.RemoveAll(line => line.StartsWith("MACs ", StringComparison.OrdinalIgnoreCase));
+		_ = configLines.RemoveAll(static line => line.StartsWith("MACs ", StringComparison.OrdinalIgnoreCase));
 
 		if (configLines.Count != initialCount)
 		{

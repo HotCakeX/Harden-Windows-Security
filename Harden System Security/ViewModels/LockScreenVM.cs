@@ -66,12 +66,12 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 			category: Categories.LockScreen,
 			name: Atlas.GetSecurityStr("LockoutBadCount-LockScreen"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutBadCount(5);
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				CommonCore.SecurityPolicy.SystemAccessInfo states = CommonCore.SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
 
@@ -79,7 +79,7 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 				return states.LockoutBadCount <= 5;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutBadCount(10);
 			}),
@@ -100,21 +100,21 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 			category: Categories.LockScreen,
 			name: Atlas.GetSecurityStr("ResetLockoutCount-LockScreen"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				// Requires SetLockoutDuration to be applied first otherwise throws error: 87
 				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(1440);
 				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetResetLockoutCount(1440);
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				CommonCore.SecurityPolicy.SystemAccessInfo states = CommonCore.SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
 
 				return states.ResetLockoutCount == 1440;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetResetLockoutCount(10);
 			}),
@@ -135,19 +135,19 @@ internal sealed partial class LockScreenVM : MUnitListViewModelBase
 			category: Categories.LockScreen,
 			name: Atlas.GetSecurityStr("LockoutDuration-LockScreen"),
 
-			applyStrategy: new DefaultApply(() =>
+			applyStrategy: new DefaultApply(static () =>
 			{
 				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(1440);
 			}),
 
-			verifyStrategy: new DefaultVerify(() =>
+			verifyStrategy: new DefaultVerify(static () =>
 			{
 				CommonCore.SecurityPolicy.SystemAccessInfo states = CommonCore.SecurityPolicy.SecurityPolicyReader.GetSystemAccess();
 
 				return states.LockoutDuration == 1440;
 			}),
 
-			removeStrategy: new DefaultRemove(() =>
+			removeStrategy: new DefaultRemove(static () =>
 			{
 				CommonCore.SecurityPolicy.SecurityPolicyWriter.SetLockoutDuration(10);
 			}),

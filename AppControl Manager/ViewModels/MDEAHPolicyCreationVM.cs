@@ -49,24 +49,24 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
 		ColumnManager = new ListViewColumnManager<FileIdentity>(
 		[
-			new("FileName", "FileNameHeader/Text", x => x.FileName),
-			new("TimeCreated", "TimeCreatedHeader/Text", x => x.TimeCreated?.ToString()),
-			new("SignatureStatus", "SignatureStatusHeader/Text", x => x.SignatureStatus_String),
-			new("Action", "ActionHeader/Text", x => x.Action_String),
-			new("OriginalFileName", "OriginalFileNameHeader/Text", x => x.OriginalFileName),
-			new("InternalName", "InternalNameHeader/Text", x => x.InternalName),
-			new("FileDescription", "FileDescriptionHeader/Text", x => x.FileDescription),
-			new("FileVersion", "FileVersionHeader/Text", x => x.FileVersion_String),
-			new("SHA256Hash", "SHA256HashHeader/Text", x => x.SHA256Hash, defaultVisibility: Visibility.Collapsed),
-			new("SHA1Hash", "SHA1HashHeader/Text", x => x.SHA1Hash, defaultVisibility: Visibility.Collapsed),
-			new("SHA256FlatHash", "SHA256FlatHashHeader/Text", x => x.SHA256FlatHash, defaultVisibility: Visibility.Collapsed),
-			new("SHA1FlatHash", "SHA1FlatHashHeader/Text", x => x.SHA1FlatHash, defaultVisibility: Visibility.Collapsed),
-			new("SISigningScenario", "SigningScenarioHeader/Text", x => x.SISigningScenario.ToString()),
-			new("FilePath", "FilePathHeader/Text", x => x.FilePath),
-			new("ComputerName", "ComputerNameHeader/Text", x => x.ComputerName),
-			new("PolicyGUID", "PolicyGUIDHeader/Text", x => x.PolicyGUID),
-			new("PolicyName", "PolicyNameHeader/Text", x => x.PolicyName),
-			new("FilePublishersToDisplay", "FilePublishersHeader/Text", x => x.FilePublishersToDisplay)
+			new("FileName", "FileNameHeader/Text", static x => x.FileName),
+			new("TimeCreated", "TimeCreatedHeader/Text", static x => x.TimeCreated?.ToString()),
+			new("SignatureStatus", "SignatureStatusHeader/Text", static x => x.SignatureStatus_String),
+			new("Action", "ActionHeader/Text", static x => x.Action_String),
+			new("OriginalFileName", "OriginalFileNameHeader/Text", static x => x.OriginalFileName),
+			new("InternalName", "InternalNameHeader/Text", static x => x.InternalName),
+			new("FileDescription", "FileDescriptionHeader/Text", static x => x.FileDescription),
+			new("FileVersion", "FileVersionHeader/Text", static x => x.FileVersion_String),
+			new("SHA256Hash", "SHA256HashHeader/Text", static x => x.SHA256Hash, defaultVisibility: Visibility.Collapsed),
+			new("SHA1Hash", "SHA1HashHeader/Text", static x => x.SHA1Hash, defaultVisibility: Visibility.Collapsed),
+			new("SHA256FlatHash", "SHA256FlatHashHeader/Text", static x => x.SHA256FlatHash, defaultVisibility: Visibility.Collapsed),
+			new("SHA1FlatHash", "SHA1FlatHashHeader/Text", static x => x.SHA1FlatHash, defaultVisibility: Visibility.Collapsed),
+			new("SISigningScenario", "SigningScenarioHeader/Text", static x => x.SISigningScenario.ToString()),
+			new("FilePath", "FilePathHeader/Text", static x => x.FilePath),
+			new("ComputerName", "ComputerNameHeader/Text", static x => x.ComputerName),
+			new("PolicyGUID", "PolicyGUIDHeader/Text", static x => x.PolicyGUID),
+			new("PolicyName", "PolicyNameHeader/Text", static x => x.PolicyName),
+			new("FilePublishersToDisplay", "FilePublishersHeader/Text", static x => x.FilePublishersToDisplay)
 		]);
 
 		// To adjust the initial width of the columns, giving them nice paddings.

@@ -74,10 +74,8 @@ internal static class GetEventLogsData
 			// Read the events from the system based on the query
 			using (EventLogReader logReader = new(eventQuery))
 			{
-				EventRecord eventRecord;
-
 				// Read each event that matches the query
-				while ((eventRecord = logReader.ReadEvent()) is not null)
+				while (logReader.ReadEvent() is EventRecord eventRecord)
 				{
 					// Add the event to the list
 					rawEvents.Add(eventRecord);
@@ -94,7 +92,7 @@ internal static class GetEventLogsData
 			cToken?.ThrowIfCancellationRequested();
 
 			// Group all events based on their ActivityId property
-			IEnumerable<IGrouping<Guid?, EventRecord>> groupedEvents = rawEvents.GroupBy(e => e.ActivityId);
+			IEnumerable<IGrouping<Guid?, EventRecord>> groupedEvents = rawEvents.GroupBy(static e => e.ActivityId);
 
 			// Iterate over each group of events
 			foreach (IGrouping<Guid?, EventRecord> group in groupedEvents)
@@ -715,10 +713,8 @@ internal static class GetEventLogsData
 			// Read the events from the system based on the query
 			using (EventLogReader logReader = new(eventQuery))
 			{
-				EventRecord eventRecord;
-
 				// Read each event that matches the query
-				while ((eventRecord = logReader.ReadEvent()) is not null)
+				while (logReader.ReadEvent() is EventRecord eventRecord)
 				{
 					// Add the event to the list
 					rawEvents.Add(eventRecord);
@@ -735,7 +731,7 @@ internal static class GetEventLogsData
 			cToken?.ThrowIfCancellationRequested();
 
 			// Group all events based on their ActivityId property
-			IEnumerable<IGrouping<Guid?, EventRecord>> groupedEvents = rawEvents.GroupBy(e => e.ActivityId);
+			IEnumerable<IGrouping<Guid?, EventRecord>> groupedEvents = rawEvents.GroupBy(static e => e.ActivityId);
 
 			// Iterate over each group of events
 			foreach (IGrouping<Guid?, EventRecord> group in groupedEvents)

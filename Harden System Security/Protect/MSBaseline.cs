@@ -373,8 +373,8 @@ internal static class MSBaseline
 	{
 		// Get all unique directory paths
 		string[] directories = extractedFiles
-			.Select(file => Path.GetDirectoryName(file.RelativePath) ?? string.Empty)
-			.Where(dir => !string.IsNullOrEmpty(dir))
+			.Select(static file => Path.GetDirectoryName(file.RelativePath) ?? string.Empty)
+			.Where(static dir => !string.IsNullOrEmpty(dir))
 			.Distinct(StringComparer.OrdinalIgnoreCase)
 			.ToArray();
 
@@ -605,7 +605,7 @@ internal static class MSBaseline
 				List<CsvAuditPolicyEntry> csvEntries = ParseAuditPolicyCsvFromReader(reader);
 
 				// Get current audit policies
-				Guid[] guids = csvEntries.Select(e => e.SubcategoryGuid).ToArray();
+				Guid[] guids = csvEntries.Select(static e => e.SubcategoryGuid).ToArray();
 				Dictionary<Guid, uint> currentPolicies = AuditPolicyManager.GetSpecificAuditPolicies(guids);
 
 				foreach (CsvAuditPolicyEntry entry in CollectionsMarshal.AsSpan(csvEntries))
@@ -1768,8 +1768,8 @@ internal static class MSBaseline
 		string[] rights = string.IsNullOrEmpty(rightsString)
 			? []
 			: rightsString.Split(',', StringSplitOptions.RemoveEmptyEntries)
-				.Select(r => r.Trim())
-				.Where(r => !string.IsNullOrEmpty(r))
+				.Select(static r => r.Trim())
+				.Where(static r => !string.IsNullOrEmpty(r))
 				.ToArray();
 
 		privilegeRights[privilege] = rights;

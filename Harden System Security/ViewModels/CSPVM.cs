@@ -638,9 +638,9 @@ internal sealed partial class CSPVM : ViewModelBase
 					XElement? format = props.Element("DFFormat");
 
 					// this DDF node is a leaf node, not a container node.
-					if (format != null && !format.Elements().Any(e => e.Name.LocalName.Equals("node", StringComparison.OrdinalIgnoreCase)))
+					if (format != null && !format.Elements().Any(static e => e.Name.LocalName.Equals("node", StringComparison.OrdinalIgnoreCase)))
 					{
-						bool hasGet = props.Element("AccessType")?.Elements().Any(a => a.Name.LocalName.Equals("Get", StringComparison.OrdinalIgnoreCase)) == true;
+						bool hasGet = props.Element("AccessType")?.Elements().Any(static a => a.Name.LocalName.Equals("Get", StringComparison.OrdinalIgnoreCase)) == true;
 
 						bool requiresInstance = hasDynamicAncestor || isThisDynamic;
 
@@ -652,7 +652,7 @@ internal sealed partial class CSPVM : ViewModelBase
 								props.Element("Description")?.Value?.Trim(),
 								format.Elements().FirstOrDefault()?.Name.LocalName.Trim() ?? Atlas.GetStr("UnknownState"),
 								props.Element("DefaultValue")?.Value,
-								string.Join(", ", props.Element("AccessType")?.Elements().Select(e => e.Name.LocalName) ?? []),
+								string.Join(", ", props.Element("AccessType")?.Elements().Select(static e => e.Name.LocalName) ?? []),
 								GetAllowedValues(props),
 								props.Element("Scope")?.Elements().FirstOrDefault()?.Name.LocalName
 							));
@@ -667,22 +667,22 @@ internal sealed partial class CSPVM : ViewModelBase
 		private static string GetAllowedValues(XElement props)
 		{
 			// Retrieve the AllowedValues element
-			XElement? allowed = props.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("AllowedValues", StringComparison.OrdinalIgnoreCase));
+			XElement? allowed = props.Elements().FirstOrDefault(static e => e.Name.LocalName.Equals("AllowedValues", StringComparison.OrdinalIgnoreCase));
 			if (allowed is null) return string.Empty;
 
 			// Determine the ValueType. Default to ENUM if not present.
-			string valType = allowed.Attributes().FirstOrDefault(a => a.Name.LocalName.Equals("ValueType", StringComparison.OrdinalIgnoreCase))?.Value ?? "ENUM";
+			string valType = allowed.Attributes().FirstOrDefault(static a => a.Name.LocalName.Equals("ValueType", StringComparison.OrdinalIgnoreCase))?.Value ?? "ENUM";
 
 			if (valType.Equals("ENUM", StringComparison.OrdinalIgnoreCase))
 			{
-				List<XElement> enums = allowed.Elements().Where(e => e.Name.LocalName.Equals("Enum", StringComparison.OrdinalIgnoreCase)).ToList();
+				List<XElement> enums = allowed.Elements().Where(static e => e.Name.LocalName.Equals("Enum", StringComparison.OrdinalIgnoreCase)).ToList();
 				if (enums.Count > 0)
 				{
 					StringBuilder sb = new();
 					foreach (XElement en in CollectionsMarshal.AsSpan(enums))
 					{
-						string val = en.Elements().FirstOrDefault(x => x.Name.LocalName.Equals("Value", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
-						string desc = en.Elements().FirstOrDefault(x => x.Name.LocalName.Equals("ValueDescription", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
+						string val = en.Elements().FirstOrDefault(static x => x.Name.LocalName.Equals("Value", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
+						string desc = en.Elements().FirstOrDefault(static x => x.Name.LocalName.Equals("ValueDescription", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
 						if (sb.Length > 0) _ = sb.Append("; ");
 						_ = sb.Append($"{val} ({desc})");
 					}
@@ -692,16 +692,16 @@ internal sealed partial class CSPVM : ViewModelBase
 			else if (valType.Equals("Range", StringComparison.OrdinalIgnoreCase))
 			{
 				// e.g.,: <MSFT:Value>[0-10000]</MSFT:Value>
-				return allowed.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("Value", StringComparison.OrdinalIgnoreCase))?.Value ?? string.Empty;
+				return allowed.Elements().FirstOrDefault(static e => e.Name.LocalName.Equals("Value", StringComparison.OrdinalIgnoreCase))?.Value ?? string.Empty;
 			}
 			else if (valType.Equals("ADMX", StringComparison.OrdinalIgnoreCase))
 			{
 				// e.g.,: <MSFT:AdmxBacked Area="..." Name="..." File="..." />
-				XElement? admx = allowed.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("AdmxBacked", StringComparison.OrdinalIgnoreCase));
+				XElement? admx = allowed.Elements().FirstOrDefault(static e => e.Name.LocalName.Equals("AdmxBacked", StringComparison.OrdinalIgnoreCase));
 				if (admx is not null)
 				{
-					string file = admx.Attributes().FirstOrDefault(a => a.Name.LocalName.Equals("File", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
-					string name = admx.Attributes().FirstOrDefault(a => a.Name.LocalName.Equals("Name", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
+					string file = admx.Attributes().FirstOrDefault(static a => a.Name.LocalName.Equals("File", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
+					string name = admx.Attributes().FirstOrDefault(static a => a.Name.LocalName.Equals("Name", StringComparison.OrdinalIgnoreCase))?.Value ?? "";
 					// Constructing a representation string
 					return string.Format(Atlas.GetStr("AdmxFilePolicyFormat"), file, name);
 				}
@@ -709,7 +709,7 @@ internal sealed partial class CSPVM : ViewModelBase
 			else if (valType.Equals("XSD", StringComparison.OrdinalIgnoreCase))
 			{
 				// e.g.,: <MSFT:Value><![CDATA[<xs:schema ...]]></MSFT:Value>
-				return allowed.Elements().FirstOrDefault(e => e.Name.LocalName.Equals("Value", StringComparison.OrdinalIgnoreCase))?.Value ?? Atlas.GetStr("XSDSchemaText");
+				return allowed.Elements().FirstOrDefault(static e => e.Name.LocalName.Equals("Value", StringComparison.OrdinalIgnoreCase))?.Value ?? Atlas.GetStr("XSDSchemaText");
 			}
 
 			return string.Empty;

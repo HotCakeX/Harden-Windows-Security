@@ -78,13 +78,13 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<CryptoAlgorithm, object?> Getter)> CA_PropertyMappings =
 		new Dictionary<string, (string Label, Func<CryptoAlgorithm, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "Name", (Atlas.GetStr("CA_NameHeader/Text") + ": ", a => a.Name) },
-			{ "AlgorithmType", (Atlas.GetStr("CA_TypeHeader/Text") + ": ", a => a.AlgorithmType) },
-			{ "Flags", (Atlas.GetStr("CA_FlagsHeader/Text") + ": ", a => a.Flags) },
-			{ "IsOpenable", (Atlas.GetStr("CA_IsOpenableHeader/Text") + ": ", a => a.IsOpenable) },
-			{ "IsPostQuantum", (Atlas.GetStr("CA_IsPQHeader/Text") + ": ", a => a.IsPostQuantum) },
-			{ "SupportsKeyGeneration", (Atlas.GetStr("CA_KeyGenHeader/Text") + ": ", a => a.SupportsKeyGeneration) },
-			{ "SupportedParameterSets", (Atlas.GetStr("CA_ParamSetsHeader/Text") + ": ", a => a.SupportedParameterSets is null ? null : string.Join(", ", a.SupportedParameterSets)) }
+			{ "Name", (Atlas.GetStr("CA_NameHeader/Text") + ": ", static a => a.Name) },
+			{ "AlgorithmType", (Atlas.GetStr("CA_TypeHeader/Text") + ": ", static a => a.AlgorithmType) },
+			{ "Flags", (Atlas.GetStr("CA_FlagsHeader/Text") + ": ", static a => a.Flags) },
+			{ "IsOpenable", (Atlas.GetStr("CA_IsOpenableHeader/Text") + ": ", static a => a.IsOpenable) },
+			{ "IsPostQuantum", (Atlas.GetStr("CA_IsPQHeader/Text") + ": ", static a => a.IsPostQuantum) },
+			{ "SupportsKeyGeneration", (Atlas.GetStr("CA_KeyGenHeader/Text") + ": ", static a => a.SupportsKeyGeneration) },
+			{ "SupportedParameterSets", (Atlas.GetStr("CA_ParamSetsHeader/Text") + ": ", static a => a.SupportedParameterSets is null ? null : string.Join(", ", a.SupportedParameterSets)) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal async void RetrieveCryptoAlgorithms() => await _RetrieveCryptoAlgorithms();
@@ -256,9 +256,9 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<EccCurveCng, object?> Getter)> CNG_PropertyMappings =
 		new Dictionary<string, (string Label, Func<EccCurveCng, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "Name", (Atlas.GetStr("CNG_NameHeader/Text") + ": ", c => c.Name) },
-			{ "Oid", (Atlas.GetStr("CNG_OidHeader/Text") + ": ", c => c.Oid) },
-			{ "PublicKeyLengthBits", (Atlas.GetStr("CNG_LengthHeader/Text") + ": ", c => c.PublicKeyLengthBits) }
+			{ "Name", (Atlas.GetStr("CNG_NameHeader/Text") + ": ", static c => c.Name) },
+			{ "Oid", (Atlas.GetStr("CNG_OidHeader/Text") + ": ", static c => c.Oid) },
+			{ "PublicKeyLengthBits", (Atlas.GetStr("CNG_LengthHeader/Text") + ": ", static c => c.PublicKeyLengthBits) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal async void RetrieveCngCurves() => await _RetrieveCngCurves();
@@ -413,11 +413,11 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<EccCurveSslProvider, object?> Getter)> SSL_PropertyMappings =
 		new Dictionary<string, (string Label, Func<EccCurveSslProvider, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "Name", (Atlas.GetStr("SSL_NameHeader/Text") + ": ", c => c.Name) },
-			{ "Oid", (Atlas.GetStr("SSL_OidHeader/Text") + ": ", c => c.Oid) },
-			{ "PublicKeyLengthBits", (Atlas.GetStr("SSL_LengthHeader/Text") + ": ", c => c.PublicKeyLengthBits) },
-			{ "CurveType", (Atlas.GetStr("SSL_TypeHeader/Text") + ": ", c => c.CurveType) },
-			{ "Flags", (Atlas.GetStr("SSL_FlagsHeader/Text") + ": ", c => c.Flags) }
+			{ "Name", (Atlas.GetStr("SSL_NameHeader/Text") + ": ", static c => c.Name) },
+			{ "Oid", (Atlas.GetStr("SSL_OidHeader/Text") + ": ", static c => c.Oid) },
+			{ "PublicKeyLengthBits", (Atlas.GetStr("SSL_LengthHeader/Text") + ": ", static c => c.PublicKeyLengthBits) },
+			{ "CurveType", (Atlas.GetStr("SSL_TypeHeader/Text") + ": ", static c => c.CurveType) },
+			{ "Flags", (Atlas.GetStr("SSL_FlagsHeader/Text") + ": ", static c => c.Flags) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal async void RetrieveSslProviderCurves() => await _RetrieveSslProviderCurves();
@@ -589,19 +589,19 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<TlsCipherSuite, object?> Getter)> TLS_PropertyMappings =
 		new Dictionary<string, (string Label, Func<TlsCipherSuite, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "Name", (Atlas.GetStr("TLS_NameHeader/Text") + ": ", s => s.Name) },
-			{ "Cipher", (Atlas.GetStr("TLS_CipherHeader/Text") + ": ", s => s.Cipher) },
-			{ "CipherSuiteHex", (Atlas.GetStr("TLS_CSHeader/Text") + ": ", s => s.CipherSuiteHex) },
-			{ "BaseCipherSuiteHex", (Atlas.GetStr("TLS_BaseCSHeader/Text") + ": ", s => s.BaseCipherSuiteHex) },
-			{ "Hash", (Atlas.GetStr("TLS_HashHeader/Text") + ": ", s => s.Hash) },
-			{ "Exchange", (Atlas.GetStr("TLS_ExchangeHeader/Text") + ": ", s => s.Exchange) },
-			{ "Certificate", (Atlas.GetStr("TLS_CertHeader/Text") + ": ", s => s.Certificate) },
-			{ "CipherLength", (Atlas.GetStr("TLS_CLenHeader/Text") + ": ", s => s.CipherLength) },
-			{ "CipherBlockLength", (Atlas.GetStr("TLS_CBLenHeader/Text") + ": ", s => s.CipherBlockLength) },
-			{ "HashLength", (Atlas.GetStr("TLS_HLenHeader/Text") + ": ", s => s.HashLength) },
-			{ "MinimumExchangeLength", (Atlas.GetStr("TLS_MinExHeader/Text") + ": ", s => s.MinimumExchangeLength) },
-			{ "MaximumExchangeLength", (Atlas.GetStr("TLS_MaxExHeader/Text") + ": ", s => s.MaximumExchangeLength) },
-			{ "KeyType", (Atlas.GetStr("TLS_KeyTypeHeader/Text") + ": ", s => s.KeyType) }
+			{ "Name", (Atlas.GetStr("TLS_NameHeader/Text") + ": ", static s => s.Name) },
+			{ "Cipher", (Atlas.GetStr("TLS_CipherHeader/Text") + ": ", static s => s.Cipher) },
+			{ "CipherSuiteHex", (Atlas.GetStr("TLS_CSHeader/Text") + ": ", static s => s.CipherSuiteHex) },
+			{ "BaseCipherSuiteHex", (Atlas.GetStr("TLS_BaseCSHeader/Text") + ": ", static s => s.BaseCipherSuiteHex) },
+			{ "Hash", (Atlas.GetStr("TLS_HashHeader/Text") + ": ", static s => s.Hash) },
+			{ "Exchange", (Atlas.GetStr("TLS_ExchangeHeader/Text") + ": ", static s => s.Exchange) },
+			{ "Certificate", (Atlas.GetStr("TLS_CertHeader/Text") + ": ", static s => s.Certificate) },
+			{ "CipherLength", (Atlas.GetStr("TLS_CLenHeader/Text") + ": ", static s => s.CipherLength) },
+			{ "CipherBlockLength", (Atlas.GetStr("TLS_CBLenHeader/Text") + ": ", static s => s.CipherBlockLength) },
+			{ "HashLength", (Atlas.GetStr("TLS_HLenHeader/Text") + ": ", static s => s.HashLength) },
+			{ "MinimumExchangeLength", (Atlas.GetStr("TLS_MinExHeader/Text") + ": ", static s => s.MinimumExchangeLength) },
+			{ "MaximumExchangeLength", (Atlas.GetStr("TLS_MaxExHeader/Text") + ": ", static s => s.MaximumExchangeLength) },
+			{ "KeyType", (Atlas.GetStr("TLS_KeyTypeHeader/Text") + ": ", static s => s.KeyType) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal async void RetrieveTlsCipherSuites() => await _RetrieveTlsCipherSuites();
@@ -795,7 +795,7 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<string, object?> Getter)> REG_PropertyMappings =
 		new Dictionary<string, (string Label, Func<string, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "Name", (Atlas.GetStr("REG_NameHeader/Text") + ": ", s => s) }
+			{ "Name", (Atlas.GetStr("REG_NameHeader/Text") + ": ", static s => s) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal async void RetrieveRegisteredProviders() => await _RetrieveRegisteredProviders();

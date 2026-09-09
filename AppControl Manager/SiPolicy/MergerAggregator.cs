@@ -41,7 +41,7 @@ internal static partial class Merger
 			// Index Allow rules by their ID for quick lookup
 			// ID will be key and Allow rule itself will be the value
 			Dictionary<string, Allow>? allowRuleDictionary = siPolicy.FileRules?.OfType<Allow>()
-				.ToDictionary(fileRule => fileRule.ID, fileRule => fileRule);
+				.ToDictionary(static fileRule => fileRule.ID, static fileRule => fileRule);
 
 			// Skip if the policy doesn't have any Allow rules
 			if (allowRuleDictionary is null)
@@ -124,7 +124,7 @@ internal static partial class Merger
 			// Index Deny rules by their ID for quick lookup
 			// ID will be key and Deny rule itself will be the value
 			Dictionary<string, Deny>? denyRuleDictionary = siPolicy.FileRules?.OfType<Deny>()
-				.ToDictionary(fileRule => fileRule.ID, fileRule => fileRule);
+				.ToDictionary(static fileRule => fileRule.ID, static fileRule => fileRule);
 
 			// Skip if the policy doesn't have any Deny rules
 			if (denyRuleDictionary is null)
@@ -201,7 +201,7 @@ internal static partial class Merger
 			// Index FileRules by their ID for quick lookup
 			// ID will be key and FileRule rule itself will be the value
 			Dictionary<string, FileRule>? fileRuleDictionary = siPolicy.FileRules?.OfType<FileRule>()
-				.ToDictionary(fileRule => fileRule.ID, fileRule => fileRule);
+				.ToDictionary(static fileRule => fileRule.ID, static fileRule => fileRule);
 
 			// Skip if the policy doesn't have any FileRule rules
 			if (fileRuleDictionary is null)
@@ -285,7 +285,7 @@ internal static partial class Merger
 
 			// Index elements for efficient lookup
 			Dictionary<string, FileAttrib>? fileAttribDictionary = siPolicy.FileRules?.OfType<FileAttrib>()
-				.ToDictionary(fileAttrib => fileAttrib.ID, fileAttrib => fileAttrib);
+				.ToDictionary(static fileAttrib => fileAttrib.ID, static fileAttrib => fileAttrib);
 
 			// Get all of the <Signer> elements from the policy
 			Dictionary<string, Signer> signerDictionary = new(siPolicy.Signers?.Count ?? 0, StringComparer.Ordinal);
@@ -299,16 +299,16 @@ internal static partial class Merger
 			}
 
 			// ID of all of the CiSigners if they exist
-			HashSet<string> ciSignerSet = [.. siPolicy.CiSigners?.Select(ciSigner => ciSigner.SignerId) ?? []];
+			HashSet<string> ciSignerSet = [.. siPolicy.CiSigners?.Select(static ciSigner => ciSigner.SignerId) ?? []];
 
 			// Dictionary to store all of the EKUs
-			Dictionary<string, EKU> ekuDictionary = siPolicy.EKUs?.ToDictionary(eku => eku.ID, eku => eku) ?? [];
+			Dictionary<string, EKU> ekuDictionary = siPolicy.EKUs?.ToDictionary(static eku => eku.ID, static eku => eku) ?? [];
 
 			// ID of all of the SupplementalPolicySigners if they exist
-			HashSet<string> supplementalPolicySignersSet = [.. siPolicy.SupplementalPolicySigners?.Select(supplementalPolicySigner => supplementalPolicySigner.SignerId) ?? []];
+			HashSet<string> supplementalPolicySignersSet = [.. siPolicy.SupplementalPolicySigners?.Select(static supplementalPolicySigner => supplementalPolicySigner.SignerId) ?? []];
 
 			// ID of all of the UpdatePolicySigners if they exist
-			HashSet<string> updatePolicySignersSet = [.. siPolicy.UpdatePolicySigners?.Select(updatePolicySigner => updatePolicySigner.SignerId) ?? []];
+			HashSet<string> updatePolicySignersSet = [.. siPolicy.UpdatePolicySigners?.Select(static updatePolicySigner => updatePolicySigner.SignerId) ?? []];
 
 
 			// Step 1: Collecting UpdatePolicySigners and SupplementalPolicySigners separately

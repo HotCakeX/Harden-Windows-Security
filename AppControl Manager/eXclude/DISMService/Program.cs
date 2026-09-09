@@ -74,7 +74,7 @@ internal static class Program
 			_reader = new BinaryReader(_pipeServer);
 
 			// Log handler to send logs to the client
-			Logger.SetLogHandler((message, logType) =>
+			Logger.SetLogHandler(static (message, logType) =>
 			{
 				try
 				{

@@ -71,7 +71,7 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(ImageUrlProperty, value);
 	}
 
-	private static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: null, (d, e) => ((HeaderTile)d).HeaderChanged()));
+	private static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(HeaderTile), new PropertyMetadata(defaultValue: null, static (d, e) => ((HeaderTile)d).HeaderChanged()));
 
 	public string Header
 	{
@@ -95,7 +95,7 @@ internal sealed partial class HeaderTile : Button
 		set => SetValue(SampleIDProperty, value);
 	}
 
-	private static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(HeaderTile), new PropertyMetadata(defaultValue: false, (d, e) => ((HeaderTile)d).IsSelectedChanged()));
+	private static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(HeaderTile), new PropertyMetadata(defaultValue: false, static (d, e) => ((HeaderTile)d).IsSelectedChanged()));
 
 	public bool IsSelected
 	{

@@ -59,7 +59,7 @@ internal sealed partial class AnimatedImage : UserControl
 		nameof(ImageUrl),
 		typeof(Uri),
 		typeof(AnimatedImage),
-		new PropertyMetadata(defaultValue: null, (d, e) => ((AnimatedImage)d).IsImageChanged()));
+		new PropertyMetadata(defaultValue: null, static (d, e) => ((AnimatedImage)d).IsImageChanged()));
 
 	public Uri ImageUrl
 	{

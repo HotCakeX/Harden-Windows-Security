@@ -207,21 +207,21 @@ internal sealed partial class SimulationVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<SimulationOutput, object?> Getter)> SimulationOutputPropertyMappings
 		= new Dictionary<string, (string Label, Func<SimulationOutput, object?> Getter)>
 		{
-			{ "Path",                                  (Atlas.GetStr("PathHeader/Text") + ": ",                                so => so.Path) },
-			{ "Source",                                (Atlas.GetStr("SourceHeader/Text") + ": ",                              so => so.Source) },
-			{ "IsAuthorized",                          (Atlas.GetStr("IsAuthorizedHeader/Text") + ": ",                        so => so.IsAuthorized) },
-			{ "SignerID",                              (Atlas.GetStr("SignerIDHeader/Text") + ": ",                            so => so.SignerID) },
-			{ "SignerName",                            (Atlas.GetStr("SignerNameHeader/Text") + ": ",                          so => so.SignerName) },
-			{ "SignerCertRoot",                        (Atlas.GetStr("SignerCertRootHeader/Text") + ": ",                      so => so.SignerCertRoot) },
-			{ "SignerCertPublisher",                   (Atlas.GetStr("SignerCertPublisherHeader/Text") + ": ",                 so => so.SignerCertPublisher) },
-			{ "SignerScope",                           (Atlas.GetStr("SignerScopeHeader/Text") + ": ",                         so => so.SignerScope) },
-			{ "MatchCriteria",                         (Atlas.GetStr("MatchCriteriaHeader/Text") + ": ",                       so => so.MatchCriteria) },
-			{ "SpecificFileNameLevelMatchCriteria",    (Atlas.GetStr("SpecificFileNameLevelMatchCriteriaHeader/Text") + ": ",  so => so.SpecificFileNameLevelMatchCriteria) },
-			{ "CertSubjectCN",                         (Atlas.GetStr("CertSubjectCNHeader/Text") + ": ",                       so => so.CertSubjectCN) },
-			{ "CertIssuerCN",                          (Atlas.GetStr("CertIssuerCNHeader/Text") + ": ",                        so => so.CertIssuerCN) },
-			{ "CertNotAfter",                          (Atlas.GetStr("CertNotAfterHeader/Text") + ": ",                        so => so.CertNotAfter) },
-			{ "CertTBSValue",                          (Atlas.GetStr("CertTBSValueHeader/Text") + ": ",                        so => so.CertTBSValue) },
-			{ "FilePath",                              (Atlas.GetStr("FilePathHeader/Text") + ": ",                            so => so.FilePath) }
+			{ "Path",                                  (Atlas.GetStr("PathHeader/Text") + ": ",                                static so => so.Path) },
+			{ "Source",                                (Atlas.GetStr("SourceHeader/Text") + ": ",                              static so => so.Source) },
+			{ "IsAuthorized",                          (Atlas.GetStr("IsAuthorizedHeader/Text") + ": ",                        static so => so.IsAuthorized) },
+			{ "SignerID",                              (Atlas.GetStr("SignerIDHeader/Text") + ": ",                            static so => so.SignerID) },
+			{ "SignerName",                            (Atlas.GetStr("SignerNameHeader/Text") + ": ",                          static so => so.SignerName) },
+			{ "SignerCertRoot",                        (Atlas.GetStr("SignerCertRootHeader/Text") + ": ",                      static so => so.SignerCertRoot) },
+			{ "SignerCertPublisher",                   (Atlas.GetStr("SignerCertPublisherHeader/Text") + ": ",                 static so => so.SignerCertPublisher) },
+			{ "SignerScope",                           (Atlas.GetStr("SignerScopeHeader/Text") + ": ",                         static so => so.SignerScope) },
+			{ "MatchCriteria",                         (Atlas.GetStr("MatchCriteriaHeader/Text") + ": ",                       static so => so.MatchCriteria) },
+			{ "SpecificFileNameLevelMatchCriteria",    (Atlas.GetStr("SpecificFileNameLevelMatchCriteriaHeader/Text") + ": ",  static so => so.SpecificFileNameLevelMatchCriteria) },
+			{ "CertSubjectCN",                         (Atlas.GetStr("CertSubjectCNHeader/Text") + ": ",                       static so => so.CertSubjectCN) },
+			{ "CertIssuerCN",                          (Atlas.GetStr("CertIssuerCNHeader/Text") + ": ",                        static so => so.CertIssuerCN) },
+			{ "CertNotAfter",                          (Atlas.GetStr("CertNotAfterHeader/Text") + ": ",                        static so => so.CertNotAfter) },
+			{ "CertTBSValue",                          (Atlas.GetStr("CertTBSValueHeader/Text") + ": ",                        static so => so.CertTBSValue) },
+			{ "FilePath",                              (Atlas.GetStr("FilePathHeader/Text") + ": ",                            static so => so.FilePath) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]

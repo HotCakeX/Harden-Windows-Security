@@ -143,7 +143,7 @@ internal static class WindowsServiceHost
 			s_pipeServer = new NamedPipeServer();
 
 			// Start the server work
-			s_workerTask = Task.Run(async () =>
+			s_workerTask = Task.Run(static async () =>
 			{
 				try
 				{

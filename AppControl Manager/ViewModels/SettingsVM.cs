@@ -229,7 +229,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 
 	private static bool IsUnavailableLanguageAddonResource(string language) => IsLanguageAddonResource(language) && !ExtraLanguagesPack1Installed;
 
-	private static Package? GetLanguageAddonsPackage() => Package.Current.Dependencies.FirstOrDefault(package => string.Equals(package.Id.ResourceId, LanguageAddonsResourceId, StringComparison.OrdinalIgnoreCase));
+	private static Package? GetLanguageAddonsPackage() => Package.Current.Dependencies.FirstOrDefault(static package => string.Equals(package.Id.ResourceId, LanguageAddonsResourceId, StringComparison.OrdinalIgnoreCase));
 
 	/// <summary>
 	/// Runs very early at app startup to detect and set the app's language.
@@ -560,7 +560,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 		MainWindowVM.SetCaptionButtonsFlowDirection(((ToggleSwitch)sender).IsOn ? FlowDirection.LeftToRight : FlowDirection.RightToLeft);
 
 		// Needs to run via Dispatcher, otherwise the 1st double-click on the UI elements register as pass-through, meaning they will resize the window as if we clicked on an empty area on the TitleBar.
-		_ = Atlas.AppDispatcher.TryEnqueue(DispatcherQueuePriority.Normal, () =>
+		_ = Atlas.AppDispatcher.TryEnqueue(DispatcherQueuePriority.Normal, static () =>
 		{
 			// Get reference to the MainWindow and refresh the localized content
 			App.MainWindow?.SetRegionsForCustomTitleBar();

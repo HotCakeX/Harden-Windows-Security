@@ -250,7 +250,7 @@ internal static class EccCurveManager
 			}
 		}
 
-		result.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
+		result.Sort(static (a, b) => string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase));
 		return result;
 	}
 

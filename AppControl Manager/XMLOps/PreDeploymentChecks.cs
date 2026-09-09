@@ -35,7 +35,7 @@ internal static class PreDeploymentChecks
 			// Check for any Allow rule that has FileName="*"
 			return policyObj.FileRules
 				.OfType<Allow>()
-				.Any(rule => string.Equals(rule.FileName, "*", StringComparison.OrdinalIgnoreCase));
+				.Any(static rule => string.Equals(rule.FileName, "*", StringComparison.OrdinalIgnoreCase));
 		}
 
 		return false;

@@ -253,7 +253,7 @@ internal static class Manager
 			}
 		}
 
-		Logger.Write(string.Format(Atlas.GetStr("RegistryVerificationComplete"), verificationResults.Count(kvp => kvp.Value), policies.Count));
+		Logger.Write(string.Format(Atlas.GetStr("RegistryVerificationComplete"), verificationResults.Count(static kvp => kvp.Value), policies.Count));
 		return verificationResults;
 	}
 

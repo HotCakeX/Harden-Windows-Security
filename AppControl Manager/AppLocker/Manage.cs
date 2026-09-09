@@ -403,9 +403,9 @@ internal static partial class Manage
 		HashSet<string> incomingRuleIds = new(
 			incomingManagedInstaller.Elements()
 				.Where(IsRuleElement)
-				.Select(rule => (string?)rule.Attribute("Id"))
+				.Select(static rule => (string?)rule.Attribute("Id"))
 				.OfType<string>()
-				.Where(id => !string.IsNullOrWhiteSpace(id)),
+				.Where(static id => !string.IsNullOrWhiteSpace(id)),
 			StringComparer.OrdinalIgnoreCase);
 
 		HashSet<string> incomingRuleConditions = new(
@@ -438,7 +438,7 @@ internal static partial class Manage
 	{
 		string ruleId = GetRequiredAttribute(rule, "Id");
 		string name = (string?)rule.Attribute("Name") ?? "Managed Installer";
-		XElement? conditions = rule.Elements().FirstOrDefault(element => string.Equals(element.Name.LocalName, "Conditions", StringComparison.OrdinalIgnoreCase));
+		XElement? conditions = rule.Elements().FirstOrDefault(static element => string.Equals(element.Name.LocalName, "Conditions", StringComparison.OrdinalIgnoreCase));
 		XElement? condition = conditions?.Elements().FirstOrDefault();
 
 		if (string.Equals(rule.Name.LocalName, "FilePathRule", StringComparison.OrdinalIgnoreCase))
@@ -458,7 +458,7 @@ internal static partial class Manage
 
 		if (string.Equals(rule.Name.LocalName, "FileHashRule", StringComparison.OrdinalIgnoreCase))
 		{
-			XElement? hash = condition?.Elements().FirstOrDefault(element => string.Equals(element.Name.LocalName, "FileHash", StringComparison.OrdinalIgnoreCase));
+			XElement? hash = condition?.Elements().FirstOrDefault(static element => string.Equals(element.Name.LocalName, "FileHash", StringComparison.OrdinalIgnoreCase));
 			return new ManagedInstallerRuleInfo(
 				ruleId,
 				name,
@@ -472,7 +472,7 @@ internal static partial class Manage
 				string.Empty);
 		}
 
-		XElement? versionRange = condition?.Elements().FirstOrDefault(element => string.Equals(element.Name.LocalName, "BinaryVersionRange", StringComparison.OrdinalIgnoreCase));
+		XElement? versionRange = condition?.Elements().FirstOrDefault(static element => string.Equals(element.Name.LocalName, "BinaryVersionRange", StringComparison.OrdinalIgnoreCase));
 		return new ManagedInstallerRuleInfo(
 			ruleId,
 			name,
@@ -487,13 +487,13 @@ internal static partial class Manage
 	}
 
 	private static XElement? GetManagedInstallerCollection(XElement policyRoot) =>
-		policyRoot.Elements().FirstOrDefault(element =>
+		policyRoot.Elements().FirstOrDefault(static element =>
 			string.Equals(element.Name.LocalName, "RuleCollection", StringComparison.OrdinalIgnoreCase) &&
 			string.Equals((string?)element.Attribute("Type"), "ManagedInstaller", StringComparison.OrdinalIgnoreCase));
 
 	private static string GetRuleConditionIdentity(XElement rule)
 	{
-		XElement? conditions = rule.Elements().FirstOrDefault(element =>
+		XElement? conditions = rule.Elements().FirstOrDefault(static element =>
 			string.Equals(element.Name.LocalName, "Conditions", StringComparison.OrdinalIgnoreCase));
 		return string.Concat(
 			rule.Name.LocalName,
@@ -806,7 +806,7 @@ internal static partial class Manage
 		}
 	}
 
-	private unsafe static string BstrToString(nint value)
+	private static string BstrToString(nint value)
 	{
 		if (value == 0)
 		{

@@ -229,7 +229,7 @@ internal sealed partial class UserConfiguration(
 			try
 			{
 				return root.TryGetProperty(propertyName, out JsonElement propertyValue) && propertyValue.ValueKind == JsonValueKind.Object
-					? propertyValue.EnumerateObject().ToDictionary(e => e.Name, e => e.Value.GetDateTime().ToUniversalTime())
+					? propertyValue.EnumerateObject().ToDictionary(static e => e.Name, static e => e.Value.GetDateTime().ToUniversalTime())
 					: null;
 			}
 			catch

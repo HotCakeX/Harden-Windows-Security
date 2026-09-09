@@ -115,12 +115,12 @@ internal sealed partial class WindowsUpdateVM : MUnitListViewModelBase
 
 		List<WindowsUpdateItem> sortedUpdates = DateSortDescending
 			? AllAvailableUpdates
-				.OrderByDescending(update => update.LastDeploymentChangeTimeSortKey)
-				.ThenBy(update => update.Title, StringComparer.OrdinalIgnoreCase)
+				.OrderByDescending(static update => update.LastDeploymentChangeTimeSortKey)
+				.ThenBy(static update => update.Title, StringComparer.OrdinalIgnoreCase)
 				.ToList()
 			: AllAvailableUpdates
-				.OrderBy(update => update.LastDeploymentChangeTimeSortKey)
-				.ThenBy(update => update.Title, StringComparer.OrdinalIgnoreCase)
+				.OrderBy(static update => update.LastDeploymentChangeTimeSortKey)
+				.ThenBy(static update => update.Title, StringComparer.OrdinalIgnoreCase)
 				.ToList();
 
 		ReplaceAvailableUpdates(sortedUpdates);

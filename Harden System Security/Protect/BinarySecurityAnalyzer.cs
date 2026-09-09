@@ -173,7 +173,7 @@ internal static class BinarySecurityAnalyzer
 
 		// Get all directories under the base path that contain "resources\app\git"
 		IEnumerable<string> directories = Directory.GetDirectories(basePath, "*", SearchOption.AllDirectories)
-								   .Where(d => d.Contains(@"resources\app\git", StringComparison.OrdinalIgnoreCase));
+								   .Where(static d => d.Contains(@"resources\app\git", StringComparison.OrdinalIgnoreCase));
 
 		// To store the found FileInfo objects
 		List<string> fileList = [];

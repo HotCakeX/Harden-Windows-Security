@@ -212,18 +212,18 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<BitLockerVolume, object?> Getter)> _volumeMappings =
 		new Dictionary<string, (string Label, Func<BitLockerVolume, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "MountPoint",           (Atlas.GetStr("MountPointHeader/Text"),           v => v.MountPoint) },
-			{ "ProtectionStatus",     (Atlas.GetStr("ProtectionStatusHeader/Text"),     v => v.ProtectionStatus) },
-			{ "ConversionStatus",     (Atlas.GetStr("ConversionStatusHeader/Text"),     v => v.ConversionStatus) },
-			{ "EncryptionMethod",     (Atlas.GetStr("EncryptionMethodHeader/Text"),     v => v.EncryptionMethod) },
-			{ "EncryptionPercentage", (Atlas.GetStr("EncryptionPercentageHeader/Text"), v => v.EncryptionPercentage) },
-			{ "WipePercentage",       (Atlas.GetStr("WipePercentageHeader/Text"),       v => v.WipePercentage) },
-			{ "AutoUnlockEnabled",    (Atlas.GetStr("AutoUnlockEnabledHeader/Text"),    v => v.AutoUnlockEnabled) },
-			{ "AutoUnlockKeyStored",  (Atlas.GetStr("AutoUnlockKeyStoredHeader/Text"),  v => v.AutoUnlockKeyStored) },
-			{ "VolumeType",           (Atlas.GetStr("VolumeTypeHeader/Text"),           v => v.VolumeType) },
-			{ "CapacityGB",           (Atlas.GetStr("CapacityGBHeader/Text"),           v => v.CapacityGB) },
-			{ "FileSystemType",       (Atlas.GetStr("FileSystemTypeHeader/Text"),       v => v.FileSystemType) },
-			{ "FriendlyName",         (Atlas.GetStr("FriendlyNameHeader/Text"),         v => v.FriendlyName) }
+			{ "MountPoint",           (Atlas.GetStr("MountPointHeader/Text"),           static v => v.MountPoint) },
+			{ "ProtectionStatus",     (Atlas.GetStr("ProtectionStatusHeader/Text"),     static v => v.ProtectionStatus) },
+			{ "ConversionStatus",     (Atlas.GetStr("ConversionStatusHeader/Text"),     static v => v.ConversionStatus) },
+			{ "EncryptionMethod",     (Atlas.GetStr("EncryptionMethodHeader/Text"),     static v => v.EncryptionMethod) },
+			{ "EncryptionPercentage", (Atlas.GetStr("EncryptionPercentageHeader/Text"), static v => v.EncryptionPercentage) },
+			{ "WipePercentage",       (Atlas.GetStr("WipePercentageHeader/Text"),       static v => v.WipePercentage) },
+			{ "AutoUnlockEnabled",    (Atlas.GetStr("AutoUnlockEnabledHeader/Text"),    static v => v.AutoUnlockEnabled) },
+			{ "AutoUnlockKeyStored",  (Atlas.GetStr("AutoUnlockKeyStoredHeader/Text"),  static v => v.AutoUnlockKeyStored) },
+			{ "VolumeType",           (Atlas.GetStr("VolumeTypeHeader/Text"),           static v => v.VolumeType) },
+			{ "CapacityGB",           (Atlas.GetStr("CapacityGBHeader/Text"),           static v => v.CapacityGB) },
+			{ "FileSystemType",       (Atlas.GetStr("FileSystemTypeHeader/Text"),       static v => v.FileSystemType) },
+			{ "FriendlyName",         (Atlas.GetStr("FriendlyNameHeader/Text"),         static v => v.FriendlyName) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -232,13 +232,13 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<KeyProtector, object?> Getter)> KeyProtectorPropertyMappings =
 		new Dictionary<string, (string Label, Func<KeyProtector, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			["Type"] = (Atlas.GetStr("Type/Text"), kp => kp.Type),
-			["ID"] = (Atlas.GetStr("ID/Text"), kp => kp.ID),
-			["AutoUnlock"] = (Atlas.GetStr("AutoUnlock/Text"), kp => kp.AutoUnlockProtector),
-			["KeyFileName"] = (Atlas.GetStr("FileName/Text"), kp => kp.KeyFileName),
-			["RecoveryPassword"] = (Atlas.GetStr("RecoveryPassword/Text"), kp => kp.RecoveryPassword),
-			["KeyCertificateType"] = (Atlas.GetStr("CertificateType/Text"), kp => kp.KeyCertificateType),
-			["Thumbprint"] = (Atlas.GetStr("Thumbprint/Text"), kp => kp.Thumbprint)
+			["Type"] = (Atlas.GetStr("Type/Text"), static kp => kp.Type),
+			["ID"] = (Atlas.GetStr("ID/Text"), static kp => kp.ID),
+			["AutoUnlock"] = (Atlas.GetStr("AutoUnlock/Text"), static kp => kp.AutoUnlockProtector),
+			["KeyFileName"] = (Atlas.GetStr("FileName/Text"), static kp => kp.KeyFileName),
+			["RecoveryPassword"] = (Atlas.GetStr("RecoveryPassword/Text"), static kp => kp.RecoveryPassword),
+			["KeyCertificateType"] = (Atlas.GetStr("CertificateType/Text"), static kp => kp.KeyCertificateType),
+			["Thumbprint"] = (Atlas.GetStr("Thumbprint/Text"), static kp => kp.Thumbprint)
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -336,7 +336,7 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 
 		ClearBitLockerVolumes();
 
-		BitLockerVolume[] volumes = await Task.Run(() =>
+		BitLockerVolume[] volumes = await Task.Run(static () =>
 		{
 			const string command = "bitlocker list all";
 			string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, command);

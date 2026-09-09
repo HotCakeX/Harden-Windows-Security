@@ -66,12 +66,12 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				category: Categories.WindowsFirewall,
 				name: Atlas.GetSecurityStr("mDNSInboundBlocking-WindowsFirewall"),
 
-				applyStrategy: new DefaultApply(() =>
+				applyStrategy: new DefaultApply(static () =>
 				{
 					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "firewallmdns set false");
 				}),
 
-				verifyStrategy: new DefaultVerify(() =>
+				verifyStrategy: new DefaultVerify(static () =>
 				{
 					string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "firewallmdns status");
 
@@ -83,7 +83,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 					return false;
 				}),
 
-				removeStrategy: new DefaultRemove(() =>
+				removeStrategy: new DefaultRemove(static () =>
 				{
 					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "firewallmdns set true");
 				}),
@@ -103,12 +103,12 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				category: Categories.WindowsFirewall,
 				name: Atlas.GetSecurityStr("SetAllNetworkLocationsPublic-WindowsFirewall"),
 
-				applyStrategy: new DefaultApply(() =>
+				applyStrategy: new DefaultApply(static () =>
 				{
 					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "networkprofiles set 0");
 				}),
 
-				verifyStrategy: new DefaultVerify(() =>
+				verifyStrategy: new DefaultVerify(static () =>
 				{
 					string result = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "networkprofiles status");
 
@@ -120,7 +120,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 					return false;
 				}),
 
-				removeStrategy: new DefaultRemove(() =>
+				removeStrategy: new DefaultRemove(static () =>
 				{
 					_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "networkprofiles set 1");
 				}),
@@ -642,9 +642,9 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<FirewallRule, object?> Getter)> _firewallRuleMappings =
 		new Dictionary<string, (string Label, Func<FirewallRule, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "DisplayString", (Atlas.GetStr("NameHeader/Text"),      r => r.DisplayString) },
-			{ "Direction",    (Atlas.GetStr("DirectionHeader/Text"), r => r.Direction) },
-			{ "Action",       (Atlas.GetStr("ActionHeader/Text"),    r => r.Action) }
+			{ "DisplayString", (Atlas.GetStr("NameHeader/Text"),      static r => r.DisplayString) },
+			{ "Direction",    (Atlas.GetStr("DirectionHeader/Text"), static r => r.Direction) },
+			{ "Action",       (Atlas.GetStr("ActionHeader/Text"),    static r => r.Action) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -960,7 +960,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				return;
 			}
 
-			await Task.Run(() => Firewall.DeleteAllFirewallRules(FW_STORE_TYPE.LOCAL));
+			await Task.Run(static () => Firewall.DeleteAllFirewallRules(FW_STORE_TYPE.LOCAL));
 
 			MainInfoBar.WriteSuccess(Atlas.GetStr("FirewallDeleteSuccess"));
 		}
@@ -1002,7 +1002,7 @@ internal sealed partial class WindowsFirewallVM : MUnitListViewModelBase
 				return;
 			}
 
-			await Task.Run(() => Firewall.DeleteAllFirewallRules(FW_STORE_TYPE.GPO));
+			await Task.Run(static () => Firewall.DeleteAllFirewallRules(FW_STORE_TYPE.GPO));
 
 			await RetrieveFirewallRules_internal();
 

@@ -92,8 +92,8 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 
 			// Group by the connection identity attributes to strip out any absolute duplicates
 			List<OpenPortItem> distinctPorts = newPorts
-				.GroupBy(p => new { p.Port, p.Protocol, p.LocalAddress, p.RemoteAddressAndPort, p.State, p.ProcessName })
-				.Select(g => g.First())
+				.GroupBy(static p => new { p.Port, p.Protocol, p.LocalAddress, p.RemoteAddressAndPort, p.State, p.ProcessName })
+				.Select(static g => g.First())
 				.ToList();
 
 			_allPorts.Clear();
@@ -112,7 +112,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 		int size = 0;
 		uint result = NativeMethods.GetExtendedTcpTable(IntPtr.Zero, ref size, true, NativeMethods.AF_INET, NativeMethods.TCP_TABLE_OWNER_PID_ALL, 0);
 
-		if (result == 122 || result == 120) // ERROR_INSUFFICIENT_BUFFER
+		if (result is 122 or 120) // ERROR_INSUFFICIENT_BUFFER
 		{
 			IntPtr buffer = Marshal.AllocHGlobal(size);
 			try
@@ -152,7 +152,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 		int size = 0;
 		uint result = NativeMethods.GetExtendedTcpTable(IntPtr.Zero, ref size, true, NativeMethods.AF_INET6, NativeMethods.TCP_TABLE_OWNER_PID_ALL, 0);
 
-		if (result == 122 || result == 120)
+		if (result is 122 or 120)
 		{
 			IntPtr buffer = Marshal.AllocHGlobal(size);
 			try
@@ -200,7 +200,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 		int size = 0;
 		uint result = NativeMethods.GetExtendedUdpTable(IntPtr.Zero, ref size, true, NativeMethods.AF_INET, NativeMethods.UDP_TABLE_OWNER_PID, 0);
 
-		if (result == 122 || result == 120)
+		if (result is 122 or 120)
 		{
 			IntPtr buffer = Marshal.AllocHGlobal(size);
 			try
@@ -236,7 +236,7 @@ internal sealed partial class OpenPortsDialog : ContentDialogV2
 		int size = 0;
 		uint result = NativeMethods.GetExtendedUdpTable(IntPtr.Zero, ref size, true, NativeMethods.AF_INET6, NativeMethods.UDP_TABLE_OWNER_PID, 0);
 
-		if (result == 122 || result == 120)
+		if (result is 122 or 120)
 		{
 			IntPtr buffer = Marshal.AllocHGlobal(size);
 			try

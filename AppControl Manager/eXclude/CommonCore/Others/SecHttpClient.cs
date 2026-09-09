@@ -25,7 +25,7 @@ namespace CommonCore.Others;
 /// </summary>
 internal static class SecHttpClient
 {
-	private static readonly Lazy<HttpClient> _instance = new(() =>
+	private static readonly Lazy<HttpClient> _instance = new(static () =>
 	{
 		SocketsHttpHandler handler = new()
 		{

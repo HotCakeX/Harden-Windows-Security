@@ -133,7 +133,7 @@ internal partial class SettingsCardV2 : SettingsCard
 					// Button with Flyout
 					Button? childButtonWithFlyout = panel.Children
 						.OfType<Button>()
-						.FirstOrDefault(b => FlyoutBase.GetAttachedFlyout(b) != null && b.IsEnabled);
+						.FirstOrDefault(static b => FlyoutBase.GetAttachedFlyout(b) != null && b.IsEnabled);
 					if (childButtonWithFlyout != null)
 					{
 						// Show the attached flyout

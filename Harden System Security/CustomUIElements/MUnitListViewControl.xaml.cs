@@ -1257,7 +1257,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		MUnit? targetMUnit = null;
 		foreach (GroupInfoListForMUnit group in ListViewItemsSource)
 		{
-			targetMUnit = group.FirstOrDefault(m => m.ID == NavigationService.PendingNavigationTargetId.Value);
+			targetMUnit = group.FirstOrDefault(static m => m.ID == NavigationService.PendingNavigationTargetId.Value);
 			if (targetMUnit != null)
 				break;
 		}

@@ -191,14 +191,14 @@ internal sealed partial class GroupPolicyEditorVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<RegistryPolicyEntry, object?> Getter)> RegistryPolicyEntryPropertyMappings
 		= new Dictionary<string, (string Label, Func<RegistryPolicyEntry, object?> Getter)>
 		{
-			{ "KeyName",        (Atlas.GetStr("KeynameHeader/Text") + ": ",        rpe => rpe.KeyName) },
-			{ "ValueName",      (Atlas.GetStr("ValueNameHeader/Text") + ": ",      rpe => rpe.ValueName) },
-			{ "Value",          (Atlas.GetStr("ValueHeader/Text") + ": ",          rpe => rpe.ValueDisplay) },
-			{ "Category",       (Atlas.GetStr("CategoryHeader/Text") + ": ",       rpe => rpe.Category) },
-			{ "SubCategory",    (Atlas.GetStr("SubCategoryHeader/Text") + ": ",    rpe => rpe.SubCategory) },
-			{ "PolicyAction",   (Atlas.GetStr("PolicyActionHeader/Text") + ": ",   rpe => rpe.policyAction) },
-			{ "FriendlyName",   (Atlas.GetStr("FriendlyNameHeader/Text") + ": ",   rpe => rpe.FriendlyName) },
-			{ "Size",           (Atlas.GetStr("SizeHeader/Text") + ": ",           rpe => rpe.Size) }
+			{ "KeyName",        (Atlas.GetStr("KeynameHeader/Text") + ": ",        static rpe => rpe.KeyName) },
+			{ "ValueName",      (Atlas.GetStr("ValueNameHeader/Text") + ": ",      static rpe => rpe.ValueName) },
+			{ "Value",          (Atlas.GetStr("ValueHeader/Text") + ": ",          static rpe => rpe.ValueDisplay) },
+			{ "Category",       (Atlas.GetStr("CategoryHeader/Text") + ": ",       static rpe => rpe.Category) },
+			{ "SubCategory",    (Atlas.GetStr("SubCategoryHeader/Text") + ": ",    static rpe => rpe.SubCategory) },
+			{ "PolicyAction",   (Atlas.GetStr("PolicyActionHeader/Text") + ": ",   static rpe => rpe.policyAction) },
+			{ "FriendlyName",   (Atlas.GetStr("FriendlyNameHeader/Text") + ": ",   static rpe => rpe.FriendlyName) },
+			{ "Size",           (Atlas.GetStr("SizeHeader/Text") + ": ",           static rpe => rpe.Size) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]

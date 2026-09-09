@@ -42,7 +42,7 @@ internal sealed partial class AllowNewApps : Page, IAnimatedIconsManager, Common
 
 		// Set the "Start" item as selected in the NavigationView
 		AllowNewAppsNavigation.SelectedItem = AllowNewAppsNavigation.MenuItems.OfType<NavigationViewItem>()
-			.First(item => string.Equals(item.Tag.ToString(), "Start", StringComparison.OrdinalIgnoreCase));
+			.First(static item => string.Equals(item.Tag.ToString(), "Start", StringComparison.OrdinalIgnoreCase));
 	}
 
 	#region Augmentation Interface

@@ -46,7 +46,7 @@ internal sealed partial class IncrementalCollection<T>(
 
 	internal static async Task CollectGarbageAggressively()
 	{
-		await Task.Run(() =>
+		await Task.Run(static () =>
 		{
 			for (int i = 0; i < 3; i++)
 			{

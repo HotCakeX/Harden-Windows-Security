@@ -108,7 +108,7 @@ internal sealed partial class PolicyFileRepresent(SiPolicy policyObj, PolicyFile
 	/// <summary>
 	/// Determines whether the policy is Signed or Unsigned.
 	/// </summary>
-	internal string SigningStatus => PolicyObj.Rules.Any(x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy) ? Atlas.GetStr("Unsigned") : Atlas.GetStr("Signed");
+	internal string SigningStatus => PolicyObj.Rules.Any(static x => x.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy) ? Atlas.GetStr("Unsigned") : Atlas.GetStr("Signed");
 
 	/// <summary>
 	/// Displays the size of the policy in the cache if Persistent Library is enabled in the app settings.

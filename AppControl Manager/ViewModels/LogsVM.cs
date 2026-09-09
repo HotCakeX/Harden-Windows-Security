@@ -138,7 +138,7 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 	{
 		// Create the incremental collection once with a dummy data provider factory
 		LogCollection = new IncrementalCollection<string>(
-			() => Task.FromResult<IFileDataProvider>(new EmptyFileDataProvider()),
+			static () => Task.FromResult<IFileDataProvider>(new EmptyFileDataProvider()),
 			FilterPredicate,
 			ItemFactory,
 			PageSize);

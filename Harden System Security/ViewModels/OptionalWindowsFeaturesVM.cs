@@ -1058,14 +1058,14 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 
 			// Build unique, case-insensitive name lists for recommended capabilities and features
 			string[] capabilityNames = SecurityHardeningConfigs
-				.Where(config => config.Type == DISMResultType.Capability)
-				.Select(config => config.Name)
+				.Where(static config => config.Type == DISMResultType.Capability)
+				.Select(static config => config.Name)
 				.Distinct(StringComparer.OrdinalIgnoreCase)
 				.ToArray();
 
 			string[] featureNames = SecurityHardeningConfigs
-				.Where(config => config.Type == DISMResultType.Feature)
-				.Select(config => config.Name)
+				.Where(static config => config.Type == DISMResultType.Feature)
+				.Select(static config => config.Name)
 				.Distinct(StringComparer.OrdinalIgnoreCase)
 				.ToArray();
 
@@ -1087,7 +1087,7 @@ internal sealed partial class OptionalWindowsFeaturesVM : ViewModelBase, IDispos
 			// Filter out items that are not available on this system, so they won't appear in the ListView
 			// This applies to features that were marked as NotAvailableOnSystem by the service.
 			List<DISMOutput> filteredResults = results
-				.Where(r => r.State is not DismPackageFeatureState.NotAvailableOnSystem)
+				.Where(static r => r.State is not DismPackageFeatureState.NotAvailableOnSystem)
 				.ToList();
 
 			// Populate list

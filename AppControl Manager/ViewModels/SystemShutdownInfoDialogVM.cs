@@ -28,11 +28,11 @@ internal sealed partial class SystemShutdownInfoDialogVM : ViewModelBase
 		// Initialize the column manager with specific definitions for this page
 		ColumnManager = new ListViewColumnManager<ShutDownInfo>(
 		[
-			new("Time", "Time", x => x.Time.ToString(), useRawHeader: true),
-			new("Type", "Type", x => x.Type, useRawHeader: true),
-			new("Reason", "Reason", x => x.Reason, useRawHeader: true),
-			new("User", "User", x => x.User, useRawHeader: true),
-			new("Program", "Program", x => x.Program, useRawHeader: true)
+			new("Time", "Time", static x => x.Time.ToString(), useRawHeader: true),
+			new("Type", "Type", static x => x.Type, useRawHeader: true),
+			new("Reason", "Reason", static x => x.Reason, useRawHeader: true),
+			new("User", "User", static x => x.User, useRawHeader: true),
+			new("Program", "Program", static x => x.Program, useRawHeader: true)
 		]);
 
 		// To adjust the initial width of the columns, giving them nice paddings.
@@ -71,10 +71,8 @@ internal sealed partial class SystemShutdownInfoDialogVM : ViewModelBase
 		// Read the events from the system based on the query
 		using (EventLogReader logReader = new(eventQuery))
 		{
-			EventRecord eventRecord;
-
 			// Read each event that matches the query
-			while ((eventRecord = logReader.ReadEvent()) is not null)
+			while (logReader.ReadEvent() is EventRecord eventRecord)
 			{
 				try
 				{
@@ -109,7 +107,7 @@ internal sealed partial class SystemShutdownInfoDialogVM : ViewModelBase
 		}
 
 		// Sort to show the newest event at top first
-		output.Sort((x, y) => Nullable.Compare(y.Time, x.Time));
+		output.Sort(static (x, y) => Nullable.Compare(y.Time, x.Time));
 
 		return output;
 	}

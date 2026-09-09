@@ -49,7 +49,7 @@ internal static class AppControlSimulation
 		ConcurrentDictionary<string, SimulationOutput> Results = Invoke(filePaths, null, policyObj, noCatalogScanning, null, 2);
 
 		// See if there are any unauthorized files
-		IEnumerable<SimulationOutput> ResultsAfterFilter = Results.Values.Where(R => !R.IsAuthorized);
+		IEnumerable<SimulationOutput> ResultsAfterFilter = Results.Values.Where(static R => !R.IsAuthorized);
 
 		// If there are no results where the IsAuthorized is false then return true, else return false
 		return !ResultsAfterFilter.Any();

@@ -182,7 +182,7 @@ internal partial class SettingsCard : ButtonBase
 
 	private void Control_PreviewKeyUp(object sender, KeyRoutedEventArgs e)
 	{
-		if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space || e.Key == Windows.System.VirtualKey.GamepadA)
+		if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Space or Windows.System.VirtualKey.GamepadA)
 		{
 			_ = VisualStateManager.GoToState(this, NormalState, true);
 		}
@@ -190,7 +190,7 @@ internal partial class SettingsCard : ButtonBase
 
 	private void Control_PreviewKeyDown(object sender, KeyRoutedEventArgs e)
 	{
-		if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Space || e.Key == Windows.System.VirtualKey.GamepadA)
+		if (e.Key is Windows.System.VirtualKey.Enter or Windows.System.VirtualKey.Space or Windows.System.VirtualKey.GamepadA)
 		{
 			// Check if the active focus is on the card itself - only then we show the pressed state.
 			if (GetFocusedElement() is SettingsCard)
@@ -422,7 +422,7 @@ internal partial class SettingsCard : ButtonBase
 			return;
 		}
 
-		if (contentAlignmentStateName == RightWrappedState || contentAlignmentStateName == VerticalState)
+		if (contentAlignmentStateName is RightWrappedState or VerticalState)
 		{
 			_ = VisualStateManager.GoToState(this, ContentSpacingState, true);
 			return;
@@ -527,7 +527,7 @@ internal partial class SettingsCard : ButtonBase
 		nameof(Header),
 		typeof(object),
 		typeof(SettingsCard),
-		new PropertyMetadata(defaultValue: null, (d, e) => ((SettingsCard)d).OnHeaderPropertyChanged(e.OldValue, e.NewValue)));
+		new PropertyMetadata(defaultValue: null, static (d, e) => ((SettingsCard)d).OnHeaderPropertyChanged(e.OldValue, e.NewValue)));
 
 	/// <summary>
 	/// The backing <see cref="DependencyProperty"/> for the <see cref="Description"/> property.
@@ -536,7 +536,7 @@ internal partial class SettingsCard : ButtonBase
 		nameof(Description),
 		typeof(object),
 		typeof(SettingsCard),
-		new PropertyMetadata(defaultValue: null, (d, e) => ((SettingsCard)d).OnDescriptionPropertyChanged(e.OldValue, e.NewValue)));
+		new PropertyMetadata(defaultValue: null, static (d, e) => ((SettingsCard)d).OnDescriptionPropertyChanged(e.OldValue, e.NewValue)));
 
 	/// <summary>
 	/// The backing <see cref="DependencyProperty"/> for the <see cref="HeaderIcon"/> property.
@@ -546,7 +546,7 @@ internal partial class SettingsCard : ButtonBase
 		nameof(HeaderIcon),
 		typeof(IconElement),
 		typeof(SettingsCard),
-		new PropertyMetadata(defaultValue: null, (d, e) => ((SettingsCard)d).OnHeaderIconPropertyChanged((IconElement)e.OldValue, (IconElement)e.NewValue)));
+		new PropertyMetadata(defaultValue: null, static (d, e) => ((SettingsCard)d).OnHeaderIconPropertyChanged((IconElement)e.OldValue, (IconElement)e.NewValue)));
 
 	/// <summary>
 	/// The backing <see cref="DependencyProperty"/> for the <see cref="ActionIcon"/> property.
@@ -573,7 +573,7 @@ internal partial class SettingsCard : ButtonBase
 		nameof(IsClickEnabled),
 		typeof(bool),
 		typeof(SettingsCard),
-		new PropertyMetadata(defaultValue: false, (d, e) => ((SettingsCard)d).OnIsClickEnabledPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+		new PropertyMetadata(defaultValue: false, static (d, e) => ((SettingsCard)d).OnIsClickEnabledPropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
 	/// <summary>
 	/// The backing <see cref="DependencyProperty"/> for the <see cref="ContentAlignment"/> property.
@@ -582,7 +582,7 @@ internal partial class SettingsCard : ButtonBase
 		nameof(ContentAlignment),
 		typeof(ContentAlignment),
 		typeof(SettingsCard),
-		new PropertyMetadata(defaultValue: ContentAlignment.Right, (d, e) => ((SettingsCard)d).OnContentAlignmentPropertyChanged((ContentAlignment)e.OldValue, (ContentAlignment)e.NewValue)));
+		new PropertyMetadata(defaultValue: ContentAlignment.Right, static (d, e) => ((SettingsCard)d).OnContentAlignmentPropertyChanged((ContentAlignment)e.OldValue, (ContentAlignment)e.NewValue)));
 
 	/// <summary>
 	/// The backing <see cref="DependencyProperty"/> for the <see cref="IsActionIconVisible"/> property.
@@ -591,7 +591,7 @@ internal partial class SettingsCard : ButtonBase
 		nameof(IsActionIconVisible),
 		typeof(bool),
 		typeof(SettingsCard),
-		new PropertyMetadata(defaultValue: true, (d, e) => ((SettingsCard)d).OnIsActionIconVisiblePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
+		new PropertyMetadata(defaultValue: true, static (d, e) => ((SettingsCard)d).OnIsActionIconVisiblePropertyChanged((bool)e.OldValue, (bool)e.NewValue)));
 
 	/// <summary>
 	/// Gets or sets the Header.

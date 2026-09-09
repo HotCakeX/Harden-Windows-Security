@@ -38,7 +38,7 @@ internal static class GetMDEAdvancedHuntingLogsData
 		FileIdentitySignatureBasedHashSet fileIdentities = new();
 
 		// Group the events based on the EtwActivityId, which is the unique identifier for each group of correlated events
-		IEnumerable<IGrouping<string?, MDEAdvancedHuntingData>> groupedEvents = data.GroupBy(e => e.EtwActivityId);
+		IEnumerable<IGrouping<string?, MDEAdvancedHuntingData>> groupedEvents = data.GroupBy(static e => e.EtwActivityId);
 
 		// Iterate over each group of logs
 		foreach (IGrouping<string?, MDEAdvancedHuntingData> group in groupedEvents)
@@ -48,17 +48,17 @@ internal static class GetMDEAdvancedHuntingLogsData
 			// If there are more than 1 of either block or audit events, selecting the first one because that means the same event was triggered by multiple deployed policies
 
 			// Get the possible CodeIntegrity audit event in the group
-			MDEAdvancedHuntingData? possibleCodeIntegrityAuditEvent = group.FirstOrDefault(g => string.Equals(g.ActionType, "AppControlCodeIntegrityPolicyAudited", StringComparison.OrdinalIgnoreCase));
+			MDEAdvancedHuntingData? possibleCodeIntegrityAuditEvent = group.FirstOrDefault(static g => string.Equals(g.ActionType, "AppControlCodeIntegrityPolicyAudited", StringComparison.OrdinalIgnoreCase));
 			// Get the possible CodeIntegrity blocked event in the group
-			MDEAdvancedHuntingData? possibleCodeIntegrityBlockEvent = group.FirstOrDefault(g => string.Equals(g.ActionType, "AppControlCodeIntegrityPolicyBlocked", StringComparison.OrdinalIgnoreCase));
+			MDEAdvancedHuntingData? possibleCodeIntegrityBlockEvent = group.FirstOrDefault(static g => string.Equals(g.ActionType, "AppControlCodeIntegrityPolicyBlocked", StringComparison.OrdinalIgnoreCase));
 
 			// Get the possible AppLocker audit event in the group
-			MDEAdvancedHuntingData? possibleAppLockerAuditEvent = group.FirstOrDefault(g => string.Equals(g.ActionType, "AppControlCIScriptAudited", StringComparison.OrdinalIgnoreCase));
+			MDEAdvancedHuntingData? possibleAppLockerAuditEvent = group.FirstOrDefault(static g => string.Equals(g.ActionType, "AppControlCIScriptAudited", StringComparison.OrdinalIgnoreCase));
 			// Get the possible AppLocker blocked event in the group
-			MDEAdvancedHuntingData? possibleAppLockerBlockEvent = group.FirstOrDefault(g => string.Equals(g.ActionType, "AppControlCIScriptBlocked", StringComparison.OrdinalIgnoreCase));
+			MDEAdvancedHuntingData? possibleAppLockerBlockEvent = group.FirstOrDefault(static g => string.Equals(g.ActionType, "AppControlCIScriptBlocked", StringComparison.OrdinalIgnoreCase));
 
 			// Get the possible correlated data
-			List<MDEAdvancedHuntingData> correlatedEvents = group.Where(g => string.Equals(g.ActionType, "AppControlCodeIntegritySigningInformation", StringComparison.OrdinalIgnoreCase)).ToList();
+			List<MDEAdvancedHuntingData> correlatedEvents = group.Where(static g => string.Equals(g.ActionType, "AppControlCodeIntegritySigningInformation", StringComparison.OrdinalIgnoreCase)).ToList();
 
 			// If the current group has Code Integrity Audit log
 			if (possibleCodeIntegrityAuditEvent is not null)

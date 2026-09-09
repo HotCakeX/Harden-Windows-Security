@@ -144,7 +144,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 
 		try
 		{
-			await Atlas.AppDispatcher.EnqueueAsync(() =>
+			await Atlas.AppDispatcher.EnqueueAsync(static () =>
 			{
 				_previousSession?.Dispose();
 				_previousSession = null;
@@ -362,7 +362,7 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 		}
 	}
 
-	private static readonly Lazy<MediaPlayer?> TypeWriterMediaPlayer = new(() =>
+	private static readonly Lazy<MediaPlayer?> TypeWriterMediaPlayer = new(static () =>
 	{
 		try
 		{

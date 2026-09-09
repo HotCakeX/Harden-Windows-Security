@@ -182,7 +182,7 @@ internal sealed class FileIdentity
 
 	// Computed property to gather all OPUSInfo from FileSignerInfos and save them in a comma-separated string for displaying purposes only.
 	[JsonInclude]
-	internal string Opus => string.Join(", ", FileSignerInfos.Where(signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo)).Select(x => x.OPUSInfo));
+	internal string Opus => string.Join(", ", FileSignerInfos.Where(static signerInfo => !string.IsNullOrEmpty(signerInfo.OPUSInfo)).Select(static x => x.OPUSInfo));
 
 	/// <summary>
 	/// Determines whether the specified object is equal to the current object.

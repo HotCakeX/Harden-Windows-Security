@@ -1055,8 +1055,8 @@ internal sealed partial class MUnit(
 					// Split policies based on their Action:
 					// Policies with Action=Apply should be Added/Set
 					// Policies with Action=Remove should be Removed
-					List<RegistryPolicyEntry> toAdd = allPolicies.Where(p => p.policyAction == PolicyAction.Apply).ToList();
-					List<RegistryPolicyEntry> toRemove = allPolicies.Where(p => p.policyAction == PolicyAction.Remove).ToList();
+					List<RegistryPolicyEntry> toAdd = allPolicies.Where(static p => p.policyAction == PolicyAction.Apply).ToList();
+					List<RegistryPolicyEntry> toRemove = allPolicies.Where(static p => p.policyAction == PolicyAction.Remove).ToList();
 
 					#region extra cleanup
 
@@ -1129,7 +1129,7 @@ internal sealed partial class MUnit(
 					// For Remove operation:
 					// Policies with Action=Apply should be Removed
 					// Policies with Action=Remove should be Skipped - Running a removal on a JSON policy with Action=Remove would mean restoring the key that was deleted to secure the system.
-					List<RegistryPolicyEntry> toUndo = allPolicies.Where(p => p.policyAction == PolicyAction.Apply).ToList();
+					List<RegistryPolicyEntry> toUndo = allPolicies.Where(static p => p.policyAction == PolicyAction.Apply).ToList();
 
 					if (toUndo.Count > 0)
 					{
@@ -1434,7 +1434,7 @@ internal sealed partial class MUnit(
 				foreach (MUnit mUnit in regularMUnits)
 				{
 					// Process Before dependencies
-					if (operation == MUnitOperation.Apply || operation == MUnitOperation.Remove)
+					if (operation is MUnitOperation.Apply or MUnitOperation.Remove)
 					{
 						ProcessDependenciesPhase([mUnit], allAvailableMUnits, operation, ExecutionTiming.Before, cancellationToken);
 					}
@@ -1442,7 +1442,7 @@ internal sealed partial class MUnit(
 					ProcessRegularMUnit(mUnit, operation, cancellationToken);
 
 					// Process After dependencies
-					if (operation == MUnitOperation.Apply || operation == MUnitOperation.Remove)
+					if (operation is MUnitOperation.Apply or MUnitOperation.Remove)
 					{
 						ProcessDependenciesPhase([mUnit], allAvailableMUnits, operation, ExecutionTiming.After, cancellationToken);
 					}
@@ -1604,7 +1604,7 @@ internal sealed partial class MUnit(
 			name: name,
 			deviceIntents: deviceIntents,
 			id: id,
-			applyStrategy: new DefaultApply(() => { }), // no-op
+			applyStrategy: new DefaultApply(static () => { }), // no-op
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: subCategory,

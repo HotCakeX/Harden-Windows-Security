@@ -47,8 +47,8 @@ internal static partial class OptimizeMDECSVData
 
 		// Map header names to their indices so columns can be located precisely regardless of their positions in the CSV file.
 		Dictionary<string, int> headerMap = headers
-			.Select((name, index) => new { name, index })
-			.ToDictionary(x => x.name, x => x.index);
+			.Select(static (name, index) => new { name, index })
+			.ToDictionary(static x => x.name, static x => x.index);
 
 		// Read the remaining lines of the CSV file until the end of the stream is reached (EOF).
 		while (!reader.EndOfStream)
@@ -168,7 +168,7 @@ internal static partial class OptimizeMDECSVData
 		Regex regex = JsonFixerRegex();
 
 		// Using MatchEvaluator to conditionally replace
-		string result = regex.Replace(jsonString, match =>
+		string result = regex.Replace(jsonString, static match =>
 		{
 			// If it matched a quoted string, return it exactly as is.
 			if (match.Groups["QuotedString"].Success)

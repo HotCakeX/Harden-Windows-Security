@@ -282,7 +282,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 			// Get distinct categories present in the unfiltered backing preview and enforce execution order
 			List<Categories> categories = AllDeviceIntentMUnitsPreview
-				.Select(m => m.Category)
+				.Select(static m => m.Category)
 				.Distinct()
 				.OrderBy(CategoryProcessorFactory.GetExecutionPriority)
 				.ToList();
@@ -434,7 +434,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 			category: Categories.MicrosoftSecurityBaseline,
 			name: Atlas.GetStr("ProtectCategory_MSFTSecBaseline"),
 			deviceIntents: intentsForBaselinesAndOptional,
-			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
@@ -448,7 +448,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 			category: Categories.Microsoft365AppsSecurityBaseline,
 			name: Atlas.GetStr("ProtectCategory_MSFT365AppsSecBaseline"),
 			deviceIntents: intentsForBaselinesAndOptional,
-			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
@@ -462,7 +462,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 			category: Categories.OptionalWindowsFeatures,
 			name: Atlas.GetStr("ProtectCategory_OptionalWinFeatures"),
 			deviceIntents: intentsForBaselinesAndOptional,
-			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
@@ -476,7 +476,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 			category: Categories.AttackSurfaceReductionRules,
 			name: Atlas.GetStr("ProtectCategory_ASRRules"),
 			deviceIntents: intentsForBaselinesAndOptional,
-			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
@@ -490,7 +490,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 			category: Categories.CountryIPBlocking,
 			name: Atlas.GetStr("ProtectCategory_CountryIPBlock"),
 			deviceIntents: [Intent.All],
-			applyStrategy: new DefaultApply(() => { /* no-op: applied via category processor in intents flow */ }),
+			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
 			verifyStrategy: null,
 			removeStrategy: null,
 			subCategory: null,
@@ -549,12 +549,12 @@ internal sealed partial class ProtectVM : ViewModelBase
 			if (SP(ref field, value))
 			{
 				// Update button enabled states when the running operation changes
-				IsApplyButtonEnabled = value == RunningOperation.None || value == RunningOperation.Apply;
-				IsRemoveButtonEnabled = value == RunningOperation.None || value == RunningOperation.Remove;
-				IsVerifyButtonEnabled = value == RunningOperation.None || value == RunningOperation.Verify;
+				IsApplyButtonEnabled = value is RunningOperation.None or RunningOperation.Apply;
+				IsRemoveButtonEnabled = value is RunningOperation.None or RunningOperation.Remove;
+				IsVerifyButtonEnabled = value is RunningOperation.None or RunningOperation.Verify;
 
 				// Gate the Device Intents animated Apply button the same way as other animated buttons in the Protect page.
-				IsApplyIntentsButtonEnabled = value == RunningOperation.None || value == RunningOperation.ApplyIntents;
+				IsApplyIntentsButtonEnabled = value is RunningOperation.None or RunningOperation.ApplyIntents;
 			}
 		}
 	} = RunningOperation.None;
@@ -1324,7 +1324,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 			// Ensure categories are processed in the correct order based on their execution priority.
 			List<ProtectionCategoryListViewItem> orderedSelection = ProtectionCategoriesListItemsSourceSelectedItems
-					.OrderBy(item => CategoryProcessorFactory.GetExecutionPriority(item.Category)).ToList();
+					.OrderBy(static item => CategoryProcessorFactory.GetExecutionPriority(item.Category)).ToList();
 
 			int processedCategories = 0;
 			int totalCategories = orderedSelection.Count;
@@ -1695,7 +1695,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	private static (int Total, int Compliant) GetMUnitStats(IMUnitListViewModel vm)
 	{
 		int total = vm.AllMUnits.Count;
-		int compliant = vm.AllMUnits.Count(m => m.IsApplied == true);
+		int compliant = vm.AllMUnits.Count(static m => m.IsApplied == true);
 		return (total, compliant);
 	}
 

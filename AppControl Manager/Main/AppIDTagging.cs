@@ -94,7 +94,7 @@ internal static class AppIDTagging
 		#endregion
 
 		// Make sure the policy only has valid rule options
-		_ = siPolicy.Rules.RemoveAll(r => !AppIDTaggingRules.Contains(r.Item));
+		_ = siPolicy.Rules.RemoveAll(static r => !AppIDTaggingRules.Contains(r.Item));
 
 		return siPolicy;
 	}

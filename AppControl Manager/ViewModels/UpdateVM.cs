@@ -311,7 +311,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 					if (asrRulesToRemove.Count > 0)
 					{
 						// Wrap them with double quotes and separate them with a space
-						string asrRulesToRemoveFinal = string.Join(" ", asrRulesToRemove.Select(item => $"\"{item}\""));
+						string asrRulesToRemoveFinal = string.Join(" ", asrRulesToRemove.Select(static item => $"\"{item}\""));
 
 						_ = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, $@"wmi stringarray ROOT\Microsoft\Windows\Defender MSFT_MpPreference remove AttackSurfaceReductionOnlyExclusions {asrRulesToRemoveFinal}");
 					}
@@ -334,7 +334,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 		{
 			// This correctly lists all packages for all users and gets the latest version package which we just installed which will be in staged state.
 			Package? AppControlManagerPackage = packageManager.FindPackages("AppControlManager_sadt7br7jpt02")
-				.OrderByDescending(p => new Version(p.Id.Version.Major, p.Id.Version.Minor, p.Id.Version.Build, p.Id.Version.Revision))
+				.OrderByDescending(static p => new Version(p.Id.Version.Major, p.Id.Version.Minor, p.Id.Version.Build, p.Id.Version.Revision))
 				.FirstOrDefault();
 
 			if (AppControlManagerPackage is null)

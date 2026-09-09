@@ -173,7 +173,7 @@ internal static class ConfigureISGServices
 					(valueKind is RegistryValueKind.DWord && value is int num2 && num2 != 0)
 					)
 				{
-					await Atlas.AppDispatcher.EnqueueAsync(async () =>
+					await Atlas.AppDispatcher.EnqueueAsync(static async () =>
 					{
 						using ContentDialogV2 sacDialog = new()
 						{

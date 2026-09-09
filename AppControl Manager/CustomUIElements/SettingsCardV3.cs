@@ -56,7 +56,7 @@ internal sealed partial class SettingsCardV3 : SettingsCardV2
 			_innerControl = panel
 				.Children
 				.OfType<Control>()
-				.FirstOrDefault(item => item is Button or SplitButtonV3);
+				.FirstOrDefault(static item => item is Button or SplitButtonV3);
 		}
 
 		if (_innerControl is null)

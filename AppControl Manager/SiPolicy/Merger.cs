@@ -496,10 +496,10 @@ internal static partial class Merger
 		// Get any possible SigningScenario from XML1 (main)
 		// Will use some of its rare details when building the new policy
 		SigningScenario? mainPolicyUserModeSigningScenario = mainPolicy.SigningScenarios?
-		  .FirstOrDefault(s => s.Value == 12);
+		  .FirstOrDefault(static s => s.Value == 12);
 
 		SigningScenario? mainPolicyKernelModeSigningScenario = mainPolicy.SigningScenarios?
-			.FirstOrDefault(s => s.Value == 131);
+			.FirstOrDefault(static s => s.Value == 131);
 
 		// Construct the User Mode Signing Scenario
 		SigningScenario UMCISigningScenario = new(
@@ -736,13 +736,13 @@ internal static partial class Merger
 	internal static bool DoEKUsMatch(List<EKU> ekusX, List<EKU> ekusY)
 	{
 		// Extract EKU values and ignore IDs
-		HashSet<int> ekuValuesX = [.. ekusX.Where(e => !e.Value.IsEmpty).Select(e => {
+		HashSet<int> ekuValuesX = [.. ekusX.Where(static e => !e.Value.IsEmpty).Select(static e => {
 					HashCode h = new();
 					h.AddBytes(e.Value.Span);
 					return h.ToHashCode();
 		})];
 
-		HashSet<int> ekuValuesY = [.. ekusY.Where(e => !e.Value.IsEmpty).Select(e => {
+		HashSet<int> ekuValuesY = [.. ekusY.Where(static e => !e.Value.IsEmpty).Select(static e => {
 					HashCode h = new();
 					h.AddBytes(e.Value.Span);
 					return h.ToHashCode();
@@ -758,7 +758,7 @@ internal static partial class Merger
 	internal static void AddEKUValuesToHashCode(ref HashCode hash, List<EKU> ekus)
 	{
 		// WHQL signer equality treats EKU collections as sets, so the hash code must not depend on XML order.
-		HashSet<int> ekuValueHashCodes = [.. ekus.Where(e => !e.Value.IsEmpty).Select(e => {
+		HashSet<int> ekuValueHashCodes = [.. ekus.Where(static e => !e.Value.IsEmpty).Select(static e => {
 					HashCode ekuHash = new();
 					ekuHash.AddBytes(e.Value.Span);
 					return ekuHash.ToHashCode();

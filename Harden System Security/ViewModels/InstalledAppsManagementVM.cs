@@ -433,7 +433,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 			.Select(group => new GroupInfoListForPackagedAppView(
 				items: group.Where(app => app.MatchesSearch(searchKeyword)),
 				key: group.Key))
-			.Where(group => group.Any())
+			.Where(group => group.Count != 0)
 			.OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
 			.ToList();
 	}
@@ -605,7 +605,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	/// Sorts app groups by their displayed SemanticZoom key so the zoomed-out letters are shown alphabetically.
 	/// </summary>
 	private static List<GroupInfoListForPackagedAppView> SortPackagedAppGroups(IEnumerable<GroupInfoListForPackagedAppView> groups) =>
-		 groups.OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase).ToList();
+		 groups.OrderBy(static group => group.Key, StringComparer.OrdinalIgnoreCase).ToList();
 
 	private static IEnumerable<PackagedAppView> GetAllLoadedApps(IEnumerable<GroupInfoListForPackagedAppView> groups) =>
 		groups.SelectMany(static group => group);
@@ -990,7 +990,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		// Create a copy of selected items to avoid collection modification during iteration
 		List<PackagedAppView> appsToUninstall = AppsListItemsSourceSelectedItems.ToList();
 
-		PackagedAppView? currentApplicationPackage = appsToUninstall.FirstOrDefault(x => string.Equals(x.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase));
+		PackagedAppView? currentApplicationPackage = appsToUninstall.FirstOrDefault(static x => string.Equals(x.PackageFamilyName, Atlas.PFN, StringComparison.OrdinalIgnoreCase));
 		if (currentApplicationPackage is not null && await ShowCurrentApplicationUninstallWarningAsync() != ContentDialogResult.Primary)
 		{
 			return;

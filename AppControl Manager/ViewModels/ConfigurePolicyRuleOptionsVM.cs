@@ -119,7 +119,7 @@ internal sealed partial class ConfigurePolicyRuleOptionsVM : ViewModelBase
 			}
 
 			// All the Policy OptionTypes in the selected XML file
-			List<OptionType> policyRules = SelectedPolicy.PolicyObj.Rules.Select(x => x.Item).ToList();
+			List<OptionType> policyRules = SelectedPolicy.PolicyObj.Rules.Select(static x => x.Item).ToList();
 
 			// Update each checkbox state based on the policy rules
 			EnabledUMCICheckBox = policyRules.Contains(OptionType.EnabledUMCI);

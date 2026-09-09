@@ -70,9 +70,9 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				IsApplyButtonEnabled = field == RunningOperation.None || field == RunningOperation.Apply;
-				IsRemoveButtonEnabled = field == RunningOperation.None || field == RunningOperation.Remove;
-				IsVerifyButtonEnabled = field == RunningOperation.None || field == RunningOperation.Verify;
+				IsApplyButtonEnabled = field is RunningOperation.None or RunningOperation.Apply;
+				IsRemoveButtonEnabled = field is RunningOperation.None or RunningOperation.Remove;
+				IsVerifyButtonEnabled = field is RunningOperation.None or RunningOperation.Verify;
 			}
 		}
 	} = RunningOperation.None;
@@ -246,12 +246,12 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		{
 			Func<VerificationResult, object?> keySelector = key switch
 			{
-				"FriendlyName" => result => result.FriendlyName,
-				"Source" => result => result.SourceDisplay,
-				"IsCompliant" => result => result.IsCompliant,
-				"CurrentValue" => result => result.CurrentValue,
-				"ExpectedValue" => result => result.ExpectedValue,
-				_ => result => result.FriendlyName
+				"FriendlyName" => static result => result.FriendlyName,
+				"Source" => static result => result.SourceDisplay,
+				"IsCompliant" => static result => result.IsCompliant,
+				"CurrentValue" => static result => result.CurrentValue,
+				"ExpectedValue" => static result => result.ExpectedValue,
+				_ => static result => result.FriendlyName
 			};
 
 			ListViewHelper.SortColumn(
@@ -381,7 +381,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	internal async Task ApplyImportedStates(List<VerificationResult> importedItems, bool synchronizeExact, CancellationToken cancellationToken)
 	{
 		// Use the IDs from the verification results to selectively apply settings from the baseline ZIP
-		HashSet<string> applyIds = importedItems.Where(x => x.IsCompliant).Select(x => x.ID).ToHashSet(StringComparer.OrdinalIgnoreCase);
+		HashSet<string> applyIds = importedItems.Where(static x => x.IsCompliant).Select(static x => x.ID).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
 		// Use custom ZIP file if provided, otherwise use the URL selected in the ComboBox
 		Uri sourceUri = !string.IsNullOrEmpty(CustomBaselineFilePath)
@@ -402,7 +402,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		// P.S MSBaseline currently supports removal only for Group Policy settings (POL files).
 		if (synchronizeExact)
 		{
-			HashSet<string> removeIds = importedItems.Where(x => !x.IsCompliant).Select(x => x.ID).ToHashSet(StringComparer.OrdinalIgnoreCase);
+			HashSet<string> removeIds = importedItems.Where(static x => !x.IsCompliant).Select(static x => x.ID).ToHashSet(StringComparer.OrdinalIgnoreCase);
 			if (removeIds.Count > 0)
 			{
 				Logger.Write($"Removing {removeIds.Count} non-compliant imported baseline settings (Group Policy only)...");
@@ -512,7 +512,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 
 			CalculateColumnWidths();
 
-			int compliantCount = results.Count(r => r.IsCompliant);
+			int compliantCount = results.Count(static r => r.IsCompliant);
 			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("VerificationCompletedCompliantPolicies"), compliantCount, results.Count));
 
 		}
@@ -616,7 +616,7 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		// Always get fresh data, otherwise the data may be stale if user just applied the security measures and other categories override the data in the Security Baseline categories.
 		await VerifyInternal();
 
-		return new(items: AllVerificationResults) { Score = AllVerificationResults.Count(x => x.IsCompliant) };
+		return new(items: AllVerificationResults) { Score = AllVerificationResults.Count(static x => x.IsCompliant) };
 	}
 
 	#region Copy
@@ -627,11 +627,11 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 	internal static readonly FrozenDictionary<string, (string Label, Func<VerificationResult, object?> Getter)> VerificationResultPropertyMappings
 		= new Dictionary<string, (string Label, Func<VerificationResult, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			{ "FriendlyName",   (Atlas.GetStr("FriendlyNameHeader/Text") + ": ", vr => vr.FriendlyName) },
-			{ "Source",         (Atlas.GetStr("SourceHeader/Text") + ": ",       vr => vr.SourceDisplay) },
-			{ "IsCompliant",    (Atlas.GetStr("StatusHeader/Text") + ": ",       vr => vr.IsCompliant) },
-			{ "CurrentValue",   (Atlas.GetStr("CurrentValueHeader/Text") + ": ",  vr => vr.CurrentValue) },
-			{ "ExpectedValue",  (Atlas.GetStr("ExpectedValueHeader/Text") + ": ", vr => vr.ExpectedValue) }
+			{ "FriendlyName",   (Atlas.GetStr("FriendlyNameHeader/Text") + ": ", static vr => vr.FriendlyName) },
+			{ "Source",         (Atlas.GetStr("SourceHeader/Text") + ": ",       static vr => vr.SourceDisplay) },
+			{ "IsCompliant",    (Atlas.GetStr("StatusHeader/Text") + ": ",       static vr => vr.IsCompliant) },
+			{ "CurrentValue",   (Atlas.GetStr("CurrentValueHeader/Text") + ": ",  static vr => vr.CurrentValue) },
+			{ "ExpectedValue",  (Atlas.GetStr("ExpectedValueHeader/Text") + ": ", static vr => vr.ExpectedValue) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>

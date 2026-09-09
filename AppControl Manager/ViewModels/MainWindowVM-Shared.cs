@@ -390,7 +390,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			Logger.Write($"- DefaultStyleOptimizations is: {XamlOptionalChanges.IsChangeEnabled(XamlChangeId.DefaultStyleOptimizations)}");
 			Logger.Write($"- DeferContextFlyoutInit is: {XamlOptionalChanges.IsChangeEnabled(XamlChangeId.DeferContextFlyoutInit)}");
 
-			await Task.Run(() =>
+			await Task.Run(static () =>
 			{
 				using Process beforeProcess = Process.GetCurrentProcess();
 

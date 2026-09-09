@@ -852,7 +852,7 @@ internal static class GetAppsList
 				app.Dependencies.Contains(query, StringComparison.OrdinalIgnoreCase) ||
 				app.Capabilities.Contains(query, StringComparison.OrdinalIgnoreCase) ||
 				app.PublisherID.Contains(query, StringComparison.OrdinalIgnoreCase)
-				), key: group.Key)).Where(group => group.Any()).ToList();
+				), key: group.Key)).Where(group => group.Count != 0).ToList();
 
 		return new ObservableCollection<GroupInfoListForPackagedAppView>(filtered);
 	}

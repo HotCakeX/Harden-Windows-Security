@@ -823,7 +823,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		try
 		{
 			await PoliciesLibraryCacheLock.WaitAsync();
-			await Task.Run(() =>
+			await Task.Run(static () =>
 			{
 				// We can only proceed if there is a user-defined location in the first place.
 				if (!string.IsNullOrEmpty(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation))
@@ -857,7 +857,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		try
 		{
 			await PoliciesLibraryCacheLock.WaitAsync();
-			await Task.Run(() =>
+			await Task.Run(static () =>
 			{
 				// The user-defined directory must exist so we can move files from it. We shouldn't try to create the directory.
 				if (!string.IsNullOrEmpty(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation) && Directory.Exists(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation))

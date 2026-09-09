@@ -241,7 +241,7 @@ internal abstract class SizerBase : UserControl
 
 
 	private static readonly DependencyProperty OrientationProperty =
-		DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(SizerBase), new PropertyMetadata(Orientation.Vertical, (d, e) => ((SizerBase)d).OnOrientationChanged()));
+		DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(SizerBase), new PropertyMetadata(Orientation.Vertical, static (d, e) => ((SizerBase)d).OnOrientationChanged()));
 
 	public Orientation Orientation
 	{

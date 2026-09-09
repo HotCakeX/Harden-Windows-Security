@@ -33,8 +33,8 @@ internal static class GetSignerInfo
 	/// <returns>a list of Signer objects. The output contains as much info as possible about each signer.</returns>
 	internal static List<SignerX> Get(SiPolicy.SiPolicy policyObj)
 	{
-		SigningScenario? UMCI = policyObj.SigningScenarios?.FirstOrDefault(x => x.Value == 12);
-		SigningScenario? KMCI = policyObj.SigningScenarios?.FirstOrDefault(x => x.Value == 131);
+		SigningScenario? UMCI = policyObj.SigningScenarios?.FirstOrDefault(static x => x.Value == 12);
+		SigningScenario? KMCI = policyObj.SigningScenarios?.FirstOrDefault(static x => x.Value == 131);
 
 		HashSet<string> allowedUMCISigners = new(StringComparer.OrdinalIgnoreCase);
 		HashSet<string> deniedUMCISigners = new(StringComparer.OrdinalIgnoreCase);

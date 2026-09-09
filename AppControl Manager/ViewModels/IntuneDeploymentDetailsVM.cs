@@ -163,11 +163,11 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<IntuneGroupItemListView, object?> Getter)> IntuneGroupPropertyMappings =
 		new Dictionary<string, (string Label, Func<IntuneGroupItemListView, object?> Getter)>(StringComparer.OrdinalIgnoreCase)
 		{
-			["GroupName"] = (Atlas.GetStr("GroupNameHeader/Text"), g => g.GroupName),
-			["GroupID"] = (Atlas.GetStr("GroupIDHeader/Text"), g => g.GroupID),
-			["Description"] = (Atlas.GetStr("GroupDescriptionHeader/Text"), g => g.Description),
-			["SecurityIdentifier"] = (Atlas.GetStr("GroupSecurityIdentifierHeader/Text"), g => g.SecurityIdentifier),
-			["CreatedDateTime"] = (Atlas.GetStr("GroupCreatedDateTimeHeader/Text"), g => g.CreatedDateTime)
+			["GroupName"] = (Atlas.GetStr("GroupNameHeader/Text"), static g => g.GroupName),
+			["GroupID"] = (Atlas.GetStr("GroupIDHeader/Text"), static g => g.GroupID),
+			["Description"] = (Atlas.GetStr("GroupDescriptionHeader/Text"), static g => g.Description),
+			["SecurityIdentifier"] = (Atlas.GetStr("GroupSecurityIdentifierHeader/Text"), static g => g.SecurityIdentifier),
+			["CreatedDateTime"] = (Atlas.GetStr("GroupCreatedDateTimeHeader/Text"), static g => g.CreatedDateTime)
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	#endregion

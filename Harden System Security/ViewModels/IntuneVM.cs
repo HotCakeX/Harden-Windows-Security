@@ -656,14 +656,14 @@ internal sealed partial class IntuneVM : ViewModelBase, IGraphAuthHost, IDisposa
 	private static readonly FrozenDictionary<string, (string Label, Func<DeviceManagementConfigurationPolicy, object?> Getter)> DeviceManagementConfigurationPolicyPropertyMappings =
 		new Dictionary<string, (string Label, Func<DeviceManagementConfigurationPolicy, object?> Getter)>
 		{
-			{ "Name", (Atlas.GetStr("NameHeader/Text"), p => p.Name) },
-			{ "Description", (Atlas.GetStr("DescriptionHeader/Text"), p => p.Description) },
-			{ "Platforms", (Atlas.GetStr("PlatformsHeader/Text"), p => p.Platforms) },
-			{ "Technologies", (Atlas.GetStr("TechnologiesHeader/Text"), p => p.Technologies) },
-			{ "SettingCount", (Atlas.GetStr("SettingCountHeader/Text"), p => p.SettingCount) },
-			{ "CreatedDateTime", (Atlas.GetStr("CreatedHeader/Text"), p => p.CreatedDateTime) },
-			{ "LastModifiedDateTime", (Atlas.GetStr("ModifiedHeader/Text"), p => p.LastModifiedDateTime) },
-			{ "Id", (Atlas.GetStr("IDHeader/Text"), p => p.Id) }
+			{ "Name", (Atlas.GetStr("NameHeader/Text"), static p => p.Name) },
+			{ "Description", (Atlas.GetStr("DescriptionHeader/Text"), static p => p.Description) },
+			{ "Platforms", (Atlas.GetStr("PlatformsHeader/Text"), static p => p.Platforms) },
+			{ "Technologies", (Atlas.GetStr("TechnologiesHeader/Text"), static p => p.Technologies) },
+			{ "SettingCount", (Atlas.GetStr("SettingCountHeader/Text"), static p => p.SettingCount) },
+			{ "CreatedDateTime", (Atlas.GetStr("CreatedHeader/Text"), static p => p.CreatedDateTime) },
+			{ "LastModifiedDateTime", (Atlas.GetStr("ModifiedHeader/Text"), static p => p.LastModifiedDateTime) },
+			{ "Id", (Atlas.GetStr("IDHeader/Text"), static p => p.Id) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>

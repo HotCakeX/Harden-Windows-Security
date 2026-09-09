@@ -144,7 +144,7 @@ internal sealed partial class AnalysisCategory : ViewModelBase
 
 	internal void UpdateCharts()
 	{
-		double total = Items.Sum(x => x.Count);
+		double total = Items.Sum(static x => x.Count);
 		if (total == 0) return;
 
 		// Update Pie Slices
@@ -228,7 +228,7 @@ internal sealed partial class AnalysisCategory : ViewModelBase
 
 		// Update Column Bars
 		ColumnBars.Clear();
-		double maxVal = Items.Max(x => x.Count);
+		double maxVal = Items.Max(static x => x.Count);
 		double maxHeightPx = 100;
 
 		foreach (AnalysisResultItem item in Items)
@@ -881,8 +881,8 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 				AddRawTrendPoint(item, blockedTrendPoints);
 			}
 		}
-		blockedTrendPoints = blockedTrendPoints.OrderBy(point => point.X).ToList();
-		allowedTrendPoints = allowedTrendPoints.OrderBy(point => point.X).ToList();
+		blockedTrendPoints = blockedTrendPoints.OrderBy(static point => point.X).ToList();
+		allowedTrendPoints = allowedTrendPoints.OrderBy(static point => point.X).ToList();
 	}
 
 	/// <summary>
@@ -960,7 +960,7 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	private static List<AnalysisResultItem> ExtractTopItems(Dictionary<string, int> dict, int take, bool fileNameOnly = false)
 	{
 		List<AnalysisResultItem> result = new(take > 100 ? dict.Count : take);
-		foreach (KeyValuePair<string, int> kvp in dict.OrderByDescending(x => x.Value).Take(take))
+		foreach (KeyValuePair<string, int> kvp in dict.OrderByDescending(static x => x.Value).Take(take))
 		{
 			string display = kvp.Key;
 			if (fileNameOnly)

@@ -45,7 +45,7 @@ internal static class WebView2Config
 	/// <summary>
 	/// Used by all WebView2 elements in the entire app.
 	/// </summary>
-	private static readonly Lazy<CoreWebView2Environment> CoreWebView2Instance = new(() =>
+	private static readonly Lazy<CoreWebView2Environment> CoreWebView2Instance = new(static () =>
 	{
 		_ = Directory.CreateDirectory(WebView2Dir);
 

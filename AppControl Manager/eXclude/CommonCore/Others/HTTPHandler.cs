@@ -114,11 +114,11 @@ internal static class HTTPHandler
 	private static bool IsRetryableStatus(HttpStatusCode statusCode)
 	{
 		// 429 (throttling) and common recoverable 5xx codes.
-		return statusCode == HttpStatusCode.TooManyRequests ||
-			   statusCode == HttpStatusCode.InternalServerError ||
-			   statusCode == HttpStatusCode.BadGateway ||
-			   statusCode == HttpStatusCode.ServiceUnavailable ||
-			   statusCode == HttpStatusCode.GatewayTimeout;
+		return statusCode is HttpStatusCode.TooManyRequests or
+			   HttpStatusCode.InternalServerError or
+			   HttpStatusCode.BadGateway or
+			   HttpStatusCode.ServiceUnavailable or
+			   HttpStatusCode.GatewayTimeout;
 	}
 
 	/// <summary>

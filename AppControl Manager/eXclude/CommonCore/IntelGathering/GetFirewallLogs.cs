@@ -78,9 +78,7 @@ internal static class GetFirewallLogs
 
 			using EventLogReader logReader = new(eventQuery);
 
-			EventRecord eventRecord;
-
-			while ((eventRecord = logReader.ReadEvent()) is not null)
+			while (logReader.ReadEvent() is EventRecord eventRecord)
 			{
 				using (eventRecord)
 				{

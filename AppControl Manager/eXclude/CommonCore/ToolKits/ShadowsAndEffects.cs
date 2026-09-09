@@ -1532,7 +1532,7 @@ public sealed class PipelineVisualFactory : PipelineVisualFactoryBase
 		{
 			Compositor compositor = CompositionTarget.GetCompositorForCurrentThread();
 
-			CompositionBrush brush = BackdropBrushCache.GetValue(compositor, c => c.CreateBackdropBrush());
+			CompositionBrush brush = BackdropBrushCache.GetValue(compositor, static c => c.CreateBackdropBrush());
 
 			return new ValueTask<CompositionBrush>(brush);
 		}

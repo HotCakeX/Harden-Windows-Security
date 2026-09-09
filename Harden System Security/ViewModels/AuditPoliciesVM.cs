@@ -168,11 +168,11 @@ internal sealed partial class AuditPoliciesVM : ViewModelBase
 	private static readonly FrozenDictionary<string, (string Label, Func<AuditPolicyInfo, object?> Getter)> AuditPolicyInfoPropertyMappings
 		= new Dictionary<string, (string Label, Func<AuditPolicyInfo, object?> Getter)>
 		{
-			{ "CategoryName",            (Atlas.GetStr("CategoryHeader/Text"),           ape => ape.CategoryName) },
-			{ "SubcategoryName",         (Atlas.GetStr("SubCategoryHeader/Text"),        ape => ape.SubcategoryName) },
-			{ "AuditSettingDescription", (Atlas.GetStr("AuditSettingHeader/Text"),       ape => ape.AuditSettingDescription) },
-			{ "CategoryGuid",            (Atlas.GetStr("CategoryGUIDHeader/Text"),       ape => ape.CategoryGuid) },
-			{ "SubcategoryGuid",         (Atlas.GetStr("SubcategoryGUIDHeader/Text"),    ape => ape.SubcategoryGuid) }
+			{ "CategoryName",            (Atlas.GetStr("CategoryHeader/Text"),           static ape => ape.CategoryName) },
+			{ "SubcategoryName",         (Atlas.GetStr("SubCategoryHeader/Text"),        static ape => ape.SubcategoryName) },
+			{ "AuditSettingDescription", (Atlas.GetStr("AuditSettingHeader/Text"),       static ape => ape.AuditSettingDescription) },
+			{ "CategoryGuid",            (Atlas.GetStr("CategoryGUIDHeader/Text"),       static ape => ape.CategoryGuid) },
+			{ "SubcategoryGuid",         (Atlas.GetStr("SubcategoryGUIDHeader/Text"),    static ape => ape.SubcategoryGuid) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]

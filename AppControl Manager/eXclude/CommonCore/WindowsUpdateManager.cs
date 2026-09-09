@@ -392,7 +392,7 @@ internal unsafe static partial class WindowsUpdateManager
 
 			for (int index = 0; index < count; index++)
 			{
-				string bundledUpdateTitle = collection.UseDispatchItem(index, bundledUpdate => bundledUpdate.GetString("Title"));
+				string bundledUpdateTitle = collection.UseDispatchItem(index, static bundledUpdate => bundledUpdate.GetString("Title"));
 
 				values.Add(bundledUpdateTitle);
 			}

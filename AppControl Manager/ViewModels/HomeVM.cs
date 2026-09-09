@@ -1701,7 +1701,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	private static string GetGpuNamesString()
 	{
 		List<GpuInfo> gpus = GPUInfoManager.GetSystemGPUs();
-		return gpus.Count > 0 ? string.Join(" - ", gpus.Select(g => g.Name)) : "Unavailable";
+		return gpus.Count > 0 ? string.Join(" - ", gpus.Select(static g => g.Name)) : "Unavailable";
 	}
 
 	#endregion

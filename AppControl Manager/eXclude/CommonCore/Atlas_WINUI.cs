@@ -113,7 +113,7 @@ internal static partial class Atlas
 	/// <summary>
 	/// Initializes the app settings class.
 	/// </summary>
-	private static readonly Lazy<AppSettings.Main> _appSettings = new(() =>
+	private static readonly Lazy<AppSettings.Main> _appSettings = new(static () =>
 		new AppSettings.Main(ApplicationData.GetDefault().LocalSettings), LazyThreadSafetyMode.PublicationOnly);
 
 	/// <summary>
@@ -136,7 +136,7 @@ internal static partial class Atlas
 	internal static readonly Lazy<char[]> InvalidFileNameChars = new(Path.GetInvalidFileNameChars, LazyThreadSafetyMode.None);
 
 	// Secure XML Reader Settings used by the entire app.
-	internal static readonly Lazy<XmlReaderSettings> UniversalXmlReaderSettings = new(() => new XmlReaderSettings()
+	internal static readonly Lazy<XmlReaderSettings> UniversalXmlReaderSettings = new(static () => new XmlReaderSettings()
 	{
 		DtdProcessing = DtdProcessing.Prohibit,
 		IgnoreComments = true,

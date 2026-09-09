@@ -58,7 +58,7 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 		Volume = volume;
 
 		// Get the full list of volumes and filter out non-removable drives.
-		RemovableDrives = [.. volumesList.Where(x => x.VolumeType is VolumeType.Removable && !string.IsNullOrWhiteSpace(x.MountPoint))];
+		RemovableDrives = [.. volumesList.Where(static x => x.VolumeType is VolumeType.Removable && !string.IsNullOrWhiteSpace(x.MountPoint))];
 
 		SelectedRemovableDrive = RemovableDrives.FirstOrDefault();
 
@@ -119,7 +119,7 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 		{
 			ElementsAreEnabled = false;
 
-			BitLockerVolume[] volumes = await Task.Run(() =>
+			BitLockerVolume[] volumes = await Task.Run(static () =>
 			{
 				const string command = "bitlocker list all";
 				string result = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, command)

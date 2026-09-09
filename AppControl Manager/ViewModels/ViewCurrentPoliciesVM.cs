@@ -44,16 +44,16 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		// We map the Key (for sorting/selection) to the Header Resource Key (for localization) and the Data Getter (for width measurement)
 		ColumnManager = new ListViewColumnManager<CiPolicyInfo>(
 		[
-			new("PolicyID", "PolicyIDHeader/Text", x => x.PolicyID),
-			new("BasePolicyID", "BasePolicyIDHeader/Text", x => x.BasePolicyID),
-			new("FriendlyName", "FriendlyNameHeader/Text", x => x.FriendlyName),
-			new("Version", "VersionHeader/Text", x => x.Version?.ToString()),
-			new("IsAuthorized", "IsAuthorizedHeader/Text", x => x.IsAuthorized.ToString()),
-			new("IsEnforced", "IsEnforcedHeader/Text", x => x.IsEnforced.ToString()),
-			new("IsOnDisk", "IsOnDiskHeader/Text", x => x.IsOnDisk.ToString()),
-			new("IsSignedPolicy", "IsSignedPolicyHeader/Text", x => x.IsSignedPolicy.ToString()),
-			new("IsSystemPolicy", "IsSystemPolicyHeader/Text", x => x.IsSystemPolicy.ToString()),
-			new("PolicyOptions", "PolicyOptionsHeader/Text", x => x.PolicyOptionsDisplay)
+			new("PolicyID", "PolicyIDHeader/Text", static x => x.PolicyID),
+			new("BasePolicyID", "BasePolicyIDHeader/Text", static x => x.BasePolicyID),
+			new("FriendlyName", "FriendlyNameHeader/Text", static x => x.FriendlyName),
+			new("Version", "VersionHeader/Text", static x => x.Version?.ToString()),
+			new("IsAuthorized", "IsAuthorizedHeader/Text", static x => x.IsAuthorized.ToString()),
+			new("IsEnforced", "IsEnforcedHeader/Text", static x => x.IsEnforced.ToString()),
+			new("IsOnDisk", "IsOnDiskHeader/Text", static x => x.IsOnDisk.ToString()),
+			new("IsSignedPolicy", "IsSignedPolicyHeader/Text", static x => x.IsSignedPolicy.ToString()),
+			new("IsSystemPolicy", "IsSystemPolicyHeader/Text", static x => x.IsSystemPolicy.ToString()),
+			new("PolicyOptions", "PolicyOptionsHeader/Text", static x => x.PolicyOptionsDisplay)
 		]);
 
 		// To adjust the initial width of the columns, giving them nice paddings.
@@ -634,17 +634,17 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	internal static readonly FrozenDictionary<string, (string Label, Func<CiPolicyInfo, object?> Getter)> CiPolicyInfoPropertyMappings
 		= new Dictionary<string, (string Label, Func<CiPolicyInfo, object?> Getter)>
 		{
-			{ "PolicyID",        (Atlas.GetStr("PolicyIDLabel"),        ci => ci.PolicyID) },
-			{ "BasePolicyID",    (Atlas.GetStr("BasePolicyIDLabel"),    ci => ci.BasePolicyID) },
-			{ "FriendlyName",    (Atlas.GetStr("FriendlyNameLabel"),    ci => ci.FriendlyName) },
-			{ "Version",         (Atlas.GetStr("VersionLabel/Text"),    ci => ci.Version) },
-			{ "VersionString",   (Atlas.GetStr("VersionLabel/Text"),    ci => ci.VersionString) },
-			{ "IsSystemPolicy",  (Atlas.GetStr("IsSystemPolicyLabel"),  ci => ci.IsSystemPolicy) },
-			{ "IsSignedPolicy",  (Atlas.GetStr("IsSignedPolicyLabel"),  ci => ci.IsSignedPolicy) },
-			{ "IsOnDisk",        (Atlas.GetStr("IsOnDiskLabel"),        ci => ci.IsOnDisk) },
-			{ "IsEnforced",      (Atlas.GetStr("IsEnforcedLabel"),      ci => ci.IsEnforced) },
-			{ "IsAuthorized",    (Atlas.GetStr("IsAuthorizedLabel"),    ci => ci.IsAuthorized) },
-			{ "PolicyOptions",   (Atlas.GetStr("PolicyOptionsLabel"),   ci => ci.PolicyOptionsDisplay) }
+			{ "PolicyID",        (Atlas.GetStr("PolicyIDLabel"),        static ci => ci.PolicyID) },
+			{ "BasePolicyID",    (Atlas.GetStr("BasePolicyIDLabel"),    static ci => ci.BasePolicyID) },
+			{ "FriendlyName",    (Atlas.GetStr("FriendlyNameLabel"),    static ci => ci.FriendlyName) },
+			{ "Version",         (Atlas.GetStr("VersionLabel/Text"),    static ci => ci.Version) },
+			{ "VersionString",   (Atlas.GetStr("VersionLabel/Text"),    static ci => ci.VersionString) },
+			{ "IsSystemPolicy",  (Atlas.GetStr("IsSystemPolicyLabel"),  static ci => ci.IsSystemPolicy) },
+			{ "IsSignedPolicy",  (Atlas.GetStr("IsSignedPolicyLabel"),  static ci => ci.IsSignedPolicy) },
+			{ "IsOnDisk",        (Atlas.GetStr("IsOnDiskLabel"),        static ci => ci.IsOnDisk) },
+			{ "IsEnforced",      (Atlas.GetStr("IsEnforcedLabel"),      static ci => ci.IsEnforced) },
+			{ "IsAuthorized",    (Atlas.GetStr("IsAuthorizedLabel"),    static ci => ci.IsAuthorized) },
+			{ "PolicyOptions",   (Atlas.GetStr("PolicyOptionsLabel"),   static ci => ci.PolicyOptionsDisplay) }
 		}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]

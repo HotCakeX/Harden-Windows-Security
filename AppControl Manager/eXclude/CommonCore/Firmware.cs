@@ -211,7 +211,7 @@ internal static partial class Firmware
 	/// <summary>
 	/// Writes the one-time boot sequence on the Windows Boot Manager BCD object.
 	/// </summary>
-	private static unsafe void SetBootManagerOneTimeBootSequence(ReadOnlySpan<Guid> bootSequence)
+	private static void SetBootManagerOneTimeBootSequence(ReadOnlySpan<Guid> bootSequence)
 	{
 		IntPtr storeHandle = IntPtr.Zero;
 		IntPtr bootManagerHandle = IntPtr.Zero;
@@ -255,7 +255,7 @@ internal static partial class Firmware
 	/// <summary>
 	/// Reads a GUID list element from a BCD object.
 	/// </summary>
-	private static unsafe Guid[] GetBcdGuidListElement(IntPtr objectHandle, uint elementType, string missingElementMessage)
+	private static Guid[] GetBcdGuidListElement(IntPtr objectHandle, uint elementType, string missingElementMessage)
 	{
 		uint dataSize = 0;
 		int queryStatus = NativeMethods.BcdGetElementDataWithFlags(objectHandle, elementType, BcdElementFlagsNone, IntPtr.Zero, ref dataSize);
@@ -506,7 +506,7 @@ internal static partial class Firmware
 	/// Retrieves raw bytes of a UEFI variable.
 	/// Checks for existence using <see cref="NativeMethods.NtEnumerateSystemEnvironmentValuesEx"/> first.
 	/// </summary>
-	private static unsafe byte[] GetUefiVariableBytes(string name, Guid vendorGuid)
+	private static byte[] GetUefiVariableBytes(string name, Guid vendorGuid)
 	{
 		// Validation for correct GUID/type mapping
 		// This is enforced before privilege enabling and reads to avoid wrong data usage.

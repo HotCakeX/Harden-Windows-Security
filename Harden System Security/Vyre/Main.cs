@@ -587,8 +587,8 @@ internal static class AuthRootProcessor
 			{
 				X509ChainStatus status = chain.ChainStatus[i];
 				// Filter out NotTimeValid
-				if (status.Status != X509ChainStatusFlags.NotTimeValid &&
-					status.Status != X509ChainStatusFlags.NoError)
+				if (status.Status is not X509ChainStatusFlags.NotTimeValid and
+					not X509ChainStatusFlags.NoError)
 				{
 					errors.Add(status.StatusInformation.Trim());
 				}
@@ -645,7 +645,7 @@ internal static class AuthRootProcessor
 			{
 				throw new InvalidDataException(Atlas.GetStr("VersionIntegerOutOfRangeError"));
 			}
-			if (versionParsed != 0 && versionParsed != 1)
+			if (versionParsed is not 0 and not 1)
 			{
 				throw new InvalidDataException("Unsupported CTL version: " + versionParsed.ToString(CultureInfo.InvariantCulture));
 			}

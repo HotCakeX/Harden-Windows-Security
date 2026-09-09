@@ -504,8 +504,8 @@ internal static class RegistryPolicyParser
 				}
 
 				Logger.Write(string.Format(Atlas.GetStr("TotalOperationsLog"), operations.Count));
-				Logger.Write(string.Format(Atlas.GetStr("AddedEntriesLog"), operations.Count(op => op.OperationType == OperationType.Added)));
-				Logger.Write(string.Format(Atlas.GetStr("ReplacedEntries"), operations.Count(op => op.OperationType == OperationType.Replaced)));
+				Logger.Write(string.Format(Atlas.GetStr("AddedEntriesLog"), operations.Count(static op => op.OperationType == OperationType.Added)));
+				Logger.Write(string.Format(Atlas.GetStr("ReplacedEntries"), operations.Count(static op => op.OperationType == OperationType.Replaced)));
 
 				RefreshPolicies.Refresh();
 			}
@@ -583,7 +583,7 @@ internal static class RegistryPolicyParser
 				}
 			}
 
-			Logger.Write(string.Format(Atlas.GetStr("VerificationCompletePoliciesMatch"), verificationResults.Count(kvp => kvp.Value.IsCompliant), policies.Count));
+			Logger.Write(string.Format(Atlas.GetStr("VerificationCompletePoliciesMatch"), verificationResults.Count(static kvp => kvp.Value.IsCompliant), policies.Count));
 		}
 		catch (Exception ex)
 		{

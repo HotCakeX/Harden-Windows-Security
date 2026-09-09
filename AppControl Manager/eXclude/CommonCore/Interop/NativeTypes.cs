@@ -241,6 +241,42 @@ internal struct UNICODE_STRING
 }
 
 /// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SYSTEM_PROCESS_INFORMATION
+{
+	internal uint NextEntryOffset;
+	internal uint NumberOfThreads;
+	internal long WorkingSetPrivateSize;
+	internal uint HardFaultCount;
+	internal uint NumberOfThreadsHighWatermark;
+	internal ulong CycleTime;
+	internal long CreateTime;
+	internal long UserTime;
+	internal long KernelTime;
+	internal UNICODE_STRING ImageName;
+	internal int BasePriority;
+	internal IntPtr UniqueProcessId;
+	internal IntPtr InheritedFromUniqueProcessId;
+	internal uint HandleCount;
+	internal uint SessionId;
+	internal nuint UniqueProcessKey;
+	internal nuint PeakVirtualSize;
+	internal nuint VirtualSize;
+	internal uint PageFaultCount;
+	internal nuint PeakWorkingSetSize;
+	internal nuint WorkingSetSize;
+	internal nuint QuotaPeakPagedPoolUsage;
+	internal nuint QuotaPagedPoolUsage;
+	internal nuint QuotaPeakNonPagedPoolUsage;
+	internal nuint QuotaNonPagedPoolUsage;
+	internal nuint PagefileUsage;
+	internal nuint PeakPagefileUsage;
+	internal nuint PrivatePageCount;
+}
+
+/// <summary>
 /// https://learn.microsoft.com/windows/win32/api/psapi/ns-psapi-performance_information
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]

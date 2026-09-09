@@ -6,6 +6,7 @@
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CC="using:CommonCore"
     Title="Top Bar"
+    Activated="{x:Bind OnWindowActivated}"
     Closed="{x:Bind OnWindowClosed}">
 
     <!-- The top bar is a border-less always on top window that is docked to the top center edge of the display.
@@ -16,13 +17,14 @@
          The theme of the bar follows the theme of the app, so every brush below is a theme resource and the two
          opaque backgrounds are assigned from the code behind whenever the effective theme changes. -->
     <Grid x:Name="RootGrid"
+          Loaded="{x:Bind OnRootGridLoaded}"
           PointerEntered="{x:Bind OnRootPointerEntered}"
           PointerExited="{x:Bind OnRootPointerExited}"
           PointerPressed="{x:Bind OnRootPointerPressed}"
-          DragEnter="{x:Bind OnFoldersPanelDragEnter}"
-          DragOver="{x:Bind OnFoldersPanelDragOver}"
-          DragLeave="{x:Bind OnFoldersPanelDragLeave}"
-          Drop="{x:Bind OnFoldersPanelDrop}">
+          DragEnter="{x:Bind OnStorageDragEnter}"
+          DragOver="{x:Bind OnStorageDragOver}"
+          DragLeave="{x:Bind OnStorageDragLeave}"
+          Drop="{x:Bind OnStorageDrop}">
 
         <!-- The chrome of the bar. It carries no stroke at all and its corner radius is animated together with the window region.
              Only the two bottom corners are ever rounded, because the two top ones are docked against the top edge of the display. -->
@@ -35,28 +37,45 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Orientation="Horizontal"
-                    Spacing="10"
+                    Spacing="6"
                     IsHitTestVisible="False">
             <FontIcon x:Name="CollapsedGlyph"
                       Glyph="&#xEC50;"
                       FontSize="14"
                       VerticalAlignment="Center"
+                      HorizontalAlignment="Center"
                       Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
             <TextBlock x:Name="CollapsedLabel"
                        FontSize="12"
                        FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
-            <FontIcon x:Name="CollapsedChevron"
-                      Glyph="&#xE70D;"
-                      FontSize="10"
-                      VerticalAlignment="Center"
-                      Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+            <StackPanel x:Name="CollapsedPerformanceHost"
+                        HorizontalAlignment="Center"
+                        Width="153"
+                        Spacing="0"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed">
+                <TextBlock x:Name="CollapsedProcessName"
+                           FontSize="10"
+                           FontWeight="SemiBold"
+                           MaxLines="1"
+                           HorizontalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock x:Name="CollapsedProcessMetrics"
+                           FontSize="12"
+                           HorizontalAlignment="Center"
+                           FontWeight="SemiBold"
+                           MaxLines="1"
+                           TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
         </StackPanel>
 
         <!-- The content that is visible while the bar is expanded. Its width drives the expanded window width, so
              switching to a view whose content is wider or narrower animates the window to the new width. -->
         <StackPanel x:Name="ExpandedHost"
+                    SizeChanged="{x:Bind OnExpandedHostSizeChanged}"
+                    XYFocusKeyboardNavigation="Enabled"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Top"
                     Orientation="Horizontal"
@@ -77,6 +96,8 @@
                     VerticalAlignment="Center">
                 <Button.Flyout>
                     <MenuFlyout x:Name="ViewSwitcherMenu"
+                                Opened="{x:Bind OnFlyoutOpened}"
+                                Closed="{x:Bind OnFlyoutClosed}"
                                 Placement="Bottom"
                                 ShouldConstrainToRootBounds="False">
                         <RadioMenuFlyoutItem x:Name="AppsViewMenuItem"
@@ -143,6 +164,7 @@
                  take, so a view that holds more entries than the display fits scrolls sideways instead of making the
                  bar grow past the edges of the display. -->
             <ScrollViewer x:Name="ViewsScrollViewer"
+                          SizeChanged="{x:Bind OnViewsScrollViewerSizeChanged}"
                           VerticalAlignment="Center"
                           HorizontalScrollMode="Enabled"
                           HorizontalScrollBarVisibility="Auto"
@@ -157,6 +179,7 @@
                     <StackPanel x:Name="AppsPanel"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Center"
+                                XYFocusKeyboardNavigation="Enabled"
                                 VerticalAlignment="Center"/>
 
                     <!-- The pinned folder tiles are generated in the code behind from the entries of the bar. -->
@@ -164,6 +187,7 @@
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
+                                XYFocusKeyboardNavigation="Enabled"
                                 Visibility="Collapsed"/>
 
                     <!-- Every metric of the live system intelligence page, laid out over two compact rows. -->
@@ -334,6 +358,7 @@
                     <StackPanel x:Name="ClocksPanel"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Center"
+                                XYFocusKeyboardNavigation="Enabled"
                                 VerticalAlignment="Center"
                                 Spacing="4"
                                 Visibility="Collapsed"/>
@@ -438,6 +463,8 @@
                     VerticalAlignment="Center">
                 <Button.Flyout>
                     <customUI:MenuFlyoutV2 x:Name="SettingsMenu"
+                                           Opened="{x:Bind OnFlyoutOpened}"
+                                           Closed="{x:Bind OnFlyoutClosed}"
                                            Placement="Bottom"
                                            ShouldConstrainToRootBounds="False">
                         <ToggleMenuFlyoutItem x:Name="NotchStyleMenuItem"

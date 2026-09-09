@@ -84,6 +84,11 @@ internal sealed class TopBarFolderEntry
 	/// The full path of the folder that is opened when the entry is invoked.
 	/// </summary>
 	public string FolderPath { get; set; } = string.Empty;
+
+	/// <summary>
+	/// The optional ARGB color of the folder glyph. A missing value preserves the theme-provided default.
+	/// </summary>
+	public uint? GlyphColor { get; set; }
 }
 
 /// <summary>

@@ -3840,4 +3840,47 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint GetDpiForWindow(IntPtr hWnd);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getforegroundwindow
+	/// </summary>
+	[LibraryImport("user32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr GetForegroundWindow();
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid
+	/// </summary>
+	[LibraryImport("user32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetWindowThreadProcessId(
+		IntPtr hWnd,
+		out uint lpdwProcessId);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr OpenProcess(
+		uint dwDesiredAccess,
+		[MarshalAs(UnmanagedType.Bool)] bool bInheritHandle,
+		uint dwProcessId);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool QueryFullProcessImageNameW(
+		IntPtr hProcess,
+		uint dwFlags,
+		char* lpExeName,
+		ref uint lpdwSize);
+
+
 }

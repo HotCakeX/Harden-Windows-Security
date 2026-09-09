@@ -16,7 +16,10 @@
 //
 
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using AppControlManager.Pages;
 using HardenSystemSecurity.Widgets;
 
@@ -56,6 +59,14 @@ internal readonly struct TopBarMetricsSnapshot(
 	internal ulong AppMemoryBytes => appMemoryBytes;
 }
 
+internal readonly struct TopBarForegroundProcessSnapshot(string name, double cpuUsagePercent, ulong memoryBytes, int processCount)
+{
+	internal string Name => name;
+	internal double CpuUsagePercent => cpuUsagePercent;
+	internal ulong MemoryBytes => memoryBytes;
+	internal int ProcessCount => processCount;
+}
+
 /// <summary>
 /// Collects every metric that the live system intelligence page of the app displays, so that the performance view of
 /// the top bar can show the very same numbers without having to open that page.
@@ -79,37 +90,31 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 	/// </summary>
 	private const int SystemBatteryState = 5;
 
-	private readonly PerformanceMetricsSampler _performanceSampler = new();
-	private readonly NetworkThroughputSampler _networkSampler = new();
-	private readonly List<EnergyMeterDevice> _energyMeterDevices = [];
+	private PerformanceMetricsSampler? _performanceSampler;
+	private NetworkThroughputSampler? _networkSampler;
+	private List<EnergyMeterDevice>? _energyMeterDevices;
 
 	private IntPtr _diskQuery;
 	private IntPtr _diskReadCounter;
 	private IntPtr _diskWriteCounter;
 	private bool _diskCountersInitialized;
 	private bool _disposed;
-
-	internal TopBarMetricsSampler()
-	{
-		InitializeDiskCounters();
-
-		try
-		{
-			// Machines without an energy meter simply report no devices, which is not an error condition.
-			_energyMeterDevices.AddRange(EnergyMeterDevice.Enumerate());
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
-	}
+	private IntPtr _processBuffer;
+	private uint _processBufferSize = 256U * 1024U;
+	private uint _previousGroupRootId;
+	private ulong _previousGroupCpuTime;
+	private long _previousGroupTimestamp;
+	private uint _cachedDescriptionProcessId;
+	private string _cachedDescription = string.Empty;
 
 	/// <summary>
 	/// Reads every metric once. It never throws; a metric that is unavailable is reported as <see cref="double.NaN"/>.
 	/// </summary>
 	internal TopBarMetricsSnapshot Sample()
 	{
-		PerformanceSnapshot performance = _performanceSampler.Sample(includeStorageTemperature: true);
+		InitializeExpandedResources();
+		PerformanceMetricsSampler performanceSampler = _performanceSampler ?? throw new InvalidOperationException();
+		PerformanceSnapshot performance = performanceSampler.Sample(includeStorageTemperature: true);
 
 		double memoryUsagePercent = performance.TotalPhysicalBytes > 0UL
 			? (double)performance.UsedPhysicalBytes / performance.TotalPhysicalBytes * 100.0
@@ -132,6 +137,26 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 			SampleTotalSystemPower(),
 			SampleBatteryDischarge(),
 			SampleAppMemory());
+	}
+
+	private void InitializeExpandedResources()
+	{
+		if (_performanceSampler is not null)
+		{
+			return;
+		}
+		_performanceSampler = new PerformanceMetricsSampler();
+		_networkSampler = new NetworkThroughputSampler();
+		_energyMeterDevices = [];
+		InitializeDiskCounters();
+		try
+		{
+			_energyMeterDevices.AddRange(EnergyMeterDevice.Enumerate());
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
 	}
 
 	/// <summary>
@@ -214,10 +239,11 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 
 		try
 		{
-			IReadOnlyList<NetworkAdapter> adapters = _networkSampler.GetAdapters();
+			NetworkThroughputSampler networkSampler = _networkSampler ?? throw new InvalidOperationException();
+			IReadOnlyList<NetworkAdapter> adapters = networkSampler.GetAdapters();
 
 			// Every adapter has to be measured within the same cycle so that a rate is only derived once per adapter.
-			_networkSampler.BeginSampleCycle();
+			networkSampler.BeginSampleCycle();
 
 			double receiveTotal = 0.0;
 			double sendTotal = 0.0;
@@ -230,7 +256,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 					continue;
 				}
 
-				if (!_networkSampler.TrySample(adapter.InterfaceLuid, out NetworkAdapterSample sample))
+				if (!networkSampler.TrySample(adapter.InterfaceLuid, out NetworkAdapterSample sample))
 				{
 					continue;
 				}
@@ -262,7 +288,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 			double totalWatts = 0.0;
 			bool measured = false;
 
-			foreach (EnergyMeterDevice device in _energyMeterDevices)
+			foreach (EnergyMeterDevice device in _energyMeterDevices ?? [])
 			{
 				if (device.TryReadTotalAveragePower(out double deviceWatts))
 				{
@@ -332,6 +358,194 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 		return counters.PrivateWorkingSetSize != 0U ? counters.PrivateWorkingSetSize : counters.WorkingSetSize;
 	}
 
+	internal unsafe TopBarForegroundProcessSnapshot SampleForegroundProcess(uint foregroundProcessId)
+	{
+		if (foregroundProcessId == 0U || !TryCollectProcesses())
+			return new(string.Empty, double.NaN, 0UL, 0);
+
+		SYSTEM_PROCESS_INFORMATION* foreground = FindProcess(foregroundProcessId);
+
+		if (foreground is null || foreground->ImageName.Buffer == IntPtr.Zero)
+			return new(string.Empty, double.NaN, 0UL, 0);
+
+		ReadOnlySpan<char> foregroundName = GetImageName(foreground);
+		uint rootId = foregroundProcessId;
+		SYSTEM_PROCESS_INFORMATION* root = foreground;
+
+		while (true)
+		{
+			uint parentId = (uint)(nuint)root->InheritedFromUniqueProcessId;
+
+			SYSTEM_PROCESS_INFORMATION* parent = FindProcess(parentId);
+
+			if (parent is null || !GetImageName(parent).Equals(foregroundName, StringComparison.OrdinalIgnoreCase))
+				break;
+
+			root = parent;
+			rootId = parentId;
+		}
+
+		ulong cpuTime = 0UL;
+		ulong memoryBytes = 0UL;
+		int processCount = 0;
+		byte* current = (byte*)_processBuffer;
+
+		while (true)
+		{
+			SYSTEM_PROCESS_INFORMATION* process = (SYSTEM_PROCESS_INFORMATION*)current;
+			uint processId = (uint)(nuint)process->UniqueProcessId;
+
+			if (processId == rootId || IsDescendantOf(process, rootId))
+			{
+				cpuTime += (ulong)Math.Max(0L, process->KernelTime) + (ulong)Math.Max(0L, process->UserTime);
+				memoryBytes += (ulong)Math.Max(0L, process->WorkingSetPrivateSize);
+				processCount++;
+			}
+
+			if (process->NextEntryOffset == 0U)
+				break;
+
+			current += process->NextEntryOffset;
+		}
+		long timestamp = Stopwatch.GetTimestamp();
+		double cpuUsage = double.NaN;
+
+		if (_previousGroupRootId == rootId && timestamp > _previousGroupTimestamp && cpuTime >= _previousGroupCpuTime)
+		{
+			double seconds = (timestamp - _previousGroupTimestamp) / (double)Stopwatch.Frequency;
+			cpuUsage = Math.Clamp((cpuTime - _previousGroupCpuTime) / 10_000_000.0 / seconds / Environment.ProcessorCount * 100.0, 0.0, 100.0);
+		}
+
+		_previousGroupRootId = rootId;
+		_previousGroupCpuTime = cpuTime;
+		_previousGroupTimestamp = timestamp;
+
+		string fallback = Path.GetFileNameWithoutExtension(GetImageName(root).ToString());
+
+		return new(GetDisplayName(rootId, fallback), cpuUsage, memoryBytes, processCount);
+	}
+
+	private unsafe ReadOnlySpan<char> GetImageName(SYSTEM_PROCESS_INFORMATION* process) =>
+		process->ImageName.Buffer == IntPtr.Zero ? [] : new ReadOnlySpan<char>((void*)process->ImageName.Buffer, process->ImageName.Length / sizeof(char));
+
+	private unsafe SYSTEM_PROCESS_INFORMATION* FindProcess(uint processId)
+	{
+		if (processId == 0U)
+			return null;
+
+		byte* current = (byte*)_processBuffer;
+
+		while (true) { SYSTEM_PROCESS_INFORMATION* process = (SYSTEM_PROCESS_INFORMATION*)current; if ((uint)(nuint)process->UniqueProcessId == processId) return process; if (process->NextEntryOffset == 0U) return null; current += process->NextEntryOffset; }
+	}
+
+	private unsafe bool IsDescendantOf(SYSTEM_PROCESS_INFORMATION* process, uint rootId)
+	{
+		uint parentId = (uint)(nuint)process->InheritedFromUniqueProcessId;
+		for (int depth = 0; depth < 16 && parentId != 0U; depth++)
+		{
+			if (parentId == rootId)
+				return true;
+
+			SYSTEM_PROCESS_INFORMATION* parent = FindProcess(parentId);
+
+			if (parent is null)
+				break;
+
+			uint next = (uint)(nuint)parent->InheritedFromUniqueProcessId;
+
+			if (next == parentId)
+				break;
+
+			parentId = next;
+		}
+		return false;
+	}
+
+	private unsafe string GetDisplayName(uint processId, string fallback)
+	{
+		if (_cachedDescriptionProcessId == processId)
+			return _cachedDescription;
+
+		string description = fallback;
+		const uint ProcessQueryLimitedInformation = 0x1000;
+		IntPtr process = NativeMethods.OpenProcess(ProcessQueryLimitedInformation, false, processId);
+
+		if (process != IntPtr.Zero)
+		{
+			try
+			{
+				Span<char> pathBuffer = stackalloc char[1024];
+				uint length = (uint)pathBuffer.Length;
+				fixed (char* path = pathBuffer)
+				{
+					if (NativeMethods.QueryFullProcessImageNameW(process, 0U, path, ref length) && length > 0U)
+					{
+						string fullPath = new(path, 0, checked((int)length));
+						string? fileDescription = FileVersionInfo.GetVersionInfo(fullPath).FileDescription;
+
+						if (!string.IsNullOrWhiteSpace(fileDescription))
+							description = fileDescription.Trim();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+			finally
+			{
+				_ = NativeMethods.CloseHandle(process);
+			}
+		}
+		_cachedDescriptionProcessId = processId;
+		_cachedDescription = description;
+
+		return description;
+	}
+
+	private bool TryCollectProcesses()
+	{
+		const int SystemProcessInformation = 5;
+		const int StatusInfoLengthMismatch = unchecked((int)0xC0000004);
+
+		if (_processBuffer == IntPtr.Zero)
+			_processBuffer = (IntPtr)NativeMemory.Alloc(_processBufferSize);
+
+		for (int attempt = 0; attempt < 2; attempt++)
+		{
+			int required = 0;
+			int status = NativeMethods.NtQuerySystemInformation(SystemProcessInformation, _processBuffer, checked((int)_processBufferSize), ref required);
+
+			if (status >= 0)
+				return true;
+
+			if (status != StatusInfoLengthMismatch || required <= 0)
+				return false;
+
+			_processBufferSize = checked((uint)required + 65536U);
+			_processBuffer = (IntPtr)NativeMemory.Realloc((void*)_processBuffer, _processBufferSize);
+		}
+		return false;
+	}
+
+	internal void ReleaseExpandedResources()
+	{
+		CloseDiskCounters();
+		_performanceSampler?.Dispose();
+		_performanceSampler = null;
+		_networkSampler = null;
+		if (_energyMeterDevices is null)
+		{
+			return;
+		}
+		foreach (EnergyMeterDevice device in _energyMeterDevices)
+		{
+			device.Dispose();
+		}
+		_energyMeterDevices.Clear();
+		_energyMeterDevices = null;
+	}
+
 	private void CloseDiskCounters()
 	{
 		if (_diskQuery != IntPtr.Zero)
@@ -353,16 +567,14 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 		}
 
 		_disposed = true;
-
-		CloseDiskCounters();
-
-		_performanceSampler.Dispose();
-
-		foreach (EnergyMeterDevice device in _energyMeterDevices)
+		if (_processBuffer != IntPtr.Zero)
 		{
-			device.Dispose();
+			unsafe
+			{
+				NativeMemory.Free((void*)_processBuffer);
+			}
+			_processBuffer = IntPtr.Zero;
 		}
-
-		_energyMeterDevices.Clear();
+		ReleaseExpandedResources();
 	}
 }

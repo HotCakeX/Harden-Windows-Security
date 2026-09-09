@@ -23,6 +23,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.AppSettings;
+using CommonCore.Others;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -30,10 +31,12 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.UI.ViewManagement;
 using WinRT;
 
@@ -143,6 +146,7 @@ internal sealed partial class TopBar : Window
 	/// The largest amount of world clocks that the bar shows.
 	/// </summary>
 	private const int MaximumClockCount = 7;
+	private static readonly TimeSpan FolderSearchDelay = TimeSpan.FromMilliseconds(150.0);
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
@@ -226,6 +230,7 @@ internal sealed partial class TopBar : Window
 
 	// Only a single top bar can exist at any given time.
 	private static TopBar? _currentInstance;
+	private static readonly SemaphoreSlim FileIconLoadGate = new(1, 1);
 
 	/// <summary>
 	/// The name of the guard that keeps a single bar on the desktop even when several instances of the app run at the
@@ -300,16 +305,13 @@ internal sealed partial class TopBar : Window
 	private bool _isExpandedHostAttached;
 	private readonly int _expandedHostIndex;
 	private bool _isPinned;
-	private bool _isFolderDragInProgress;
-	private bool _doesFolderDragContainFolders;
-	private int _folderDragGeneration;
+	private bool _isStorageDragInProgress;
+	private bool _doesStorageDragContainItems;
+	private int _storageDragGeneration;
 	private bool _isClosed;
 
 	// Whether the bar is currently being driven by touch, which it has to retract differently from.
 	private bool _isTouchInteraction;
-
-	// The presenter of the window, which is kept so that the z order of the bar can be changed later on.
-	private readonly OverlappedPresenter _presenter;
 
 	private TopBar()
 	{
@@ -324,12 +326,10 @@ internal sealed partial class TopBar : Window
 
 		OverlappedPresenter presenter = OverlappedPresenter.Create();
 		presenter.SetBorderAndTitleBar(false, false);
-		presenter.IsAlwaysOnTop = Atlas.Settings.WindowsTopBarAlwaysOnTop;
 		presenter.IsResizable = false;
 		presenter.IsMaximizable = false;
 		presenter.IsMinimizable = false;
 		AppWindow.SetPresenter(presenter);
-		_presenter = presenter;
 
 		_windowHandle = WinRT.Interop.WindowNative.GetWindowHandle(this);
 
@@ -376,10 +376,6 @@ internal sealed partial class TopBar : Window
 		ToolTipService.SetToolTip(OpenOnHoverMenuItem, Atlas.GetStr("TopBarOpenOnHoverToolTip"));
 		ToolTipService.SetToolTip(AlwaysOnTopMenuItem, Atlas.GetStr("TopBarAlwaysOnTopToolTip"));
 
-		// Neither of the two menus may let the bar retract while it is open, exactly like the menu of a tile does.
-		TrackFlyout(ViewSwitcherMenu);
-		TrackFlyout(SettingsMenu);
-
 		// Both hosts keep a fixed size so that the visual tree is not re-laid out while the window is being resized.
 		ApplyNotchStyle(_notchStyle);
 		ExpandedHost.Height = ExpandedHeightDips;
@@ -415,11 +411,6 @@ internal sealed partial class TopBar : Window
 		_liveRefreshTimer.Interval = TimeSpan.FromMilliseconds(LiveRefreshIntervalMilliseconds);
 		_liveRefreshTimer.Tick += OnLiveRefreshTimerTick;
 
-		ExpandedHost.SizeChanged += OnExpandedHostSizeChanged;
-		ViewsScrollViewer.SizeChanged += OnViewsScrollViewerSizeChanged;
-		RootGrid.Loaded += OnRootGridLoaded;
-		Activated += OnWindowActivated;
-
 		RefreshDisplayMetrics();
 		ApplyState(0.0);
 		DetachExpandedHost();
@@ -436,6 +427,7 @@ internal sealed partial class TopBar : Window
 		{
 			_currentInstance.Activate();
 			_currentInstance.RemoveWindowBorder();
+			_currentInstance.ApplyAlwaysOnTop();
 
 			return;
 		}
@@ -455,6 +447,7 @@ internal sealed partial class TopBar : Window
 
 		// Showing the window makes the presenter lay out its own frame again, so the frame is stripped once more afterwards.
 		_currentInstance.RemoveWindowBorder();
+		_currentInstance.ApplyAlwaysOnTop();
 	}
 
 	/// <summary>
@@ -764,7 +757,9 @@ internal sealed partial class TopBar : Window
 		foreach (TopBarAppEntry entry in _configuration.Apps)
 		{
 			// The entry is captured by the handlers so the sender of the event never needs to be cast.
-			TopBarTile tile = CreateTile(entry.Glyph, entry.DisplayName, () => LaunchTarget(entry.LaunchTarget), () => RemoveAppEntry(entry), RemoveAllAppEntries);
+			string? iconPath = ResolveFilePath(entry.LaunchTarget);
+			FrameworkElement icon = iconPath is null ? CreateGlyphIcon(entry.Glyph) : CreateFileIcon(iconPath);
+			TopBarTile tile = CreateTile(icon, entry.DisplayName, () => LaunchTarget(entry.LaunchTarget), () => RemoveAppEntry(entry), RemoveAllAppEntries);
 
 			AppsPanel.Children.Add(tile.Element);
 
@@ -790,7 +785,12 @@ internal sealed partial class TopBar : Window
 
 		foreach (TopBarFolderEntry entry in _configuration.Folders)
 		{
-			TopBarTile tile = CreateTile("\uE8B7", entry.DisplayName, () => LaunchTarget(entry.FolderPath), () => RemoveFolderEntry(entry), RemoveAllFolderEntries);
+			FontIcon icon = CreateGlyphIcon("\uE8B7");
+			if (entry.GlyphColor is uint argb)
+			{
+				icon.Foreground = new SolidColorBrush(ToColor(argb));
+			}
+			TopBarTile tile = CreateTile(icon, entry.DisplayName, () => LaunchTarget(entry.FolderPath), () => RemoveFolderEntry(entry), RemoveAllFolderEntries, () => ShowFolderColorPicker(icon, entry), () => ShowFolderSearchFlyout(icon, entry));
 
 			ToolTipService.SetToolTip(tile.Element, entry.FolderPath);
 
@@ -808,11 +808,12 @@ internal sealed partial class TopBar : Window
 	}
 
 	[DynamicWindowsRuntimeCast(typeof(StorageFolder))]
-	private async void OnFoldersPanelDragEnter(object sender, DragEventArgs e)
+	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
+	private async void OnStorageDragEnter(object sender, DragEventArgs e)
 	{
-		_isFolderDragInProgress = true;
-		_doesFolderDragContainFolders = false;
-		int dragGeneration = ++_folderDragGeneration;
+		_isStorageDragInProgress = true;
+		_doesStorageDragContainItems = false;
+		int dragGeneration = ++_storageDragGeneration;
 		e.AcceptedOperation = DataPackageOperation.None;
 
 		if (Atlas.IsElevated || !e.DataView.Contains(StandardDataFormats.StorageItems))
@@ -823,21 +824,24 @@ internal sealed partial class TopBar : Window
 		try
 		{
 			IReadOnlyList<IStorageItem> storageItems = await e.DataView.GetStorageItemsAsync();
-			if (!_isFolderDragInProgress || dragGeneration != _folderDragGeneration)
+			if (!_isStorageDragInProgress || dragGeneration != _storageDragGeneration)
 			{
 				return;
 			}
 
+			TopBarView targetView = TopBarView.Folders;
 			foreach (IStorageItem storageItem in storageItems)
 			{
-				if (storageItem is StorageFolder)
+				if (storageItem is StorageFile)
 				{
-					_doesFolderDragContainFolders = true;
+					targetView = TopBarView.Apps;
+					_doesStorageDragContainItems = true;
 					break;
 				}
+				_doesStorageDragContainItems |= storageItem is StorageFolder;
 			}
 
-			if (!_doesFolderDragContainFolders)
+			if (!_doesStorageDragContainItems)
 			{
 				return;
 			}
@@ -846,14 +850,14 @@ internal sealed partial class TopBar : Window
 			bool canAcceptWhileCollapsed = Atlas.Settings.WindowsTopBarOpenOnHover;
 			if (!canAcceptWhileCollapsed && _progress <= 0.0 && !isOpening)
 			{
-				_doesFolderDragContainFolders = false;
+				_doesStorageDragContainItems = false;
 				return;
 			}
 
 			_retractionTimer.Stop();
-			if (_activeView != TopBarView.Folders)
+			if (_activeView != targetView)
 			{
-				SetActiveView(TopBarView.Folders, animate: _progress > 0.0);
+				SetActiveView(targetView, animate: _progress > 0.0);
 			}
 			if (canAcceptWhileCollapsed && !isOpening && _progress < 1.0)
 			{
@@ -862,14 +866,14 @@ internal sealed partial class TopBar : Window
 		}
 		catch (Exception ex)
 		{
-			_doesFolderDragContainFolders = false;
+			_doesStorageDragContainItems = false;
 			Logger.Write(ex);
 		}
 	}
 
-	private void OnFoldersPanelDragOver(object sender, DragEventArgs e)
+	private void OnStorageDragOver(object sender, DragEventArgs e)
 	{
-		if (!_doesFolderDragContainFolders)
+		if (!_doesStorageDragContainItems)
 		{
 			e.AcceptedOperation = DataPackageOperation.None;
 			e.Handled = true;
@@ -877,17 +881,17 @@ internal sealed partial class TopBar : Window
 		}
 
 		e.AcceptedOperation = DataPackageOperation.Copy;
-		e.DragUIOverride.Caption = "Add folder to Top Bar";
+		e.DragUIOverride.Caption = _activeView == TopBarView.Apps ? "Add file to Top Bar" : "Add folder to Top Bar";
 		e.DragUIOverride.IsCaptionVisible = true;
 		e.DragUIOverride.IsContentVisible = true;
 		e.Handled = true;
 	}
 
-	private void OnFoldersPanelDragLeave()
+	private void OnStorageDragLeave()
 	{
-		_isFolderDragInProgress = false;
-		_doesFolderDragContainFolders = false;
-		_folderDragGeneration++;
+		_isStorageDragInProgress = false;
+		_doesStorageDragContainItems = false;
+		_storageDragGeneration++;
 		if (!_isPinned && !_isClosed)
 		{
 			_retractionTimer.Stop();
@@ -896,47 +900,53 @@ internal sealed partial class TopBar : Window
 	}
 
 	[DynamicWindowsRuntimeCast(typeof(StorageFolder))]
-	private async void OnFoldersPanelDrop(object sender, DragEventArgs e)
+	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
+	private async void OnStorageDrop(object sender, DragEventArgs e)
 	{
-		bool canProcessDrop = _doesFolderDragContainFolders;
-		_isFolderDragInProgress = false;
-		_doesFolderDragContainFolders = false;
-		_folderDragGeneration++;
-		if (!canProcessDrop || Atlas.IsElevated || _activeView != TopBarView.Folders)
+		bool canProcessDrop = _doesStorageDragContainItems;
+		_isStorageDragInProgress = false;
+		_doesStorageDragContainItems = false;
+		_storageDragGeneration++;
+		if (!canProcessDrop || Atlas.IsElevated)
 		{
 			return;
 		}
-
 		try
 		{
 			IReadOnlyList<IStorageItem> storageItems = await e.DataView.GetStorageItemsAsync();
-			bool configurationChanged = false;
+			bool appsChanged = false;
+			bool foldersChanged = false;
 			foreach (IStorageItem storageItem in storageItems)
 			{
-				if (storageItem is not StorageFolder folder || string.IsNullOrWhiteSpace(folder.Path) || FolderEntryExists(folder.Path))
+				if (storageItem is StorageFile file && !string.IsNullOrWhiteSpace(file.Path) && !AppEntryExists(file.Path))
 				{
-					continue;
+					_configuration.Apps.Add(new TopBarAppEntry { DisplayName = string.IsNullOrWhiteSpace(file.DisplayName) ? file.Name : file.DisplayName, LaunchTarget = file.Path });
+					appsChanged = true;
 				}
-
-				_configuration.Folders.Add(new TopBarFolderEntry
+				else if (storageItem is StorageFolder folder && !string.IsNullOrWhiteSpace(folder.Path) && !FolderEntryExists(folder.Path))
 				{
-					DisplayName = string.IsNullOrWhiteSpace(folder.DisplayName) ? folder.Name : folder.DisplayName,
-					FolderPath = folder.Path
-				});
-				configurationChanged = true;
+					_configuration.Folders.Add(new TopBarFolderEntry { DisplayName = string.IsNullOrWhiteSpace(folder.DisplayName) ? folder.Name : folder.DisplayName, FolderPath = folder.Path });
+					foldersChanged = true;
+				}
 			}
-
-			if (configurationChanged)
-			{
-				TopBarConfigurationManager.Save(_configuration);
-				RebuildFolderTiles();
-				SetActiveView(TopBarView.Folders, animate: true);
-			}
+			if (!appsChanged && !foldersChanged) return;
+			TopBarConfigurationManager.Save(_configuration);
+			if (appsChanged) RebuildAppTiles();
+			if (foldersChanged) RebuildFolderTiles();
+			SetActiveView(appsChanged ? TopBarView.Apps : TopBarView.Folders, animate: true);
 		}
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
 		}
+	}
+	private bool AppEntryExists(string launchTarget)
+	{
+		foreach (TopBarAppEntry entry in _configuration.Apps)
+		{
+			if (string.Equals(entry.LaunchTarget, launchTarget, StringComparison.OrdinalIgnoreCase)) return true;
+		}
+		return false;
 	}
 
 	private bool FolderEntryExists(string folderPath)
@@ -956,16 +966,56 @@ internal sealed partial class TopBar : Window
 	/// <summary>
 	/// Builds a single tile of the applications view or of the folders view.
 	/// </summary>
-	private TopBarTile CreateTile(string glyph, string displayName, Action onInvoked, Action onRemove, Action onRemoveAll)
+	private static FontIcon CreateGlyphIcon(string glyph) => new()
 	{
-		FontIcon icon = new()
-		{
-			Glyph = glyph,
-			FontSize = 18.0,
-			Height = TileGlyphHeightDips,
-			HorizontalAlignment = HorizontalAlignment.Center
-		};
+		Glyph = glyph,
+		FontSize = 18.0,
+		Height = TileGlyphHeightDips,
+		HorizontalAlignment = HorizontalAlignment.Center
+	};
 
+	private static string? ResolveFilePath(string launchTarget)
+	{
+		if (Path.IsPathFullyQualified(launchTarget)) return File.Exists(launchTarget) ? launchTarget : null;
+		if (launchTarget.Contains(Path.DirectorySeparatorChar) || launchTarget.Contains(Path.AltDirectorySeparatorChar)) return null;
+		string systemPath = Path.Join(Environment.SystemDirectory, launchTarget);
+		if (File.Exists(systemPath)) return systemPath;
+		string windowsPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.Windows), launchTarget);
+		return File.Exists(windowsPath) ? windowsPath : null;
+	}
+
+	private static Image CreateFileIcon(string path)
+	{
+		Image icon = new() { Width = TileGlyphHeightDips, Height = TileGlyphHeightDips, Stretch = Stretch.Uniform, Tag = path };
+		icon.Loaded += OnFileIconLoaded;
+		return icon;
+	}
+
+	private static async void OnFileIconLoaded(object sender, RoutedEventArgs e)
+	{
+		if (sender is not Image { Tag: string path } icon || icon.Source is not null) return;
+		await FileIconLoadGate.WaitAsync();
+		try
+		{
+			StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+			using StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 40U, ThumbnailOptions.UseCurrentScale);
+			BitmapImage bitmap = new();
+			await bitmap.SetSourceAsync(thumbnail);
+			icon.Source = bitmap;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+		finally
+		{
+			icon.Loaded -= OnFileIconLoaded;
+			_ = FileIconLoadGate.Release();
+		}
+	}
+
+	private TopBarTile CreateTile(FrameworkElement icon, string displayName, Action onInvoked, Action onRemove, Action onRemoveAll, Action? onSetColor = null, Action? onSearch = null)
+	{
 		// A name that does not fit on a single line is wrapped onto a second one instead of being cut short, which is
 		// what lets a name of two words be read in full. Anything that still does not fit is trimmed, and the whole
 		// name remains available on the tool tip of the tile either way.
@@ -1009,7 +1059,7 @@ internal sealed partial class TopBar : Window
 
 		tile.Click += (_, _) => onInvoked();
 
-		AttachRemoveMenu(tile, onRemove, onRemoveAll);
+		AttachRemoveMenu(tile, onRemove, onRemoveAll, onSetColor, onSearch);
 
 		return new TopBarTile(tile, transform);
 	}
@@ -1102,7 +1152,7 @@ internal sealed partial class TopBar : Window
 	/// The menu is not constrained to the bounds of the bar because the bar is only a few tiles tall and its window is
 	/// clipped into a rounded silhouette, so a menu that had to fit inside of it would not be usable.
 	/// </summary>
-	private void AttachRemoveMenu(FrameworkElement element, Action onRemove, Action onRemoveAll)
+	private void AttachRemoveMenu(FrameworkElement element, Action onRemove, Action onRemoveAll, Action? onSetColor = null, Action? onSearch = null)
 	{
 		MenuFlyoutItem removeItem = new()
 		{
@@ -1124,8 +1174,23 @@ internal sealed partial class TopBar : Window
 			ShouldConstrainToRootBounds = false
 		};
 
-		menu.Items.Add(removeItem);
+		if (onSearch is not null)
+		{
+			MenuFlyoutItem searchItem = new() { Text = "Search", Icon = new FontIcon { Glyph = "\uE721" } };
+			searchItem.Click += (_, _) => onSearch();
+			menu.Items.Add(searchItem);
+			menu.Items.Add(new MenuFlyoutSeparator());
+		}
 
+		if (onSetColor is not null)
+		{
+			MenuFlyoutItem colorItem = new() { Text = "Set color", Icon = new FontIcon { Glyph = "\uE790" } };
+			colorItem.Click += (_, _) => onSetColor();
+			menu.Items.Add(colorItem);
+			menu.Items.Add(new MenuFlyoutSeparator());
+		}
+
+		menu.Items.Add(removeItem);
 		menu.Items.Add(new MenuFlyoutSeparator());
 		menu.Items.Add(removeAllItem);
 		TrackFlyout(menu);
@@ -1135,6 +1200,242 @@ internal sealed partial class TopBar : Window
 		// A right click has to bring the menu up even where the element itself does not handle it.
 		element.RightTapped += OnElementRightTapped;
 	}
+
+	private void ShowFolderSearchFlyout(FrameworkElement target, TopBarFolderEntry entry)
+	{
+		string? folderPath = ResolveSearchableFolderPath(entry.FolderPath);
+		TextBox searchBox = new()
+		{
+			PlaceholderText = "Search files",
+			Width = 420.0
+		};
+		StackPanel resultsPanel = new()
+		{
+			Spacing = 2.0,
+			MaxWidth = 420.0
+		};
+		TextBlock statusText = new()
+		{
+			FontSize = 11.0,
+			Opacity = 0.65,
+			Text = folderPath is null ? "This folder cannot be searched." : "Type a file name to search."
+		};
+		StackPanel content = new()
+		{
+			Spacing = 6.0,
+			XYFocusKeyboardNavigation = XYFocusKeyboardNavigationMode.Enabled,
+			Children = { searchBox, statusText, resultsPanel }
+		};
+		Flyout flyout = new()
+		{
+			Content = content,
+			ShouldConstrainToRootBounds = false
+		};
+		TrackFlyout(flyout);
+
+		CancellationTokenSource? activeSearch = null;
+		searchBox.IsEnabled = folderPath is not null;
+		searchBox.TextChanged += async (_, _) =>
+		{
+			activeSearch?.Cancel();
+			activeSearch?.Dispose();
+			activeSearch = null;
+			resultsPanel.Children.Clear();
+
+			string searchText = searchBox.Text.Trim();
+			if (folderPath is null || searchText.Length == 0)
+			{
+				statusText.Text = folderPath is null ? "This folder cannot be searched." : "Type a file name to search.";
+				return;
+			}
+
+			CancellationTokenSource searchCancellation = new();
+			activeSearch = searchCancellation;
+			statusText.Text = "Searching...";
+			try
+			{
+				await Task.Delay(FolderSearchDelay, searchCancellation.Token);
+				List<string> results = await Task.Run(
+					() => FileUtility.SearchFilesFast(folderPath, searchText, 10, searchCancellation.Token),
+					searchCancellation.Token);
+				searchCancellation.Token.ThrowIfCancellationRequested();
+
+				foreach (string result in CollectionsMarshal.AsSpan(results))
+				{
+					resultsPanel.Children.Add(CreateFolderSearchResult(result, flyout));
+				}
+				statusText.Text = results.Count == 0 ? "No matching files." : $"{results.Count} result(s)";
+			}
+			catch (OperationCanceledException)
+			{
+				// A newer query or a closed flyout owns the results now.
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+				statusText.Text = "Unable to search this folder.";
+			}
+		};
+		flyout.Closed += (_, _) =>
+		{
+			activeSearch?.Cancel();
+			activeSearch?.Dispose();
+			activeSearch = null;
+		};
+		flyout.ShowAt(target);
+		_ = searchBox.Focus(FocusState.Programmatic);
+	}
+
+	private Button CreateFolderSearchResult(string filePath, Flyout flyout)
+	{
+		TextBlock nameText = new()
+		{
+			Text = Path.GetFileName(filePath),
+			FontSize = 12.0,
+			FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+			TextTrimming = TextTrimming.CharacterEllipsis
+		};
+		TextBlock pathText = new()
+		{
+			Text = filePath,
+			FontSize = 10.0,
+			Opacity = 0.65,
+			MaxWidth = 404.0,
+			TextWrapping = TextWrapping.Wrap
+		};
+		StackPanel content = new()
+		{
+			Spacing = 1.0,
+			CanDrag = true,
+			Children = { nameText, pathText }
+		};
+		Button result = new()
+		{
+			Content = content,
+			HorizontalContentAlignment = HorizontalAlignment.Left,
+			Width = 420.0,
+			Padding = new Thickness(8.0, 4.0, 8.0, 4.0)
+		};
+		result.Click += (_, _) =>
+		{
+			flyout.Hide();
+			LaunchTarget(filePath);
+		};
+		content.DragStarting += async (_, e) =>
+		{
+			DragOperationDeferral deferral = e.GetDeferral();
+			try
+			{
+				StorageFile file = await StorageFile.GetFileFromPathAsync(filePath);
+				e.Data.SetStorageItems(new IStorageItem[] { file });
+				e.Data.RequestedOperation = DataPackageOperation.Copy;
+			}
+			catch (Exception ex)
+			{
+				e.Cancel = true;
+				Logger.Write(ex);
+			}
+			finally
+			{
+				deferral.Complete();
+			}
+		};
+
+		// Close only after the destination reports that it accepted the drop. This only allows one successful drag & drop to be made per folder search.
+		// Without this, after a successful drag & drop, the flyout wouldn't get closed if we clicked anywhere outside of the flyout and TopBar, unless we first clicked on the TopBar and then clickeds somewhere else.
+		content.DropCompleted += (_, e) =>
+		{
+			if (e.DropResult != DataPackageOperation.None)
+			{
+				flyout.Hide();
+			}
+		};
+
+		MenuFlyoutItem openLocationItem = new()
+		{
+			Text = "Open file location",
+			Icon = new FontIcon { Glyph = "\uE838" }
+		};
+		openLocationItem.Click += (_, _) =>
+		{
+			flyout.Hide();
+			OpenFileLocation(filePath);
+		};
+		MenuFlyout resultMenu = new()
+		{
+			ShouldConstrainToRootBounds = false,
+			Items = { openLocationItem }
+		};
+		TrackFlyout(resultMenu);
+		result.ContextFlyout = resultMenu;
+		result.RightTapped += OnElementRightTapped;
+		return result;
+	}
+	private static void OpenFileLocation(string filePath)
+	{
+		if (!File.Exists(filePath))
+		{
+			return;
+		}
+		try
+		{
+			using Process? explorer = Process.Start(new ProcessStartInfo
+			{
+				FileName = "explorer.exe",
+				Arguments = $"/select,\"{filePath}\"",
+				UseShellExecute = true
+			});
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+	private static string? ResolveSearchableFolderPath(string folderPath)
+	{
+		if (Directory.Exists(folderPath))
+		{
+			return folderPath;
+		}
+		if (string.Equals(folderPath, "shell:Downloads", StringComparison.OrdinalIgnoreCase))
+		{
+			return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+		}
+		if (string.Equals(folderPath, "shell:Personal", StringComparison.OrdinalIgnoreCase))
+		{
+			return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+		}
+		if (string.Equals(folderPath, "shell:Desktop", StringComparison.OrdinalIgnoreCase))
+		{
+			return Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+		}
+		return null;
+	}
+
+	private void ShowFolderColorPicker(FontIcon icon, TopBarFolderEntry entry)
+	{
+		ColorPicker picker = new()
+		{
+			Color = entry.GlyphColor is uint argb ? ToColor(argb) : Windows.UI.Color.FromArgb(255, 255, 185, 0),
+			IsAlphaEnabled = false
+		};
+		Button applyButton = new() { Content = "Apply", HorizontalAlignment = HorizontalAlignment.Right };
+		StackPanel content = new() { Spacing = 8.0, Children = { picker, applyButton } };
+		Flyout flyout = new() { Content = content, ShouldConstrainToRootBounds = false };
+		TrackFlyout(flyout);
+		applyButton.Click += (_, _) =>
+		{
+			Windows.UI.Color color = picker.Color;
+			entry.GlyphColor = ((uint)color.A << 24) | ((uint)color.R << 16) | ((uint)color.G << 8) | color.B;
+			icon.Foreground = new SolidColorBrush(color);
+			TopBarConfigurationManager.Save(_configuration);
+			flyout.Hide();
+		};
+		flyout.ShowAt(icon);
+	}
+
+	private static Windows.UI.Color ToColor(uint argb) => Windows.UI.Color.FromArgb(
+		(byte)(argb >> 24), (byte)((argb >> 16) & 0xFFU), (byte)((argb >> 8) & 0xFFU), (byte)(argb & 0xFFU));
 
 	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
 	private void OnElementRightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -1209,6 +1510,7 @@ internal sealed partial class TopBar : Window
 		// The notch names the view that the bar opens into, so the collapsed bar always tells what it currently holds.
 		CollapsedLabel.Text = GetViewName(view);
 		CollapsedGlyph.Glyph = GetViewGlyph(view);
+		UpdateCollapsedPerformanceVisibility();
 
 		_tiles = _viewTiles.TryGetValue(view, out List<TopBarTile>? tiles) ? tiles : [];
 
@@ -1344,25 +1646,35 @@ internal sealed partial class TopBar : Window
 	}
 
 	/// <summary>
-	/// Asks the user for an executable and pins it to the applications view.
+	/// Asks the user for executables and pins them to the applications view.
 	/// </summary>
 	private void AddAppEntry()
 	{
 		try
 		{
-			string? selectedPath = FileDialogHelper.ShowFilePickerDialog(Atlas.ExecutablesPickerFilter);
+			List<string> selectedPaths = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.ExecutablesPickerFilter);
+			bool changed = false;
 
-			if (string.IsNullOrWhiteSpace(selectedPath))
+			foreach (string selectedPath in selectedPaths)
+			{
+				if (string.IsNullOrWhiteSpace(selectedPath) || AppEntryExists(selectedPath))
+				{
+					continue;
+				}
+
+				_configuration.Apps.Add(new TopBarAppEntry
+				{
+					DisplayName = Path.GetFileNameWithoutExtension(selectedPath),
+					LaunchTarget = selectedPath
+				});
+
+				changed = true;
+			}
+
+			if (!changed)
 			{
 				return;
 			}
-
-			_configuration.Apps.Add(new TopBarAppEntry
-			{
-				DisplayName = Path.GetFileNameWithoutExtension(selectedPath),
-				Glyph = "\uE737",
-				LaunchTarget = selectedPath
-			});
 
 			TopBarConfigurationManager.Save(_configuration);
 
@@ -1376,29 +1688,40 @@ internal sealed partial class TopBar : Window
 	}
 
 	/// <summary>
-	/// Asks the user for a folder and pins it to the folders view.
+	/// Asks the user for folders and pins them to the folders view.
 	/// </summary>
 	private void AddFolderEntry()
 	{
 		try
 		{
-			string? selectedPath = FileDialogHelper.ShowDirectoryPickerDialog();
+			List<string> selectedPaths = FileDialogHelper.ShowMultipleDirectoryPickerDialog();
+			bool changed = false;
 
-			if (string.IsNullOrWhiteSpace(selectedPath))
+			foreach (string selectedPath in selectedPaths)
+			{
+				if (string.IsNullOrWhiteSpace(selectedPath) || FolderEntryExists(selectedPath))
+				{
+					continue;
+				}
+
+				string trimmedPath = selectedPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+				// The name of a folder that sits at the root of a drive is empty, so the path itself is displayed instead.
+				string displayName = Path.GetFileName(trimmedPath);
+
+				_configuration.Folders.Add(new TopBarFolderEntry
+				{
+					DisplayName = string.IsNullOrEmpty(displayName) ? selectedPath : displayName,
+					FolderPath = selectedPath
+				});
+
+				changed = true;
+			}
+
+			if (!changed)
 			{
 				return;
 			}
-
-			string trimmedPath = selectedPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-
-			// The name of a folder that sits at the root of a drive is empty, so the path itself is displayed instead.
-			string displayName = Path.GetFileName(trimmedPath);
-
-			_configuration.Folders.Add(new TopBarFolderEntry
-			{
-				DisplayName = string.IsNullOrEmpty(displayName) ? selectedPath : displayName,
-				FolderPath = selectedPath
-			});
 
 			TopBarConfigurationManager.Save(_configuration);
 
@@ -1756,6 +2079,7 @@ internal sealed partial class TopBar : Window
 
 	private void RefreshCollapsedLabel()
 	{
+		UpdateCollapsedPerformanceVisibility();
 		CollapsedLabel.Text = GetViewName(_activeView);
 		CollapsedGlyph.Glyph = GetViewGlyph(_activeView);
 	}
@@ -1766,9 +2090,17 @@ internal sealed partial class TopBar : Window
 	/// </summary>
 	private void UpdateLiveRefreshTimer()
 	{
-		bool isNeeded = !_isClosed
-			&& _progress > 0.0
-			&& (_activeView == TopBarView.Performance || _activeView == TopBarView.Clocks);
+		bool collapsedPerformance = _activeView == TopBarView.Performance && _notchStyle == TopBarNotchStyle.Standard && _progress <= 0.0;
+		if (_activeView != TopBarView.Performance || (_progress <= 0.0 && _notchStyle != TopBarNotchStyle.Standard))
+		{
+			_metricsSampler?.Dispose();
+			_metricsSampler = null;
+		}
+		else if (collapsedPerformance)
+		{
+			_metricsSampler?.ReleaseExpandedResources();
+		}
+		bool isNeeded = !_isClosed && ((_progress > 0.0 && (_activeView == TopBarView.Performance || _activeView == TopBarView.Clocks)) || collapsedPerformance);
 
 		if (isNeeded)
 		{
@@ -1789,8 +2121,8 @@ internal sealed partial class TopBar : Window
 	{
 		if (_activeView == TopBarView.Performance)
 		{
-			UpdateMetrics();
-
+			if (_progress <= 0.0 && _notchStyle == TopBarNotchStyle.Standard) UpdateCollapsedPerformance();
+			else if (_progress > 0.0) UpdateMetrics();
 			return;
 		}
 
@@ -1798,6 +2130,32 @@ internal sealed partial class TopBar : Window
 		{
 			UpdateClocks();
 		}
+	}
+
+	private void UpdateCollapsedPerformanceVisibility()
+	{
+		bool show = _activeView == TopBarView.Performance && _notchStyle == TopBarNotchStyle.Standard;
+		CollapsedLabel.Visibility = show ? Visibility.Collapsed : Visibility.Visible;
+		CollapsedPerformanceHost.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+	}
+
+	private void UpdateCollapsedPerformance()
+	{
+		_metricsSampler ??= new TopBarMetricsSampler();
+
+		_ = NativeMethods.GetWindowThreadProcessId(NativeMethods.GetForegroundWindow(), out uint processId);
+
+		TopBarForegroundProcessSnapshot snapshot = _metricsSampler.SampleForegroundProcess(processId);
+
+		string count = snapshot.ProcessCount > 1 ? " (" + snapshot.ProcessCount.ToString(CultureInfo.InvariantCulture) + ")" : string.Empty;
+
+		CollapsedProcessName.Text = (string.IsNullOrWhiteSpace(snapshot.Name) ? Atlas.GetStr("TopBarViewPerformance") : snapshot.Name) + count;
+
+		string cpu = double.IsNaN(snapshot.CpuUsagePercent) ? "CPU --" : "CPU " + snapshot.CpuUsagePercent.ToString("0.0", CultureInfo.InvariantCulture) + "%";
+
+		string memory = snapshot.MemoryBytes == 0UL ? "RAM --" : "RAM " + FormatBytes(snapshot.MemoryBytes);
+
+		CollapsedProcessMetrics.Text = cpu + "   " + memory;
 	}
 
 	/// <summary>
@@ -2405,7 +2763,7 @@ internal sealed partial class TopBar : Window
 	{
 		// A flyout of the bar lives in a window of its own, so moving the pointer onto it makes the pointer leave the
 		// bar, and retracting at that point would take the flyout away from underneath the pointer.
-		if (_isPinned || _openFlyoutCount > 0 || _isFolderDragInProgress)
+		if (_isPinned || _openFlyoutCount > 0 || _isStorageDragInProgress)
 		{
 			return;
 		}
@@ -2417,8 +2775,6 @@ internal sealed partial class TopBar : Window
 		{
 			return;
 		}
-
-		_isTouchInteraction = false;
 
 		// The retraction is delayed so that briefly leaving the bar does not immediately collapse it.
 		_retractionTimer.Stop();
@@ -2445,8 +2801,6 @@ internal sealed partial class TopBar : Window
 		{
 			return;
 		}
-
-		_isTouchInteraction = false;
 
 		_retractionTimer.Stop();
 		_retractionTimer.Start();
@@ -2480,15 +2834,16 @@ internal sealed partial class TopBar : Window
 	/// launched. Changing the z order of the window makes the presenter lay its own frame out again, so the frame of
 	/// the bar is stripped once more right afterwards.
 	/// </summary>
+	private void ApplyAlwaysOnTop() => _ = NativeMethods.SetWindowPos(
+		_windowHandle,
+		Atlas.Settings.WindowsTopBarAlwaysOnTop ? NativeMethods.HWND_TOPMOST : NativeMethods.HWND_NOTOPMOST,
+		0, 0, 0, 0,
+		SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+
 	private void OnAlwaysOnTopMenuItemClick()
 	{
-		bool isAlwaysOnTop = AlwaysOnTopMenuItem.IsChecked;
-
-		Atlas.Settings.WindowsTopBarAlwaysOnTop = isAlwaysOnTop;
-
-		_presenter.IsAlwaysOnTop = isAlwaysOnTop;
-
-		RemoveWindowBorder();
+		Atlas.Settings.WindowsTopBarAlwaysOnTop = AlwaysOnTopMenuItem.IsChecked;
+		ApplyAlwaysOnTop();
 	}
 
 	private void OnCloseButtonClick() => Close();
@@ -2587,9 +2942,8 @@ internal sealed partial class TopBar : Window
 
 		CollapsedGlyph.FontSize = isCompact ? CompactCollapsedGlyphFontSize : StandardCollapsedGlyphFontSize;
 		CollapsedLabel.FontSize = isCompact ? CompactCollapsedLabelFontSize : StandardCollapsedLabelFontSize;
-
-		// The chevron is what the lower profile notch gives up first, because it carries no information of its own.
-		CollapsedChevron.Visibility = isCompact ? Visibility.Collapsed : Visibility.Visible;
+		UpdateCollapsedPerformanceVisibility();
+		UpdateLiveRefreshTimer();
 
 		NotchStyleMenuItem.IsChecked = isCompact;
 	}
@@ -2785,10 +3139,6 @@ internal sealed partial class TopBar : Window
 		AppThemeManager.AppThemeChanged -= OnAppThemeChanged;
 		_uiSettings.ColorValuesChanged -= SystemWideThemeChangedEventHandler;
 
-		ExpandedHost.SizeChanged -= OnExpandedHostSizeChanged;
-		ViewsScrollViewer.SizeChanged -= OnViewsScrollViewerSizeChanged;
-		RootGrid.Loaded -= OnRootGridLoaded;
-		Activated -= OnWindowActivated;
 		_xamlRoot?.Changed -= OnXamlRootChanged;
 		_xamlRoot = null;
 

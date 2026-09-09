@@ -411,6 +411,47 @@ internal static class FileUtility
 	}
 
 	/// <summary>
+	/// Searches a directory tree for files whose names contain the supplied text and stops as soon as the requested
+	/// number of matches has been collected. The file-system enumerator is consumed exactly once.
+	/// </summary>
+	internal static List<string> SearchFilesFast(
+		string directory,
+		string searchText,
+		int maximumResults,
+		CancellationToken cancellationToken)
+	{
+		List<string> results = new(maximumResults);
+		FileSystemEnumerable<string> enumeration = new(
+			directory,
+			(ref entry) => entry.ToFullPath(),
+			RecursiveEnumeration)
+		{
+			ShouldIncludePredicate = (ref entry) =>
+				!entry.IsDirectory && entry.FileName.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+		};
+
+		using IEnumerator<string> enumerator = enumeration.GetEnumerator();
+		while (results.Count < maximumResults)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			try
+			{
+				if (!enumerator.MoveNext())
+				{
+					break;
+				}
+				results.Add(enumerator.Current);
+			}
+			catch
+			{
+				break;
+			}
+		}
+
+		return results;
+	}
+
+	/// <summary>
 	/// A flexible and fast method that can accept directory paths and file paths as input and return file paths that are compliant with App Control policies.
 	/// It supports custom extensions to filter by as well.
 	/// </summary>

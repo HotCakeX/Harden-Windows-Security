@@ -65,6 +65,14 @@
                                 <PasswordBox Password="{x:Bind PIN, Mode=TwoWay}"
                                              PasswordChar="#"
                                              IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                                <TextBlock Text="Confirm PIN"/>
+                                <PasswordBox Password="{x:Bind ConfirmPIN, Mode=TwoWay}"
+                                             PasswordChar="#"
+                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                                <TextBlock Text="{x:Bind PinValidationMessage, Mode=OneWay}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                           Visibility="{x:Bind PinValidationMessageVisibility, Mode=OneWay}"/>
                             </StackPanel>
                         </Border>
 
@@ -136,6 +144,14 @@
                                 <PasswordBox Password="{x:Bind PIN, Mode=TwoWay}"
                                              PasswordChar="#"
                                              IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                                <TextBlock Text="Confirm PIN"/>
+                                <PasswordBox Password="{x:Bind ConfirmPIN, Mode=TwoWay}"
+                                             PasswordChar="#"
+                                             IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                                <TextBlock Text="{x:Bind PinValidationMessage, Mode=OneWay}"
+                                           TextWrapping="Wrap"
+                                           Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                           Visibility="{x:Bind PinValidationMessageVisibility, Mode=OneWay}"/>
                             </StackPanel>
                         </Border>
 

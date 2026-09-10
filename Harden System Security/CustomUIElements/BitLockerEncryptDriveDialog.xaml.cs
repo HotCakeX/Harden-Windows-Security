@@ -23,6 +23,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using HardenSystemSecurity.BitLocker;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 
 namespace HardenSystemSecurity.CustomUIElements;
 
@@ -36,7 +38,34 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 	/// <summary>
 	/// PIN entered by user in textboxes.
 	/// </summary>
-	internal string? PIN { get; private set => this.SP(ref field, value); }
+	internal string? PIN
+	{
+		get; private set
+		{
+			if (this.SP(ref field, value))
+			{
+				_ = ValidatePin(showRequiredMessage: false);
+			}
+		}
+	}
+
+	/// <summary>
+	/// PIN confirmation entered by the user.
+	/// </summary>
+	private string? ConfirmPIN
+	{
+		get; set
+		{
+			if (this.SP(ref field, value))
+			{
+				_ = ValidatePin(showRequiredMessage: false);
+			}
+		}
+	}
+
+	private string PinValidationMessage { get; set => this.SP(ref field, value); } = string.Empty;
+
+	private Visibility PinValidationMessageVisibility { get; set => this.SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
 	/// Password entered by user in textboxes.
@@ -161,6 +190,36 @@ internal sealed partial class BitLockerEncryptDriveDialog : ContentDialogV2, INP
 		{
 			ElementsAreEnabled = true;
 		}
+	}
+
+	/// <summary>
+	/// Prevents the dialog from closing when the operating-system drive PIN is invalid.
+	/// </summary>
+	private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+	{
+		if (!ValidatePin(showRequiredMessage: true))
+		{
+			args.Cancel = true;
+		}
+	}
+
+	private bool ValidatePin(bool showRequiredMessage)
+	{
+		if (Volume is null || Volume.VolumeType is not VolumeType.OperatingSystem)
+		{
+			SetPinValidationMessage(null);
+			return true;
+		}
+
+		bool isValid = ViewModels.BitLockerVM.TryValidate(PIN, ConfirmPIN, showRequiredMessage, out string? message);
+		SetPinValidationMessage(message);
+		return isValid;
+	}
+
+	private void SetPinValidationMessage(string? message)
+	{
+		PinValidationMessage = message ?? string.Empty;
+		PinValidationMessageVisibility = message is null ? Visibility.Collapsed : Visibility.Visible;
 	}
 
 	#region IPropertyChangeHost Implementation

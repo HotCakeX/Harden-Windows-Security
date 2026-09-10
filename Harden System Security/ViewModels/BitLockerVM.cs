@@ -1116,6 +1116,42 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 		handler?.Invoke();
 	}
 
+	/// <summary>
+	/// Validates the PIN fields and returns the UI message to display when invalid.
+	/// </summary>
+	internal static bool TryValidate(string? pin, string? confirmation, bool showRequiredMessage, out string? message)
+	{
+		const int MinimumLength = 10;
+		const int MaximumLength = 20;
+
+		if (string.IsNullOrWhiteSpace(pin) || string.IsNullOrWhiteSpace(confirmation))
+		{
+			message = showRequiredMessage ? "Enter the PIN in both fields." : null;
+			return false;
+		}
+
+		if (pin.Length < MinimumLength || confirmation.Length < MinimumLength)
+		{
+			message = $"The PIN must contain at least {MinimumLength} characters.";
+			return false;
+		}
+
+		if (pin.Length > MaximumLength || confirmation.Length > MaximumLength)
+		{
+			message = $"The PIN cannot be longer than {MaximumLength} characters.";
+			return false;
+		}
+
+		if (!string.Equals(pin, confirmation, StringComparison.OrdinalIgnoreCase))
+		{
+			message = "The PIN entries do not match.";
+			return false;
+		}
+
+		message = null;
+		return true;
+	}
+
 	#endregion
 
 }

@@ -23,6 +23,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using AppControlManager.CustomUIElements;
 using HardenSystemSecurity.BitLocker;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
 namespace HardenSystemSecurity.CustomUIElements;
@@ -37,7 +38,34 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 	/// <summary>
 	/// PIN entered by user in textboxes.
 	/// </summary>
-	internal string? PIN { get; private set => this.SP(ref field, value); }
+	internal string? PIN
+	{
+		get; private set
+		{
+			if (this.SP(ref field, value))
+			{
+				_ = ValidatePin(showRequiredMessage: false);
+			}
+		}
+	}
+
+	/// <summary>
+	/// PIN confirmation entered by the user.
+	/// </summary>
+	private string? ConfirmPIN
+	{
+		get; set
+		{
+			if (this.SP(ref field, value))
+			{
+				_ = ValidatePin(showRequiredMessage: false);
+			}
+		}
+	}
+
+	private string PinValidationMessage { get; set => this.SP(ref field, value); } = string.Empty;
+
+	private Visibility PinValidationMessageVisibility { get; set => this.SP(ref field, value); } = Visibility.Collapsed;
 
 	/// <summary>
 	/// Password entered by user in textboxes.
@@ -82,7 +110,16 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 	/// <summary>
 	/// The selected key protector type in the Segmented element.
 	/// </summary>
-	private int SelectedKeyProtectorTypeIndex { get; set => this.SP(ref field, value); }
+	private int SelectedKeyProtectorTypeIndex
+	{
+		get; set
+		{
+			if (this.SP(ref field, value))
+			{
+				_ = ValidatePin(showRequiredMessage: false);
+			}
+		}
+	}
 
 	/// <summary>
 	/// Bound to the ComboBoxes in the UI that display removable drives.
@@ -156,10 +193,17 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 	}
 
 	/// <summary>
-	/// Event handler for the primary button click
+	/// Event handler for the primary button click that validates the current selection before allowing the dialog to close.
 	/// </summary>
 	private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
 	{
+		// PIN validation only applies to TPM+PIN and TPM+PIN+StartupKey.
+		if (SelectedKeyProtectorTypeIndex is 1 or 3 && !ValidatePin(showRequiredMessage: true))
+		{
+			args.Cancel = true;
+			return;
+		}
+
 		// Resolve the selected key protector type when the primary button is selected.
 		SelectedKeyProtectorType = SelectedKeyProtectorTypeIndex switch
 		{
@@ -175,6 +219,24 @@ internal sealed partial class AddKeyProtectorDialog : ContentDialogV2, INPCImpla
 		};
 	}
 
+	private bool ValidatePin(bool showRequiredMessage)
+	{
+		if (SelectedKeyProtectorTypeIndex is not (1 or 3))
+		{
+			SetPinValidationMessage(null);
+			return true;
+		}
+
+		bool isValid = ViewModels.BitLockerVM.TryValidate(PIN, ConfirmPIN, showRequiredMessage, out string? message);
+		SetPinValidationMessage(message);
+		return isValid;
+	}
+
+	private void SetPinValidationMessage(string? message)
+	{
+		PinValidationMessage = message ?? string.Empty;
+		PinValidationMessageVisibility = message is null ? Visibility.Collapsed : Visibility.Visible;
+	}
 
 	#region IPropertyChangeHost Implementation
 	public event PropertyChangedEventHandler? PropertyChanged;

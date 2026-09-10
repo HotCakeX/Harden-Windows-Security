@@ -553,8 +553,9 @@ internal sealed partial class MicrosoftSecurityBaselineVM : ViewModelBase
 		{"Windows 11 version 23H2", @"https://download.microsoft.com/download/8/5/c/85c25433-a1b0-4ffa-9429-7e023e7da8d8/Windows%2011%20v23H2%20Security%20Baseline.zip"},
 		{"Windows 11 version 24H2", @"https://download.microsoft.com/download/8/5/c/85c25433-a1b0-4ffa-9429-7e023e7da8d8/Windows%2011%20v24H2%20Security%20Baseline.zip"},
 		{"Windows 11 version 25H2", @"https://download.microsoft.com/download/e99be2d2-e077-4986-a06b-6078051999dd/Windows%2011%20v25H2%20Security%20Baseline.zip"},
+		{"Windows Server 2022", @"https://download.microsoft.com/download/8/5/c/85c25433-a1b0-4ffa-9429-7e023e7da8d8/Windows%20Server%202022%20Security%20Baseline.zip"},
 		{"Windows Server 2025 - 2602", @"https://download.microsoft.com/download/e99be2d2-e077-4986-a06b-6078051999dd/Windows%20Server%202025%20Security%20Baseline%20-%202602.zip"},
-		{"Microsoft Edge v139 Security Baseline", @"https://download.microsoft.com/download/e99be2d2-e077-4986-a06b-6078051999dd/Microsoft%20Edge%20v139%20Security%20Baseline.zip"}
+		{"Microsoft Edge v151 Security Baseline", @"https://download.microsoft.com/download/e99be2d2-e077-4986-a06b-6078051999dd/Microsoft%20Edge%20v151%20Security%20Baseline.zip"}
 	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	internal List<string> SecurityBaselinesComboBoxItemsSource => DownloadURLs.Keys.ToList();

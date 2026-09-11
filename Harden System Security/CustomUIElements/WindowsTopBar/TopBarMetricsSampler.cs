@@ -288,7 +288,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 			double totalWatts = 0.0;
 			bool measured = false;
 
-			foreach (EnergyMeterDevice device in _energyMeterDevices ?? [])
+			foreach (EnergyMeterDevice device in CollectionsMarshal.AsSpan(_energyMeterDevices))
 			{
 				if (device.TryReadTotalAveragePower(out double deviceWatts))
 				{
@@ -534,15 +534,10 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 		_performanceSampler?.Dispose();
 		_performanceSampler = null;
 		_networkSampler = null;
-		if (_energyMeterDevices is null)
-		{
-			return;
-		}
-		foreach (EnergyMeterDevice device in _energyMeterDevices)
+		foreach (EnergyMeterDevice device in CollectionsMarshal.AsSpan(_energyMeterDevices))
 		{
 			device.Dispose();
 		}
-		_energyMeterDevices.Clear();
 		_energyMeterDevices = null;
 	}
 

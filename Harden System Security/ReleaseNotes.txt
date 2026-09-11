@@ -14,6 +14,4 @@
 
 * Improved keyboard navigation in the TopBar: you can now use arrow keys to navigate it.
 
-## Others
-
-* Updated dependencies to the latest versions.
+* More on GitHub: GitHub.com/HotCakeX/Harden-Windows-Security

@@ -254,7 +254,7 @@ internal sealed partial class TopBar : Window
 	private readonly IntPtr _windowHandle;
 
 	// The cells of every view, so that switching a view only swaps which list the animations are applied to.
-	private readonly Dictionary<TopBarView, List<TopBarTile>> _viewTiles = new(5);
+	private readonly Dictionary<TopBarView, List<TopBarTile>> _viewTiles = new(6);
 
 	private readonly TopBarConfiguration _configuration = TopBarConfigurationManager.Load();
 
@@ -262,6 +262,8 @@ internal sealed partial class TopBar : Window
 	private readonly List<TextBlock> _clockTimeLabels = new(MaximumClockCount);
 	private readonly List<TextBlock> _clockDateLabels = new(MaximumClockCount);
 	private readonly List<TimeZoneInfo?> _clockZones = new(MaximumClockCount);
+	private readonly List<TextBlock> _notchClockTimeLabels = new(2);
+	private readonly List<TimeZoneInfo?> _notchClockZones = new(2);
 
 	private List<TopBarTile> _tiles = [];
 	private TopBarMetricsSampler? _metricsSampler;
@@ -350,6 +352,7 @@ internal sealed partial class TopBar : Window
 		PerformanceViewMenuItem.Text = Atlas.GetStr("TopBarViewPerformance");
 		ClocksViewMenuItem.Text = Atlas.GetStr("TopBarViewClocks");
 		NetworkQualityViewMenuItem.Text = "Network quality";
+		SentryViewMenuItem.Text = "Sentry";
 
 		NotchStyleMenuItem.Text = Atlas.GetStr("TopBarNotchStyleMenuItem");
 		OpenOnHoverMenuItem.Text = Atlas.GetStr("TopBarOpenOnHoverMenuItem");
@@ -392,6 +395,8 @@ internal sealed partial class TopBar : Window
 		PrepareMetricCells();
 		PrepareNetworkQualityView();
 		NetworkQualityDestinationBox.SelectedIndex = 0;
+
+		InitializeSentryView();
 
 		RebuildAppTiles();
 		RebuildFolderTiles();
@@ -481,12 +486,6 @@ internal sealed partial class TopBar : Window
 
 			return true;
 		}
-	}
-
-	private static void ReleaseSingleInstanceGuard()
-	{
-		_singleInstanceGuard?.Dispose();
-		_singleInstanceGuard = null;
 	}
 
 	/// <summary>
@@ -717,14 +716,8 @@ internal sealed partial class TopBar : Window
 	/// <summary>
 	/// Treats the complete network quality dashboard as a single animated cell.
 	/// </summary>
-	private void PrepareNetworkQualityView()
-	{
-		List<TopBarTile> tiles = new(1)
-		{
-			new TopBarTile(NetworkQualityPanel, AttachEntranceTransform(NetworkQualityPanel))
-		};
-		_viewTiles[TopBarView.NetworkQuality] = tiles;
-	}
+	private void PrepareNetworkQualityView() =>
+		_viewTiles[TopBarView.NetworkQuality] = [new TopBarTile(NetworkQualityPanel, AttachEntranceTransform(NetworkQualityPanel))];
 
 	/// <summary>
 	/// Gives an element the transform that its entrance and retraction animations are applied to.
@@ -993,7 +986,10 @@ internal sealed partial class TopBar : Window
 
 	private static async void OnFileIconLoaded(object sender, RoutedEventArgs e)
 	{
-		if (sender is not Image { Tag: string path } icon || icon.Source is not null) return;
+		if (sender is not Image { Tag: string path } icon || icon.Source is not null)
+		{
+			return;
+		}
 		await FileIconLoadGate.WaitAsync();
 		try
 		{
@@ -1134,8 +1130,10 @@ internal sealed partial class TopBar : Window
 
 			tiles.Add(new TopBarTile(cell, AttachEntranceTransform(cell)));
 
-			AttachRemoveMenu(cell, () => RemoveClockEntry(entry), RemoveAllClockEntries);
+			AttachClockMenu(cell, entry);
 		}
+
+		RebuildNotchClocks();
 
 		_viewTiles[TopBarView.Clocks] = tiles;
 
@@ -1143,8 +1141,104 @@ internal sealed partial class TopBar : Window
 		{
 			_tiles = tiles;
 		}
+	}
+
+	private void RebuildNotchClocks()
+	{
+		CollapsedNotchClocksHost.Children.Clear();
+		_notchClockTimeLabels.Clear();
+		_notchClockZones.Clear();
+
+		foreach (TopBarClockEntry entry in _configuration.Clocks)
+		{
+			if (!entry.DisplayOnNotch)
+			{
+				continue;
+			}
+
+			AddNotchClock(entry);
+			if (_notchClockTimeLabels.Count == 2)
+			{
+				break;
+			}
+		}
 
 		UpdateClocks();
+		UpdateCollapsedPerformanceVisibility();
+		UpdateLiveRefreshTimer();
+	}
+
+	private void AddNotchClock(TopBarClockEntry entry)
+	{
+		TextBlock name = new()
+		{
+			Text = entry.DisplayName,
+			FontSize = 8.0,
+			FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+			TextTrimming = TextTrimming.CharacterEllipsis,
+			TextAlignment = TextAlignment.Center,
+			HorizontalAlignment = HorizontalAlignment.Stretch,
+			Opacity = 0.6
+		};
+
+		TextBlock time = new()
+		{
+			FontSize = 12.0,
+			FontWeight = Microsoft.UI.Text.FontWeights.SemiBold,
+			TextAlignment = TextAlignment.Center,
+			HorizontalAlignment = HorizontalAlignment.Stretch
+		};
+
+		StackPanel cell = new()
+		{
+			Width = 76.0,
+			Spacing = 0.0,
+			VerticalAlignment = VerticalAlignment.Center
+		};
+
+		cell.Children.Add(name);
+		cell.Children.Add(time);
+		ToolTipService.SetToolTip(cell, entry.DisplayName);
+		CollapsedNotchClocksHost.Children.Add(cell);
+		_notchClockTimeLabels.Add(time);
+		_notchClockZones.Add(ResolveTimeZone(entry.TimeZoneId));
+	}
+
+	private void AttachClockMenu(FrameworkElement element, TopBarClockEntry entry)
+	{
+		ToggleMenuFlyoutItem toggle = new() { Text = "Display on Notch", IsChecked = entry.DisplayOnNotch, Icon = new FontIcon { Glyph = "\uE823" } };
+		toggle.Click += (_, _) =>
+		{
+			bool requested = toggle.IsChecked;
+			if (requested && !entry.DisplayOnNotch && _notchClockTimeLabels.Count >= 2)
+			{
+				foreach (TopBarClockEntry clock in _configuration.Clocks)
+				{
+					if (clock.DisplayOnNotch)
+					{
+						clock.DisplayOnNotch = false;
+						break;
+					}
+				}
+			}
+
+			entry.DisplayOnNotch = requested;
+			TopBarConfigurationManager.Save(_configuration);
+			RebuildNotchClocks();
+		};
+
+		MenuFlyoutItem remove = new() { Text = Atlas.GetStr("TopBarRemoveMenuItem"), Icon = new FontIcon { Glyph = "\uE74D" } };
+		remove.Click += (_, _) => RemoveClockEntry(entry);
+		MenuFlyoutItem removeAll = new() { Text = "Remove all", Icon = new FontIcon { Glyph = "\uE74D" } };
+		removeAll.Click += (_, _) => RemoveAllClockEntries();
+		MenuFlyout menu = new() { ShouldConstrainToRootBounds = false, Items = { toggle, new MenuFlyoutSeparator(), remove, new MenuFlyoutSeparator(), removeAll } };
+		menu.Opened += (_, _) =>
+		{
+			toggle.IsChecked = entry.DisplayOnNotch;
+		};
+		TrackFlyout(menu);
+		element.ContextFlyout = menu;
+		element.RightTapped += OnElementRightTapped;
 	}
 
 	/// <summary>
@@ -1446,7 +1540,6 @@ internal sealed partial class TopBar : Window
 		}
 
 		flyout.ShowAt(element);
-
 		e.Handled = true;
 	}
 
@@ -1462,7 +1555,6 @@ internal sealed partial class TopBar : Window
 	private void OnFlyoutOpened(object? sender, object e)
 	{
 		_openFlyoutCount++;
-
 		_retractionTimer.Stop();
 	}
 
@@ -1490,14 +1582,16 @@ internal sealed partial class TopBar : Window
 		PerformancePanel.Visibility = view == TopBarView.Performance ? Visibility.Visible : Visibility.Collapsed;
 		ClocksPanel.Visibility = view == TopBarView.Clocks ? Visibility.Visible : Visibility.Collapsed;
 		NetworkQualityPanel.Visibility = view == TopBarView.NetworkQuality ? Visibility.Visible : Visibility.Collapsed;
+		SentryPanel.Visibility = view == TopBarView.Sentry ? Visibility.Visible : Visibility.Collapsed;
 
 		AppsViewMenuItem.IsChecked = view == TopBarView.Apps;
 		FoldersViewMenuItem.IsChecked = view == TopBarView.Folders;
 		PerformanceViewMenuItem.IsChecked = view == TopBarView.Performance;
 		ClocksViewMenuItem.IsChecked = view == TopBarView.Clocks;
+		SentryViewMenuItem.IsChecked = view == TopBarView.Sentry;
 
-		// There is nothing to add to the metrics of the machine or to the fixed network quality destination list.
-		AddButton.Visibility = view is TopBarView.Performance or TopBarView.NetworkQuality
+		// There is nothing to add to the metrics of the machine or to the fixed network quality destination list or the Sentry.
+		AddButton.Visibility = view is TopBarView.Performance or TopBarView.NetworkQuality or TopBarView.Sentry
 			? Visibility.Collapsed
 			: Visibility.Visible;
 
@@ -1544,6 +1638,7 @@ internal sealed partial class TopBar : Window
 		TopBarView.Performance => Atlas.GetStr("TopBarViewPerformance"),
 		TopBarView.Clocks => Atlas.GetStr("TopBarViewClocks"),
 		TopBarView.NetworkQuality => "Network quality",
+		TopBarView.Sentry => "Sentry",
 		_ => Atlas.GetStr("TopBarViewApps")
 	};
 
@@ -1556,6 +1651,7 @@ internal sealed partial class TopBar : Window
 		TopBarView.Performance => "\uE9D9",
 		TopBarView.Clocks => "\uE823",
 		TopBarView.NetworkQuality => "\uE968",
+		TopBarView.Sentry => "\uE720",
 		_ => "\uECAA"
 	};
 
@@ -1635,11 +1731,9 @@ internal sealed partial class TopBar : Window
 				ShowAddClockFlyout();
 				break;
 
-			// The metrics of the machine are read from the machine itself, so there is nothing to add to them.
-			case TopBarView.Performance:
+			case TopBarView.Performance: // The metrics of the machine are read from the machine itself, so there is nothing to add to them.
 			case TopBarView.NetworkQuality:
-				break;
-
+			case TopBarView.Sentry:
 			default:
 				break;
 		}
@@ -1655,7 +1749,7 @@ internal sealed partial class TopBar : Window
 			List<string> selectedPaths = FileDialogHelper.ShowMultipleFilePickerDialog(Atlas.ExecutablesPickerFilter);
 			bool changed = false;
 
-			foreach (string selectedPath in selectedPaths)
+			foreach (string selectedPath in CollectionsMarshal.AsSpan(selectedPaths))
 			{
 				if (string.IsNullOrWhiteSpace(selectedPath) || AppEntryExists(selectedPath))
 				{
@@ -1752,9 +1846,7 @@ internal sealed partial class TopBar : Window
 			Width = 240.0
 		};
 
-		IReadOnlyCollection<TimeZoneInfo> timeZones = TimeZoneInfo.GetSystemTimeZones();
-
-		foreach (TimeZoneInfo timeZone in timeZones)
+		foreach (TimeZoneInfo timeZone in TimeZoneInfo.GetSystemTimeZones())
 		{
 			// The display name of a time zone is not available while the app runs in the invariant globalization mode,
 			// so the identifier is shown instead, which is readable on its own on Windows.
@@ -1970,10 +2062,7 @@ internal sealed partial class TopBar : Window
 		await task;
 	}
 
-	private async Task RunNetworkQualityTestAsync(
-		string destination,
-		TopBarNetworkQualitySampler sampler,
-		CancellationTokenSource cancellation)
+	private async Task RunNetworkQualityTestAsync(string destination, TopBarNetworkQualitySampler sampler, CancellationTokenSource cancellation)
 	{
 		try
 		{
@@ -2024,9 +2113,7 @@ internal sealed partial class TopBar : Window
 
 	private void StopNetworkQualityTest() => _networkQualityCancellation?.Cancel();
 
-	private void ApplyNetworkQualitySnapshot(
-		TopBarNetworkQualitySnapshot snapshot,
-		IReadOnlyCollection<long?> history)
+	private void ApplyNetworkQualitySnapshot(TopBarNetworkQualitySnapshot snapshot, IReadOnlyCollection<long?> history)
 	{
 		string currentText = snapshot.Succeeded ? snapshot.CurrentRoundtripMilliseconds.ToString(CultureInfo.InvariantCulture) + " ms" : "Timeout";
 		NetworkQualityCurrentValue.Text = "Current: " + currentText;
@@ -2090,7 +2177,10 @@ internal sealed partial class TopBar : Window
 	/// </summary>
 	private void UpdateLiveRefreshTimer()
 	{
+		UpdateSentryMeterTimer();
+
 		bool collapsedPerformance = _activeView == TopBarView.Performance && _notchStyle == TopBarNotchStyle.Standard && _progress <= 0.0;
+		bool collapsedClocks = _activeView == TopBarView.Clocks && _notchStyle == TopBarNotchStyle.Standard && _progress <= 0.0 && _notchClockTimeLabels.Count > 0;
 		if (_activeView != TopBarView.Performance || (_progress <= 0.0 && _notchStyle != TopBarNotchStyle.Standard))
 		{
 			_metricsSampler?.Dispose();
@@ -2100,7 +2190,7 @@ internal sealed partial class TopBar : Window
 		{
 			_metricsSampler?.ReleaseExpandedResources();
 		}
-		bool isNeeded = !_isClosed && ((_progress > 0.0 && (_activeView == TopBarView.Performance || _activeView == TopBarView.Clocks)) || collapsedPerformance);
+		bool isNeeded = !_isClosed && ((_progress > 0.0 && (_activeView == TopBarView.Performance || _activeView == TopBarView.Clocks)) || collapsedPerformance || collapsedClocks);
 
 		if (isNeeded)
 		{
@@ -2121,12 +2211,16 @@ internal sealed partial class TopBar : Window
 	{
 		if (_activeView == TopBarView.Performance)
 		{
-			if (_progress <= 0.0 && _notchStyle == TopBarNotchStyle.Standard) UpdateCollapsedPerformance();
-			else if (_progress > 0.0) UpdateMetrics();
-			return;
+			if (_progress <= 0.0 && _notchStyle == TopBarNotchStyle.Standard)
+			{
+				UpdateCollapsedPerformance();
+			}
+			else if (_progress > 0.0)
+			{
+				UpdateMetrics();
+			}
 		}
-
-		if (_activeView == TopBarView.Clocks)
+		else if (_activeView == TopBarView.Clocks)
 		{
 			UpdateClocks();
 		}
@@ -2134,9 +2228,12 @@ internal sealed partial class TopBar : Window
 
 	private void UpdateCollapsedPerformanceVisibility()
 	{
-		bool show = _activeView == TopBarView.Performance && _notchStyle == TopBarNotchStyle.Standard;
-		CollapsedLabel.Visibility = show ? Visibility.Collapsed : Visibility.Visible;
-		CollapsedPerformanceHost.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
+		bool showNotchClocks = _activeView == TopBarView.Clocks && _notchStyle == TopBarNotchStyle.Standard && _notchClockTimeLabels.Count > 0;
+		bool showPerformance = _activeView == TopBarView.Performance && _notchStyle == TopBarNotchStyle.Standard;
+		CollapsedNotchClocksHost.Visibility = showNotchClocks ? Visibility.Visible : Visibility.Collapsed;
+		CollapsedGlyph.Visibility = showNotchClocks ? Visibility.Collapsed : Visibility.Visible;
+		CollapsedLabel.Visibility = showNotchClocks || showPerformance ? Visibility.Collapsed : Visibility.Visible;
+		CollapsedPerformanceHost.Visibility = showPerformance ? Visibility.Visible : Visibility.Collapsed;
 	}
 
 	private void UpdateCollapsedPerformance()
@@ -2201,6 +2298,12 @@ internal sealed partial class TopBar : Window
 			_clockTimeLabels[index].Text = localized.ToString("HH:mm", CultureInfo.InvariantCulture);
 			_clockDateLabels[index].Text = localized.ToString("ddd d MMM", CultureInfo.InvariantCulture);
 		}
+
+		for (int index = 0; index < _notchClockZones.Count; index++)
+		{
+			DateTimeOffset localized = _notchClockZones[index] is TimeZoneInfo zone ? TimeZoneInfo.ConvertTime(now, zone) : now;
+			_notchClockTimeLabels[index].Text = localized.ToString("HH:mm", CultureInfo.InvariantCulture);
+		}
 	}
 
 	/// <summary>
@@ -2264,12 +2367,8 @@ internal sealed partial class TopBar : Window
 		string firstText = (first / divisor).ToString(divisor == 1.0 ? "0" : "0.0", CultureInfo.InvariantCulture);
 		string secondText = (second / divisor).ToString(divisor == 1.0 ? "0" : "0.0", CultureInfo.InvariantCulture);
 
-		return firstText + " / " + secondText + " " + ThroughputUnits[unitIndex];
+		return firstText + " / " + secondText + " " + Atlas.RateUnits[unitIndex];
 	}
-
-	private static readonly string[] ThroughputUnits = ["B/s", "KB/s", "MB/s", "GB/s"];
-
-	private static readonly string[] SizeUnits = ["B", "KB", "MB", "GB", "TB"];
 
 	private static string FormatBytes(ulong value)
 	{
@@ -2281,13 +2380,13 @@ internal sealed partial class TopBar : Window
 		double amount = value;
 		int unitIndex = 0;
 
-		while (unitIndex < SizeUnits.Length - 1 && amount >= 1024.0)
+		while (unitIndex < Atlas.SizeUnits.Length - 1 && amount >= 1024.0)
 		{
 			amount /= 1024.0;
 			unitIndex++;
 		}
 
-		return amount.ToString(unitIndex == 0 ? "0" : "0.0", CultureInfo.InvariantCulture) + " " + SizeUnits[unitIndex];
+		return amount.ToString(unitIndex == 0 ? "0" : "0.0", CultureInfo.InvariantCulture) + " " + Atlas.SizeUnits[unitIndex];
 	}
 
 	private void QueueDisplayMetricsRefresh()
@@ -2378,11 +2477,6 @@ internal sealed partial class TopBar : Window
 	/// </summary>
 	private void ApplyTileStagger(double progress)
 	{
-		if (_tiles.Count == 0)
-		{
-			return;
-		}
-
 		// The step is derived from the amount of the cells so the last cell always completes before the expansion does.
 		double staggerStep = _tiles.Count > 1 ? TileStaggerSpan / (_tiles.Count - 1) : 0.0;
 
@@ -3027,12 +3121,6 @@ internal sealed partial class TopBar : Window
 	}
 
 	/// <summary>
-	/// Re-evaluates the clearance whenever the panel that hosts the views is resized, which is when a view that no
-	/// longer fits inside of it starts to be scrollable.
-	/// </summary>
-	private void OnViewsScrollViewerSizeChanged(object sender, SizeChangedEventArgs e) => UpdateScrollBarClearance();
-
-	/// <summary>
 	/// Leaves room underneath the views for the horizontal scroll bar of the panel, but only while the active view
 	/// actually holds more than the panel can show at once, so that a view that fits keeps sitting centered.
 	/// </summary>
@@ -3122,11 +3210,441 @@ internal sealed partial class TopBar : Window
 		return totalWidthDips;
 	}
 
+	#region Sentry
+
+	// The Acoustic Sentry engine lives only for as long as a session is armed and is null while it is idle, so that
+	// the microphone is only ever held open while the user has explicitly armed a capture session.
+	private TopBarSentryEngine? _sentryEngine;
+
+	// The live graph only ticks while the Sentry view is on display and expanded and a session is armed, so a
+	// collapsed bar, a different view and an idle Sentry all cost nothing while a session keeps running in the
+	// background.
+	private readonly DispatcherTimer _sentryMeterTimer = new();
+
+	// Guards the initial population of the controls so that assigning their starting values does not immediately
+	// write those same values straight back into the settings.
+	private bool _isSentryInitializing;
+
+	// The scale that the live graph and the numeric readout are measured against.
+	private const double SentryMeterMinimumDecibel = -90.0;
+	private const double SentryMeterFloorDecibel = -100.0;
+
+	// The live graph is a fixed strip of thin bars that scrolls left as new readings arrive. The bars are built once
+	// and then only have their height and brush updated, so a tick allocates nothing.
+	private const int SentryGraphBarCount = 30;
+	private const double SentryGraphBarWidth = 4.0;
+	private const double SentryGraphHeight = 26.0;
+	private readonly List<Border> _sentryGraphBars = new(SentryGraphBarCount);
+	private readonly double[] _sentryGraphLevels = new double[SentryGraphBarCount];
+
+	// The bars are painted green while calm and red once their level has crossed the trigger. The two brushes are
+	// kept aside so that a fresh brush is not allocated on every single tick.
+	private static readonly Windows.UI.Color SentryCalmColor = Windows.UI.Color.FromArgb(255, 52, 199, 89);
+	private static readonly Windows.UI.Color SentryHotColor = Windows.UI.Color.FromArgb(255, 255, 69, 58);
+	private readonly SolidColorBrush _sentryCalmBrush = new(SentryCalmColor);
+	private readonly SolidColorBrush _sentryHotBrush = new(SentryHotColor);
+
+	/// <summary>
+	/// Populates the Sentry controls from the persisted settings and prepares the graph and its timer. Called once
+	/// from the constructor.
+	/// </summary>
+	private void InitializeSentryView()
+	{
+		// The panel takes part in the entrance and retraction animations exactly like every other view does.
+		_viewTiles[TopBarView.Sentry] = [new TopBarTile(SentryPanel, AttachEntranceTransform(SentryPanel))];
+
+		_isSentryInitializing = true;
+
+		SentryThresholdSlider.Value = Atlas.Settings.WindowsTopBarSentryTriggerDecibel;
+		SentryDurationBox.Value = Atlas.Settings.WindowsTopBarSentryRecordingDurationSeconds;
+		SentryCooldownBox.Value = Atlas.Settings.WindowsTopBarSentryCooldownSeconds;
+		SentryMaxCyclesBox.Value = Atlas.Settings.WindowsTopBarSentryMaxCycles;
+
+		_isSentryInitializing = false;
+
+		SentryThresholdText.Text = FormatSentryDecibel(Atlas.Settings.WindowsTopBarSentryTriggerDecibel);
+		SetSentryFolderText();
+		BuildSentryGraphBars();
+
+		_sentryMeterTimer.Interval = TimeSpan.FromMilliseconds(100.0);
+		_sentryMeterTimer.Tick += OnSentryMeterTimerTick;
+	}
+
+	private void OnSentryViewButtonClick() => SetActiveView(TopBarView.Sentry, animate: true);
+
+	/// <summary>
+	/// Starts the graph timer only while the Sentry view is expanded and a session is running, and stops it
+	/// otherwise. Called from the shared live refresh path so that expanding, collapsing and switching views all
+	/// keep it correct.
+	/// </summary>
+	private void UpdateSentryMeterTimer()
+	{
+		bool isNeeded = !_isClosed && _activeView == TopBarView.Sentry && _progress > 0.0 && _sentryEngine is not null;
+		if (isNeeded)
+		{
+			if (!_sentryMeterTimer.IsEnabled)
+			{
+				_sentryMeterTimer.Start();
+			}
+
+			OnSentryMeterTimerTick(null, EventArgs.Empty);
+			return;
+		}
+
+		_sentryMeterTimer.Stop();
+	}
+
+	/// <summary>
+	/// Pushes the newest ambient reading onto the live graph and refreshes the numeric readout, the state label and
+	/// the stop button. It never touches the arm toggle, so it cannot fight the user for its checked state.
+	/// </summary>
+	private void OnSentryMeterTimerTick(object? sender, object e)
+	{
+		TopBarSentryEngine? engine = _sentryEngine;
+		if (engine is null)
+		{
+			return;
+		}
+
+		double decibel = engine.CurrentDecibel;
+		PushSentryLevel(decibel);
+		SentryLevelText.Text = decibel <= SentryMeterFloorDecibel ? "-- dBFS" : FormatSentryDecibel(decibel);
+
+		TopBarSentryState state = engine.State;
+		SentryStopButton.IsEnabled = state == TopBarSentryState.Recording;
+		SentryStateText.Text = state == TopBarSentryState.Recording ? "Recording" : "Armed";
+		SentryCyclesText.Text = "Cycles: " + engine.CompletedCycles.ToString(CultureInfo.InvariantCulture);
+	}
+
+	/// <summary>
+	/// Arms a new session or disarms the running one. The decision is taken from whether an engine currently exists,
+	/// not from the toggle, so the toggle can never leave the two out of step.
+	/// </summary>
+	private async void OnSentryArmToggleClick()
+	{
+		if (_sentryEngine is null)
+		{
+			await ArmSentryAsync();
+		}
+		else
+		{
+			await DisarmSentryAsync();
+		}
+	}
+
+	/// <summary>
+	/// Opens the microphone and begins watching. On failure it puts the toggle back and, when the cause is the
+	/// microphone privacy setting, reveals the shortcut to the relevant Settings page.
+	/// </summary>
+	private async Task ArmSentryAsync()
+	{
+		SentryArmToggleButton.IsEnabled = false;
+		TopBarSentryEngine? engine = null;
+		try
+		{
+			engine = new TopBarSentryEngine(DispatcherQueue);
+			engine.StatusChanged += OnSentryEngineStatusChanged;
+			TopBarSentryArmResult result = await engine.ArmAsync(BuildSentrySettings());
+			if (!result.Success)
+			{
+				engine.StatusChanged -= OnSentryEngineStatusChanged;
+				ShowSentryError(result);
+				// The engine is left for the finally to dispose, which keeps a single disposal path.
+				return;
+			}
+
+			_sentryEngine = engine;
+			// Ownership has passed to the field, so the local is cleared to keep the finally from disposing the live engine.
+			engine = null;
+			HideSentryError();
+			ResetSentryGraph();
+			SentryArmToggleButton.IsChecked = true;
+			SentryArmToggleButton.Content = "ARMED";
+			SentryStateText.Text = "Armed";
+			UpdateSentryMeterTimer();
+		}
+		finally
+		{
+			engine?.Dispose();
+			SentryArmToggleButton.IsEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Stops watching, ends any capture in flight and releases the microphone. Nulling the field first means any late
+	/// status callback from the outgoing engine is ignored, because a callback whose sender is no longer the current
+	/// engine is dropped.
+	/// </summary>
+	private async Task DisarmSentryAsync()
+	{
+		TopBarSentryEngine? engine = _sentryEngine;
+		_sentryEngine = null;
+
+		if (engine is not null)
+		{
+			engine.StatusChanged -= OnSentryEngineStatusChanged;
+			await engine.DisarmAsync();
+			engine.Dispose();
+		}
+
+		SentryArmToggleButton.IsChecked = false;
+		SentryArmToggleButton.Content = "ARM";
+		SentryStopButton.IsEnabled = false;
+		SentryStateText.Text = "Idle";
+		SentryLevelText.Text = "-- dBFS";
+		ResetSentryGraph();
+		UpdateSentryMeterTimer();
+	}
+
+	private void OnSentryStopClick() => _sentryEngine?.StopCurrentRecording();
+
+	/// <summary>
+	/// Handles the state transitions the engine raises, including the self disarm that happens once the cycle ceiling
+	/// has been reached.
+	/// </summary>
+	private void OnSentryEngineStatusChanged(object? sender, TopBarSentryStatus status)
+	{
+		if (_isClosed || !ReferenceEquals(sender, _sentryEngine))
+		{
+			return;
+		}
+
+		if (status.State == TopBarSentryState.Idle)
+		{
+			// The engine reached its cycle ceiling and stopped itself, so the view finishes the teardown.
+			_ = DisarmSentryAsync();
+			return;
+		}
+
+		SentryStateText.Text = status.State == TopBarSentryState.Recording ? "Recording" : "Armed";
+		SentryStopButton.IsEnabled = status.State == TopBarSentryState.Recording;
+		SentryCyclesText.Text = "Cycles: " + status.CompletedCycles.ToString(CultureInfo.InvariantCulture);
+	}
+
+	/// <summary>
+	/// Shows why a session could not be armed, and reveals the shortcut to the microphone Settings page when the
+	/// cause was the privacy setting.
+	/// </summary>
+	private void ShowSentryError(TopBarSentryArmResult result)
+	{
+		SentryArmToggleButton.IsChecked = false;
+		SentryArmToggleButton.Content = "ARM";
+		SentryStateText.Text = result.PermissionDenied ? "Mic blocked" : "Error";
+		ToolTipService.SetToolTip(SentryStateText, result.Error ?? "The microphone could not be opened.");
+		SentryCyclesText.Text = result.Error ?? "The microphone could not be opened.";
+		SentryOpenPrivacyButton.Visibility = result.PermissionDenied ? Visibility.Visible : Visibility.Collapsed;
+	}
+
+	private void HideSentryError()
+	{
+		ToolTipService.SetToolTip(SentryStateText, null);
+		SentryCyclesText.Text = "Cycles: 0";
+		SentryOpenPrivacyButton.Visibility = Visibility.Collapsed;
+	}
+
+	/// <summary>
+	/// Opens the Windows microphone privacy Settings page so the user can allow app access without leaving the flow.
+	/// </summary>
+	private async void OnSentryOpenPrivacyClick() => _ = await Windows.System.Launcher.LaunchUriAsync(new Uri("ms-settings:privacy-microphone"));
+
+	/// <summary>
+	/// Builds the fixed strip of graph bars once. Every later update only touches their height and brush.
+	/// </summary>
+	private void BuildSentryGraphBars()
+	{
+		for (int index = 0; index < SentryGraphBarCount; index++)
+		{
+			_sentryGraphLevels[index] = SentryMeterFloorDecibel;
+			Border bar = new()
+			{
+				Width = SentryGraphBarWidth,
+				Height = 2.0,
+				CornerRadius = new CornerRadius(1.0),
+				VerticalAlignment = VerticalAlignment.Bottom,
+				Background = _sentryCalmBrush
+			};
+			_sentryGraphBars.Add(bar);
+			SentryGraphPanel.Children.Add(bar);
+		}
+	}
+
+	/// <summary>
+	/// Scrolls the history one step to the left, drops the newest reading in at the right, and repaints the bars.
+	/// </summary>
+	private void PushSentryLevel(double decibel)
+	{
+		Array.Copy(_sentryGraphLevels, 1, _sentryGraphLevels, 0, SentryGraphBarCount - 1);
+		_sentryGraphLevels[SentryGraphBarCount - 1] = decibel;
+
+		double threshold = Atlas.Settings.WindowsTopBarSentryTriggerDecibel;
+		for (int index = 0; index < SentryGraphBarCount; index++)
+		{
+			double level = _sentryGraphLevels[index];
+			double fraction = Math.Clamp((level - SentryMeterMinimumDecibel) / (0.0 - SentryMeterMinimumDecibel), 0.0, 1.0);
+			Border bar = _sentryGraphBars[index];
+			bar.Height = Math.Max(2.0, SentryGraphHeight * fraction);
+			bar.Background = level >= threshold ? _sentryHotBrush : _sentryCalmBrush;
+		}
+	}
+
+	/// <summary>
+	/// Flattens the graph back to its floor so that a stale trace does not linger after a session ends.
+	/// </summary>
+	private void ResetSentryGraph()
+	{
+		for (int index = 0; index < SentryGraphBarCount; index++)
+		{
+			_sentryGraphLevels[index] = SentryMeterFloorDecibel;
+			Border bar = _sentryGraphBars[index];
+			bar.Height = 2.0;
+			bar.Background = _sentryCalmBrush;
+		}
+	}
+
+	private void OnSentryThresholdChanged(object sender, RangeBaseValueChangedEventArgs e)
+	{
+		double value = Math.Round(e.NewValue);
+		SentryThresholdText.Text = FormatSentryDecibel(value);
+
+		if (_isSentryInitializing)
+		{
+			return;
+		}
+
+		Atlas.Settings.WindowsTopBarSentryTriggerDecibel = value;
+		_sentryEngine?.UpdateThreshold(value);
+	}
+
+	private void OnSentryDurationChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
+	{
+		if (_isSentryInitializing || double.IsNaN(e.NewValue))
+		{
+			return;
+		}
+
+		int value = (int)Math.Round(e.NewValue);
+		Atlas.Settings.WindowsTopBarSentryRecordingDurationSeconds = value;
+		_sentryEngine?.UpdateRecordingDuration(value);
+	}
+
+	private void OnSentryCooldownChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
+	{
+		if (_isSentryInitializing || double.IsNaN(e.NewValue))
+		{
+			return;
+		}
+
+		int value = (int)Math.Round(e.NewValue);
+		Atlas.Settings.WindowsTopBarSentryCooldownSeconds = value;
+		_sentryEngine?.UpdateCooldown(value);
+	}
+
+	private void OnSentryMaxCyclesChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
+	{
+		if (_isSentryInitializing || double.IsNaN(e.NewValue))
+		{
+			return;
+		}
+
+		int value = (int)Math.Round(e.NewValue);
+		Atlas.Settings.WindowsTopBarSentryMaxCycles = value;
+		_sentryEngine?.UpdateMaxCycles(value);
+	}
+
+	private void OnSentryBrowseClick()
+	{
+		try
+		{
+			string? selectedPaths = FileDialogHelper.ShowDirectoryPickerDialog();
+			if (!Directory.Exists(selectedPaths))
+			{
+				return;
+			}
+
+			Atlas.Settings.WindowsTopBarSentryOutputDirectory = selectedPaths;
+			_sentryEngine?.UpdateOutputDirectory(selectedPaths);
+			SetSentryFolderText();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	private void OnSentryDefaultFolderClick()
+	{
+		Atlas.Settings.WindowsTopBarSentryOutputDirectory = string.Empty;
+		_sentryEngine?.UpdateOutputDirectory(string.Empty);
+		SetSentryFolderText();
+	}
+
+	private void OnSentryOpenFolderClick()
+	{
+		try
+		{
+			string directory = ResolveSentryOutputDirectory();
+			_ = Directory.CreateDirectory(directory);
+			using Process? explorer = Process.Start(new ProcessStartInfo
+			{
+				FileName = directory,
+				UseShellExecute = true
+			});
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	private static string ResolveSentryOutputDirectory()
+	{
+		string configured = Atlas.Settings.WindowsTopBarSentryOutputDirectory;
+		return string.IsNullOrWhiteSpace(configured) ? TopBarSentryEngine.DefaultOutputDirectory : configured;
+	}
+
+	private void SetSentryFolderText()
+	{
+		string configured = Atlas.Settings.WindowsTopBarSentryOutputDirectory;
+		bool isDefault = string.IsNullOrWhiteSpace(configured);
+		string directory = isDefault ? TopBarSentryEngine.DefaultOutputDirectory : configured;
+		SentryFolderText.Text = isDefault ? "Default: " + directory : directory;
+		ToolTipService.SetToolTip(SentryFolderText, directory);
+	}
+
+	private static TopBarSentrySettings BuildSentrySettings() => new(
+		Atlas.Settings.WindowsTopBarSentryTriggerDecibel,
+		Atlas.Settings.WindowsTopBarSentryRecordingDurationSeconds,
+		Atlas.Settings.WindowsTopBarSentryCooldownSeconds,
+		Atlas.Settings.WindowsTopBarSentryMaxCycles,
+		Atlas.Settings.WindowsTopBarSentryOutputDirectory);
+
+	private static string FormatSentryDecibel(double decibel) => decibel.ToString("0", CultureInfo.InvariantCulture) + " dBFS";
+
+	/// <summary>
+	/// Tears the Sentry down when the window closes, ending any capture that is in flight.
+	/// </summary>
+	private void TeardownSentry()
+	{
+		_sentryMeterTimer.Stop();
+		_sentryMeterTimer.Tick -= OnSentryMeterTimerTick;
+
+		TopBarSentryEngine? engine = _sentryEngine;
+		_sentryEngine = null;
+		if (engine is not null)
+		{
+			engine.StatusChanged -= OnSentryEngineStatusChanged;
+			engine.Dispose();
+		}
+	}
+
+	#endregion
+
 	private void OnWindowClosed()
 	{
 		_isClosed = true;
 		DetachExpandedHost();
 		StopNetworkQualityTest();
+		TeardownSentry();
 
 		DetachRenderHook();
 
@@ -3152,7 +3670,8 @@ internal sealed partial class TopBar : Window
 			_currentInstance = null;
 
 			// The desktop wide ownership is handed back so that another instance of the app can show a bar afterwards.
-			ReleaseSingleInstanceGuard();
+			_singleInstanceGuard?.Dispose();
+			_singleInstanceGuard = null;
 		}
 	}
 }

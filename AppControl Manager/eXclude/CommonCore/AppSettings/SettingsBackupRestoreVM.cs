@@ -367,6 +367,13 @@ internal static class SettingsBackupRestoreSerializer
 		CreateBoolean(nameof(Main.WindowsTopBarLaunchAtStartup), static settings => settings.WindowsTopBarLaunchAtStartup, static (settings, value) => settings.WindowsTopBarLaunchAtStartup = value),
 		CreateBoolean(nameof(Main.WindowsTopBarOpenOnHover), static settings => settings.WindowsTopBarOpenOnHover, static (settings, value) => settings.WindowsTopBarOpenOnHover = value),
 		CreateBoolean(nameof(Main.WindowsTopBarAlwaysOnTop), static settings => settings.WindowsTopBarAlwaysOnTop, static (settings, value) => settings.WindowsTopBarAlwaysOnTop = value),
+		CreateDouble(nameof(Main.WindowsTopBarSentryTriggerDecibel), "Number in range -90-0", -90D, 0D, static settings => settings.WindowsTopBarSentryTriggerDecibel, static (settings, value) => settings.WindowsTopBarSentryTriggerDecibel = value),
+		CreateInt(nameof(Main.WindowsTopBarSentryRecordingDurationSeconds), "Integer in range 1-3600", 1, 3600, static settings => settings.WindowsTopBarSentryRecordingDurationSeconds, static (settings, value) => settings.WindowsTopBarSentryRecordingDurationSeconds = value),
+		CreateInt(nameof(Main.WindowsTopBarSentryCooldownSeconds), "Integer in range 0-3600", 0, 3600, static settings => settings.WindowsTopBarSentryCooldownSeconds, static (settings, value) => settings.WindowsTopBarSentryCooldownSeconds = value),
+		CreateInt(nameof(Main.WindowsTopBarSentryMaxCycles), "Integer in range 0-1000", 0, 1000, static settings => settings.WindowsTopBarSentryMaxCycles, static (settings, value) => settings.WindowsTopBarSentryMaxCycles = value),
+		CreateStringWithCustomValidation(nameof(Main.WindowsTopBarSentryOutputDirectory), "Absolute path or empty string", static settings => settings.WindowsTopBarSentryOutputDirectory, static (settings, value) => settings.WindowsTopBarSentryOutputDirectory = value,
+			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
+			$"'{nameof(Main.WindowsTopBarSentryOutputDirectory)}' must be empty or an absolute path."),
 
 		];
 

@@ -134,6 +134,11 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarLaunchAtStartup = ReadValue(nameof(WindowsTopBarLaunchAtStartup), WindowsTopBarLaunchAtStartup);
 		WindowsTopBarOpenOnHover = ReadValue(nameof(WindowsTopBarOpenOnHover), WindowsTopBarOpenOnHover);
 		WindowsTopBarAlwaysOnTop = ReadValue(nameof(WindowsTopBarAlwaysOnTop), WindowsTopBarAlwaysOnTop);
+		WindowsTopBarSentryTriggerDecibel = ReadValue(nameof(WindowsTopBarSentryTriggerDecibel), WindowsTopBarSentryTriggerDecibel);
+		WindowsTopBarSentryRecordingDurationSeconds = ReadValue(nameof(WindowsTopBarSentryRecordingDurationSeconds), WindowsTopBarSentryRecordingDurationSeconds);
+		WindowsTopBarSentryCooldownSeconds = ReadValue(nameof(WindowsTopBarSentryCooldownSeconds), WindowsTopBarSentryCooldownSeconds);
+		WindowsTopBarSentryMaxCycles = ReadValue(nameof(WindowsTopBarSentryMaxCycles), WindowsTopBarSentryMaxCycles);
+		WindowsTopBarSentryOutputDirectory = ReadValue(nameof(WindowsTopBarSentryOutputDirectory), WindowsTopBarSentryOutputDirectory);
 	}
 
 	/// <summary>
@@ -1198,5 +1203,79 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = true;
+
+	/// <summary>
+	/// The dBFS signal level at or above which the Top Bar Sentry view begins an audio capture cycle.
+	/// A value closer to 0 is louder; a value closer to -90 is quieter and therefore more sensitive.
+	/// </summary>
+	internal double WindowsTopBarSentryTriggerDecibel
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarSentryTriggerDecibel), field);
+			}
+		}
+	} = -30.0;
+
+	/// <summary>
+	/// How many seconds each Sentry capture lasts once the trigger level is reached.
+	/// </summary>
+	internal int WindowsTopBarSentryRecordingDurationSeconds
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarSentryRecordingDurationSeconds), field);
+			}
+		}
+	} = 30;
+
+	/// <summary>
+	/// The cooldown, in seconds, that the Sentry waits after a capture finishes before it is allowed to trigger the
+	/// next one. It acts as a timeout so that a sound that stays above the trigger level does not record endlessly.
+	/// </summary>
+	internal int WindowsTopBarSentryCooldownSeconds
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarSentryCooldownSeconds), field);
+			}
+		}
+	} = 5;
+
+	/// <summary>
+	/// How many capture cycles the Sentry performs before it disarms itself. Zero means it keeps capturing for as
+	/// long as it stays armed.
+	/// </summary>
+	internal int WindowsTopBarSentryMaxCycles
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarSentryMaxCycles), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Optional custom directory where the Sentry writes its audio captures. An empty string means the app default
+	/// folder inside the user's profile directory.
+	/// </summary>
+	internal string WindowsTopBarSentryOutputDirectory
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarSentryOutputDirectory), field);
+			}
+		}
+	} = string.Empty;
 
 }

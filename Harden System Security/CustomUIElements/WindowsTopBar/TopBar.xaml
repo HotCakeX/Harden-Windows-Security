@@ -45,11 +45,15 @@
                       VerticalAlignment="Center"
                       HorizontalAlignment="Center"
                       Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+            <!-- This is the default notch content -->
             <TextBlock x:Name="CollapsedLabel"
                        FontSize="12"
                        FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+            <!-- Notch content specialized for the Clocks view -->
+            <StackPanel x:Name="CollapsedNotchClocksHost" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="12"/>
+            <!-- Notch content specialized for the Performance view -->
             <StackPanel x:Name="CollapsedPerformanceHost"
                         HorizontalAlignment="Center"
                         Width="153"
@@ -135,6 +139,13 @@
                                 <FontIcon Glyph="&#xE968;"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem x:Name="SentryViewMenuItem"
+                                             GroupName="TopBarViewSwitcher"
+                                             Click="{x:Bind OnSentryViewButtonClick}">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE720;"/>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
                     </MenuFlyout>
                 </Button.Flyout>
                 <FontIcon Glyph="&#xE8A9;"
@@ -164,7 +175,7 @@
                  take, so a view that holds more entries than the display fits scrolls sideways instead of making the
                  bar grow past the edges of the display. -->
             <ScrollViewer x:Name="ViewsScrollViewer"
-                          SizeChanged="{x:Bind OnViewsScrollViewerSizeChanged}"
+                          SizeChanged="{x:Bind UpdateScrollBarClearance}"
                           VerticalAlignment="Center"
                           HorizontalScrollMode="Enabled"
                           HorizontalScrollBarVisibility="Auto"
@@ -363,8 +374,6 @@
                                 Spacing="4"
                                 Visibility="Collapsed"/>
                     <Grid x:Name="NetworkQualityPanel"
-                          Width="626"
-                          Height="58"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
                           ColumnSpacing="8"
@@ -424,11 +433,211 @@
                                     VerticalAlignment="Center"/>
                         <Button x:Name="NetworkQualityStartStopButton"
                                 Grid.Column="3"
-                                Width="52"
-                                Height="28"
-                                Padding="4,0"
                                 Content="Start"
                                 Click="{x:Bind OnNetworkQualityStartStopButtonClick}"/>
+                    </Grid>
+                    <!-- The Acoustic Sentry. A decibel triggered environment audio recorder that arms in the
+                         background and captures high fidelity WAV audio whenever the ambient level crosses the user defined trigger. -->
+                    <Grid x:Name="SentryPanel"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          ColumnSpacing="10"
+                          Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Arm and disarm, plus a manual stop for the capture that is in flight. -->
+                        <StackPanel Grid.Column="0"
+                                    Spacing="3"
+                                    VerticalAlignment="Center">
+                            <ToggleButton x:Name="SentryArmToggleButton"
+                                          Width="86"
+                                          Height="32"
+                                          Padding="0"
+                                          MinWidth="0"
+                                          HorizontalAlignment="Center"
+                                          Content="ARM"
+                                          Click="{x:Bind OnSentryArmToggleClick}"/>
+                            <Button x:Name="SentryStopButton"
+                                    Width="86"
+                                    Height="20"
+                                    Padding="0"
+                                    MinWidth="0"
+                                    FontSize="11"
+                                    IsEnabled="False"
+                                    HorizontalAlignment="Center"
+                                    Content="Stop"
+                                    Click="{x:Bind OnSentryStopClick}"/>
+                        </StackPanel>
+                        <!-- The lightweight live audio graph. It scrolls the recent ambient level and only ticks
+                             while the Sentry view is expanded and a session is armed. Bars turn red once their
+                             level has crossed the trigger, so the trigger is read straight off the graph. -->
+                        <StackPanel Grid.Column="1"
+                                    Spacing="2"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="LIVE LEVEL"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <Border Width="156"
+                                    Height="30"
+                                    CornerRadius="4"
+                                    Background="{ThemeResource ControlAltFillColorSecondaryBrush}">
+                                <StackPanel x:Name="SentryGraphPanel"
+                                            Height="28"
+                                            Orientation="Horizontal"
+                                            Spacing="1"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Bottom"
+                                            Margin="0,0,0,1"/>
+                            </Border>
+                            <TextBlock x:Name="SentryLevelText"
+                                       FontSize="9"
+                                       Text="-- dBFS"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+                        <!-- Trigger sensitivity in dBFS. -->
+                        <StackPanel Grid.Column="2"
+                                    Spacing="1"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="TRIGGER dBFS"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <Slider x:Name="SentryThresholdSlider"
+                                    Width="150"
+                                    Height="30"
+                                    Minimum="-90"
+                                    Maximum="0"
+                                    StepFrequency="1"
+                                    ValueChanged="{x:Bind OnSentryThresholdChanged}"/>
+                            <TextBlock x:Name="SentryThresholdText"
+                                       FontSize="9"
+                                       Text="-30 dBFS"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+                        <!-- Capture length per trigger. -->
+                        <StackPanel Grid.Column="3"
+                                    Spacing="1"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="REC SEC"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <NumberBox x:Name="SentryDurationBox"
+                                       Minimum="1"
+                                       Maximum="3600"
+                                       SmallChange="5"
+                                       LargeChange="30"
+                                       SpinButtonPlacementMode="Inline"
+                                       ValueChanged="{x:Bind OnSentryDurationChanged}"/>
+                        </StackPanel>
+                        <!-- Cooldown between captures. This is the timeout that governs how often a capture repeats. -->
+                        <StackPanel Grid.Column="4"
+                                    Spacing="1"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="GAP SEC"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <NumberBox x:Name="SentryCooldownBox"
+                                       Minimum="0"
+                                       Maximum="3600"
+                                       SmallChange="1"
+                                       LargeChange="10"
+                                       SpinButtonPlacementMode="Inline"
+                                       ValueChanged="{x:Bind OnSentryCooldownChanged}"/>
+                        </StackPanel>
+                        <!-- How many capture cycles before the Sentry disarms itself. Zero means unlimited. -->
+                        <StackPanel Grid.Column="5"
+                                    Spacing="1"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="CYCLES 0=INF"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <NumberBox x:Name="SentryMaxCyclesBox"
+                                       Minimum="0"
+                                       Maximum="1000"
+                                       SmallChange="1"
+                                       LargeChange="5"
+                                       SpinButtonPlacementMode="Inline"
+                                       ValueChanged="{x:Bind OnSentryMaxCyclesChanged}"/>
+                        </StackPanel>
+                        <!-- Where the captures are written. -->
+                        <StackPanel Grid.Column="6"
+                                    Spacing="1"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="FOLDER"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <TextBlock x:Name="SentryFolderText"
+                                       FontSize="9"
+                                       MaxLines="1"
+                                       MaxWidth="166"
+                                       Text="Default folder"
+                                       IsTextSelectionEnabled="True"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="4"
+                                        Margin="0,4,0,0">
+                                <Button x:Name="SentryBrowseButton"
+                                        FontSize="10"
+                                        Content="Browse"
+                                        Click="{x:Bind OnSentryBrowseClick}"/>
+                                <Button x:Name="SentryOpenFolderButton"
+                                        FontSize="10"
+                                        Content="Open"
+                                        Click="{x:Bind OnSentryOpenFolderClick}"/>
+                                <Button x:Name="SentryDefaultFolderButton"
+                                        FontSize="10"
+                                        Content="Reset"
+                                        Click="{x:Bind OnSentryDefaultFolderClick}"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <!-- Current state and completed cycle count. -->
+                        <StackPanel Grid.Column="7"
+                                    Spacing="1"
+                                    Width="128"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="STATUS"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <TextBlock x:Name="SentryStateText"
+                                       FontSize="12"
+                                       FontWeight="SemiBold"
+                                       Text="Idle"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+                            <ScrollViewer MaxHeight="34"
+                                          VerticalScrollMode="Enabled"
+                                          VerticalScrollBarVisibility="Auto"
+                                          HorizontalScrollMode="Disabled"
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <TextBlock x:Name="SentryCyclesText"
+                                           FontSize="9"
+                                           TextWrapping="Wrap"
+                                           Text="Cycles: 0"
+                                           IsTextSelectionEnabled="True"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </ScrollViewer>
+                            <HyperlinkButton x:Name="SentryOpenPrivacyButton"
+                                             Padding="0"
+                                             FontSize="10"
+                                             Content="Open mic settings"
+                                             Visibility="Collapsed"
+                                             Click="{x:Bind OnSentryOpenPrivacyClick}"/>
+                        </StackPanel>
                     </Grid>
                 </Grid>
             </ScrollViewer>

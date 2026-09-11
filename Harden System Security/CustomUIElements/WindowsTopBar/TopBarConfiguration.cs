@@ -32,7 +32,8 @@ internal enum TopBarView
 	Folders = 1,
 	Performance = 2,
 	Clocks = 3,
-	NetworkQuality = 4
+	NetworkQuality = 4,
+	Sentry = 5
 }
 
 /// <summary>
@@ -106,6 +107,11 @@ internal sealed class TopBarClockEntry
 	/// An empty identifier means the local time zone of the machine.
 	/// </summary>
 	public string TimeZoneId { get; set; } = string.Empty;
+
+	/// <summary>
+	/// Whether this clock is displayed in the standard collapsed notch.
+	/// </summary>
+	public bool DisplayOnNotch { get; set; }
 }
 
 /// <summary>
@@ -178,8 +184,8 @@ internal static class TopBarConfigurationManager
 		],
 		Clocks =
 		[
-			new TopBarClockEntry { DisplayName = "Local", TimeZoneId = string.Empty },
-			new TopBarClockEntry { DisplayName = "UTC", TimeZoneId = "UTC" },
+			new TopBarClockEntry { DisplayName = "Local", TimeZoneId = string.Empty, DisplayOnNotch = true },
+			new TopBarClockEntry { DisplayName = "UTC", TimeZoneId = "UTC", DisplayOnNotch = true },
 			new TopBarClockEntry { DisplayName = "Washington, D.C.", TimeZoneId = "Eastern Standard Time" },
 			new TopBarClockEntry { DisplayName = "Central", TimeZoneId = "Central Standard Time" },
 			new TopBarClockEntry { DisplayName = "Pacific", TimeZoneId = "Pacific Standard Time" },
@@ -221,9 +227,7 @@ internal static class TopBarConfigurationManager
 	/// Writes the configuration atomically to the app's local data folder so an interrupted write cannot replace the
 	/// last complete configuration with a partial JSON document.
 	/// </summary>
-	internal static void Save(TopBarConfiguration configuration) => _ = TrySave(configuration);
-
-	private static bool TrySave(TopBarConfiguration configuration)
+	internal static void Save(TopBarConfiguration configuration)
 	{
 		string temporaryFilePath = GetTemporaryConfigurationFilePath();
 		try
@@ -231,13 +235,11 @@ internal static class TopBarConfigurationManager
 			string content = JsonSerializer.Serialize(configuration, TopBarConfigurationJsonContext.Default.TopBarConfiguration);
 			File.WriteAllText(temporaryFilePath, content);
 			File.Move(temporaryFilePath, GetConfigurationFilePath(), true);
-			return true;
 		}
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
 			TryDeleteTemporaryConfigurationFile(temporaryFilePath);
-			return false;
 		}
 	}
 

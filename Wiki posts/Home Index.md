@@ -8,6 +8,7 @@
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/65086755cd831ab6bbb4eddf10b7b716cee12a48/Pictures/AppControl%20Manager%20Icons/icon.png" alt="AppControl Manager icon" width="50"> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
 
+- <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/AppControl%20Manager%20Menu/Home.gif?raw=true" alt="App Home Page" width="30"> [Home](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Home-Page)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20Policy.gif" alt="AppControl Manager Menu Item" width="30"> [Create AppControl Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-App-Control-Policy)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Create%20Supplemental%20Policy.gif" alt="AppControl Manager Menu Item" width="30"> [Create Supplemental Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Create-Supplemental-App-Control-Policy)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/System%20Information.gif" alt="AppControl Manager Menu Item" width="30"> [System Information](https://github.com/HotCakeX/Harden-Windows-Security/wiki/System-Information)
@@ -35,6 +36,10 @@
 <br>
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/9b2e88aad5ba54000a24c904e1f473b039202691/Pictures/Harden%20System%20Security%20Icons/ICON-SVG-SIMPLIFIED.svg" width="50"> [Harden System Security](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security)  <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
+
+- <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/AppControl%20Manager%20Menu/Home.gif?raw=true" alt="App Home Page" width="30"> [Home](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Home-Page)
+
+- <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/Harden%20System%20Security%20Menu/TopBar.gif?raw=true" alt="App Top Bar" width="30"> [TopBar](https://github.com/HotCakeX/Harden-Windows-Security/wiki/TopBar)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/Protect.gif" alt="Harden System Security Menu Item" width="30"> [Protect](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect)
 

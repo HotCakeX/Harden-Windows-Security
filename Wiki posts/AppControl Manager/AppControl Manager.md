@@ -45,15 +45,23 @@ Please feel free to open a discussion if you have any questions about the build 
 
 ### Supported Operating Systems
 
+* Windows 11 26H2
+* Windows 11 26H1
 * Windows 11 25H2
 * Windows 11 24H2
-* Windows 11 23H2
-* Windows 11 22H2
 * Windows Server 2025
 
 <br>
 
 ## Preview of the App
+
+<div align="center">
+
+<img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/AppControlManager%20FeatureHighlights%20Carousel.gif?raw=true" alt="Carousel"/>
+
+</div>
+
+<br>
 
 <div align="center">
 

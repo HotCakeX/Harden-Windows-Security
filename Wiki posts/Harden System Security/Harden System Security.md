@@ -32,10 +32,10 @@ Please feel free to open a discussion if you have any questions about the build 
 
 ### Supported Operating Systems
 
+* Windows 11 26H2
+* Windows 11 26H1
 * Windows 11 25H2
 * Windows 11 24H2
-* Windows 11 23H2
-* Windows 11 22H2
 * Windows Server 2025
 
 <br>
@@ -45,6 +45,14 @@ Please feel free to open a discussion if you have any questions about the build 
 <div align="center">
 
 <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/HardenWindowsSecurityApp.gif?raw=true" alt="Harden System Security App Demo"/>
+
+</div>
+
+<br>
+
+<div align="center">
+
+<img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/HardenSystemSecurity%20FeatureHighlights%20Carousel.gif?raw=true" alt="Carousel"/>
 
 </div>
 

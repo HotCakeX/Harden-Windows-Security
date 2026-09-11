@@ -694,7 +694,12 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 
 If you would like to support my work financially, your generosity is greatly appreciated. You can donate using any of the following methods and then let me know via DM on [**X**](https://x.com/CyberCakeX) or <a href="https://discord.com/users/1198196610476294239"> Discord </a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/103188555ea09bb5670a5720faf5e3d92a9bed6d/Pictures/Gifs/discord%20rainbow.gif" width="25"> or Teams/Email via `spynetgirl@outlook.com` so I can thank you personally. <img src="https://raw.githubusercontent.com/HotCakeX/.github/aa3901d1efc03871a423552dd32a5f2cea5ba180/Pictures/Gifs/stellakiss.gif" width="45" alt="xo">
 
-Your support helps me continue to create and maintain this project. You can also use donations to request special or extraordinary features.
+I am the only developer and maintainer of this repository and everything in it. Your financial support helps me continue to create and maintain this project. As it grows larger, I naturally need to spend more time on it. You can also use donations to request special or extraordinary features to implement for you.
+
+> [!TIP]\
+> You **do not** have to use Trust Wallet, it's only one of the thousands of crypto wallet providers out there. You can use any wallet you like or currently use. The important thing is to send your donations to the correct wallet address that is displayed below in the code blocks.
+>
+> When using cryptocurrency transactions, there is no middle-man or 3rd party intermediaries involved, your donations are sent directly to me.
 
 ### Bitcoin
 

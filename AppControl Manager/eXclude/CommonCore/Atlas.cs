@@ -108,6 +108,8 @@ internal static partial class Atlas
 	/// </summary>
 	internal const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36 Edg/152.0.0.0";
 
+	internal const string DefaultMaxVersion = "65535.65535.65535.65535";
+
 #if APP_CONTROL_MANAGER
 
 	static Atlas()

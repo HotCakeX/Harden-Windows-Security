@@ -10,5 +10,9 @@
     <Platform Solution="*|x64" Project="x64" />
     <Deploy />
   </Project>
+  <Project Path="eXclude/CipPreviewHandler/CipPreviewHandler.csproj">
+    <Platform Solution="*|arm64" Project="ARM64" />
+    <Platform Solution="*|x64" Project="x64" />
+  </Project>
   <Project Path="eXclude/CommonCore/CommonCore.shproj" Id="076556fd-204b-4b34-9fb9-82e48a87e3e4" />
 </Solution>

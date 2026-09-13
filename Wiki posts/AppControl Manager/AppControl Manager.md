@@ -635,6 +635,14 @@ function Build_ACM {
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building the Shell solution for ARM64. Exit Code: $LASTEXITCODE") }
 
+    ### Preview Handler DLL
+
+    dotnet publish '.\eXclude\CipPreviewHandler\CipPreviewHandler.csproj' --configuration Release --runtime win-x64 /p:Platform=x64 --output '.\eXclude\CipPreviewHandler\X64Output'
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building CipPreviewHandler project for X64. Exit Code: $LASTEXITCODE") }
+
+    dotnet publish '.\eXclude\CipPreviewHandler\CipPreviewHandler.csproj' --configuration Release --runtime win-arm64 /p:Platform=ARM64 --output '.\eXclude\CipPreviewHandler\ARM64Output'
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building CipPreviewHandler project for ARM64. Exit Code: $LASTEXITCODE") }
+
     #endregion
 
     #region --- RUST projects ---
@@ -759,8 +767,12 @@ function Build_ACM {
     # https://learn.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
     # https://learn.microsoft.com/visualstudio/msbuild/common-msbuild-project-properties
 
+    New-Item -Path '.\PreviewHandler' -ItemType Directory -Force | Out-Null
+
     # Copy the X64 components to the directory before the build starts
     Copy-Item -Path '.\eXclude\Shell\x64\Release\Shell.dll' -Destination 'Shell' -Force
+
+    Copy-Item -Path '.\eXclude\CipPreviewHandler\X64Output\CipPreviewHandler.dll' -Destination '.\PreviewHandler\CipPreviewHandler.dll' -Force
 
     New-Item -Path '.\CppInterop' -ItemType Directory -Force | Out-Null
 
@@ -778,6 +790,8 @@ function Build_ACM {
 
     # Copy the ARM64 components to the directory before the build starts
     Copy-Item -Path '.\eXclude\Shell\ARM64\Release\Shell.dll' -Destination 'Shell' -Force
+
+    Copy-Item -Path '.\eXclude\CipPreviewHandler\ARM64Output\CipPreviewHandler.dll' -Destination '.\PreviewHandler\CipPreviewHandler.dll' -Force
 
     Copy-Item -Path '.\eXclude\ComManager\ARM64\Release\ComManager.exe' -Destination '.\CppInterop\ComManager.exe' -Force
 

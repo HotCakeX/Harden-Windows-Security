@@ -546,7 +546,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							{
 								string? cipFilePathToDecode = GetLocalCIPFile(policy) ?? throw new InvalidOperationException("Could not find the CIP path of the Signed policy you're trying to remove on the system.");
 
-								policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(cipFilePathToDecode);
+								policyObj = Management.ConvertBinaryToXmlFile(cipFilePathToDecode);
 
 								if (!CertificatePresence.InferCertificatePresence(policyObj, CertPath, CertCN))
 								{
@@ -847,7 +847,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 					try
 					{
 						// We only ever decode the same P7B file once and reuse it from the dictionary on retrievals
-						SiPolicy.SiPolicy decodedPolicy = BinaryOpsReverse.ConvertBinaryToXmlFile(item);
+						SiPolicy.SiPolicy decodedPolicy = Management.ConvertBinaryToXmlFile(item);
 
 						// Store PolicyID -> Policy Object
 						if (P7BPoliciesDictionary.TryAdd(decodedPolicy.PolicyID.Trim('{', '}'), decodedPolicy))

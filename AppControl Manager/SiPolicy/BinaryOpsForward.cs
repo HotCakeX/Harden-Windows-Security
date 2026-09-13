@@ -166,7 +166,7 @@ internal static partial class BinaryOpsForward
 				{
 					ulong minFileVersionNumber = (denyRule.MinimumFileVersion is not null || denyRule.MaximumFileVersion is not null)
 						? Helper.ConvertStringVersionToUInt64(denyRule.MinimumFileVersion)
-						: Helper.ConvertStringVersionToUInt64(Helper.DefaultMaxVersion);
+						: Helper.ConvertStringVersionToUInt64(Atlas.DefaultMaxVersion);
 
 					BodyWriter.Write((uint)(minFileVersionNumber & uint.MaxValue));
 					BodyWriter.Write((uint)(minFileVersionNumber >> 32));
@@ -318,7 +318,7 @@ internal static partial class BinaryOpsForward
 					else if (fileAttributeRule.Hash.IsEmpty)
 					{
 						// Emit the default maximum version for non-hash FileAttrib rules when no explicit maximum is present.
-						maxFileVersionNumber = Helper.ConvertStringVersionToUInt64(Helper.DefaultMaxVersion);
+						maxFileVersionNumber = Helper.ConvertStringVersionToUInt64(Atlas.DefaultMaxVersion);
 					}
 
 					BodyWriter.Write((uint)(maxFileVersionNumber & uint.MaxValue));
@@ -1530,7 +1530,7 @@ internal static partial class BinaryOpsForward
 					ulong minimumVersionNumber = Helper.ConvertStringVersionToUInt64(artifactRule.MinimumVersion);
 					ulong maximumVersionNumber = artifactRule.MaximumVersion is not null
 						? Helper.ConvertStringVersionToUInt64(artifactRule.MaximumVersion)
-						: Helper.ConvertStringVersionToUInt64(Helper.DefaultMaxVersion);
+						: Helper.ConvertStringVersionToUInt64(Atlas.DefaultMaxVersion);
 					if (maximumVersionNumber < minimumVersionNumber)
 					{
 						throw new InvalidOperationException($"For artifact rule {artifactRule.ID}, the minimum version {artifactRule.MinimumVersion} is greater than the maximum version {artifactRule.MaximumVersion}.");

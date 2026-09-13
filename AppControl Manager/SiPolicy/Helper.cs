@@ -24,21 +24,6 @@ namespace AppControlManager.SiPolicy;
 
 internal static class Helper
 {
-	internal const string DefaultMaxVersion = "65535.65535.65535.65535";
-
-	internal static readonly Dictionary<OptionType, Setting> RuleToSettingMapping = new()
-	{
-		{
-			OptionType.DisabledDefaultWindowsCertificateRemapping,
-			new Setting(
-				provider: "Microsoft",
-				key: "PolicySettings",
-				valueName: "DisabledDefaultWindowsCertificateRemappingValueName",
-				value: new SettingValueType(item: true)
-			)
-		}
-	};
-
 	/// <summary>
 	/// Compare two settings for ordering (Provider, Key, ValueName).
 	/// </summary>
@@ -369,7 +354,7 @@ internal static class Helper
 
 		foreach (RuleType rule in CollectionsMarshal.AsSpan(Policy.Rules))
 		{
-			if (!RuleToSettingMapping.ContainsKey(rule.Item))
+			if (!BinaryOpsReverse.RuleToSettingMapping.ContainsKey(rule.Item))
 			{
 				flags |= (uint)rule.Item;
 			}
@@ -385,7 +370,7 @@ internal static class Helper
 	{
 		foreach (RuleType rule in CollectionsMarshal.AsSpan(Policy.Rules))
 		{
-			if (rule.Item is OptionType option && RuleToSettingMapping.TryGetValue(option, out Setting? setting))
+			if (rule.Item is OptionType option && BinaryOpsReverse.RuleToSettingMapping.TryGetValue(option, out Setting? setting))
 			{
 				setting.Value = new SettingValueType
 				(

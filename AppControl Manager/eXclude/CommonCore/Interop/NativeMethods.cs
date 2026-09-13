@@ -3883,4 +3883,112 @@ internal static unsafe partial class NativeMethods
 		ref uint lpdwSize);
 
 
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial ushort RegisterClassExW(in WNDCLASSEXW lpwcx);
+
+
+	[LibraryImport("USER32", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint CreateWindowExW(
+		uint dwExStyle,
+		string lpClassName,
+		string? lpWindowName,
+		uint dwStyle,
+		int x,
+		int y,
+		int nWidth,
+		int nHeight,
+		nint hWndParent,
+		nint hMenu,
+		nint hInstance,
+		nint lpParam);
+
+
+	[LibraryImport("USER32")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool DestroyWindow(nint hWnd);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint DefWindowProcW(nint hWnd, uint msg, nuint wParam, nint lParam);
+
+
+	[LibraryImport("USER32")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool MoveWindow(nint hWnd, int x, int y, int nWidth, int nHeight, [MarshalAs(UnmanagedType.Bool)] bool bRepaint);
+
+
+	[LibraryImport("USER32")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool ShowWindow(nint hWnd, int nCmdShow);
+
+
+	[LibraryImport("USER32")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool RedrawWindow(nint hWnd, nint lprcUpdate, nint hrgnUpdate, uint flags);
+
+
+	[LibraryImport("USER32")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool GetClientRect(nint hWnd, out RECT lpRect);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint LoadCursorW(nint hInstance, nint lpCursorName);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetSysColor(int nIndex);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint SetFocus(nint hWnd);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint GetFocus();
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint SetParent(nint hWndChild, nint hWndNewParent);
+
+
+	[LibraryImport("USER32", StringMarshalling = StringMarshalling.Utf16)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool SetWindowTextW(nint hWnd, string lpString);
+
+
+	[LibraryImport("KERNEL32", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint LoadLibraryW(string lpLibFileName);
+
+
+	[LibraryImport("KERNEL32")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial bool GetModuleHandleExW(uint dwFlags, nint lpModuleName, out nint phModule);
+
+
+	[LibraryImport("ADVAPI32", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int RegGetValueW(nint hkey, string lpSubKey, string? lpValue, uint dwFlags, uint* pdwType, void* pvData, uint* pcbData);
+
+
+	[LibraryImport("UXTHEME", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SetWindowTheme(nint hwnd, string pszSubAppName, string? pszSubIdList);
+
 }

@@ -17,10 +17,12 @@
 
 namespace CommonCore.Others;
 
+#pragma warning disable CA1515
+
 /// <summary>
 /// a class to throw a custom exception when the certificate has HashMismatch
 /// </summary>
-internal sealed class HashMismatchInCertificateException : Exception
+public sealed class HashMismatchInCertificateException : Exception
 {
 	/// <summary>
 	/// Initializes a new instance of the HashMismatchInCertificateException class. This constructor does not take any

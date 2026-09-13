@@ -16,98 +16,34 @@
 //
 
 using System.Collections.Generic;
-using System.Formats.Asn1;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Security.Cryptography.Pkcs;
 using System.Text;
-using System.Xml;
 
 namespace AppControlManager.SiPolicy;
 
 internal static class BinaryOpsReverse
 {
-
-	/// <summary>
-	/// Entry point to convert a binary .cip file into its XML representation.
-	/// Reads, parses, and serializes the policy object.
-	/// </summary>
-	/// <param name="binaryFilePath">Input CIP file path</param>
-	internal static SiPolicy ConvertBinaryToXmlFile(string binaryFilePath)
+	internal static readonly Dictionary<OptionType, Setting> RuleToSettingMapping = new()
 	{
-		byte[] cipContent = ExtractCipContent(binaryFilePath);
-		using MemoryStream memoryStream = new(cipContent);
-		using BinaryReader reader = new(memoryStream, Encoding.Unicode, leaveOpen: false);
-
-		SiPolicy policy = ParseSiPolicy(reader);
-
-		// PolicyTypeID is not needed in the XML, clear it
-		policy.PolicyTypeID = null;
-
-		// Serialize it because we need to pass the SiPolicy obj to
-		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
-
-		// Deserialize it because we need to normalize the content such as empty or whitespaces values for File Rules etc.
-		// The policy will essentially pass from Serialization and Deserialization, each including many layers of checks for correctness.
-		return CustomDeserialization.DeserializeSiPolicy(null, xmlObj);
-	}
-
-	private static byte[] ExtractCipContent(string binaryFilePath)
-	{
-		byte[] fileBytes = File.ReadAllBytes(binaryFilePath);
-		SignedCms signedCms = new();
-		try
 		{
-			// Try to parse as PKCS#7 SignedData. If Decode fails, the file is a raw CIP payload.
-			signedCms.Decode(fileBytes);
+			OptionType.DisabledDefaultWindowsCertificateRemapping,
+			new Setting(
+				provider: "Microsoft",
+				key: "PolicySettings",
+				valueName: "DisabledDefaultWindowsCertificateRemappingValueName",
+				value: new SettingValueType(item: true)
+			)
 		}
-		catch (CryptographicException)
-		{
-			// Not a signed file, assume it's the raw CIP content.
-			return fileBytes;
-		}
-
-		Logger.Write(Atlas.GetStr("LogCIPFileIsSigned"));
-
-		// The SignedData content type must be the Secure Boot policy OID, and the signature must be cryptographically valid.
-		if (!string.Equals(signedCms.ContentInfo.ContentType.Value, CommonCore.Signing.Structure.CodeIntegrityOID, StringComparison.OrdinalIgnoreCase))
-		{
-			throw new InvalidOperationException($"Signed policy content type '{signedCms.ContentInfo.ContentType.Value}' does not match the expected Secure Boot policy OID '{CommonCore.Signing.Structure.CodeIntegrityOID}'.");
-		}
-		signedCms.CheckSignature(true);
-
-		byte[] content = signedCms.ContentInfo.Content;
-		if (content.Length == 0)
-		{
-			throw new InvalidOperationException("Signed policy contains no content.");
-		}
-
-		if (content[0] != 0x04)
-		{
-			return content;
-		}
-
-		try
-		{
-			// Some signed policies wrap the CIP payload in a DER OCTET STRING. Unwrap it before parsing
-			// so signed and unsigned policies feed the same raw binary format into the reverse converter.
-			AsnReader asnReader = new(content, AsnEncodingRules.DER);
-			return asnReader.ReadOctetString();
-		}
-		catch (AsnContentException ex)
-		{
-			throw new InvalidOperationException("Signed policy content appears to be an ASN.1 OCTET STRING but is malformed.", ex);
-		}
-	}
+	};
 
 	/// <summary>
 	/// Parses the binary .cip file content to reconstruct the SiPolicy C# object.
 	/// Handles all versioned blocks and structure.
 	/// </summary>
-	internal static SiPolicy ParseSiPolicy(BinaryReader reader)
+	internal static SiPolicy ParseSiPolicy(BinaryReader reader, Func<string, string> GetString)
 	{
 		// HEADER PARSING
 		_ = reader.BaseStream.Seek(0, SeekOrigin.Begin);
@@ -140,7 +76,7 @@ internal static class BinaryOpsReverse
 		uint bodyOffset = reader.ReadUInt32();
 		if (bodyOffset + 4 > reader.BaseStream.Length)
 		{
-			throw new InvalidOperationException(Atlas.GetStr("ErrorBodyOffsetInvalid"));
+			throw new InvalidOperationException(GetString("ErrorBodyOffsetInvalid"));
 		}
 
 		SiPolicy policy = new(
@@ -202,7 +138,7 @@ internal static class BinaryOpsReverse
 				0 => new Deny(id: id) { FileName = fn, MinimumFileVersion = minVer, Hash = hash },
 				1 => new Allow(id: id) { FileName = fn, MinimumFileVersion = minVer, Hash = hash },
 				2 => new FileAttrib(id: id) { FileName = fn, MinimumFileVersion = minVer, Hash = hash },
-				_ => throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorUnknownFileRuleType"), type))
+				_ => throw new InvalidOperationException(string.Format(GetString("ErrorUnknownFileRuleType"), type))
 			};
 			fileRules[i] = fr;
 		}
@@ -265,7 +201,7 @@ internal static class BinaryOpsReverse
 				// Keep binary secure settings in the same ReadOnlyMemory<byte> shape used by the SiPolicy model.
 				2 => new ReadOnlyMemory<byte>(ReadCountedAlignedBytes(reader)),
 				3 => ReadStringValue(reader),
-				_ => throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorUnknownSettingType"), t))
+				_ => throw new InvalidOperationException(string.Format(GetString("ErrorUnknownSettingType"), t))
 			};
 
 			if (prov is null || key is null || valName is null || data is null)
@@ -275,7 +211,7 @@ internal static class BinaryOpsReverse
 			// Reverse conversion has to recognize those secure settings and restore the original RuleType, otherwise XML to CIP to XML
 			// would change a rule option into a raw Setting and the policy would no longer round-trip semantically.
 			bool settingMappedToRule = false;
-			foreach (KeyValuePair<OptionType, Setting> mappedRule in Helper.RuleToSettingMapping)
+			foreach (KeyValuePair<OptionType, Setting> mappedRule in RuleToSettingMapping)
 			{
 				Setting mappedSetting = mappedRule.Value;
 
@@ -309,7 +245,7 @@ internal static class BinaryOpsReverse
 		if (version >= 3)
 		{
 			uint tag3 = reader.ReadUInt32();
-			if (tag3 != 3) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV3BlockTagGot"), tag3));
+			if (tag3 != 3) throw new InvalidOperationException(string.Format(GetString("ErrorExpectedV3BlockTagGot"), tag3));
 			for (int i = 0; i < fileRuleCount; i++)
 			{
 				uint maxL = reader.ReadUInt32();
@@ -350,7 +286,7 @@ internal static class BinaryOpsReverse
 		if (version >= 4)
 		{
 			uint tag4 = reader.ReadUInt32();
-			if (tag4 != 4) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV4BlockTagGot"), tag4));
+			if (tag4 != 4) throw new InvalidOperationException(string.Format(GetString("ErrorExpectedV4BlockTagGot"), tag4));
 			for (int i = 0; i < fileRuleCount; i++)
 			{
 				string? internalName = ReadStringValue(reader);
@@ -383,7 +319,7 @@ internal static class BinaryOpsReverse
 		if (version >= 5)
 		{
 			uint tag5 = reader.ReadUInt32();
-			if (tag5 != 5) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV5BlockTagGot"), tag5));
+			if (tag5 != 5) throw new InvalidOperationException(string.Format(GetString("ErrorExpectedV5BlockTagGot"), tag5));
 			for (int i = 0; i < fileRuleCount; i++)
 			{
 				string? pfn = ReadStringValue(reader);
@@ -421,7 +357,7 @@ internal static class BinaryOpsReverse
 		if (version >= 6)
 		{
 			uint tag6 = reader.ReadUInt32();
-			if (tag6 != 6) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV6BlockTagGot"), tag6));
+			if (tag6 != 6) throw new InvalidOperationException(string.Format(GetString("ErrorExpectedV6BlockTagGot"), tag6));
 			policy.PolicyID = new Guid(reader.ReadBytes(16)).ToString("B").ToUpperInvariant();
 			policy.BasePolicyID = new Guid(reader.ReadBytes(16)).ToString("B").ToUpperInvariant();
 			policy.PolicyType = string.Equals(policy.PolicyID, policy.BasePolicyID, StringComparison.OrdinalIgnoreCase)
@@ -436,7 +372,7 @@ internal static class BinaryOpsReverse
 		if (version >= 7)
 		{
 			uint tag7 = reader.ReadUInt32();
-			if (tag7 != 7) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV7BlockTagGot"), tag7));
+			if (tag7 != 7) throw new InvalidOperationException(string.Format(GetString("ErrorExpectedV7BlockTagGot"), tag7));
 			for (int i = 0; i < fileRuleCount; i++)
 			{
 				string? filePath = ReadStringValue(reader);
@@ -453,7 +389,7 @@ internal static class BinaryOpsReverse
 		if (version >= 8)
 		{
 			uint tag8 = reader.ReadUInt32();
-			if (tag8 != 8) throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorExpectedV8BlockTagGot"), tag8));
+			if (tag8 != 8) throw new InvalidOperationException(string.Format(GetString("ErrorExpectedV8BlockTagGot"), tag8));
 			policy.AppSettings = ParseAppSettings(reader);
 		}
 
@@ -575,7 +511,7 @@ internal static class BinaryOpsReverse
 		uint endTag = reader.ReadUInt32();
 		if (endTag < expectedEndTag)
 		{
-			throw new InvalidOperationException(string.Format(Atlas.GetStr("WarningReverseConvertingNewerPolicyVersion"), expectedEndTag, endTag));
+			throw new InvalidOperationException(string.Format(GetString("WarningReverseConvertingNewerPolicyVersion"), expectedEndTag, endTag));
 		}
 
 		return policy;
@@ -928,66 +864,4 @@ internal static class BinaryOpsReverse
 		ushort* p = (ushort*)&version;
 		return $"{p[Idx0]}.{p[Idx1]}.{p[Idx2]}.{p[Idx3]}";
 	}
-
-	/// <summary>
-	/// Converts in-memory raw or PKCS#7-wrapped CIP content into its <see cref="SiPolicy"/> representation.
-	/// </summary>
-	/// <param name="binaryContent">The exact policy bytes.</param>
-	internal static SiPolicy ConvertBinaryToXmlFile(ReadOnlyMemory<byte> binaryContent)
-	{
-		byte[] cipContent = ExtractCipContent(binaryContent);
-		using MemoryStream memoryStream = new(cipContent, writable: false);
-		using BinaryReader reader = new(memoryStream, Encoding.Unicode, leaveOpen: false);
-		SiPolicy policy = ParseSiPolicy(reader);
-		policy.PolicyTypeID = null;
-		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
-		return CustomDeserialization.DeserializeSiPolicy(null, xmlObj);
-	}
-
-	/// <summary>
-	/// Extracts raw CIP content from in-memory raw or PKCS#7-wrapped policy bytes.
-	/// </summary>
-	/// <param name="binaryContent">The exact policy bytes.</param>
-	internal static byte[] ExtractCipContent(ReadOnlyMemory<byte> binaryContent)
-	{
-		byte[] fileBytes = binaryContent.ToArray();
-		SignedCms signedCms = new();
-		try
-		{
-			signedCms.Decode(fileBytes);
-		}
-		catch (CryptographicException)
-		{
-			return fileBytes;
-
-		}
-		Logger.Write(Atlas.GetStr("LogCIPFileIsSigned"));
-
-		if (!string.Equals(signedCms.ContentInfo.ContentType.Value, CommonCore.Signing.Structure.CodeIntegrityOID, StringComparison.OrdinalIgnoreCase))
-		{
-			throw new InvalidOperationException($"Signed policy content type '{signedCms.ContentInfo.ContentType.Value}' does not match the expected Secure Boot policy OID '{CommonCore.Signing.Structure.CodeIntegrityOID}'.");
-		}
-
-		signedCms.CheckSignature(true);
-
-		byte[] content = signedCms.ContentInfo.Content;
-		if (content.Length == 0)
-		{
-			throw new InvalidOperationException("Signed policy contains no content.");
-		}
-		if (content[0] != 0x04)
-		{
-			return content;
-		}
-		try
-		{
-			AsnReader asnReader = new(content, AsnEncodingRules.DER);
-			return asnReader.ReadOctetString();
-		}
-		catch (AsnContentException ex)
-		{
-			throw new InvalidOperationException("Signed policy content appears to be an ASN.1 OCTET STRING but is malformed.", ex);
-		}
-	}
-
 }

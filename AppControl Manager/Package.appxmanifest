@@ -20,6 +20,7 @@
   xmlns:uap17="http://schemas.microsoft.com/appx/manifest/uap/windows10/17"
   xmlns:uap18="http://schemas.microsoft.com/appx/manifest/uap/windows10/18"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:desktop2="http://schemas.microsoft.com/appx/manifest/desktop/windows10/2"
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
@@ -154,8 +155,30 @@
             <uap:InfoTip>Open a .cip binary in the Policy Editor</uap:InfoTip>
             <uap:EditFlags OpenIsSafe="true"/>
             <uap:Logo>Assets\External\CIPIcon.png</uap:Logo>
+
+            <!--
+            CIP Preview Handler: shows CIP policy details in the File Explorer preview pane.
+            The Clsid must match the com:Class Id in the SurrogateServer below,
+            which is the [Guid] of the CipPreviewHandler class in the native DLL.
+            -->
+            <desktop2:DesktopPreviewHandler Clsid="C1F0A2D4-3B56-47E8-9A1C-2D8E5F6B0A73"
+                                            desktop10:DisplayName="AppControl Manager CIP Preview Handler" />
+
           </uap:FileTypeAssociation>
         </uap:Extension>
+
+        <!--
+        COM registration for the CIP Preview Handler DLL. SystemSurrogate="PreviewHost" routes activation through
+        the in-box preview host (prevhost.exe), which is the supported, elevation-free way to host a preview handler
+        from an MSIX package. The Path is relative to the package root.
+        -->
+        <com:Extension Category="windows.comServer">
+          <com:ComServer>
+            <com:SurrogateServer DisplayName="AppControl Manager CIP Preview Handler" SystemSurrogate="PreviewHost">
+              <com:Class Id="C1F0A2D4-3B56-47E8-9A1C-2D8E5F6B0A73" Path="PreviewHandler\CipPreviewHandler.dll" ThreadingModel="STA" />
+            </com:SurrogateServer>
+          </com:ComServer>
+        </com:Extension>
 
        <!-- Context Menu entry -->
        <desktop4:Extension Category="windows.fileExplorerContextMenus">

@@ -15,7 +15,11 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Formats.Asn1;
 using System.IO;
+using System.Security.Cryptography;
+using System.Security.Cryptography.Pkcs;
+using System.Text;
 using System.Xml;
 using AppControlManager.Main;
 
@@ -72,6 +76,139 @@ internal static class Management
 		CiPolicyTest.TestCiPolicy(filePath);
 	}
 
+	/// <summary>
+	/// Converts in-memory raw or PKCS#7-wrapped CIP content into its <see cref="SiPolicy"/> representation.
+	/// </summary>
+	/// <param name="binaryContent">The exact policy bytes.</param>
+	internal static SiPolicy ConvertBinaryToXmlFile(ReadOnlyMemory<byte> binaryContent)
+	{
+		byte[] cipContent = ExtractCipContent(binaryContent);
+		using MemoryStream memoryStream = new(cipContent, writable: false);
+		using BinaryReader reader = new(memoryStream, Encoding.Unicode, leaveOpen: false);
+		SiPolicy policy = BinaryOpsReverse.ParseSiPolicy(reader, Atlas.GetStr);
+		policy.PolicyTypeID = null;
+		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
+		return CustomDeserialization.DeserializeSiPolicy(null, xmlObj);
+	}
+
+	/// <summary>
+	/// Extracts raw CIP content from in-memory raw or PKCS#7-wrapped policy bytes.
+	/// </summary>
+	/// <param name="binaryContent">The exact policy bytes.</param>
+	internal static byte[] ExtractCipContent(ReadOnlyMemory<byte> binaryContent)
+	{
+		byte[] fileBytes = binaryContent.ToArray();
+		SignedCms signedCms = new();
+		try
+		{
+			signedCms.Decode(fileBytes);
+		}
+		catch (CryptographicException)
+		{
+			return fileBytes;
+
+		}
+		Logger.Write(Atlas.GetStr("LogCIPFileIsSigned"));
+
+		if (!string.Equals(signedCms.ContentInfo.ContentType.Value, CommonCore.Signing.Structure.CodeIntegrityOID, StringComparison.OrdinalIgnoreCase))
+		{
+			throw new InvalidOperationException($"Signed policy content type '{signedCms.ContentInfo.ContentType.Value}' does not match the expected Secure Boot policy OID '{CommonCore.Signing.Structure.CodeIntegrityOID}'.");
+		}
+
+		signedCms.CheckSignature(true);
+
+		byte[] content = signedCms.ContentInfo.Content;
+		if (content.Length == 0)
+		{
+			throw new InvalidOperationException("Signed policy contains no content.");
+		}
+		if (content[0] != 0x04)
+		{
+			return content;
+		}
+		try
+		{
+			AsnReader asnReader = new(content, AsnEncodingRules.DER);
+			return asnReader.ReadOctetString();
+		}
+		catch (AsnContentException ex)
+		{
+			throw new InvalidOperationException("Signed policy content appears to be an ASN.1 OCTET STRING but is malformed.", ex);
+		}
+	}
+
+	/// <summary>
+	/// Entry point to convert a binary .cip file into its XML representation.
+	/// Reads, parses, and serializes the policy object.
+	/// </summary>
+	/// <param name="binaryFilePath">Input CIP file path</param>
+	internal static SiPolicy ConvertBinaryToXmlFile(string binaryFilePath)
+	{
+		byte[] cipContent = ExtractCipContent(binaryFilePath);
+		using MemoryStream memoryStream = new(cipContent);
+		using BinaryReader reader = new(memoryStream, Encoding.Unicode, leaveOpen: false);
+
+		SiPolicy policy = BinaryOpsReverse.ParseSiPolicy(reader, Atlas.GetStr);
+
+		// PolicyTypeID is not needed in the XML, clear it
+		policy.PolicyTypeID = null;
+
+		// Serialize it because we need to pass the SiPolicy obj to
+		XmlDocument xmlObj = CustomSerialization.CreateXmlFromSiPolicy(policy);
+
+		// Deserialize it because we need to normalize the content such as empty or whitespaces values for File Rules etc.
+		// The policy will essentially pass from Serialization and Deserialization, each including many layers of checks for correctness.
+		return CustomDeserialization.DeserializeSiPolicy(null, xmlObj);
+	}
+
+	private static byte[] ExtractCipContent(string binaryFilePath)
+	{
+		byte[] fileBytes = File.ReadAllBytes(binaryFilePath);
+		SignedCms signedCms = new();
+		try
+		{
+			// Try to parse as PKCS#7 SignedData. If Decode fails, the file is a raw CIP payload.
+			signedCms.Decode(fileBytes);
+		}
+		catch (CryptographicException)
+		{
+			// Not a signed file, assume it's the raw CIP content.
+			return fileBytes;
+		}
+
+		Logger.Write(Atlas.GetStr("LogCIPFileIsSigned"));
+
+		// The SignedData content type must be the Secure Boot policy OID, and the signature must be cryptographically valid.
+		if (!string.Equals(signedCms.ContentInfo.ContentType.Value, CommonCore.Signing.Structure.CodeIntegrityOID, StringComparison.OrdinalIgnoreCase))
+		{
+			throw new InvalidOperationException($"Signed policy content type '{signedCms.ContentInfo.ContentType.Value}' does not match the expected Secure Boot policy OID '{CommonCore.Signing.Structure.CodeIntegrityOID}'.");
+		}
+		signedCms.CheckSignature(true);
+
+		byte[] content = signedCms.ContentInfo.Content;
+		if (content.Length == 0)
+		{
+			throw new InvalidOperationException("Signed policy contains no content.");
+		}
+
+		if (content[0] != 0x04)
+		{
+			return content;
+		}
+
+		try
+		{
+			// Some signed policies wrap the CIP payload in a DER OCTET STRING. Unwrap it before parsing
+			// so signed and unsigned policies feed the same raw binary format into the reverse converter.
+			AsnReader asnReader = new(content, AsnEncodingRules.DER);
+			return asnReader.ReadOctetString();
+		}
+		catch (AsnContentException ex)
+		{
+			throw new InvalidOperationException("Signed policy content appears to be an ASN.1 OCTET STRING but is malformed.", ex);
+		}
+	}
+
 	// For Unit testing
 
 #if DEBUG
@@ -124,7 +261,7 @@ internal static class Management
 		byte[] firstBinary = ConvertXMLToBinary(firstPolicy);
 		File.WriteAllBytes(firstBinaryPath, firstBinary);
 
-		SiPolicy firstReversedPolicy = BinaryOpsReverse.ConvertBinaryToXmlFile(firstBinaryPath);
+		SiPolicy firstReversedPolicy = ConvertBinaryToXmlFile(firstBinaryPath);
 		XmlDocument firstRoundTripXml = CustomSerialization.CreateXmlFromSiPolicy(firstReversedPolicy);
 		firstRoundTripXml.Save(firstRoundTripXmlPath);
 		CiPolicyTest.TestCiPolicy(firstRoundTripXmlPath);
@@ -133,7 +270,7 @@ internal static class Management
 		byte[] secondBinary = ConvertXMLToBinary(secondPolicy);
 		File.WriteAllBytes(secondBinaryPath, secondBinary);
 
-		SiPolicy secondReversedPolicy = BinaryOpsReverse.ConvertBinaryToXmlFile(secondBinaryPath);
+		SiPolicy secondReversedPolicy = ConvertBinaryToXmlFile(secondBinaryPath);
 		XmlDocument secondRoundTripXml = CustomSerialization.CreateXmlFromSiPolicy(secondReversedPolicy);
 		secondRoundTripXml.Save(secondRoundTripXmlPath);
 		CiPolicyTest.TestCiPolicy(secondRoundTripXmlPath);

@@ -17,10 +17,12 @@
 
 namespace CommonCore.Others;
 
+#pragma warning disable CA1515
+
 /// <summary>
 /// A class used to throw a custom exception when no valid files are found for scanning or performing other relevant tasks in the application.
 /// </summary>
-internal sealed class NoValidFilesSelectedException : Exception
+public sealed class NoValidFilesSelectedException : Exception
 {
 	/// <summary>
 	/// Initializes a new instance of the NoValidFilesSelectedException class. This constructor does not take any

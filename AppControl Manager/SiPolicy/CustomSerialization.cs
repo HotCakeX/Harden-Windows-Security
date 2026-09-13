@@ -143,7 +143,7 @@ internal static class CustomSerialization
 				if (!string.IsNullOrEmpty(artifactRule.ArtifactDescription)) artifactRuleElement.SetAttribute("ArtifactDescription", artifactRule.ArtifactDescription);
 				if (!string.IsNullOrEmpty(artifactRule.MinimumVersion) && !string.Equals(artifactRule.MinimumVersion, "0.0.0.0", StringComparison.OrdinalIgnoreCase))
 					artifactRuleElement.SetAttribute("MinimumVersion", artifactRule.MinimumVersion);
-				if (!string.IsNullOrEmpty(artifactRule.MaximumVersion) && !string.Equals(artifactRule.MaximumVersion, Helper.DefaultMaxVersion, StringComparison.OrdinalIgnoreCase))
+				if (!string.IsNullOrEmpty(artifactRule.MaximumVersion) && !string.Equals(artifactRule.MaximumVersion, Atlas.DefaultMaxVersion, StringComparison.OrdinalIgnoreCase))
 					artifactRuleElement.SetAttribute("MaximumVersion", artifactRule.MaximumVersion);
 
 				if (artifactRule.ArtifactHash?.Hash is not null && !artifactRule.ArtifactHash.Hash.Item.IsEmpty)
@@ -517,7 +517,7 @@ internal static class CustomSerialization
 	}
 
 	// Helper for OptionType conversion
-	private static string ConvertOptionType(OptionType option) => option switch
+	internal static string ConvertOptionType(OptionType option) => option switch
 	{
 		OptionType.EnabledUMCI => "Enabled:UMCI",
 		OptionType.EnabledBootMenuProtection => "Enabled:Boot Menu Protection",
@@ -551,7 +551,7 @@ internal static class CustomSerialization
 	/// This is more efficient than using a switch for retrieving the strings
 	/// but only for cases where the enum values are contiguous and start from 0, which is the case for <see cref="PolicyType"/>.
 	/// </summary>
-	private static readonly string[] s_policyTypeLabels = [
+	internal static readonly string[] s_policyTypeLabels = [
 		"Base Policy",
 		"Supplemental Policy",
 		"AppID Tagging Policy",

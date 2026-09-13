@@ -286,6 +286,13 @@
         <Content Include="Shell\Shell.dll">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+
+        <!-- The native CIP Preview Handler DLL. Built by the EnsureCipPreviewHandlerDll target below (or manually).
+             This exact path is referenced by the com:SurrogateServer in Package.appxmanifest. -->
+        <Content Include="PreviewHandler\CipPreviewHandler.dll">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+
         <None Include="..\LICENSE">
             <Pack>True</Pack>
             <PackagePath>\</PackagePath>
@@ -359,6 +366,24 @@
         <!-- Place the native executable in CppInterop for its existing Content item. -->
         <Error Condition="!Exists('$(_ComManagerPublishedExecutable)')" Text="ComManager was rebuilt, but '$(_ComManagerPublishedExecutable)' was not produced." />
         <Copy SourceFiles="$(_ComManagerPublishedExecutable)" DestinationFiles="$(MSBuildProjectDirectory)\CppInterop\ComManager.exe" />
+    </Target>
+
+    <!-- Build the native CIP Preview Handler DLL only when it is missing from the PreviewHandler directory. -->
+    <Target Name="EnsureCipPreviewHandlerDll" BeforeTargets="PrepareForBuild" Condition="'$(HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds)' != 'true' AND !Exists('$(MSBuildProjectDirectory)\PreviewHandler\CipPreviewHandler.dll')">
+        <PropertyGroup>
+            <_CipPreviewHandlerProject>$(MSBuildProjectDirectory)\eXclude\CipPreviewHandler\CipPreviewHandler.csproj</_CipPreviewHandlerProject>
+            <_CipPreviewHandlerProfile Condition="'$(Platform)' == 'x64'">win-x64</_CipPreviewHandlerProfile>
+            <_CipPreviewHandlerProfile Condition="'$(Platform)' == 'arm64'">win-arm64</_CipPreviewHandlerProfile>
+            <_CipPreviewHandlerOutputDir Condition="'$(Platform)' == 'x64'">$(MSBuildProjectDirectory)\eXclude\CipPreviewHandler\OutputX64</_CipPreviewHandlerOutputDir>
+            <_CipPreviewHandlerOutputDir Condition="'$(Platform)' == 'arm64'">$(MSBuildProjectDirectory)\eXclude\CipPreviewHandler\OutputARM64</_CipPreviewHandlerOutputDir>
+            <_CipPreviewHandlerDll>$(_CipPreviewHandlerOutputDir)\CipPreviewHandler.dll</_CipPreviewHandlerDll>
+        </PropertyGroup>
+        <Error Condition="'$(_CipPreviewHandlerProfile)' == ''" Text="CipPreviewHandler supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
+        <Error Condition="!Exists('$(_CipPreviewHandlerProject)')" Text="The CipPreviewHandler project was not found at '$(_CipPreviewHandlerProject)'." />
+        <Exec Command="dotnet publish &quot;$(_CipPreviewHandlerProject)&quot; /p:PublishProfile=$(_CipPreviewHandlerProfile)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <Error Condition="!Exists('$(_CipPreviewHandlerDll)')" Text="CipPreviewHandler was built, but '$(_CipPreviewHandlerDll)' was not produced." />
+        <MakeDir Directories="$(MSBuildProjectDirectory)\PreviewHandler" />
+        <Copy SourceFiles="$(_CipPreviewHandlerDll)" DestinationFiles="$(MSBuildProjectDirectory)\PreviewHandler\CipPreviewHandler.dll" />
     </Target>
 
 </Project>

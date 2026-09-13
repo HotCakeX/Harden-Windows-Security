@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Library</OutputType>
+        <RootNamespace>CipPreviewHandler</RootNamespace>
+        <AssemblyName>CipPreviewHandler</AssemblyName>
+        <Platforms>x64;ARM64</Platforms>
+        <Configurations>Debug;Release</Configurations>
+        <PublishAot>true</PublishAot>
+        <PublishTrimmed>True</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+        <TrimmerSingleWarn>false</TrimmerSingleWarn>
+        <StackTraceSupport>false</StackTraceSupport>
+        <OptimizationPreference>Size</OptimizationPreference>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <NuGetAuditMode>all</NuGetAuditMode>
+        <NuGetAuditLevel>low</NuGetAuditLevel>
+        <IsAotCompatible>true</IsAotCompatible>
+        <!--
+		This is the key that turns the class library into a real native Windows DLL (a shared library) that exports
+		our [UnmanagedCallersOnly] entry points (DllGetClassObject, DllCanUnloadNow, DllRegisterServer,
+		DllUnregisterServer). Without it, publishing would produce a managed assembly instead of a native DLL.
+		https://learn.microsoft.com/dotnet/core/deploying/native-aot/libraries
+		-->
+        <NativeLib>Shared</NativeLib>
+        <AssemblyTitle>AppControl Manager CIP Preview Handler</AssemblyTitle>
+        <AssemblyProduct>AppControlManager</AssemblyProduct>
+        <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.12" />
+    </ItemGroup>
+    <!-- Bind the Win32 imports directly to the OS loader. -->
+    <ItemGroup>
+        <DirectPInvoke Include="USER32" />
+        <DirectPInvoke Include="ADVAPI32" />
+        <DirectPInvoke Include="OLE32" />
+        <DirectPInvoke Include="KERNEL32" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="..\..\SiPolicy\CustomSerialization.cs" Link="Linked\CustomSerialization.cs" />
+        <Compile Include="..\..\SiPolicy\SiPolicy.cs" Link="Linked\SiPolicy.cs" />
+        <Compile Include="..\..\SiPolicy\BinaryOpsReverse.cs" Link="Linked\BinaryOpsReverse.cs" />
+    </ItemGroup>
+    <!-- Imports the Common Core -->
+    <Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />
+</Project>

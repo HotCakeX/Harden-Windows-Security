@@ -259,7 +259,7 @@ internal sealed class ArtifactRule(string id, ArtifactTypeType artifactType, Art
 	internal string? ArtifactName { get; set; }
 	internal string? ArtifactDescription { get; set; }
 	internal string? MinimumVersion { get; set; } = "0.0.0.0";
-	internal string? MaximumVersion { get; set; } = "65535.65535.65535.65535";
+	internal string? MaximumVersion { get; set; } = Atlas.DefaultMaxVersion;
 	internal ArtifactHashType? ArtifactHash { get; set; }
 }
 

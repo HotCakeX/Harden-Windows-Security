@@ -183,7 +183,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 							throw new InvalidOperationException($"The OMA setting payload is too short to be a CIP policy. Decoded length: {policyBytes.Length} bytes.");
 						}
 
-						SiPolicy.SiPolicy policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile((ReadOnlyMemory<byte>)policyBytes);
+						SiPolicy.SiPolicy policyObj = Management.ConvertBinaryToXmlFile((ReadOnlyMemory<byte>)policyBytes);
 						bool isSignedPolicy = !policyObj.Rules.Any(rule => rule.Item == OptionType.EnabledUnsignedSystemIntegrityPolicy);
 						List<string> policyOptions = new(policyObj.Rules.Count);
 						foreach (RuleType rule in CollectionsMarshal.AsSpan(policyObj.Rules))

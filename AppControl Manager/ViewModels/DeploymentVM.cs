@@ -571,7 +571,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 					MainInfoBar.WriteInfo(Atlas.GetStr("DeployingCIPFile") + file + "'");
 
 					// Convert the CIP to a SiPolicy object
-					SiPolicy.SiPolicy policyObj = BinaryOpsReverse.ConvertBinaryToXmlFile(file);
+					SiPolicy.SiPolicy policyObj = Management.ConvertBinaryToXmlFile(file);
 
 					if (DeployToIntune)
 					{

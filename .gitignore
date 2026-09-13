@@ -43,3 +43,6 @@
 
 # Exe Files
 *.[eE][xX][eE]
+
+# DLL
+AppControl Manager/PreviewHandler/CipPreviewHandler.dll

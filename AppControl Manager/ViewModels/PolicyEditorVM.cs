@@ -759,7 +759,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		if (string.Equals(fileExt, ".cip", StringComparison.OrdinalIgnoreCase))
 		{
 			return new SiPolicy.PolicyFileRepresent(
-				policyObj: BinaryOpsReverse.ConvertBinaryToXmlFile(filePath),
+				policyObj: Management.ConvertBinaryToXmlFile(filePath),
 				kind: PolicyFileRepresentKind.CIP)
 			{
 				FilePath = filePath
@@ -777,7 +777,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		else if (string.Equals(fileExt, ".p7b", StringComparison.OrdinalIgnoreCase))
 		{
 			return new SiPolicy.PolicyFileRepresent(
-				policyObj: BinaryOpsReverse.ConvertBinaryToXmlFile(filePath),
+				policyObj: Management.ConvertBinaryToXmlFile(filePath),
 				kind: PolicyFileRepresentKind.P7B)
 			{
 				FilePath = filePath
@@ -786,7 +786,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 		else if (string.Equals(fileExt, ".bin", StringComparison.OrdinalIgnoreCase))
 		{
 			return new SiPolicy.PolicyFileRepresent(
-				policyObj: BinaryOpsReverse.ConvertBinaryToXmlFile(filePath),
+				policyObj: Management.ConvertBinaryToXmlFile(filePath),
 				kind: PolicyFileRepresentKind.BIN)
 			{
 				FilePath = filePath

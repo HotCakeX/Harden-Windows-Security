@@ -471,6 +471,11 @@ internal struct POINT
 	internal int y;
 }
 
+/// <summary>
+/// Win32 RECT: https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect
+/// The Width and Height are computed unchecked because a checked subtraction of two large screen
+/// coordinates could throw an OverflowException.
+/// </summary>
 [StructLayout(LayoutKind.Sequential)]
 internal struct RECT
 {
@@ -478,6 +483,9 @@ internal struct RECT
 	internal int top;
 	internal int right;
 	internal int bottom;
+
+	internal readonly int Width => unchecked(right - left);
+	internal readonly int Height => unchecked(bottom - top);
 }
 
 /// <summary>
@@ -2370,4 +2378,126 @@ internal partial interface IClassFactory
 	/// </summary>
 	[PreserveSig]
 	int LockServer(int fLock);
+}
+
+/// <summary>
+/// Lets the host provide the handler with the site (frame) object.
+/// </summary>
+[GeneratedComInterface]
+[Guid("FC4801A3-2BA9-11CF-A229-00AA003D7352")]
+internal partial interface IObjectWithSite
+{
+	[PreserveSig]
+	int SetSite(nint pUnkSite);
+
+	[PreserveSig]
+	int GetSite(in Guid riid, out nint ppvSite);
+}
+
+/// <summary>
+/// Provides the handle to the preview window.
+/// </summary>
+[GeneratedComInterface]
+[Guid("00000114-0000-0000-C000-000000000046")]
+internal partial interface IOleWindow
+{
+	[PreserveSig]
+	int GetWindow(out nint phwnd);
+
+	[PreserveSig]
+	int ContextSensitiveHelp(int fEnterMode);
+}
+
+/// <summary>
+/// The core preview handler contract used to render the preview into the host supplied window area.
+/// </summary>
+[GeneratedComInterface]
+[Guid("8895B1C6-B41F-4C1C-A562-0D564250836F")]
+internal partial interface IPreviewHandler
+{
+	[PreserveSig]
+	int SetWindow(nint hwnd, in RECT prc);
+
+	[PreserveSig]
+	int SetRect(in RECT prc);
+
+	[PreserveSig]
+	int DoPreview();
+
+	[PreserveSig]
+	int Unload();
+
+	[PreserveSig]
+	int SetFocus();
+
+	[PreserveSig]
+	int QueryFocus(out nint phwnd);
+
+	[PreserveSig]
+	int TranslateAccelerator(in MSG pmsg);
+}
+
+/// <summary>
+/// Win32 MSG.
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct MSG
+{
+	internal nint Hwnd;
+	internal uint Message;
+	internal nuint WParam;
+	internal nint LParam;
+	internal uint Time;
+	internal POINT Pt;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct WNDCLASSEXW
+{
+	internal uint cbSize;
+	internal uint style;
+	internal nint lpfnWndProc;
+	internal int cbClsExtra;
+	internal int cbWndExtra;
+	internal nint hInstance;
+	internal nint hIcon;
+	internal nint hCursor;
+	internal nint hbrBackground;
+	internal nint lpszMenuName;
+	internal nint lpszClassName;
+	internal nint hIconSm;
+}
+
+// The base CHARFORMATW (Rich Edit) structure. cbSize is set to sizeof(CHARFORMATW) which tells the control to use
+// only these base members (bold / size / face / text color), which is all the preview needs. Using the base
+// structure avoids the alignment subtleties of the CHARFORMAT2W extension. szFaceName is an inline 32 WCHAR
+// buffer so the whole struct stays blittable (total size is 92 bytes).
+[StructLayout(LayoutKind.Sequential)]
+internal struct CHARFORMATW
+{
+	internal uint cbSize;
+	internal uint dwMask;
+	internal uint dwEffects;
+	internal int yHeight;   // character height in twips (1/20 point)
+	internal int yOffset;
+	internal uint crTextColor;
+	internal byte bCharSet;
+	internal byte bPitchAndFamily;
+	internal fixed char szFaceName[32];
+}
+
+// The base PARAFORMAT (Rich Edit) structure.
+[StructLayout(LayoutKind.Sequential)]
+internal struct PARAFORMAT
+{
+	internal uint cbSize;
+	internal uint dwMask;
+	internal ushort wNumbering;
+	internal ushort wReserved;
+	internal int dxStartIndent;
+	internal int dxRightIndent;
+	internal int dxOffset;
+	internal ushort wAlignment;
+	internal short cTabCount;
+	internal fixed int rgxTabs[32]; // The maximum number of tab stops a PARAFORMAT can hold.
 }

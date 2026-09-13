@@ -224,7 +224,7 @@ internal static class CustomDeserialization
 						ArtifactName = string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("ArtifactName")) ? null : artifactRuleElem.GetAttribute("ArtifactName"),
 						ArtifactDescription = string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("ArtifactDescription")) ? null : artifactRuleElem.GetAttribute("ArtifactDescription"),
 						MinimumVersion = artifactRuleElem.HasAttribute("MinimumVersion") && !string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("MinimumVersion")) ? artifactRuleElem.GetAttribute("MinimumVersion") : "0.0.0.0",
-						MaximumVersion = artifactRuleElem.HasAttribute("MaximumVersion") && !string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("MaximumVersion")) ? artifactRuleElem.GetAttribute("MaximumVersion") : Helper.DefaultMaxVersion
+						MaximumVersion = artifactRuleElem.HasAttribute("MaximumVersion") && !string.IsNullOrWhiteSpace(artifactRuleElem.GetAttribute("MaximumVersion")) ? artifactRuleElem.GetAttribute("MaximumVersion") : Atlas.DefaultMaxVersion
 					};
 
 					XmlElement? hashElement = artifactRuleElem["ArtifactHash", Atlas.SiPolicyNamespace]?["Hash", Atlas.SiPolicyNamespace];

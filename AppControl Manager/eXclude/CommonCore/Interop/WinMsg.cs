@@ -517,5 +517,12 @@ internal enum WinMsg
 	WM_COALESCE_FIRST = 0x0390,
 	WM_COALESCE_LAST = 0x039F,
 	WM_INTERNAL_DDE_FIRST = 0x03E0,
-	WM_INTERNAL_DDE_LAST = 0x03EF
+	WM_INTERNAL_DDE_LAST = 0x03EF,
+
+	// Rich Edit control messages (WM_USER + N). Unlike the base EDIT control messages above (which are standardized
+	// system-wide, below WM_USER), these live in the WM_USER-relative range that Rich Edit (Msftedit.dll /
+	// RICHEDIT50W) assigns its own meaning to.
+	EM_SETBKGNDCOLOR = 0x0443, // WM_USER + 67
+	EM_SETCHARFORMAT = 0x0444, // WM_USER + 68
+	EM_SETPARAFORMAT = 0x0447  // WM_USER + 71
 }

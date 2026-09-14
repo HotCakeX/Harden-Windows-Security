@@ -985,6 +985,32 @@
                             </Grid>
                         </Border>
 
+                        <!-- PENDING REBOOT OPERATIONS -->
+                        <Button Style="{StaticResource CardButtonStyle}" Click="{x:Bind ViewModel.OnPendingRebootClick}">
+                            <Grid Style="{StaticResource CardContentGridStyle}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <!-- Clickable Indicator -->
+                                <FontIcon Grid.Row="0"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Top"
+                                          FontSize="12"
+                                          Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                                          Glyph="&#xE76C;" />
+                                <StackPanel Style="{StaticResource CardHeaderStackStyle}">
+                                    <FontIcon Style="{StaticResource CardHeaderIconStyle}"
+                                              Glyph="&#xF305;"/>
+                                    <TextBlock Style="{StaticResource CardHeaderTextStyle}"
+                                               Text="Pending Reboot Operations"/>
+                                </StackPanel>
+                                <TextBlock Grid.Row="1"
+                                           Style="{StaticResource CardBodyTextStyle}"
+                                           Text="{x:Bind ViewModel.PendingRebootSummaryText, Mode=OneWay}"/>
+                            </Grid>
+                        </Button>
+
                     </ItemsControl>
 
                     <!-- spacer between sections -->

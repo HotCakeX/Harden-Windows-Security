@@ -2501,3 +2501,12 @@ internal struct PARAFORMAT
 	internal short cTabCount;
 	internal fixed int rgxTabs[32]; // The maximum number of tab stops a PARAFORMAT can hold.
 }
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct SP_DEVINFO_DATA
+{
+	internal uint cbSize;
+	internal Guid ClassGuid;
+	internal uint DevInst;
+	internal nint Reserved;
+}

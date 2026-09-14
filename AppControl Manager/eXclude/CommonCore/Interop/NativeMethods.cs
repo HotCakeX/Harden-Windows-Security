@@ -3991,4 +3991,28 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int SetWindowTheme(nint hwnd, string pszSubAppName, string? pszSubIdList);
 
+
+	[LibraryImport("setupapi.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetupDiEnumDeviceInfo(nint deviceInfoSet, uint memberIndex, ref SP_DEVINFO_DATA deviceInfoData);
+
+
+	[LibraryImport("setupapi.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SetupDiGetDeviceRegistryPropertyW(
+		nint deviceInfoSet,
+		ref SP_DEVINFO_DATA deviceInfoData,
+		uint property,
+		out uint propertyRegDataType,
+		nint propertyBuffer,
+		uint propertyBufferSize,
+		out uint requiredSize);
+
+
+	[LibraryImport("cfgmgr32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CM_Get_DevNode_Status(out uint pulStatus, out uint pulProblemNumber, uint dnDevInst, uint ulFlags);
+
 }

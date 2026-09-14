@@ -181,6 +181,18 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 			try
 			{
+				List<PendingRebootCheckItem> pendingRebootChecks = GetPendingRebootChecks();
+				int pendingRebootDetectedCount = pendingRebootChecks.Count(static item => item.Detected);
+				PendingRebootSummaryText = string.Create(CultureInfo.InvariantCulture, $"{pendingRebootDetectedCount} of {pendingRebootChecks.Count} Areas Detected");
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+				PendingRebootSummaryText = "Unavailable";
+			}
+
+			try
+			{
 				// Get USB History Count
 				List<UsbDeviceInfo> usbDevices = GetUsbDevices();
 				UsbDeviceCountText = string.Format(Atlas.GetStr("TotalUSBDevices"), usbDevices.Count);
@@ -299,6 +311,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	internal string SystemUuidText { get; private set => SP(ref field, value); } = DefaultText;
 	internal string BaseboardSerialText { get; private set => SP(ref field, value); } = DefaultText;
 	internal string ChassisIdentityText { get; private set => SP(ref field, value); } = DefaultText;
+	internal string PendingRebootSummaryText { get; private set => SP(ref field, value); } = DefaultText;
 
 #if HARDEN_SYSTEM_SECURITY
 	internal bool IsLiveGraphsWindowOpen
@@ -3016,6 +3029,290 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 		return string.Empty;
 	}
+
+	#region Pending Reboot Operations Detection
+
+	// One row for the Pending Reboot Operations dialog's ListView: the OS area that was checked, its
+	// detected/not-detected status text (with full evidence appended when detected), and
+	// whether that area was actually detected (used only for the tile's summary count).
+	private sealed record PendingRebootCheckItem(string Area, string Status, bool Detected);
+
+	/// <summary>
+	/// Handler for the Pending Reboot Operations tile click event.
+	/// Opens a dialog with a two-column list: the OS area checked, and its detected/not-detected status with full evidence.
+	/// </summary>
+	internal async void OnPendingRebootClick()
+	{
+		try
+		{
+			List<PendingRebootCheckItem> pendingRebootChecks = await Task.Run(GetPendingRebootChecks);
+
+			Grid headerGrid = new() { Margin = new Thickness(12, 0, 12, 4) };
+			headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(340) });
+			headerGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+			TextBlock headerAreaText = new() { Text = "Area of OS Checked", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold };
+			Grid.SetColumn(headerAreaText, 0);
+			TextBlock headerStatusText = new() { Text = "Status", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold };
+			Grid.SetColumn(headerStatusText, 1);
+			headerGrid.Children.Add(headerAreaText);
+			headerGrid.Children.Add(headerStatusText);
+
+			ListView pendingRebootListView = new()
+			{
+				SelectionMode = ListViewSelectionMode.None,
+				IsItemClickEnabled = false,
+				MaxHeight = 480
+			};
+
+			foreach (PendingRebootCheckItem item in CollectionsMarshal.AsSpan(pendingRebootChecks))
+			{
+				Grid rowGrid = new() { Padding = new Thickness(0, 6, 0, 6) };
+				rowGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(340) });
+				rowGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+
+				TextBlock areaText = new() { Text = item.Area, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(0, 0, 8, 0) };
+				Grid.SetColumn(areaText, 0);
+				TextBlock statusText = new() { Text = item.Status, TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true };
+				Grid.SetColumn(statusText, 1);
+
+				rowGrid.Children.Add(areaText);
+				rowGrid.Children.Add(statusText);
+
+				pendingRebootListView.Items.Add(rowGrid);
+			}
+
+			StackPanel contentPanel = new() { Spacing = 4 };
+			contentPanel.Children.Add(headerGrid);
+			contentPanel.Children.Add(pendingRebootListView);
+
+			using ContentDialogV2 pendingRebootDialog = new()
+			{
+				Title = "Pending Reboot Operations",
+				Content = contentPanel,
+				CloseButtonText = Atlas.GetStr("OK"),
+				DefaultButton = ContentDialogButton.Close
+			};
+
+			_ = await pendingRebootDialog.ShowAsync();
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	// Each area of the OS that can independently require a restart. Every check
+	// reports "Not detected" or "Detected" followed by the exact raw evidence.
+	private static List<PendingRebootCheckItem> GetPendingRebootChecks()
+	{
+		const string CbsPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing";
+		const string WindowsUpdatePath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update";
+		const string SessionManagerPath = @"SYSTEM\CurrentControlSet\Control\Session Manager";
+		const string ComputerNamePath = @"SYSTEM\CurrentControlSet\Control\ComputerName";
+		const string NetlogonPath = @"SYSTEM\CurrentControlSet\Services\Netlogon";
+		const string UpdatesPath = @"SOFTWARE\Microsoft\Updates";
+		const string InstallerPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer";
+		const string ServerManagerPath = @"SOFTWARE\Microsoft\ServerManager";
+		const string CcmRebootPath = @"SOFTWARE\Microsoft\CCM\RebootManagement\RebootData";
+
+		return new List<PendingRebootCheckItem>(13)
+		{
+			CreatePendingRebootCheck("Windows Servicing (Component-Based Servicing): restart flag",
+				RegistryKeyExists(CbsPath + @"\RebootPending"),
+				"Set by Windows servicing (CBS) after installing component packages that replace files currently in use."),
+			CreatePendingRebootCheck("Windows Servicing (Component-Based Servicing): restart processing state",
+				RegistryKeyExists(CbsPath + @"\RebootInProgress"),
+				"Set by Windows servicing (CBS) while a restart-driven servicing operation is being processed."),
+			CreatePendingRebootCheck("Windows Servicing (Component-Based Servicing): packages awaiting completion",
+				RegistryKeyExists(CbsPath + @"\PackagesPending"),
+				"Set by Windows servicing (CBS) when component packages remain in a pending state."),
+			CreatePendingRebootCheck("Windows Update: restart required flag",
+				RegistryKeyExists(WindowsUpdatePath + @"\RebootRequired"),
+				"Set by the Windows Update Agent after installing updates that require a restart to complete."),
+			CreatePendingRebootCheck("Windows Update: post-restart reporting state",
+				RegistryKeyExists(WindowsUpdatePath + @"\PostRebootReporting"),
+				"Set by the Windows Update Agent to report update status after the next restart."),
+			GetPendingFileOperationsCheck(SessionManagerPath),
+			GetComputerRenameCheck(ComputerNamePath),
+			GetDomainJoinCheck(NetlogonPath),
+			CreatePendingRebootCheck("Windows Update installer: incomplete/volatile install state",
+				RegistryValueIsNonZero(UpdatesPath, "UpdateExeVolatile"),
+				"Non-zero value written by an update installer to track incomplete update state."),
+			CreatePendingRebootCheck("Windows Installer (MSI): active install transaction",
+				RegistryKeyExists(InstallerPath + @"\InProgress"),
+				"Written by Windows Installer while an installation transaction is active."),
+			CreatePendingRebootCheck("Windows Server Manager: restart attempts",
+				RegistryValueIsNonZero(ServerManagerPath, "CurrentRebootAttempts"),
+				"Incremented by Server Manager each time it attempts to restart the server for a pending action."),
+			CreatePendingRebootCheck("Microsoft Configuration Manager (ConfigMgr): scheduled restart",
+				RegistryKeyExists(CcmRebootPath),
+				"Written by Microsoft Configuration Manager when it has scheduled a restart action."),
+			GetDeviceInstallRestartCheck()
+		};
+	}
+
+	private static PendingRebootCheckItem CreatePendingRebootCheck(string area, bool detected, string definition) =>
+		new(area, detected ? $"Detected - {definition}" : "Not detected", detected);
+
+	private static bool RegistryKeyExists(string subKeyPath)
+	{
+		using RegistryKey? key = Registry.LocalMachine.OpenSubKey(subKeyPath);
+		return key is not null;
+	}
+
+	private static bool RegistryValueIsNonZero(string subKeyPath, string valueName)
+	{
+		using RegistryKey? key = Registry.LocalMachine.OpenSubKey(subKeyPath);
+		object? value = key?.GetValue(valueName);
+		return value switch
+		{
+			int intValue => intValue != 0,
+			long longValue => longValue != 0,
+			uint uintValue => uintValue != 0,
+			_ => false
+		};
+	}
+
+	// PendingFileRenameOperations is a REG_MULTI_SZ of source/destination string pairs. An empty
+	// destination means the source is scheduled for deletion; a non-empty destination means the
+	// source will be moved to it (used to replace files currently in use) at the next restart.
+	private static PendingRebootCheckItem GetPendingFileOperationsCheck(string sessionManagerPath)
+	{
+		const string Area = "File system: files scheduled for change or deletion at restart";
+
+		using RegistryKey? key = Registry.LocalMachine.OpenSubKey(sessionManagerPath);
+		if (key?.GetValue("PendingFileRenameOperations") is not string[] operations || operations.Length == 0)
+		{
+			return new PendingRebootCheckItem(Area, "Not detected", false);
+		}
+
+		// The raw REG_MULTI_SZ stores each operation as a source/destination pair, so the number
+		// of actual operations is half the raw string count.
+		int operationCount = (operations.Length + 1) / 2;
+
+		StringBuilder details = new(256);
+		_ = details.Append("Detected - ").Append(operationCount).Append(operationCount == 1 ? " pending operation" : " pending operations");
+
+		for (int index = 0; index < operations.Length; index += 2)
+		{
+			string source = operations[index];
+			string destination = index + 1 < operations.Length ? operations[index + 1] : string.Empty;
+			_ = details.Append('\n').Append(string.IsNullOrEmpty(destination) ? "Delete: " : "Move/replace: ").Append(source);
+			if (!string.IsNullOrEmpty(destination))
+			{
+				_ = details.Append(" -> ").Append(destination);
+			}
+		}
+
+		return new PendingRebootCheckItem(Area, details.ToString(), true);
+	}
+
+	private static PendingRebootCheckItem GetComputerRenameCheck(string computerNamePath)
+	{
+		const string Area = "Computer name: pending rename";
+
+		if (Registry.GetValue(@"HKEY_LOCAL_MACHINE\" + computerNamePath + @"\ActiveComputerName", "ComputerName", null) is not string activeName ||
+			Registry.GetValue(@"HKEY_LOCAL_MACHINE\" + computerNamePath + @"\ComputerName", "ComputerName", null) is not string pendingName ||
+			string.Equals(activeName, pendingName, StringComparison.OrdinalIgnoreCase))
+		{
+			return new PendingRebootCheckItem(Area, "Not detected", false);
+		}
+
+		return new PendingRebootCheckItem(Area, $"Detected - active name: {activeName}; configured name: {pendingName}", true);
+	}
+
+	private static PendingRebootCheckItem GetDomainJoinCheck(string netlogonPath)
+	{
+		const string Area = "Domain membership (Netlogon): pending join or leave data";
+
+		using RegistryKey? key = Registry.LocalMachine.OpenSubKey(netlogonPath);
+		bool hasJoinDomain = key?.GetValue("JoinDomain") is not null;
+		bool hasAvoidSpnSet = key?.GetValue("AvoidSpnSet") is not null;
+
+		if (!hasJoinDomain && !hasAvoidSpnSet)
+		{
+			return new PendingRebootCheckItem(Area, "Not detected", false);
+		}
+
+		string presentValues = hasJoinDomain && hasAvoidSpnSet ? "JoinDomain and AvoidSpnSet" : hasJoinDomain ? "JoinDomain" : "AvoidSpnSet";
+		return new PendingRebootCheckItem(Area, "Detected - Netlogon contains " + presentValues, true);
+	}
+
+	// A driver's installer or co-installer sets the DN_NEED_RESTART status flag on a device node
+	// when the user selects "Restart later" during driver install or removal. This flag is
+	// independent of every registry-based check above and stays set until the computer restarts
+	// or the device is reconfigured.
+	private static PendingRebootCheckItem GetDeviceInstallRestartCheck()
+	{
+		const string Area = "Device drivers: restart required flag";
+		const uint DigcfPresent = 0x00000002;
+		const uint DigcfAllClasses = 0x00000004;
+		const uint DnNeedRestart = 0x00000100;
+		const uint SpdrpFriendlyName = 0x0000000C;
+		const uint SpdrpDeviceDesc = 0x00000000;
+
+		IntPtr deviceInfoSet = NativeMethods.SetupDiGetClassDevsW(Guid.Empty, IntPtr.Zero, IntPtr.Zero, DigcfPresent | DigcfAllClasses);
+		if (deviceInfoSet == IntPtr.Zero || deviceInfoSet == NativeMethods.INVALID_HANDLE_VALUE)
+		{
+			return new PendingRebootCheckItem(Area, "Not detected", false);
+		}
+
+		List<string> devicesNeedingRestart = new(4);
+		try
+		{
+			SP_DEVINFO_DATA deviceInfoData = new() { cbSize = (uint)Unsafe.SizeOf<SP_DEVINFO_DATA>() };
+			Span<byte> nameBuffer = stackalloc byte[512];
+			uint memberIndex = 0;
+
+			while (NativeMethods.SetupDiEnumDeviceInfo(deviceInfoSet, memberIndex, ref deviceInfoData))
+			{
+				memberIndex++;
+
+				int configRet = NativeMethods.CM_Get_DevNode_Status(out uint status, out _, deviceInfoData.DevInst, 0);
+				if (configRet != 0 || (status & DnNeedRestart) == 0)
+				{
+					continue;
+				}
+
+				string displayName = TryReadDeviceProperty(deviceInfoSet, ref deviceInfoData, SpdrpFriendlyName, nameBuffer)
+					?? TryReadDeviceProperty(deviceInfoSet, ref deviceInfoData, SpdrpDeviceDesc, nameBuffer)
+					?? "(unknown device)";
+
+				devicesNeedingRestart.Add($"{displayName} (Status=0x{status:X8})");
+			}
+		}
+		finally
+		{
+			_ = NativeMethods.SetupDiDestroyDeviceInfoList(deviceInfoSet);
+		}
+
+		if (devicesNeedingRestart.Count == 0)
+		{
+			return new PendingRebootCheckItem(Area, "Not detected", false);
+		}
+
+		string detail = "Detected - " + string.Join(", ", devicesNeedingRestart);
+		return new PendingRebootCheckItem(Area, detail, true);
+	}
+
+	private static unsafe string? TryReadDeviceProperty(IntPtr deviceInfoSet, ref SP_DEVINFO_DATA deviceInfoData, uint property, Span<byte> buffer)
+	{
+		bool succeeded;
+
+		fixed (byte* bufferPointer = buffer)
+		{
+			succeeded = NativeMethods.SetupDiGetDeviceRegistryPropertyW(deviceInfoSet, ref deviceInfoData, property, out _, (nint)bufferPointer, (uint)buffer.Length, out uint requiredSize);
+			if (!succeeded || requiredSize < 2)
+			{
+				return null;
+			}
+
+			return Encoding.Unicode.GetString(bufferPointer, (int)(requiredSize - 2));
+		}
+	}
+
+	#endregion
 
 	private static string NormalizeIdentifier(string value) => string.IsNullOrWhiteSpace(value) ? "Unavailable" : value;
 }

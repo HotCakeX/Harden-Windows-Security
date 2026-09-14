@@ -4,7 +4,7 @@ The **Home page** is the landing/overview surface of the app. It presents a live
 
 > [!NOTE]\
 > The page has two entry points into richer experiences for [the Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) only.
-> 
+>
 > - An entry to the [**Windows TopBar**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/TopBar).
 > - An entry to the **Live System Intelligence** window (documented in full at the end).
 
@@ -41,6 +41,8 @@ Cards that you can click show a small arrow in their corner. Clicking them opens
 - **Uptime**: How long your computer has been running since it was last started. Click to see additional shutdown and startup details.
 
 - **Last Boot Time**: How long the firmware startup (the phase before Windows loads) took, shown in seconds.
+
+* **Pending Reboot Operations**: Displays any operation that will happen by the operating system during the next reboot, and also shows underlying system components that need a reboot, such as any pending driver installation, Windows Updates, domain join, computer name change and such.
 
 ### Memory and Storage
 

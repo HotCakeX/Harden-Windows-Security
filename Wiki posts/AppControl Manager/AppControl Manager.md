@@ -342,6 +342,18 @@ explorer.exe shell:AppsFolder\VioletHansen.AppControlManager_ea7andspwdn10!App
 
 <br>
 
+## CIP File Preview Shell Integration
+
+When you install the AppControl Manager, you can simply select `.CIP` Application Control policy binaries in the File Explorer and view all of their details in the preview pane. Very practical and useful for fast inspection of the deployed policies. If you need more information, you can always double-click on them to open them in the AppControl Manager.
+
+<div align="center">
+
+<img alt="image" src="https://github.com/user-attachments/assets/b40629df-1bff-4bdb-9663-edfdfc5a7a6d" />
+
+</div>
+
+<br>
+
 ## How To Build The AppControl Manager Locally?
 
 You can build the AppControl Manager application directly from the source code locally on your device without using any 3rd party tools in a completely automated way.
@@ -1067,3 +1079,66 @@ function Build_ACM {
 </details>
 
 <br>
+
+## How To Set up the Development Environment
+
+This section is for those who would like to clone the source code and work on the project. The following steps are manual but if you need a fully automated workflow, please use the PowerShell script above.
+
+### Component Installation
+
+#### Visual Studio 2026
+
+You need the latest version of [the Visual Studio IDE](https://visualstudio.microsoft.com/downloads/), preferably the Insider version. You need to Install the following workloads:
+
+  * .NET Desktop Development
+  * Desktop Development with C++
+  * WinUI Application Development
+
+These are the only workloads you need to select to install. No other changes or selections are required. Begin installation and wait for it to complete.
+
+<div align="center">
+
+<img alt="image" src="https://github.com/user-attachments/assets/7ec0ed2f-c348-4e32-a5b8-5d05dd6ff838" />
+
+</div>
+
+#### .NET SDK
+
+[Download](https://dotnet.microsoft.com/en-us/download) and install the latest version of the .NET SDK if you don't already have it.
+
+#### Rust Toolchain
+
+Install the latest version of the Rust toolchain via Winget if you don't already have it.
+```
+winget install --id Rustlang.Rustup --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+```
+
+If you already have it, make sure it is up to date via the command below
+```
+rustup update
+```
+
+Then install the nightly edition of the toolchain. The Rust library requires security features that are currently only available in the nightly edition of the Rust language.
+```
+rustup toolchain install nightly
+rustup target add x86_64-pc-windows-msvc
+rustup target add aarch64-pc-windows-msvc
+rustup component add rust-src --toolchain nightly-x86_64-pc-windows-msvc
+rustup default nightly
+```
+
+### Compilation
+
+Navigate to the following directory in the cloned repository:
+```
+Harden-Windows-Security\AppControl Manager\eXclude\Rust Interop Library
+```
+Open a terminal and run the following command
+```
+cargo build_x64
+```
+It will create the required `.lib` file needed to compile the application in release mode. The C# project includes automated steps that generate all other components for you when you load the project in the Visual Studio.
+
+In the Windows settings, navigate to System -> Advanced -> Turn on the `Developer Mode`.
+
+Now you are ready to start working on the project. If you have any questions or need help, please feel free to ask me.

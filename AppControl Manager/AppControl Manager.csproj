@@ -118,11 +118,18 @@
     <ItemGroup Condition="'$(Platform)' == 'x64' OR '$(RuntimeIdentifier)' == 'win-x64'">
         <DirectPInvoke Include="rust_interop" />
         <NativeLibrary Include="./eXclude/Rust Interop Library/target/x86_64-pc-windows-msvc/release/rust_interop.lib" />
+        <!-- Rust std's Mutex/thread-parking/panic hook reference WaitOnAddress/WakeByAddress*,
+         which resolve from Synchronization.lib. A staticlib handed to the ILC linker does
+         not auto-propagate std's native-lib dependencies, so link it explicitly.
+         
+         This started happening since rustc 1.100.0-nightly (4b6d04e70 2026-09-13).
+        -->
+        <NativeLibrary Include="Synchronization.lib" />
     </ItemGroup>
-
     <ItemGroup Condition="'$(Platform)' == 'arm64' OR '$(RuntimeIdentifier)' == 'win-arm64'">
         <DirectPInvoke Include="rust_interop" />
         <NativeLibrary Include="./eXclude/Rust Interop Library/target/aarch64-pc-windows-msvc/release/rust_interop.lib" />
+        <NativeLibrary Include="Synchronization.lib" />
     </ItemGroup>
 
     <!-- Only for Debug -->

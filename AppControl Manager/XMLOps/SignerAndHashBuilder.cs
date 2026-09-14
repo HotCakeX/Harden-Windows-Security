@@ -226,10 +226,15 @@ internal static class SignerAndHashBuilder
 									}
 								case ScanLevels.Hash:
 									{
-										// Hash rules can be created for both signed and unsigned files, so no additional checks are needed.
-										hashRuleData.Add(item);
-										levelAssigned = true;
-
+										// Hash rules require both Authenticode hashes and a file path. Files lacking them
+										// must fall through to a later fallback such as FilePath instead of being claimed here and then dropped during rule creation.
+										if (!string.IsNullOrWhiteSpace(item.SHA256Hash) &&
+											!string.IsNullOrWhiteSpace(item.SHA1Hash) &&
+											!string.IsNullOrWhiteSpace(item.FilePath))
+										{
+											hashRuleData.Add(item);
+											levelAssigned = true;
+										}
 										break;
 									}
 								case ScanLevels.FileName:

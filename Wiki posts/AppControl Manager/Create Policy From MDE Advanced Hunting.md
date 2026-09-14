@@ -32,6 +32,10 @@ Only the following [event types](https://learn.microsoft.com/en-us/windows/secur
 
   * **Event ID `3089`:** This event contains signature information for files that were blocked or audit blocked by App Control. One of these events is created for each signature of a file.
 
+  * **Event ID `3091`:** This event contains the origin information, such as the Intelligent Security Graph (ISG) reputation and the managed installer installation source, for a file that was audited by App Control.
+
+  * **Event ID `3092`:** This event contains the origin information, such as the Intelligent Security Graph (ISG) reputation and the managed installer installation source, for a file that was blocked by App Control.
+
 * **AppLocker**:
 
   * **Event ID `8028`:** This event indicates that a script host, such as PowerShell, queried App Control about a file the script host was about to run. Since the policy was in audit mode, the script or MSI file should have run, but wouldn't have passed the App Control policy if it was enforced.

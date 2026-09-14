@@ -27,6 +27,15 @@ namespace CommonCore.IntelGathering;
 internal sealed class FileIdentityComparer : IEqualityComparer<FileIdentity>
 {
 	/// <summary>
+	/// Determines whether a FileIdentity carries no usable hash based identity.
+	/// AppControl Origin events (OriginBlocked/OriginAudited) provide neither an
+	/// Authenticode hash nor a Flat hash and no version metadata, so without this
+	/// distinction every such event would compare equal to every other one and
+	/// collapse into a single entry.
+	/// </summary>
+	private static bool IsHashless(FileIdentity item) => string.IsNullOrEmpty(item.SHA256Hash) && string.IsNullOrEmpty(item.SHA256FlatHash);
+
+	/// <summary>
 	/// Determines whether two FileIdentity instances are equal.
 	/// The instances are considered equal if all six specified properties are the same.
 	///
@@ -59,12 +68,29 @@ internal sealed class FileIdentityComparer : IEqualityComparer<FileIdentity>
 			return false;
 
 		// Compare the specified properties for equality using string comparison
-		return string.Equals(x.SHA256Hash, y.SHA256Hash, StringComparison.OrdinalIgnoreCase) &&
+		bool baseEqual = string.Equals(x.SHA256Hash, y.SHA256Hash, StringComparison.OrdinalIgnoreCase) &&
 			   string.Equals(x.SHA256FlatHash, y.SHA256FlatHash, StringComparison.OrdinalIgnoreCase) &&
 			   string.Equals(x.ProductName, y.ProductName, StringComparison.OrdinalIgnoreCase) &&
 			   string.Equals(x.InternalName, y.InternalName, StringComparison.OrdinalIgnoreCase) &&
 			   string.Equals(x.OriginalFileName, y.OriginalFileName, StringComparison.OrdinalIgnoreCase) &&
 			   string.Equals(x.FileDescription, y.FileDescription, StringComparison.OrdinalIgnoreCase);
+
+		// If the six core fields do not all match, the two items are definitely not equal, so stop right here and return false.
+		if (!baseEqual)
+			return false;
+
+		// When both items are hashless (e.g. AppControl Origin events), the six
+		// properties above are all null and therefore not sufficient to tell distinct
+		// files apart. Fall back to the file name and path so each distinct Origin
+		// event is preserved instead of collapsing into one. Items that carry hashes
+		// keep their original behavior and are never compared by path here.
+		if (IsHashless(x) && IsHashless(y))
+		{
+			return string.Equals(x.FileName, y.FileName, StringComparison.OrdinalIgnoreCase) &&
+				   string.Equals(x.FilePath, y.FilePath, StringComparison.OrdinalIgnoreCase);
+		}
+
+		return true;
 	}
 
 	/// <summary>
@@ -85,6 +111,15 @@ internal sealed class FileIdentityComparer : IEqualityComparer<FileIdentity>
 		hash.Add(obj.InternalName, StringComparer.OrdinalIgnoreCase);
 		hash.Add(obj.OriginalFileName, StringComparer.OrdinalIgnoreCase);
 		hash.Add(obj.FileDescription, StringComparer.OrdinalIgnoreCase);
+
+		// Mirror the Equals logic: hashless items additionally include the file name
+		// and path so equal items still produce equal hash codes and distinct Origin
+		// events land in different buckets.
+		if (IsHashless(obj))
+		{
+			hash.Add(obj.FileName, StringComparer.OrdinalIgnoreCase);
+			hash.Add(obj.FilePath, StringComparer.OrdinalIgnoreCase);
+		}
 
 		return hash.ToHashCode();
 	}

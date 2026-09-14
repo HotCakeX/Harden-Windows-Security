@@ -30,6 +30,8 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// Finds the correlated events in the CSV data and groups them together based on the EtwActivityId.
 	/// Ensures that each Audit or Blocked event has its correlated Signing information events grouped together.
 	/// CodeIntegrity and AppLocker logs are considered separately in each group of EtwActivityId.
+	/// Schema for MDE Advanced Hunting Data which are DeviceEvents.
+	/// https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceevents-table
 	/// </summary>
 	internal static HashSet<FileIdentity> Retrieve(List<MDEAdvancedHuntingData> data)
 	{
@@ -89,6 +91,25 @@ internal static class GetMDEAdvancedHuntingLogsData
 			}
 		}
 
+		// Process the Origin (reputation/installation-source) events.
+		// These are the ETW 3091 (AppControlCodeIntegrityOriginAudited) and 3092 (AppControlCodeIntegrityOriginBlocked) events.
+		// They don't carry any SHA hashes, signing information or PE header details, and they don't have an EtwActivityId,
+		// so they can't take part in the EtwActivityId based correlation above. Each one is turned into an individual FileIdentity
+		// that only contains its file path (plus the available policy/device/process context).
+		foreach (MDEAdvancedHuntingData originEvent in CollectionsMarshal.AsSpan(data))
+		{
+			// The current Origin event is an Audit type
+			if (string.Equals(originEvent.ActionType, "AppControlCodeIntegrityOriginAudited", StringComparison.OrdinalIgnoreCase))
+			{
+				_ = ProcessEvent(originEvent, EventAction.Audit, [], fileIdentities, false);
+			}
+			// The current Origin event is a Blocked type
+			else if (string.Equals(originEvent.ActionType, "AppControlCodeIntegrityOriginBlocked", StringComparison.OrdinalIgnoreCase))
+			{
+				_ = ProcessEvent(originEvent, EventAction.Block, [], fileIdentities, false);
+			}
+		}
+
 		// Return the internal data which is the right return type
 		return fileIdentities.FileIdentitiesInternal;
 	}
@@ -102,13 +123,15 @@ internal static class GetMDEAdvancedHuntingLogsData
 	/// <param name="action">The action type of the main event, Audit or Block.</param>
 	/// <param name="correlatedEvents">The correlated Signing Information events of the current group.</param>
 	/// <param name="fileIdentities">The output collection that the complete event package is added to.</param>
+	/// <param name="requireSha256">Whether the main event must contain a SHA256 hash to be processed. Origin (reputation/installation-source) events don't carry a hash so they pass false and rely on their file path only.</param>
 	/// <returns>False if the main event lacks the required SHA256 hash, in which case the caller must skip the rest of the current group, true otherwise.</returns>
-	private static bool ProcessEvent(MDEAdvancedHuntingData mainEvent, EventAction action, List<MDEAdvancedHuntingData> correlatedEvents, FileIdentitySignatureBasedHashSet fileIdentities)
+	private static bool ProcessEvent(MDEAdvancedHuntingData mainEvent, EventAction action, List<MDEAdvancedHuntingData> correlatedEvents, FileIdentitySignatureBasedHashSet fileIdentities, bool requireSha256 = true)
 	{
 
 		// The SHA256 must be available in Audit/Block type of events for either Code Integrity or AppLocker
 		// It doesn't need to exist in the correlated SigningInformation event for MDE Advanced Hunting
-		if (mainEvent.SHA256 is null)
+		// The Origin (reputation/installation-source) events don't carry a hash so they opt out of this requirement via requireSha256 and rely on their file path
+		if (requireSha256 && mainEvent.SHA256 is null)
 			return false;
 
 		// Assign fields from MDE Advanced Hunting record properties

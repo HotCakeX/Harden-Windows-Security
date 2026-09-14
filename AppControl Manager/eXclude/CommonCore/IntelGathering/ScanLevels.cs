@@ -176,6 +176,72 @@ internal sealed partial class ScanLevelsComboBoxType : INotifyPropertyChanged
 		RebuildFallbackChains();
 	}
 
+	/// <summary>
+	/// Re-applies a persisted fallback selection and order onto this scan level.
+	/// The selected fallbacks are placed first, in the exact order provided, followed by the
+	/// remaining available options in their current order. This mirrors the selected-first layout
+	/// the source is created with, so the resulting fallback chain is identical to what was saved.
+	/// Levels that are not part of this scan level's available fallbacks are ignored.
+	/// </summary>
+	internal void RestoreFallbackState(IReadOnlyList<ScanLevels> orderedSelectedLevels)
+	{
+		int count = AvailableFallbacks.Count;
+		if (count is 0)
+			return;
+
+		// Compute the desired ordering of levels: valid, unique, saved-selected first, then the rest.
+		List<ScanLevels> desiredOrder = new(count);
+		HashSet<ScanLevels> selectedSet = new(orderedSelectedLevels.Count);
+		foreach (ScanLevels candidate in orderedSelectedLevels)
+		{
+			bool exists = false;
+			foreach (ScanLevelFallbackOption option in AvailableFallbacks)
+			{
+				if (option.Level == candidate)
+				{
+					exists = true;
+					break;
+				}
+			}
+
+			if (exists && selectedSet.Add(candidate))
+				desiredOrder.Add(candidate);
+		}
+
+		foreach (ScanLevelFallbackOption option in AvailableFallbacks)
+		{
+			if (!selectedSet.Contains(option.Level))
+				desiredOrder.Add(option.Level);
+		}
+
+		// Reorder AvailableFallbacks in place to match the desired ordering.
+		for (int targetIndex = 0; targetIndex < desiredOrder.Count; targetIndex++)
+		{
+			ScanLevels wantedLevel = desiredOrder[targetIndex];
+			int currentIndex = -1;
+			for (int j = targetIndex; j < AvailableFallbacks.Count; j++)
+			{
+				if (AvailableFallbacks[j].Level == wantedLevel)
+				{
+					currentIndex = j;
+					break;
+				}
+			}
+
+			if (currentIndex >= 0 && currentIndex != targetIndex)
+				AvailableFallbacks.Move(currentIndex, targetIndex);
+		}
+
+		// Apply the selection state after the ordering is settled.
+		foreach (ScanLevelFallbackOption option in AvailableFallbacks)
+		{
+			option.IsSelected = selectedSet.Contains(option.Level);
+		}
+
+		// Guarantee the visual chain reflects the final order even when no selection actually changed.
+		RebuildFallbackChains();
+	}
+
 	private void RebuildFallbackChains()
 	{
 		EditableFallbackRows.Clear();

@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Text;
 using CommonCore.IntelGathering;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Xaml;
@@ -37,7 +38,7 @@ internal sealed partial class ScanLevelSelector : UserControl
 		nameof(ItemsSource),
 		typeof(object),
 		typeof(ScanLevelSelector),
-		new PropertyMetadata(null, SelectionInputChanged));
+		new PropertyMetadata(null, ItemsSourceChanged));
 
 	public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
 		nameof(SelectedItem),
@@ -61,6 +62,16 @@ internal sealed partial class ScanLevelSelector : UserControl
 	private static void SelectionInputChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e) =>
 		((ScanLevelSelector)sender).UpdateSelectionIndicators();
 
+	// Runs when the source is bound by any page that hosts the selector. It first re-applies the user's
+	// persisted fallback selection/order onto the freshly created source, then refreshes the selection indicators.
+	[DynamicWindowsRuntimeCast(typeof(ScanLevelSelector))]
+	private static void ItemsSourceChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+	{
+		ScanLevelSelector selector = (ScanLevelSelector)sender;
+		selector.ApplySavedFallbackOrder();
+		selector.UpdateSelectionIndicators();
+	}
+
 	private void UpdateSelectionIndicators()
 	{
 		if (ItemsSource is not IEnumerable<ScanLevelsComboBoxType> items)
@@ -68,6 +79,101 @@ internal sealed partial class ScanLevelSelector : UserControl
 
 		foreach (ScanLevelsComboBoxType item in items)
 			item.IsSelected = ReferenceEquals(item, SelectedItem);
+	}
+
+	// Re-applies the persisted selection/order onto the current source.
+	private void ApplySavedFallbackOrder()
+	{
+		if (ItemsSource is not IEnumerable<ScanLevelsComboBoxType> items)
+			return;
+
+		if (string.IsNullOrEmpty(Atlas.Settings.CustomizableScanLevelsFallbackOrder))
+			return;
+
+		Dictionary<ScanLevels, List<ScanLevels>> parsed = ParseSavedState(Atlas.Settings.CustomizableScanLevelsFallbackOrder);
+		if (parsed.Count is 0)
+			return;
+
+		foreach (ScanLevelsComboBoxType level in items)
+		{
+			if (parsed.TryGetValue(level.Level, out List<ScanLevels>? orderedSelected))
+			{
+				level.RestoreFallbackState(orderedSelected);
+			}
+		}
+	}
+
+	// Parses the compact persisted format: "levelId:selId,selId,...;levelId:...".
+	// The value part can be empty which means the user removed every fallback for that level.
+	// Any malformed or unknown token is ignored so a bad/imported value can never break restoration.
+	private static Dictionary<ScanLevels, List<ScanLevels>> ParseSavedState(string saved)
+	{
+		Dictionary<ScanLevels, List<ScanLevels>> result = new();
+
+		string[] entries = saved.Split(';', StringSplitOptions.RemoveEmptyEntries);
+		foreach (string entry in entries)
+		{
+			int colon = entry.IndexOf(':');
+			if (colon < 0)
+				continue;
+
+			if (!int.TryParse(entry.AsSpan(0, colon), out int levelId))
+				continue;
+
+			ScanLevels levelKey = (ScanLevels)levelId;
+
+			List<ScanLevels> selected = [];
+			string valuePart = entry[(colon + 1)..];
+			if (valuePart.Length > 0)
+			{
+				string[] tokens = valuePart.Split(',', StringSplitOptions.RemoveEmptyEntries);
+				foreach (string token in tokens)
+				{
+					if (int.TryParse(token, out int fallbackId))
+					{
+						selected.Add((ScanLevels)fallbackId);
+					}
+				}
+			}
+
+			result[levelKey] = selected;
+		}
+
+		return result;
+	}
+
+	// Serializes the current selection/order of every scan level that owns fallbacks and persists it.
+	private void PersistScanLevels()
+	{
+		if (ItemsSource is not IEnumerable<ScanLevelsComboBoxType> items)
+			return;
+
+		StringBuilder builder = new();
+		foreach (ScanLevelsComboBoxType level in items)
+		{
+			// Levels without fallbacks (such as: Hash, File Path, Wildcard Folder Path) have nothing to persist.
+			if (level.AvailableFallbacks.Count is 0)
+				continue;
+
+			if (builder.Length > 0)
+			{
+				_ = builder.Append(';');
+			}
+
+			_ = builder.Append((int)level.Level).Append(':');
+
+			List<ScanLevels> selected = level.SelectedFallbackLevels;
+			for (int i = 0; i < selected.Count; i++)
+			{
+				if (i > 0)
+				{
+					_ = builder.Append(',');
+				}
+				_ = builder.Append((int)selected[i]);
+			}
+		}
+
+		Atlas.Settings.CustomizableScanLevelsFallbackOrder = builder.ToString();
 	}
 
 	[DynamicWindowsRuntimeCast(typeof(Border))]
@@ -164,20 +270,34 @@ internal sealed partial class ScanLevelSelector : UserControl
 	private void AddFallbackMenuItem_Click(object sender, RoutedEventArgs e)
 	{
 		if (((MenuFlyoutItem)sender).Tag is ScanLevelFallbackOption option)
+		{
 			option.IsSelected = true;
+			PersistScanLevels();
+		}
 	}
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]
-	private void MoveFallbackLeft_Click(object sender, RoutedEventArgs e) => MoveFallback((Button)sender, -1);
+	private void MoveFallbackLeft_Click(object sender, RoutedEventArgs e)
+	{
+		MoveFallback((Button)sender, -1);
+		PersistScanLevels();
+	}
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]
-	private void MoveFallbackRight_Click(object sender, RoutedEventArgs e) => MoveFallback((Button)sender, 1);
+	private void MoveFallbackRight_Click(object sender, RoutedEventArgs e)
+	{
+		MoveFallback((Button)sender, 1);
+		PersistScanLevels();
+	}
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	private void RemoveFallback_Click(object sender, RoutedEventArgs e)
 	{
 		if (((Button)sender).Tag is FallbackItem { Option: ScanLevelFallbackOption option })
+		{
 			option.IsSelected = false;
+			PersistScanLevels();
+		}
 	}
 
 	[DynamicWindowsRuntimeCast(typeof(Border))]

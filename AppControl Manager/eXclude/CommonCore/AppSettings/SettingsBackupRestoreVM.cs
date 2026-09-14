@@ -374,7 +374,7 @@ internal static class SettingsBackupRestoreSerializer
 		CreateStringWithCustomValidation(nameof(Main.WindowsTopBarSentryOutputDirectory), "Absolute path or empty string", static settings => settings.WindowsTopBarSentryOutputDirectory, static (settings, value) => settings.WindowsTopBarSentryOutputDirectory = value,
 			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
 			$"'{nameof(Main.WindowsTopBarSentryOutputDirectory)}' must be empty or an absolute path."),
-
+		CreateString(nameof(Main.CustomizableScanLevelsFallbackOrder), "String", static settings => settings.CustomizableScanLevelsFallbackOrder, static (settings, value) => settings.CustomizableScanLevelsFallbackOrder = value)
 		];
 
 	internal static byte[] Export(Main settings)

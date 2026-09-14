@@ -139,6 +139,7 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarSentryCooldownSeconds = ReadValue(nameof(WindowsTopBarSentryCooldownSeconds), WindowsTopBarSentryCooldownSeconds);
 		WindowsTopBarSentryMaxCycles = ReadValue(nameof(WindowsTopBarSentryMaxCycles), WindowsTopBarSentryMaxCycles);
 		WindowsTopBarSentryOutputDirectory = ReadValue(nameof(WindowsTopBarSentryOutputDirectory), WindowsTopBarSentryOutputDirectory);
+		CustomizableScanLevelsFallbackOrder = ReadValue(nameof(CustomizableScanLevelsFallbackOrder), CustomizableScanLevelsFallbackOrder);
 	}
 
 	/// <summary>
@@ -1278,4 +1279,19 @@ internal sealed partial class Main : ViewModelBase
 		}
 	} = string.Empty;
 
+	/// <summary>
+	/// For AppControl Manager.
+	/// The user-customized selection and ordering of the scan levels' fallbacks, persisted so the customization
+	/// made in the Scan Level Selector is never lost across sessions. The value is a compact serialized string.
+	/// </summary>
+	internal string CustomizableScanLevelsFallbackOrder
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(CustomizableScanLevelsFallbackOrder), field);
+			}
+		}
+	} = string.Empty;
 }

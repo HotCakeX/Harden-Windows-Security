@@ -30,7 +30,7 @@
         <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.12" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.1.26425.128" />
     </ItemGroup>
     <!-- Bind the Win32 imports directly to the OS loader. -->
     <ItemGroup>

@@ -806,7 +806,7 @@ internal static partial class Manage
 		}
 	}
 
-	private static unsafe string BstrToString(nint value)
+	private static string BstrToString(nint value)
 	{
 		if (value == 0)
 		{

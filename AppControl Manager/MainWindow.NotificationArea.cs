@@ -423,7 +423,7 @@ internal sealed partial class MainWindow
 	/// <summary>
 	/// Copies the tooltip text into the fixed native buffer and preserves the terminating null.
 	/// </summary>
-	private static unsafe void SetNotificationAreaToolTip(ref NOTIFYICONDATAW notificationIconData, string toolTip)
+	private static void SetNotificationAreaToolTip(ref NOTIFYICONDATAW notificationIconData, string toolTip)
 	{
 		fixed (char* toolTipBuffer = notificationIconData.szTip)
 		{

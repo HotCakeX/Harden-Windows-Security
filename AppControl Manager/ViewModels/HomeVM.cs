@@ -3296,7 +3296,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		return new PendingRebootCheckItem(Area, detail, true);
 	}
 
-	private static unsafe string? TryReadDeviceProperty(IntPtr deviceInfoSet, ref SP_DEVINFO_DATA deviceInfoData, uint property, Span<byte> buffer)
+	private static string? TryReadDeviceProperty(IntPtr deviceInfoSet, ref SP_DEVINFO_DATA deviceInfoData, uint property, Span<byte> buffer)
 	{
 		bool succeeded;
 

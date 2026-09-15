@@ -1,1 +1,3 @@
 * Added a new Pending Reboot Operations tile to the home page under System Overview, displaying any operation that will happen by the OS during the next reboot, and also shows underlying system components that need a reboot, such as any pending driver installation, Windows Updates, domain join, computer name change etc. This new feature unlocks new information and possibilities for you to review about your system.
+
+* Updated dependencies to the latest versions.

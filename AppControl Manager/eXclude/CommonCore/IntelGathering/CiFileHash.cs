@@ -296,7 +296,7 @@ internal static class CiFileHash
 	/// <param name="fileStreamHandle">Used to hash the file.</param>
 	/// <param name="hashAlgorithm">The hashing algorithm to use.</param>
 	/// <exception cref="InvalidOperationException"></exception>
-	private static unsafe string? GetAuthenticodeHashLegacy(string filePath, nint fileStreamHandle, string hashAlgorithm)
+	private static string? GetAuthenticodeHashLegacy(string filePath, nint fileStreamHandle, string hashAlgorithm)
 	{
 		nint contextHandle = nint.Zero;
 		nint hashValue = nint.Zero;
@@ -462,7 +462,7 @@ internal static class CiFileHash
 	/// <summary>
 	/// a method to get the hash of the first page of a file as a hexadecimal string
 	/// </summary>
-	private static unsafe string? GetPageHash(string algName, string fileName)
+	private static string? GetPageHash(string algName, string fileName)
 	{
 		// initialize the buffer pointer to zero
 		IntPtr buffer = IntPtr.Zero;
@@ -506,7 +506,7 @@ internal static class CiFileHash
 	/// Calculates Flat file hashes.
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
-	private static unsafe (string?, string?) GetFlatHash(string fileName)
+	private static (string?, string?) GetFlatHash(string fileName)
 	{
 		string? SHA3_512Hash = null;
 		string? SHA3_384Hash = null;

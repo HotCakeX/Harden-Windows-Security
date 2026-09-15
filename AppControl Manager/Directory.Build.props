@@ -4,7 +4,7 @@
 
    <!-- .NET SDK projects only -->
    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
-       <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+       <TargetFramework>net11.0-windows10.0.26100.0</TargetFramework>
        <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
        <!-- https://learn.microsoft.com/dotnet/standard/frameworks#support-older-os-versions -->
        <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
@@ -54,7 +54,9 @@
        <TrimmerRemoveSymbols>true</TrimmerRemoveSymbols>
        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
        <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
-        <DebuggerSupport>false</DebuggerSupport>
+       <DebuggerSupport>false</DebuggerSupport>
+       <UseSizeOptimizedLinq>true</UseSizeOptimizedLinq>
+       <StackTraceLineNumberSupport>false</StackTraceLineNumberSupport>
        <!-- Disabled by default in the default ILC.exe config -->
        <EventSourceSupport>false</EventSourceSupport>
        <GenerateDocumentationFile>false</GenerateDocumentationFile>

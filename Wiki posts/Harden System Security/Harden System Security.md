@@ -566,9 +566,9 @@ function Build_HSS {
         [System.String]$BranchName = 'main'
         [System.String]$RepoName = 'Harden-Windows-Security'
         [System.String]$RepoUrl = "https://github.com/HotCakeX/$RepoName/archive/refs/heads/$BranchName.zip"
-        [System.String]$ZipPath = [System.IO.Path]::Combine($env:TEMP, "$RepoName.zip")
+        [System.String]$ZipPath = [System.IO.Path]::Join($env:TEMP, "$RepoName.zip")
         [System.String]$InitialWorkingDirectory = $PWD.Path
-        $script:HardenSystemSecurityDirectory = [System.IO.Path]::Combine($InitialWorkingDirectory, "$RepoName-$BranchName", 'Harden System Security')
+        $script:HardenSystemSecurityDirectory = [System.IO.Path]::Join($InitialWorkingDirectory, "$RepoName-$BranchName", 'Harden System Security')
 
         if (Test-Path -Path $script:HardenSystemSecurityDirectory -PathType Container) {
             Remove-Item -Path $script:HardenSystemSecurityDirectory -Recurse -Force
@@ -615,7 +615,6 @@ function Build_HSS {
             Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
 
             Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath "$($DependencyPaths[0])", "$($DependencyPaths[1])" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
-
         }
 
         Write-Host -Object 'The version of the Winget currently in use:'
@@ -628,7 +627,7 @@ function Build_HSS {
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install the Rust toolchain: $LASTEXITCODE") }
 
         Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
-        $null = winget install --id Microsoft.DotNet.SDK.10 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+        $null = winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install .NET SDK: $LASTEXITCODE") }
 
         Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta
@@ -682,12 +681,7 @@ function Build_HSS {
     Write-Host -Object "`nListing installed .NET SDKs`n`n" -ForegroundColor Magenta
     dotnet --list-sdks
 
-    function Find-mspdbcmf {
-        # "-products *" is necessary to detect BuildTools too
-        [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
-
-        [string]$BasePath = [System.IO.Path]::Combine($VisualStudioPath, 'VC', 'Tools', 'MSVC')
-
+    function Get-LatestVersionDirectoryName([System.String]$BasePath) {
         # Get all subdirectories under the base path
         [System.String[]]$VersionDirs = [System.IO.Directory]::GetDirectories($BasePath)
 
@@ -715,8 +709,19 @@ function Build_HSS {
             throw [System.IO.DirectoryNotFoundException]::New("No valid version directories found in $BasePath")
         }
 
+        return $HighestVersionFolder
+    }
+
+    function Find-mspdbcmf {
+        # "-products *" is necessary to detect BuildTools too
+        [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
+
+        [string]$BasePath = [System.IO.Path]::Join($VisualStudioPath, 'VC', 'Tools', 'MSVC')
+
+        [System.String]$HighestVersionFolder = Get-LatestVersionDirectoryName -BasePath $BasePath
+
         # Combine the base path, the highest version folder, the architecture folder, and the file name.
-        [System.String]$mspdbcmfPath = [System.IO.Path]::Combine($BasePath, $HighestVersionFolder, 'bin', 'Hostx64', 'x64', 'mspdbcmf.exe')
+        [System.String]$mspdbcmfPath = [System.IO.Path]::Join($BasePath, $HighestVersionFolder, 'bin', 'Hostx64', 'x64', 'mspdbcmf.exe')
 
         if (![System.IO.File]::Exists($mspdbcmfPath)) {
             throw [System.IO.FileNotFoundException]::New("mspdbcmf.exe not found at $mspdbcmfPath")
@@ -731,7 +736,7 @@ function Build_HSS {
         # "-products *" is necessary to detect BuildTools too
         [string]$VisualStudioPath = . 'C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe' -prerelease -latest -property resolvedInstallationPath -products *
 
-        [string]$MSBuildPath = [System.IO.Path]::Combine($VisualStudioPath, 'MSBuild', 'Current', 'Bin', 'MSBuild.exe')
+        [string]$MSBuildPath = [System.IO.Path]::Join($VisualStudioPath, 'MSBuild', 'Current', 'Bin', 'MSBuild.exe')
 
         if (![System.IO.File]::Exists($MSBuildPath)) {
             throw [System.IO.FileNotFoundException]::New("MSBuild.exe not found at $MSBuildPath")
@@ -742,36 +747,11 @@ function Build_HSS {
 
     [string]$MSBuildPath = Find-MSBuild
 
-    function Get-MakePriPath {
+    function Get-WindowsSdkToolPath([System.String]$FileName) {
+
         [System.String]$BasePath = 'C:\Program Files (x86)\Windows Kits\10\bin'
 
-        # Get all subdirectories under the base path
-        [System.String[]]$VersionDirs = [System.IO.Directory]::GetDirectories($BasePath)
-
-        # Initialize the highest version with a minimal version value.
-        [System.Version]$HighestVersion = [System.Version]::New('0.0.0.0')
-        [System.String]$HighestVersionFolder = $null
-
-        # Loop through each directory to find the highest version folder.
-        foreach ($Dir in $VersionDirs) {
-            # Extract the folder name
-            [System.String]$FolderName = [System.IO.Path]::GetFileName($Dir)
-            [System.Version]$CurrentVersion = $null
-
-            # Try parsing the folder name as a Version.
-            if ([System.Version]::TryParse($FolderName, [ref] $CurrentVersion)) {
-                # Compare versions
-                if ($CurrentVersion.CompareTo($HighestVersion) -gt 0) {
-                    $HighestVersion = $CurrentVersion
-                    $HighestVersionFolder = $FolderName
-                }
-            }
-        }
-
-        # If no valid version folder is found
-        if (!$HighestVersionFolder) {
-            throw [System.IO.DirectoryNotFoundException]::New("No valid version directories found in $BasePath")
-        }
+        [System.String]$HighestVersionFolder = Get-LatestVersionDirectoryName -BasePath $BasePath
 
         [System.String]$CPUArch = @{AMD64 = 'x64'; ARM64 = 'arm64' }[$Env:PROCESSOR_ARCHITECTURE]
         if ([System.String]::IsNullOrWhiteSpace($CPUArch)) {
@@ -779,53 +759,14 @@ function Build_HSS {
         }
 
         # Combine the base path, the highest version folder, the architecture folder, and the file name.
-        [System.String]$MakePriPath = [System.IO.Path]::Combine($BasePath, $HighestVersionFolder, $CPUArch, 'makepri.exe')
+        [System.String]$ToolPath = [System.IO.Path]::Join($BasePath, $HighestVersionFolder, $CPUArch, $FileName)
 
-        return $MakePriPath
+        return $ToolPath
     }
 
-    [string]$MakePriPath = Get-MakePriPath
+    [string]$MakePriPath = Get-WindowsSdkToolPath -FileName 'makepri.exe'
 
-    function Get-MakeAppxPath {
-        [System.String]$BasePath = 'C:\Program Files (x86)\Windows Kits\10\bin'
-
-        # Get all subdirectories under the base path
-        [System.String[]]$VersionDirs = [System.IO.Directory]::GetDirectories($BasePath)
-
-        # Initialize the highest version with a minimal version value.
-        [System.Version]$HighestVersion = [System.Version]::New('0.0.0.0')
-        [System.String]$HighestVersionFolder = $null
-
-        # Loop through each directory to find the highest version folder.
-        foreach ($Dir in $VersionDirs) {
-            # Extract the folder name
-            [System.String]$FolderName = [System.IO.Path]::GetFileName($Dir)
-            [System.Version]$CurrentVersion = $null
-            # Try parsing the folder name as a Version.
-            if ([System.Version]::TryParse($FolderName, [ref] $CurrentVersion)) {
-                # Compare versions
-                if ($CurrentVersion.CompareTo($HighestVersion) -gt 0) {
-                    $HighestVersion = $CurrentVersion
-                    $HighestVersionFolder = $FolderName
-                }
-            }
-        }
-
-        # If no valid version folder is found
-        if (!$HighestVersionFolder) {
-            throw [System.IO.DirectoryNotFoundException]::New("No valid version directories found in $BasePath")
-        }
-
-        [string]$CPUArch = @{AMD64 = 'x64'; ARM64 = 'arm64' }[$Env:PROCESSOR_ARCHITECTURE]
-        if ([System.String]::IsNullOrWhiteSpace($CPUArch)) { throw [System.PlatformNotSupportedException]::New('Only AMD64 and ARM64 architectures are supported.') }
-
-        # Combine the base path, the highest version folder, the architecture folder, and the file name.
-        [System.String]$MakeAppxPath = [System.IO.Path]::Combine($BasePath, $HighestVersionFolder, $CPUArch, 'makeappx.exe')
-
-        return $MakeAppxPath
-    }
-
-    [System.String]$MakeAppxPath = Get-MakeAppxPath
+    [System.String]$MakeAppxPath = Get-WindowsSdkToolPath -FileName 'makeappx.exe'
 
     if ([System.string]::IsNullOrWhiteSpace($MakeAppxPath)) {
         throw [System.IO.FileNotFoundException]::New('Could not find the makeappx.exe')
@@ -925,57 +866,32 @@ function Build_HSS {
 
     # DISM Service
 
-    dotnet restore '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' -r win-x64
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring DISMService for x64. Exit Code: $LASTEXITCODE") }
-
-    dotnet restore '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' -r win-arm64
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring DISMService for ARM64. Exit Code: $LASTEXITCODE") }
-
     dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (first pass). Exit Code: $LASTEXITCODE") }
 
-    dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (first pass). Exit Code: $LASTEXITCODE") }
-
-    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' /p:Configuration=Release /restore /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-x64.pubxml" /t:Publish -v:minimal
+    dotnet publish '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release --runtime win-x64 --verbosity minimal /p:Platform=x64 /p:PublishProfileFullPath="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-x64.pubxml" /p:PublishDir="..\AppControl Manager\eXclude\DISMService\OutputX64\"
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for x64. Exit Code: $LASTEXITCODE") }
 
     dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (second pass). Exit Code: $LASTEXITCODE") }
 
-    dotnet build '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building DISMService (second pass). Exit Code: $LASTEXITCODE") }
-
-    dotnet msbuild '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' /p:Configuration=Release /restore /p:Platform=arm64 /p:RuntimeIdentifier=win-arm64 /p:PublishProfile="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
+    dotnet publish '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release --runtime win-arm64 --verbosity minimal /p:Platform=arm64 /p:PublishProfileFullPath="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /p:PublishDir="..\AppControl Manager\eXclude\DISMService\OutputARM64\"
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for ARM64. Exit Code: $LASTEXITCODE") }
 
 
     # Windows Service
 
-    dotnet restore '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' -r win-x64
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring QuantumRelayHSS for x64. Exit Code: $LASTEXITCODE") }
-
-    dotnet restore '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' -r win-arm64
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed restoring QuantumRelayHSS for ARM64. Exit Code: $LASTEXITCODE") }
-
     dotnet clean '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning QuantumRelayHSS (first pass). Exit Code: $LASTEXITCODE") }
 
-    dotnet build '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building QuantumRelayHSS (first pass). Exit Code: $LASTEXITCODE") }
-
-    dotnet msbuild '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' /p:Configuration=Release /restore /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:PublishProfile="..\AppControl Manager\eXclude\QuantumRelayHSS\Properties\PublishProfiles\win-x64.pubxml" /t:Publish -v:minimal
+    dotnet publish '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --runtime win-x64 --verbosity minimal /p:Platform=x64 /p:PublishProfileFullPath="..\AppControl Manager\eXclude\QuantumRelayHSS\Properties\PublishProfiles\win-x64.pubxml" /p:PublishDir="..\AppControl Manager\eXclude\QuantumRelayHSS\OutputX64\"
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing QuantumRelayHSS for x64. Exit Code: $LASTEXITCODE") }
 
     dotnet clean '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning QuantumRelayHSS (second pass). Exit Code: $LASTEXITCODE") }
 
-    dotnet build '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building QuantumRelayHSS (second pass). Exit Code: $LASTEXITCODE") }
-
-    dotnet msbuild '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' /p:Configuration=Release /restore /p:Platform=arm64 /p:RuntimeIdentifier=win-arm64 /p:PublishProfile="..\AppControl Manager\eXclude\QuantumRelayHSS\Properties\PublishProfiles\win-arm64.pubxml" /t:Publish -v:minimal
+    dotnet publish '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --runtime win-arm64 --verbosity minimal /p:Platform=arm64 /p:PublishProfileFullPath="..\AppControl Manager\eXclude\QuantumRelayHSS\Properties\PublishProfiles\win-arm64.pubxml" /p:PublishDir="..\AppControl Manager\eXclude\QuantumRelayHSS\OutputARM64\"
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing QuantumRelayHSS for ARM64. Exit Code: $LASTEXITCODE") }
-
 
     #endregion
 
@@ -997,11 +913,8 @@ function Build_HSS {
 
     # Generate for X64 architecture
     dotnet clean 'Harden System Security.csproj' --configuration Release
-    dotnet build 'Harden System Security.csproj' --configuration Release --verbosity minimal /p:Platform=x64 /p:RuntimeIdentifier=win-x64 /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building x64 Harden System Security project. Exit Code: $LASTEXITCODE") }
-
-    dotnet msbuild 'Harden System Security.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
+    dotnet msbuild 'Harden System Security.csproj' /t:Publish /restore /p:Configuration=Release /p:RuntimeIdentifier=win-x64 /p:AppxPackageDir="MSIXOutputX64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=x64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:X64MSBuildLog.binlog /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging x64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
@@ -1015,11 +928,8 @@ function Build_HSS {
 
     # Generate for ARM64 architecture
     dotnet clean 'Harden System Security.csproj' --configuration Release
-    dotnet build 'Harden System Security.csproj' --configuration Release --verbosity minimal /p:Platform=ARM64 /p:RuntimeIdentifier=win-arm64 /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed building ARM64 Harden System Security project. Exit Code: $LASTEXITCODE") }
-
-    dotnet msbuild 'Harden System Security.csproj' /t:Publish /p:Configuration=Release /p:RuntimeIdentifier=win-arm64 /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
+    dotnet msbuild 'Harden System Security.csproj' /t:Publish /restore /p:Configuration=Release /p:RuntimeIdentifier=win-arm64 /p:AppxPackageDir="MSIXOutputARM64\" /p:GenerateAppxPackageOnBuild=true /p:Platform=ARM64 -v:minimal /p:MsPdbCmfExeFullpath=$mspdbcmfPath -bl:ARM64MSBuildLog.binlog /p:HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds=true
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed packaging ARM64 Harden System Security project. Exit Code: $LASTEXITCODE") }
 
@@ -1029,7 +939,7 @@ function Build_HSS {
     if ($null -eq $BasePri) { throw 'Build or publish Harden System Security first so its base resources.pri exists under bin.' }
     [System.String]$Stage = Join-Path $env:TEMP ([guid]::NewGuid())
     [System.String]$ExtraLanguagesPack1MSIXPathName = 'HardenSystemSecurity.ExtraLanguagesPack1.msix'
-    [System.String]$ExtraLanguagesPack1MSIXPath = [System.IO.Path]::Combine($AddonSource, $ExtraLanguagesPack1MSIXPathName)
+    [System.String]$ExtraLanguagesPack1MSIXPath = [System.IO.Path]::Join($AddonSource, $ExtraLanguagesPack1MSIXPathName)
     New-Item -ItemType Directory -Path $Stage | Out-Null
     Copy-Item (Join-Path $AddonSource 'AppxManifest.xml') $Stage
     Copy-Item (Join-Path $AddonSource 'Assets') $Stage -Recurse
@@ -1080,16 +990,16 @@ function Build_HSS {
     }
 
     #region Finding X64 outputs
-    [System.String]$FinalMSIXX64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64\.msix' -ErrorMessageFolder 'Could not find the directory for X64 MSIX file' -ErrorMessageFile 'Could not find the X64 MSIX file'
+    [System.String]$FinalMSIXX64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Join($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64\.msix' -ErrorMessageFolder 'Could not find the directory for X64 MSIX file' -ErrorMessageFile 'Could not find the X64 MSIX file'
     [System.String]$FinalMSIXX64Name = [System.IO.Path]::GetFileName($FinalMSIXX64Path)
-    [System.String]$FinalMSIXX64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64\.appxsym' -ErrorMessageFolder 'Could not find the directory for X64 symbol file' -ErrorMessageFile 'Could not find the X64 symbol file'
+    [System.String]$FinalMSIXX64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Join($PWD.Path, 'MSIXOutputX64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_x64\.appxsym' -ErrorMessageFolder 'Could not find the directory for X64 symbol file' -ErrorMessageFile 'Could not find the X64 symbol file'
     [System.String]$FinalMSIXX64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXX64SymbolPath)
     #endregion
 
     #region Finding ARM64 outputs
-    [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
+    [System.String]$FinalMSIXARM64Path = Get-MSIXFile -BasePath ([System.IO.Path]::Join($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64\.msix' -ErrorMessageFolder 'Could not find the directory for ARM64 MSIX file' -ErrorMessageFile 'Could not find the ARM64 MSIX file'
     [System.String]$FinalMSIXARM64Name = [System.IO.Path]::GetFileName($FinalMSIXARM64Path)
-    [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Combine($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64\.appxsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
+    [System.String]$FinalMSIXARM64SymbolPath = Get-MSIXFile -BasePath ([System.IO.Path]::Join($PWD.Path, 'MSIXOutputARM64')) -FolderPattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64_Test' -FileNamePattern 'Harden System Security_\d+\.\d+\.\d+\.\d+_arm64\.appxsym' -ErrorMessageFolder 'Could not find the directory for ARM64 symbol file' -ErrorMessageFile 'Could not find the ARM64 symbol file'
     [System.String]$FinalMSIXARM64SymbolName = [System.IO.Path]::GetFileName($FinalMSIXARM64SymbolPath)
     #endregion
 
@@ -1122,16 +1032,16 @@ function Build_HSS {
     #endregion
 
     # Creating the directory where the MSIX packages will be copied to
-    [System.String]$MSIXBundleOutput = [System.IO.Directory]::CreateDirectory([System.IO.Path]::Combine($script:HardenSystemSecurityDirectory, 'MSIXBundleOutput')).FullName
+    [System.String]$MSIXBundleOutput = [System.IO.Directory]::CreateDirectory([System.IO.Path]::Join($script:HardenSystemSecurityDirectory, 'MSIXBundleOutput')).FullName
 
-    [System.IO.File]::Copy($FinalMSIXX64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXX64Name), $true)
+    [System.IO.File]::Copy($FinalMSIXX64Path, [System.IO.Path]::Join($MSIXBundleOutput, $FinalMSIXX64Name), $true)
 
-    [System.IO.File]::Copy($FinalMSIXARM64Path, [System.IO.Path]::Combine($MSIXBundleOutput, $FinalMSIXARM64Name), $true)
+    [System.IO.File]::Copy($FinalMSIXARM64Path, [System.IO.Path]::Join($MSIXBundleOutput, $FinalMSIXARM64Name), $true)
 
-    [System.IO.File]::Copy($ExtraLanguagesPack1MSIXPath, [System.IO.Path]::Combine($MSIXBundleOutput, $ExtraLanguagesPack1MSIXPathName), $true)
+    [System.IO.File]::Copy($ExtraLanguagesPack1MSIXPath, [System.IO.Path]::Join($MSIXBundleOutput, $ExtraLanguagesPack1MSIXPathName), $true)
 
     # The path to the final MSIX Bundle file
-    [System.String]$MSIXBundle = [System.IO.Path]::Combine($MSIXBundleOutput, $FinalBundleFileName)
+    [System.String]$MSIXBundle = [System.IO.Path]::Join($MSIXBundleOutput, $FinalBundleFileName)
 
     # https://learn.microsoft.com/windows/win32/appxpkg/make-appx-package--makeappx-exe-#to-create-a-package-bundle-using-a-directory-structure
     . $MakeAppxPath bundle /d $MSIXBundleOutput /p $MSIXBundle /o /v
@@ -1191,8 +1101,7 @@ function Build_HSS {
 
     if ($Upload) {
         dotnet clean '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release
-        dotnet build '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release --verbosity minimal
-        dotnet msbuild '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Configuration=Release /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
+        dotnet msbuild '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Configuration=Release /restore /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
 
         [System.String]$TokenEndpoint = $env:PARTNERCENTER_TOKENENDPOINT
         [System.String]$ClientId = $env:PARTNERCENTER_CLIENTID
@@ -1205,26 +1114,20 @@ function Build_HSS {
         . '..\AppControl Manager\eXclude\PartnerCenter\X64Output\PartnerCenter.exe' $TokenEndpoint $ClientId $ClientSecret $ApplicationId $PackageFilePath $ReleaseNotesFilePath
     }
 
-    if ($null -ne $Stopwatch) {
-
-        $Stopwatch.Stop()
-
-        $Elapsed = $Stopwatch.Elapsed
-        [string]$Result = @"
-                            Execution Time:
-                            ----------------------------
-                            Total Time   : $($Elapsed.ToString('g'))
-                            Hours        : $($Elapsed.Hours)
-                            Minutes      : $($Elapsed.Minutes)
-                            Seconds      : $($Elapsed.Seconds)
-                            Milliseconds : $($Elapsed.Milliseconds)
-                            ----------------------------
+    $Stopwatch.Stop()
+    [string]$Result = @"
+    Execution Time:
+    ----------------------------
+    Total Time   : $($Stopwatch.Elapsed.ToString('g'))
+    Hours        : $($Stopwatch.Elapsed.Hours)
+    Minutes      : $($Stopwatch.Elapsed.Minutes)
+    Seconds      : $($Stopwatch.Elapsed.Seconds)
+    Milliseconds : $($Stopwatch.Elapsed.Milliseconds)
+    ----------------------------
 "@
 
-        Write-Host -Object $Result -ForegroundColor Cyan
-    }
+    Write-Host -Object $Result -ForegroundColor Cyan
 }
-
 # For GitHub workflow
 # Build_HSS -DownloadRepo $false -InstallDeps $true -Workflow $true -UpdateWorkLoads $false -Upload $true
 # Local - ARM64 + X64

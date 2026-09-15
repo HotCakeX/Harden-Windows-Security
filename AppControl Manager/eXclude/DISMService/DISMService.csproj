@@ -15,6 +15,7 @@
 		<ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
 		<TrimmerSingleWarn>false</TrimmerSingleWarn>
 		<UseNativeHttpHandler>false</UseNativeHttpHandler>
+        <OptimizationPreference>Size</OptimizationPreference>
 		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
 		<Http3Support>false</Http3Support>
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>

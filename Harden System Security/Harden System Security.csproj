@@ -265,25 +265,25 @@
         <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.89.0" />
         <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.89.0" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.12" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.1.26425.128" />
         <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.6" />
-        <PackageReference Include="System.Diagnostics.EventLog" Version="10.0.12" />
+        <PackageReference Include="System.Diagnostics.EventLog" Version="11.0.0-rc.1.26425.128" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.22.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4191.47" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.29648.1000-preview" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.3.9" />
         <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="2.0.5" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260610101">
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260903100">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.WindowsPackageManager.ComInterop" Version="1.30.100-preview" />
-        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="10.0.12" />
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="11.0.0-rc.1.26425.128" />
 
     </ItemGroup>
 
@@ -506,11 +506,10 @@
         <Error Condition="!Exists('$(_DISMServiceProject)')" Text="The DISMService project was not found at '$(_DISMServiceProject)'." />
         <Error Condition="!Exists('$(_DISMServicePublishProfile)')" Text="The DISMService publish profile was not found at '$(_DISMServicePublishProfile)'." />
 
-        <!-- Restore, clean, build and publish only the architecture selected for the current app build. -->
-        <Exec Command="dotnet restore &quot;$(_DISMServiceProject)&quot; -r $(_DISMServiceRuntimeIdentifier)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <!-- Clean and publish only the architecture selected for the current app build. -->
         <Exec Command="dotnet clean &quot;$(_DISMServiceProject)&quot; --configuration Release" WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet build &quot;$(_DISMServiceProject)&quot; --configuration Release --verbosity minimal /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_DISMServiceRuntimeIdentifier)" WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet msbuild &quot;$(_DISMServiceProject)&quot; /p:Configuration=Release /restore /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_DISMServiceRuntimeIdentifier) /p:PublishProfile=&quot;$(_DISMServicePublishProfile)&quot; /t:Publish -v:minimal" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <RemoveDir Directories="$(_DISMServicePublishDirectory)" />
+        <Exec Command="dotnet publish &quot;$(_DISMServiceProject)&quot; --configuration Release --runtime $(_DISMServiceRuntimeIdentifier) --verbosity minimal /p:Platform=$(Platform) /p:PublishProfileFullPath=&quot;$(_DISMServicePublishProfile)&quot; /p:PublishDir=&quot;$(_DISMServicePublishDirectory)&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" />
 
         <!-- Place the native executable in the app project root for its existing Content item. -->
         <Error Condition="!Exists('$(_DISMServicePublishedExecutable)')" Text="DISMService was published, but '$(_DISMServicePublishedExecutable)' was not produced." />
@@ -537,11 +536,10 @@
         <Error Condition="!Exists('$(_QuantumRelayHSSProject)')" Text="The QuantumRelayHSS project was not found at '$(_QuantumRelayHSSProject)'." />
         <Error Condition="!Exists('$(_QuantumRelayHSSPublishProfile)')" Text="The QuantumRelayHSS publish profile was not found at '$(_QuantumRelayHSSPublishProfile)'." />
 
-        <!-- Restore, clean, build and publish only the architecture selected for the current app build. -->
-        <Exec Command="dotnet restore &quot;$(_QuantumRelayHSSProject)&quot; -r $(_QuantumRelayHSSRuntimeIdentifier)" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <!-- Clean and publish only the architecture selected for the current app build. -->
         <Exec Command="dotnet clean &quot;$(_QuantumRelayHSSProject)&quot; --configuration Release" WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet build &quot;$(_QuantumRelayHSSProject)&quot; --configuration Release --verbosity minimal /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_QuantumRelayHSSRuntimeIdentifier)" WorkingDirectory="$(MSBuildProjectDirectory)" />
-        <Exec Command="dotnet msbuild &quot;$(_QuantumRelayHSSProject)&quot; /p:Configuration=Release /restore /p:Platform=$(Platform) /p:RuntimeIdentifier=$(_QuantumRelayHSSRuntimeIdentifier) /p:PublishProfile=&quot;$(_QuantumRelayHSSPublishProfile)&quot; /t:Publish -v:minimal" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <RemoveDir Directories="$(_QuantumRelayHSSPublishDirectory)" />
+        <Exec Command="dotnet publish &quot;$(_QuantumRelayHSSProject)&quot; --configuration Release --runtime $(_QuantumRelayHSSRuntimeIdentifier) --verbosity minimal /p:Platform=$(Platform) /p:PublishProfileFullPath=&quot;$(_QuantumRelayHSSPublishProfile)&quot; /p:PublishDir=&quot;$(_QuantumRelayHSSPublishDirectory)&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" />
 
         <!-- Place the service executable in the app project root for its existing Content item. -->
         <Error Condition="!Exists('$(_QuantumRelayHSSPublishedExecutable)')" Text="QuantumRelayHSS was published, but '$(_QuantumRelayHSSPublishedExecutable)' was not produced." />

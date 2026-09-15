@@ -11,7 +11,7 @@
 		<StartupObject>QuantumRelayHSS.Program</StartupObject>
 		<DebugSymbols>false</DebugSymbols>
 		<DebugType>none</DebugType>
-
+        <OptimizationPreference>Size</OptimizationPreference>
 		<!--Trim And Native AOT-->
 		<PublishAot>True</PublishAot>
 		<PublishTrimmed>True</PublishTrimmed>

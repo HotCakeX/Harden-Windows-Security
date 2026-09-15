@@ -14,7 +14,7 @@
 		<ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
 		<TrimmerSingleWarn>false</TrimmerSingleWarn>
 		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
-		<OptimizationPreference>Speed</OptimizationPreference>
+		<OptimizationPreference>Size</OptimizationPreference>
 		<Title>Partner Center</Title>
 		<Copyright>Violet Hansen</Copyright>
 		<Description>Partner Center</Description>

@@ -15,9 +15,13 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
@@ -87,6 +91,65 @@ internal readonly struct TopBarSentryArmResult(bool success, string? error, bool
 }
 
 /// <summary>
+/// Applies the selected DPAPI protection mode to Sentry WAV files in place.
+/// </summary>
+internal static class TopBarSentryProtection
+{
+	private static readonly byte[] Entropy = Encoding.UTF8.GetBytes("HotCakeX");
+
+	internal static void ProcessFile(string filePath, int mode)
+	{
+		byte[] currentBytes = File.ReadAllBytes(filePath);
+		// If we should disable encryption
+		if (mode == 0)
+		{
+			// Try to decrypt the file with both scopes and write the plain bytes back to disk.
+			if (!TryDecrypt(currentBytes, DataProtectionScope.CurrentUser, out byte[]? plainBytes) &&
+				!TryDecrypt(currentBytes, DataProtectionScope.LocalMachine, out plainBytes))
+			{
+				return;
+			}
+
+			File.WriteAllBytes(filePath, plainBytes);
+			return;
+		}
+
+		// Select the DPAPI scope requested by the mode
+		DataProtectionScope targetScope = mode == 1 ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine;
+
+		// Check whether the file is already encrypted using the requested scope.
+		if (TryDecrypt(currentBytes, targetScope, out _))
+		{
+			// No processing is needed because the file is already protected using the requested scope.
+			return;
+		}
+
+		// Select the opposite DPAPI scope so a file protected with that scope can first be decrypted.
+		DataProtectionScope otherScope = mode == 1 ? DataProtectionScope.LocalMachine : DataProtectionScope.CurrentUser;
+
+		// Use bytes decrypted with the opposite scope when possible; otherwise treat the current bytes as unencrypted file content.
+		byte[] plainBytesToProtect = TryDecrypt(currentBytes, otherScope, out byte[]? decryptedBytes) ? decryptedBytes : currentBytes;
+
+		// Encrypt the plain file content using the requested scope and replace the file with the protected bytes.
+		File.WriteAllBytes(filePath, ProtectedData.Protect(plainBytesToProtect, Entropy, targetScope));
+	}
+
+	private static bool TryDecrypt(byte[] bytes, DataProtectionScope scope, [NotNullWhen(true)] out byte[]? plainBytes)
+	{
+		try
+		{
+			plainBytes = ProtectedData.Unprotect(bytes, Entropy, scope);
+			return true;
+		}
+		catch (CryptographicException)
+		{
+			plainBytes = null;
+			return false;
+		}
+	}
+}
+
+/// <summary>
 /// The engine of the Acoustic Sentry view of the Top Bar.
 ///
 /// It opens the default microphone through an <see cref="AudioGraph"/> and watches the ambient loudness continuously.
@@ -119,6 +182,7 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 	/// The floor that a fully silent quantum is reported at, so that the logarithm never has to be taken of zero.
 	/// </summary>
 	private const double SilenceFloorDecibel = -100.0;
+	private static readonly TimeSpan InitializationTimeout = TimeSpan.FromSeconds(15.0);
 
 	/// <summary>
 	/// The default folder that captures are written to when the user has not chosen one of their own.
@@ -193,7 +257,15 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 
 			// The render category is nominal for a capture only graph, but a category still has to be named.
 			AudioGraphSettings graphSettings = new(AudioRenderCategory.Media);
-			CreateAudioGraphResult graphResult = await AudioGraph.CreateAsync(graphSettings);
+			CreateAudioGraphResult graphResult;
+			try
+			{
+				graphResult = await AudioGraph.CreateAsync(graphSettings).AsTask().WaitAsync(InitializationTimeout);
+			}
+			catch (TimeoutException)
+			{
+				return new TopBarSentryArmResult(false, "The audio engine did not start within 15 seconds.", false);
+			}
 			if (graphResult.Status != AudioGraphCreationStatus.Success || graphResult.Graph is null)
 			{
 				return new TopBarSentryArmResult(false, "The audio engine could not start (" + graphResult.Status.ToString() + ").", false);
@@ -201,7 +273,16 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 
 			_graph = graphResult.Graph;
 
-			CreateAudioDeviceInputNodeResult inputResult = await _graph.CreateDeviceInputNodeAsync(MediaCategory.Media);
+			CreateAudioDeviceInputNodeResult inputResult;
+			try
+			{
+				inputResult = await _graph.CreateDeviceInputNodeAsync(MediaCategory.Media).AsTask().WaitAsync(InitializationTimeout);
+			}
+			catch (TimeoutException)
+			{
+				await ShutdownGraphAsync();
+				return new TopBarSentryArmResult(false, "The microphone did not open within 15 seconds.", false);
+			}
 			if (inputResult.Status != AudioDeviceNodeCreationStatus.Success || inputResult.DeviceInputNode is null)
 			{
 				await ShutdownGraphAsync();
@@ -406,7 +487,7 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 				// A manual stop ends the wait early and the capture is finalized with whatever it has so far.
 			}
 
-			await CompleteRecordingAsync();
+			await CompleteRecordingAsync(file.Path);
 		}
 		catch (Exception ex)
 		{
@@ -424,21 +505,37 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 	/// Detaches the capture file from the graph, finalizes it, records the cooldown, and either re-arms for the next
 	/// cycle or disarms the session when the cycle ceiling has been reached.
 	/// </summary>
-	private async Task CompleteRecordingAsync()
+	private async Task CompleteRecordingAsync(string filePath)
 	{
 		AudioFileOutputNode? fileOutputNode = _fileOutputNode;
 		_fileOutputNode = null;
+		bool finalized = false;
 
 		if (fileOutputNode is not null)
 		{
 			try
 			{
 				_deviceInputNode?.RemoveOutgoingConnection(fileOutputNode);
+				fileOutputNode.Stop();
 				TranscodeFailureReason reason = await fileOutputNode.FinalizeAsync();
-				if (reason != TranscodeFailureReason.None)
+				finalized = reason == TranscodeFailureReason.None;
+				if (!finalized)
 				{
 					Logger.Write("The Sentry could not finalize a capture: " + reason.ToString(), LogTypeIntel.Error);
 				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		}
+
+		// If finalized and user has selected for recording files to be encrypted
+		if (finalized && Atlas.Settings.WindowsTopBarSentryEncryptionMode != 0)
+		{
+			try
+			{
+				await Task.Run(() => TopBarSentryProtection.ProcessFile(filePath, Atlas.Settings.WindowsTopBarSentryEncryptionMode));
 			}
 			catch (Exception ex)
 			{
@@ -668,6 +765,7 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 				try
 				{
 					_deviceInputNode?.RemoveOutgoingConnection(fileOutputNode);
+					fileOutputNode.Stop();
 					_ = await fileOutputNode.FinalizeAsync();
 				}
 				catch (Exception ex)

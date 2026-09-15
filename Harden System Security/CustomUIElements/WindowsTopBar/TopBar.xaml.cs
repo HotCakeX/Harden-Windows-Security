@@ -3637,6 +3637,55 @@ internal sealed partial class TopBar : Window
 		}
 	}
 
+	/// <summary>
+	/// Keeps the bar expanded while the actions menu is open and prevents changing protection while a capture is active.
+	/// </summary>
+	private void OnSentryActionsMenuOpened(object? sender, object e)
+	{
+		OnFlyoutOpened(sender, e);
+		bool isIdle = _sentryEngine is null;
+		SentryNoEncryptionMenuItem.IsEnabled = isIdle;
+		SentryEncryptUserMenuItem.IsEnabled = isIdle;
+		SentryEncryptMachineMenuItem.IsEnabled = isIdle;
+	}
+
+	private async void OnSentryEncryptionChanged()
+	{
+		if (_sentryEngine is not null)
+		{
+			return;
+		}
+
+		try
+		{
+			await Task.Run(() =>
+			{
+				// Find all the existing recordings
+				(IEnumerable<string> Paths, int Count) = FileUtility.GetFilesFast(
+					directories: new[] { ResolveSentryOutputDirectory() },
+					files: null,
+					extensionsToFilterBy: [".wav"]);
+
+				foreach (string file in Paths)
+				{
+					TopBarSentryProtection.ProcessFile(file, Atlas.Settings.WindowsTopBarSentryEncryptionMode);
+				}
+			});
+			if (!_isClosed)
+			{
+				SentryCyclesText.Text = "The recordings have been processed.";
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			if (!_isClosed)
+			{
+				SentryCyclesText.Text = "The recordings could not be processed.";
+			}
+		}
+	}
+
 	#endregion
 
 	private void OnWindowClosed()

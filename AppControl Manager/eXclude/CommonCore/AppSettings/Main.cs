@@ -139,6 +139,7 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarSentryCooldownSeconds = ReadValue(nameof(WindowsTopBarSentryCooldownSeconds), WindowsTopBarSentryCooldownSeconds);
 		WindowsTopBarSentryMaxCycles = ReadValue(nameof(WindowsTopBarSentryMaxCycles), WindowsTopBarSentryMaxCycles);
 		WindowsTopBarSentryOutputDirectory = ReadValue(nameof(WindowsTopBarSentryOutputDirectory), WindowsTopBarSentryOutputDirectory);
+		WindowsTopBarSentryEncryptionMode = ReadValue(nameof(WindowsTopBarSentryEncryptionMode), WindowsTopBarSentryEncryptionMode);
 		CustomizableScanLevelsFallbackOrder = ReadValue(nameof(CustomizableScanLevelsFallbackOrder), CustomizableScanLevelsFallbackOrder);
 	}
 
@@ -1278,6 +1279,58 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = string.Empty;
+
+	/// <summary>
+	/// Harden System Security app only.
+	/// Controls Sentry recording protection. 0 disables encryption, 1 uses the current-user scope and 2 uses the local-machine scope.
+	/// </summary>
+	internal int WindowsTopBarSentryEncryptionMode
+	{
+		get; set
+		{
+			int normalizedValue = Math.Clamp(value, 0, 2);
+			if (SP(ref field, normalizedValue))
+			{
+				SaveValue(nameof(WindowsTopBarSentryEncryptionMode), field);
+				OnPropertyChanged(nameof(WindowsTopBarSentryNoEncryption));
+				OnPropertyChanged(nameof(WindowsTopBarSentryEncryptForUser));
+				OnPropertyChanged(nameof(WindowsTopBarSentryEncryptForMachine));
+			}
+		}
+	}
+	internal bool WindowsTopBarSentryNoEncryption
+	{
+		get => WindowsTopBarSentryEncryptionMode == 0;
+		set
+		{
+			if (value)
+			{
+				WindowsTopBarSentryEncryptionMode = 0;
+			}
+		}
+	}
+	internal bool WindowsTopBarSentryEncryptForUser
+	{
+		get => WindowsTopBarSentryEncryptionMode == 1;
+		set
+		{
+			if (value)
+			{
+				WindowsTopBarSentryEncryptionMode = 1;
+			}
+		}
+	}
+	internal bool WindowsTopBarSentryEncryptForMachine
+	{
+		get => WindowsTopBarSentryEncryptionMode == 2;
+		set
+		{
+			if (value)
+			{
+				WindowsTopBarSentryEncryptionMode = 2;
+			}
+		}
+	}
 
 	/// <summary>
 	/// For AppControl Manager.

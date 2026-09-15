@@ -590,18 +590,67 @@
                             <StackPanel Orientation="Horizontal"
                                         Spacing="4"
                                         Margin="0,4,0,0">
-                                <Button x:Name="SentryBrowseButton"
+                                <Button x:Name="SentryActionsButton"
                                         FontSize="10"
-                                        Content="Browse"
-                                        Click="{x:Bind OnSentryBrowseClick}"/>
-                                <Button x:Name="SentryOpenFolderButton"
-                                        FontSize="10"
-                                        Content="Open"
-                                        Click="{x:Bind OnSentryOpenFolderClick}"/>
-                                <Button x:Name="SentryDefaultFolderButton"
-                                        FontSize="10"
-                                        Content="Reset"
-                                        Click="{x:Bind OnSentryDefaultFolderClick}"/>
+                                        Content="Actions">
+                                    <Button.Flyout>
+                                        <MenuFlyout x:Name="SentryActionsMenu"
+                                                    Opened="{x:Bind OnSentryActionsMenuOpened}"
+                                                    Closed="{x:Bind OnFlyoutClosed}"
+                                                    Placement="Bottom"
+                                                    ShouldConstrainToRootBounds="False">
+                                            <MenuFlyoutItem x:Name="SentryBrowseMenuItem"
+                                                            Text="Browse"
+                                                            Click="{x:Bind OnSentryBrowseClick}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE838;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem x:Name="SentryOpenFolderMenuItem"
+                                                            Text="Open"
+                                                            Click="{x:Bind OnSentryOpenFolderClick}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE8DA;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem x:Name="SentryDefaultFolderMenuItem"
+                                                            Text="Reset"
+                                                            Click="{x:Bind OnSentryDefaultFolderClick}">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE777;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutSeparator/>
+                                            <RadioMenuFlyoutItem x:Name="SentryNoEncryptionMenuItem"
+                                                                 Text="No encryption"
+                                                                 GroupName="SentryEncryption"
+                                                                 IsChecked="{x:Bind CC:Atlas.Settings.WindowsTopBarSentryNoEncryption, Mode=TwoWay}"
+                                                                 Click="{x:Bind OnSentryEncryptionChanged}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE785;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+                                            <RadioMenuFlyoutItem x:Name="SentryEncryptUserMenuItem"
+                                                                 Text="Encrypt recordings for current user"
+                                                                 GroupName="SentryEncryption"
+                                                                 IsChecked="{x:Bind CC:Atlas.Settings.WindowsTopBarSentryEncryptForUser, Mode=TwoWay}"
+                                                                 Click="{x:Bind OnSentryEncryptionChanged}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE77B;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+                                            <RadioMenuFlyoutItem x:Name="SentryEncryptMachineMenuItem"
+                                                                 Text="Encrypt recordings for this machine"
+                                                                 GroupName="SentryEncryption"
+                                                                 IsChecked="{x:Bind CC:Atlas.Settings.WindowsTopBarSentryEncryptForMachine, Mode=TwoWay}"
+                                                                 Click="{x:Bind OnSentryEncryptionChanged}">
+                                                <RadioMenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xF712;"/>
+                                                </RadioMenuFlyoutItem.Icon>
+                                            </RadioMenuFlyoutItem>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
                             </StackPanel>
                         </StackPanel>
                         <!-- Current state and completed cycle count. -->

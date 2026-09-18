@@ -503,7 +503,7 @@
                                                        TextAlignment="Center"
                                                        TextWrapping="NoWrap" />
                                         </ToggleButton>
-                                        <TextBlock x:Name="TotalSystemPowerValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="Unavailable" />
+                                        <TextBlock x:Name="TotalSystemPowerValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="N/A" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="TotalSystemPowerLiveGraph"
                                                                     Grid.Row="1"
@@ -555,7 +555,7 @@
                                                        TextAlignment="Center"
                                                        TextWrapping="NoWrap" />
                                         </ToggleButton>
-                                        <TextBlock x:Name="BatteryDischargeValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="Unavailable" />
+                                        <TextBlock x:Name="BatteryDischargeValueTextBlock" HorizontalAlignment="Right" VerticalAlignment="Center" MaxWidth="150" TextTrimming="CharacterEllipsis" Text="N/A" />
                                     </Grid>
                                     <customUI:HomeLiveLineGraph x:Name="BatteryDischargeLiveGraph"
                                                                     Grid.Row="1"

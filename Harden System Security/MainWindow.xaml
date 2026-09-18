@@ -625,6 +625,7 @@
                 <NavigationViewItem x:Name="ServiceManagerNavItem" Icon="{x:Bind ViewModel.ServiceManagerIcon, Mode=OneWay}" x:Uid="ServiceManagerNavItem" Tag="ServiceManager"/>
                 <NavigationViewItem x:Name="ExploitMitigationsNavItem" Icon="{x:Bind ViewModel.ExploitMitigationsIcon, Mode=OneWay}" x:Uid="ExploitMitigationsNavItem" Tag="ExploitMitigations" />
                 <NavigationViewItem x:Name="SandboxMakerNavItem" Icon="{x:Bind ViewModel.SandboxMakerIcon, Mode=OneWay}" x:Uid="SandboxMakerNavItem" Tag="SandboxMaker" />
+                <NavigationViewItem x:Name="TweaksNavItem" Icon="{x:Bind ViewModel.TweaksIcon, Mode=OneWay}" x:Uid="TweaksNavItem" Tag="Tweaks" />
 
                 <!-- Extras -->
 

@@ -4015,4 +4015,110 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int CM_Get_DevNode_Status(out uint pulStatus, out uint pulProblemNumber, uint dnDevInst, uint ulFlags);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/shlobj_core/nf-shlobj_core-shgetpathfromidlistex
+	/// </summary>
+	[LibraryImport("shell32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool SHGetPathFromIDListEx(void* pidl, char* pszPath, uint cchPath, uint uOpts);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/iphlpapi/nf-iphlpapi-getadaptersaddresses
+	/// </summary>
+	[LibraryImport("Iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetAdaptersAddresses(
+		uint Family,
+		uint Flags,
+		IntPtr Reserved,
+		IntPtr AdapterAddresses,
+		ref uint SizePointer);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/iphlpapi/nf-iphlpapi-getinterfaceinfo
+	/// </summary>
+	[LibraryImport("Iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetInterfaceInfo(IntPtr pIfTable, ref uint dwOutBufLen);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/iphlpapi/nf-iphlpapi-ipreleaseaddress
+	/// </summary>
+	[LibraryImport("Iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint IpReleaseAddress(ref IP_ADAPTER_INDEX_MAP AdapterInfo);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/iphlpapi/nf-iphlpapi-iprenewaddress
+	/// </summary>
+	[LibraryImport("Iphlpapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint IpRenewAddress(ref IP_ADAPTER_INDEX_MAP AdapterInfo);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winhttp/nf-winhttp-winhttpopen
+	/// </summary>
+	[LibraryImport("winhttp.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr WinHttpOpen(
+		string? pszAgentW,
+		uint dwAccessType,
+		string? pszProxyW,
+		string? pszProxyBypassW,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winhttp/nf-winhttp-winhttpresetautoproxy
+	/// </summary>
+	[LibraryImport("winhttp.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint WinHttpResetAutoProxy(IntPtr hSession, uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winhttp/nf-winhttp-winhttpclosehandle
+	/// </summary>
+	[LibraryImport("winhttp.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool WinHttpCloseHandle(IntPtr hInternet);
+
+
+	[LibraryImport("ReInfo.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int WinReGetConfig(char* configWinDir, WINRE_CONFIG* config);
+
+
+	[LibraryImport("ReAgent.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int WinReInstall(int enable, Guid* osGuid);
+
+
+	[LibraryImport("ReAgent.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int WinReUnInstall();
+
+
+	[LibraryImport("wimgapi.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr WIMCreateFile(char* path, uint access, uint disposition, uint flags, uint compression, uint* creationResult);
+
+
+	[LibraryImport("wimgapi.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int WIMGetImageInformation(IntPtr image, IntPtr* information, uint* size);
+
+
+	[LibraryImport("wimgapi.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int WIMCloseHandle(IntPtr value);
+
 }

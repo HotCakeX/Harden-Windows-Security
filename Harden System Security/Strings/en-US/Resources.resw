@@ -7836,9 +7836,6 @@ Thumbprint: {3}</value>
   <data name="TopBarMetricAppMemory" xml:space="preserve">
     <value>App RAM</value>
   </data>
-  <data name="TopBarMetricUnavailable" xml:space="preserve">
-    <value>—</value>
-  </data>
   <data name="TopBarClockNameLabel" xml:space="preserve">
     <value>Name</value>
   </data>
@@ -7889,5 +7886,14 @@ Thumbprint: {3}</value>
   </data>
   <data name="TopBarStartupMenuItem" xml:space="preserve">
     <value>Start with Windows</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>Tweaks</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tweaks allow you to customize and enhance your Windows experience by providing access to various system settings and optimizations in one convenient location.</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Tweaks allow you to customize and enhance your Windows experience by providing access to various system settings and optimizations in one convenient location.</value>
   </data>
 </root>

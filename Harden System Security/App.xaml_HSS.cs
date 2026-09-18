@@ -578,18 +578,6 @@ public sealed partial class App : Application
 
 		#endregion
 
-		// If the user has enabled animated rainbow border for the app window, start it
-		if (Atlas.Settings.IsAnimatedRainbowEnabled)
-		{
-			CustomUIElements.AppWindowBorderCustomization.StartAnimatedFrame();
-		}
-		// If the user has set a custom color for the app window border, apply it
-		else if (!string.IsNullOrEmpty(Atlas.Settings.CustomAppWindowsBorder) &&
-			RGBHEX.ToRGB(Atlas.Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
-		{
-			CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
-		}
-
 		// Startup update check
 		AppUpdate.CheckAtStartup();
 	}

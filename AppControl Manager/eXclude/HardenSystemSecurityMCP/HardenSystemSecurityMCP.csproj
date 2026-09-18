@@ -7,7 +7,7 @@
         <StartupObject>HardenSystemSecurityMCP.Program</StartupObject>
         <EnableMsixTooling>true</EnableMsixTooling>
         <Version>$(FileVersion)</Version>
-        <FileVersion>1.0.2.0</FileVersion>
+        <FileVersion>1.0.3.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <AssemblyName>HardenSystemSecurityMCP</AssemblyName>
         <AssemblyProduct>Harden System Security MCP Server</AssemblyProduct>

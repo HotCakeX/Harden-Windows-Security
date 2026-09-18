@@ -236,6 +236,17 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 #endif
 
+		// If the user has enabled animated rainbow border for the app window, start it
+		if (Atlas.Settings.IsAnimatedRainbowEnabled)
+		{
+			CustomUIElements.AppWindowBorderCustomization.StartAnimatedFrame();
+		}
+		// If the user has set a custom color for the app window border, apply it
+		else if (!string.IsNullOrEmpty(Atlas.Settings.CustomAppWindowsBorder) &&
+			RGBHEX.ToRGB(Atlas.Settings.CustomAppWindowsBorder, out byte r, out byte g, out byte b))
+		{
+			CustomUIElements.AppWindowBorderCustomization.SetBorderColor(r, g, b);
+		}
 	}
 
 	private void MainWindow_Closed(object sender, WindowEventArgs args)
@@ -246,6 +257,9 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		NavigationViewLocationManager.NavigationViewLocationChanged -= OnNavigationViewLocationChanged;
 		AppThemeManager.AppThemeChanged -= OnAppThemeChanged;
 		UISettingInstance.ColorValuesChanged -= SystemWideThemeChangedEventHandler;
+		AppWindow.Changed -= MainWindow_SizeChanged;
+		SizeChanged -= OnSizeChanged;
+		AppWindow.Closing -= AppWindow_Closing;
 
 		try
 		{
@@ -277,6 +291,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		}
 		finally
 		{
+			Nav.Uninitialize();
+			CustomAcrylicWithPictureBackdropHost.Fill = null;
+			Content = null;
+
 			if (ReferenceEquals(App.MainWindow, this))
 			{
 				App.MainWindow = null;
@@ -1213,6 +1231,9 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			AutomationProperties.SetHelpText(SecureVaultNavigationViewItem, Atlas.GetStr("SecureVaultNavigationViewItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(SecureVaultNavigationViewItem, Atlas.GetStr("SecureVaultNavigationViewItem/ToolTipService/ToolTip"));
 
+			TweaksNavItem.Content = Atlas.GetStr("TweaksNavItem/Content");
+			AutomationProperties.SetHelpText(TweaksNavItem, Atlas.GetStr("TweaksNavItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(TweaksNavItem, Atlas.GetStr("TweaksNavItem/ToolTipService/ToolTip"));
 #endif
 
 #if APP_CONTROL_MANAGER

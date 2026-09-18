@@ -261,12 +261,12 @@
 
         <!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.89.0" />
-        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.89.0" />
-        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.89.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.90.0" />
+        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.90.0" />
+        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.90.0" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.1.26425.128" />
-        <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.6" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.9" />
         <PackageReference Include="System.Diagnostics.EventLog" Version="11.0.0-rc.1.26425.128" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
@@ -275,8 +275,8 @@
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.29648.1000-preview" />
         <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
-        <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.3.9" />
-        <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.3.12" />
+        <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.9" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Widgets" Version="2.0.5" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260903100">
             <PrivateAssets>all</PrivateAssets>

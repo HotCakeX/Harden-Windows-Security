@@ -977,7 +977,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			}
 			if (!hasMeasurement)
 			{
-				TotalSystemPowerValueTextBlock.Text = "Unavailable";
+				TotalSystemPowerValueTextBlock.Text = "N/A";
 				return;
 			}
 			TotalSystemPowerValueTextBlock.Text = totalWatts.ToString("0.###", CultureInfo.InvariantCulture) + " W";
@@ -987,7 +987,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
-			TotalSystemPowerValueTextBlock.Text = "Unavailable";
+			TotalSystemPowerValueTextBlock.Text = "N/A";
 		}
 	}
 
@@ -999,7 +999,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			int status = GetSystemBatteryState(ref batteryState);
 			if (status != 0 || batteryState.BatteryPresent == 0 || batteryState.Rate == int.MinValue)
 			{
-				BatteryDischargeValueTextBlock.Text = "Unavailable";
+				BatteryDischargeValueTextBlock.Text = "N/A";
 				return;
 			}
 			double dischargeWatts = batteryState.Discharging != 0 && batteryState.Rate < 0
@@ -1012,7 +1012,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
-			BatteryDischargeValueTextBlock.Text = "Unavailable";
+			BatteryDischargeValueTextBlock.Text = "N/A";
 		}
 	}
 
@@ -1032,7 +1032,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 			memoryStatus.dwLength = (uint)Unsafe.SizeOf<MEMORYSTATUSEX>();
 			if (!NativeMethods.GlobalMemoryStatusEx(ref memoryStatus) || memoryStatus.ullTotalPhys == 0UL)
 			{
-				SystemMemoryUtilizationValueTextBlock.Text = "Unavailable";
+				SystemMemoryUtilizationValueTextBlock.Text = "N/A";
 				return;
 			}
 
@@ -1046,7 +1046,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
-			SystemMemoryUtilizationValueTextBlock.Text = "Unavailable";
+			SystemMemoryUtilizationValueTextBlock.Text = "N/A";
 		}
 	}
 
@@ -1056,14 +1056,14 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		{
 			if (!EnsureCpuUsageCountersInitialized())
 			{
-				CpuUsageValueTextBlock.Text = "Unavailable";
+				CpuUsageValueTextBlock.Text = "N/A";
 				return;
 			}
 
 			uint collectStatus = NativeMethods.PdhCollectQueryData(_cpuUsagePdhQuery);
 			if (collectStatus != ErrorSuccess)
 			{
-				CpuUsageValueTextBlock.Text = "Unavailable";
+				CpuUsageValueTextBlock.Text = "N/A";
 				return;
 			}
 
@@ -1075,7 +1075,7 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
-			CpuUsageValueTextBlock.Text = "Unavailable";
+			CpuUsageValueTextBlock.Text = "N/A";
 		}
 	}
 
@@ -1332,13 +1332,13 @@ internal sealed partial class HomeLiveGraphsWindow : Window, IDisposable
 	{
 		if (!EnsureDiskActivityCountersInitialized())
 		{
-			DiskActivityValueTextBlock.Text = "Unavailable";
+			DiskActivityValueTextBlock.Text = "N/A";
 			return;
 		}
 		uint collectStatus = NativeMethods.PdhCollectQueryData(_diskActivityPdhQuery);
 		if (collectStatus != ErrorSuccess)
 		{
-			DiskActivityValueTextBlock.Text = "Unavailable";
+			DiskActivityValueTextBlock.Text = "N/A";
 			return;
 		}
 		_lastDiskReadBytesPerSecond = GetFormattedCounterValue(_diskReadSpeedCounter);

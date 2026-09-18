@@ -84,6 +84,24 @@ internal sealed class NavigationService
 		frame.CacheSize = 1;
 	}
 
+	/// <summary>
+	/// Releases references to the MainWindow visual tree.
+	/// </summary>
+	internal void Uninitialize()
+	{
+		if (_frame is not null)
+		{
+			_frame.BackStack.Clear();
+			_frame.Content = null;
+			_frame = null;
+		}
+		MainNavigation = null;
+		mainWindowVM.NavViewSelectedItem = null;
+		mainWindowVM.allNavigationItems.Clear();
+		MainWindowVM.PageTypeToNavItem = null;
+		NavItemsHaveBeenCollected = false;
+	}
+
 #if APP_CONTROL_MANAGER
 	/// <summary>
 	/// Event handler to change visibility of the AnimatedIcons on the currently visible page in the frame

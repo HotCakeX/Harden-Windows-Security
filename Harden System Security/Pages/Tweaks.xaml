@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HardenSystemSecurity.Pages.Tweaks"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:CC="using:CommonCore"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+    <Grid RowSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Section selector -->
+        <SelectorBar Grid.Row="0"
+                     HorizontalAlignment="Center"
+                     SelectionChanged="{x:Bind ViewModel.SectionSelectorBar_SelectionChanged}">
+            <SelectorBarItem Text="Cleanup"
+                             IsSelected="True">
+                <SelectorBarItem.Icon>
+                    <FontIcon Glyph="&#xE74D;"/>
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
+            <SelectorBarItem Text="Diagnostics"
+                             IsEnabled="{x:Bind CC:Atlas.IsElevated}" >
+                <SelectorBarItem.Icon>
+                    <FontIcon Glyph="&#xE9D9;"/>
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
+        </SelectorBar>
+
+        <!-- Cleanup section -->
+        <ScrollViewer Grid.Row="1"
+                      Visibility="{x:Bind ViewModel.CleanupSectionVisibility, Mode=OneWay}">
+            <Grid RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Old NuGet Package Versions -->
+                <Border Grid.Row="0"
+                        Padding="15"
+                        Style="{StaticResource GridCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="NuGet Package Cache Cleaner"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Free up disk space by finding older NuGet package versions that your development environment no longer needs. Close your .NET projects first, then review the detected folders before removing them."
+                                   TextWrapping="Wrap"/>
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.NuGetCleanerInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.NuGetCleanerInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.NuGetCleanerInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.NuGetCleanerInfoBar.IsClosable, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <Button Content="Check"
+                                    IsEnabled="{x:Bind ViewModel.NuGetCleanerIsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CheckNuGetCleaner_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F9;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Content="Remove"
+                                    IsEnabled="{x:Bind ViewModel.NuGetCleanerCanRemove, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RemoveNuGetCleaner_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                        <Expander Header="Review detected data"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind ViewModel.NuGetCleanerReviewExpanded, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.NuGetCleanerIsEnabled, Mode=OneWay}"
+                                  MaxHeight="400">
+                            <TextBox Text="{x:Bind ViewModel.NuGetCleanerResults, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     IsSpellCheckEnabled="False"
+                                     TextWrapping="Wrap"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- PowerShell and VS Code history -->
+                <Border Grid.Row="1"
+                        Padding="15"
+                        Style="{StaticResource GridCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="PowerShell Command History Cleaner"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Keep your command-line activity to yourself by reviewing and clearing commands you previously entered in PowerShell consoles and the Visual Studio Code terminal. This removes the saved command histories."
+                                   TextWrapping="Wrap"/>
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.PowerShellHistoryInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.PowerShellHistoryInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.PowerShellHistoryInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.PowerShellHistoryInfoBar.IsClosable, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <Button Content="Check"
+                                    IsEnabled="{x:Bind ViewModel.PowerShellHistoryIsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CheckPowerShellHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F9;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Content="Clear"
+                                    IsEnabled="{x:Bind ViewModel.PowerShellHistoryCanRemove, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RemovePowerShellHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                        <Expander Header="Review detected data"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind ViewModel.PowerShellHistoryReviewExpanded, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.PowerShellHistoryIsEnabled, Mode=OneWay}"
+                                  MaxHeight="400">
+                            <TextBox Text="{x:Bind ViewModel.PowerShellHistoryResults, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     IsSpellCheckEnabled="False"
+                                     TextWrapping="Wrap"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- RUN History -->
+                <Border Grid.Row="2"
+                        Padding="15"
+                        Style="{StaticResource GridCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Run History Cleaner"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Give the Windows Run dialog a fresh start by reviewing and clearing commands you previously entered. This prevents old commands from continuing to appear as suggestions when you use Run again."
+                                   TextWrapping="Wrap"/>
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.RunHistoryInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.RunHistoryInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.RunHistoryInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.RunHistoryInfoBar.IsClosable, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <Button Content="Check"
+                                    IsEnabled="{x:Bind ViewModel.RunHistoryIsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CheckRunHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F9;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Content="Clear"
+                                    IsEnabled="{x:Bind ViewModel.RunHistoryCanRemove, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RemoveRunHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                        <Expander Header="Review detected data"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind ViewModel.RunHistoryReviewExpanded, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.RunHistoryIsEnabled, Mode=OneWay}"
+                                  MaxHeight="400">
+                            <TextBox Text="{x:Bind ViewModel.RunHistoryResults, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     IsSpellCheckEnabled="False"
+                                     TextWrapping="Wrap"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- File Explorer Typed-Path History -->
+                <Border Grid.Row="3"
+                        Padding="15"
+                        Style="{StaticResource GridCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="File Explorer Typed-Path History"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Leave previously visited paths behind by reviewing and clearing entries from the File Explorer address bar. This removes saved path suggestions without deleting any files or folders."
+                                   TextWrapping="Wrap"/>
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.TypedPathHistoryInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.TypedPathHistoryInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.TypedPathHistoryInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.TypedPathHistoryInfoBar.IsClosable, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <Button Content="Check"
+                                    IsEnabled="{x:Bind ViewModel.TypedPathHistoryIsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CheckTypedPathHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F9;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Content="Clear"
+                                    IsEnabled="{x:Bind ViewModel.TypedPathHistoryCanRemove, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RemoveTypedPathHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                        <Expander Header="Review detected data"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind ViewModel.TypedPathHistoryReviewExpanded, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.TypedPathHistoryIsEnabled, Mode=OneWay}"
+                                  MaxHeight="400">
+                            <TextBox Text="{x:Bind ViewModel.TypedPathHistoryResults, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     IsSpellCheckEnabled="False"
+                                     TextWrapping="Wrap"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- File Explorer Search-Box History -->
+                <Border Grid.Row="4"
+                        Padding="15"
+                        Style="{StaticResource GridCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="File Explorer Search-Box History"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Start with a clean search slate by reviewing and clearing terms you previously entered in File Explorer. This removes saved search suggestions without affecting your files or Windows Search index."
+                                   TextWrapping="Wrap"/>
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.SearchBoxHistoryInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.SearchBoxHistoryInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.SearchBoxHistoryInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.SearchBoxHistoryInfoBar.IsClosable, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <Button Content="Check"
+                                    IsEnabled="{x:Bind ViewModel.SearchBoxHistoryIsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CheckSearchBoxHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F9;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Content="Clear"
+                                    IsEnabled="{x:Bind ViewModel.SearchBoxHistoryCanRemove, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RemoveSearchBoxHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                        <Expander Header="Review detected data"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind ViewModel.SearchBoxHistoryReviewExpanded, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.SearchBoxHistoryIsEnabled, Mode=OneWay}"
+                                  MaxHeight="400">
+                            <TextBox Text="{x:Bind ViewModel.SearchBoxHistoryResults, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     IsSpellCheckEnabled="False"
+                                     TextWrapping="Wrap"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- Recent Items Shortcuts -->
+                <Border Grid.Row="5"
+                        Padding="15"
+                        Style="{StaticResource GridCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Recent Items Shortcuts"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Clean up your Recent Items list and reduce traces of recently opened content by reviewing and removing its saved shortcuts. Your original files remain untouched."
+                                   TextWrapping="Wrap"/>
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.RecentItemsInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.RecentItemsInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.RecentItemsInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.RecentItemsInfoBar.IsClosable, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <Button Content="Check"
+                                    IsEnabled="{x:Bind ViewModel.RecentItemsIsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CheckRecentItems_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F9;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Content="Clear"
+                                    IsEnabled="{x:Bind ViewModel.RecentItemsCanRemove, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RemoveRecentItems_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                        <Expander Header="Review detected data"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind ViewModel.RecentItemsReviewExpanded, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.RecentItemsIsEnabled, Mode=OneWay}"
+                                  MaxHeight="400">
+                            <TextBox Text="{x:Bind ViewModel.RecentItemsResults, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     IsSpellCheckEnabled="False"
+                                     TextWrapping="Wrap"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- Common Open/Save Dialog History -->
+                <Border Grid.Row="6"
+                        Padding="15"
+                        Style="{StaticResource GridCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Common Open/Save Dialog History"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Stop Open and Save dialogs from retracing your steps by reviewing and clearing the file and folder locations they remember. This reduces previously visited locations shown by compatible apps without deleting your files."
+                                   TextWrapping="Wrap"/>
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.CommonDialogHistoryInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.CommonDialogHistoryInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.CommonDialogHistoryInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.CommonDialogHistoryInfoBar.IsClosable, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <Button Content="Check"
+                                    IsEnabled="{x:Bind ViewModel.CommonDialogHistoryIsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CheckCommonDialogHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F9;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Content="Clear"
+                                    IsEnabled="{x:Bind ViewModel.CommonDialogHistoryCanRemove, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RemoveCommonDialogHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                        <Expander Header="Review detected data"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind ViewModel.CommonDialogHistoryReviewExpanded, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.CommonDialogHistoryIsEnabled, Mode=OneWay}"
+                                  MaxHeight="400">
+                            <TextBox Text="{x:Bind ViewModel.CommonDialogHistoryResults, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     IsSpellCheckEnabled="False"
+                                     TextWrapping="Wrap"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- RecentDocs History -->
+                <Border Grid.Row="7"
+                        Padding="15"
+                        Style="{StaticResource GridCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="RecentDocs History"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Clear the trail of document names remembered by File Explorer by reviewing and removing its RecentDocs history. This removes history records only and does not delete your documents."
+                                   TextWrapping="Wrap"/>
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.RecentDocsHistoryInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.RecentDocsHistoryInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.RecentDocsHistoryInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.RecentDocsHistoryInfoBar.IsClosable, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <Button Content="Check"
+                                    IsEnabled="{x:Bind ViewModel.RecentDocsHistoryIsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CheckRecentDocsHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F9;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Content="Clear"
+                                    IsEnabled="{x:Bind ViewModel.RecentDocsHistoryCanRemove, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RemoveRecentDocsHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                        <Expander Header="Review detected data"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind ViewModel.RecentDocsHistoryReviewExpanded, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.RecentDocsHistoryIsEnabled, Mode=OneWay}"
+                                  MaxHeight="400">
+                            <TextBox Text="{x:Bind ViewModel.RecentDocsHistoryResults, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     IsSpellCheckEnabled="False"
+                                     TextWrapping="Wrap"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+
+                <!-- Jump List History -->
+                <Border Grid.Row="8"
+                        Padding="15"
+                        Style="{StaticResource GridCardStyle}">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Jump List History"
+                                   Style="{ThemeResource SubtitleTextBlockStyle}"/>
+                        <TextBlock Text="Reset your Jump Lists by reviewing and clearing the data that stores recently used and pinned items for supported apps. Use this when you want a cleaner Start menu and taskbar history."
+                                   TextWrapping="Wrap"/>
+                        <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.JumpListHistoryInfoBar.IsOpen, Mode=TwoWay}"
+                                            Message="{x:Bind ViewModel.JumpListHistoryInfoBar.Message, Mode=OneWay}"
+                                            Severity="{x:Bind ViewModel.JumpListHistoryInfoBar.Severity, Mode=OneWay}"
+                                            IsClosable="{x:Bind ViewModel.JumpListHistoryInfoBar.IsClosable, Mode=OneWay}"/>
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="10">
+                            <Button Content="Check"
+                                    IsEnabled="{x:Bind ViewModel.JumpListHistoryIsEnabled, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.CheckJumpListHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE9F9;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Content="Clear"
+                                    IsEnabled="{x:Bind ViewModel.JumpListHistoryCanRemove, Mode=OneWay}"
+                                    Click="{x:Bind ViewModel.RemoveJumpListHistory_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                        <Expander Header="Review detected data"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind ViewModel.JumpListHistoryReviewExpanded, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ViewModel.JumpListHistoryIsEnabled, Mode=OneWay}"
+                                  MaxHeight="400">
+                            <TextBox Text="{x:Bind ViewModel.JumpListHistoryResults, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     IsReadOnly="True"
+                                     IsSpellCheckEnabled="False"
+                                     TextWrapping="Wrap"
+                                     HorizontalAlignment="Stretch"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </Expander>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+
+        <!-- Diagnostics section -->
+        <ScrollViewer Grid.Row="1"
+                      Visibility="{x:Bind ViewModel.DiagnosticsSectionVisibility, Mode=OneWay}">
+            <StackPanel HorizontalAlignment="Stretch"
+                        Spacing="12">
+                <StackPanel.ChildrenTransitions>
+                    <EntranceThemeTransition FromVerticalOffset="50"/>
+                    <RepositionThemeTransition IsStaggeringEnabled="False"/>
+                </StackPanel.ChildrenTransitions>
+
+                <!-- DNS Client Cache -->
+                <StackPanel>
+                    <customUI:InfoBarV2 IsIconVisible="True"
+                                        Margin="0,0,0,-1"
+                                        Title="{x:Bind ViewModel.DnsCacheInfoBar.Title, Mode=OneWay}"
+                                        Message="{x:Bind ViewModel.DnsCacheInfoBar.Message, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.DnsCacheInfoBar.IsOpen, Mode=TwoWay}"
+                                        IsClosable="{x:Bind ViewModel.DnsCacheInfoBar.IsClosable, Mode=OneWay}"
+                                        Severity="{x:Bind ViewModel.DnsCacheInfoBar.Severity, Mode=OneWay}"/>
+                    <customUI:SettingsCardV2 Header="Clear DNS Client Cache"
+                                             Description="Clears the DNS resolver cache so that name lookups are resolved again instead of being answered from cached records.">
+                        <customUI:SettingsCardV2.HeaderIcon>
+                            <FontIcon Glyph="&#xE968;"/>
+                        </customUI:SettingsCardV2.HeaderIcon>
+                        <Button Content="Clear"
+                                Style="{StaticResource AccentButtonStyle}"
+                                IsEnabled="{x:Bind ViewModel.DnsCacheIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.FlushDnsCache_Click}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </customUI:SettingsCardV2>
+                </StackPanel>
+
+                <!-- Reset IPv4 Addresses -->
+                <StackPanel>
+                    <customUI:InfoBarV2 IsIconVisible="True"
+                                        Margin="0,0,0,-1"
+                                        Title="{x:Bind ViewModel.IpAddressInfoBar.Title, Mode=OneWay}"
+                                        Message="{x:Bind ViewModel.IpAddressInfoBar.Message, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.IpAddressInfoBar.IsOpen, Mode=TwoWay}"
+                                        IsClosable="{x:Bind ViewModel.IpAddressInfoBar.IsClosable, Mode=OneWay}"
+                                        Severity="{x:Bind ViewModel.IpAddressInfoBar.Severity, Mode=OneWay}"/>
+                    <customUI:SettingsCardV2 Header="Reset IPv4 Addresses"
+                                             Description="Reset the IPv4 of every active DHCP-enabled network adapter by releasing and then renewing it. Network and VPN connectivity may be briefly interrupted.">
+                        <customUI:SettingsCardV2.HeaderIcon>
+                            <FontIcon Glyph="&#xE774;"/>
+                        </customUI:SettingsCardV2.HeaderIcon>
+                        <Button Content="Reset"
+                                Style="{StaticResource AccentButtonStyle}"
+                                IsEnabled="{x:Bind ViewModel.IpAddressIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.ReleaseAndRenewIpAddress_Click}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE895;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </customUI:SettingsCardV2>
+                </StackPanel>
+
+                <!-- Reset System Proxy -->
+                <StackPanel>
+                    <customUI:InfoBarV2 IsIconVisible="True"
+                                        Margin="0,0,0,-1"
+                                        Title="{x:Bind ViewModel.WinHttpAutoProxyInfoBar.Title, Mode=OneWay}"
+                                        Message="{x:Bind ViewModel.WinHttpAutoProxyInfoBar.Message, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.WinHttpAutoProxyInfoBar.IsOpen, Mode=TwoWay}"
+                                        IsClosable="{x:Bind ViewModel.WinHttpAutoProxyInfoBar.IsClosable, Mode=OneWay}"
+                                        Severity="{x:Bind ViewModel.WinHttpAutoProxyInfoBar.Severity, Mode=OneWay}"/>
+                    <customUI:SettingsCardV2 Header="Reset System HTTP Proxy"
+                                             Description="Clears WinHTTP automatic proxy information, WPAD state, and cached proxy scripts for all networks.">
+                        <customUI:SettingsCardV2.HeaderIcon>
+                            <FontIcon Glyph="&#xE968;"/>
+                        </customUI:SettingsCardV2.HeaderIcon>
+                        <Button Content="Reset"
+                                Style="{StaticResource AccentButtonStyle}"
+                                IsEnabled="{x:Bind ViewModel.WinHttpAutoProxyIsEnabled, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.ResetWinHttpAutoProxy_Click}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE777;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+                    </customUI:SettingsCardV2>
+                </StackPanel>
+
+                <!-- Disk Health Model Updates -->
+                <StackPanel>
+                    <customUI:InfoBarV2 IsIconVisible="True"
+                                        Margin="0,0,0,-1"
+                                        Title="{x:Bind ViewModel.DiskHealthModelUpdatesInfoBar.Title, Mode=OneWay}"
+                                        Message="{x:Bind ViewModel.DiskHealthModelUpdatesInfoBar.Message, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.DiskHealthModelUpdatesInfoBar.IsOpen, Mode=TwoWay}"
+                                        IsClosable="{x:Bind ViewModel.DiskHealthModelUpdatesInfoBar.IsClosable, Mode=OneWay}"
+                                        Severity="{x:Bind ViewModel.DiskHealthModelUpdatesInfoBar.Severity, Mode=OneWay}"/>
+                    <customUI:SettingsCardV2 Header="Disk Health Model Updates"
+                                             Description="Allows Windows to download updated machine learning model parameters used to predict storage disk failure.">
+                        <customUI:SettingsCardV2.HeaderIcon>
+                            <FontIcon Glyph="&#xEDA2;"/>
+                        </customUI:SettingsCardV2.HeaderIcon>
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.DiskHealthModelUpdatesIsOn, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.DiskHealthModelUpdatesIsEnabled, Mode=OneWay}"
+                                      Toggled="{x:Bind ViewModel.DiskHealthModelUpdates_Toggled}"/>
+                    </customUI:SettingsCardV2>
+                </StackPanel>
+
+                <!-- Windows Recovery Environment -->
+                <StackPanel>
+                    <customUI:InfoBarV2 IsIconVisible="True"
+                                        Margin="0,0,0,-1"
+                                        Title="{x:Bind ViewModel.WindowsReInfoBar.Title, Mode=OneWay}"
+                                        Message="{x:Bind ViewModel.WindowsReInfoBar.Message, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.WindowsReInfoBar.IsOpen, Mode=TwoWay}"
+                                        IsClosable="False"
+                                        Severity="{x:Bind ViewModel.WindowsReInfoBar.Severity, Mode=OneWay}"/>
+                    <customUI:SettingsCardV2 Header="Windows Recovery Environment"
+                                             Description="Enables or disables Windows Recovery Environment and displays its current configuration.">
+                        <customUI:SettingsCardV2.HeaderIcon>
+                            <FontIcon Glyph="&#xE774;"/>
+                        </customUI:SettingsCardV2.HeaderIcon>
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.WindowsReIsOn, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.WindowsReIsEnabled, Mode=OneWay}"
+                                      Toggled="{x:Bind ViewModel.WindowsRe_Toggled}"/>
+                    </customUI:SettingsCardV2>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

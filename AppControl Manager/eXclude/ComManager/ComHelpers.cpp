@@ -976,7 +976,9 @@ extern "C" __declspec(dllexport) bool __stdcall GetAllWmiData(const wchar_t* wmi
 		IWbemClassObject* pOut = nullptr;
 		hr = pSvc->ExecMethod(_bstr_t(wmiClassName), _bstr_t(customMethodName), 0, nullptr, pIn, &pOut, nullptr);
 
-		if (FAILED(hr) || !pOut)
+		// Some providers complete successfully without returning an output object, so only a failed
+		// HRESULT is treated as an error here.
+		if (FAILED(hr))
 		{
 			SetLastErrorMsg(wstring(L"ExecMethod for ") + customMethodName + L" failed. Error code = 0x" + to_wstring(hr));
 			if (pOut) pOut->Release();
@@ -991,25 +993,28 @@ extern "C" __declspec(dllexport) bool __stdcall GetAllWmiData(const wchar_t* wmi
 		}
 
 		// Log ReturnValue if present
-		VARIANT vRet; VariantInit(&vRet);
-		HRESULT hrRet = pOut->Get(_bstr_t(L"ReturnValue"), 0, &vRet, nullptr, nullptr);
-		if (SUCCEEDED(hrRet))
+		if (pOut)
 		{
-			if (vRet.vt == VT_I4 || vRet.vt == VT_UI4)
+			VARIANT vRet; VariantInit(&vRet);
+			HRESULT hrRet = pOut->Get(_bstr_t(L"ReturnValue"), 0, &vRet, nullptr, nullptr);
+			if (SUCCEEDED(hrRet))
 			{
-				LogOut(L"Method ", customMethodName, L" returned: ", (vRet.vt == VT_I4 ? vRet.intVal : static_cast<int>(vRet.ulVal)));
+				if (vRet.vt == VT_I4 || vRet.vt == VT_UI4)
+				{
+					LogOut(L"Method ", customMethodName, L" returned: ", (vRet.vt == VT_I4 ? vRet.intVal : static_cast<int>(vRet.ulVal)));
+				}
+				else
+				{
+					LogOut(L"Method ", customMethodName, L" executed; ReturnValue present with non-integer type.");
+				}
 			}
 			else
 			{
-				LogOut(L"Method ", customMethodName, L" executed; ReturnValue present with non-integer type.");
+				LogOut(L"Method ", customMethodName, L" executed, but no return value provided.");
 			}
+			VariantClear(&vRet);
+			pOut->Release();
 		}
-		else
-		{
-			LogOut(L"Method ", customMethodName, L" executed, but no return value provided.");
-		}
-		VariantClear(&vRet);
-		pOut->Release();
 
 		overallOk = true;
 	}

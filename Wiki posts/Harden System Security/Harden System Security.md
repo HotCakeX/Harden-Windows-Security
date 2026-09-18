@@ -826,7 +826,11 @@ function Build_HSS {
 
     rustup component add rust-src --toolchain nightly-x86_64-pc-windows-msvc
 
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed adding rust-src component to Nightly toolchain. Exit Code: $LASTEXITCODE") }
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed adding X64 rust-src component to Nightly toolchain. Exit Code: $LASTEXITCODE") }
+
+    rustup component add rust-src --toolchain nightly-aarch64-pc-windows-msvc
+
+    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed adding ARM64 rust-src component to Nightly toolchain. Exit Code: $LASTEXITCODE") }
 
     rustup update
 
@@ -869,13 +873,13 @@ function Build_HSS {
     dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (first pass). Exit Code: $LASTEXITCODE") }
 
-    dotnet publish '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release --runtime win-x64 --verbosity minimal /p:Platform=x64 /p:PublishProfileFullPath="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-x64.pubxml" /p:PublishDir="..\AppControl Manager\eXclude\DISMService\OutputX64\"
+    dotnet publish '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release --runtime win-x64 --verbosity minimal /p:Platform=x64 /p:PublishProfile=win-x64
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for x64. Exit Code: $LASTEXITCODE") }
 
     dotnet clean '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning DISMService (second pass). Exit Code: $LASTEXITCODE") }
 
-    dotnet publish '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release --runtime win-arm64 --verbosity minimal /p:Platform=arm64 /p:PublishProfileFullPath="..\AppControl Manager\eXclude\DISMService\Properties\PublishProfiles\win-arm64.pubxml" /p:PublishDir="..\AppControl Manager\eXclude\DISMService\OutputARM64\"
+    dotnet publish '..\AppControl Manager\eXclude\DISMService\DISMService.csproj' --configuration Release --runtime win-arm64 --verbosity minimal /p:Platform=arm64 /p:PublishProfile=win-arm64
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing DISMService for ARM64. Exit Code: $LASTEXITCODE") }
 
 
@@ -884,13 +888,13 @@ function Build_HSS {
     dotnet clean '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning QuantumRelayHSS (first pass). Exit Code: $LASTEXITCODE") }
 
-    dotnet publish '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --runtime win-x64 --verbosity minimal /p:Platform=x64 /p:PublishProfileFullPath="..\AppControl Manager\eXclude\QuantumRelayHSS\Properties\PublishProfiles\win-x64.pubxml" /p:PublishDir="..\AppControl Manager\eXclude\QuantumRelayHSS\OutputX64\"
+    dotnet publish '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --runtime win-x64 --verbosity minimal /p:Platform=x64 /p:PublishProfile=win-x64
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing QuantumRelayHSS for x64. Exit Code: $LASTEXITCODE") }
 
     dotnet clean '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning QuantumRelayHSS (second pass). Exit Code: $LASTEXITCODE") }
 
-    dotnet publish '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --runtime win-arm64 --verbosity minimal /p:Platform=arm64 /p:PublishProfileFullPath="..\AppControl Manager\eXclude\QuantumRelayHSS\Properties\PublishProfiles\win-arm64.pubxml" /p:PublishDir="..\AppControl Manager\eXclude\QuantumRelayHSS\OutputARM64\"
+    dotnet publish '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --runtime win-arm64 --verbosity minimal /p:Platform=arm64 /p:PublishProfile=win-arm64
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing QuantumRelayHSS for ARM64. Exit Code: $LASTEXITCODE") }
 
     #endregion

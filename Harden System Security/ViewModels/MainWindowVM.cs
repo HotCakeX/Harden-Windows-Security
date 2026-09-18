@@ -60,7 +60,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.SandboxMaker),
 		typeof(Pages.Extras.SecureVault),
 		typeof(AppControlManager.Pages.SettingsBackupRestore),
-		typeof(Pages.IntunePolicyDetails)
+		typeof(Pages.IntunePolicyDetails),
+		typeof(Pages.Tweaks)
 		];
 
 
@@ -343,6 +344,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [Atlas.GetStr("SecureVaultNavigationViewItem/Content")],
 			pages: [typeof(Pages.Extras.SecureVault)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.Tweaks)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("TweaksNavItem/Content")],
+			pages: [typeof(Pages.Tweaks)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -395,7 +402,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "BootableDriveMaker", typeof(Pages.Extras.BootableDriveMaker) },
 		{ "ExploitMitigations", typeof(Pages.ExploitMitigations) },
 		{ "SandboxMaker", typeof(Pages.SandboxMaker) },
-		{ "SecureVault", typeof(Pages.Extras.SecureVault) }
+		{ "SecureVault", typeof(Pages.Extras.SecureVault) },
+		{ "Tweaks", typeof(Pages.Tweaks) }
 	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -453,6 +461,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(Pages.SandboxMaker)] = Atlas.GetStr("SandboxMakerNavItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.SettingsBackupRestore)] = Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.SecureVault)] = Atlas.GetStr("SecureVaultNavigationViewItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Tweaks)] = Atlas.GetStr("TweaksNavItem/Content");
 	}
 
 	/// <summary>
@@ -581,6 +590,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the Secure Vault navigation item.
 	/// </summary>
 	internal IconElement? SecureVaultIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the Tweaks navigation item.
+	/// </summary>
+	internal IconElement? TweaksIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -731,6 +745,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Lock()
 					};
 
+					TweaksIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -7, -7, -7),
+						Source = new Tweaks()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -864,6 +884,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					TweaksIcon = new FontIcon
+					{
+						Glyph = "\uF1BA",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -890,6 +916,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					ExploitMitigationsIcon = new FontIcon { Glyph = "\uF272" };
 					CSPIcon = new FontIcon { Glyph = "\uE835" };
 					SecureVaultIcon = new FontIcon { Glyph = "\uF540" };
+					TweaksIcon = new FontIcon { Glyph = "\uF1BA" };
 					break;
 				}
 		}

@@ -2279,7 +2279,7 @@ internal sealed partial class TopBar : Window
 		// The exact amount of the physical memory does not fit into a cell of this size, so it is offered on demand.
 		ToolTipService.SetToolTip(MemoryValue, snapshot.TotalPhysicalBytes > 0UL
 			? FormatBytes(snapshot.UsedPhysicalBytes) + " / " + FormatBytes(snapshot.TotalPhysicalBytes)
-			: Atlas.GetStr("TopBarMetricUnavailable"));
+			: "-");
 	}
 
 	/// <summary>
@@ -2331,15 +2331,15 @@ internal sealed partial class TopBar : Window
 	}
 
 	private static string FormatPercentage(double value) => double.IsNaN(value)
-		? Atlas.GetStr("TopBarMetricUnavailable")
+		? "-"
 		: value.ToString("0", CultureInfo.InvariantCulture) + "%";
 
 	private static string FormatTemperature(double value) => double.IsNaN(value)
-		? Atlas.GetStr("TopBarMetricUnavailable")
+		? "-"
 		: value.ToString("0", CultureInfo.InvariantCulture) + " \u00B0C";
 
 	private static string FormatWatts(double value) => double.IsNaN(value)
-		? Atlas.GetStr("TopBarMetricUnavailable")
+		? "-"
 		: value.ToString("0.0", CultureInfo.InvariantCulture) + " W";
 
 	/// <summary>
@@ -2350,7 +2350,7 @@ internal sealed partial class TopBar : Window
 	{
 		if (double.IsNaN(first) || double.IsNaN(second))
 		{
-			return Atlas.GetStr("TopBarMetricUnavailable");
+			return "-";
 		}
 
 		// The unit is picked from the larger of the two so that the smaller one never turns into a row of zeroes.
@@ -2374,7 +2374,7 @@ internal sealed partial class TopBar : Window
 	{
 		if (value == 0UL)
 		{
-			return Atlas.GetStr("TopBarMetricUnavailable");
+			return "-";
 		}
 
 		double amount = value;

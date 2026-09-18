@@ -1,3 +1,11 @@
+# New Tweaks Page
+
+Introducing the new Tweaks page, a centralized collection of cleanup, privacy, diagnostics, networking, storage, and recovery tools for Windows. Each tool clearly identifies what will be removed while preserving original files where applicable.
+
+The Diagnostics section provides convenient access to essential system maintenance controls. Clear the DNS client cache, release and renew active IPv4 DHCP leases, reset system HTTP proxy data, and manage disk health model updates. You can also view detailed Windows Recovery Environment configuration and enable or disable Windows RE directly.
+
+# Other Changes
+
 * Added a new Pending Reboot Operations tile to the home page under System Overview, displaying any operation that will happen by the OS during the next reboot, and also shows underlying system components that need a reboot, such as any pending driver installation, Windows Updates, domain join, computer name change etc. This new feature unlocks new information and possibilities for you to review about your system.
 
 * Updated dependencies to the latest versions.

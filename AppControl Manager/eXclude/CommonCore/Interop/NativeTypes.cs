@@ -2510,3 +2510,72 @@ internal struct SP_DEVINFO_DATA
 	internal uint DevInst;
 	internal nint Reserved;
 }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/ipexport/ns-ipexport-ip_adapter_index_map
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct IP_ADAPTER_INDEX_MAP
+{
+	internal uint Index;
+	internal fixed char Name[128];
+}
+
+/// <summary>
+/// Contains the leading fields of IP_ADAPTER_ADDRESSES used to select active DHCP-enabled IPv4 adapters.
+/// https://learn.microsoft.com/windows/win32/api/iptypes/ns-iptypes-ip_adapter_addresses_lh
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct IP_ADAPTER_ADDRESSES
+{
+	internal uint Length;
+	internal uint IfIndex;
+	internal IntPtr Next;
+	internal IntPtr AdapterName;
+	internal IntPtr FirstUnicastAddress;
+	internal IntPtr FirstAnycastAddress;
+	internal IntPtr FirstMulticastAddress;
+	internal IntPtr FirstDnsServerAddress;
+	internal IntPtr DnsSuffix;
+	internal IntPtr Description;
+	internal IntPtr FriendlyName;
+	internal fixed byte PhysicalAddress[8];
+	internal uint PhysicalAddressLength;
+	internal uint Flags;
+	internal uint Mtu;
+	internal uint IfType;
+	internal uint OperStatus;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct WINRE_CONFIG
+{
+	internal const int ExpectedSize = 0xEA0;
+	internal const int PathCharacterCount = 302;
+	internal const int HashLength = 32;
+	internal ulong Size;
+	internal uint WindowsReEnabled;
+	internal uint StagedLocationPresent;
+	internal uint Undocumented010;
+	internal uint Undocumented014;
+	internal uint Undocumented018;
+	internal fixed char StagedLocation[PathCharacterCount];
+	internal fixed char WinReLocation[PathCharacterCount];
+	internal Guid WindowsReBcdIdentifier;
+	internal fixed char RecoveryImageLocation[PathCharacterCount];
+	internal uint RecoveryImageIndex;
+	internal fixed char CustomImageLocation[PathCharacterCount];
+	internal uint CustomImageIndex;
+	internal uint ScheduledOperation;
+	internal fixed char OperationParam[PathCharacterCount];
+	internal uint OperationPermanent;
+	internal uint OsInstallAvailable;
+	internal uint CustomImageAvailable;
+	internal uint IsAutoRepairOn;
+	internal uint WinReImageHashPresent;
+	internal fixed byte WinReImageHash[HashLength];
+	internal uint WinReImageHashLength;
+	internal fixed char DownlevelWinReLocation[PathCharacterCount];
+	internal uint IsWimBoot;
+	internal uint NarratorScheduled;
+}

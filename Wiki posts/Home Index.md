@@ -73,6 +73,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/62b90278bdeea5615ec36e17f68b78b7a5862173/Pictures/Gifs/Harden%20System%20Security%20Menu/Exploit%20Mitigations.gif" alt="Harden System Security Menu Item" width="30"> [Exploit Mitigations](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Exploit-Mitigations)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/62b90278bdeea5615ec36e17f68b78b7a5862173/Pictures/Gifs/Harden%20System%20Security%20Menu/Sandbox%20Maker.gif" alt="Harden System Security Menu Item" width="30"> [Sandbox Maker](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sandbox-Maker)
 - <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/Harden%20System%20Security%20Menu/WinGet%20Management.gif?raw=true" alt="Harden System Security Menu Item" width="30"> [WinGet Management](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WinGet-Management)
+- <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/Harden%20System%20Security%20Menu/Tweaks.gif?raw=true" alt="Harden System Security Menu Item" width="30"> [Tweaks](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Windows-Tweaks)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/d73489091644d3366bf2e876c108174aefbd6c48/Pictures/Gifs/Harden%20System%20Security%20Menu/Extras.gif" alt="Harden System Security Menu Item" width="30"> Extras
 

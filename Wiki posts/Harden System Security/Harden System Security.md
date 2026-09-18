@@ -824,13 +824,18 @@ function Build_HSS {
 
     if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed setting Rust toolchain to Nightly. Exit Code: $LASTEXITCODE") }
 
-    rustup component add rust-src --toolchain nightly-x86_64-pc-windows-msvc
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed adding X64 rust-src component to Nightly toolchain. Exit Code: $LASTEXITCODE") }
-
-    rustup component add rust-src --toolchain nightly-aarch64-pc-windows-msvc
-
-    if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed adding ARM64 rust-src component to Nightly toolchain. Exit Code: $LASTEXITCODE") }
+    $Architecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
+    if ($Architecture -eq [System.Runtime.InteropServices.Architecture]::Arm64) {
+        rustup component add rust-src --toolchain nightly-aarch64-pc-windows-msvc
+        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed adding ARM64 rust-src component to Nightly toolchain. Exit Code: $LASTEXITCODE") }
+    }
+    elseif ($Architecture -eq [System.Runtime.InteropServices.Architecture]::X64) {
+        rustup component add rust-src --toolchain nightly-x86_64-pc-windows-msvc
+        if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed adding X64 rust-src component to Nightly toolchain. Exit Code: $LASTEXITCODE") }
+    }
+    else {
+        throw [System.PlatformNotSupportedException]::New("Unsupported architecture: $Architecture")
+    }
 
     rustup update
 
@@ -1104,9 +1109,17 @@ function Build_HSS {
     }
 
     if ($Upload) {
-        dotnet clean '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' --configuration Release
-        dotnet msbuild '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.slnx' /p:Configuration=Release /restore /p:Platform=x64 /p:PublishProfile=win-x64 /t:Publish -v:minimal
+        dotnet clean '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.csproj' --configuration Release
 
+        if ($LASTEXITCODE -ne 0) {
+            throw [System.InvalidOperationException]::New("Failed cleaning PartnerCenter. Exit Code: $LASTEXITCODE")
+        }
+
+        dotnet publish '..\AppControl Manager\eXclude\PartnerCenter\PartnerCenter.csproj' --configuration Release --runtime win-x64 /p:Platform=x64 /p:PublishProfile=win-x64 --verbosity minimal
+
+        if ($LASTEXITCODE -ne 0) {
+            throw [System.InvalidOperationException]::New("Failed publishing PartnerCenter for x64. Exit Code: $LASTEXITCODE")
+        }
         [System.String]$TokenEndpoint = $env:PARTNERCENTER_TOKENENDPOINT
         [System.String]$ClientId = $env:PARTNERCENTER_CLIENTID
         [System.String]$ClientSecret = $env:PARTNERCENTER_CLIENTSECRET

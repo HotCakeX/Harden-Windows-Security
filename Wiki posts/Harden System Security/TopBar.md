@@ -149,6 +149,10 @@ It is a decibel‑triggered environment audio watchdog security capability. Arm 
 
 * **Live level graph**: A lightweight, scrolling meter shows the ambient level in real time and turns red the instant it crosses your trigger, so you can read the threshold straight off the graph. The meter only runs while the Sentry view is expanded and armed; it costs nothing otherwise.
 
+* **Recordings Encryption**: For privacy and security, you can optionally choose to encrypt any existing recordings and also automatically encrypt any future recordings on disk with user or machine context.
+   * User Context will only allow your own user account to decrypt them.
+   * Machine context will only allow your device to encrypt them and they cannot be read or played on any other device.
+
 * Very efficient and low system resource usage.
 
 #### Clear, actionable error reporting

@@ -33,7 +33,7 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:appdata="http://schemas.microsoft.com/appx/manifest/appdata/windows10"
   xmlns:trustedlaunch="http://schemas.microsoft.com/appx/manifest/trustedlaunch/windows10"
-  IgnorableNamespaces="mp uap uap3 uap17 desktop desktop5 desktop10 com virtualization appdata trustedlaunch">
+  IgnorableNamespaces="mp uap uap3 uap17 uap18 desktop desktop5 desktop6 desktop10 com virtualization appdata trustedlaunch">
   <!-- IgnorableNamespaces are evaluated during package creation and installation/registration so any optional feature's namespace should be added to it as long as the app can properly function without it. -->
 
   <Identity

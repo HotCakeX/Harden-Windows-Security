@@ -27,7 +27,8 @@ internal static class StorageTemperature
 
 	private const uint IOCTL_STORAGE_PREDICT_FAILURE = 0x002D1100;
 	private const uint IOCTL_STORAGE_QUERY_PROPERTY = 0x002D1400;
-	private const uint StorageDeviceTemperatureProperty = 10;
+	// https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ne-winioctl-storage_property_id
+	private const uint StorageDeviceTemperatureProperty = 52;
 	private const uint PropertyStandardQuery = 0;
 
 	/// <summary>

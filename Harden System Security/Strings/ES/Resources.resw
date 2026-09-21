@@ -7778,4 +7778,265 @@ Huella Digital: {3}</value>
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Administra la configuración relacionada con las notificaciones y los avisos.</value>
   </data>
+   <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Muestra la barra en el borde superior de la pantalla, la cual ofrece numerosas funciones y te abre nuevas posibilidades.</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Muestra la barra en el borde superior de la pantalla, la cual ofrece numerosas funciones y te abre nuevas posibilidades.</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>Mantener la barra superior expandida</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>Cerrar la barra superior</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>Agregar una nueva entrada a esta vista</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>Aplicaciones</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>Carpetas</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>Rendimiento</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>Relojes</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>Memoria</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>Disco L / E</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>Red Bajada / Subida</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>Energía</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>Batería</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>Zona horaria</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>Agregar reloj</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>Alternar entre el notch estándar y el compacto</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>Mostrar la barra superior al iniciar sesión en Windows</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>El inicio de la barra superior al iniciar sesión se desactivó fuera de esta aplicación. Para volver a activarlo, usa la página Aplicaciones de inicio de la aplicación Configuración o la pestaña Inicio del Administrador de tareas.</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>El inicio de la barra superior al iniciar sesión está desactivado por una directiva de este dispositivo, por lo que no se puede cambiar aquí.</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>Windows no informó si la barra superior puede iniciarse al iniciar sesión, por lo que esto no se puede cambiar en este momento.</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>Elige lo que muestra la barra superior</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>Opciones de la barra superior</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>Notch compacto</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>Abrir al pasar el puntero</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>Abrir la barra superior en cuanto el puntero pase sobre ella, en lugar de hacerlo solo al hacer clic o tocar el notch</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>Siempre visible</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>Mantener la barra superior por encima de todas las demás ventanas</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>Mantener expandida</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>Iniciar con Windows</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>Ajustes</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Los ajustes te permiten personalizar y mejorar tu experiencia con Windows, ya que brindan acceso a diversas configuraciones del sistema y optimizaciones en un solo lugar práctico.</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Los ajustes te permiten personalizar y mejorar tu experiencia con Windows, ya que brindan acceso a diversas configuraciones del sistema y optimizaciones en un solo lugar práctico.</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>Limpieza</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>Diagnóstico</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Limpiador de caché de paquetes NuGet</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Libera espacio en disco al encontrar versiones anteriores de paquetes NuGet que tu entorno de desarrollo ya no necesita. Cierra primero tus proyectos de .NET y después revisa las carpetas detectadas antes de eliminarlas.</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Limpiador del historial de comandos de PowerShell</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Mantén tu actividad de línea de comandos en privado al revisar y borrar los comandos que escribiste anteriormente en consolas de PowerShell y en la terminal de Visual Studio Code. Esto elimina los historiales de comandos guardados.</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Limpiador del historial de Ejecutar</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Dale un nuevo comienzo al cuadro de diálogo Ejecutar de Windows al revisar y borrar los comandos que escribiste anteriormente. Esto evita que los comandos antiguos sigan apareciendo como sugerencias la próxima vez que uses Ejecutar.</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historial de rutas escritas en el Explorador de archivos</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Deja atrás las rutas que visitaste al revisar y borrar las entradas de la barra de direcciones del Explorador de archivos. Esto elimina las sugerencias de rutas guardadas sin borrar ningún archivo ni carpeta.</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historial del cuadro de búsqueda del Explorador de archivos</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Comienza con búsquedas en blanco al revisar y borrar los términos que escribiste anteriormente en el Explorador de archivos. Esto elimina las sugerencias de búsqueda guardadas sin afectar tus archivos ni el índice de Búsqueda de Windows.</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>Accesos directos de elementos recientes</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ordena tu lista de elementos recientes y reduce los rastros del contenido abierto recientemente al revisar y eliminar sus accesos directos guardados. Tus archivos originales permanecen intactos.</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historial de los cuadros de diálogo comunes Abrir/Guardar</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Evita que los cuadros de diálogo Abrir y Guardar reconstruyan tus pasos al revisar y borrar las ubicaciones de archivos y carpetas que recuerdan. Esto reduce las ubicaciones visitadas anteriormente que muestran las aplicaciones compatibles, sin borrar tus archivos.</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historial de RecentDocs</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Borra el rastro de nombres de documentos que recuerda el Explorador de archivos al revisar y eliminar su historial de RecentDocs. Esto solo elimina los registros del historial y no borra tus documentos.</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historial de listas de accesos directos</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Restablece tus listas de accesos directos al revisar y borrar los datos que almacenan los elementos usados recientemente y anclados de las aplicaciones compatibles. Úsalo cuando quieras un menú Inicio y un historial de la barra de tareas más limpios.</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>Revisar los datos detectados</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>Comprobar</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>Borrar la caché del cliente DNS</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>Borra la caché del solucionador DNS para que las búsquedas de nombres se resuelvan de nuevo en lugar de responderse con registros almacenados en caché.</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>Restablecer direcciones IPv4</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>Restablece la dirección IPv4 de cada adaptador de red activo con DHCP habilitado mediante su liberación y posterior renovación. La conectividad de red y de VPN puede interrumpirse brevemente.</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>Restablecer el proxy HTTP del sistema</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>Borra la información de proxy automático de WinHTTP, el estado de WPAD y los scripts de proxy almacenados en caché de todas las redes.</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>Actualizaciones del modelo de estado del disco</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>Permite que Windows descargue parámetros actualizados del modelo de aprendizaje automático que se usan para predecir fallas del disco de almacenamiento.</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>Entorno de recuperación de Windows</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>Habilita o deshabilita el Entorno de recuperación de Windows y muestra su configuración actual.</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abrir inteligencia del sistema en vivo</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Administrar la supervisión del portapapeles</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>Supervisión del portapapeles</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Supervisa y analiza el contenido copiado con Microsoft Defender y te avisa cuando se detecta contenido sospechoso.</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>Estado actual</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>Estado de inicio</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>Habilitar</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>Deshabilitar</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>Ejecutar al iniciar</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>No ejecutar al iniciar</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>Activación de Windows</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>Dirección IP</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>Número de serie del sistema</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>UUID del sistema</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>Número de serie de la placa base</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>Número de serie del chasis / Etiqueta de activo</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>Operaciones de reinicio pendientes</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 segundos</value>
+  </data>
 </root>

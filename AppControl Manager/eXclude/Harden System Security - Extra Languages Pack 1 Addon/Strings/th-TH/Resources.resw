@@ -7778,4 +7778,265 @@
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>จัดการการตั้งค่าที่เกี่ยวข้องกับการแจ้งเตือนและประกาศ.</value>
   </data>
+  <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>แสดงแถบที่ขอบด้านบนของจอภาพ ซึ่งมีคุณสมบัติมากมายและเปิดความเป็นไปได้ใหม่ ๆ ให้กับคุณ</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>แสดงแถบที่ขอบด้านบนของจอภาพ ซึ่งมีคุณสมบัติมากมายและเปิดความเป็นไปได้ใหม่ ๆ ให้กับคุณ</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>ขยายแถบด้านบนค้างไว้</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>ปิดแถบด้านบน</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>เพิ่มรายการใหม่ในมุมมองนี้</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>แอป</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>โฟลเดอร์</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>ประสิทธิภาพ</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>นาฬิกา</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>หน่วยความจำ</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>อ่าน / เขียนดิสก์</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>เครือข่าย ดาวน์ / อัป</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>พลังงาน</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>แบตเตอรี่</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>ชื่อ</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>เขตเวลา</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>เพิ่มนาฬิกา</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>สลับระหว่างรอยบากมาตรฐานและรอยบากแบบกะทัดรัด</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>แสดงแถบด้านบนเมื่อคุณลงชื่อเข้าใช้ Windows</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>การเริ่มแถบด้านบนเมื่อคุณลงชื่อเข้าใช้ถูกปิดจากภายนอกแอปนี้ หากต้องการเปิดอีกครั้ง ให้ใช้หน้าแอปเริ่มต้นระบบในแอปการตั้งค่า หรือแท็บเริ่มต้นระบบในตัวจัดการงาน</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>การเริ่มแถบด้านบนเมื่อคุณลงชื่อเข้าใช้ถูกปิดโดยนโยบายของอุปกรณ์นี้ จึงไม่สามารถเปลี่ยนแปลงได้ที่นี่</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>Windows ไม่ได้รายงานว่าสามารถเริ่มแถบด้านบนเมื่อคุณลงชื่อเข้าใช้ได้หรือไม่ จึงไม่สามารถเปลี่ยนแปลงได้ในขณะนี้</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>เลือกสิ่งที่แถบด้านบนจะแสดง</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>ตัวเลือกของแถบด้านบน</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>รอยบากแบบกะทัดรัด</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>เปิดเมื่อชี้เมาส์</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>เปิดแถบด้านบนทันทีที่ตัวชี้เลื่อนผ่าน แทนที่จะเปิดเฉพาะเมื่อคุณคลิกหรือแตะที่รอยบาก</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>อยู่บนสุดเสมอ</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>ให้แถบด้านบนอยู่เหนือหน้าต่างอื่นทั้งหมด</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>ขยายค้างไว้</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>เริ่มพร้อม Windows</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>การปรับแต่ง</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>การปรับแต่งช่วยให้คุณปรับแต่งและยกระดับประสบการณ์การใช้งาน Windows ได้ ด้วยการให้เข้าถึงการตั้งค่าระบบและการเพิ่มประสิทธิภาพต่าง ๆ ในที่เดียวอย่างสะดวก</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>การปรับแต่งช่วยให้คุณปรับแต่งและยกระดับประสบการณ์การใช้งาน Windows ได้ ด้วยการให้เข้าถึงการตั้งค่าระบบและการเพิ่มประสิทธิภาพต่าง ๆ ในที่เดียวอย่างสะดวก</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>การล้างข้อมูล</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>การวินิจฉัย</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>ตัวล้างแคชแพ็กเกจ NuGet</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>เพิ่มพื้นที่ว่างในดิสก์ด้วยการค้นหาแพ็กเกจ NuGet เวอร์ชันเก่าที่สภาพแวดล้อมการพัฒนาของคุณไม่ต้องการอีกต่อไป โปรดปิดโครงการ .NET ของคุณก่อน แล้วตรวจสอบโฟลเดอร์ที่ตรวจพบก่อนนำออก</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>ตัวล้างประวัติคำสั่ง PowerShell</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>เก็บกิจกรรมบรรทัดคำสั่งของคุณไว้เป็นความลับ ด้วยการตรวจสอบและล้างคำสั่งที่คุณเคยป้อนในคอนโซล PowerShell และเทอร์มินัลของ Visual Studio Code การดำเนินการนี้จะนำประวัติคำสั่งที่บันทึกไว้ออก</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>ตัวล้างประวัติการเรียกใช้</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>เริ่มต้นใหม่ให้กับกล่องโต้ตอบเรียกใช้ของ Windows ด้วยการตรวจสอบและล้างคำสั่งที่คุณเคยป้อน การดำเนินการนี้จะป้องกันไม่ให้คำสั่งเก่าปรากฏเป็นคำแนะนำอีกเมื่อคุณใช้เรียกใช้ครั้งต่อไป</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>ประวัติเส้นทางที่พิมพ์ใน File Explorer</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>ทิ้งเส้นทางที่เคยเข้าชมไว้เบื้องหลัง ด้วยการตรวจสอบและล้างรายการจากแถบที่อยู่ของ File Explorer การดำเนินการนี้จะนำคำแนะนำเส้นทางที่บันทึกไว้ออกโดยไม่ลบไฟล์หรือโฟลเดอร์ใด ๆ</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>ประวัติกล่องค้นหาของ File Explorer</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>เริ่มต้นการค้นหาใหม่อย่างสะอาด ด้วยการตรวจสอบและล้างคำที่คุณเคยป้อนใน File Explorer การดำเนินการนี้จะนำคำแนะนำการค้นหาที่บันทึกไว้ออกโดยไม่ส่งผลต่อไฟล์ของคุณหรือดัชนีการค้นหาของ Windows</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>ทางลัดของรายการล่าสุด</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>จัดระเบียบรายการล่าสุดของคุณและลดร่องรอยของเนื้อหาที่เพิ่งเปิด ด้วยการตรวจสอบและนำทางลัดที่บันทึกไว้ออก ไฟล์ต้นฉบับของคุณจะไม่ถูกแตะต้อง</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>ประวัติกล่องโต้ตอบเปิด/บันทึกทั่วไป</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>หยุดไม่ให้กล่องโต้ตอบเปิดและบันทึกย้อนรอยการใช้งานของคุณ ด้วยการตรวจสอบและล้างตำแหน่งไฟล์และโฟลเดอร์ที่กล่องเหล่านั้นจดจำไว้ การดำเนินการนี้จะลดตำแหน่งที่เคยเข้าชมซึ่งแสดงโดยแอปที่รองรับ โดยไม่ลบไฟล์ของคุณ</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>ประวัติ RecentDocs</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>ล้างร่องรอยชื่อเอกสารที่ File Explorer จดจำไว้ ด้วยการตรวจสอบและนำประวัติ RecentDocs ออก การดำเนินการนี้จะนำออกเฉพาะระเบียนประวัติและจะไม่ลบเอกสารของคุณ</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>ประวัติรายการลัด</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>รีเซ็ตรายการลัดของคุณ ด้วยการตรวจสอบและล้างข้อมูลที่จัดเก็บรายการที่ใช้ล่าสุดและรายการที่ปักหมุดของแอปที่รองรับ ใช้ตัวเลือกนี้เมื่อคุณต้องการเมนูเริ่มและประวัติแถบงานที่สะอาดขึ้น</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>ตรวจสอบข้อมูลที่ตรวจพบ</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>ตรวจสอบ</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>นำออก</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>ล้างแคชไคลเอ็นต์ DNS</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>ล้างแคชของตัวแปลชื่อ DNS เพื่อให้การค้นหาชื่อถูกแปลใหม่อีกครั้ง แทนที่จะตอบจากระเบียนที่เก็บไว้ในแคช</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>รีเซ็ตที่อยู่ IPv4</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>รีเซ็ตที่อยู่ IPv4 ของอะแดปเตอร์เครือข่ายที่ใช้งานอยู่และเปิดใช้ DHCP ทุกตัว ด้วยการปล่อยแล้วขอใหม่ การเชื่อมต่อเครือข่ายและ VPN อาจหยุดชะงักชั่วครู่</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>รีเซ็ตพร็อกซี HTTP ของระบบ</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>ล้างข้อมูลพร็อกซีอัตโนมัติของ WinHTTP สถานะ WPAD และสคริปต์พร็อกซีที่เก็บไว้ในแคชสำหรับทุกเครือข่าย</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>การอัปเดตโมเดลความสมบูรณ์ของดิสก์</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>อนุญาตให้ Windows ดาวน์โหลดพารามิเตอร์โมเดลการเรียนรู้ของเครื่องที่อัปเดตแล้ว ซึ่งใช้ในการคาดการณ์ความล้มเหลวของดิสก์จัดเก็บข้อมูล</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>สภาพแวดล้อมการกู้คืน Windows</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>เปิดหรือปิดใช้งานสภาพแวดล้อมการกู้คืน Windows และแสดงการกำหนดค่าปัจจุบัน</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>เปิดข้อมูลอัจฉริยะของระบบแบบสด</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>จัดการการตรวจสอบคลิปบอร์ด</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>ตัวตรวจสอบคลิปบอร์ด</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>ตรวจสอบและสแกนเนื้อหาที่คัดลอกด้วย Microsoft Defender และแจ้งเตือนคุณเมื่อตรวจพบเนื้อหาที่น่าสงสัย</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>สถานะปัจจุบัน</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>สถานะเมื่อเริ่มต้นระบบ</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>เปิดใช้งาน</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>ปิดใช้งาน</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>เรียกใช้เมื่อเริ่มต้นระบบ</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>ไม่เรียกใช้เมื่อเริ่มต้นระบบ</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>การเปิดใช้งาน Windows</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>ที่อยู่ IP</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>หมายเลขซีเรียลของระบบ</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>UUID ของระบบ</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>หมายเลขซีเรียลของเมนบอร์ด</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>หมายเลขซีเรียลของตัวเครื่อง / แท็กสินทรัพย์</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>การดำเนินการรีบูตที่รอดำเนินการ</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 วินาที</value>
+  </data>
 </root>

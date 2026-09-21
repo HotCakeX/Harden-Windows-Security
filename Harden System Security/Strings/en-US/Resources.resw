@@ -2056,7 +2056,7 @@
   <data name="VerifyText.Text" xml:space="preserve">
     <value>Verify</value>
   </data>
-      <data name="RemoveText.Text" xml:space="preserve">
+  <data name="RemoveText.Text" xml:space="preserve">
     <value>Remove</value>
   </data>
   <data name="OpenTheFollowingLinkInBrowser" xml:space="preserve">
@@ -7778,7 +7778,6 @@ Thumbprint: {3}</value>
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Manage settings related to notifications and notices.</value>
   </data>
-  <!--NEW-->
   <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Show the bar on the top edge of the display which offers many features and unlocks new possibilities for you.</value>
   </data>
@@ -7806,20 +7805,8 @@ Thumbprint: {3}</value>
   <data name="TopBarViewClocks" xml:space="preserve">
     <value>Clocks</value>
   </data>
-  <data name="TopBarRemoveMenuItem" xml:space="preserve">
-    <value>Remove</value>
-  </data>
-  <data name="TopBarMetricCpuUsage" xml:space="preserve">
-    <value>CPU</value>
-  </data>
-  <data name="TopBarMetricCpuTemperature" xml:space="preserve">
-    <value>CPU Temp</value>
-  </data>
   <data name="TopBarMetricMemory" xml:space="preserve">
     <value>Memory</value>
-  </data>
-  <data name="TopBarMetricStorageTemperature" xml:space="preserve">
-    <value>Drive Temp</value>
   </data>
   <data name="TopBarMetricDiskActivity" xml:space="preserve">
     <value>Disk R / W</value>
@@ -7832,9 +7819,6 @@ Thumbprint: {3}</value>
   </data>
   <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
     <value>Battery</value>
-  </data>
-  <data name="TopBarMetricAppMemory" xml:space="preserve">
-    <value>App RAM</value>
   </data>
   <data name="TopBarClockNameLabel" xml:space="preserve">
     <value>Name</value>
@@ -7895,5 +7879,164 @@ Thumbprint: {3}</value>
   </data>
   <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
     <value>Tweaks allow you to customize and enhance your Windows experience by providing access to various system settings and optimizations in one convenient location.</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>Cleanup</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>Diagnostics</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>NuGet Package Cache Cleaner</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Free up disk space by finding older NuGet package versions that your development environment no longer needs. Close your .NET projects first, then review the detected folders before removing them.</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>PowerShell Command History Cleaner</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Keep your command-line activity to yourself by reviewing and clearing commands you previously entered in PowerShell consoles and the Visual Studio Code terminal. This removes the saved command histories.</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Run History Cleaner</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Give the Windows Run dialog a fresh start by reviewing and clearing commands you previously entered. This prevents old commands from continuing to appear as suggestions when you use Run again.</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>File Explorer Typed-Path History</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Leave previously visited paths behind by reviewing and clearing entries from the File Explorer address bar. This removes saved path suggestions without deleting any files or folders.</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>File Explorer Search-Box History</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Start with a clean search slate by reviewing and clearing terms you previously entered in File Explorer. This removes saved search suggestions without affecting your files or Windows Search index.</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>Recent Items Shortcuts</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Clean up your Recent Items list and reduce traces of recently opened content by reviewing and removing its saved shortcuts. Your original files remain untouched.</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Common Open/Save Dialog History</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Stop Open and Save dialogs from retracing your steps by reviewing and clearing the file and folder locations they remember. This reduces previously visited locations shown by compatible apps without deleting your files.</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>RecentDocs History</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Clear the trail of document names remembered by File Explorer by reviewing and removing its RecentDocs history. This removes history records only and does not delete your documents.</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Jump List History</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Reset your Jump Lists by reviewing and clearing the data that stores recently used and pinned items for supported apps. Use this when you want a cleaner Start menu and taskbar history.</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>Review detected data</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>Check</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>Clear DNS Client Cache</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>Clears the DNS resolver cache so that name lookups are resolved again instead of being answered from cached records.</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>Reset IPv4 Addresses</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>Reset the IPv4 of every active DHCP-enabled network adapter by releasing and then renewing it. Network and VPN connectivity may be briefly interrupted.</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>Reset System HTTP Proxy</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>Clears WinHTTP automatic proxy information, WPAD state, and cached proxy scripts for all networks.</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>Disk Health Model Updates</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>Allows Windows to download updated machine learning model parameters used to predict storage disk failure.</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>Windows Recovery Environment</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>Enables or disables Windows Recovery Environment and displays its current configuration.</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open live system intelligence</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Manage Clipboard Monitoring</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>Clipboard Monitor</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Monitor and scan copied content with Microsoft Defender and alert you when suspicious content is detected.</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>Current status</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>Startup status</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>Run at startup</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>Do not run at startup</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>Windows Activation</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>IP Address</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>System Serial Number</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>System UUID</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>Baseboard Serial Number</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>Chassis Serial / Asset Tag</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>Pending Reboot Operations</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 Seconds</value>
   </data>
 </root>

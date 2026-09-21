@@ -129,9 +129,9 @@
                                     <GradientStop Color="#4BC0C8" Offset="1.0"/>
                                 </LinearGradientBrush>
                             </Border.BorderBrush>
-                            <ToggleButton VerticalAlignment="Center"
-                                          IsChecked="{x:Bind ViewModel.IsLiveGraphsWindowOpen, Mode=TwoWay}"
-                                          ToolTipService.ToolTip="Open live system intelligence">
+                            <ToggleButton x:Uid="LiveSystemIntelligenceToggleButton"
+                                          VerticalAlignment="Center"
+                                          IsChecked="{x:Bind ViewModel.IsLiveGraphsWindowOpen, Mode=TwoWay}">
                                 <FontIcon Glyph="&#xEB44;"/>
                             </ToggleButton>
                         </Border>
@@ -143,10 +143,10 @@
                                 </LinearGradientBrush>
                             </Border.BorderBrush>
                             <Button x:Name="ClipboardMonitorButton"
+                                    x:Uid="ClipboardMonitorButton"
                                     VerticalAlignment="Center"
                                     Click="{x:Bind ViewModel.OpenClipboardMonitorTeachingTip}"
-                                    Tag="{x:Bind ClipboardMonitorTeachingTip}"
-                                    ToolTipService.ToolTip="Manage Clipboard Monitoring">
+                                    Tag="{x:Bind ClipboardMonitorTeachingTip}">
                                 <FontIcon Glyph="&#xF760;"/>
                             </Button>
                         </Border>
@@ -168,18 +168,18 @@
                     </CCToolKit:WrapPanel>
 
                     <TeachingTip x:Name="ClipboardMonitorTeachingTip"
-                                 Title="Clipboard Monitor"
+                                 x:Uid="ClipboardMonitorTeachingTip"
                                  Target="{x:Bind ClipboardMonitorButton}"
                                  PreferredPlacement="Bottom"
                                  IsLightDismissEnabled="True">
                         <StackPanel Spacing="12">
-                            <TextBlock Text="Monitor and scan copied content with Microsoft Defender and alert you when suspicious content is detected."
+                            <TextBlock x:Uid="ClipboardMonitorTeachingTipDescriptionTextBlock"
                                        TextWrapping="Wrap"/>
-                            <TextBox Header="Current status"
+                            <TextBox x:Uid="ClipboardMonitorCurrentStatusTextBox"
                                      Text="{x:Bind ViewModel.ClipboardMonitorStatusText, Mode=OneWay}"
                                      IsReadOnly="True"/>
                             <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="8" VerticalSpacing="8">
-                                <Button Content="Enable"
+                                <Button x:Uid="ClipboardMonitorEnableButton"
                                         Click="{x:Bind ViewModel.EnableClipboardMonitor}">
                                     <Button.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">
@@ -190,7 +190,7 @@
                                         </DataTemplate>
                                     </Button.ContentTemplate>
                                 </Button>
-                                <Button Content="Disable"
+                                <Button x:Uid="ClipboardMonitorDisableButton"
                                         Click="{x:Bind ViewModel.DisableClipboardMonitor}">
                                     <Button.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">
@@ -202,11 +202,11 @@
                                     </Button.ContentTemplate>
                                 </Button>
                             </CCToolKit:WrapPanel>
-                            <TextBox Header="Startup status"
+                            <TextBox x:Uid="ClipboardMonitorStartupStatusTextBox"
                                      Text="{x:Bind ViewModel.ClipboardMonitorStartupStatusText, Mode=OneWay}"
                                      IsReadOnly="True"/>
                             <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="8" VerticalSpacing="8">
-                                <Button Content="Run at startup"
+                                <Button x:Uid="ClipboardMonitorRunAtStartupButton"
                                         Click="{x:Bind ViewModel.EnableClipboardMonitorAtStartup}">
                                     <Button.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">
@@ -217,7 +217,7 @@
                                         </DataTemplate>
                                     </Button.ContentTemplate>
                                 </Button>
-                                <Button Content="Do not run at startup"
+                                <Button x:Uid="ClipboardMonitorDoNotRunAtStartupButton"
                                         Click="{x:Bind ViewModel.DisableClipboardMonitorAtStartup}">
                                     <Button.ContentTemplate>
                                         <DataTemplate x:DataType="x:String">
@@ -388,7 +388,7 @@
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xE8D0;"/>
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               Text="Windows Activation"/>
+                                               x:Uid="WindowsActivation"/>
                                 </StackPanel>
                                 <TextBlock Grid.Row="1"
                                            Style="{StaticResource CardBodyTextStyle}"
@@ -533,7 +533,7 @@
                                                 HorizontalAlignment="Right"
                                                 FontSize="8"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="0 Seconds"/>
+                                                x:Uid="ZeroSecondsChartLabel"/>
                                 </Grid>
 
                                 <Grid Margin="10,8,10,0">
@@ -626,7 +626,7 @@
                                                 HorizontalAlignment="Right"
                                                 FontSize="8"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="0 Seconds"/>
+                                                x:Uid="ZeroSecondsChartLabel"/>
                                 </Grid>
 
                                 <Grid Margin="10,8,10,0">
@@ -725,7 +725,7 @@
                                         <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                                   Glyph="&#xE774;"/>
                                         <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                                   Text="IP Address"/>
+                                                   x:Uid="IPAddress"/>
                                     </StackPanel>
 
                                     <Grid Grid.Row="1"
@@ -765,7 +765,7 @@
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xEEA1;"/>
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               Text="CPU"/>
+                                               x:Uid="CPU"/>
                                 </StackPanel>
                                 <ScrollViewer Grid.Row="1"
                                               HorizontalScrollBarVisibility="Disabled"
@@ -801,7 +801,7 @@
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xEC5C;"/>
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               Text="GPU"/>
+                                               x:Uid="GPU"/>
                                 </StackPanel>
                                 <ScrollViewer Grid.Row="1"
                                               HorizontalScrollBarVisibility="Disabled"
@@ -886,7 +886,7 @@
                                                 HorizontalAlignment="Right"
                                                 FontSize="8"
                                                 Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                                                Text="0 Seconds"/>
+                                                x:Uid="ZeroSecondsChartLabel"/>
                                 </Grid>
 
                                 <Grid Margin="10,8,10,0">
@@ -968,7 +968,7 @@
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xE8A5;"/>
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               Text="System Serial Number"/>
+                                               x:Uid="SystemSerialNumber"/>
                                 </StackPanel>
                                 <ScrollViewer Grid.Row="1"
                                               HorizontalScrollBarVisibility="Disabled"
@@ -995,7 +995,7 @@
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xE8A5;"/>
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               Text="System UUID"/>
+                                               x:Uid="SystemUUID"/>
                                 </StackPanel>
                                 <ScrollViewer Grid.Row="1"
                                               HorizontalScrollBarVisibility="Disabled"
@@ -1022,7 +1022,7 @@
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xE950;"/>
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               Text="Baseboard Serial Number"/>
+                                               x:Uid="BaseboardSerialNumber"/>
                                 </StackPanel>
                                 <ScrollViewer Grid.Row="1"
                                               HorizontalScrollBarVisibility="Disabled"
@@ -1049,7 +1049,7 @@
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xE950;"/>
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               Text="Chassis Serial / Asset Tag"/>
+                                               x:Uid="ChassisSerialAssetTag"/>
                                 </StackPanel>
                                 <ScrollViewer Grid.Row="1"
                                               HorizontalScrollBarVisibility="Disabled"
@@ -1083,7 +1083,7 @@
                                     <FontIcon Style="{StaticResource CardHeaderIconStyle}"
                                               Glyph="&#xF305;"/>
                                     <TextBlock Style="{StaticResource CardHeaderTextStyle}"
-                                               Text="Pending Reboot Operations"/>
+                                               x:Uid="PendingRebootOperations"/>
                                 </StackPanel>
                                 <TextBlock Grid.Row="1"
                                            Style="{StaticResource CardBodyTextStyle}"

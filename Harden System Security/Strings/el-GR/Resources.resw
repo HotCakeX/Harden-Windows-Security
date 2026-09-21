@@ -7778,4 +7778,265 @@
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Διαχειριστείτε τις ρυθμίσεις που σχετίζονται με ειδοποιήσεις και ενημερώσεις.</value>
   </data>
+  <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφανίζει τη γραμμή στο επάνω άκρο της οθόνης, η οποία προσφέρει πολλές δυνατότητες και ξεκλειδώνει νέες προοπτικές για εσάς.</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εμφανίζει τη γραμμή στο επάνω άκρο της οθόνης, η οποία προσφέρει πολλές δυνατότητες και ξεκλειδώνει νέες προοπτικές για εσάς.</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>Διατήρηση της επάνω γραμμής ανεπτυγμένης</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>Κλείσιμο της επάνω γραμμής</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>Προσθήκη νέας καταχώρησης σε αυτήν την προβολή</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>Εφαρμογές</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>Φάκελοι</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>Επιδόσεις</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>Ρολόγια</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>Μνήμη</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>Δίσκος Ανάγνωση / Εγγραφή</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>Δίκτυο Λήψη / Αποστολή</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>Ισχύς</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>Μπαταρία</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>Όνομα</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>Ζώνη ώρας</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>Προσθήκη ρολογιού</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>Εναλλαγή μεταξύ της τυπικής και της συμπαγούς εγκοπής</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>Εμφάνιση της επάνω γραμμής κατά τη σύνδεσή σας στα Windows</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>Η εκκίνηση της επάνω γραμμής κατά τη σύνδεση απενεργοποιήθηκε εκτός αυτής της εφαρμογής. Για να την ενεργοποιήσετε ξανά, χρησιμοποιήστε τη σελίδα «Εφαρμογές εκκίνησης» της εφαρμογής Ρυθμίσεις ή την καρτέλα «Εκκίνηση» της Διαχείρισης εργασιών.</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>Η εκκίνηση της επάνω γραμμής κατά τη σύνδεση είναι απενεργοποιημένη από πολιτική αυτής της συσκευής, επομένως δεν μπορεί να αλλάξει από εδώ.</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>Τα Windows δεν ανέφεραν εάν η επάνω γραμμή μπορεί να εκκινηθεί κατά τη σύνδεση, επομένως αυτό δεν μπορεί να αλλάξει αυτήν τη στιγμή.</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>Επιλέξτε τι εμφανίζει η επάνω γραμμή</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>Επιλογές της επάνω γραμμής</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>Συμπαγής εγκοπή</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>Άνοιγμα με την τοποθέτηση του δείκτη</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>Άνοιγμα της επάνω γραμμής μόλις ο δείκτης περάσει από πάνω της, αντί μόνο όταν κάνετε κλικ ή πατάτε την εγκοπή</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>Πάντα σε πρώτο πλάνο</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>Διατήρηση της επάνω γραμμής πάνω από κάθε άλλο παράθυρο</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>Διατήρηση ανεπτυγμένης</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>Εκκίνηση με τα Windows</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>Προσαρμογές</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Οι προσαρμογές σάς επιτρέπουν να εξατομικεύσετε και να βελτιώσετε την εμπειρία σας στα Windows, παρέχοντας πρόσβαση σε διάφορες ρυθμίσεις συστήματος και βελτιστοποιήσεις από ένα ενιαίο, βολικό σημείο.</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Οι προσαρμογές σάς επιτρέπουν να εξατομικεύσετε και να βελτιώσετε την εμπειρία σας στα Windows, παρέχοντας πρόσβαση σε διάφορες ρυθμίσεις συστήματος και βελτιστοποιήσεις από ένα ενιαίο, βολικό σημείο.</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>Εκκαθάριση</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>Διαγνωστικά</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Εκκαθάριση κρυφής μνήμης πακέτων NuGet</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Απελευθερώστε χώρο στον δίσκο εντοπίζοντας παλαιότερες εκδόσεις πακέτων NuGet που δεν χρειάζεται πλέον το περιβάλλον ανάπτυξής σας. Κλείστε πρώτα τα έργα .NET και έπειτα ελέγξτε τους φακέλους που εντοπίστηκαν πριν τους καταργήσετε.</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Εκκαθάριση ιστορικού εντολών του PowerShell</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Κρατήστε τη δραστηριότητά σας στη γραμμή εντολών μόνο για εσάς, ελέγχοντας και διαγράφοντας εντολές που έχετε εισαγάγει στο παρελθόν σε κονσόλες PowerShell και στο τερματικό του Visual Studio Code. Αυτό καταργεί τα αποθηκευμένα ιστορικά εντολών.</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Εκκαθάριση ιστορικού της Εκτέλεσης</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Δώστε στο παράθυρο διαλόγου «Εκτέλεση» των Windows ένα νέο ξεκίνημα, ελέγχοντας και διαγράφοντας εντολές που έχετε εισαγάγει στο παρελθόν. Έτσι, οι παλιές εντολές δεν θα συνεχίσουν να εμφανίζονται ως προτάσεις την επόμενη φορά που θα χρησιμοποιήσετε την «Εκτέλεση».</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Ιστορικό πληκτρολογημένων διαδρομών της Εξερεύνησης αρχείων</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Αφήστε πίσω σας τις διαδρομές που επισκεφθήκατε, ελέγχοντας και διαγράφοντας καταχωρήσεις από τη γραμμή διευθύνσεων της Εξερεύνησης αρχείων. Αυτό καταργεί τις αποθηκευμένες προτάσεις διαδρομών χωρίς να διαγράφει αρχεία ή φακέλους.</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Ιστορικό του πλαισίου αναζήτησης της Εξερεύνησης αρχείων</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Ξεκινήστε με καθαρές αναζητήσεις, ελέγχοντας και διαγράφοντας όρους που έχετε εισαγάγει στο παρελθόν στην Εξερεύνηση αρχείων. Αυτό καταργεί τις αποθηκευμένες προτάσεις αναζήτησης χωρίς να επηρεάζει τα αρχεία σας ή το ευρετήριο της Αναζήτησης των Windows.</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>Συντομεύσεις πρόσφατων στοιχείων</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Καθαρίστε τη λίστα πρόσφατων στοιχείων και μειώστε τα ίχνη του περιεχομένου που ανοίξατε πρόσφατα, ελέγχοντας και καταργώντας τις αποθηκευμένες συντομεύσεις της. Τα αρχικά σας αρχεία παραμένουν ανέπαφα.</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Ιστορικό των κοινών παραθύρων διαλόγου Άνοιγμα/Αποθήκευση</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Εμποδίστε τα παράθυρα διαλόγου «Άνοιγμα» και «Αποθήκευση» να ανασυνθέτουν τα βήματά σας, ελέγχοντας και διαγράφοντας τις θέσεις αρχείων και φακέλων που απομνημονεύουν. Αυτό περιορίζει τις θέσεις που επισκεφθήκατε στο παρελθόν και εμφανίζονται από συμβατές εφαρμογές, χωρίς να διαγράφει τα αρχεία σας.</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Ιστορικό RecentDocs</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Διαγράψτε τα ίχνη των ονομάτων εγγράφων που απομνημονεύει η Εξερεύνηση αρχείων, ελέγχοντας και καταργώντας το ιστορικό RecentDocs της. Αυτό καταργεί μόνο τις εγγραφές ιστορικού και δεν διαγράφει τα έγγραφά σας.</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Ιστορικό λιστών συντομεύσεων</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Επαναφέρετε τις λίστες συντομεύσεων, ελέγχοντας και διαγράφοντας τα δεδομένα που αποθηκεύουν πρόσφατα χρησιμοποιημένα και καρφιτσωμένα στοιχεία για τις υποστηριζόμενες εφαρμογές. Χρησιμοποιήστε το όταν θέλετε πιο καθαρό μενού Έναρξη και ιστορικό γραμμής εργασιών.</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>Έλεγχος των δεδομένων που εντοπίστηκαν</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>Έλεγχος</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>Κατάργηση</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>Εκκαθάριση κρυφής μνήμης προγράμματος-πελάτη DNS</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>Εκκαθαρίζει την κρυφή μνήμη του αναλυτή DNS, ώστε οι αναζητήσεις ονομάτων να επιλύονται εκ νέου αντί να απαντώνται από αποθηκευμένες εγγραφές.</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>Επαναφορά διευθύνσεων IPv4</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>Επαναφέρει τη διεύθυνση IPv4 κάθε ενεργού προσαρμογέα δικτύου με ενεργοποιημένο DHCP, αποδεσμεύοντάς την και στη συνέχεια ανανεώνοντάς την. Η συνδεσιμότητα δικτύου και VPN ενδέχεται να διακοπεί για λίγο.</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>Επαναφορά του διακομιστή μεσολάβησης HTTP του συστήματος</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>Εκκαθαρίζει τις πληροφορίες αυτόματου διακομιστή μεσολάβησης του WinHTTP, την κατάσταση WPAD και τα αποθηκευμένα σενάρια μεσολάβησης για όλα τα δίκτυα.</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>Ενημερώσεις μοντέλου εύρυθμης λειτουργίας δίσκου</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>Επιτρέπει στα Windows να λαμβάνουν ενημερωμένες παραμέτρους μοντέλου μηχανικής μάθησης που χρησιμοποιούνται για την πρόβλεψη βλάβης του δίσκου αποθήκευσης.</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>Περιβάλλον αποκατάστασης των Windows</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>Ενεργοποιεί ή απενεργοποιεί το Περιβάλλον αποκατάστασης των Windows και εμφανίζει την τρέχουσα διαμόρφωσή του.</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Άνοιγμα ζωντανής ανάλυσης συστήματος</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Διαχείριση παρακολούθησης του Προχείρου</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>Παρακολούθηση Προχείρου</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Παρακολουθεί και σαρώνει το αντιγραμμένο περιεχόμενο με το Microsoft Defender και σας ειδοποιεί όταν εντοπίζεται ύποπτο περιεχόμενο.</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>Τρέχουσα κατάσταση</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>Κατάσταση εκκίνησης</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>Ενεργοποίηση</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>Απενεργοποίηση</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>Εκτέλεση κατά την εκκίνηση</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>Να μην εκτελείται κατά την εκκίνηση</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>Ενεργοποίηση των Windows</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>Διεύθυνση IP</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>Επεξεργαστής</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>Κάρτα γραφικών</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>Σειριακός αριθμός συστήματος</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>UUID συστήματος</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>Σειριακός αριθμός μητρικής πλακέτας</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>Σειριακός αριθμός πλαισίου / Ετικέτα περιουσιακού στοιχείου</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>Εκκρεμείς λειτουργίες επανεκκίνησης</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 δευτερόλεπτα</value>
+  </data>
 </root>

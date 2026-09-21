@@ -17,13 +17,13 @@
         <SelectorBar Grid.Row="0"
                      HorizontalAlignment="Center"
                      SelectionChanged="{x:Bind ViewModel.SectionSelectorBar_SelectionChanged}">
-            <SelectorBarItem Text="Cleanup"
+            <SelectorBarItem x:Uid="TweaksCleanupSelectorBarItem"
                              IsSelected="True">
                 <SelectorBarItem.Icon>
                     <FontIcon Glyph="&#xE74D;"/>
                 </SelectorBarItem.Icon>
             </SelectorBarItem>
-            <SelectorBarItem Text="Diagnostics"
+            <SelectorBarItem x:Uid="TweaksDiagnosticsSelectorBarItem"
                              IsEnabled="{x:Bind CC:Atlas.IsElevated}" >
                 <SelectorBarItem.Icon>
                     <FontIcon Glyph="&#xE9D9;"/>
@@ -52,9 +52,9 @@
                         Padding="15"
                         Style="{StaticResource GridCardStyle}">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="NuGet Package Cache Cleaner"
+                        <TextBlock x:Uid="NuGetCleanerTitleTextBlock"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Free up disk space by finding older NuGet package versions that your development environment no longer needs. Close your .NET projects first, then review the detected folders before removing them."
+                        <TextBlock x:Uid="NuGetCleanerDescriptionTextBlock"
                                    TextWrapping="Wrap"/>
                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.NuGetCleanerInfoBar.IsOpen, Mode=TwoWay}"
                                             Message="{x:Bind ViewModel.NuGetCleanerInfoBar.Message, Mode=OneWay}"
@@ -62,7 +62,7 @@
                                             IsClosable="{x:Bind ViewModel.NuGetCleanerInfoBar.IsClosable, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10">
-                            <Button Content="Check"
+                            <Button x:Uid="CheckButton"
                                     IsEnabled="{x:Bind ViewModel.NuGetCleanerIsEnabled, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.CheckNuGetCleaner_Click}">
                                 <Button.ContentTemplate>
@@ -74,7 +74,7 @@
                                     </DataTemplate>
                                 </Button.ContentTemplate>
                             </Button>
-                            <Button Content="Remove"
+                            <Button x:Uid="RemoveButton"
                                     IsEnabled="{x:Bind ViewModel.NuGetCleanerCanRemove, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.RemoveNuGetCleaner_Click}">
                                 <Button.ContentTemplate>
@@ -87,7 +87,7 @@
                                 </Button.ContentTemplate>
                             </Button>
                         </StackPanel>
-                        <Expander Header="Review detected data"
+                        <Expander x:Uid="ReviewDetectedDataExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   IsExpanded="{x:Bind ViewModel.NuGetCleanerReviewExpanded, Mode=TwoWay}"
@@ -110,9 +110,9 @@
                         Padding="15"
                         Style="{StaticResource GridCardStyle}">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="PowerShell Command History Cleaner"
+                        <TextBlock x:Uid="PowerShellHistoryCleanerTitleTextBlock"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Keep your command-line activity to yourself by reviewing and clearing commands you previously entered in PowerShell consoles and the Visual Studio Code terminal. This removes the saved command histories."
+                        <TextBlock x:Uid="PowerShellHistoryCleanerDescriptionTextBlock"
                                    TextWrapping="Wrap"/>
                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.PowerShellHistoryInfoBar.IsOpen, Mode=TwoWay}"
                                             Message="{x:Bind ViewModel.PowerShellHistoryInfoBar.Message, Mode=OneWay}"
@@ -120,7 +120,7 @@
                                             IsClosable="{x:Bind ViewModel.PowerShellHistoryInfoBar.IsClosable, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10">
-                            <Button Content="Check"
+                            <Button x:Uid="CheckButton"
                                     IsEnabled="{x:Bind ViewModel.PowerShellHistoryIsEnabled, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.CheckPowerShellHistory_Click}">
                                 <Button.ContentTemplate>
@@ -132,7 +132,7 @@
                                     </DataTemplate>
                                 </Button.ContentTemplate>
                             </Button>
-                            <Button Content="Clear"
+                            <Button x:Uid="ClearButton"
                                     IsEnabled="{x:Bind ViewModel.PowerShellHistoryCanRemove, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.RemovePowerShellHistory_Click}">
                                 <Button.ContentTemplate>
@@ -145,7 +145,7 @@
                                 </Button.ContentTemplate>
                             </Button>
                         </StackPanel>
-                        <Expander Header="Review detected data"
+                        <Expander x:Uid="ReviewDetectedDataExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   IsExpanded="{x:Bind ViewModel.PowerShellHistoryReviewExpanded, Mode=TwoWay}"
@@ -168,9 +168,9 @@
                         Padding="15"
                         Style="{StaticResource GridCardStyle}">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Run History Cleaner"
+                        <TextBlock x:Uid="RunHistoryCleanerTitleTextBlock"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Give the Windows Run dialog a fresh start by reviewing and clearing commands you previously entered. This prevents old commands from continuing to appear as suggestions when you use Run again."
+                        <TextBlock x:Uid="RunHistoryCleanerDescriptionTextBlock"
                                    TextWrapping="Wrap"/>
                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.RunHistoryInfoBar.IsOpen, Mode=TwoWay}"
                                             Message="{x:Bind ViewModel.RunHistoryInfoBar.Message, Mode=OneWay}"
@@ -178,7 +178,7 @@
                                             IsClosable="{x:Bind ViewModel.RunHistoryInfoBar.IsClosable, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10">
-                            <Button Content="Check"
+                            <Button x:Uid="CheckButton"
                                     IsEnabled="{x:Bind ViewModel.RunHistoryIsEnabled, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.CheckRunHistory_Click}">
                                 <Button.ContentTemplate>
@@ -190,7 +190,7 @@
                                     </DataTemplate>
                                 </Button.ContentTemplate>
                             </Button>
-                            <Button Content="Clear"
+                            <Button x:Uid="ClearButton"
                                     IsEnabled="{x:Bind ViewModel.RunHistoryCanRemove, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.RemoveRunHistory_Click}">
                                 <Button.ContentTemplate>
@@ -203,7 +203,7 @@
                                 </Button.ContentTemplate>
                             </Button>
                         </StackPanel>
-                        <Expander Header="Review detected data"
+                        <Expander x:Uid="ReviewDetectedDataExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   IsExpanded="{x:Bind ViewModel.RunHistoryReviewExpanded, Mode=TwoWay}"
@@ -226,9 +226,9 @@
                         Padding="15"
                         Style="{StaticResource GridCardStyle}">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="File Explorer Typed-Path History"
+                        <TextBlock x:Uid="TypedPathHistoryTitleTextBlock"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Leave previously visited paths behind by reviewing and clearing entries from the File Explorer address bar. This removes saved path suggestions without deleting any files or folders."
+                        <TextBlock x:Uid="TypedPathHistoryDescriptionTextBlock"
                                    TextWrapping="Wrap"/>
                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.TypedPathHistoryInfoBar.IsOpen, Mode=TwoWay}"
                                             Message="{x:Bind ViewModel.TypedPathHistoryInfoBar.Message, Mode=OneWay}"
@@ -236,7 +236,7 @@
                                             IsClosable="{x:Bind ViewModel.TypedPathHistoryInfoBar.IsClosable, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10">
-                            <Button Content="Check"
+                            <Button x:Uid="CheckButton"
                                     IsEnabled="{x:Bind ViewModel.TypedPathHistoryIsEnabled, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.CheckTypedPathHistory_Click}">
                                 <Button.ContentTemplate>
@@ -248,7 +248,7 @@
                                     </DataTemplate>
                                 </Button.ContentTemplate>
                             </Button>
-                            <Button Content="Clear"
+                            <Button x:Uid="ClearButton"
                                     IsEnabled="{x:Bind ViewModel.TypedPathHistoryCanRemove, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.RemoveTypedPathHistory_Click}">
                                 <Button.ContentTemplate>
@@ -261,7 +261,7 @@
                                 </Button.ContentTemplate>
                             </Button>
                         </StackPanel>
-                        <Expander Header="Review detected data"
+                        <Expander x:Uid="ReviewDetectedDataExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   IsExpanded="{x:Bind ViewModel.TypedPathHistoryReviewExpanded, Mode=TwoWay}"
@@ -284,9 +284,9 @@
                         Padding="15"
                         Style="{StaticResource GridCardStyle}">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="File Explorer Search-Box History"
+                        <TextBlock x:Uid="SearchBoxHistoryTitleTextBlock"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Start with a clean search slate by reviewing and clearing terms you previously entered in File Explorer. This removes saved search suggestions without affecting your files or Windows Search index."
+                        <TextBlock x:Uid="SearchBoxHistoryDescriptionTextBlock"
                                    TextWrapping="Wrap"/>
                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.SearchBoxHistoryInfoBar.IsOpen, Mode=TwoWay}"
                                             Message="{x:Bind ViewModel.SearchBoxHistoryInfoBar.Message, Mode=OneWay}"
@@ -294,7 +294,7 @@
                                             IsClosable="{x:Bind ViewModel.SearchBoxHistoryInfoBar.IsClosable, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10">
-                            <Button Content="Check"
+                            <Button x:Uid="CheckButton"
                                     IsEnabled="{x:Bind ViewModel.SearchBoxHistoryIsEnabled, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.CheckSearchBoxHistory_Click}">
                                 <Button.ContentTemplate>
@@ -306,7 +306,7 @@
                                     </DataTemplate>
                                 </Button.ContentTemplate>
                             </Button>
-                            <Button Content="Clear"
+                            <Button x:Uid="ClearButton"
                                     IsEnabled="{x:Bind ViewModel.SearchBoxHistoryCanRemove, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.RemoveSearchBoxHistory_Click}">
                                 <Button.ContentTemplate>
@@ -319,7 +319,7 @@
                                 </Button.ContentTemplate>
                             </Button>
                         </StackPanel>
-                        <Expander Header="Review detected data"
+                        <Expander x:Uid="ReviewDetectedDataExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   IsExpanded="{x:Bind ViewModel.SearchBoxHistoryReviewExpanded, Mode=TwoWay}"
@@ -342,9 +342,9 @@
                         Padding="15"
                         Style="{StaticResource GridCardStyle}">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Recent Items Shortcuts"
+                        <TextBlock x:Uid="RecentItemsShortcutsTitleTextBlock"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Clean up your Recent Items list and reduce traces of recently opened content by reviewing and removing its saved shortcuts. Your original files remain untouched."
+                        <TextBlock x:Uid="RecentItemsShortcutsDescriptionTextBlock"
                                    TextWrapping="Wrap"/>
                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.RecentItemsInfoBar.IsOpen, Mode=TwoWay}"
                                             Message="{x:Bind ViewModel.RecentItemsInfoBar.Message, Mode=OneWay}"
@@ -352,7 +352,7 @@
                                             IsClosable="{x:Bind ViewModel.RecentItemsInfoBar.IsClosable, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10">
-                            <Button Content="Check"
+                            <Button x:Uid="CheckButton"
                                     IsEnabled="{x:Bind ViewModel.RecentItemsIsEnabled, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.CheckRecentItems_Click}">
                                 <Button.ContentTemplate>
@@ -364,7 +364,7 @@
                                     </DataTemplate>
                                 </Button.ContentTemplate>
                             </Button>
-                            <Button Content="Clear"
+                            <Button x:Uid="ClearButton"
                                     IsEnabled="{x:Bind ViewModel.RecentItemsCanRemove, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.RemoveRecentItems_Click}">
                                 <Button.ContentTemplate>
@@ -377,7 +377,7 @@
                                 </Button.ContentTemplate>
                             </Button>
                         </StackPanel>
-                        <Expander Header="Review detected data"
+                        <Expander x:Uid="ReviewDetectedDataExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   IsExpanded="{x:Bind ViewModel.RecentItemsReviewExpanded, Mode=TwoWay}"
@@ -400,9 +400,9 @@
                         Padding="15"
                         Style="{StaticResource GridCardStyle}">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Common Open/Save Dialog History"
+                        <TextBlock x:Uid="CommonDialogHistoryTitleTextBlock"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Stop Open and Save dialogs from retracing your steps by reviewing and clearing the file and folder locations they remember. This reduces previously visited locations shown by compatible apps without deleting your files."
+                        <TextBlock x:Uid="CommonDialogHistoryDescriptionTextBlock"
                                    TextWrapping="Wrap"/>
                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.CommonDialogHistoryInfoBar.IsOpen, Mode=TwoWay}"
                                             Message="{x:Bind ViewModel.CommonDialogHistoryInfoBar.Message, Mode=OneWay}"
@@ -410,7 +410,7 @@
                                             IsClosable="{x:Bind ViewModel.CommonDialogHistoryInfoBar.IsClosable, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10">
-                            <Button Content="Check"
+                            <Button x:Uid="CheckButton"
                                     IsEnabled="{x:Bind ViewModel.CommonDialogHistoryIsEnabled, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.CheckCommonDialogHistory_Click}">
                                 <Button.ContentTemplate>
@@ -422,7 +422,7 @@
                                     </DataTemplate>
                                 </Button.ContentTemplate>
                             </Button>
-                            <Button Content="Clear"
+                            <Button x:Uid="ClearButton"
                                     IsEnabled="{x:Bind ViewModel.CommonDialogHistoryCanRemove, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.RemoveCommonDialogHistory_Click}">
                                 <Button.ContentTemplate>
@@ -435,7 +435,7 @@
                                 </Button.ContentTemplate>
                             </Button>
                         </StackPanel>
-                        <Expander Header="Review detected data"
+                        <Expander x:Uid="ReviewDetectedDataExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   IsExpanded="{x:Bind ViewModel.CommonDialogHistoryReviewExpanded, Mode=TwoWay}"
@@ -458,9 +458,9 @@
                         Padding="15"
                         Style="{StaticResource GridCardStyle}">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="RecentDocs History"
+                        <TextBlock x:Uid="RecentDocsHistoryTitleTextBlock"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Clear the trail of document names remembered by File Explorer by reviewing and removing its RecentDocs history. This removes history records only and does not delete your documents."
+                        <TextBlock x:Uid="RecentDocsHistoryDescriptionTextBlock"
                                    TextWrapping="Wrap"/>
                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.RecentDocsHistoryInfoBar.IsOpen, Mode=TwoWay}"
                                             Message="{x:Bind ViewModel.RecentDocsHistoryInfoBar.Message, Mode=OneWay}"
@@ -468,7 +468,7 @@
                                             IsClosable="{x:Bind ViewModel.RecentDocsHistoryInfoBar.IsClosable, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10">
-                            <Button Content="Check"
+                            <Button x:Uid="CheckButton"
                                     IsEnabled="{x:Bind ViewModel.RecentDocsHistoryIsEnabled, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.CheckRecentDocsHistory_Click}">
                                 <Button.ContentTemplate>
@@ -480,7 +480,7 @@
                                     </DataTemplate>
                                 </Button.ContentTemplate>
                             </Button>
-                            <Button Content="Clear"
+                            <Button x:Uid="ClearButton"
                                     IsEnabled="{x:Bind ViewModel.RecentDocsHistoryCanRemove, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.RemoveRecentDocsHistory_Click}">
                                 <Button.ContentTemplate>
@@ -493,7 +493,7 @@
                                 </Button.ContentTemplate>
                             </Button>
                         </StackPanel>
-                        <Expander Header="Review detected data"
+                        <Expander x:Uid="ReviewDetectedDataExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   IsExpanded="{x:Bind ViewModel.RecentDocsHistoryReviewExpanded, Mode=TwoWay}"
@@ -516,9 +516,9 @@
                         Padding="15"
                         Style="{StaticResource GridCardStyle}">
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Jump List History"
+                        <TextBlock x:Uid="JumpListHistoryTitleTextBlock"
                                    Style="{ThemeResource SubtitleTextBlockStyle}"/>
-                        <TextBlock Text="Reset your Jump Lists by reviewing and clearing the data that stores recently used and pinned items for supported apps. Use this when you want a cleaner Start menu and taskbar history."
+                        <TextBlock x:Uid="JumpListHistoryDescriptionTextBlock"
                                    TextWrapping="Wrap"/>
                         <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.JumpListHistoryInfoBar.IsOpen, Mode=TwoWay}"
                                             Message="{x:Bind ViewModel.JumpListHistoryInfoBar.Message, Mode=OneWay}"
@@ -526,7 +526,7 @@
                                             IsClosable="{x:Bind ViewModel.JumpListHistoryInfoBar.IsClosable, Mode=OneWay}"/>
                         <StackPanel Orientation="Horizontal"
                                     Spacing="10">
-                            <Button Content="Check"
+                            <Button x:Uid="CheckButton"
                                     IsEnabled="{x:Bind ViewModel.JumpListHistoryIsEnabled, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.CheckJumpListHistory_Click}">
                                 <Button.ContentTemplate>
@@ -538,7 +538,7 @@
                                     </DataTemplate>
                                 </Button.ContentTemplate>
                             </Button>
-                            <Button Content="Clear"
+                            <Button x:Uid="ClearButton"
                                     IsEnabled="{x:Bind ViewModel.JumpListHistoryCanRemove, Mode=OneWay}"
                                     Click="{x:Bind ViewModel.RemoveJumpListHistory_Click}">
                                 <Button.ContentTemplate>
@@ -551,7 +551,7 @@
                                 </Button.ContentTemplate>
                             </Button>
                         </StackPanel>
-                        <Expander Header="Review detected data"
+                        <Expander x:Uid="ReviewDetectedDataExpander"
                                   HorizontalAlignment="Stretch"
                                   HorizontalContentAlignment="Stretch"
                                   IsExpanded="{x:Bind ViewModel.JumpListHistoryReviewExpanded, Mode=TwoWay}"
@@ -590,12 +590,11 @@
                                         IsOpen="{x:Bind ViewModel.DnsCacheInfoBar.IsOpen, Mode=TwoWay}"
                                         IsClosable="{x:Bind ViewModel.DnsCacheInfoBar.IsClosable, Mode=OneWay}"
                                         Severity="{x:Bind ViewModel.DnsCacheInfoBar.Severity, Mode=OneWay}"/>
-                    <customUI:SettingsCardV2 Header="Clear DNS Client Cache"
-                                             Description="Clears the DNS resolver cache so that name lookups are resolved again instead of being answered from cached records.">
+                    <customUI:SettingsCardV2 x:Uid="ClearDnsClientCacheSettingsCard">
                         <customUI:SettingsCardV2.HeaderIcon>
                             <FontIcon Glyph="&#xE968;"/>
                         </customUI:SettingsCardV2.HeaderIcon>
-                        <Button Content="Clear"
+                        <Button x:Uid="ClearButton"
                                 Style="{StaticResource AccentButtonStyle}"
                                 IsEnabled="{x:Bind ViewModel.DnsCacheIsEnabled, Mode=OneWay}"
                                 Click="{x:Bind ViewModel.FlushDnsCache_Click}">
@@ -620,12 +619,11 @@
                                         IsOpen="{x:Bind ViewModel.IpAddressInfoBar.IsOpen, Mode=TwoWay}"
                                         IsClosable="{x:Bind ViewModel.IpAddressInfoBar.IsClosable, Mode=OneWay}"
                                         Severity="{x:Bind ViewModel.IpAddressInfoBar.Severity, Mode=OneWay}"/>
-                    <customUI:SettingsCardV2 Header="Reset IPv4 Addresses"
-                                             Description="Reset the IPv4 of every active DHCP-enabled network adapter by releasing and then renewing it. Network and VPN connectivity may be briefly interrupted.">
+                    <customUI:SettingsCardV2 x:Uid="ResetIPv4AddressesSettingsCard">
                         <customUI:SettingsCardV2.HeaderIcon>
                             <FontIcon Glyph="&#xE774;"/>
                         </customUI:SettingsCardV2.HeaderIcon>
-                        <Button Content="Reset"
+                        <Button x:Uid="ResetButton"
                                 Style="{StaticResource AccentButtonStyle}"
                                 IsEnabled="{x:Bind ViewModel.IpAddressIsEnabled, Mode=OneWay}"
                                 Click="{x:Bind ViewModel.ReleaseAndRenewIpAddress_Click}">
@@ -650,12 +648,11 @@
                                         IsOpen="{x:Bind ViewModel.WinHttpAutoProxyInfoBar.IsOpen, Mode=TwoWay}"
                                         IsClosable="{x:Bind ViewModel.WinHttpAutoProxyInfoBar.IsClosable, Mode=OneWay}"
                                         Severity="{x:Bind ViewModel.WinHttpAutoProxyInfoBar.Severity, Mode=OneWay}"/>
-                    <customUI:SettingsCardV2 Header="Reset System HTTP Proxy"
-                                             Description="Clears WinHTTP automatic proxy information, WPAD state, and cached proxy scripts for all networks.">
+                    <customUI:SettingsCardV2 x:Uid="ResetSystemHttpProxySettingsCard">
                         <customUI:SettingsCardV2.HeaderIcon>
                             <FontIcon Glyph="&#xE968;"/>
                         </customUI:SettingsCardV2.HeaderIcon>
-                        <Button Content="Reset"
+                        <Button x:Uid="ResetButton"
                                 Style="{StaticResource AccentButtonStyle}"
                                 IsEnabled="{x:Bind ViewModel.WinHttpAutoProxyIsEnabled, Mode=OneWay}"
                                 Click="{x:Bind ViewModel.ResetWinHttpAutoProxy_Click}">
@@ -680,8 +677,7 @@
                                         IsOpen="{x:Bind ViewModel.DiskHealthModelUpdatesInfoBar.IsOpen, Mode=TwoWay}"
                                         IsClosable="{x:Bind ViewModel.DiskHealthModelUpdatesInfoBar.IsClosable, Mode=OneWay}"
                                         Severity="{x:Bind ViewModel.DiskHealthModelUpdatesInfoBar.Severity, Mode=OneWay}"/>
-                    <customUI:SettingsCardV2 Header="Disk Health Model Updates"
-                                             Description="Allows Windows to download updated machine learning model parameters used to predict storage disk failure.">
+                    <customUI:SettingsCardV2 x:Uid="DiskHealthModelUpdatesSettingsCard">
                         <customUI:SettingsCardV2.HeaderIcon>
                             <FontIcon Glyph="&#xEDA2;"/>
                         </customUI:SettingsCardV2.HeaderIcon>
@@ -700,8 +696,7 @@
                                         IsOpen="{x:Bind ViewModel.WindowsReInfoBar.IsOpen, Mode=TwoWay}"
                                         IsClosable="False"
                                         Severity="{x:Bind ViewModel.WindowsReInfoBar.Severity, Mode=OneWay}"/>
-                    <customUI:SettingsCardV2 Header="Windows Recovery Environment"
-                                             Description="Enables or disables Windows Recovery Environment and displays its current configuration.">
+                    <customUI:SettingsCardV2 x:Uid="WindowsRecoveryEnvironmentSettingsCard">
                         <customUI:SettingsCardV2.HeaderIcon>
                             <FontIcon Glyph="&#xE774;"/>
                         </customUI:SettingsCardV2.HeaderIcon>

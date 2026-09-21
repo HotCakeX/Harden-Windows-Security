@@ -7778,4 +7778,265 @@
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>通知およびお知らせに関連する設定を管理します。</value>
   </data>
+  <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>多彩な機能を備え、新たな可能性を広げるバーをディスプレイの上端に表示します。</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>多彩な機能を備え、新たな可能性を広げるバーをディスプレイの上端に表示します。</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>上部バーを展開したままにする</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>上部バーを閉じる</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>このビューに新しいエントリを追加する</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>アプリ</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>フォルダー</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>パフォーマンス</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>時計</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>メモリ</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>ディスク 読み取り / 書き込み</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>ネットワーク 下り / 上り</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>電力</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>バッテリー</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>名前</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>タイム ゾーン</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>時計を追加</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>標準のノッチとコンパクトなノッチを切り替える</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>Windows にサインインしたときに上部バーを表示する</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>サインイン時の上部バーの起動は、このアプリの外部で無効にされました。再度有効にするには、設定アプリの [スタートアップ アプリ] ページ、またはタスク マネージャーの [スタートアップ] タブを使用してください。</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>サインイン時の上部バーの起動は、このデバイスのポリシーによって無効にされているため、ここでは変更できません。</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>サインイン時に上部バーを起動できるかどうかが Windows から報告されなかったため、現在は変更できません。</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>上部バーに表示する内容を選択する</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>上部バーのオプション</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>コンパクトなノッチ</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>ポインターを合わせて開く</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>ノッチをクリックまたはタップしたときだけでなく、ポインターが上に移動した時点で上部バーを開く</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>常に手前に表示</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>上部バーを他のすべてのウィンドウより前面に表示する</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>展開したままにする</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>Windows と同時に起動する</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>調整</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>調整では、さまざまなシステム設定や最適化に 1 か所からアクセスできるため、Windows の使用環境をカスタマイズして向上させることができます。</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>調整では、さまざまなシステム設定や最適化に 1 か所からアクセスできるため、Windows の使用環境をカスタマイズして向上させることができます。</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>クリーンアップ</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>診断</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>NuGet パッケージ キャッシュ クリーナー</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>開発環境で不要になった古いバージョンの NuGet パッケージを見つけて、ディスク領域を解放します。最初に .NET プロジェクトを閉じてから、検出されたフォルダーを確認して削除してください。</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>PowerShell コマンド履歴クリーナー</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>PowerShell コンソールや Visual Studio Code のターミナルで以前に入力したコマンドを確認してクリアし、コマンド ラインの操作履歴を自分だけのものにします。保存されたコマンド履歴が削除されます。</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>ファイル名を指定して実行の履歴クリーナー</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>以前に入力したコマンドを確認してクリアし、Windows の [ファイル名を指定して実行] ダイアログを新しい状態に戻します。これにより、次回の使用時に古いコマンドが候補として表示され続けることを防ぎます。</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>エクスプローラーの入力パス履歴</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>エクスプローラーのアドレス バーのエントリを確認してクリアし、これまでにアクセスしたパスを残さないようにします。保存されたパスの候補が削除されますが、ファイルやフォルダーが削除されることはありません。</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>エクスプローラーの検索ボックス履歴</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>エクスプローラーで以前に入力した語句を確認してクリアし、検索をまっさらな状態から始めます。保存された検索候補が削除されますが、ファイルや Windows Search のインデックスには影響しません。</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>最近使った項目のショートカット</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>保存されたショートカットを確認して削除し、最近使った項目の一覧を整理して、最近開いたコンテンツの痕跡を減らします。元のファイルはそのまま残ります。</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>共通の [開く]/[保存] ダイアログの履歴</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>[開く] および [保存] ダイアログが記憶しているファイルとフォルダーの場所を確認してクリアし、操作の足跡がたどられないようにします。ファイルを削除することなく、対応アプリに表示される過去のアクセス場所を減らせます。</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>RecentDocs の履歴</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>エクスプローラーの RecentDocs 履歴を確認して削除し、記憶されているドキュメント名の痕跡を消去します。削除されるのは履歴レコードのみで、ドキュメント自体は削除されません。</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>ジャンプ リストの履歴</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>対応アプリの最近使った項目とピン留めされた項目を保存しているデータを確認してクリアし、ジャンプ リストをリセットします。スタート メニューやタスク バーの履歴をすっきりさせたいときに使用します。</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>検出されたデータを確認する</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>確認</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>削除</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>DNS クライアント キャッシュのクリア</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>DNS リゾルバーのキャッシュをクリアし、名前解決がキャッシュされたレコードで応答されるのではなく、改めて実行されるようにします。</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>IPv4 アドレスのリセット</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>DHCP が有効なすべてのアクティブなネットワーク アダプターの IPv4 アドレスを解放してから更新することでリセットします。ネットワークおよび VPN の接続が一時的に中断される場合があります。</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>システム HTTP プロキシのリセット</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>すべてのネットワークについて、WinHTTP の自動プロキシ情報、WPAD の状態、キャッシュされたプロキシ スクリプトをクリアします。</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>ディスク正常性モデルの更新</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>ストレージ ディスクの障害予測に使用される機械学習モデルの更新されたパラメーターを Windows がダウンロードできるようにします。</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>Windows 回復環境</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>Windows 回復環境を有効または無効にし、現在の構成を表示します。</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ライブ システム インテリジェンスを開く</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>クリップボード監視の管理</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>クリップボード監視</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>コピーされた内容を Microsoft Defender で監視およびスキャンし、疑わしい内容が検出されたときに通知します。</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>現在の状態</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>スタートアップの状態</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>有効化</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>無効化</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>スタートアップ時に実行する</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>スタートアップ時に実行しない</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>Windows のライセンス認証</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>IP アドレス</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>システム シリアル番号</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>システム UUID</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>ベースボード シリアル番号</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>シャーシ シリアル / 資産タグ</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>保留中の再起動操作</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 秒</value>
+  </data>
 </root>

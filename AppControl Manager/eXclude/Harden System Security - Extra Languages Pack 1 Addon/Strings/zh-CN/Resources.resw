@@ -7778,4 +7778,265 @@
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>管理与通知和提示相关的设置。</value>
   </data>
+   <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>在屏幕顶部边缘显示该工具栏，它提供众多功能，为你开启全新的可能。</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>在屏幕顶部边缘显示该工具栏，它提供众多功能，为你开启全新的可能。</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>保持顶部工具栏展开</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>关闭顶部工具栏</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>向此视图添加新条目</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>文件夹</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>性能</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>时钟</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>内存</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>磁盘读 / 写</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>网络下载 / 上传</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>功耗</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>电池</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>名称</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>时区</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>添加时钟</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>在标准凹口与紧凑凹口之间切换</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>登录 Windows 时显示顶部工具栏</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>登录时启动顶部工具栏的功能已在此应用之外被关闭。若要重新开启，请使用“设置”应用中的“启动应用”页面或任务管理器中的“启动”选项卡。</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>登录时启动顶部工具栏的功能已被此设备的策略关闭，因此无法在此处更改。</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>Windows 未报告登录时能否启动顶部工具栏，因此目前无法更改此项。</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>选择顶部工具栏显示的内容</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>顶部工具栏选项</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>紧凑凹口</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>悬停时打开</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>指针移到顶部工具栏上方时即打开，而不是仅在单击或点击凹口时才打开</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>始终置顶</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>使顶部工具栏始终位于所有其他窗口之上</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>保持展开</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>随 Windows 启动</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>优化调整</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>优化调整让你可以在一个便捷的位置访问各种系统设置和优化项，从而自定义并提升你的 Windows 使用体验。</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>优化调整让你可以在一个便捷的位置访问各种系统设置和优化项，从而自定义并提升你的 Windows 使用体验。</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>清理</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>诊断</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>NuGet 包缓存清理工具</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>通过查找开发环境不再需要的旧版 NuGet 包来释放磁盘空间。请先关闭 .NET 项目，然后在删除之前检查检测到的文件夹。</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>PowerShell 命令历史记录清理工具</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>检查并清除你之前在 PowerShell 控制台和 Visual Studio Code 终端中输入的命令，让命令行活动仅为你所知。此操作会删除已保存的命令历史记录。</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>运行历史记录清理工具</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>检查并清除你之前输入的命令，让 Windows 的“运行”对话框焕然一新。这样可以防止旧命令在你下次使用“运行”时继续显示为建议。</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>文件资源管理器键入路径历史记录</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>检查并清除文件资源管理器地址栏中的条目，将曾经访问过的路径抛在身后。此操作会删除已保存的路径建议，且不会删除任何文件或文件夹。</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>文件资源管理器搜索框历史记录</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>检查并清除你之前在文件资源管理器中输入的搜索词，从干净的搜索记录重新开始。此操作会删除已保存的搜索建议，且不会影响你的文件或 Windows 搜索索引。</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>最近使用项目的快捷方式</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>检查并删除已保存的快捷方式，整理最近使用的项目列表，减少最近打开内容留下的痕迹。你的原始文件不会受到影响。</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>通用“打开/保存”对话框历史记录</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>检查并清除“打开”和“保存”对话框记住的文件和文件夹位置，防止它们回溯你的操作轨迹。此操作可减少兼容应用显示的曾访问位置，且不会删除你的文件。</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>RecentDocs 历史记录</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>检查并删除文件资源管理器的 RecentDocs 历史记录，清除它所记住的文档名称痕迹。此操作仅删除历史记录条目，不会删除你的文档。</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>跳转列表历史记录</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>检查并清除存储受支持应用的最近使用项和固定项的数据，以重置跳转列表。当你希望获得更整洁的“开始”菜单和任务栏历史记录时，可使用此功能。</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>检查检测到的数据</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>检查</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>清除 DNS 客户端缓存</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>清除 DNS 解析程序缓存，使名称查找重新进行解析，而不是由缓存记录作答。</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>重置 IPv4 地址</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>通过释放并续订的方式，重置每个已启用 DHCP 的活动网络适配器的 IPv4 地址。网络和 VPN 连接可能会短暂中断。</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>重置系统 HTTP 代理</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>清除所有网络的 WinHTTP 自动代理信息、WPAD 状态和缓存的代理脚本。</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>磁盘运行状况模型更新</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>允许 Windows 下载用于预测存储磁盘故障的机器学习模型的更新参数。</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>Windows 恢复环境</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>启用或禁用 Windows 恢复环境，并显示其当前配置。</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>打开实时系统智能分析</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>管理剪贴板监视</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>剪贴板监视</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>使用 Microsoft Defender 监视并扫描复制的内容，并在检测到可疑内容时向你发出警报。</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>当前状态</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>启动状态</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>启用</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>禁用</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>开机时运行</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>开机时不运行</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>Windows 激活</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>IP 地址</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>系统序列号</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>系统 UUID</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>主板序列号</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>机箱序列号 / 资产标签</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>挂起的重启操作</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 秒</value>
+  </data>
 </root>

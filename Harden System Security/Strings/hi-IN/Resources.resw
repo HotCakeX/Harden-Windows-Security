@@ -7778,4 +7778,265 @@
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>सूचनाओं और नोटिस से संबंधित सेटिंग्स प्रबंधित करें.</value>
   </data>
+   <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>डिस्प्ले के ऊपरी किनारे पर वह बार दिखाएँ जो अनेक सुविधाएँ प्रदान करता है और आपके लिए नई संभावनाएँ खोलता है।</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>डिस्प्ले के ऊपरी किनारे पर वह बार दिखाएँ जो अनेक सुविधाएँ प्रदान करता है और आपके लिए नई संभावनाएँ खोलता है।</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>शीर्ष बार को विस्तारित रखें</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>शीर्ष बार बंद करें</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>इस दृश्य में नई प्रविष्टि जोड़ें</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>ऐप्स</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>फ़ोल्डर</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>प्रदर्शन</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>घड़ियाँ</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>मेमोरी</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>डिस्क पठन / लेखन</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>नेटवर्क डाउन / अप</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>पावर</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>बैटरी</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>नाम</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>समय क्षेत्र</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>घड़ी जोड़ें</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>मानक और सघन नॉच के बीच स्विच करें</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>Windows में साइन इन करने पर शीर्ष बार दिखाएँ</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>साइन इन करने पर शीर्ष बार को प्रारंभ करना इस ऐप के बाहर से बंद कर दिया गया था। इसे फिर से चालू करने के लिए, सेटिंग्स ऐप के 'स्टार्टअप ऐप्स' पृष्ठ या कार्य प्रबंधक के 'स्टार्टअप' टैब का उपयोग करें।</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>साइन इन करने पर शीर्ष बार को प्रारंभ करना इस डिवाइस की किसी नीति द्वारा बंद है, इसलिए इसे यहाँ से बदला नहीं जा सकता।</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>Windows ने यह नहीं बताया कि साइन इन करने पर शीर्ष बार प्रारंभ किया जा सकता है या नहीं, इसलिए इसे अभी बदला नहीं जा सकता।</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>चुनें कि शीर्ष बार क्या दिखाए</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>शीर्ष बार के विकल्प</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>सघन नॉच</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>होवर करने पर खोलें</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>नॉच पर क्लिक या टैप करने के बजाय, पॉइंटर के ऊपर आते ही शीर्ष बार खोलें</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>हमेशा सबसे ऊपर</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>शीर्ष बार को हर दूसरी विंडो के ऊपर रखें</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>विस्तारित रखें</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>Windows के साथ प्रारंभ करें</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>ट्वीक्स</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ट्वीक्स आपको विभिन्न सिस्टम सेटिंग्स और अनुकूलन तक एक ही सुविधाजनक स्थान पर पहुँच देकर आपके Windows अनुभव को अनुकूलित और बेहतर बनाने में सक्षम बनाते हैं।</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ट्वीक्स आपको विभिन्न सिस्टम सेटिंग्स और अनुकूलन तक एक ही सुविधाजनक स्थान पर पहुँच देकर आपके Windows अनुभव को अनुकूलित और बेहतर बनाने में सक्षम बनाते हैं।</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>सफ़ाई</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>निदान</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>NuGet पैकेज कैश क्लीनर</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>NuGet पैकेज के उन पुराने संस्करणों को ढूँढ़कर डिस्क स्थान खाली करें जिनकी आपके विकास परिवेश को अब आवश्यकता नहीं है। पहले अपनी .NET परियोजनाएँ बंद करें, फिर हटाने से पहले पहचाने गए फ़ोल्डरों की समीक्षा करें।</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>PowerShell कमांड इतिहास क्लीनर</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>PowerShell कंसोल और Visual Studio Code टर्मिनल में पहले दर्ज किए गए आदेशों की समीक्षा करके और उन्हें साफ़ करके अपनी कमांड-लाइन गतिविधि को अपने तक सीमित रखें। इससे सहेजे गए कमांड इतिहास हट जाते हैं।</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>रन इतिहास क्लीनर</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>पहले दर्ज किए गए आदेशों की समीक्षा करके और उन्हें साफ़ करके Windows के 'रन' संवाद को नई शुरुआत दें। इससे अगली बार 'रन' का उपयोग करने पर पुराने आदेश सुझावों के रूप में दिखाई देना बंद हो जाते हैं।</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में टाइप किए गए पथों का इतिहास</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर के पता बार से प्रविष्टियों की समीक्षा करके और उन्हें साफ़ करके पहले देखे गए पथों को पीछे छोड़ दें। इससे सहेजे गए पथ सुझाव हट जाते हैं, बिना किसी फ़ाइल या फ़ोल्डर को हटाए।</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर खोज बॉक्स इतिहास</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर में पहले दर्ज किए गए शब्दों की समीक्षा करके और उन्हें साफ़ करके स्वच्छ खोज के साथ शुरुआत करें। इससे सहेजे गए खोज सुझाव हट जाते हैं, बिना आपकी फ़ाइलों या Windows खोज अनुक्रमणिका को प्रभावित किए।</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>हाल के आइटम के शॉर्टकट</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>सहेजे गए शॉर्टकट की समीक्षा करके और उन्हें हटाकर अपनी हाल के आइटम सूची को व्यवस्थित करें और हाल ही में खोली गई सामग्री के निशान कम करें। आपकी मूल फ़ाइलें अछूती रहती हैं।</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>सामान्य खोलें/सहेजें संवाद इतिहास</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>'खोलें' और 'सहेजें' संवादों द्वारा याद रखे गए फ़ाइल और फ़ोल्डर स्थानों की समीक्षा करके और उन्हें साफ़ करके उन्हें आपके कदमों का पीछा करने से रोकें। इससे संगत ऐप्स द्वारा दिखाए जाने वाले पहले देखे गए स्थान कम हो जाते हैं, बिना आपकी फ़ाइलें हटाए।</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>RecentDocs इतिहास</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>फ़ाइल एक्सप्लोरर के RecentDocs इतिहास की समीक्षा करके और उसे हटाकर उसके द्वारा याद रखे गए दस्तावेज़ नामों के निशान मिटाएँ। इससे केवल इतिहास रिकॉर्ड हटते हैं और आपके दस्तावेज़ नहीं हटाए जाते।</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>जंप सूची इतिहास</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>समर्थित ऐप्स के लिए हाल ही में उपयोग किए गए और पिन किए गए आइटम संग्रहीत करने वाले डेटा की समीक्षा करके और उसे साफ़ करके अपनी जंप सूचियाँ रीसेट करें। इसका उपयोग तब करें जब आप स्वच्छ प्रारंभ मेनू और कार्यपट्टी इतिहास चाहते हों।</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>पहचाने गए डेटा की समीक्षा करें</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>जाँचें</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>हटाएँ</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>DNS क्लाइंट कैश साफ़ करें</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>DNS रिज़ॉल्वर कैश को साफ़ करता है ताकि नाम खोजें कैश की गई प्रविष्टियों से उत्तरित होने के बजाय फिर से हल की जाएँ।</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>IPv4 पते रीसेट करें</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>DHCP-सक्षम प्रत्येक सक्रिय नेटवर्क अडैप्टर के IPv4 पते को जारी करके और फिर नवीनीकृत करके रीसेट करता है। नेटवर्क और VPN कनेक्टिविटी कुछ समय के लिए बाधित हो सकती है।</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>सिस्टम HTTP प्रॉक्सी रीसेट करें</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>सभी नेटवर्क के लिए WinHTTP स्वचालित प्रॉक्सी जानकारी, WPAD स्थिति और कैश की गई प्रॉक्सी स्क्रिप्ट साफ़ करता है।</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>डिस्क स्वास्थ्य मॉडल अद्यतन</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>Windows को संग्रहण डिस्क विफलता का पूर्वानुमान लगाने के लिए उपयोग किए जाने वाले मशीन लर्निंग मॉडल के अद्यतन पैरामीटर डाउनलोड करने की अनुमति देता है।</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>Windows पुनर्प्राप्ति परिवेश</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>Windows पुनर्प्राप्ति परिवेश को सक्षम या अक्षम करता है और उसका वर्तमान कॉन्फ़िगरेशन दिखाता है।</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>लाइव सिस्टम इंटेलिजेंस खोलें</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>क्लिपबोर्ड निगरानी प्रबंधित करें</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>क्लिपबोर्ड मॉनिटर</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Microsoft Defender के साथ कॉपी की गई सामग्री की निगरानी और स्कैन करता है और संदिग्ध सामग्री का पता चलने पर आपको सचेत करता है।</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>वर्तमान स्थिति</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>स्टार्टअप स्थिति</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>सक्षम करें</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>अक्षम करें</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>स्टार्टअप पर चलाएँ</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>स्टार्टअप पर न चलाएँ</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>Windows सक्रियण</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>IP पता</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>सिस्टम क्रम संख्या</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>सिस्टम UUID</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>बेसबोर्ड क्रम संख्या</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>चेसिस क्रम संख्या / एसेट टैग</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>लंबित पुनरारंभ कार्रवाइयाँ</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 सेकंड</value>
+  </data>
 </root>

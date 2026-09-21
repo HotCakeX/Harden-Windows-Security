@@ -7778,4 +7778,265 @@
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>إدارة الإعدادات المتعلقة بالإشعارات والتنبيهات.</value>
   </data>
+   <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إظهار الشريط في الحافة العلوية من الشاشة، والذي يوفر العديد من الميزات ويفتح أمامك إمكانات جديدة.</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إظهار الشريط في الحافة العلوية من الشاشة، والذي يوفر العديد من الميزات ويفتح أمامك إمكانات جديدة.</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>إبقاء الشريط العلوي موسّعًا</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>إغلاق الشريط العلوي</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>إضافة إدخال جديد إلى طريقة العرض هذه</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>التطبيقات</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>المجلدات</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>الأداء</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>الساعات</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>الذاكرة</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>قراءة / كتابة القرص</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>تنزيل / تحميل الشبكة</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>الطاقة</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>البطارية</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>المنطقة الزمنية</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>إضافة ساعة</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>التبديل بين النتوء القياسي والنتوء المضغوط</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>إظهار الشريط العلوي عند تسجيل الدخول إلى Windows</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>تم إيقاف تشغيل بدء الشريط العلوي عند تسجيل الدخول من خارج هذا التطبيق. لإعادة تشغيله، استخدم صفحة “تطبيقات بدء التشغيل” في تطبيق الإعدادات أو علامة التبويب “بدء التشغيل” في إدارة المهام.</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>تم إيقاف بدء الشريط العلوي عند تسجيل الدخول بواسطة نهج على هذا الجهاز، لذا لا يمكن تغييره من هنا.</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>لم يُبلغ Windows عمّا إذا كان يمكن بدء الشريط العلوي عند تسجيل الدخول، لذا لا يمكن تغيير ذلك في الوقت الحالي.</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>اختر ما يعرضه الشريط العلوي</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>خيارات الشريط العلوي</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>نتوء مضغوط</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>الفتح عند التمرير</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>فتح الشريط العلوي بمجرد مرور المؤشر فوقه بدلاً من الفتح عند النقر أو الضغط على النتوء فقط</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>دائمًا في المقدمة</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>إبقاء الشريط العلوي فوق جميع النوافذ الأخرى</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>الإبقاء موسّعًا</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>البدء مع Windows</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>التحسينات</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تتيح لك التحسينات تخصيص تجربتك مع Windows وتطويرها من خلال توفير الوصول إلى مجموعة متنوعة من إعدادات النظام وتحسينات الأداء في مكان واحد ملائم.</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>تتيح لك التحسينات تخصيص تجربتك مع Windows وتطويرها من خلال توفير الوصول إلى مجموعة متنوعة من إعدادات النظام وتحسينات الأداء في مكان واحد ملائم.</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>التنظيف</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>التشخيص</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>أداة تنظيف ذاكرة التخزين المؤقت لحزم NuGet</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>وفّر مساحة على القرص من خلال العثور على إصدارات أقدم من حزم NuGet لم تعد بيئة التطوير لديك بحاجة إليها. أغلق مشاريع .NET أولاً، ثم راجع المجلدات المكتشفة قبل إزالتها.</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>أداة تنظيف سجل أوامر PowerShell</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>احتفظ بنشاط سطر الأوامر الخاص بك لنفسك من خلال مراجعة ومسح الأوامر التي أدخلتها سابقًا في وحدات تحكم PowerShell وفي وحدة Visual Studio Code الطرفية. يؤدي ذلك إلى إزالة سجلات الأوامر المحفوظة.</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>أداة تنظيف سجل التشغيل</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>امنح مربع الحوار “تشغيل” في Windows بداية جديدة من خلال مراجعة ومسح الأوامر التي أدخلتها سابقًا. يمنع ذلك استمرار ظهور الأوامر القديمة كاقتراحات عند استخدام “تشغيل” مرة أخرى.</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>سجل المسارات المكتوبة في مستكشف الملفات</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>اترك المسارات التي زرتها سابقًا خلفك من خلال مراجعة ومسح الإدخالات من شريط عناوين مستكشف الملفات. يؤدي ذلك إلى إزالة اقتراحات المسارات المحفوظة دون حذف أي ملفات أو مجلدات.</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>سجل مربع البحث في مستكشف الملفات</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>ابدأ بسجل بحث نظيف من خلال مراجعة ومسح المصطلحات التي أدخلتها سابقًا في مستكشف الملفات. يؤدي ذلك إلى إزالة اقتراحات البحث المحفوظة دون التأثير في ملفاتك أو في فهرس بحث Windows.</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>اختصارات العناصر الأخيرة</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>نظّف قائمة العناصر الأخيرة وقلّل آثار المحتوى الذي فتحته مؤخرًا من خلال مراجعة اختصاراتها المحفوظة وإزالتها. تبقى ملفاتك الأصلية دون تغيير.</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>سجل مربعات حوار الفتح/الحفظ الشائعة</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>امنع مربعي الحوار “فتح” و“حفظ” من تتبع خطواتك من خلال مراجعة ومسح مواقع الملفات والمجلدات التي يحتفظان بها. يقلل ذلك من المواقع التي زرتها سابقًا والتي تعرضها التطبيقات المتوافقة، دون حذف ملفاتك.</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>سجل RecentDocs</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>امسح أثر أسماء المستندات التي يحتفظ بها مستكشف الملفات من خلال مراجعة سجل RecentDocs الخاص به وإزالته. يؤدي ذلك إلى إزالة سجلات المحفوظات فقط ولا يحذف مستنداتك.</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>سجل قوائم الانتقال</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>أعد تعيين قوائم الانتقال من خلال مراجعة ومسح البيانات التي تخزّن العناصر المستخدمة مؤخرًا والمثبتة للتطبيقات المدعومة. استخدم ذلك عندما ترغب في قائمة ابدأ وسجل شريط مهام أكثر نظافة.</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>مراجعة البيانات المكتشفة</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>فحص</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>إزالة</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>مسح ذاكرة التخزين المؤقت لعميل DNS</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>يمسح ذاكرة التخزين المؤقت لمحلل DNS بحيث تتم إعادة تحليل عمليات البحث عن الأسماء بدلاً من الرد عليها من السجلات المخزنة مؤقتًا.</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>إعادة تعيين عناوين IPv4</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>يعيد تعيين عنوان IPv4 لكل محول شبكة نشط ممكّن عليه DHCP عن طريق تحريره ثم تجديده. قد يتم قطع اتصال الشبكة وشبكة VPN لفترة وجيزة.</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>إعادة تعيين وكيل HTTP للنظام</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>يمسح معلومات الوكيل التلقائي لـ WinHTTP وحالة WPAD ونصوص الوكيل البرمجية المخزنة مؤقتًا لجميع الشبكات.</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>تحديثات نموذج سلامة القرص</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>يسمح لـ Windows بتنزيل معلمات محدَّثة لنموذج التعلم الآلي المستخدم للتنبؤ بفشل قرص التخزين.</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>بيئة استرداد Windows</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>يمكّن بيئة استرداد Windows أو يعطّلها ويعرض تكوينها الحالي.</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فتح ذكاء النظام المباشر</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إدارة مراقبة الحافظة</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>مراقبة الحافظة</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>يراقب المحتوى المنسوخ ويفحصه باستخدام Microsoft Defender وينبهك عند اكتشاف محتوى مشبوه.</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>الحالة الحالية</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>حالة بدء التشغيل</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>تمكين</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>تعطيل</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>التشغيل عند بدء التشغيل</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>عدم التشغيل عند بدء التشغيل</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>تنشيط Windows</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>عنوان IP</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>المعالج</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>معالج الرسومات</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>الرقم التسلسلي للنظام</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>معرّف UUID للنظام</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>الرقم التسلسلي للوحة الأم</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>الرقم التسلسلي للهيكل / علامة الأصل</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>عمليات إعادة التشغيل المعلّقة</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 ثانية</value>
+  </data>
 </root>

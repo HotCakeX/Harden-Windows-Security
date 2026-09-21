@@ -7778,4 +7778,265 @@
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Керуйте налаштуваннями, пов’язаними зі сповіщеннями та повідомленнями.</value>
   </data>
+   <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Показує панель біля верхнього краю екрана, яка пропонує безліч функцій і відкриває для вас нові можливості.</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Показує панель біля верхнього краю екрана, яка пропонує безліч функцій і відкриває для вас нові можливості.</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>Тримати верхню панель розгорнутою</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>Закрити верхню панель</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>Додати новий запис до цього подання</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>Програми</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>Папки</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>Продуктивність</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>Годинники</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>Пам'ять</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>Диск Читання / Запис</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>Мережа Завантаження / Вивантаження</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>Живлення</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>Батарея</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>Ім'я</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>Часовий пояс</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>Додати годинник</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>Перемикання між стандартним і компактним вирізом</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>Показувати верхню панель під час входу в Windows</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>Запуск верхньої панелі під час входу вимкнено за межами цієї програми. Щоб увімкнути його знову, скористайтеся сторінкою «Програми, що запускаються» у програмі «Параметри» або вкладкою «Автозавантаження» в Диспетчері завдань.</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>Запуск верхньої панелі під час входу вимкнено політикою цього пристрою, тому його не можна змінити тут.</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>Windows не повідомила, чи можна запускати верхню панель під час входу, тому наразі це неможливо змінити.</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>Виберіть, що показує верхня панель</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>Параметри верхньої панелі</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>Компактний виріз</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>Відкривати при наведенні</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>Відкривати верхню панель щойно вказівник наводиться на неї, а не лише після клацання чи дотику до вирізу</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>Поверх усіх вікон</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>Тримати верхню панель поверх усіх інших вікон</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>Тримати розгорнутою</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>Запускати разом із Windows</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>Налаштування</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Налаштування дають змогу персоналізувати та покращити вашу роботу з Windows, надаючи доступ до різноманітних системних параметрів і оптимізацій в одному зручному місці.</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Налаштування дають змогу персоналізувати та покращити вашу роботу з Windows, надаючи доступ до різноманітних системних параметрів і оптимізацій в одному зручному місці.</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>Очищення</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>Діагностика</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Очищення кешу пакетів NuGet</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Звільніть місце на диску, знайшовши старіші версії пакетів NuGet, які більше не потрібні вашому середовищу розробки. Спершу закрийте свої проєкти .NET, а потім перегляньте виявлені папки, перш ніж видаляти їх.</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Очищення журналу команд PowerShell</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Збережіть свою активність у командному рядку в таємниці, переглянувши та очистивши команди, раніше введені в консолях PowerShell і в терміналі Visual Studio Code. Це видаляє збережені журнали команд.</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Очищення журналу вікна «Виконати»</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Подаруйте діалоговому вікну «Виконати» у Windows новий початок, переглянувши та очистивши раніше введені команди. Це не дасть старим командам і надалі з'являтися як пропозиції під час наступного використання «Виконати».</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Журнал шляхів, введених у Провіднику файлів</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Залиште позаду раніше відвідані шляхи, переглянувши та очистивши записи з адресного рядка Провідника файлів. Це видаляє збережені пропозиції шляхів, не видаляючи жодних файлів чи папок.</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Журнал поля пошуку Провідника файлів</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Почніть пошук з чистого аркуша, переглянувши та очистивши терміни, раніше введені в Провіднику файлів. Це видаляє збережені пропозиції пошуку, не впливаючи на ваші файли чи індекс пошуку Windows.</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>Ярлики останніх елементів</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Упорядкуйте список останніх елементів і зменште сліди нещодавно відкритого вмісту, переглянувши та видаливши збережені ярлики. Ваші вихідні файли залишаються недоторканими.</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Журнал спільних діалогових вікон «Відкрити/Зберегти»</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Не дозволяйте діалоговим вікнам «Відкрити» та «Зберегти» відстежувати ваші кроки, переглянувши та очистивши розташування файлів і папок, які вони запам'ятовують. Це зменшує кількість раніше відвіданих розташувань, які показують сумісні програми, не видаляючи ваших файлів.</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Журнал RecentDocs</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Зітріть слід назв документів, які запам'ятовує Провідник файлів, переглянувши та видаливши його журнал RecentDocs. Це видаляє лише записи журналу й не видаляє ваших документів.</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Журнал списків переходів</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Скиньте списки переходів, переглянувши та очистивши дані, у яких зберігаються нещодавно використані та закріплені елементи підтримуваних програм. Скористайтеся цим, коли хочете мати чистіше меню «Пуск» і журнал панелі завдань.</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>Перегляньте виявлені дані</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>Перевірити</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>Видалити</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>Очистити кеш клієнта DNS</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>Очищає кеш перетворювача DNS, щоб пошук імен виконувався заново, а не обслуговувався з кешованих записів.</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>Скинути адреси IPv4</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>Скидає адресу IPv4 кожного активного мережевого адаптера з увімкненим DHCP, звільняючи її та поновлюючи. Мережеве підключення та VPN можуть на короткий час перерватися.</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>Скинути системний проксі-сервер HTTP</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>Очищає відомості про автоматичний проксі-сервер WinHTTP, стан WPAD і кешовані сценарії проксі для всіх мереж.</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>Оновлення моделі стану диска</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>Дозволяє Windows завантажувати оновлені параметри моделі машинного навчання, які використовуються для прогнозування відмови диска сховища.</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>Середовище відновлення Windows</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>Вмикає або вимикає середовище відновлення Windows і показує його поточну конфігурацію.</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Відкрити аналітику системи в реальному часі</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Керування моніторингом буфера обміну</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>Монітор буфера обміну</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Відстежує та перевіряє скопійований вміст за допомогою Microsoft Defender і сповіщає вас у разі виявлення підозрілого вмісту.</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>Поточний стан</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>Стан автозапуску</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>Увімкнути</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>Вимкнути</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>Запускати під час запуску системи</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>Не запускати під час запуску системи</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>Активація Windows</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>IP-адреса</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>Процесор</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>Графічний процесор</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>Серійний номер системи</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>UUID системи</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>Серійний номер материнської плати</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>Серійний номер корпусу / інвентарний номер</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>Незавершені операції перезавантаження</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 секунд</value>
+  </data>
 </root>

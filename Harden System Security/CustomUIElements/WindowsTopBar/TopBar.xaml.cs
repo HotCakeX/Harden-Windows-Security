@@ -679,15 +679,15 @@ internal sealed partial class TopBar : Window
 	/// </summary>
 	private void ApplyMetricCaptions()
 	{
-		CpuUsageCaption.Text = Atlas.GetStr("TopBarMetricCpuUsage");
-		CpuTemperatureCaption.Text = Atlas.GetStr("TopBarMetricCpuTemperature");
+		CpuUsageCaption.Text = Atlas.GetStr("CPU/Text");
+		CpuTemperatureCaption.Text = Atlas.GetStr("CPUTemperature/Text");
 		MemoryCaption.Text = Atlas.GetStr("TopBarMetricMemory");
-		StorageTemperatureCaption.Text = Atlas.GetStr("TopBarMetricStorageTemperature");
+		StorageTemperatureCaption.Text = Atlas.GetStr("StorageTemperatureTitle/Text");
 		DiskActivityCaption.Text = Atlas.GetStr("TopBarMetricDiskActivity");
 		NetworkCaption.Text = Atlas.GetStr("TopBarMetricNetwork");
 		SystemPowerCaption.Text = Atlas.GetStr("TopBarMetricSystemPower");
 		BatteryDischargeCaption.Text = Atlas.GetStr("TopBarMetricBatteryDischarge");
-		AppMemoryCaption.Text = Atlas.GetStr("TopBarMetricAppMemory");
+		AppMemoryCaption.Text = Atlas.GetStr("AppRamUsageTitle/Text");
 	}
 
 	/// <summary>
@@ -1227,9 +1227,9 @@ internal sealed partial class TopBar : Window
 			RebuildNotchClocks();
 		};
 
-		MenuFlyoutItem remove = new() { Text = Atlas.GetStr("TopBarRemoveMenuItem"), Icon = new FontIcon { Glyph = "\uE74D" } };
+		MenuFlyoutItem remove = new() { Text = Atlas.GetStr("RemoveText/Text"), Icon = new FontIcon { Glyph = "\uE74D" } };
 		remove.Click += (_, _) => RemoveClockEntry(entry);
-		MenuFlyoutItem removeAll = new() { Text = "Remove all", Icon = new FontIcon { Glyph = "\uE74D" } };
+		MenuFlyoutItem removeAll = new() { Text = Atlas.GetStr("RemoveAllMitigationsMenuFlyoutItem/Text"), Icon = new FontIcon { Glyph = "\uE74D" } };
 		removeAll.Click += (_, _) => RemoveAllClockEntries();
 		MenuFlyout menu = new() { ShouldConstrainToRootBounds = false, Items = { toggle, new MenuFlyoutSeparator(), remove, new MenuFlyoutSeparator(), removeAll } };
 		menu.Opened += (_, _) =>
@@ -1250,7 +1250,7 @@ internal sealed partial class TopBar : Window
 	{
 		MenuFlyoutItem removeItem = new()
 		{
-			Text = Atlas.GetStr("TopBarRemoveMenuItem"),
+			Text = Atlas.GetStr("RemoveText/Text"),
 			Icon = new FontIcon { Glyph = "\uE74D" }
 		};
 
@@ -1258,7 +1258,7 @@ internal sealed partial class TopBar : Window
 
 		MenuFlyoutItem removeAllItem = new()
 		{
-			Text = "Remove all",
+			Text = Atlas.GetStr("RemoveAllMitigationsMenuFlyoutItem/Text"),
 			Icon = new FontIcon { Glyph = "\uE74D" }
 		};
 		removeAllItem.Click += (_, _) => onRemoveAll();
@@ -1270,7 +1270,7 @@ internal sealed partial class TopBar : Window
 
 		if (onSearch is not null)
 		{
-			MenuFlyoutItem searchItem = new() { Text = "Search", Icon = new FontIcon { Glyph = "\uE721" } };
+			MenuFlyoutItem searchItem = new() { Text = Atlas.GetStr("WinGetSearchButton/Content"), Icon = new FontIcon { Glyph = "\uE721" } };
 			searchItem.Click += (_, _) => onSearch();
 			menu.Items.Add(searchItem);
 			menu.Items.Add(new MenuFlyoutSeparator());
@@ -2102,7 +2102,7 @@ internal sealed partial class TopBar : Window
 				if (!_isClosed)
 				{
 					NetworkQualityDestinationBox.IsEnabled = true;
-					NetworkQualityStartStopButton.Content = "Start";
+					NetworkQualityStartStopButton.Content = Atlas.GetStr("StartSandboxButton/Content");
 					NetworkQualityStatusText.Text = "Stopped";
 					NetworkQualityGraphPanel.Children.Clear();
 					RefreshCollapsedLabel();

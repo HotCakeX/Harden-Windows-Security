@@ -7778,4 +7778,265 @@ Thumbprint: {3}</value>
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Kelola pengaturan yang berkaitan dengan notifikasi dan pemberitahuan.</value>
   </data>
+   <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tampilkan bilah di tepi atas layar yang menawarkan banyak fitur dan membuka berbagai kemungkinan baru untuk Anda.</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Tampilkan bilah di tepi atas layar yang menawarkan banyak fitur dan membuka berbagai kemungkinan baru untuk Anda.</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>Tetap bentangkan bilah atas</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>Tutup bilah atas</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>Tambahkan entri baru ke tampilan ini</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>Aplikasi</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>Performa</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>Jam</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>Memori</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>Baca / Tulis Disk</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>Jaringan Unduh / Unggah</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>Daya</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>Baterai</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>Zona waktu</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>Tambahkan jam</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>Beralih antara notch standar dan notch ringkas</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>Tampilkan bilah atas saat Anda masuk ke Windows</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>Menjalankan bilah atas saat Anda masuk telah dinonaktifkan dari luar aplikasi ini. Untuk mengaktifkannya kembali, gunakan halaman Aplikasi Pengaktifan pada aplikasi Pengaturan atau tab Pengaktifan pada Pengelola Tugas.</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>Menjalankan bilah atas saat Anda masuk dinonaktifkan oleh kebijakan perangkat ini, sehingga tidak dapat diubah di sini.</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>Windows tidak melaporkan apakah bilah atas dapat dijalankan saat Anda masuk, sehingga hal ini tidak dapat diubah saat ini.</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>Pilih apa yang ditampilkan bilah atas</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>Opsi bilah atas</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>Notch ringkas</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>Buka saat kursor diarahkan</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>Buka bilah atas begitu penunjuk bergerak di atasnya, bukan hanya saat Anda mengeklik atau mengetuk notch</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>Selalu di atas</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>Jaga bilah atas tetap berada di atas semua jendela lain</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>Tetap bentangkan</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>Jalankan bersama Windows</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>Penyesuaian</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Penyesuaian memungkinkan Anda menyesuaikan dan meningkatkan pengalaman Windows Anda dengan menyediakan akses ke berbagai pengaturan sistem dan optimalisasi dalam satu tempat yang praktis.</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Penyesuaian memungkinkan Anda menyesuaikan dan meningkatkan pengalaman Windows Anda dengan menyediakan akses ke berbagai pengaturan sistem dan optimalisasi dalam satu tempat yang praktis.</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>Pembersihan</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>Diagnostik</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Pembersih Cache Paket NuGet</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Kosongkan ruang disk dengan menemukan versi paket NuGet lama yang tidak lagi dibutuhkan oleh lingkungan pengembangan Anda. Tutup dahulu proyek .NET Anda, lalu tinjau folder yang terdeteksi sebelum menghapusnya.</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Pembersih Riwayat Perintah PowerShell</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Jaga kerahasiaan aktivitas baris perintah Anda dengan meninjau dan menghapus perintah yang sebelumnya Anda masukkan di konsol PowerShell dan terminal Visual Studio Code. Tindakan ini menghapus riwayat perintah yang tersimpan.</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Pembersih Riwayat Jalankan</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Berikan awal yang bersih bagi kotak dialog Jalankan Windows dengan meninjau dan menghapus perintah yang sebelumnya Anda masukkan. Hal ini mencegah perintah lama terus muncul sebagai saran saat Anda menggunakan Jalankan lagi.</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Riwayat Jalur yang Diketik di File Explorer</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Tinggalkan jalur yang pernah Anda kunjungi dengan meninjau dan menghapus entri dari bilah alamat File Explorer. Tindakan ini menghapus saran jalur yang tersimpan tanpa menghapus file atau folder apa pun.</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Riwayat Kotak Pencarian File Explorer</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Mulailah dengan pencarian yang bersih dengan meninjau dan menghapus istilah yang sebelumnya Anda masukkan di File Explorer. Tindakan ini menghapus saran pencarian yang tersimpan tanpa memengaruhi file Anda atau indeks Pencarian Windows.</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>Pintasan Item Terbaru</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Rapikan daftar Item Terbaru Anda dan kurangi jejak konten yang baru dibuka dengan meninjau dan menghapus pintasan yang tersimpan. File asli Anda tetap utuh.</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Riwayat Dialog Umum Buka/Simpan</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Cegah dialog Buka dan Simpan menelusuri kembali langkah Anda dengan meninjau dan menghapus lokasi file dan folder yang mereka ingat. Hal ini mengurangi lokasi yang pernah dikunjungi dan ditampilkan oleh aplikasi yang kompatibel, tanpa menghapus file Anda.</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Riwayat RecentDocs</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Hapus jejak nama dokumen yang diingat oleh File Explorer dengan meninjau dan menghapus riwayat RecentDocs-nya. Tindakan ini hanya menghapus catatan riwayat dan tidak menghapus dokumen Anda.</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Riwayat Jump List</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Atur ulang Jump List Anda dengan meninjau dan menghapus data yang menyimpan item yang baru digunakan dan yang disematkan untuk aplikasi yang didukung. Gunakan ini saat Anda menginginkan menu Mulai dan riwayat bilah tugas yang lebih bersih.</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>Tinjau data yang terdeteksi</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>Periksa</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>Hapus</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>Bersihkan Cache Klien DNS</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>Membersihkan cache resolver DNS sehingga pencarian nama diselesaikan kembali alih-alih dijawab dari catatan yang tersimpan dalam cache.</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>Atur Ulang Alamat IPv4</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>Mengatur ulang alamat IPv4 setiap adaptor jaringan aktif yang mengaktifkan DHCP dengan melepaskannya lalu memperbaruinya. Konektivitas jaringan dan VPN mungkin terputus sejenak.</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>Atur Ulang Proksi HTTP Sistem</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>Membersihkan informasi proksi otomatis WinHTTP, status WPAD, dan skrip proksi yang tersimpan dalam cache untuk semua jaringan.</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>Pembaruan Model Kesehatan Disk</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>Mengizinkan Windows mengunduh parameter model pembelajaran mesin terbaru yang digunakan untuk memprediksi kegagalan disk penyimpanan.</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>Lingkungan Pemulihan Windows</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>Mengaktifkan atau menonaktifkan Lingkungan Pemulihan Windows dan menampilkan konfigurasinya saat ini.</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Buka inteligensi sistem langsung</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Kelola Pemantauan Papan Klip</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>Pemantau Papan Klip</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Memantau dan memindai konten yang disalin dengan Microsoft Defender serta memberi tahu Anda saat konten mencurigakan terdeteksi.</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>Status saat ini</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>Status pengaktifan</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>Aktifkan</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>Nonaktifkan</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>Jalankan saat pengaktifan</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>Jangan jalankan saat pengaktifan</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>Aktivasi Windows</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>Alamat IP</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>CPU</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>GPU</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>Nomor Seri Sistem</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>UUID Sistem</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>Nomor Seri Baseboard</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>Nomor Seri Sasis / Tag Aset</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>Operasi Mulai Ulang yang Tertunda</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 Detik</value>
+  </data>
 </root>

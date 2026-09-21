@@ -7778,4 +7778,265 @@ Odcisk Palca: {3}</value>
   <data name="NotificationSettingsSettingsExpander.AutomationProperties.HelpText" xml:space="preserve">
     <value>Zarządzaj ustawieniami dotyczącymi powiadomień i komunikatów.</value>
   </data>
+  <data name="WindowsTopBarButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Pokazuje pasek przy górnej krawędzi ekranu, który oferuje wiele funkcji i otwiera przed Tobą nowe możliwości.</value>
+  </data>
+  <data name="WindowsTopBarButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Pokazuje pasek przy górnej krawędzi ekranu, który oferuje wiele funkcji i otwiera przed Tobą nowe możliwości.</value>
+  </data>
+  <data name="TopBarPinToolTip" xml:space="preserve">
+    <value>Utrzymuj górny pasek rozwinięty</value>
+  </data>
+  <data name="TopBarCloseToolTip" xml:space="preserve">
+    <value>Zamknij górny pasek</value>
+  </data>
+  <data name="TopBarAddToolTip" xml:space="preserve">
+    <value>Dodaj nowy wpis do tego widoku</value>
+  </data>
+  <data name="TopBarViewApps" xml:space="preserve">
+    <value>Aplikacje</value>
+  </data>
+  <data name="TopBarViewFolders" xml:space="preserve">
+    <value>Foldery</value>
+  </data>
+  <data name="TopBarViewPerformance" xml:space="preserve">
+    <value>Wydajność</value>
+  </data>
+  <data name="TopBarViewClocks" xml:space="preserve">
+    <value>Zegary</value>
+  </data>
+  <data name="TopBarMetricMemory" xml:space="preserve">
+    <value>Pamięć</value>
+  </data>
+  <data name="TopBarMetricDiskActivity" xml:space="preserve">
+    <value>Dysk O / Z</value>
+  </data>
+  <data name="TopBarMetricNetwork" xml:space="preserve">
+    <value>Sieć pobieranie / wysyłanie</value>
+  </data>
+  <data name="TopBarMetricSystemPower" xml:space="preserve">
+    <value>Zasilanie</value>
+  </data>
+  <data name="TopBarMetricBatteryDischarge" xml:space="preserve">
+    <value>Bateria</value>
+  </data>
+  <data name="TopBarClockNameLabel" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="TopBarClockTimeZoneLabel" xml:space="preserve">
+    <value>Strefa czasowa</value>
+  </data>
+  <data name="TopBarAddClockConfirm" xml:space="preserve">
+    <value>Dodaj zegar</value>
+  </data>
+  <data name="TopBarNotchStyleToolTip" xml:space="preserve">
+    <value>Przełączaj między standardowym a kompaktowym wcięciem</value>
+  </data>
+  <data name="TopBarStartupToolTip" xml:space="preserve">
+    <value>Pokazuj górny pasek po zalogowaniu do systemu Windows</value>
+  </data>
+  <data name="TopBarStartupBlockedByUserToolTip" xml:space="preserve">
+    <value>Uruchamianie górnego paska podczas logowania zostało wyłączone poza tą aplikacją. Aby włączyć je ponownie, użyj strony „Aplikacje autostartu” w aplikacji Ustawienia lub karty „Uruchamianie” w Menedżerze zadań.</value>
+  </data>
+  <data name="TopBarStartupBlockedByPolicyToolTip" xml:space="preserve">
+    <value>Uruchamianie górnego paska podczas logowania jest wyłączone przez zasadę tego urządzenia, dlatego nie można go tutaj zmienić.</value>
+  </data>
+  <data name="TopBarStartupUnavailableToolTip" xml:space="preserve">
+    <value>System Windows nie zgłosił, czy górny pasek może być uruchamiany podczas logowania, dlatego nie można tego teraz zmienić.</value>
+  </data>
+  <data name="TopBarViewSwitcherToolTip" xml:space="preserve">
+    <value>Wybierz, co ma pokazywać górny pasek</value>
+  </data>
+  <data name="TopBarSettingsToolTip" xml:space="preserve">
+    <value>Opcje górnego paska</value>
+  </data>
+  <data name="TopBarNotchStyleMenuItem" xml:space="preserve">
+    <value>Kompaktowe wcięcie</value>
+  </data>
+  <data name="TopBarOpenOnHoverMenuItem" xml:space="preserve">
+    <value>Otwieraj po najechaniu</value>
+  </data>
+  <data name="TopBarOpenOnHoverToolTip" xml:space="preserve">
+    <value>Otwieraj górny pasek, gdy tylko wskaźnik znajdzie się nad nim, zamiast dopiero po kliknięciu lub dotknięciu wcięcia</value>
+  </data>
+  <data name="TopBarAlwaysOnTopMenuItem" xml:space="preserve">
+    <value>Zawsze na wierzchu</value>
+  </data>
+  <data name="TopBarAlwaysOnTopToolTip" xml:space="preserve">
+    <value>Utrzymuj górny pasek nad wszystkimi innymi oknami</value>
+  </data>
+  <data name="TopBarPinMenuItem" xml:space="preserve">
+    <value>Utrzymuj rozwinięty</value>
+  </data>
+  <data name="TopBarStartupMenuItem" xml:space="preserve">
+    <value>Uruchamiaj z systemem Windows</value>
+  </data>
+  <data name="TweaksNavItem.Content" xml:space="preserve">
+    <value>Ulepszenia</value>
+  </data>
+  <data name="TweaksNavItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ulepszenia pozwalają dostosować i wzbogacić korzystanie z systemu Windows, zapewniając dostęp do różnych ustawień systemowych i optymalizacji w jednym wygodnym miejscu.</value>
+  </data>
+  <data name="TweaksNavItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ulepszenia pozwalają dostosować i wzbogacić korzystanie z systemu Windows, zapewniając dostęp do różnych ustawień systemowych i optymalizacji w jednym wygodnym miejscu.</value>
+  </data>
+  <data name="TweaksCleanupSelectorBarItem.Text" xml:space="preserve">
+    <value>Czyszczenie</value>
+  </data>
+  <data name="TweaksDiagnosticsSelectorBarItem.Text" xml:space="preserve">
+    <value>Diagnostyka</value>
+  </data>
+  <data name="NuGetCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Narzędzie czyszczenia pamięci podręcznej pakietów NuGet</value>
+  </data>
+  <data name="NuGetCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zwolnij miejsce na dysku, wyszukując starsze wersje pakietów NuGet, których Twoje środowisko programistyczne już nie potrzebuje. Najpierw zamknij projekty .NET, a następnie przejrzyj wykryte foldery przed ich usunięciem.</value>
+  </data>
+  <data name="PowerShellHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Narzędzie czyszczenia historii poleceń programu PowerShell</value>
+  </data>
+  <data name="PowerShellHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zachowaj swoją aktywność w wierszu polecenia dla siebie, przeglądając i usuwając polecenia wprowadzone wcześniej w konsolach programu PowerShell oraz w terminalu programu Visual Studio Code. Powoduje to usunięcie zapisanych historii poleceń.</value>
+  </data>
+  <data name="RunHistoryCleanerTitleTextBlock.Text" xml:space="preserve">
+    <value>Narzędzie czyszczenia historii okna Uruchom</value>
+  </data>
+  <data name="RunHistoryCleanerDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zapewnij oknu dialogowemu Uruchom systemu Windows świeży start, przeglądając i usuwając wcześniej wprowadzone polecenia. Zapobiega to dalszemu pojawianiu się starych poleceń jako sugestii przy kolejnym użyciu okna Uruchom.</value>
+  </data>
+  <data name="TypedPathHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historia ścieżek wpisanych w Eksploratorze plików</value>
+  </data>
+  <data name="TypedPathHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zostaw za sobą wcześniej odwiedzane ścieżki, przeglądając i usuwając wpisy z paska adresu Eksploratora plików. Powoduje to usunięcie zapisanych sugestii ścieżek bez usuwania jakichkolwiek plików ani folderów.</value>
+  </data>
+  <data name="SearchBoxHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historia pola wyszukiwania Eksploratora plików</value>
+  </data>
+  <data name="SearchBoxHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zacznij wyszukiwanie z czystą kartą, przeglądając i usuwając terminy wprowadzone wcześniej w Eksploratorze plików. Powoduje to usunięcie zapisanych sugestii wyszukiwania bez wpływu na Twoje pliki ani indeks wyszukiwania systemu Windows.</value>
+  </data>
+  <data name="RecentItemsShortcutsTitleTextBlock.Text" xml:space="preserve">
+    <value>Skróty ostatnio używanych elementów</value>
+  </data>
+  <data name="RecentItemsShortcutsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Uporządkuj listę ostatnio używanych elementów i ogranicz ślady niedawno otwieranej zawartości, przeglądając i usuwając zapisane skróty. Oryginalne pliki pozostaną nienaruszone.</value>
+  </data>
+  <data name="CommonDialogHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historia wspólnych okien dialogowych Otwórz/Zapisz</value>
+  </data>
+  <data name="CommonDialogHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Uniemożliw oknom dialogowym Otwórz i Zapisz odtwarzanie Twoich kroków, przeglądając i usuwając zapamiętane przez nie lokalizacje plików i folderów. Ogranicza to wcześniej odwiedzane lokalizacje wyświetlane przez zgodne aplikacje bez usuwania Twoich plików.</value>
+  </data>
+  <data name="RecentDocsHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historia RecentDocs</value>
+  </data>
+  <data name="RecentDocsHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Usuń ślad nazw dokumentów zapamiętanych przez Eksplorator plików, przeglądając i usuwając jego historię RecentDocs. Powoduje to usunięcie wyłącznie wpisów historii i nie usuwa Twoich dokumentów.</value>
+  </data>
+  <data name="JumpListHistoryTitleTextBlock.Text" xml:space="preserve">
+    <value>Historia list szybkiego dostępu</value>
+  </data>
+  <data name="JumpListHistoryDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zresetuj listy szybkiego dostępu, przeglądając i usuwając dane przechowujące ostatnio używane oraz przypięte elementy obsługiwanych aplikacji. Użyj tej opcji, gdy chcesz mieć czystsze menu Start i historię paska zadań.</value>
+  </data>
+  <data name="ReviewDetectedDataExpander.Header" xml:space="preserve">
+    <value>Przejrzyj wykryte dane</value>
+  </data>
+  <data name="CheckButton.Content" xml:space="preserve">
+    <value>Sprawdź</value>
+  </data>
+  <data name="RemoveButton.Content" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Header" xml:space="preserve">
+    <value>Wyczyść pamięć podręczną klienta DNS</value>
+  </data>
+  <data name="ClearDnsClientCacheSettingsCard.Description" xml:space="preserve">
+    <value>Czyści pamięć podręczną resolvera DNS, dzięki czemu nazwy są rozwiązywane ponownie, zamiast być obsługiwane na podstawie zapisanych rekordów.</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Header" xml:space="preserve">
+    <value>Zresetuj adresy IPv4</value>
+  </data>
+  <data name="ResetIPv4AddressesSettingsCard.Description" xml:space="preserve">
+    <value>Resetuje adres IPv4 każdej aktywnej karty sieciowej z włączonym DHCP, zwalniając go, a następnie odnawiając. Łączność sieciowa i VPN może zostać na krótko przerwana.</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Header" xml:space="preserve">
+    <value>Zresetuj systemowy serwer proxy HTTP</value>
+  </data>
+  <data name="ResetSystemHttpProxySettingsCard.Description" xml:space="preserve">
+    <value>Czyści informacje o automatycznym serwerze proxy WinHTTP, stan WPAD oraz zapisane w pamięci podręcznej skrypty proxy dla wszystkich sieci.</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Header" xml:space="preserve">
+    <value>Aktualizacje modelu kondycji dysku</value>
+  </data>
+  <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
+    <value>Zezwala systemowi Windows na pobieranie zaktualizowanych parametrów modelu uczenia maszynowego używanych do przewidywania awarii dysku magazynu.</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+    <value>Środowisko odzyskiwania systemu Windows</value>
+  </data>
+  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+    <value>Włącza lub wyłącza Środowisko odzyskiwania systemu Windows i wyświetla jego bieżącą konfigurację.</value>
+  </data>
+  <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz analizę systemu na żywo</value>
+  </data>
+  <data name="ClipboardMonitorButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zarządzaj monitorowaniem schowka</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTip.Title" xml:space="preserve">
+    <value>Monitor schowka</value>
+  </data>
+  <data name="ClipboardMonitorTeachingTipDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Monitoruje i skanuje kopiowaną zawartość za pomocą programu Microsoft Defender oraz powiadamia Cię o wykryciu podejrzanej zawartości.</value>
+  </data>
+  <data name="ClipboardMonitorCurrentStatusTextBox.Header" xml:space="preserve">
+    <value>Bieżący stan</value>
+  </data>
+  <data name="ClipboardMonitorStartupStatusTextBox.Header" xml:space="preserve">
+    <value>Stan przy uruchamianiu</value>
+  </data>
+  <data name="ClipboardMonitorEnableButton.Content" xml:space="preserve">
+    <value>Włącz</value>
+  </data>
+  <data name="ClipboardMonitorDisableButton.Content" xml:space="preserve">
+    <value>Wyłącz</value>
+  </data>
+  <data name="ClipboardMonitorRunAtStartupButton.Content" xml:space="preserve">
+    <value>Uruchamiaj przy starcie</value>
+  </data>
+  <data name="ClipboardMonitorDoNotRunAtStartupButton.Content" xml:space="preserve">
+    <value>Nie uruchamiaj przy starcie</value>
+  </data>
+  <data name="WindowsActivation.Text" xml:space="preserve">
+    <value>Aktywacja systemu Windows</value>
+  </data>
+  <data name="IPAddress.Text" xml:space="preserve">
+    <value>Adres IP</value>
+  </data>
+  <data name="CPU.Text" xml:space="preserve">
+    <value>Procesor</value>
+  </data>
+  <data name="GPU.Text" xml:space="preserve">
+    <value>Procesor graficzny</value>
+  </data>
+  <data name="SystemSerialNumber.Text" xml:space="preserve">
+    <value>Numer seryjny systemu</value>
+  </data>
+  <data name="SystemUUID.Text" xml:space="preserve">
+    <value>Identyfikator UUID systemu</value>
+  </data>
+  <data name="BaseboardSerialNumber.Text" xml:space="preserve">
+    <value>Numer seryjny płyty głównej</value>
+  </data>
+  <data name="ChassisSerialAssetTag.Text" xml:space="preserve">
+    <value>Numer seryjny obudowy / etykieta zasobu</value>
+  </data>
+  <data name="PendingRebootOperations.Text" xml:space="preserve">
+    <value>Oczekujące operacje ponownego uruchomienia</value>
+  </data>
+  <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
+    <value>0 sekund</value>
+  </data>
 </root>

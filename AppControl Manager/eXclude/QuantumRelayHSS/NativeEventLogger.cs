@@ -53,6 +53,16 @@ internal static class NativeEventLogger
 					_ => 0x0004                              // EVENTLOG_INFORMATION_TYPE
 				};
 
+				// Reporting the ID 0 would make Event Viewer find no matching entry and render the
+				// "message resource is present but the message was not found in the message table" error instead of the text.
+				// Mapping each severity to a distinct in-range ID makes the insertion string render verbatim.
+				uint eventID = type switch
+				{
+					EventLogEntryType.Error => 1u,
+					EventLogEntryType.Warning => 2u,
+					_ => 3u
+				};
+
 				IntPtr pInsertion = IntPtr.Zero;
 				IntPtr pArray = IntPtr.Zero;
 
@@ -66,7 +76,7 @@ internal static class NativeEventLogger
 						hEventLog,
 						wType,
 						0,              // Category
-						0,              // EventID
+						eventID,        // EventID
 						IntPtr.Zero,    // No user SID
 						1,              // One insertion string
 						0,              // No raw data

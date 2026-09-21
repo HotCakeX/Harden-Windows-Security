@@ -68,11 +68,12 @@ internal static class UnelevatedOperations
 			string group,
 			AppNotificationSoundEvent soundEvent,
 			Uri? inlineImage = null,
+			bool ignoreUserPreferences = false,
 			params (string Key, string Value)[] arguments)
 		{
 			try
 			{
-				if (!Atlas.Settings.ToastNotificationsAreEnabled) return;
+				if (!ignoreUserPreferences && !Atlas.Settings.ToastNotificationsAreEnabled) return;
 
 				string soundEventValue = ((int)soundEvent).ToString(System.Globalization.CultureInfo.InvariantCulture);
 				string inlineImageValue = inlineImage?.OriginalString ?? string.Empty;

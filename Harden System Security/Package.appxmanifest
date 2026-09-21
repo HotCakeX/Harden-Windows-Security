@@ -32,13 +32,13 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:appdata="http://schemas.microsoft.com/appx/manifest/appdata/windows10"
   xmlns:trustedlaunch="http://schemas.microsoft.com/appx/manifest/trustedlaunch/windows10"
-  IgnorableNamespaces="mp uap uap3 uap17 desktop desktop5 com virtualization appdata trustedlaunch">
+  IgnorableNamespaces="mp uap uap3 uap17 uap18 desktop desktop5 com virtualization appdata trustedlaunch">
   <!-- IgnorableNamespaces are evaluated during package creation and installation/registration so any optional feature's namespace should be added to it as long as the app can properly function without it. -->
 
   <Identity
     Name="VioletHansen.HardenSystemSecurity"
     Publisher="CN=C62E63B6-6EF1-4F86-B80F-41A725BD0189"
-    Version="1.0.89.0" />
+    Version="1.0.90.0" />
 
   <mp:PhoneIdentity PhoneProductId="74d36aa3-e613-41ec-808e-c5d051224316" PhonePublisherId="387464d6-cb95-4e5f-9c8f-f153a4855fb2"/>
 
@@ -272,6 +272,16 @@
           <uap5:StartupTask TaskId="HardenSystemSecurityWindowsTopBar"
                             Enabled="false"
                             DisplayName="Harden System Security Top Bar" />
+        </uap5:Extension>
+
+        <!-- Runs the clipboard monitor at user sign-in . -->
+        <uap5:Extension Category="windows.startupTask"
+                        Executable="HardenSystemSecurity.exe"
+                        EntryPoint="Windows.FullTrustApplication"
+                        uap10:Parameters="--startClipBoardMonitor">
+          <uap5:StartupTask TaskId="HardenSystemSecurityClipboardMonitor"
+                            Enabled="false"
+                            DisplayName="Harden System Security Clipboard Monitor" />
         </uap5:Extension>
 
         <!-- POL File Association -->

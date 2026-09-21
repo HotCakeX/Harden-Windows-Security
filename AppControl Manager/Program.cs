@@ -89,6 +89,12 @@ internal static class Program
 				Widgets.WidgetProviderHost.Run();
 				Environment.Exit(0);
 			}
+
+			// Clipboard monitor
+			if (string.Equals(args[0], "--startClipBoardMonitor", StringComparison.OrdinalIgnoreCase))
+			{
+				Environment.Exit(ClipboardMonitor.Run());
+			}
 		}
 #endif
 

@@ -2579,3 +2579,15 @@ internal struct WINRE_CONFIG
 	internal uint IsWimBoot;
 	internal uint NarratorScheduled;
 }
+
+/// <summary>
+/// https://learn.microsoft.com/en-us/windows/win32/api/amsi/ne-amsi-amsi_result
+/// </summary>
+internal enum AMSI_RESULT
+{
+	CLEAN = 0,
+	NOT_DETECTED = 1,
+	BLOCKED_BY_ADMIN_START = 0x4000,
+	BLOCKED_BY_ADMIN_END = 0x4FFF,
+	DETECTED = 0x8000
+}

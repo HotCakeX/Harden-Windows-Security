@@ -576,7 +576,6 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		internal DateTimeOffset LastCheckpointPersistUtc { get; set; } = DateTimeOffset.MinValue;
 		internal DateTimeOffset LastHistoryPersistUtc { get; set; } = DateTimeOffset.MinValue;
 		internal DateTimeOffset LastUiRefreshUtc { get; set; } = DateTimeOffset.MinValue;
-		internal DateTimeOffset LastDataFlushUtc { get; set; } = DateTimeOffset.MinValue;
 		internal DateTimeOffset LastSpeedSampleUtc { get; set; } = DateTimeOffset.MinValue;
 		internal long LastSpeedSampleBytes { get; set; }
 		internal double SmoothedBytesPerSecond { get; set; }
@@ -585,20 +584,8 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	private sealed class ActiveDownloadOperation(CancellationTokenSource cancellationTokenSource)
 	{
 		internal CancellationTokenSource CancellationTokenSource => cancellationTokenSource;
-		internal bool PauseRequested { get; set; }
-		internal bool RestartRequested { get; set; }
 		internal bool DeleteRequested { get; set; }
 		internal readonly TaskCompletionSource<bool> CompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
-	}
-
-	private sealed class DownloadPreparationResult(
-		DownloadCheckpointRecord checkpoint,
-		bool useParallelConnections,
-		HttpResponseMessage? initialResponse = null)
-	{
-		internal DownloadCheckpointRecord Checkpoint => checkpoint;
-		internal bool UseParallelConnections => useParallelConnections;
-		internal HttpResponseMessage? InitialResponse => initialResponse;
 	}
 
 	internal sealed class SettingOption(string label, int value)
@@ -686,17 +673,6 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 	private static readonly Lock _atomicWriteLock = new();
 
-	private static readonly FrozenSet<HttpStatusCode> RetryableStatusCodes = new HashSet<HttpStatusCode>
-	{
-		HttpStatusCode.RequestTimeout,
-		HttpStatusCode.TooManyRequests,
-		HttpStatusCode.InternalServerError,
-		HttpStatusCode.BadGateway,
-		HttpStatusCode.ServiceUnavailable,
-		HttpStatusCode.GatewayTimeout
-	}.ToFrozenSet();
-
-	private const int MaxTransientRetryAttempts = 3;
 	private const uint TokenAdjustPrivileges = 0x00000020;
 	private const uint TokenQuery = 0x00000008;
 	private const uint SePrivilegeEnabled = 0x00000002;
@@ -1876,6 +1852,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		item.CompletedAtUtc = null;
 		item.CurrentBytesPerSecond = 0;
 		item.State = DownloadState.Queued;
+		NotifySelectedDownloadsChanged();
 
 		if (TryEnqueuePendingItem(item))
 		{
@@ -2043,229 +2020,204 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			_activeDownloads[item] = activeDownloadOperation;
 		}
 
-		DownloadPreparationResult? preparation = null;
+		HttpResponseMessage? initialResponse = null;
 		DownloadRuntimeState? runtime = null;
 
 		try
 		{
-			await UpdateItemAsync(item, static current =>
+			await RetryDownloadAsync(async () =>
 			{
-				current.State = DownloadState.Running;
-				current.ErrorMessage = null;
-				current.CompletedAtUtc = null;
-				current.CurrentBytesPerSecond = 0;
-			}).ConfigureAwait(false);
-
-			_ = Directory.CreateDirectory(item.DestinationDirectory);
-
-			if (TryLoadCheckpoint(item, out DownloadCheckpointRecord? existingCheckpoint))
-			{
-				if (ApplyParallelConnectionsPreference(existingCheckpoint, ParallelConnectionsPerDownload))
+				await UpdateItemAsync(item, static current =>
 				{
-					SaveCheckpoint(existingCheckpoint);
-				}
+					current.State = DownloadState.Running;
+					current.ErrorMessage = null;
+					current.CompletedAtUtc = null;
+					current.CurrentBytesPerSecond = 0;
+				}).ConfigureAwait(false);
 
-				preparation = new(
-					existingCheckpoint,
-					existingCheckpoint.SupportsRangeRequests && existingCheckpoint.ParallelConnectionsUsed > 1);
-			}
-			else
-			{
-				Uri sourceUri = new(item.SourceUrl);
-				DownloadMetadataResponse metadata = await GetDownloadMetadataResponseAsync(sourceUri, cancellationTokenSource.Token).ConfigureAwait(false);
+				_ = Directory.CreateDirectory(item.DestinationDirectory);
 
-				bool keepInitialResponse = false;
-
-				try
+				// Keep the live offsets across retries, even if persisting a checkpoint failed.
+				if (runtime is null)
 				{
-					string suggestedFileName = GetSuggestedFileName(metadata.Response, sourceUri);
-					string finalFilePath;
-					if (!string.IsNullOrWhiteSpace(item.FilePath))
+					DownloadCheckpointRecord checkpoint;
+					if (TryLoadCheckpoint(item, out DownloadCheckpointRecord? existingCheckpoint))
 					{
-						string currentFileName = Path.GetFileName(item.FilePath);
-						string sanitizedSuggestedFileName = SanitizeFileName(suggestedFileName);
-						bool currentFileNameMatchesSourcePath = string.Equals(
-							currentFileName,
-							GetDisplayNameFromUri(sourceUri),
-							StringComparison.OrdinalIgnoreCase);
-
-						bool shouldReplaceInitialFileName =
-							!string.IsNullOrWhiteSpace(currentFileName)
-							&& !string.IsNullOrWhiteSpace(sanitizedSuggestedFileName)
-							&& !string.Equals(currentFileName, sanitizedSuggestedFileName, StringComparison.OrdinalIgnoreCase)
-							// Allow metadata to replace placeholder names that came from generic/raw URL paths
-							// once we have a verified file name from the response headers or final request URI.
-							&& (IsGenericDownloadName(currentFileName) || !Path.HasExtension(currentFileName) || currentFileNameMatchesSourcePath)
-							&& !IsGenericDownloadName(sanitizedSuggestedFileName)
-							&& (Path.HasExtension(sanitizedSuggestedFileName) || !Path.HasExtension(currentFileName));
-
-						if (!shouldReplaceInitialFileName)
+						if (ApplyParallelConnectionsPreference(existingCheckpoint, ParallelConnectionsPerDownload))
 						{
-							finalFilePath = item.FilePath;
+							SaveCheckpoint(existingCheckpoint);
 						}
-						else
-						{
-							string? resolvedFilePath = await ResolveInitialFilePathAsync(new Uri(item.SourceUrl), sanitizedSuggestedFileName, item).ConfigureAwait(false);
-							finalFilePath = string.IsNullOrWhiteSpace(resolvedFilePath)
-								? item.FilePath
-								: resolvedFilePath;
-						}
+
+						checkpoint = existingCheckpoint;
 					}
 					else
 					{
-						finalFilePath = GetUniqueDestinationPath(item.DestinationDirectory, suggestedFileName);
-					}
+						Uri sourceUri = new(item.SourceUrl);
+						DownloadMetadataResponse metadata = await GetDownloadMetadataResponseAsync(sourceUri, cancellationTokenSource.Token).ConfigureAwait(false);
 
-					string temporaryFilePath = GetTemporaryFilePath(finalFilePath);
-					string checkpointFilePath = GetCheckpointFilePath(finalFilePath);
+						bool keepInitialResponse = false;
 
-					DeleteFileIfExists(temporaryFilePath);
-					DeleteFileIfExists(checkpointFilePath);
-
-					(bool supportsRangeRequests, long? totalBytes) = await DetectRangeSupportAsync(sourceUri, metadata.Response, cancellationTokenSource.Token).ConfigureAwait(false);
-					int effectiveParallelConnections = GetEffectiveParallelConnections(totalBytes, supportsRangeRequests, ParallelConnectionsPerDownload);
-
-					List<DownloadSegmentRecord> segments = supportsRangeRequests && totalBytes.HasValue && totalBytes.Value > 0
-						? CreateSegments(totalBytes.Value, effectiveParallelConnections)
-						: [new DownloadSegmentRecord { StartOffset = 0, EndOffsetInclusive = totalBytes.HasValue ? totalBytes.Value - 1 : -1, NextOffset = 0 }];
-
-					DownloadCheckpointRecord checkpoint = new()
-					{
-						SourceUrl = item.SourceUrl,
-						DestinationDirectory = item.DestinationDirectory,
-						FinalFilePath = finalFilePath,
-						TemporaryFilePath = temporaryFilePath,
-						CheckpointFilePath = checkpointFilePath,
-						TotalBytes = totalBytes,
-						SupportsRangeRequests = supportsRangeRequests,
-						ParallelConnectionsUsed = Math.Max(1, effectiveParallelConnections),
-						CreatedAtUtc = item.CreatedAtUtc,
-						ServerFileTimestampUtc = metadata.ServerFileTimestampUtc,
-						UpdatedAtUtc = DateTimeOffset.UtcNow,
-						Segments = segments
-					};
-
-					if (supportsRangeRequests && totalBytes.HasValue && totalBytes.Value > 0)
-					{
-						using FileStream stream = new(checkpoint.TemporaryFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
-						if (stream.Length != totalBytes.Value)
+						try
 						{
-							stream.SetLength(totalBytes.Value);
+							string suggestedFileName = GetSuggestedFileName(metadata.Response, sourceUri);
+							string finalFilePath;
+							if (!string.IsNullOrWhiteSpace(item.FilePath))
+							{
+								string currentFileName = Path.GetFileName(item.FilePath);
+								string sanitizedSuggestedFileName = SanitizeFileName(suggestedFileName);
+								bool currentFileNameMatchesSourcePath = string.Equals(
+									currentFileName,
+									GetDisplayNameFromUri(sourceUri),
+									StringComparison.OrdinalIgnoreCase);
+
+								bool shouldReplaceInitialFileName =
+									!string.IsNullOrWhiteSpace(currentFileName)
+									&& !string.IsNullOrWhiteSpace(sanitizedSuggestedFileName)
+									&& !string.Equals(currentFileName, sanitizedSuggestedFileName, StringComparison.OrdinalIgnoreCase)
+									// Allow metadata to replace placeholder names that came from generic/raw URL paths
+									// once we have a verified file name from the response headers or final request URI.
+									&& (IsGenericDownloadName(currentFileName) || !Path.HasExtension(currentFileName) || currentFileNameMatchesSourcePath)
+									&& !IsGenericDownloadName(sanitizedSuggestedFileName)
+									&& (Path.HasExtension(sanitizedSuggestedFileName) || !Path.HasExtension(currentFileName));
+
+								if (!shouldReplaceInitialFileName)
+								{
+									finalFilePath = item.FilePath;
+								}
+								else
+								{
+									string? resolvedFilePath = await ResolveInitialFilePathAsync(new Uri(item.SourceUrl), sanitizedSuggestedFileName, item).ConfigureAwait(false);
+									finalFilePath = string.IsNullOrWhiteSpace(resolvedFilePath)
+										? item.FilePath
+										: resolvedFilePath;
+								}
+							}
+							else
+							{
+								finalFilePath = GetUniqueDestinationPath(item.DestinationDirectory, suggestedFileName);
+							}
+
+							string temporaryFilePath = GetTemporaryFilePath(finalFilePath);
+							string checkpointFilePath = GetCheckpointFilePath(finalFilePath);
+
+							DeleteFileIfExists(temporaryFilePath);
+							DeleteFileIfExists(checkpointFilePath);
+
+							(bool supportsRangeRequests, long? totalBytes) = await DetectRangeSupportAsync(sourceUri, metadata.Response, cancellationTokenSource.Token).ConfigureAwait(false);
+							int effectiveParallelConnections = GetEffectiveParallelConnections(totalBytes, supportsRangeRequests, ParallelConnectionsPerDownload);
+
+							List<DownloadSegmentRecord> segments = supportsRangeRequests && totalBytes.HasValue && totalBytes.Value > 0
+								? CreateSegments(totalBytes.Value, effectiveParallelConnections)
+								: [new DownloadSegmentRecord { StartOffset = 0, EndOffsetInclusive = totalBytes.HasValue ? totalBytes.Value - 1 : -1, NextOffset = 0 }];
+
+							checkpoint = new()
+							{
+								SourceUrl = item.SourceUrl,
+								DestinationDirectory = item.DestinationDirectory,
+								FinalFilePath = finalFilePath,
+								TemporaryFilePath = temporaryFilePath,
+								CheckpointFilePath = checkpointFilePath,
+								TotalBytes = totalBytes,
+								SupportsRangeRequests = supportsRangeRequests,
+								ParallelConnectionsUsed = Math.Max(1, effectiveParallelConnections),
+								CreatedAtUtc = item.CreatedAtUtc,
+								ServerFileTimestampUtc = metadata.ServerFileTimestampUtc,
+								UpdatedAtUtc = DateTimeOffset.UtcNow,
+								Segments = segments
+							};
+
+							if (supportsRangeRequests && totalBytes.HasValue && totalBytes.Value > 0)
+							{
+								using FileStream stream = new(checkpoint.TemporaryFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite);
+								if (stream.Length != totalBytes.Value)
+								{
+									stream.SetLength(totalBytes.Value);
+								}
+							}
+
+							SaveCheckpoint(checkpoint);
+
+							keepInitialResponse = metadata.CanReuseResponseBody && effectiveParallelConnections == 1;
+							initialResponse = keepInitialResponse ? metadata.Response : null;
+						}
+						finally
+						{
+							if (!keepInitialResponse)
+							{
+								metadata.Response.Dispose();
+							}
 						}
 					}
 
-					SaveCheckpoint(checkpoint);
-
-					keepInitialResponse = metadata.CanReuseResponseBody && effectiveParallelConnections == 1;
-
-					preparation = new(
-						checkpoint,
-						effectiveParallelConnections > 1,
-						keepInitialResponse ? metadata.Response : null);
-				}
-				finally
-				{
-					if (!keepInitialResponse)
+					runtime = new(checkpoint);
+					lock (_activeDownloadsLock)
 					{
-						metadata.Response.Dispose();
+						_activeDownloadRuntimes[item] = runtime;
 					}
 				}
-			}
-			runtime = new(preparation.Checkpoint);
 
-			lock (_activeDownloadsLock)
-			{
-				_activeDownloadRuntimes[item] = runtime;
-			}
+				await UpdateItemAsync(item, current =>
+				{
+					current.DisplayName = Path.GetFileName(runtime.Checkpoint.FinalFilePath);
+					current.DestinationDirectory = runtime.Checkpoint.DestinationDirectory;
+					current.FilePath = runtime.Checkpoint.FinalFilePath;
+					current.TemporaryFilePath = runtime.Checkpoint.TemporaryFilePath;
+					current.CheckpointFilePath = runtime.Checkpoint.CheckpointFilePath;
+					current.TotalBytes = runtime.Checkpoint.TotalBytes;
+					current.BytesReceived = CalculateReceivedBytes(runtime.Checkpoint);
+					current.SupportsRangeRequests = runtime.Checkpoint.SupportsRangeRequests;
+					current.ParallelConnectionsUsed = runtime.Checkpoint.ParallelConnectionsUsed;
+					current.ServerFileTimestampUtc = runtime.Checkpoint.ServerFileTimestampUtc;
+					current.CurrentBytesPerSecond = 0;
+				}).ConfigureAwait(false);
 
-			await UpdateItemAsync(item, current =>
-			{
-				current.DisplayName = Path.GetFileName(runtime.Checkpoint.FinalFilePath);
-				current.DestinationDirectory = runtime.Checkpoint.DestinationDirectory;
-				current.FilePath = runtime.Checkpoint.FinalFilePath;
-				current.TemporaryFilePath = runtime.Checkpoint.TemporaryFilePath;
-				current.CheckpointFilePath = runtime.Checkpoint.CheckpointFilePath;
-				current.TotalBytes = runtime.Checkpoint.TotalBytes;
-				current.BytesReceived = CalculateReceivedBytes(runtime.Checkpoint);
-				current.SupportsRangeRequests = runtime.Checkpoint.SupportsRangeRequests;
-				current.ParallelConnectionsUsed = runtime.Checkpoint.ParallelConnectionsUsed;
-				current.ServerFileTimestampUtc = runtime.Checkpoint.ServerFileTimestampUtc;
-				current.CurrentBytesPerSecond = 0;
-			}).ConfigureAwait(false);
+				await RefreshFilteredDownloadItemsAsync().ConfigureAwait(false);
+				await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
 
-			await RefreshFilteredDownloadItemsAsync().ConfigureAwait(false);
-			await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
+				using HttpResponseMessage? response = initialResponse;
+				initialResponse = null;
 
-			if (IsCheckpointComplete(runtime.Checkpoint))
-			{
+				if (!IsCheckpointComplete(runtime.Checkpoint))
+				{
+					if (runtime.Checkpoint.SupportsRangeRequests && runtime.Checkpoint.ParallelConnectionsUsed > 1)
+					{
+						await DownloadInParallelAsync(item, runtime, cancellationTokenSource.Token).ConfigureAwait(false);
+					}
+					else
+					{
+						await DownloadSingleConnectionAsync(item, runtime, response, cancellationTokenSource.Token).ConfigureAwait(false);
+					}
+				}
+
+				cancellationTokenSource.Token.ThrowIfCancellationRequested();
 				await FinalizeSuccessfulDownloadAsync(item, runtime).ConfigureAwait(false);
-				return;
-			}
-
-			if (preparation.UseParallelConnections)
-			{
-				await DownloadInParallelAsync(item, runtime, cancellationTokenSource.Token).ConfigureAwait(false);
-			}
-			else
-			{
-				await DownloadSingleConnectionAsync(item, runtime, preparation.InitialResponse, cancellationTokenSource.Token).ConfigureAwait(false);
-			}
-
-			await FinalizeSuccessfulDownloadAsync(item, runtime).ConfigureAwait(false);
+			}, cancellationTokenSource.Token).ConfigureAwait(false);
 		}
-		catch (OperationCanceledException) when (activeDownloadOperation.PauseRequested)
+		catch (Exception) when (cancellationTokenSource.IsCancellationRequested)
 		{
-			if (runtime is not null)
+			try
 			{
-				await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
+				if (runtime is not null && !activeDownloadOperation.DeleteRequested)
+				{
+					await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
+				}
+			}
+			catch (Exception ex)
+			{
+				MainInfoBar.WriteError(ex);
 			}
 
 			await UpdateItemAsync(item, current =>
 			{
-				current.State = activeDownloadOperation.RestartRequested ? DownloadState.Queued : DownloadState.Paused;
+				current.State = activeDownloadOperation.DeleteRequested
+					? DownloadState.Deleted
+					: DownloadState.Paused;
 				current.ErrorMessage = null;
 				current.CompletedAtUtc = null;
 				current.CurrentBytesPerSecond = 0;
 			}).ConfigureAwait(false);
 
-			if (activeDownloadOperation.RestartRequested)
-			{
-				_ = TryEnqueuePendingItem(item);
-			}
-
 			await SaveHistoryAsync().ConfigureAwait(false);
-		}
-		catch (OperationCanceledException) when (activeDownloadOperation.DeleteRequested)
-		{
-			await UpdateItemAsync(item, static current =>
-			{
-				current.State = DownloadState.Deleted;
-				current.ErrorMessage = null;
-				current.CompletedAtUtc = null;
-				current.CurrentBytesPerSecond = 0;
-			}).ConfigureAwait(false);
-		}
-		catch (Exception ex)
-		{
-			if (runtime is not null)
-			{
-				await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
-			}
-
-			await UpdateItemAsync(item, current =>
-			{
-				current.State = runtime is not null && (CalculateReceivedBytes(runtime.Checkpoint) > 0
-					|| File.Exists(runtime.Checkpoint.CheckpointFilePath)
-					|| File.Exists(runtime.Checkpoint.TemporaryFilePath))
-					? DownloadState.Interrupted
-					: DownloadState.Failed;
-				current.ErrorMessage = ex.Message;
-				current.CompletedAtUtc = null;
-				current.CurrentBytesPerSecond = 0;
-			}).ConfigureAwait(false);
-
-			await SaveHistoryAsync().ConfigureAwait(false);
-			MainInfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -2274,22 +2226,29 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 				_ = _activeDownloads.Remove(item);
 				_ = _activeDownloadRuntimes.Remove(item);
 			}
-			preparation?.InitialResponse?.Dispose();
+			initialResponse?.Dispose();
 
 			lock (_queueLock)
 			{
 				_activeDownloadCount = Math.Max(0, _activeDownloadCount - 1);
 			}
 
-			ProcessPendingDownloads();
-			await MaybeRunCompletionActionAsync().ConfigureAwait(false);
 			_ = activeDownloadOperation.CompletionSource.TrySetResult(true);
+			ProcessPendingDownloads();
 		}
+
+		// Removal waits for the worker to finish, so automatic removal must run after its cleanup.
+		if (item.State is DownloadState.Completed && RemoveCompletedDownloadsFromList)
+		{
+			_ = await RemoveItemFromListAsync(item, announce: false).ConfigureAwait(false);
+		}
+
+		await MaybeRunCompletionActionAsync().ConfigureAwait(false);
 	}
 
 	private async Task DownloadInParallelAsync(DownloadManagerItem item, DownloadRuntimeState runtime, CancellationToken cancellationToken)
 	{
-		List<Task> segmentTasks = [];
+		List<Task> segmentTasks = new(runtime.Checkpoint.Segments.Count);
 
 		foreach (DownloadSegmentRecord segment in runtime.Checkpoint.Segments)
 		{
@@ -2310,9 +2269,8 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		int bufferSize = GetBufferSize();
 		byte[] buffer = GC.AllocateUninitializedArray<byte>(bufferSize);
 		Uri sourceUri = new(item.SourceUrl);
-		int transientFailureCount = 0;
 
-		while (true)
+		await RetryDownloadAsync(async () =>
 		{
 			long startOffset;
 			long endOffsetInclusive;
@@ -2328,97 +2286,63 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 				return;
 			}
 
-			try
+			using HttpRequestMessage request = new(HttpMethod.Get, sourceUri);
+			request.Headers.Range = new RangeHeaderValue(startOffset, endOffsetInclusive >= 0 ? endOffsetInclusive : null);
+			using HttpResponseMessage response = await DownloadHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+
+			if (response.StatusCode != HttpStatusCode.PartialContent)
 			{
-				using HttpResponseMessage response = await SendDownloadRequestWithRetriesAsync(() =>
-				{
-					HttpRequestMessage request = new(HttpMethod.Get, sourceUri);
-					request.Headers.Range = new RangeHeaderValue(startOffset, endOffsetInclusive >= 0 ? endOffsetInclusive : null);
-					return request;
-				}, cancellationToken).ConfigureAwait(false);
+				_ = response.EnsureSuccessStatusCode();
+				throw new HttpRequestException($"The server returned {FormatDownloadHttpStatus(response)} instead of HTTP 206 Partial Content for the requested byte range.");
+			}
 
-				if (response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable)
-				{
-					lock (runtime.SyncRoot)
-					{
-						segment.NextOffset = endOffsetInclusive >= 0 ? endOffsetInclusive + 1 : segment.NextOffset;
-					}
+			ValidateDownloadRange(response, startOffset, endOffsetInclusive, runtime.Checkpoint.TotalBytes);
 
-					await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
-					return;
+			await using Stream sourceStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+			// Checkpoint offsets must only include completed file writes, not managed-buffer contents.
+			await using FileStream destinationStream = new(runtime.Checkpoint.TemporaryFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite, bufferSize: 1, useAsync: true);
+			_ = destinationStream.Seek(startOffset, SeekOrigin.Begin);
+			using CancellationTokenSource readTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+			long currentOffset = startOffset;
+
+			while (true)
+			{
+				int maximumChunkSize = GetReadChunkSize(buffer.Length);
+				int maxRead = endOffsetInclusive >= 0
+					? (int)Math.Min(maximumChunkSize, endOffsetInclusive - currentOffset + 1)
+					: maximumChunkSize;
+
+				if (maxRead <= 0)
+				{
+					break;
 				}
 
-				if (response.StatusCode != HttpStatusCode.PartialContent)
+				int bytesRead = await ReadDownloadAsync(sourceStream, buffer.AsMemory(0, maxRead), readTimeout).ConfigureAwait(false);
+				if (bytesRead == 0)
 				{
-					_ = response.EnsureSuccessStatusCode();
-					throw new HttpRequestException($"The server returned {FormatDownloadHttpStatus(response)} instead of HTTP 206 Partial Content for the requested byte range.");
+					break;
 				}
 
-				await using Stream sourceStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-				await using FileStream destinationStream = new(runtime.Checkpoint.TemporaryFilePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite, bufferSize, useAsync: true);
-				_ = destinationStream.Seek(startOffset, SeekOrigin.Begin);
-
-				long currentOffset = startOffset;
-
-				while (true)
-				{
-					int maximumChunkSize = GetReadChunkSize(buffer.Length);
-					int maxRead = endOffsetInclusive >= 0
-						? (int)Math.Min(maximumChunkSize, endOffsetInclusive - currentOffset + 1)
-						: maximumChunkSize;
-
-					if (maxRead <= 0)
-					{
-						break;
-					}
-
-					int bytesRead = await sourceStream.ReadAsync(buffer.AsMemory(0, maxRead), cancellationToken).ConfigureAwait(false);
-					if (bytesRead == 0)
-					{
-						break;
-					}
-
-					await _rateLimiter.WaitAsync(bytesRead, GetSpeedLimitBytesPerSecond, cancellationToken).ConfigureAwait(false);
-					await destinationStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
-					currentOffset += bytesRead;
-
-					lock (runtime.SyncRoot)
-					{
-						segment.NextOffset = currentOffset;
-					}
-
-					if (ShouldFlushDataFile(runtime))
-					{
-						await destinationStream.FlushAsync(cancellationToken).ConfigureAwait(false);
-					}
-
-					await PersistRuntimeProgressAsync(item, runtime, force: false).ConfigureAwait(false);
-				}
-
-				await destinationStream.FlushAsync(cancellationToken).ConfigureAwait(false);
+				await _rateLimiter.WaitAsync(bytesRead, GetSpeedLimitBytesPerSecond, cancellationToken).ConfigureAwait(false);
+				await destinationStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
+				currentOffset += bytesRead;
 
 				lock (runtime.SyncRoot)
 				{
-					if (currentOffset > segment.NextOffset)
-					{
-						segment.NextOffset = currentOffset;
-					}
+					segment.NextOffset = currentOffset;
 				}
 
-				transientFailureCount = 0;
-
-				if (endOffsetInclusive < 0 || currentOffset > endOffsetInclusive)
-				{
-					await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
-					return;
-				}
+				await PersistRuntimeProgressAsync(item, runtime, force: false).ConfigureAwait(false);
 			}
-			catch (Exception ex) when (IsTransientDownloadException(ex, cancellationToken) && ++transientFailureCount <= MaxTransientRetryAttempts)
+
+			if (endOffsetInclusive >= 0 && currentOffset <= endOffsetInclusive)
 			{
-				await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
-				await Task.Delay(GetTransientRetryDelay(transientFailureCount), cancellationToken).ConfigureAwait(false);
+				throw new EndOfStreamException("The server ended the response before the requested byte range was complete.");
 			}
-		}
+
+			await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
+		}, cancellationToken).ConfigureAwait(false);
 	}
 
 	private async Task DownloadSingleConnectionAsync(DownloadManagerItem item, DownloadRuntimeState runtime, HttpResponseMessage? initialResponse, CancellationToken cancellationToken)
@@ -2427,9 +2351,8 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		byte[] buffer = GC.AllocateUninitializedArray<byte>(bufferSize);
 		Uri sourceUri = new(item.SourceUrl);
 		DownloadSegmentRecord segment = runtime.Checkpoint.Segments[0];
-		int transientFailureCount = 0;
 
-		while (true)
+		await RetryDownloadAsync(async () =>
 		{
 			long startOffset;
 
@@ -2438,202 +2361,137 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 				startOffset = segment.NextOffset;
 			}
 
-			try
+			if (IsCheckpointComplete(runtime.Checkpoint))
 			{
-				HttpResponseMessage response;
-				if (initialResponse is not null)
-				{
-					response = initialResponse;
-					initialResponse = null;
-				}
-				else
-				{
-					response = await SendDownloadRequestWithRetriesAsync(() =>
-					{
-						HttpRequestMessage request = new(HttpMethod.Get, sourceUri);
-						if (startOffset > 0)
-						{
-							request.Headers.Range = new RangeHeaderValue(startOffset, null);
-						}
-
-						return request;
-					}, cancellationToken).ConfigureAwait(false);
-				}
-
-				using (response)
-				{
-					if (startOffset > 0 && response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable)
-					{
-						lock (runtime.SyncRoot)
-						{
-							if (runtime.Checkpoint.TotalBytes.HasValue)
-							{
-								segment.NextOffset = runtime.Checkpoint.TotalBytes.Value;
-								if (segment.EndOffsetInclusive < runtime.Checkpoint.TotalBytes.Value - 1)
-								{
-									segment.EndOffsetInclusive = runtime.Checkpoint.TotalBytes.Value - 1;
-								}
-							}
-						}
-
-						await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
-						return;
-					}
-
-					bool appendMode = startOffset > 0 && response.StatusCode == HttpStatusCode.PartialContent;
-
-					if (startOffset > 0 && !appendMode)
-					{
-						DeleteFileIfExists(runtime.Checkpoint.TemporaryFilePath);
-
-						lock (runtime.SyncRoot)
-						{
-							segment.NextOffset = 0;
-							if (runtime.Checkpoint.TotalBytes.HasValue)
-							{
-								segment.EndOffsetInclusive = runtime.Checkpoint.TotalBytes.Value - 1;
-							}
-						}
-
-						await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
-						continue;
-					}
-
-					_ = response.EnsureSuccessStatusCode();
-
-					if (!appendMode && response.StatusCode != HttpStatusCode.OK)
-					{
-						throw new HttpRequestException($"The server returned {FormatDownloadHttpStatus(response)} instead of HTTP 200 OK for the download payload.");
-					}
-
-					long? totalBytes = response.Content.Headers.ContentRange?.Length
-						?? (response.Content.Headers.ContentLength.HasValue
-							? startOffset + response.Content.Headers.ContentLength.Value
-							: null);
-
-					if (totalBytes.HasValue && totalBytes.Value > 0)
-					{
-						runtime.Checkpoint.TotalBytes = totalBytes.Value;
-						if (runtime.Checkpoint.Segments.Count == 1)
-						{
-							runtime.Checkpoint.Segments[0].EndOffsetInclusive = totalBytes.Value - 1;
-						}
-					}
-
-					FileMode fileMode = appendMode ? FileMode.OpenOrCreate : FileMode.Create;
-					await using FileStream destinationStream = new(runtime.Checkpoint.TemporaryFilePath, fileMode, FileAccess.Write, FileShare.ReadWrite, bufferSize, useAsync: true);
-
-					if (appendMode)
-					{
-						_ = destinationStream.Seek(startOffset, SeekOrigin.Begin);
-					}
-					else
-					{
-						lock (runtime.SyncRoot)
-						{
-							segment.NextOffset = 0;
-						}
-					}
-
-					await using Stream sourceStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-
-					while (true)
-					{
-						int bytesRead = await sourceStream.ReadAsync(
-							buffer.AsMemory(0, GetReadChunkSize(buffer.Length)),
-							cancellationToken).ConfigureAwait(false);
-						if (bytesRead == 0)
-						{
-							break;
-						}
-
-						await _rateLimiter.WaitAsync(bytesRead, GetSpeedLimitBytesPerSecond, cancellationToken).ConfigureAwait(false);
-						await destinationStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
-
-						lock (runtime.SyncRoot)
-						{
-							segment.NextOffset += bytesRead;
-						}
-
-						if (ShouldFlushDataFile(runtime))
-						{
-							await destinationStream.FlushAsync(cancellationToken).ConfigureAwait(false);
-						}
-
-						await PersistRuntimeProgressAsync(item, runtime, force: false).ConfigureAwait(false);
-					}
-
-					await destinationStream.FlushAsync(cancellationToken).ConfigureAwait(false);
-
-					if (!runtime.Checkpoint.TotalBytes.HasValue)
-					{
-						lock (runtime.SyncRoot)
-						{
-							// Unknown-length downloads must not look complete until the response stream actually
-							// reaches EOF. Advancing the segment end here prevents finalization from trying to
-							// move a .part file before any payload has been written.
-							segment.EndOffsetInclusive = segment.NextOffset - 1;
-						}
-					}
-
-					await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
-				}
-
-				transientFailureCount = 0;
-
-				if (!runtime.Checkpoint.TotalBytes.HasValue || IsCheckpointComplete(runtime.Checkpoint))
-				{
-					return;
-				}
+				return;
 			}
-			catch (Exception ex) when (IsTransientDownloadException(ex, cancellationToken) && ++transientFailureCount <= MaxTransientRetryAttempts)
+
+			using HttpRequestMessage request = new(HttpMethod.Get, sourceUri);
+			if (startOffset > 0)
 			{
+				request.Headers.Range = new RangeHeaderValue(startOffset, null);
+			}
+
+			using HttpResponseMessage response = initialResponse
+				?? await DownloadHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+			initialResponse = null;
+			ContentRangeHeaderValue? contentRange = response.Content.Headers.ContentRange;
+			if (startOffset > 0 && !runtime.Checkpoint.TotalBytes.HasValue
+				&& response.StatusCode == HttpStatusCode.RequestedRangeNotSatisfiable
+				&& contentRange is { HasRange: false, Length: long resourceLength }
+				&& resourceLength == startOffset
+				&& string.Equals(contentRange.Unit, "bytes", StringComparison.OrdinalIgnoreCase))
+			{
+				// An unknown-length range transfer is complete only when the server confirms its size.
+				lock (runtime.SyncRoot)
+				{
+					runtime.Checkpoint.TotalBytes = resourceLength;
+					segment.EndOffsetInclusive = resourceLength - 1;
+				}
+
 				await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
-				await Task.Delay(GetTransientRetryDelay(transientFailureCount), cancellationToken).ConfigureAwait(false);
+				return;
 			}
-		}
+
+			_ = response.EnsureSuccessStatusCode();
+
+			bool appendMode = startOffset > 0 && response.StatusCode == HttpStatusCode.PartialContent;
+			if (appendMode)
+			{
+				ValidateDownloadRange(response, startOffset, segment.EndOffsetInclusive, runtime.Checkpoint.TotalBytes);
+			}
+			else if (response.StatusCode != HttpStatusCode.OK)
+			{
+				throw new HttpRequestException($"The server returned {FormatDownloadHttpStatus(response)} instead of HTTP 200 OK for the download payload.");
+			}
+
+			long? totalBytes = appendMode
+				? contentRange!.Length ?? runtime.Checkpoint.TotalBytes
+				: response.Content.Headers.ContentLength;
+
+			if (totalBytes.HasValue && totalBytes.Value > 0)
+			{
+				runtime.Checkpoint.TotalBytes = totalBytes.Value;
+				segment.EndOffsetInclusive = totalBytes.Value - 1;
+			}
+
+			if (!appendMode)
+			{
+				lock (runtime.SyncRoot)
+				{
+					segment.NextOffset = 0;
+				}
+
+				// A server ignoring Range requires a restart. Save the reset before discarding bytes.
+				await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
+			}
+
+			FileMode fileMode = appendMode ? FileMode.OpenOrCreate : FileMode.Create;
+			// Match the range worker: advance checkpoints only after the OS accepts each write.
+			await using FileStream destinationStream = new(runtime.Checkpoint.TemporaryFilePath, fileMode, FileAccess.Write, FileShare.ReadWrite, bufferSize: 1, useAsync: true);
+
+			if (appendMode)
+			{
+				_ = destinationStream.Seek(startOffset, SeekOrigin.Begin);
+			}
+
+			await using Stream sourceStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+			using CancellationTokenSource readTimeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+
+			while (true)
+			{
+				int bytesRead = await ReadDownloadAsync(
+					sourceStream, buffer.AsMemory(0, GetReadChunkSize(buffer.Length)), readTimeout).ConfigureAwait(false);
+				if (bytesRead == 0)
+				{
+					break;
+				}
+
+				await _rateLimiter.WaitAsync(bytesRead, GetSpeedLimitBytesPerSecond, cancellationToken).ConfigureAwait(false);
+				await destinationStream.WriteAsync(buffer.AsMemory(0, bytesRead), cancellationToken).ConfigureAwait(false);
+
+				lock (runtime.SyncRoot)
+				{
+					segment.NextOffset += bytesRead;
+				}
+
+				await PersistRuntimeProgressAsync(item, runtime, force: false).ConfigureAwait(false);
+			}
+
+			if (!runtime.Checkpoint.TotalBytes.HasValue)
+			{
+				if (appendMode)
+				{
+					throw new EndOfStreamException("The partial response ended without establishing the complete download length.");
+				}
+
+				lock (runtime.SyncRoot)
+				{
+					// Unknown-length downloads must not look complete until the response stream actually
+					// reaches EOF. Record the discovered length, including zero, so finalization retries
+					// do not restart an already completed transfer.
+					runtime.Checkpoint.TotalBytes = segment.NextOffset;
+					segment.EndOffsetInclusive = segment.NextOffset - 1;
+				}
+			}
+			else if (!IsCheckpointComplete(runtime.Checkpoint))
+			{
+				throw new EndOfStreamException("The server ended the response before the download was complete.");
+			}
+
+			await PersistRuntimeProgressAsync(item, runtime, force: true).ConfigureAwait(false);
+		}, cancellationToken).ConfigureAwait(false);
 	}
 
 	private async Task FinalizeSuccessfulDownloadAsync(DownloadManagerItem item, DownloadRuntimeState runtime)
 	{
 		DownloadCheckpointRecord checkpoint = CreateCheckpointSnapshot(runtime.Checkpoint);
-		if (!checkpoint.TotalBytes.HasValue && File.Exists(checkpoint.TemporaryFilePath))
+		// A previous attempt may have renamed the file before checkpoint cleanup failed.
+		if (File.Exists(checkpoint.TemporaryFilePath) || !File.Exists(checkpoint.FinalFilePath))
 		{
-			checkpoint.TotalBytes = new FileInfo(checkpoint.TemporaryFilePath).Length;
+			File.Move(checkpoint.TemporaryFilePath, checkpoint.FinalFilePath, overwrite: true);
 		}
 
-		if (!File.Exists(checkpoint.TemporaryFilePath) && File.Exists(checkpoint.FinalFilePath))
-		{
-			ApplyMarkOfTheWebIfNeeded(checkpoint.FinalFilePath, checkpoint.SourceUrl);
-
-			await UpdateItemAsync(item, current =>
-			{
-				current.State = DownloadState.Completed;
-				current.ErrorMessage = null;
-				current.BytesReceived = checkpoint.TotalBytes ?? current.BytesReceived;
-				current.TotalBytes = checkpoint.TotalBytes ?? current.TotalBytes;
-				current.CompletedAtUtc = DateTimeOffset.UtcNow;
-				current.TemporaryFilePath = string.Empty;
-				current.CheckpointFilePath = string.Empty;
-				current.CurrentBytesPerSecond = 0;
-			}).ConfigureAwait(false);
-
-			DeleteFileIfExists(checkpoint.CheckpointFilePath);
-			ShowDownloadCompletedToast(item);
-			if (RemoveCompletedDownloadsFromList)
-			{
-				_ = await RemoveItemFromListAsync(item, announce: false).ConfigureAwait(false);
-				return;
-			}
-
-			await SaveHistoryAsync().ConfigureAwait(false);
-			_ = RefreshPreviewAsync(item);
-			return;
-		}
-
-		DeleteFileIfExists(checkpoint.FinalFilePath);
-
-		File.Move(checkpoint.TemporaryFilePath, checkpoint.FinalFilePath, overwrite: true);
 		ApplyMarkOfTheWebIfNeeded(checkpoint.FinalFilePath, checkpoint.SourceUrl);
 		DeleteFileIfExists(checkpoint.CheckpointFilePath);
 
@@ -2643,7 +2501,7 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			current.ErrorMessage = null;
 			current.FilePath = checkpoint.FinalFilePath;
 			current.BytesReceived = checkpoint.TotalBytes ?? new FileInfo(checkpoint.FinalFilePath).Length;
-			current.TotalBytes ??= current.BytesReceived;
+			current.TotalBytes = current.BytesReceived;
 			current.CompletedAtUtc = DateTimeOffset.UtcNow;
 			current.TemporaryFilePath = string.Empty;
 			current.CheckpointFilePath = string.Empty;
@@ -2651,12 +2509,6 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		}).ConfigureAwait(false);
 
 		ShowDownloadCompletedToast(item);
-		if (RemoveCompletedDownloadsFromList)
-		{
-			_ = await RemoveItemFromListAsync(item, announce: false).ConfigureAwait(false);
-			return;
-		}
-
 		await SaveHistoryAsync().ConfigureAwait(false);
 		_ = RefreshPreviewAsync(item);
 	}
@@ -2862,12 +2714,9 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			return (true, totalBytes);
 		}
 
-		using HttpResponseMessage probeResponse = await SendDownloadRequestWithRetriesAsync(() =>
-		{
-			HttpRequestMessage probeRequest = new(HttpMethod.Get, sourceUri);
-			probeRequest.Headers.Range = new RangeHeaderValue(0, 0);
-			return probeRequest;
-		}, cancellationToken).ConfigureAwait(false);
+		using HttpRequestMessage probeRequest = new(HttpMethod.Get, sourceUri);
+		probeRequest.Headers.Range = new RangeHeaderValue(0, 0);
+		using HttpResponseMessage probeResponse = await DownloadHttpClient.SendAsync(probeRequest, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 		if (probeResponse.StatusCode == HttpStatusCode.PartialContent)
 		{
 			totalBytes ??= probeResponse.Content.Headers.ContentRange?.Length;
@@ -2885,9 +2734,8 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 	private async Task<DownloadMetadataResponse> GetDownloadMetadataResponseAsync(Uri sourceUri, CancellationToken cancellationToken)
 	{
-		HttpResponseMessage headResponse = await SendDownloadRequestWithRetriesAsync(
-			() => new HttpRequestMessage(HttpMethod.Head, sourceUri),
-			cancellationToken).ConfigureAwait(false);
+		using HttpRequestMessage headRequest = new(HttpMethod.Head, sourceUri);
+		HttpResponseMessage headResponse = await DownloadHttpClient.SendAsync(headRequest, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 		// Different download endpoints are inconsistent about which verb exposes Last-Modified. Capture the
 		// HEAD value up front and carry it forward so we still show the server timestamp even if the later
 		// fallback GET omits it (or vice versa).
@@ -2924,40 +2772,63 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		}
 
 		headResponse.Dispose();
-		HttpResponseMessage getResponse = await SendDownloadRequestWithRetriesAsync(
-			() => new HttpRequestMessage(HttpMethod.Get, sourceUri),
-			cancellationToken).ConfigureAwait(false);
-		_ = getResponse.EnsureSuccessStatusCode();
-		return new(getResponse, canReuseResponseBody: true, GetServerFileTimestampUtc(getResponse) ?? headServerFileTimestampUtc);
+		using HttpRequestMessage getRequest = new(HttpMethod.Get, sourceUri);
+		HttpResponseMessage getResponse = await DownloadHttpClient.SendAsync(getRequest, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+		try
+		{
+			_ = getResponse.EnsureSuccessStatusCode();
+			return new(getResponse, canReuseResponseBody: true, GetServerFileTimestampUtc(getResponse) ?? headServerFileTimestampUtc);
+		}
+		catch
+		{
+			getResponse.Dispose();
+			throw;
+		}
 	}
 
-	private async Task<HttpResponseMessage> SendDownloadRequestWithRetriesAsync(Func<HttpRequestMessage> requestFactory, CancellationToken cancellationToken)
+	private static async Task RetryDownloadAsync(Func<Task> download, CancellationToken cancellationToken)
 	{
-		TimeSpan delay = TimeSpan.FromSeconds(1);
-
-		for (int attempt = 0; ; attempt++)
+		// Retry every error without a limit. Only the user's cancellation stops an active download.
+		while (true)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 
 			try
 			{
-				using HttpRequestMessage request = requestFactory();
-				HttpResponseMessage response = await DownloadHttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-				if (attempt < MaxTransientRetryAttempts && RetryableStatusCodes.Contains(response.StatusCode))
-				{
-					response.Dispose();
-					await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
-					delay = delay >= TimeSpan.FromSeconds(4) ? delay : delay + delay;
-					continue;
-				}
-
-				return response;
+				await download().ConfigureAwait(false);
+				return;
 			}
-			catch (Exception ex) when (attempt < MaxTransientRetryAttempts && IsTransientDownloadException(ex, cancellationToken))
+			catch (Exception) when (!cancellationToken.IsCancellationRequested)
 			{
-				await Task.Delay(delay, cancellationToken).ConfigureAwait(false);
-				delay = delay >= TimeSpan.FromSeconds(4) ? delay : delay + delay;
+				await Task.Delay(TimeSpan.FromSeconds(4), cancellationToken).ConfigureAwait(false);
 			}
+		}
+	}
+
+	private static async ValueTask<int> ReadDownloadAsync(Stream sourceStream, Memory<byte> buffer, CancellationTokenSource readTimeout)
+	{
+		// ResponseHeadersRead does not apply HttpClient.Timeout to the body. Time out only stalled
+		// reads, not intentional rate-limit waits or disk writes between them.
+		readTimeout.CancelAfter(TimeSpan.FromSeconds(30));
+		int bytesRead = await sourceStream.ReadAsync(buffer, readTimeout.Token).ConfigureAwait(false);
+		readTimeout.CancelAfter(Timeout.InfiniteTimeSpan);
+		return bytesRead;
+	}
+
+	private static void ValidateDownloadRange(HttpResponseMessage response, long startOffset, long endOffsetInclusive, long? totalBytes)
+	{
+		ContentRangeHeaderValue? range = response.Content.Headers.ContentRange;
+		if (range is null
+			|| !range.HasRange
+			|| !string.Equals(range.Unit, "bytes", StringComparison.OrdinalIgnoreCase)
+			|| range.From != startOffset
+			|| (endOffsetInclusive >= 0 && range.To > endOffsetInclusive)
+			|| (totalBytes.HasValue && range.Length.HasValue && range.Length != totalBytes)
+			|| (response.Content.Headers.ContentLength.HasValue
+				&& response.Content.Headers.ContentLength != range.To - range.From + 1))
+		{
+			// Never append another range or representation to the bytes already saved.
+			throw new HttpRequestException("The server returned a byte range that does not match the download.");
 		}
 	}
 
@@ -2969,17 +2840,6 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 
 		return $"HTTP {(int)response.StatusCode} {reasonPhrase}";
 	}
-
-	private static bool IsTransientDownloadException(Exception ex, CancellationToken cancellationToken) => ex switch
-	{
-		OperationCanceledException => !cancellationToken.IsCancellationRequested,
-		HttpRequestException => true,
-		IOException => true,
-		TimeoutException => true,
-		_ => false
-	};
-
-	private static TimeSpan GetTransientRetryDelay(int failureCount) => TimeSpan.FromSeconds(Math.Min(Math.Max(1, 1 << Math.Max(0, failureCount - 1)), 4));
 
 	private async Task PersistRuntimeProgressAsync(DownloadManagerItem item, DownloadRuntimeState runtime, bool force)
 	{
@@ -3332,8 +3192,18 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 		return properties;
 	}
 
-	private static async Task UpdateItemAsync(DownloadManagerItem item, Action<DownloadManagerItem> updateAction) =>
-		await Atlas.AppDispatcher.EnqueueAsync(() => updateAction(item)).ConfigureAwait(false);
+	private async Task UpdateItemAsync(DownloadManagerItem item, Action<DownloadManagerItem> updateAction) =>
+		await Atlas.AppDispatcher.EnqueueAsync(() =>
+		{
+			DownloadState previousState = item.State;
+			updateAction(item);
+
+			// Bulk actions depend on selected item states, not only on selection changes.
+			if (item.State != previousState && _selectedDownloadItems.Contains(item))
+			{
+				NotifySelectedDownloadsChanged();
+			}
+		}).ConfigureAwait(false);
 
 	private async Task StopDownloadForRemovalAsync(DownloadManagerItem item)
 	{
@@ -3353,8 +3223,6 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			if (activeDownloadOperation is not null)
 			{
 				activeDownloadOperation.DeleteRequested = true;
-				activeDownloadOperation.PauseRequested = false;
-				activeDownloadOperation.RestartRequested = false;
 #pragma warning disable CA1849 // Can't await in a Lock.
 				_ = activeDownloadOperation.CancellationTokenSource.CancelAsync();
 #pragma warning restore CA1849
@@ -3377,8 +3245,6 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 			{
 				return;
 			}
-
-			activeDownloadOperation.PauseRequested = true;
 			activeDownloadOperation.CancellationTokenSource.Cancel();
 		}
 	}
@@ -4248,22 +4114,6 @@ internal sealed partial class DownloadManagerVM : ViewModelBase
 	{
 		string json = JsonSerializer.Serialize(checkpoint, DownloadManagerJsonContext.Default.DownloadCheckpointRecord);
 		WriteTextAtomically(checkpoint.CheckpointFilePath, json);
-	}
-
-	private static bool ShouldFlushDataFile(DownloadRuntimeState runtime)
-	{
-		DateTimeOffset now = DateTimeOffset.UtcNow;
-
-		lock (runtime.SyncRoot)
-		{
-			if (now - runtime.LastDataFlushUtc < TimeSpan.FromSeconds(2))
-			{
-				return false;
-			}
-
-			runtime.LastDataFlushUtc = now;
-			return true;
-		}
 	}
 
 	private static void WriteTextAtomically(string path, string content)

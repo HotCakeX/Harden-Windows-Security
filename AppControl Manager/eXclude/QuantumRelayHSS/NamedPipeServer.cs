@@ -45,6 +45,17 @@ internal sealed class NamedPipeServer : IDisposable
 	/// </summary>
 	private const int IdleTimeoutSeconds = 120;
 
+	/// <summary>
+	/// The package family name of the Harden System Security app. Only clients whose token carries this exact
+	/// package identity are allowed to use the service, and the named pipe is the only way to reach it.
+	/// </summary>
+	private const string AuthorizedPackageFamilyName = "VioletHansen.HardenSystemSecurity_ea7andspwdn10";
+
+	/// <summary>
+	/// Returned by the first GetPackageFamilyNameFromToken call because no output buffer is supplied to it.
+	/// </summary>
+	private const int ERROR_INSUFFICIENT_BUFFER = 122;
+
 	private readonly CancellationTokenSource CTS = new();
 
 	/// <summary>
@@ -240,9 +251,9 @@ internal sealed class NamedPipeServer : IDisposable
 
 				sessionContext = new ClientSessionContext(writer);
 
-				// Verify the client's elevation status once per session (after the first byte).
-				bool adminVerified = false;
-				bool adminAllowed;
+				// Verify the client's elevation status and package identity once per session (after the first byte).
+				bool clientVerified = false;
+				bool clientAllowed;
 
 				while (pipeServer.IsConnected && !cancellationToken.IsCancellationRequested)
 				{
@@ -254,18 +265,18 @@ internal sealed class NamedPipeServer : IDisposable
 							break;
 						}
 
-						// Ensure the client is an elevated Administrator before processing any request.
-						if (!adminVerified)
+						// Ensure the client is an elevated Administrator from the authorized package before processing any request.
+						if (!clientVerified)
 						{
-							adminAllowed = IsClientElevatedAdmin(pipeServer);
-							adminVerified = true;
+							clientAllowed = IsClientAuthorized(pipeServer);
+							clientVerified = true;
 
-							if (!adminAllowed)
+							if (!clientAllowed)
 							{
 								// Deny and inform client
 								try
 								{
-									await sessionContext.WriteErrorResponseAsync(-1, "Access denied: client is not an elevated administrator.", cancellationToken).ConfigureAwait(false);
+									await sessionContext.WriteErrorResponseAsync(-1, "Access denied: client is not an elevated administrator from the authorized package.", cancellationToken).ConfigureAwait(false);
 								}
 								catch { }
 								break; // Break out of the loop and disconnect.
@@ -563,11 +574,12 @@ internal sealed class NamedPipeServer : IDisposable
 		}
 	}
 
-	// Using RunAsClient to impersonate, then CheckTokenMembership against the Administrators SID.
+	// Using RunAsClient to impersonate, then CheckTokenMembership against the Administrators SID and
+	// GetPackageFamilyNameFromToken against the impersonated token for the package identity check.
 	// CheckTokenMembership with an impersonated thread returns false for filtered (non-elevated) admin tokens.
-	private static bool IsClientElevatedAdmin(NamedPipeServerStream pipeServer)
+	private static bool IsClientAuthorized(NamedPipeServerStream pipeServer)
 	{
-		bool isAdmin = false;
+		bool isAllowed = false;
 
 		try
 		{
@@ -589,11 +601,16 @@ internal sealed class NamedPipeServer : IDisposable
 
 					// TokenHandle = NULL means evaluate membership for the effective token of the calling thread.
 					// Since we are inside RunAsClient, the thread is impersonating the client.
-					isAdmin = NativeMethods.CheckTokenMembership(IntPtr.Zero, pSid, out bool isMember) && isMember;
+					// The identity of the impersonating thread is the client's, so its token is the one to inspect.
+					using WindowsIdentity clientIdentity = WindowsIdentity.GetCurrent();
+
+					isAllowed = NativeMethods.CheckTokenMembership(IntPtr.Zero, pSid, out bool isMember)
+						&& isMember
+						&& IsTokenFromAuthorizedPackage(clientIdentity.Token);
 				}
 				catch
 				{
-					isAdmin = false;
+					isAllowed = false;
 				}
 				finally
 				{
@@ -606,10 +623,29 @@ internal sealed class NamedPipeServer : IDisposable
 		}
 		catch
 		{
-			isAdmin = false;
+			isAllowed = false;
 		}
 
-		return isAdmin;
+		return isAllowed;
+	}
+
+	// Reads the package family name out of the client's token with the documented two-call pattern and compares it.
+	// A token with no package identity makes the first call return APPMODEL_ERROR_NO_PACKAGE instead, so it is denied.
+	private static bool IsTokenFromAuthorizedPackage(IntPtr token)
+	{
+		uint length = 0;
+
+		// The first call supplies no buffer and only reports the required character count, including the null terminator.
+		if (NativeMethods.GetPackageFamilyNameFromToken(token, ref length, null) != ERROR_INSUFFICIENT_BUFFER
+			|| length != AuthorizedPackageFamilyName.Length + 1)
+		{
+			return false;
+		}
+
+		char[] packageFamilyName = new char[length];
+
+		return NativeMethods.GetPackageFamilyNameFromToken(token, ref length, packageFamilyName) == 0
+			&& AuthorizedPackageFamilyName.AsSpan().Equals(packageFamilyName.AsSpan(0, (int)length - 1), StringComparison.OrdinalIgnoreCase);
 	}
 }
 

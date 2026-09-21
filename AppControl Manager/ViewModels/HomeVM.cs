@@ -37,6 +37,7 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
+using WinRT;
 
 namespace AppControlManager.ViewModels;
 
@@ -3315,4 +3316,106 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	#endregion
 
 	private static string NormalizeIdentifier(string value) => string.IsNullOrWhiteSpace(value) ? "Unavailable" : value;
+
+#if HARDEN_SYSTEM_SECURITY
+
+	#region Clipboard Monitoring
+
+	internal string ClipboardMonitorStatusText { get; private set => SP(ref field, value); } = "Checking...";
+	internal string ClipboardMonitorStartupStatusText { get; private set => SP(ref field, value); } = "Checking...";
+
+	// Event handler for when the Clipboard Monitor button is clicked on.
+	[DynamicWindowsRuntimeCast(typeof(TeachingTip))]
+	internal async void OpenClipboardMonitorTeachingTip(object sender, RoutedEventArgs args)
+	{
+		// Always display up to date info when the teaching tip is opened
+		await RefreshClipboardMonitorStatusAsync();
+		if (sender is FrameworkElement { Tag: TeachingTip teachingTip })
+		{
+			teachingTip.IsOpen = true;
+		}
+	}
+
+	internal async void EnableClipboardMonitor()
+	{
+		try
+		{
+			UpdateClipboardMonitorStatus(await HardenSystemSecurity.ClipboardMonitor.StartAsync());
+
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			ClipboardMonitorStatusText = "Failed to enable. See the app logs.";
+		}
+	}
+
+	internal async void DisableClipboardMonitor()
+	{
+		try
+		{
+			UpdateClipboardMonitorStatus(await HardenSystemSecurity.ClipboardMonitor.StopAsync());
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			ClipboardMonitorStatusText = "Failed to disable. See the app logs.";
+		}
+	}
+
+	internal async void EnableClipboardMonitorAtStartup()
+	{
+		try
+		{
+			UpdateClipboardMonitorStartupStatus(await HardenSystemSecurity.ClipboardMonitor.EnableAtStartupAsync());
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			ClipboardMonitorStartupStatusText = "Failed to enable. See the app logs.";
+		}
+	}
+
+	internal async void DisableClipboardMonitorAtStartup()
+	{
+		try
+		{
+			UpdateClipboardMonitorStartupStatus(await HardenSystemSecurity.ClipboardMonitor.DisableAtStartupAsync());
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			ClipboardMonitorStartupStatusText = "Failed to disable. See the app logs.";
+		}
+	}
+
+	private async Task RefreshClipboardMonitorStatusAsync()
+	{
+		try
+		{
+			UpdateClipboardMonitorStatus(HardenSystemSecurity.ClipboardMonitor.IsRunning());
+			UpdateClipboardMonitorStartupStatus(await HardenSystemSecurity.ClipboardMonitor.GetStartupStateAsync());
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			ClipboardMonitorStartupStatusText = "Unavailable. See the app logs.";
+		}
+	}
+
+	private void UpdateClipboardMonitorStatus(bool isRunning) => ClipboardMonitorStatusText = isRunning ? "Enabled" : "Disabled";
+
+	private void UpdateClipboardMonitorStartupStatus(Windows.ApplicationModel.StartupTaskState state) => ClipboardMonitorStartupStatusText = state switch
+	{
+		Windows.ApplicationModel.StartupTaskState.Enabled => "Enabled",
+		Windows.ApplicationModel.StartupTaskState.EnabledByPolicy => "Enabled by policy",
+		Windows.ApplicationModel.StartupTaskState.DisabledByPolicy => "Disabled by policy",
+		Windows.ApplicationModel.StartupTaskState.DisabledByUser => "Disabled by user",
+		_ => "Disabled"
+	};
+
+	#endregion
+
+#endif
+
 }

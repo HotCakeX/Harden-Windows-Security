@@ -1,1 +1,5 @@
-* Updated many dependencies to the latest versions.
+* The SSD temperature is now able to be displayed on more devices where it would previously be unavailable.
+
+* Improved the app installation compatibility with certain system types and configurations.
+
+* Updated dependencies to the latest version.

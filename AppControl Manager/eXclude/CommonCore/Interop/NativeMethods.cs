@@ -244,7 +244,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setwindowpos
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool SetWindowPos(
@@ -269,7 +269,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setforegroundwindow
 	/// </summary>
-	[LibraryImport("user32.dll")]
+	[LibraryImport("USER32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool SetForegroundWindow(IntPtr hWnd);
@@ -278,7 +278,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-postmessagew
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool PostMessageW(
@@ -291,7 +291,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-createpopupmenu
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr CreatePopupMenu();
 
@@ -299,7 +299,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-appendmenuw
 	/// </summary>
-	[LibraryImport("user32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[LibraryImport("USER32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool AppendMenuW(
@@ -312,7 +312,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-trackpopupmenuex
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint TrackPopupMenuEx(
 		IntPtr hMenu,
@@ -326,7 +326,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setmenuiteminfow
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool SetMenuItemInfoW(
@@ -339,7 +339,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-destroymenu
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool DestroyMenu(IntPtr hMenu);
@@ -348,7 +348,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-destroyicon
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool DestroyIcon(IntPtr hIcon);
@@ -357,7 +357,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getclasslongptrw
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr GetClassLongPtrW(IntPtr hWnd, int nIndex);
 
@@ -378,7 +378,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-createiconindirect
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr CreateIconIndirect(ref ICONINFO piconinfo);
 
@@ -395,7 +395,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-registerwindowmessagew
 	/// </summary>
-	[LibraryImport("user32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[LibraryImport("USER32", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint RegisterWindowMessageW(string lpString);
 
@@ -2381,7 +2381,7 @@ internal static unsafe partial class NativeMethods
 	internal static partial uint UnregisterDeviceWithLocalManagement();
 
 
-	[LibraryImport("ntdll.dll")]
+	[LibraryImport("NTDLL")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int NtEnumerateSystemEnvironmentValuesEx(uint InformationClass, IntPtr Buffer, ref uint BufferLength);
 
@@ -2404,7 +2404,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-exitwindowsex
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool ExitWindowsEx(uint uFlags, uint dwReason);
@@ -3828,7 +3828,7 @@ internal static unsafe partial class NativeMethods
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setwindowrgn
 	/// The system takes the ownership of the region when this method succeeds, so the region must not be deleted afterwards.
 	/// </summary>
-	[LibraryImport("user32.dll", SetLastError = true)]
+	[LibraryImport("USER32", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int SetWindowRgn(IntPtr hWnd, IntPtr hRgn, [MarshalAs(UnmanagedType.Bool)] bool bRedraw);
 
@@ -3836,7 +3836,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getdpiforwindow
 	/// </summary>
-	[LibraryImport("user32.dll")]
+	[LibraryImport("USER32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint GetDpiForWindow(IntPtr hWnd);
 
@@ -3844,7 +3844,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getforegroundwindow
 	/// </summary>
-	[LibraryImport("user32.dll")]
+	[LibraryImport("USER32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr GetForegroundWindow();
 
@@ -3852,7 +3852,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowthreadprocessid
 	/// </summary>
-	[LibraryImport("user32.dll")]
+	[LibraryImport("USER32")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial uint GetWindowThreadProcessId(
 		IntPtr hWnd,
@@ -4120,5 +4120,121 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("wimgapi.dll", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int WIMCloseHandle(IntPtr value);
+
+
+	[LibraryImport("amsi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int AmsiInitialize(string appName, out nint amsiContext);
+
+
+	[LibraryImport("amsi.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int AmsiScanBuffer(nint amsiContext, void* buffer, uint length, string contentName, nint amsiSession, out AMSI_RESULT result);
+
+
+	[LibraryImport("amsi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial void AmsiUninitialize(nint amsiContext);
+
+
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool AddClipboardFormatListener(nint hwnd);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool RemoveClipboardFormatListener(nint hwnd);
+
+
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool OpenClipboard(nint hWndNewOwner);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool CloseClipboard();
+
+
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool EmptyClipboard();
+
+
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint GetClipboardData(uint uFormat);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool IsClipboardFormatAvailable(uint format);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint GetClipboardOwner();
+
+
+	[LibraryImport("KERNEL32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint GlobalLock(nint hMem);
+
+
+	[LibraryImport("KERNEL32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GlobalUnlock(nint hMem);
+
+
+	[LibraryImport("KERNEL32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nuint GlobalSize(nint hMem);
+
+
+	[LibraryImport("USER32", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool UnregisterClassW(string lpClassName, nint hInstance);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial void PostQuitMessage(int nExitCode);
+
+
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int GetMessageW(out MSG lpMsg, nint hWnd, uint wMsgFilterMin, uint wMsgFilterMax);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint DispatchMessageW(in MSG lpMsg);
+
+
+	[LibraryImport("KERNEL32", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint GetModuleHandleW(string? lpModuleName);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint GetClipboardSequenceNumber();
+
+
+	[LibraryImport("kernelbase.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int GetPackageFamilyNameFromToken(IntPtr token,
+		ref uint packageFamilyNameLength,
+		[Out] char[]?
+		packageFamilyName);
 
 }

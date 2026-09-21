@@ -3,9 +3,10 @@
 The **Home page** is the landing/overview surface of the app. It presents a live, at‑a‑glance dashboard of the machine's identity, hardware, operating system, security posture, and real‑time telemetry.
 
 > [!NOTE]\
-> The page has two entry points into richer experiences for [the Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) only.
+> The page has three entry points into richer experiences for [the Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security) only.
 >
 > - An entry to the [**Windows TopBar**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/TopBar).
+> - An entry to the **Clipboard Monitor** management panel (documented in full at the end).
 > - An entry to the **Live System Intelligence** window (documented in full at the end).
 
 ## What the Home Page Shows You
@@ -194,3 +195,23 @@ To stay efficient, only the diagnostic tab you're currently viewing does any liv
 ### In Short
 
 The Home page gives you a clear, all‑in‑one snapshot of your computer, who and what it is and how it's doing. And when you want to go deeper, the Live System Intelligence window turns that snapshot into a living, real‑time cockpit complete with pop‑out graphs, per‑GPU tracking, power and battery insights, and a handy set of network and sensor diagnostics.
+
+## Clipboard Monitor
+
+At the top of the System Overview area, next to the section title, is a button that opens the **Clipboard Monitor** management panel.
+
+Clipboard Monitor watches for newly copied text and automatically scans it using Microsoft Defender's Antimalware Scan Interface (AMSI). It helps protect you from clipboard-based attacks involving malicious commands, scripts, downloaders, or other dangerous text copied from websites, emails, documents, or messages.
+
+The management panel lets you:
+
+- See whether Clipboard Monitor is currently enabled or disabled.
+
+- Enable or disable Clipboard Monitor.
+
+- See whether it is configured to run at startup.
+
+- Choose whether Clipboard Monitor starts automatically when you sign in to Windows.
+
+When Microsoft Defender identifies copied text as malware, or an antimalware provider reports that it is blocked by administrator policy, Clipboard Monitor removes the detected clipboard content and displays a notification. When available, the notification also identifies the process the content was copied from. The event and any monitoring errors are recorded in the app logs.
+
+Clipboard Monitor is event-driven, so it waits for clipboard changes instead of repeatedly checking the clipboard. It monitors text content only and runs separately from the main app after you enable it, allowing protection to continue after the app window is closed.

@@ -7973,10 +7973,10 @@ Huella Digital: {3}</value>
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>Permite que Windows descargue parámetros actualizados del modelo de aprendizaje automático que se usan para predecir fallas del disco de almacenamiento.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Entorno de recuperación de Windows</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Habilita o deshabilita el Entorno de recuperación de Windows y muestra su configuración actual.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

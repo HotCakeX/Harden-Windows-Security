@@ -7973,10 +7973,10 @@ Thumbprint: {3}</value>
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>Allows Windows to download updated machine learning model parameters used to predict storage disk failure.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Windows Recovery Environment</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Enables or disables Windows Recovery Environment and displays its current configuration.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

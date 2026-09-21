@@ -274,8 +274,11 @@ internal static class GetAppsList
 					Windows.ApplicationModel.PackageStatus packageStatus = item.Status;
 					PackageId packageId = item.Id;
 
-					// Try to get the logo string
-					string? logoStr = item.Logo?.ToString();
+					// Try to get the logo string.
+					// Some packages declare their logo through a resource reference that cannot be resolved, in which case
+					// reading the property itself fails instead of returning a URI, so the failure is contained in the helper
+					// and does not discard the rest of the package details.
+					string? logoStr = GetPackageLogo(item);
 
 					// Validate that the logo string is a valid absolute URI and check size requirements
 					// Many logos exist and are valid URI but are 1x1 pixels which makes them useless to show on the ListView.
@@ -298,7 +301,7 @@ internal static class GetAppsList
 						fullName: packageId.FullName,
 						description: string.IsNullOrEmpty(item.Description) ? "N/A" : item.Description,
 						installLocation: GetInstallLocation(item),
-						installedDate: item.InstalledDate.ToLocalTime().ToString(CultureInfo.CurrentCulture),
+						installedDate: GetInstalledDate(item, notApplicableText),
 						isFramework: item.IsFramework ? bool.TrueString : bool.FalseString,
 						packageUserInformation: GetPackageUserInformation(item),
 						appSize: deferredSizeText,
@@ -317,12 +320,6 @@ internal static class GetAppsList
 						vmRef: VVMRef
 					));
 				}
-				catch (System.Runtime.InteropServices.COMException)
-				{ /*
-				     Do nothing.
-				     It's thrown here: string? logoStr = item.Logo?.ToString();
-				  */
-				}
 				catch (Exception ex)
 				{
 					try
@@ -336,10 +333,8 @@ internal static class GetAppsList
 					Logger.Write(ex);
 				}
 			}
-
 			return apps;
 		});
-
 	}
 
 	internal static async Task PopulateStorageDetailsAsync(PackagedAppView app)
@@ -488,7 +483,11 @@ internal static class GetAppsList
 			}
 
 			HashSet<string> capabilities = new(StringComparer.OrdinalIgnoreCase);
-			bool readingCapabilities = false;
+
+			// Depth of the package level <Capabilities> element that is currently being read.
+			// It remains -1 while the reader is outside of that element.
+			// Only the <Capabilities> element that is a direct child of the root <Package> element contains real app capabilities.
+			int capabilitiesDepth = -1;
 
 			using FileStream manifestStream = new(manifestPath, FileMode.Open, FileAccess.Read, FileShare.Read);
 			using XmlReader reader = XmlReader.Create(manifestStream, Atlas.UniversalXmlReaderSettings.Value);
@@ -497,27 +496,29 @@ internal static class GetAppsList
 			{
 				if (reader.NodeType == XmlNodeType.Element)
 				{
-					if (string.Equals(reader.LocalName, "Capabilities", StringComparison.Ordinal))
+					// The root <Package> element is at depth 0, so the package level <Capabilities> element is at depth 1.
+					if (capabilitiesDepth < 0 && reader.Depth == 1 && string.Equals(reader.LocalName, "Capabilities", StringComparison.Ordinal))
 					{
-						readingCapabilities = !reader.IsEmptyElement;
+						if (!reader.IsEmptyElement)
+						{
+							capabilitiesDepth = reader.Depth;
+						}
 						continue;
 					}
 
-					if (readingCapabilities)
+					if (capabilitiesDepth >= 0 && reader.Depth == capabilitiesDepth + 1 && reader.LocalName.EndsWith("Capability", StringComparison.Ordinal))
 					{
-						string capabilityValue = reader.GetAttribute("Name") ?? reader.LocalName;
+						string? capabilityValue = reader.GetAttribute("Name");
 						if (!string.IsNullOrWhiteSpace(capabilityValue))
 						{
 							_ = capabilities.Add(capabilityValue.Trim());
 						}
-
 						continue;
 					}
 				}
-				else if (reader.NodeType == XmlNodeType.EndElement &&
-					string.Equals(reader.LocalName, "Capabilities", StringComparison.Ordinal))
+				else if (capabilitiesDepth >= 0 && reader.NodeType == XmlNodeType.EndElement && reader.Depth == capabilitiesDepth && string.Equals(reader.LocalName, "Capabilities", StringComparison.Ordinal))
 				{
-					readingCapabilities = false;
+					capabilitiesDepth = -1;
 				}
 			}
 
@@ -534,6 +535,47 @@ internal static class GetAppsList
 		catch
 		{
 			return new PackagedAppManifestDetails(Atlas.GetStr("NAText"), 0);
+		}
+	}
+
+	/// <summary>
+	/// Safely retrieves the logo URI of a package.
+	/// Packages whose logo is declared via a resource reference that cannot be resolved make the underlying
+	/// IPackage2::get_Logo call fail with E_INVALIDARG, which the WinRT projection surfaces as an ArgumentException
+	/// rather than a COMException. Every failure mode is handled here so a broken logo never discards the whole entry.
+	/// </summary>
+	/// <param name="package">The package whose logo should be retrieved.</param>
+	/// <returns>The logo URI string, or null when the logo cannot be resolved.</returns>
+	private static string? GetPackageLogo(Package package)
+	{
+		try
+		{
+			return package.Logo?.ToString();
+		}
+		catch
+		{
+			return null;
+		}
+	}
+
+	/// <summary>
+	/// Safely retrieves the installation date of a package in a display ready form.
+	/// Some packages, mostly framework, resource and system provided ones, have no recorded installation time, so the
+	/// underlying IPackage3::get_InstalledDate call fails with ERROR_NOT_FOUND instead of returning a value. The failure
+	/// is contained here so a missing date never discards the whole package entry.
+	/// </summary>
+	/// <param name="package">The package whose installation date should be retrieved.</param>
+	/// <param name="fallbackText">The text to return when the installation date is not available.</param>
+	/// <returns>The localized installation date, or the fallback text when it cannot be determined.</returns>
+	private static string GetInstalledDate(Package package, string fallbackText)
+	{
+		try
+		{
+			return package.InstalledDate.ToLocalTime().ToString(CultureInfo.CurrentCulture);
+		}
+		catch
+		{
+			return fallbackText;
 		}
 	}
 
@@ -815,7 +857,7 @@ internal static class GetAppsList
 		}
 
 		List<string> orderedKeys = [.. groupedApps.Keys];
-		orderedKeys.Sort(StringComparer.Ordinal);
+		orderedKeys.Sort(PackagedAppGroupKeyComparer.Instance);
 
 		List<GroupInfoListForPackagedAppView> groupedResults = new(orderedKeys.Count);
 		foreach (string key in CollectionsMarshal.AsSpan(orderedKeys))

@@ -7973,10 +7973,10 @@ Thumbprint: {3}</value>
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>Mengizinkan Windows mengunduh parameter model pembelajaran mesin terbaru yang digunakan untuk memprediksi kegagalan disk penyimpanan.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Lingkungan Pemulihan Windows</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Mengaktifkan atau menonaktifkan Lingkungan Pemulihan Windows dan menampilkan konfigurasinya saat ini.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

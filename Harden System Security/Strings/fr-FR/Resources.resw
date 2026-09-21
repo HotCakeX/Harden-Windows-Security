@@ -7973,10 +7973,10 @@ Empreinte : {3}</value>
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>Autorise Windows à télécharger les paramètres actualisés du modèle d'apprentissage automatique utilisé pour prédire les défaillances des disques de stockage.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Environnement de récupération Windows</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Active ou désactive l'Environnement de récupération Windows et affiche sa configuration actuelle.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

@@ -7973,10 +7973,10 @@
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>מאפשר ל-Windows להוריד פרמטרים מעודכנים של מודל למידת מכונה המשמשים לחיזוי כשל של דיסק אחסון.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>סביבת השחזור של Windows</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>מפעיל או משבית את סביבת השחזור של Windows ומציג את התצורה הנוכחית שלה.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

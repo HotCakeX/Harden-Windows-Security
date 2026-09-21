@@ -231,18 +231,6 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		}
 	} = true;
 
-	internal bool IsLoadingInstalledPrograms
-	{
-		get; private set
-		{
-			if (SP(ref field, value))
-			{
-				OnPropertyChanged(nameof(IsInstalledProgramsCancelButtonEnabled));
-				OnPropertyChanged(nameof(InstalledProgramsProgressRingVisibility));
-			}
-		}
-	}
-
 	internal bool IsSourceOperationRunning
 	{
 		get; private set
@@ -261,9 +249,6 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 	internal bool IsSourceOperationCancelButtonEnabled => !SourcesUIElementsAreEnabled;
 	internal Visibility SearchProgressRingVisibility => SearchPackageUIElementsAreEnabled ? Visibility.Collapsed : Visibility.Visible;
 	internal Visibility InstalledProgramsProgressRingVisibility => InstalledProgramsUIElementsAreEnabled ? Visibility.Collapsed : Visibility.Visible;
-	internal bool HasSearchResults => SearchResults.Count > 0;
-	internal bool HasInstalledPrograms => InstalledPrograms.Count > 0;
-	internal bool HasSources => Sources.Count > 0;
 	internal int SearchResultsCount => SearchResults.Count;
 	internal int InstalledProgramsCount => InstalledPrograms.Count;
 	internal int InstalledProgramsTotalCount => installedProgramsCache.Count;
@@ -272,7 +257,6 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 	internal int SelectedInstalledProgramsCount { get; private set => SP(ref field, value); }
 	internal int SelectedSourcesCount { get; private set => SP(ref field, value); }
 	internal bool IsWinGetSettingsPaneOpen { get; set => SP(ref field, value); }
-	internal string ResultsStatusText { get; private set => SP(ref field, value); } = "Search for packages by name, ID, moniker, command, or tag.";
 	internal string InstalledProgramsStatusText { get; private set => SP(ref field, value); } = "Select refresh to query installed programs.";
 	internal string SourcesStatusText { get; private set => SP(ref field, value); } = "Select refresh to list configured WinGet sources.";
 	internal string CustomDownloadDirectorySetting
@@ -386,7 +370,6 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		SearchResults.Clear();
 		SelectedSearchResultsCount = 0;
 		NotifySearchResultsChanged();
-		ResultsStatusText = "Search for packages by name, ID, moniker, command, or tag.";
 		MainInfoBar.IsOpen = false;
 	}
 
@@ -804,24 +787,15 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		return sourceInfo is not null;
 	}
 
-	private void NotifySearchResultsChanged()
-	{
-		OnPropertyChanged(nameof(HasSearchResults));
-		OnPropertyChanged(nameof(SearchResultsCount));
-	}
+	private void NotifySearchResultsChanged() => OnPropertyChanged(nameof(SearchResultsCount));
 
 	private void NotifyInstalledProgramsChanged()
 	{
-		OnPropertyChanged(nameof(HasInstalledPrograms));
 		OnPropertyChanged(nameof(InstalledProgramsCount));
 		OnPropertyChanged(nameof(InstalledProgramsTotalCount));
 	}
 
-	private void NotifySourcesChanged()
-	{
-		OnPropertyChanged(nameof(HasSources));
-		OnPropertyChanged(nameof(SourcesCount));
-	}
+	private void NotifySourcesChanged() => OnPropertyChanged(nameof(SourcesCount));
 
 	private static int SelectAllListView(ListViewHelper.ListViewsRegistry registryKey)
 	{
@@ -1392,7 +1366,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 			SearchResults.Clear();
 			SelectedSearchResultsCount = 0;
 			NotifySearchResultsChanged();
-			ResultsStatusText = "Searching packages.";
+			MainInfoBar.WriteInfo("Searching packages.");
 			string packageSearchSourceName = GetSelectedPackageSearchSourceName();
 			string packageSearchSourceDisplayName = string.IsNullOrWhiteSpace(packageSearchSourceName) ? AnyPackageSearchSourceOption : packageSearchSourceName;
 			WinGetPackageSearchMatchMode packageSearchMatchMode = (WinGetPackageSearchMatchMode)SelectedPackageSearchMatchModeValue;
@@ -1407,18 +1381,15 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 			cancellationToken.ThrowIfCancellationRequested();
 			SearchResults.AddRange(results);
 			NotifySearchResultsChanged();
-			ResultsStatusText = GetResultStatusText(string.Format(CultureInfo.InvariantCulture, "Found {0} package(s) for {1} using {2} search with {3} match mode in {4}.", SearchResults.Count, trimmedQuery, packageSearchFieldName, packageSearchMatchModeName, packageSearchSourceDisplayName), results);
-			MainInfoBar.WriteSuccess(ResultsStatusText);
+			MainInfoBar.WriteSuccess(GetResultStatusText(string.Format(CultureInfo.InvariantCulture, "Found {0} package(s) for {1} using {2} search with {3} match mode in {4}.", SearchResults.Count, trimmedQuery, packageSearchFieldName, packageSearchMatchModeName, packageSearchSourceDisplayName), results));
 		}
 		catch (OperationCanceledException)
 		{
-			ResultsStatusText = "Package search canceled.";
-			MainInfoBar.WriteInfo(ResultsStatusText);
+			MainInfoBar.WriteInfo("Package search canceled.");
 		}
 		catch (Exception ex)
 		{
-			ResultsStatusText = "Package search failed.";
-			MainInfoBar.WriteError(ex, "Package search failed.");
+			MainInfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -1538,7 +1509,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		catch (Exception ex)
 		{
 			packageSearchResult.PackageOperationStatus = string.Format(CultureInfo.InvariantCulture, "Package operation failed for {0}.", GetPackageLogDisplayName(packageSearchResult));
-			MainInfoBar.WriteError(ex, "Package operation failed.");
+			MainInfoBar.WriteError(ex);
 		}
 		finally
 		{
@@ -1919,9 +1890,8 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		}
 	}
 
-	private static async Task ShowInstallationNotesAsync(WinGetPackageSearchResult packageSearchResult, CancellationToken cancellationToken = default)
+	private static async Task ShowInstallationNotesAsync(WinGetPackageSearchResult packageSearchResult)
 	{
-		cancellationToken.ThrowIfCancellationRequested();
 		string installationNotes = string.IsNullOrWhiteSpace(packageSearchResult.InstallationNotes)
 			? "No installation notes are published for this package."
 			: packageSearchResult.InstallationNotes;
@@ -2137,7 +2107,6 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		try
 		{
 			InstalledProgramsUIElementsAreEnabled = false;
-			IsLoadingInstalledPrograms = true;
 			InstalledPrograms.Clear();
 			SelectedInstalledProgramsCount = 0;
 			installedProgramsCache.Clear();
@@ -2175,7 +2144,6 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 			if (shouldRestoreInstalledProgramsUI)
 			{
 				InstalledProgramsUIElementsAreEnabled = true;
-				IsLoadingInstalledPrograms = false;
 			}
 		}
 	}

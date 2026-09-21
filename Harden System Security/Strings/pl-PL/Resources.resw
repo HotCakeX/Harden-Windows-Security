@@ -7973,10 +7973,10 @@ Odcisk Palca: {3}</value>
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>Zezwala systemowi Windows na pobieranie zaktualizowanych parametrów modelu uczenia maszynowego używanych do przewidywania awarii dysku magazynu.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Środowisko odzyskiwania systemu Windows</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Włącza lub wyłącza Środowisko odzyskiwania systemu Windows i wyświetla jego bieżącą konfigurację.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

@@ -7973,10 +7973,10 @@ Thumbprint: {3}</value>
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>به Windows اجازه می‌دهد پارامترهای به‌روزشدهٔ مدل یادگیری ماشین را که برای پیش‌بینی خرابی دیسک ذخیره‌سازی به کار می‌رود بارگیری کند.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>محیط بازیابی Windows</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>محیط بازیابی Windows را فعال یا غیرفعال می‌کند و پیکربندی کنونی آن را نشان می‌دهد.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

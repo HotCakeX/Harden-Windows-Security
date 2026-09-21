@@ -7973,10 +7973,10 @@
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>സംഭരണ ഡിസ്‌കിന്റെ പരാജയം പ്രവചിക്കാൻ ഉപയോഗിക്കുന്ന മെഷീൻ ലേണിംഗ് മോഡൽ പാരാമീറ്ററുകളുടെ പുതുക്കിയ പതിപ്പ് ഡൗൺലോഡ് ചെയ്യാൻ Windows-നെ അനുവദിക്കുന്നു.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Windows വീണ്ടെടുക്കൽ പരിതസ്ഥിതി</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Windows വീണ്ടെടുക്കൽ പരിതസ്ഥിതി പ്രവർത്തനക്ഷമമാക്കുകയോ പ്രവർത്തനരഹിതമാക്കുകയോ ചെയ്യുകയും അതിന്റെ നിലവിലെ കോൺഫിഗറേഷൻ കാണിക്കുകയും ചെയ്യുന്നു.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

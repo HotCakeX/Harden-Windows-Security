@@ -7973,10 +7973,10 @@
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>ストレージ ディスクの障害予測に使用される機械学習モデルの更新されたパラメーターを Windows がダウンロードできるようにします。</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Windows 回復環境</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Windows 回復環境を有効または無効にし、現在の構成を表示します。</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

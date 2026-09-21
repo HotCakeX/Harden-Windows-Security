@@ -1970,6 +1970,7 @@ internal sealed partial class TweaksVM : ViewModelBase
 	internal readonly InfoBarSettings WindowsReInfoBar = new();
 	internal bool WindowsReIsEnabled { get; set => SP(ref field, value); }
 	internal bool WindowsReIsOn { get; set => SP(ref field, value); }
+	internal string? WindowsReDetails { get; set => SP(ref field, value); }
 	private const uint WimOpenExisting = 3;
 
 	[DynamicWindowsRuntimeCast(typeof(ToggleSwitch))]
@@ -1987,7 +1988,8 @@ internal sealed partial class TweaksVM : ViewModelBase
 			WindowsReInfoBar.WriteInfo(isOn ? "Enabling Windows Recovery Environment..." : "Disabling Windows Recovery Environment...");
 			WinReConfigurationResult result = await Task.Run(() => ChangeWindowsReState(isOn));
 			WindowsReIsOn = result.IsEnabled;
-			WindowsReInfoBar.WriteSuccess($"Windows Recovery Environment was {(result.IsEnabled ? "enabled" : "disabled")}.\n\n{result.Details}");
+			WindowsReDetails = result.Details;
+			WindowsReInfoBar.WriteSuccess($"Windows Recovery Environment was {(result.IsEnabled ? "enabled" : "disabled")}.");
 		}
 		catch (Exception ex)
 		{
@@ -1995,6 +1997,7 @@ internal sealed partial class TweaksVM : ViewModelBase
 			{
 				WinReConfigurationResult result = await Task.Run(GetWindowsReConfiguration);
 				WindowsReIsOn = result.IsEnabled;
+				WindowsReDetails = result.Details;
 			}
 			catch
 			{
@@ -2004,7 +2007,7 @@ internal sealed partial class TweaksVM : ViewModelBase
 		finally
 		{
 			WindowsReIsEnabled = true;
-			WindowsReInfoBar.IsClosable = false;
+			WindowsReInfoBar.IsClosable = true;
 		}
 	}
 
@@ -2013,10 +2016,9 @@ internal sealed partial class TweaksVM : ViewModelBase
 		try
 		{
 			WindowsReIsEnabled = false;
-			WindowsReInfoBar.IsClosable = false;
 			WinReConfigurationResult result = await Task.Run(GetWindowsReConfiguration);
 			WindowsReIsOn = result.IsEnabled;
-			WindowsReInfoBar.WriteInfo(result.Details);
+			WindowsReDetails = result.Details;
 		}
 		catch (Exception ex)
 		{
@@ -2025,7 +2027,6 @@ internal sealed partial class TweaksVM : ViewModelBase
 		finally
 		{
 			WindowsReIsEnabled = true;
-			WindowsReInfoBar.IsClosable = false;
 		}
 	}
 
@@ -2092,13 +2093,32 @@ internal sealed partial class TweaksVM : ViewModelBase
 		int winReImageHashLength = Math.Min(checked((int)config->WinReImageHashLength), WINRE_CONFIG.HashLength);
 		string winReImageHash = winReImageHashLength == 0 ? string.Empty : Convert.ToHexString(new ReadOnlySpan<byte>(config->WinReImageHash, winReImageHashLength));
 		string version = GetWindowsReVersion(winReLocation);
-		StringBuilder details = new(512);
+		string stagedLocation = GetWindowsReString(config->StagedLocation, WINRE_CONFIG.PathCharacterCount);
+		string recoveryImageLocation = GetWindowsReString(config->RecoveryImageLocation, WINRE_CONFIG.PathCharacterCount);
+		string customImageLocation = GetWindowsReString(config->CustomImageLocation, WINRE_CONFIG.PathCharacterCount);
+		string operationParam = GetWindowsReString(config->OperationParam, WINRE_CONFIG.PathCharacterCount);
+		string downlevelWinReLocation = GetWindowsReString(config->DownlevelWinReLocation, WINRE_CONFIG.PathCharacterCount);
+		StringBuilder details = new(1024);
 		_ = details.AppendLine($"Windows RE version: {version}");
 		_ = details.AppendLine($"Windows RE location: {winReLocation}");
+		_ = details.AppendLine($"Staged location present: {config->StagedLocationPresent}");
+		_ = details.AppendLine($"Staged location: {stagedLocation}");
 		_ = details.AppendLine($"BCD identifier: {config->WindowsReBcdIdentifier}");
+		_ = details.AppendLine($"Recovery image location: {recoveryImageLocation}");
+		_ = details.AppendLine($"Recovery image index: {config->RecoveryImageIndex}");
+		_ = details.AppendLine($"Custom image location: {customImageLocation}");
+		_ = details.AppendLine($"Custom image index: {config->CustomImageIndex}");
 		_ = details.AppendLine($"Scheduled operation: {config->ScheduledOperation}");
+		_ = details.AppendLine($"Operation parameter: {operationParam}");
+		_ = details.AppendLine($"Operation permanent: {config->OperationPermanent}");
+		_ = details.AppendLine($"OS install available: {config->OsInstallAvailable}");
+		_ = details.AppendLine($"Custom image available: {config->CustomImageAvailable}");
 		_ = details.AppendLine($"Automatic repair enabled: {config->IsAutoRepairOn}");
+		_ = details.AppendLine($"Windows RE image hash present: {config->WinReImageHashPresent}");
 		_ = details.AppendLine($"Windows RE image hash: {winReImageHash}");
+		_ = details.AppendLine($"Downlevel Windows RE location: {downlevelWinReLocation}");
+		_ = details.AppendLine($"WIM boot: {config->IsWimBoot}");
+		_ = details.AppendLine($"Narrator scheduled: {config->NarratorScheduled}");
 		return new(config->WindowsReEnabled != 0, details.ToString());
 	}
 

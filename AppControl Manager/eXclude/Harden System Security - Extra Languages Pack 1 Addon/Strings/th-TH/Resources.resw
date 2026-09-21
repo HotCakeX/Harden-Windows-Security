@@ -7973,10 +7973,10 @@
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>อนุญาตให้ Windows ดาวน์โหลดพารามิเตอร์โมเดลการเรียนรู้ของเครื่องที่อัปเดตแล้ว ซึ่งใช้ในการคาดการณ์ความล้มเหลวของดิสก์จัดเก็บข้อมูล</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>สภาพแวดล้อมการกู้คืน Windows</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>เปิดหรือปิดใช้งานสภาพแวดล้อมการกู้คืน Windows และแสดงการกำหนดค่าปัจจุบัน</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

@@ -266,7 +266,6 @@ internal static class WinGetPackageSearchService
 			}
 
 			updates.Add(new WinGetAvailableUpdate(
-				SafeOptionalString(package.Id),
 				SafeString(package.Name, package.Id),
 				SafeOptionalString(GetInstalledVersion(package)?.Version),
 				SafeOptionalString(GetDefaultInstallVersion(package)?.Version)));

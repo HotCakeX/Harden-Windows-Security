@@ -7973,10 +7973,10 @@ Fingerabdruck: {3}</value>
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>Erlaubt Windows, aktualisierte Parameter des Machine-Learning-Modells herunterzuladen, die zur Vorhersage von Speicherdatenträgerausfällen verwendet werden.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Windows-Wiederherstellungsumgebung</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Aktiviert oder deaktiviert die Windows-Wiederherstellungsumgebung und zeigt deren aktuelle Konfiguration an.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

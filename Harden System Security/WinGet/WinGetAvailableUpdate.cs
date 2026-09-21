@@ -25,13 +25,11 @@ namespace HardenSystemSecurity.WinGet;
 /// That makes this type usable from processes of the app that never start the XAML application, such as the headless
 /// widget provider COM server.
 /// </summary>
-/// <param name="id">The WinGet package identifier.</param>
 /// <param name="name">The display name of the package.</param>
 /// <param name="installedVersion">The version that is currently installed.</param>
 /// <param name="availableVersion">The version that WinGet offers as the update.</param>
-internal sealed class WinGetAvailableUpdate(string id, string name, string installedVersion, string availableVersion)
+internal sealed class WinGetAvailableUpdate(string name, string installedVersion, string availableVersion)
 {
-	internal string Id => id;
 	internal string Name => name;
 	internal string InstalledVersion => installedVersion;
 	internal string AvailableVersion => availableVersion;

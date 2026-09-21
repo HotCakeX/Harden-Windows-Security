@@ -7973,10 +7973,10 @@
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>Windows को संग्रहण डिस्क विफलता का पूर्वानुमान लगाने के लिए उपयोग किए जाने वाले मशीन लर्निंग मॉडल के अद्यतन पैरामीटर डाउनलोड करने की अनुमति देता है।</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Windows पुनर्प्राप्ति परिवेश</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Windows पुनर्प्राप्ति परिवेश को सक्षम या अक्षम करता है और उसका वर्तमान कॉन्फ़िगरेशन दिखाता है।</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

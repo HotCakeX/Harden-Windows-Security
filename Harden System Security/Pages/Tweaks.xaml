@@ -650,7 +650,7 @@
                                         Severity="{x:Bind ViewModel.WinHttpAutoProxyInfoBar.Severity, Mode=OneWay}"/>
                     <customUI:SettingsCardV2 x:Uid="ResetSystemHttpProxySettingsCard">
                         <customUI:SettingsCardV2.HeaderIcon>
-                            <FontIcon Glyph="&#xE968;"/>
+                            <FontIcon Glyph="&#xEBDE;"/>
                         </customUI:SettingsCardV2.HeaderIcon>
                         <Button x:Uid="ResetButton"
                                 Style="{StaticResource AccentButtonStyle}"
@@ -694,16 +694,23 @@
                                         Title="{x:Bind ViewModel.WindowsReInfoBar.Title, Mode=OneWay}"
                                         Message="{x:Bind ViewModel.WindowsReInfoBar.Message, Mode=OneWay}"
                                         IsOpen="{x:Bind ViewModel.WindowsReInfoBar.IsOpen, Mode=TwoWay}"
-                                        IsClosable="False"
+                                        IsClosable="{x:Bind ViewModel.WindowsReInfoBar.IsClosable, Mode=OneWay}"
                                         Severity="{x:Bind ViewModel.WindowsReInfoBar.Severity, Mode=OneWay}"/>
-                    <customUI:SettingsCardV2 x:Uid="WindowsRecoveryEnvironmentSettingsCard">
-                        <customUI:SettingsCardV2.HeaderIcon>
-                            <FontIcon Glyph="&#xE774;"/>
-                        </customUI:SettingsCardV2.HeaderIcon>
+                    <CCToolKit:SettingsExpander x:Uid="WindowsRecoveryEnvironmentSettingsExpander">
+                        <CCToolKit:SettingsExpander.HeaderIcon>
+                            <FontIcon Glyph="&#xEBC4;"/>
+                        </CCToolKit:SettingsExpander.HeaderIcon>
                         <ToggleSwitch IsOn="{x:Bind ViewModel.WindowsReIsOn, Mode=OneWay}"
                                       IsEnabled="{x:Bind ViewModel.WindowsReIsEnabled, Mode=OneWay}"
                                       Toggled="{x:Bind ViewModel.WindowsRe_Toggled}"/>
-                    </customUI:SettingsCardV2>
+                        <CCToolKit:SettingsExpander.Items>
+                            <CCToolKit:SettingsCard ContentAlignment="Left">
+                                <TextBlock Text="{x:Bind ViewModel.WindowsReDetails, Mode=OneWay}"
+                                           IsTextSelectionEnabled="True"
+                                           TextWrapping="Wrap"/>
+                            </CCToolKit:SettingsCard>
+                        </CCToolKit:SettingsExpander.Items>
+                    </CCToolKit:SettingsExpander>
                 </StackPanel>
 
             </StackPanel>

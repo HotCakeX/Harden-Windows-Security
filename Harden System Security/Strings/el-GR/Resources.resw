@@ -7973,10 +7973,10 @@
   <data name="DiskHealthModelUpdatesSettingsCard.Description" xml:space="preserve">
     <value>Επιτρέπει στα Windows να λαμβάνουν ενημερωμένες παραμέτρους μοντέλου μηχανικής μάθησης που χρησιμοποιούνται για την πρόβλεψη βλάβης του δίσκου αποθήκευσης.</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Header" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Header" xml:space="preserve">
     <value>Περιβάλλον αποκατάστασης των Windows</value>
   </data>
-  <data name="WindowsRecoveryEnvironmentSettingsCard.Description" xml:space="preserve">
+  <data name="WindowsRecoveryEnvironmentSettingsExpander.Description" xml:space="preserve">
     <value>Ενεργοποιεί ή απενεργοποιεί το Περιβάλλον αποκατάστασης των Windows και εμφανίζει την τρέχουσα διαμόρφωσή του.</value>
   </data>
   <data name="LiveSystemIntelligenceToggleButton.ToolTipService.ToolTip" xml:space="preserve">

@@ -31,3 +31,54 @@ internal sealed partial class GroupInfoListForPackagedAppView(IEnumerable<Packag
 
 	public override string ToString() => "Group " + Key;
 }
+
+/// <summary>
+/// Compares the group keys of <see cref="GroupInfoListForPackagedAppView"/> so the SemanticZoom groups are ordered
+/// in a way that is useful to the user: letters first, then digits, then every other character.
+/// </summary>
+internal sealed class PackagedAppGroupKeyComparer : IComparer<string>
+{
+	/// <summary>
+	/// The single shared instance, the comparer is stateless.
+	/// </summary>
+	internal static readonly PackagedAppGroupKeyComparer Instance = new();
+
+	private PackagedAppGroupKeyComparer() { }
+
+	/// <summary>
+	/// Gets the ordering rank of a group key. Lower ranks are displayed first.
+	/// </summary>
+	/// <param name="key">The group key to rank.</param>
+	/// <returns>0 for letters, 1 for digits and 2 for anything else, including empty keys.</returns>
+	private static int GetRank(string? key)
+	{
+		if (string.IsNullOrEmpty(key))
+		{
+			return 2;
+		}
+
+		char firstCharacter = key[0];
+
+		if (char.IsLetter(firstCharacter))
+		{
+			return 0;
+		}
+
+		return char.IsDigit(firstCharacter) ? 1 : 2;
+	}
+
+	public int Compare(string? x, string? y)
+	{
+		int xRank = GetRank(x);
+		int yRank = GetRank(y);
+
+		// Groups in different ranks are ordered by their rank alone, so symbol groups always end up at the very end.
+		if (xRank != yRank)
+		{
+			return xRank.CompareTo(yRank);
+		}
+
+		// Groups within the same rank keep the previous alphabetical ordering.
+		return StringComparer.OrdinalIgnoreCase.Compare(x, y);
+	}
+}

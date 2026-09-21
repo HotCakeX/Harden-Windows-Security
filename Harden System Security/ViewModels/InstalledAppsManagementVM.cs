@@ -434,7 +434,7 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 				items: group.Where(app => app.MatchesSearch(searchKeyword)),
 				key: group.Key))
 			.Where(group => group.Count != 0)
-			.OrderBy(group => group.Key, StringComparer.OrdinalIgnoreCase)
+			.OrderBy(group => group.Key, PackagedAppGroupKeyComparer.Instance)
 			.ToList();
 	}
 
@@ -602,10 +602,11 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Sorts app groups by their displayed SemanticZoom key so the zoomed-out letters are shown alphabetically.
+	/// Sorts app groups by their displayed SemanticZoom key so the zoomed-out letters are shown alphabetically,
+	/// with digit groups after them and symbol groups last.
 	/// </summary>
 	private static List<GroupInfoListForPackagedAppView> SortPackagedAppGroups(IEnumerable<GroupInfoListForPackagedAppView> groups) =>
-		 groups.OrderBy(static group => group.Key, StringComparer.OrdinalIgnoreCase).ToList();
+		 groups.OrderBy(static group => group.Key, PackagedAppGroupKeyComparer.Instance).ToList();
 
 	private static IEnumerable<PackagedAppView> GetAllLoadedApps(IEnumerable<GroupInfoListForPackagedAppView> groups) =>
 		groups.SelectMany(static group => group);

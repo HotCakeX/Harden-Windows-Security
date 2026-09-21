@@ -1184,6 +1184,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		const string GamingBundleIconFolder = "ms-appx:///Assets/WinGetManagementAppBundles/Gaming/";
 		const string DebuggingBundleIconFolder = "ms-appx:///Assets/WinGetManagementAppBundles/Debugging/";
 		const string ProductivityBundleIconFolder = "ms-appx:///Assets/WinGetManagementAppBundles/Productivity/";
+		const string SecurityBundleIconFolder = "ms-appx:///Assets/WinGetManagementAppBundles/Security/";
 		List<WinGetPackageBundle> bundles = new(4);
 		bundles.Add(new WinGetPackageBundle(
 			"Development",
@@ -1194,7 +1195,8 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 				new WinGetPackageBundlePackage("Microsoft.VisualStudioCode", "Visual Studio Code", new Uri(DevelopmentBundleIconFolder + "icons8-visual-studio-code.svg")),
 				new WinGetPackageBundlePackage("GitHub.GitHubDesktop", "GitHub Desktop", new Uri(DevelopmentBundleIconFolder + "icons8-github.svg"),displayIconBackground: true),
 				new WinGetPackageBundlePackage("Microsoft.PowerShell", "PowerShell", new Uri(DevelopmentBundleIconFolder + "icons8-powershell.svg"), displayIconBackground: true),
-				new WinGetPackageBundlePackage("Rustlang.Rustup", "Rust Language", new Uri(DevelopmentBundleIconFolder + "icons8-rust-programming-language.svg"))
+				new WinGetPackageBundlePackage("Rustlang.Rustup", "Rust Language", new Uri(DevelopmentBundleIconFolder + "icons8-rust-programming-language.svg")),
+				new WinGetPackageBundlePackage("Microsoft.IntelligentTerminal", "Intelligent Terminal", new Uri(DevelopmentBundleIconFolder + "intelligent-terminal.svg"))
 			]));
 		bundles.Add(new WinGetPackageBundle(
 			"Gaming",
@@ -1222,6 +1224,16 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 				new WinGetPackageBundlePackage("Microsoft.PowerToys", "PowerToys", new Uri(ProductivityBundleIconFolder + "icons8-microsoft-powertoys.svg")),
 				new WinGetPackageBundlePackage("9NT1R1C2HH7J", "ChatGPT", new Uri(ProductivityBundleIconFolder + "icons8-chat-gpt.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName),
 				new WinGetPackageBundlePackage("XPDP273C0XHQH2", "Adobe Acrobat Reader DC", new Uri(ProductivityBundleIconFolder + "icons8-adobe-acrobat-reader.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName)
+			]));
+		bundles.Add(new WinGetPackageBundle(
+			"Security",
+			[
+				new WinGetPackageBundlePackage("9PNG1JDDTGP8", "AppControl Manager", new Uri(SecurityBundleIconFolder + "AppControl Manager.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName),
+				new WinGetPackageBundlePackage("9P3BDTHKR7KS", "MCP App for Harden System Security", new Uri(SecurityBundleIconFolder + "MCP For Harden System Security.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName),
+				new WinGetPackageBundlePackage("TorProject.TorBrowser", "Tor Browser", new Uri(SecurityBundleIconFolder + "Tor.svg")),
+				new WinGetPackageBundlePackage("NextDNS.NextDNS", "NextDNS", new Uri(SecurityBundleIconFolder + "NextDNS.svg")),
+				new WinGetPackageBundlePackage("Cloudflare.Warp", "Cloudflare WARP", new Uri(SecurityBundleIconFolder + "cloudflare.svg")),
+				new WinGetPackageBundlePackage("MullvadVPN.MullvadVPN", "Mullvad VPN", new Uri(SecurityBundleIconFolder + "mullvad.svg"))
 			]));
 		return bundles;
 	}

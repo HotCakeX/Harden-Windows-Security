@@ -202,6 +202,8 @@ At the top of the System Overview area, next to the section title, is a button t
 
 Clipboard Monitor watches for newly copied text and automatically scans it using Microsoft Defender's Antimalware Scan Interface (AMSI). It helps protect you from clipboard-based attacks involving malicious commands, scripts, downloaders, or other dangerous text copied from websites, emails, documents, or messages.
 
+You can test AMSI active scan used by the Harden System Security app by copying the scripts mentioned by Microsoft [**in this demo**](https://learn.microsoft.com/defender-endpoint/mde-demonstration-amsi). Instead of waiting for potentially malicious clipboard content to be pasted or saved in a file and then detected by Microsoft Defender, Harden System Security scans it proactively. If AMSI identifies the content as malicious, the app immediately removes it from the active clipboard, preventing it from being pasted into documents, terminals, or other applications.
+
 The management panel lets you:
 
 - See whether Clipboard Monitor is currently enabled or disabled.

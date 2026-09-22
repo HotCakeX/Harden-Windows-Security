@@ -57,6 +57,7 @@
   </ItemGroup>
   <!-- Include WinUI3 specific files so non-WinUI builds won't use these -->
   <ItemGroup Condition="'$(UseWinUI)' == 'true'">
+    <Compile Include="$(MSBuildThisFileDirectory)Others\DependentsAnalyzer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)QR.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)UnelevatedOperations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DoDDoWCertificateMgr.cs" />

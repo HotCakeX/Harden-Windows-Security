@@ -1263,6 +1263,44 @@ internal sealed partial class InstalledAppsManagementVM : ViewModelBase
 		}
 	}
 
+	#region Dependents analysis
+
+	/// <summary>
+	/// Runs the optional dependents analysis over every app that is currently loaded in the list.
+	/// </summary>
+	internal async void AnalyzeDependents_Click()
+	{
+		try
+		{
+			if (AppsListItemsSourceBackingList.Count == 0)
+			{
+				MainInfoBar.WriteWarning("There are no installed apps loaded to analyze. Refresh the list first.");
+				return;
+			}
+
+			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
+			MainInfoBar.WriteInfo("Analyzing dependents by building the declared dependency graph of every package on the system.");
+
+			List<PackagedAppView> appsToAnalyze = GetAllLoadedApps(AppsListItemsSourceBackingList).ToList();
+
+			await DependentsAnalyzer.AnalyzeAsync(appsToAnalyze);
+
+			MainInfoBar.WriteSuccess(string.Format(CultureInfo.InvariantCulture, "Dependents analysis completed for {0} apps.", appsToAnalyze.Count));
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+			MainInfoBar.IsClosable = true;
+		}
+	}
+
+	#endregion
+
 	#region Export to JSON
 
 	/// <summary>

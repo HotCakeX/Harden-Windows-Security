@@ -58,6 +58,11 @@ internal sealed partial class PackagedAppView(
 {
 	public event PropertyChangedEventHandler? PropertyChanged;
 
+	/// <summary>
+	/// Placeholder shown in the dependents section before the optional dependents analysis has been run.
+	/// </summary>
+	private const string DependentsNotAnalyzedText = "Not analyzed yet. Use the Analyze Dependents button to find out what depends on this app.";
+
 	[JsonInclude]
 	[JsonPropertyName("Display Name")]
 	internal string DisplayName => displayName;
@@ -182,6 +187,23 @@ internal sealed partial class PackagedAppView(
 	internal string Dependencies => dependencies;
 
 	[JsonInclude]
+	[JsonPropertyName("Dependents")]
+	internal string Dependents
+	{
+		get; private set
+		{
+			if (string.Equals(field, value, StringComparison.Ordinal))
+			{
+				return;
+			}
+
+			field = value;
+			OnPropertyChanged();
+			RefreshSearchText();
+		}
+	} = DependentsNotAnalyzedText;
+
+	[JsonInclude]
 	[JsonPropertyName("IsPartiallyStaged")]
 	internal string IsPartiallyStaged => isPartiallyStaged;
 
@@ -292,7 +314,8 @@ internal sealed partial class PackagedAppView(
 		capabilities,
 		dependencies,
 		string.Empty,
-		string.Empty);
+		string.Empty,
+		DependentsNotAnalyzedText);
 
 	internal bool TryBeginStorageDetailsLoad()
 	{
@@ -321,6 +344,11 @@ internal sealed partial class PackagedAppView(
 		TotalUsage = newTotalUsage;
 	}
 
+	/// <summary>
+	/// Writes the outcome of the optional dependents analysis into this app.
+	/// </summary>
+	internal void SetDependents(string dependentsText) => Dependents = dependentsText;
+
 	internal void SetLoopbackDetails(string sid, bool isExempt, string statusText)
 	{
 		AppContainerSid = sid;
@@ -347,7 +375,8 @@ internal sealed partial class PackagedAppView(
 		Capabilities,
 		Dependencies,
 		LoopbackExemptionStatus,
-		AppContainerSid);
+		AppContainerSid,
+		Dependents);
 
 	private static string BuildSearchText(params string[] values) =>
 		string.Join('\n', values.Where(static value => !string.IsNullOrWhiteSpace(value)));

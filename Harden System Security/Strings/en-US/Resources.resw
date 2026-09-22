@@ -8039,4 +8039,11 @@ Thumbprint: {3}</value>
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 Seconds</value>
   </data>
+  <!--NEW-->
+  <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>Dependents</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>Analyze Dependents</value>
+  </data>
 </root>

@@ -45,7 +45,7 @@ internal static class GetAppsList
 	private readonly record struct PackagedAppManifestDetails(string Capabilities, int CapabilityCount);
 
 	// Package Manager object used by the PFN section
-	private static readonly PackageManager packageManager = new();
+	internal static readonly PackageManager packageManager = new();
 
 	internal static readonly ConcurrentDictionary<string, string> SIDToNameDictionary = new(StringComparer.Ordinal);
 

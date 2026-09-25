@@ -617,6 +617,25 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 				SelectedLogs = AllFileIdentities;
 			}
 
+			// If the Policy To Add Logs To that user selected is a Signed policy and user chose to deploy it,
+			// Obtain and verify the certificate requirement for its signing and deployment.
+			string? signingCertificatePath = null;
+			string? signingCertificateCommonName = null;
+
+			if (DeployPolicyToggle && SelectedCreationMethod is 0 && PolicyToAddLogsTo is not null &&
+				!PolicyToAddLogsTo.PolicyObj.Rules.Any(static rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
+			{
+				using SigningDetailsDialog signingDialog = new(PolicyToAddLogsTo.PolicyObj);
+
+				if (await signingDialog.ShowAsync() is not ContentDialogResult.Primary)
+				{
+					return;
+				}
+
+				signingCertificatePath = signingDialog.CertificatePath ?? throw new InvalidOperationException("A signing certificate file is required.");
+				signingCertificateCommonName = signingDialog.CertificateCommonName ?? throw new InvalidOperationException("A signing certificate common name is required.");
+			}
+
 			await Task.Run(async () =>
 			{
 				// Separate the signed and unsigned data
@@ -651,6 +670,22 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								// Set the HVCI to Strict
 								PolicyToAddLogsTo.PolicyObj = PolicySettingsManager.UpdateHVCIOptions(PolicyToAddLogsTo.PolicyObj);
 
+								// A signed update must not have a lower version than the signed policy already deployed.
+								if (signingCertificatePath is not null && signingCertificateCommonName is not null)
+								{
+									Version updatedVersion = Version.Parse(PolicyToAddLogsTo.PolicyObj.VersionEx);
+
+									foreach (CiPolicyInfo deployedPolicy in CiToolHelper.GetPolicies(false, true, true))
+									{
+										if (deployedPolicy.IsSignedPolicy && string.Equals(deployedPolicy.PolicyID, PolicyToAddLogsTo.PolicyObj.PolicyID.Trim('{', '}'), StringComparison.OrdinalIgnoreCase) &&
+											deployedPolicy.Version is not null && updatedVersion < deployedPolicy.Version)
+										{
+											// The updated signed policy version cannot be lower than the deployed signed policy version.
+											PolicyToAddLogsTo.PolicyObj.VersionEx = VersionIncrementer.AddVersion(deployedPolicy.Version).ToString();
+											break;
+										}
+									}
+								}
 								// Save the merged policy to the user selected file path if it was provided
 								if (PolicyToAddLogsTo.FilePath is not null)
 								{
@@ -669,11 +704,35 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 								{
 									PreDeploymentChecks.CheckForSignatureConflict(PolicyToAddLogsTo.PolicyObj);
 
-									// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
-									if (SupplementalForSelf.IsEligible(PolicyToAddLogsTo.PolicyObj))
-										SupplementalForSelf.Deploy(PolicyToAddLogsTo.PolicyObj.PolicyID);
+									byte[] cipContent = Management.ConvertXMLToBinary(PolicyToAddLogsTo.PolicyObj);
 
-									CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(PolicyToAddLogsTo.PolicyObj));
+									// If the policy user selected is signed
+									if (signingCertificatePath is not null && signingCertificateCommonName is not null)
+									{
+										cipContent = CommonCore.Signing.Main.SignCIP(cipContent, signingCertificateCommonName);
+
+										// Replace an unsigned policy with the same ID before deploying.
+										foreach (CiPolicyInfo deployedPolicy in CiToolHelper.GetPolicies(false, true, true))
+										{
+											if (!deployedPolicy.IsSignedPolicy && string.Equals(deployedPolicy.PolicyID, PolicyToAddLogsTo.PolicyObj.PolicyID.Trim('{', '}'), StringComparison.OrdinalIgnoreCase))
+											{
+												CiToolHelper.RemovePolicy(deployedPolicy.PolicyID);
+											}
+										}
+
+										// A signed base policy requires a signed AppControl Manager supplemental policy.
+										if (SupplementalForSelf.IsEligible(PolicyToAddLogsTo.PolicyObj))
+										{
+											SupplementalForSelf.DeploySigned(PolicyToAddLogsTo.PolicyObj.PolicyID, signingCertificatePath, signingCertificateCommonName);
+										}
+									}
+									else if (SupplementalForSelf.IsEligible(PolicyToAddLogsTo.PolicyObj))
+									{
+										// Preserve the existing unsigned deployment path.
+										SupplementalForSelf.Deploy(PolicyToAddLogsTo.PolicyObj.PolicyID);
+									}
+
+									CiToolHelper.UpdatePolicy(cipContent);
 								}
 							}
 							else

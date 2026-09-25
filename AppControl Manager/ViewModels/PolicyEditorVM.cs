@@ -620,7 +620,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 					foreach (SupplementalPolicySignerRule sig in SignerCollectionCol.SupplementalPolicySigners)
 					{
 						_SupplementalPolicySignersCount++;
-						SignatureRulesCollection.Add(new PolicyEditor.SignatureBasedRulesForListView
+						PolicyEditor.SignatureBasedRulesForListView temp9 = new
 						(
 							certRoot: Convert.ToHexString(sig.SignerElement.CertRoot.Value.Span),
 							certEKU: string.Join(",", sig.SignerElement.CertEKU?.Select(x => x.ID) ?? []),
@@ -631,7 +631,9 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 							id: sig.SignerElement.ID,
 							sourceType: PolicyEditor.SignatureBasedRuleType.SupplementalPolicySigner,
 							source: sig
-						));
+						);
+						SignatureRulesCollection.Add(temp9);
+						SignatureRulesCollectionList.Add(temp9);
 					}
 
 					SupplementalPolicySignersCount = $"• Supplemental Policy Signer Rules count: {_SupplementalPolicySignersCount}";

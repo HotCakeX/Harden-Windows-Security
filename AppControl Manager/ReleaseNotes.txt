@@ -1,7 +1,1 @@
-* The Supplemental and Deny policy creation pages now display all system apps for you to select and create rules for.
-
-* The SSD temperature is now able to be displayed on more devices where it would previously be unavailable.
-
-* Improved the app installation compatibility with certain system types and configurations.
-
-* Updated dependencies to the latest version.
+* You can now deploy Signed policies right in the event logs policy creation and MDE Advanced Hunting pages, resolving the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1219

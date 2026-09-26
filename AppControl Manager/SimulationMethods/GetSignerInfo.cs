@@ -87,7 +87,6 @@ internal static class GetSignerInfo
 		// An empty list to store the output
 		List<SignerX> output = [];
 
-
 		#region
 		// Storing all the FileAttribs in a list
 		IEnumerable<FileAttrib>? fileAttributes = policyObj.FileRules?.OfType<FileAttrib>();

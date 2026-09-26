@@ -72,7 +72,6 @@ internal sealed partial class AnimatedCancellableButtonInitializer(string button
 
 	internal bool OperationStarted { get; set => SP(ref field, value); }
 
-
 	internal void Begin()
 	{
 		wasCancelled = false;

@@ -410,7 +410,6 @@
                 </TeachingTip.IconSource>
             </TeachingTip>
 
-
             <Button x:Name="MinimizeToNotificationAreaButton"
                     x:Uid="MinimizeToNotificationAreaButton"
                     Click="{x:Bind MinimizeToNotificationAreaButton_Click}"

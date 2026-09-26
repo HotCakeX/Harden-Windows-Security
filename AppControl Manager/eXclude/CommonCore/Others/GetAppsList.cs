@@ -712,7 +712,6 @@ internal static class GetAppsList
 		}
 	}
 
-
 	private static readonly EnumerationOptions EnumerationOptions = new()
 	{
 		AttributesToSkip = FileAttributes.ReparsePoint,

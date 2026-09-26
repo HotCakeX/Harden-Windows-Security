@@ -1038,7 +1038,6 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		}
 	}
 
-
 	// Function binding getters used by x:Bind for the Status Overview checkboxes.
 	// Return bool? because CheckBox.IsChecked is nullable.
 	// Default to showing all items when VM not ready

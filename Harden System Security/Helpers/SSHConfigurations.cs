@@ -84,7 +84,6 @@ internal static class SSHConfigurations
 		}
 	}
 
-
 	/// <summary>
 	/// First checks user configurations and then system-wide configurations for secure MACs configurations of the SSH client
 	/// </summary>
@@ -119,7 +118,6 @@ internal static class SSHConfigurations
 				}
 			}
 		}
-
 
 		Logger.Write(Atlas.GetStr("CheckingSecureMACsInSSHClientSystemWideConfiguration"), LogTypeIntel.Information);
 

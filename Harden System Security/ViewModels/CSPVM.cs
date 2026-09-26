@@ -649,7 +649,7 @@ internal sealed partial class CSPVM : ViewModelBase
 							collector.Add(new CspPolicyEntry(
 								nodeName,
 								EnsureDotSlash(currentPath),
-								props.Element("Description")?.Value?.Trim(),
+								props.Element("Description")?.Value.Trim(),
 								format.Elements().FirstOrDefault()?.Name.LocalName.Trim() ?? Atlas.GetStr("UnknownState"),
 								props.Element("DefaultValue")?.Value,
 								string.Join(", ", props.Element("AccessType")?.Elements().Select(static e => e.Name.LocalName) ?? []),

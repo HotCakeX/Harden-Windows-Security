@@ -112,7 +112,6 @@ internal sealed partial class FeatureHighlightsCarouselDialog : ContentDialog, I
 		Resources["ContentDialogMaxWidth"] = 5000;
 		Resources["ContentDialogMaxHeight"] = 5000;
 
-
 		_slides = [Slide0, Slide1, Slide2, Slide3];
 		_contentRoots = [Slide0Content, Slide1Content, Slide2Content, Slide3Content];
 		_contentHosts =

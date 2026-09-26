@@ -1,1 +1,3 @@
 * New feature in the Installed Apps Management page: Added an installed-apps action that builds an inverted package dependency graph and displays which packages depend on each app. Basically like how Windows Services display dependencies and dependents of each service. This helps you make an informed decision when deciding to uninstall a framework package or an app.
+
+* Updated dependencies to the latest versions.

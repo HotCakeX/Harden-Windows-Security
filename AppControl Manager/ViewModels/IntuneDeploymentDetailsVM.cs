@@ -35,7 +35,6 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 {
 	internal IntuneDeploymentDetailsVM() => _ = Atlas.AppDispatcher.TryEnqueue(CalculateColumnWidths);
 
-
 	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>

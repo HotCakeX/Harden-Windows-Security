@@ -321,7 +321,6 @@
 
                         <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10" XYFocusKeyboardNavigation="Enabled">
 
-
                             <SplitButton IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                          x:Name="MainSplitButton"
                                          ToolTipService.ToolTip="Create the supplemental policy based on the MDE Advanced Hunting logs"

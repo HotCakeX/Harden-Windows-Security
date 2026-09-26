@@ -298,7 +298,6 @@ internal static class AuthRootProcessor
 		"WindowsServerUpdateServices"
 	];
 
-
 	internal static readonly StoreLocation[] storeLocations =
 	[
 		StoreLocation.CurrentUser,
@@ -955,10 +954,10 @@ internal static class AuthRootProcessor
 	/// <summary>
 	/// Decodes a DER SEQUENCE of OBJECT IDENTIFIER values (EKUs).
 	/// </summary>
-	private static List<string> DecodeEkuSequence(ReadOnlySpan<byte> der)
+	private static List<string> DecodeEkuSequence(ReadOnlyMemory<byte> der)
 	{
 		List<string> oids = [];
-		AsnReader seqReader = new(der.ToArray(), AsnEncodingRules.DER);
+		AsnReader seqReader = new(der, AsnEncodingRules.DER);
 		AsnReader innerSeq = seqReader.ReadSequence();
 		if (seqReader.HasData)
 		{
@@ -1200,7 +1199,7 @@ internal static class AuthRootProcessor
 
 						if (!rootSha256CacheByRootSha1.TryGetValue(rootSha1, out rootSha256Hex!))
 						{
-							rootSha256Hex = ComputeCertSha256Hex(rootCert);
+							rootSha256Hex = rootCert.GetCertHashString(HashAlgorithmName.SHA256);
 							rootSha256CacheByRootSha1[rootSha1] = rootSha256Hex;
 						}
 
@@ -1293,15 +1292,6 @@ internal static class AuthRootProcessor
 		string subject = cert.Subject ?? string.Empty;
 		string issuer = cert.Issuer ?? string.Empty;
 		return subject.Equals(issuer, StringComparison.OrdinalIgnoreCase);
-	}
-
-	/// <summary>
-	/// Computes uppercase hex SHA256 of the certificate's raw data.
-	/// </summary>
-	internal static string ComputeCertSha256Hex(X509Certificate2 cert)
-	{
-		byte[] hash = SHA256.HashData(cert.RawData);
-		return Convert.ToHexString(hash);
 	}
 }
 

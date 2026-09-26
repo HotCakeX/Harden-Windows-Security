@@ -118,7 +118,6 @@ internal sealed partial class Home : Page, IDisposable, CommonCore.UI.IInvisible
 		base.OnNavigatingFrom(e);
 	}
 
-
 	private static readonly Random _random = new(0x5A17C3);
 
 	// Global timings

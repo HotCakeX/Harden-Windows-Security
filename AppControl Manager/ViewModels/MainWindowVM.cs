@@ -235,7 +235,6 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 		typeof(Pages.SettingsBackupRestore)
 		];
 
-
 	internal void RebuildBreadcrumbMappings()
 	{
 		breadCrumbMappingsV2.Clear();

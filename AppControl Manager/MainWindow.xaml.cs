@@ -1658,7 +1658,6 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		transferIconVisual.StartAnimationGroup(animationGroup);
 	}
 
-
 	#region Event handlers for the Sidebar's Policies Library
 
 	private async void OnSwipeSaveAsXML(SwipeItem sender, SwipeItemInvokedEventArgs args)

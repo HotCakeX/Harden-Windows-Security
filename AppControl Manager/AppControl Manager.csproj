@@ -65,7 +65,7 @@
         <AssemblyName>AppControlManager</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>2.0.737.0</FileVersion>
+        <FileVersion>2.0.738.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
 
         <AssemblyProduct>AppControlManager</AssemblyProduct>
@@ -228,9 +228,9 @@
 
         <!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.90.0" />
-        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.90.0" />
-        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.90.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.90.1" />
+        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.90.1" />
+        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.90.1" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.1.26425.128" />
         <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.9" />

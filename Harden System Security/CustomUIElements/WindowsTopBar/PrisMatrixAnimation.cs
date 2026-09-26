@@ -205,7 +205,6 @@ internal sealed partial class PrisMatrixAnimation : UserControl
 				Vector3 v1 = Project(triangle.B, triangle.Centroid, scale, edge, face.FlipSign, translateZ, cosTilt, sinTilt, cosYaw, sinYaw);
 				Vector3 v2 = Project(triangle.C, triangle.Centroid, scale, edge, face.FlipSign, translateZ, cosTilt, sinTilt, cosYaw, sinYaw);
 
-
 				float divisor0 = perspective - v0.Z;
 				float divisor1 = perspective - v1.Z;
 				float divisor2 = perspective - v2.Z;

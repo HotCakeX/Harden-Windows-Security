@@ -49,7 +49,6 @@ internal abstract class SizerBase : UserControl
 	private const double ThumbWidth = 4;
 	private const double ThumbHeight = 24;
 	private const double ThumbRadius = 2;
-	private const double DragIncrement = 1d;
 	private const double KeyboardIncrement = 8d;
 
 	protected SizerBase()
@@ -209,8 +208,8 @@ internal abstract class SizerBase : UserControl
 
 	private void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
 	{
-		double horizontalChange = Math.Truncate(e.Cumulative.Translation.X / DragIncrement) * DragIncrement;
-		double verticalChange = Math.Truncate(e.Cumulative.Translation.Y / DragIncrement) * DragIncrement;
+		double horizontalChange = Math.Truncate(e.Cumulative.Translation.X);
+		double verticalChange = Math.Truncate(e.Cumulative.Translation.Y);
 
 		if (FlowDirection == FlowDirection.RightToLeft) horizontalChange *= -1;
 
@@ -238,7 +237,6 @@ internal abstract class SizerBase : UserControl
 	}
 
 	private void OnIsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e) => UpdateVisualState();
-
 
 	private static readonly DependencyProperty OrientationProperty =
 		DependencyProperty.Register(nameof(Orientation), typeof(Orientation), typeof(SizerBase), new PropertyMetadata(Orientation.Vertical, static (d, e) => ((SizerBase)d).OnOrientationChanged()));

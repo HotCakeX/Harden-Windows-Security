@@ -65,7 +65,7 @@ internal static class McpServer
 
 				if (!IsValidJsonRpcEnvelope(root, out JsonElement methodElement, out bool hasId, out JsonElement id))
 				{
-					await WriteRequestErrorAsync(output, default, false, -32600, "Invalid Request.").ConfigureAwait(false);
+					await WriteRequestErrorAsync(output, -32600, "Invalid Request.").ConfigureAwait(false);
 					continue;
 				}
 
@@ -118,7 +118,7 @@ internal static class McpServer
 			catch (Exception)
 			{
 				// Keep the stdio server alive after an unexpected request-processing failure without exposing internal details.
-				await WriteRequestErrorAsync(output, default, false, -32603, "Internal error.").ConfigureAwait(false);
+				await WriteRequestErrorAsync(output, -32603, "Internal error.").ConfigureAwait(false);
 			}
 		}
 	}
@@ -706,7 +706,7 @@ internal static class McpServer
 		await output.FlushAsync().ConfigureAwait(false);
 	}
 
-	private static async Task WriteRequestErrorAsync(Stream output, JsonElement id, bool hasId, int code, string message)
+	private static async Task WriteRequestErrorAsync(Stream output, int code, string message)
 	{
 		ArrayBufferWriter<byte> responseBuffer = new(160);
 		using (Utf8JsonWriter writer = new(responseBuffer))
@@ -714,21 +714,14 @@ internal static class McpServer
 			writer.WriteStartObject();
 			writer.WriteString("jsonrpc", "2.0");
 			writer.WritePropertyName("id");
-			if (hasId)
-			{
-				id.WriteTo(writer);
-			}
-			else
-			{
-				writer.WriteNullValue();
-			}
+			writer.WriteNullValue();
 			WriteProtocolError(writer, code, message);
 			writer.WriteEndObject();
 		}
 		await WriteResponseAsync(output, responseBuffer.WrittenMemory).ConfigureAwait(false);
 	}
 
-	private static Task WriteParseErrorAsync(Stream output) => WriteRequestErrorAsync(output, default, false, -32700, "Parse error.");
+	private static Task WriteParseErrorAsync(Stream output) => WriteRequestErrorAsync(output, -32700, "Parse error.");
 
 	private sealed class ToolExecutionResult
 	{

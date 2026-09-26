@@ -85,7 +85,6 @@ internal sealed class CbomHost
 	internal bool IsFIPSPolicyEnabled => Helpers.IsFIPSEnabled();
 }
 
-
 internal static class Helpers
 {
 	internal static string GetOsVersion()

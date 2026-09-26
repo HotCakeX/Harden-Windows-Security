@@ -47,7 +47,7 @@ internal static class DeserializationOverrides
 			}
 			else
 			{
-				_ = reader.Read();
+				reader.Skip();
 			}
 			return null;
 		}
@@ -80,7 +80,7 @@ internal static class DeserializationOverrides
 			}
 			else
 			{
-				_ = reader.Read();
+				reader.Skip();
 			}
 			return null;
 		}

@@ -137,7 +137,6 @@ internal static class CustomDeserialization
 			EKUs = []
 		};
 
-
 		XmlElement? ekusElement = root["EKUs", Atlas.SiPolicyNamespace];
 		HashSet<string> EKUIDsCol = new(capacity: ekusElement?.ChildNodes.Count ?? 0);
 		if (ekusElement is not null)
@@ -1295,7 +1294,6 @@ internal static class CustomDeserialization
 
 		return new Setting(settingValue, provider, key, valueName);
 	}
-
 
 	private static AppIDTags DeserializeAppIDTags(XmlElement elem)
 	{

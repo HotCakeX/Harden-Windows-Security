@@ -19,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.ToolKits;
 using Microsoft.UI.Xaml;
-using Windows.Graphics;
 using Microsoft.UI.Dispatching;
 
 // To learn more about WinUI and the WinUI project structure see: http://aka.ms/winui-project-info

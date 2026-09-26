@@ -65,7 +65,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		_ = ProcessStarter.RunCommand(Atlas.ComManagerProcessPath, args);
 	}
 
-
 	/// <summary>
 	/// Used to supply extra information regarding Microsoft recommended driver block rules
 	/// </summary>
@@ -800,7 +799,6 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 
 		return new(policyObj);
 	}
-
 
 	// Captures the first <code class="lang-xml">...</code> block (case-insensitive) into the named group "xml".
 	// Singleline so '.' spans newlines.

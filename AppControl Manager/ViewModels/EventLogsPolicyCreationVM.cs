@@ -192,10 +192,8 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 		}
 	}
 
-
 	internal bool ScanLogsProgressRingIsActive { get; set => SP(ref field, value); }
 	internal Visibility ScanLogsProgressRingVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
 
 	internal string? PolicyNameTextBox { get; set => SPT(ref field, value); }
 
@@ -720,15 +718,15 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 											}
 										}
 
-										// A signed base policy requires a signed AppControl Manager supplemental policy.
+										// If a Signed base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 										if (SupplementalForSelf.IsEligible(PolicyToAddLogsTo.PolicyObj))
 										{
 											SupplementalForSelf.DeploySigned(PolicyToAddLogsTo.PolicyObj.PolicyID, signingCertificatePath, signingCertificateCommonName);
 										}
 									}
+									// If a base policy is being deployed, ensure its supplemental policy for AppControl Manager also gets deployed
 									else if (SupplementalForSelf.IsEligible(PolicyToAddLogsTo.PolicyObj))
 									{
-										// Preserve the existing unsigned deployment path.
 										SupplementalForSelf.Deploy(PolicyToAddLogsTo.PolicyObj.PolicyID);
 									}
 

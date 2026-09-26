@@ -508,7 +508,6 @@
                         </customUI:InfoBarV2>
                     </CCToolKit:SettingsExpander.ItemsHeader>
 
-
                     <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <customUI:AnimatedCancellableButton x:Uid="CreateDenyPolicyButton"
@@ -701,7 +700,6 @@
 
                 </CCToolKit:SettingsExpander>
 
-
                 <!-- Package Family Name (PFN) -->
                 <CCToolKit:SettingsExpander x:Uid="CreateDenyPolicyPFNSettingsExpander"
                                            Expanded="{x:Bind ViewModel.PFNSettingsCard_Expanded}"
@@ -891,7 +889,6 @@
                     </CCToolKit:SettingsExpander.Items>
 
                 </CCToolKit:SettingsExpander>
-
 
                 <!-- Custom File Path Rules -->
                 <CCToolKit:SettingsExpander x:Uid="DenyPolicyCustomPatternBasedFileRuleSettingsExpander"

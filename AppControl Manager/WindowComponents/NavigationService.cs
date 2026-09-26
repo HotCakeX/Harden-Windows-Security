@@ -33,7 +33,6 @@ using WinRT;
 namespace AppControlManager.WindowComponents;
 #endif
 #if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity.Traverse;
 using AppControlManager.WindowComponents;
 using HardenSystemSecurity.ViewModels;
 namespace HardenSystemSecurity.WindowComponents;

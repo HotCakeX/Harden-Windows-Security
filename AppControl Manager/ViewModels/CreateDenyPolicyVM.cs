@@ -168,7 +168,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal string FilesAndFoldersScalabilityButtonContent { get; set => SP(ref field, value); } = Atlas.GetStr("Scalability") + "2";
 
-
 	// Column width dependency properties
 	internal GridLength ColumnWidth1 { get; set => SP(ref field, value); }
 	internal GridLength ColumnWidth2 { get; set => SP(ref field, value); }
@@ -701,7 +700,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 		PFNBasedAppsListItemsSourceSelectedItems.Clear();
 	}
 
-
 	/// <summary>
 	/// Event handler to display the selected apps count on the UI TextBlock
 	/// </summary>
@@ -741,7 +739,6 @@ internal sealed partial class CreateDenyPolicyVM : ViewModelBase, IDisposable
 			packagesLoadedOnExpand = true;
 		}
 	}
-
 
 	/// <summary>
 	/// Main button's event handler - Create Deny policy based on PFNs

@@ -89,7 +89,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 	#region WinGet package bundles
 
 	private CancellationTokenSource? bundleOperationCancellationTokenSource;
-	internal readonly List<WinGetPackageBundle> PackageBundles = CreatePackageBundles();
+	internal readonly WinGetPackageBundle[] PackageBundles = CreatePackageBundles();
 
 	internal WinGetPackageBundle? SelectedPackageBundle
 	{
@@ -127,12 +127,12 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 	#endregion
 
-	internal readonly List<string> PackageSearchFieldOptions = ["Default", "Package ID", "App name", "Moniker", "Tag", "Command"];
-	internal readonly List<string> PackageSearchMatchModeOptions = ["Contains, ignore case", "Equals, ignore case", "Equals, match case"];
+	internal readonly string[] PackageSearchFieldOptions = ["Default", "Package ID", "App name", "Moniker", "Tag", "Command"];
+	internal readonly string[] PackageSearchMatchModeOptions = ["Contains, ignore case", "Equals, ignore case", "Equals, match case"];
 	internal readonly ObservableCollection<string> PackageSearchSourceOptions = [];
-	internal readonly List<string> SourceTrustLevelOptions = [PackageCatalogTrustLevel.None.ToString(), PackageCatalogTrustLevel.Trusted.ToString()];
+	internal readonly string[] SourceTrustLevelOptions = [PackageCatalogTrustLevel.None.ToString(), PackageCatalogTrustLevel.Trusted.ToString()];
 	// Keep source type selection constrained to the source types documented by WinGet.
-	internal readonly List<string> SourceTypeOptions = ["Microsoft.PreIndexed.Package", "Microsoft.Rest"];
+	internal readonly string[] SourceTypeOptions = ["Microsoft.PreIndexed.Package", "Microsoft.Rest"];
 	internal readonly string WinGetEngineVersion = WinGetPackageSearchService.GetWinGetEngineVersion();
 
 	internal WinGetManagementVM() => RefreshPackageSearchSourceOptions();
@@ -165,7 +165,7 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 	{
 		get; set
 		{
-			int normalizedValue = Math.Clamp(value, 0, SourceTypeOptions.Count - 1);
+			int normalizedValue = Math.Clamp(value, 0, SourceTypeOptions.Length - 1);
 			_ = SP(ref field, normalizedValue);
 		}
 	}
@@ -419,7 +419,6 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 
 	[DynamicWindowsRuntimeCast(typeof(ListView))]
 	internal void SourcesListView_SelectionChanged(object sender, SelectionChangedEventArgs args) => SelectedSourcesCount = sender is ListView listView ? listView.SelectedItems.Count : 0;
-
 
 	#region WinGet package bundles
 
@@ -1152,64 +1151,65 @@ internal sealed partial class WinGetManagementVM : ViewModelBase, IDisposable
 		}
 	}
 
-	private static List<WinGetPackageBundle> CreatePackageBundles()
+	private static WinGetPackageBundle[] CreatePackageBundles()
 	{
 		const string DevelopmentBundleIconFolder = "ms-appx:///Assets/WinGetManagementAppBundles/Development/";
 		const string GamingBundleIconFolder = "ms-appx:///Assets/WinGetManagementAppBundles/Gaming/";
 		const string DebuggingBundleIconFolder = "ms-appx:///Assets/WinGetManagementAppBundles/Debugging/";
 		const string ProductivityBundleIconFolder = "ms-appx:///Assets/WinGetManagementAppBundles/Productivity/";
 		const string SecurityBundleIconFolder = "ms-appx:///Assets/WinGetManagementAppBundles/Security/";
-		List<WinGetPackageBundle> bundles = new(4);
-		bundles.Add(new WinGetPackageBundle(
-			"Development",
-			[
-				new WinGetPackageBundlePackage("Git.Git", "Git", new Uri(DevelopmentBundleIconFolder + "icons8-git.svg")),
-				new WinGetPackageBundlePackage("Python.Python.3.14", "Python", new Uri(DevelopmentBundleIconFolder + "icons8-python.svg")),
-				new WinGetPackageBundlePackage("Microsoft.VisualStudio.Community", "Visual Studio", new Uri(DevelopmentBundleIconFolder + "icons8-visual-studio.svg")),
-				new WinGetPackageBundlePackage("Microsoft.VisualStudioCode", "Visual Studio Code", new Uri(DevelopmentBundleIconFolder + "icons8-visual-studio-code.svg")),
-				new WinGetPackageBundlePackage("GitHub.GitHubDesktop", "GitHub Desktop", new Uri(DevelopmentBundleIconFolder + "icons8-github.svg"),displayIconBackground: true),
-				new WinGetPackageBundlePackage("Microsoft.PowerShell", "PowerShell", new Uri(DevelopmentBundleIconFolder + "icons8-powershell.svg"), displayIconBackground: true),
-				new WinGetPackageBundlePackage("Rustlang.Rustup", "Rust Language", new Uri(DevelopmentBundleIconFolder + "icons8-rust-programming-language.svg")),
-				new WinGetPackageBundlePackage("Microsoft.IntelligentTerminal", "Intelligent Terminal", new Uri(DevelopmentBundleIconFolder + "intelligent-terminal.svg"))
-			]));
-		bundles.Add(new WinGetPackageBundle(
-			"Gaming",
-			[
-				new WinGetPackageBundlePackage("Valve.Steam", "Steam", new Uri(GamingBundleIconFolder + "icons8-steam.svg")),
-				new WinGetPackageBundlePackage("Discord.Discord", "Discord", new Uri(GamingBundleIconFolder + "icons8-discord.svg")),
-				new WinGetPackageBundlePackage("Mojang.MinecraftLauncher", "Minecraft Launcher", new Uri(GamingBundleIconFolder + "icons8-minecraft.svg")),
-				new WinGetPackageBundlePackage("Blizzard.BattleNet", "BattleNet", new Uri(GamingBundleIconFolder + "icons8-battle.net.svg")),
-				new WinGetPackageBundlePackage("GOG.Galaxy", "GOG Galaxy", new Uri(GamingBundleIconFolder + "icons8-gog-galaxy.svg"))
-			]));
-		bundles.Add(new WinGetPackageBundle(
-			"Investigation Tools",
-			[
-				new WinGetPackageBundlePackage("WiresharkFoundation.Wireshark", "Wireshark", new Uri(DebuggingBundleIconFolder + "icons8-wireshark.svg")),
-				new WinGetPackageBundlePackage("9PGJGD53TN86", "WinDbg", new Uri(DebuggingBundleIconFolder + "icons8-code.svg"), WinGetPackageSearchService.MicrosoftStoreSourceName),
-				new WinGetPackageBundlePackage("Hex-Rays.IDA.Free", "IDA Free", new Uri(DebuggingBundleIconFolder + "icons8-source-code.svg")),
-				new WinGetPackageBundlePackage("Microsoft.Sysinternals.Suite", "Sysinternals", new Uri(DebuggingBundleIconFolder + "icons8-microsoft.svg"))
-			]));
-		bundles.Add(new WinGetPackageBundle(
-			"Productivity",
-			[
-				new WinGetPackageBundlePackage("XPFFH613W8V6LV", "OBS Studio", new Uri(ProductivityBundleIconFolder + "icons8-obs.svg"), WinGetPackageSearchService.MicrosoftStoreSourceName,displayIconBackground: true),
-				new WinGetPackageBundlePackage("VideoLAN.VLC", "VLC Media Player", new Uri(ProductivityBundleIconFolder + "icons8-vlc.svg")),
-				new WinGetPackageBundlePackage("ShareX.ShareX", "ShareX", new Uri(ProductivityBundleIconFolder + "icons8-sharex.svg")),
-				new WinGetPackageBundlePackage("Microsoft.PowerToys", "PowerToys", new Uri(ProductivityBundleIconFolder + "icons8-microsoft-powertoys.svg")),
-				new WinGetPackageBundlePackage("9NT1R1C2HH7J", "ChatGPT", new Uri(ProductivityBundleIconFolder + "icons8-chat-gpt.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName),
-				new WinGetPackageBundlePackage("XPDP273C0XHQH2", "Adobe Acrobat Reader DC", new Uri(ProductivityBundleIconFolder + "icons8-adobe-acrobat-reader.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName)
-			]));
-		bundles.Add(new WinGetPackageBundle(
-			"Security",
-			[
-				new WinGetPackageBundlePackage("9PNG1JDDTGP8", "AppControl Manager", new Uri(SecurityBundleIconFolder + "AppControl Manager.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName),
-				new WinGetPackageBundlePackage("9P3BDTHKR7KS", "MCP App for Harden System Security", new Uri(SecurityBundleIconFolder + "MCP For Harden System Security.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName),
-				new WinGetPackageBundlePackage("TorProject.TorBrowser", "Tor Browser", new Uri(SecurityBundleIconFolder + "Tor.svg")),
-				new WinGetPackageBundlePackage("NextDNS.NextDNS", "NextDNS", new Uri(SecurityBundleIconFolder + "NextDNS.svg")),
-				new WinGetPackageBundlePackage("Cloudflare.Warp", "Cloudflare WARP", new Uri(SecurityBundleIconFolder + "cloudflare.svg")),
-				new WinGetPackageBundlePackage("MullvadVPN.MullvadVPN", "Mullvad VPN", new Uri(SecurityBundleIconFolder + "mullvad.svg"))
-			]));
-		return bundles;
+		return
+		[
+			new WinGetPackageBundle(
+				"Development",
+				[
+					new WinGetPackageBundlePackage("Git.Git", "Git", new Uri(DevelopmentBundleIconFolder + "icons8-git.svg")),
+					new WinGetPackageBundlePackage("Python.Python.3.14", "Python", new Uri(DevelopmentBundleIconFolder + "icons8-python.svg")),
+					new WinGetPackageBundlePackage("Microsoft.VisualStudio.Community", "Visual Studio", new Uri(DevelopmentBundleIconFolder + "icons8-visual-studio.svg")),
+					new WinGetPackageBundlePackage("Microsoft.VisualStudioCode", "Visual Studio Code", new Uri(DevelopmentBundleIconFolder + "icons8-visual-studio-code.svg")),
+					new WinGetPackageBundlePackage("GitHub.GitHubDesktop", "GitHub Desktop", new Uri(DevelopmentBundleIconFolder + "icons8-github.svg"),displayIconBackground: true),
+					new WinGetPackageBundlePackage("Microsoft.PowerShell", "PowerShell", new Uri(DevelopmentBundleIconFolder + "icons8-powershell.svg"), displayIconBackground: true),
+					new WinGetPackageBundlePackage("Rustlang.Rustup", "Rust Language", new Uri(DevelopmentBundleIconFolder + "icons8-rust-programming-language.svg")),
+					new WinGetPackageBundlePackage("Microsoft.IntelligentTerminal", "Intelligent Terminal", new Uri(DevelopmentBundleIconFolder + "intelligent-terminal.svg"))
+			]),
+			new WinGetPackageBundle(
+				"Gaming",
+				[
+					new WinGetPackageBundlePackage("Valve.Steam", "Steam", new Uri(GamingBundleIconFolder + "icons8-steam.svg")),
+					new WinGetPackageBundlePackage("Discord.Discord", "Discord", new Uri(GamingBundleIconFolder + "icons8-discord.svg")),
+					new WinGetPackageBundlePackage("Mojang.MinecraftLauncher", "Minecraft Launcher", new Uri(GamingBundleIconFolder + "icons8-minecraft.svg")),
+					new WinGetPackageBundlePackage("Blizzard.BattleNet", "BattleNet", new Uri(GamingBundleIconFolder + "icons8-battle.net.svg")),
+					new WinGetPackageBundlePackage("GOG.Galaxy", "GOG Galaxy", new Uri(GamingBundleIconFolder + "icons8-gog-galaxy.svg"))
+			]),
+			new WinGetPackageBundle(
+				"Investigation Tools",
+				[
+					new WinGetPackageBundlePackage("WiresharkFoundation.Wireshark", "Wireshark", new Uri(DebuggingBundleIconFolder + "icons8-wireshark.svg")),
+					new WinGetPackageBundlePackage("9PGJGD53TN86", "WinDbg", new Uri(DebuggingBundleIconFolder + "icons8-code.svg"), WinGetPackageSearchService.MicrosoftStoreSourceName),
+					new WinGetPackageBundlePackage("Hex-Rays.IDA.Free", "IDA Free", new Uri(DebuggingBundleIconFolder + "icons8-source-code.svg")),
+					new WinGetPackageBundlePackage("Microsoft.Sysinternals.Suite", "Sysinternals", new Uri(DebuggingBundleIconFolder + "icons8-microsoft.svg"))
+			]),
+			new WinGetPackageBundle(
+				"Productivity",
+				[
+					new WinGetPackageBundlePackage("XPFFH613W8V6LV", "OBS Studio", new Uri(ProductivityBundleIconFolder + "icons8-obs.svg"), WinGetPackageSearchService.MicrosoftStoreSourceName,displayIconBackground: true),
+					new WinGetPackageBundlePackage("VideoLAN.VLC", "VLC Media Player", new Uri(ProductivityBundleIconFolder + "icons8-vlc.svg")),
+					new WinGetPackageBundlePackage("ShareX.ShareX", "ShareX", new Uri(ProductivityBundleIconFolder + "icons8-sharex.svg")),
+					new WinGetPackageBundlePackage("Microsoft.PowerToys", "PowerToys", new Uri(ProductivityBundleIconFolder + "icons8-microsoft-powertoys.svg")),
+					new WinGetPackageBundlePackage("9NT1R1C2HH7J", "ChatGPT", new Uri(ProductivityBundleIconFolder + "icons8-chat-gpt.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName),
+					new WinGetPackageBundlePackage("XPDP273C0XHQH2", "Adobe Acrobat Reader DC", new Uri(ProductivityBundleIconFolder + "icons8-adobe-acrobat-reader.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName)
+			]),
+			new WinGetPackageBundle(
+				"Security",
+				[
+					new WinGetPackageBundlePackage("9PNG1JDDTGP8", "AppControl Manager", new Uri(SecurityBundleIconFolder + "AppControl Manager.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName),
+					new WinGetPackageBundlePackage("9P3BDTHKR7KS", "MCP App for Harden System Security", new Uri(SecurityBundleIconFolder + "MCP For Harden System Security.svg"),WinGetPackageSearchService.MicrosoftStoreSourceName),
+					new WinGetPackageBundlePackage("TorProject.TorBrowser", "Tor Browser", new Uri(SecurityBundleIconFolder + "Tor.svg")),
+					new WinGetPackageBundlePackage("NextDNS.NextDNS", "NextDNS", new Uri(SecurityBundleIconFolder + "NextDNS.svg")),
+					new WinGetPackageBundlePackage("Cloudflare.Warp", "Cloudflare WARP", new Uri(SecurityBundleIconFolder + "cloudflare.svg")),
+					new WinGetPackageBundlePackage("MullvadVPN.MullvadVPN", "Mullvad VPN", new Uri(SecurityBundleIconFolder + "mullvad.svg"))
+			])
+		];
 	}
 
 	private async Task RunBundleInstallActionAsync(WinGetPackageBundle packageBundle, PackageInstallMode packageInstallMode, PackageInstallScope packageInstallScope) =>

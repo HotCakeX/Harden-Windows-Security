@@ -15,7 +15,6 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-
 /*
 
 The code in this file is a MODIFIED version of the MIT licensed code in the following repository: https://github.com/CommunityToolkit/Windows
@@ -166,14 +165,12 @@ public static class StickyHeaderBehaviorV2
 		/// </summary>
 		private CompositionPropertySet? _scrollProperties;
 
-
 		private CompositionPropertySet? _animationProperties;
 
 		/// <summary>
 		/// The Visual associated with the header element.
 		/// </summary>
 		private Visual? _headerVisual;
-
 
 		private bool _isAttached;
 

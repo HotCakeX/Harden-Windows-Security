@@ -254,7 +254,6 @@ internal static class EccCurveManager
 		return result;
 	}
 
-
 	private static EccCurveCng? GetCurveDetails(string curveName)
 	{
 		IntPtr hAlgLocal = IntPtr.Zero;

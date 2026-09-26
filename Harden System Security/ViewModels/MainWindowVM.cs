@@ -64,7 +64,6 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		typeof(Pages.Tweaks)
 		];
 
-
 	internal void RebuildBreadcrumbMappings()
 	{
 		breadCrumbMappingsV2.Clear();

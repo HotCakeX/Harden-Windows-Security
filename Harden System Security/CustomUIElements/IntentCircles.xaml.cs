@@ -259,15 +259,7 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 		// All => show all 6
 		if (set.Contains(Intent.All))
 		{
-			return new List<Intent>
-			{
-				Intent.Development,
-				Intent.Gaming,
-				Intent.School,
-				Intent.Business,
-				Intent.SpecializedAccessWorkstation,
-				Intent.PrivilegedAccessWorkstation
-			};
+			return new(Order);
 		}
 
 		List<Intent> result = new(capacity: set.Count);
@@ -301,7 +293,6 @@ internal sealed partial class IntentCircles : UserControl, IDisposable, IExplici
 
 		return _hoverEase;
 	}
-
 
 	/// <summary>
 	/// Creates a circular icon using an Ellipse filled with an ImageBrush (no halo).

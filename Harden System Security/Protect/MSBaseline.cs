@@ -610,19 +610,17 @@ internal static class MSBaseline
 
 				foreach (CsvAuditPolicyEntry entry in CollectionsMarshal.AsSpan(csvEntries))
 				{
-					bool isCompliant = currentPolicies.TryGetValue(entry.SubcategoryGuid, out uint currentValue) &&
-									  currentValue == entry.SettingValue;
+					bool found = currentPolicies.TryGetValue(entry.SubcategoryGuid, out uint currentValue);
+					bool isCompliant = found && currentValue == entry.SettingValue;
 
-					string currentValueStr = currentPolicies.TryGetValue(entry.SubcategoryGuid, out uint value)
-						? AuditPolicyInfo.GetAuditSettingDescription(value)
+					string currentValueStr = found
+						? AuditPolicyInfo.GetAuditSettingDescription(currentValue)
 						: "Not Found";
 
 					string expectedValueStr = AuditPolicyInfo.GetAuditSettingDescription(entry.SettingValue);
 
-					string id = $"AuditPolicy|{entry.SubcategoryGuid}";
-
 					results.Add(new VerificationResult(
-						id: id,
+						id: $"AuditPolicy|{entry.SubcategoryGuid}",
 						friendlyName: entry.SubcategoryName,
 						source: SecurityMeasureSource.AuditPolicy,
 						isCompliant: isCompliant,

@@ -31,7 +31,6 @@ internal sealed partial class GetCIHashesVM : ViewModelBase
 {
 	internal GetCIHashesVM() => InitializeHashItems();
 
-
 	internal readonly InfoBarSettings MainInfoBar = new();
 
 	internal bool ElementsAreEnabled { get; set => SP(ref field, value); } = true;

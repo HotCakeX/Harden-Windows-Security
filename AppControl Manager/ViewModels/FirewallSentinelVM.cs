@@ -916,7 +916,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	internal Visibility FilesAndFoldersBrowseForFilesSettingsCardVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
 
-
 	internal readonly InfoBarSettings FilesAndFoldersInfoBar = new();
 
 	internal readonly List<ScanLevelsComboBoxType> FilesAndFoldersScanLevelsSource = ScanLevelFallbackCatalog.CreateSource(true);
@@ -1140,11 +1139,7 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 
 	#region Certificates scan
 
-	internal Visibility CertificatesInfoBarActionButtonVisibility
-	{
-		get; set => SP(ref field, value);
-	} = Visibility.Collapsed;
-
+	internal Visibility CertificatesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
 	internal readonly InfoBarSettings CertificatesBasedInfoBar = new();
 
@@ -1304,7 +1299,6 @@ internal sealed partial class FirewallSentinelVM : ViewModelBase, IDisposable
 	internal bool CustomFilePathRulesSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
 
 	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
 
 	internal readonly InfoBarSettings CustomFilePathRulesInfoBar = new();
 

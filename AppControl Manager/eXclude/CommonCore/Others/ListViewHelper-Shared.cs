@@ -414,9 +414,7 @@ internal static partial class ListViewHelper
 	// This is a modification of the methods in Windows Community Toolkit, ListViewExtensions, Smooth Scroll Into View feature that only has the center vertically code plus some additional logic
 	// https://github.com/CommunityToolkit/Windows/pull/648
 
-
 	private static readonly Dictionary<ListView, int> ObjRemovalTracking = [];
-
 
 	/// <summary>
 	/// Smooth scrolling the list to bring the specified index into view, centering vertically

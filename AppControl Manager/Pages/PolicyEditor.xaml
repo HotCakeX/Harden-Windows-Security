@@ -509,7 +509,6 @@
                 </TabViewItem.Content>
             </TabViewItem>
 
-
             <TabViewItem x:Uid="PolicyDetails" IsClosable="False" Visibility="Visible" MinWidth="200">
                 <TabViewItem.IconSource>
                     <BitmapIconSource UriSource="ms-appx:///Assets/External/Sparkle.png" ShowAsMonochrome="False" />
@@ -754,7 +753,6 @@
                 </TabViewItem.Content>
             </TabViewItem>
 
-
             <TabViewItem x:Uid="CustomPolicySettingsTabViewItem"
                          IsClosable="False"
                          Visibility="Visible"
@@ -843,7 +841,6 @@
                                     </StackPanel>
                                 </Button>
                             </CCToolKit:WrapPanel>
-
 
                         </Border>
 

@@ -25,7 +25,6 @@ internal static class Firewall
 {
 	//https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-fasp/55e50895-2e1f-4479-b130-122f9dc0265f
 
-
 	/// <summary>
 	/// Binary version for Windows 11 23H2 / Server 2025
 	/// </summary>

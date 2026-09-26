@@ -100,13 +100,10 @@ internal sealed partial class HomePhysicalOrientationView : Grid
 	private double AccelerationX { get; set; }
 	private double AccelerationY { get; set; }
 	private double AccelerationZ { get; set; }
-	private double AngularVelocityX { get; set; }
-	private double AngularVelocityY { get; set; }
-	private double AngularVelocityZ { get; set; }
 	private string GyrometerText { get; set; } = "Gyro unavailable";
 	private string OrientationText { get; set; } = "Unavailable";
 	private string StatusText { get; set; } = "Initializing sensors...";
-	internal void ApplyOrientationSnapshot(double pitchDegrees, double rollDegrees, double yawDegrees, double accelerationX, double accelerationY, double accelerationZ, double angularVelocityX, double angularVelocityY, double angularVelocityZ, string gyrometerText, string orientationText, string statusText)
+	internal void ApplyOrientationSnapshot(double pitchDegrees, double rollDegrees, double yawDegrees, double accelerationX, double accelerationY, double accelerationZ, string gyrometerText, string orientationText, string statusText)
 	{
 		PitchDegrees = pitchDegrees;
 		RollDegrees = rollDegrees;
@@ -114,9 +111,6 @@ internal sealed partial class HomePhysicalOrientationView : Grid
 		AccelerationX = accelerationX;
 		AccelerationY = accelerationY;
 		AccelerationZ = accelerationZ;
-		AngularVelocityX = angularVelocityX;
-		AngularVelocityY = angularVelocityY;
-		AngularVelocityZ = angularVelocityZ;
 		GyrometerText = gyrometerText;
 		OrientationText = orientationText;
 		StatusText = statusText;
@@ -197,7 +191,6 @@ internal sealed partial class HomePhysicalOrientationView : Grid
 			}
 		}
 	}
-
 
 	private void OnSizeChanged(object sender, SizeChangedEventArgs args) => RenderOrientation();
 

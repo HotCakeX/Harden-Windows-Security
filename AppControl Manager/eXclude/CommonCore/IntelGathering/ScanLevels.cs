@@ -270,7 +270,6 @@ internal sealed partial class ScanLevelsComboBoxType : INotifyPropertyChanged
 				this,
 				selected[i]);
 
-
 			if (i % 2 is 0)
 			{
 				currentRow = new();

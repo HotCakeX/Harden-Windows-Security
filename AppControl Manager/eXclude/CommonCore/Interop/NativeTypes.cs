@@ -1317,7 +1317,6 @@ internal struct IUnknownVtbl
 	internal delegate* unmanaged[Stdcall]<void*, uint> Release;
 }
 
-
 [StructLayout(LayoutKind.Sequential)]
 internal struct RawIAppxFactory
 {

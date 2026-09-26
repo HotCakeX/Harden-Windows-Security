@@ -937,7 +937,6 @@ internal sealed partial class ServiceManagerVM : ViewModelBase
 		return false;
 	}
 
-
 	private sealed class ScmServiceChanges
 	{
 		internal readonly List<string> Created = [];

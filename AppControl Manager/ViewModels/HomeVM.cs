@@ -43,7 +43,7 @@ namespace AppControlManager.ViewModels;
 
 // Core logic of the Home page, Home VM and the Live System Intelligence window.
 // 1. The Home page must not be consuming any resources (polling, timers, animations and such) when user navigates away from it.
-// 2. The Live System Intelligence window must not be consuming any resources(polling, timers, animations and such) when it is closed.
+// 2. The Live System Intelligence window must not be consuming any resources (polling, timers, animations and such) when it is closed.
 // 3. If Live System Intelligence window is open but user has navigated away from the Home page, the graphs must continue to be updated correctly in the Live System Intelligence window, however, if that window gets closed as well while user is on another page in the main window, everything related to Home page and the Live System Intelligence window must be disposed so they don't consume any resources.
 internal sealed partial class HomeVM : ViewModelBase, IDisposable
 {
@@ -65,7 +65,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	{
 		_isHomePageTelemetryActive = true;
 
-		// Let these finish without waiting for them.
 		await Task.Run(() =>
 		{
 			try
@@ -1210,19 +1209,18 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		try
 		{
 			// Download XML
-			string xml = await SecHttpClient.Instance.GetStringAsync(OnlineMSDefenderStatusURL, cancellationToken)
-										 .ConfigureAwait(false);
+			string xml = await SecHttpClient.Instance.GetStringAsync(OnlineMSDefenderStatusURL, cancellationToken).ConfigureAwait(false);
 
 			// Parse
 			XDocument doc = XDocument.Parse(xml, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
 			XElement? root = doc.Root;
 			if (root != null && string.Equals(root.Name.LocalName, "versions", StringComparison.OrdinalIgnoreCase))
 			{
-				string engineVal = root.Element(XName.Get("engine"))?.Value?.Trim() ?? string.Empty;
-				string platformVal = root.Element(XName.Get("platform"))?.Value?.Trim() ?? string.Empty;
+				string engineVal = root.Element(XName.Get("engine"))?.Value.Trim() ?? string.Empty;
+				string platformVal = root.Element(XName.Get("platform"))?.Value.Trim() ?? string.Empty;
 
 				XElement? sigEl = root.Element(XName.Get("signatures"));
-				string signaturesVal = sigEl?.Value?.Trim() ?? string.Empty;
+				string signaturesVal = sigEl?.Value.Trim() ?? string.Empty;
 				string? dateAttr = sigEl?.Attribute(XName.Get("date"))?.Value;
 
 				// Assign parsed or fallback
@@ -1253,7 +1251,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	}
 
 	#endregion
-
 
 	#region CPU
 
@@ -1856,19 +1853,19 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 					});
 
 					// Details
-					gpuGroup.Children.Add(CreateGpuDetailRow("Brand", gpu.Brand));
-					gpuGroup.Children.Add(CreateGpuDetailRow("Manufacturer", gpu.Manufacturer));
-					gpuGroup.Children.Add(CreateGpuDetailRow("Description", gpu.Description));
-					gpuGroup.Children.Add(CreateGpuDetailRow("Device ID", $"0x{gpu.DeviceId:X}"));
-					gpuGroup.Children.Add(CreateGpuDetailRow("Vendor ID", $"0x{gpu.VendorId:X}"));
-					gpuGroup.Children.Add(CreateGpuDetailRow("Driver Version", gpu.DriverVersion));
-					gpuGroup.Children.Add(CreateGpuDetailRow("Driver Date", FormatWmiDate(gpu.DriverDate)));
-					gpuGroup.Children.Add(CreateGpuDetailRow("PNP Device ID", gpu.PnpDeviceId));
+					gpuGroup.Children.Add(CreateDetailRow("Brand", gpu.Brand));
+					gpuGroup.Children.Add(CreateDetailRow("Manufacturer", gpu.Manufacturer));
+					gpuGroup.Children.Add(CreateDetailRow("Description", gpu.Description));
+					gpuGroup.Children.Add(CreateDetailRow("Device ID", $"0x{gpu.DeviceId:X}"));
+					gpuGroup.Children.Add(CreateDetailRow("Vendor ID", $"0x{gpu.VendorId:X}"));
+					gpuGroup.Children.Add(CreateDetailRow("Driver Version", gpu.DriverVersion));
+					gpuGroup.Children.Add(CreateDetailRow("Driver Date", FormatWmiDate(gpu.DriverDate)));
+					gpuGroup.Children.Add(CreateDetailRow("PNP Device ID", gpu.PnpDeviceId));
 
 					if (gpu.ErrorCode != 0)
 					{
-						gpuGroup.Children.Add(CreateGpuDetailRow("Error Code", gpu.ErrorCode.ToString(CultureInfo.InvariantCulture)));
-						gpuGroup.Children.Add(CreateGpuDetailRow("Error Message", gpu.ErrorMessage));
+						gpuGroup.Children.Add(CreateDetailRow("Error Code", gpu.ErrorCode.ToString(CultureInfo.InvariantCulture)));
+						gpuGroup.Children.Add(CreateDetailRow("Error Message", gpu.ErrorMessage));
 					}
 
 					contentPanel.Children.Add(gpuGroup);
@@ -1906,9 +1903,9 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
-	/// Helper to create a TextBlock with a bold Label and normal Value.
+	/// Helper to create a TextBlock for details of various types.
 	/// </summary>
-	private static TextBlock CreateGpuDetailRow(string label, string value)
+	private static TextBlock CreateDetailRow(string label, string? value)
 	{
 		TextBlock tb = new()
 		{
@@ -1963,41 +1960,41 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 					});
 
 					// Details
-					statusGroup.Children.Add(CreateActivationDetailRow("Description", status.Description));
-					statusGroup.Children.Add(CreateActivationDetailRow("Activation ID", status.ActivationId.ToString()));
-					statusGroup.Children.Add(CreateActivationDetailRow("Extended PID", status.ExtendedPid));
-					statusGroup.Children.Add(CreateActivationDetailRow("Product Key Channel", status.ProductKeyChannel));
-					statusGroup.Children.Add(CreateActivationDetailRow("Partial Product Key", status.PartialProductKey));
-					statusGroup.Children.Add(CreateActivationDetailRow("License Status", status.LicenseStatusString));
-					statusGroup.Children.Add(CreateActivationDetailRow("Status Code", status.Status.ToString(CultureInfo.InvariantCulture)));
-					statusGroup.Children.Add(CreateActivationDetailRow("Grace Time", $"{status.GraceTime} minutes"));
-					statusGroup.Children.Add(CreateActivationDetailRow("Reason Code", $"0x{status.Reason:X}"));
-					statusGroup.Children.Add(CreateActivationDetailRow("Validity Expiration", status.Validity.ToString(CultureInfo.InvariantCulture)));
-					statusGroup.Children.Add(CreateActivationDetailRow("Genuine Status", status.ClcGenuineStatus));
-					statusGroup.Children.Add(CreateActivationDetailRow("Digital License", status.ClcIsDigitalLicense ? "Yes" : "No"));
-					statusGroup.Children.Add(CreateActivationDetailRow("Last Activation Time", status.ClcLastActivationTime));
-					statusGroup.Children.Add(CreateActivationDetailRow("Last Activation HResult", status.ClcHResult));
+					statusGroup.Children.Add(CreateDetailRow("Description", status.Description));
+					statusGroup.Children.Add(CreateDetailRow("Activation ID", status.ActivationId.ToString()));
+					statusGroup.Children.Add(CreateDetailRow("Extended PID", status.ExtendedPid));
+					statusGroup.Children.Add(CreateDetailRow("Product Key Channel", status.ProductKeyChannel));
+					statusGroup.Children.Add(CreateDetailRow("Partial Product Key", status.PartialProductKey));
+					statusGroup.Children.Add(CreateDetailRow("License Status", status.LicenseStatusString));
+					statusGroup.Children.Add(CreateDetailRow("Status Code", status.Status.ToString(CultureInfo.InvariantCulture)));
+					statusGroup.Children.Add(CreateDetailRow("Grace Time", $"{status.GraceTime} minutes"));
+					statusGroup.Children.Add(CreateDetailRow("Reason Code", $"0x{status.Reason:X}"));
+					statusGroup.Children.Add(CreateDetailRow("Validity Expiration", status.Validity.ToString(CultureInfo.InvariantCulture)));
+					statusGroup.Children.Add(CreateDetailRow("Genuine Status", status.ClcGenuineStatus));
+					statusGroup.Children.Add(CreateDetailRow("Digital License", status.ClcIsDigitalLicense ? "Yes" : "No"));
+					statusGroup.Children.Add(CreateDetailRow("Last Activation Time", status.ClcLastActivationTime));
+					statusGroup.Children.Add(CreateDetailRow("Last Activation HResult", status.ClcHResult));
 
 					if (!string.IsNullOrWhiteSpace(status.ExpirationMsg))
 					{
-						statusGroup.Children.Add(CreateActivationDetailRow("Expiration Info", status.ExpirationMsg));
+						statusGroup.Children.Add(CreateDetailRow("Expiration Info", status.ExpirationMsg));
 					}
 
-					statusGroup.Children.Add(CreateActivationDetailRow("Is Subscription Supported", status.EditionSupportsSubscription.ToString()));
+					statusGroup.Children.Add(CreateDetailRow("Is Subscription Supported", status.EditionSupportsSubscription.ToString()));
 
 					if (status.EditionSupportsSubscription)
 					{
-						statusGroup.Children.Add(CreateActivationDetailRow("Subscription Enabled", status.IsSubscriptionEnabled ? "Yes" : "No"));
+						statusGroup.Children.Add(CreateDetailRow("Subscription Enabled", status.IsSubscriptionEnabled ? "Yes" : "No"));
 						if (status.IsSubscriptionEnabled)
 						{
-							statusGroup.Children.Add(CreateActivationDetailRow("Subscription SKU", status.SubscriptionSku));
-							statusGroup.Children.Add(CreateActivationDetailRow("Subscription State", status.SubscriptionState));
+							statusGroup.Children.Add(CreateDetailRow("Subscription SKU", status.SubscriptionSku));
+							statusGroup.Children.Add(CreateDetailRow("Subscription State", status.SubscriptionState));
 						}
 					}
 
 					if (!string.IsNullOrWhiteSpace(status.ClcStateData))
 					{
-						statusGroup.Children.Add(CreateActivationDetailRow("State Data", status.ClcStateData));
+						statusGroup.Children.Add(CreateDetailRow("State Data", status.ClcStateData));
 					}
 
 					contentPanel.Children.Add(statusGroup);
@@ -2011,7 +2008,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 				contentPanel.Children.Add(new MenuFlyoutSeparator());
 
-				contentPanel.Children.Add(CreateActivationDetailRow("Firmware Embedded Product Key", firmwareEmbeddedProductKey));
+				contentPanel.Children.Add(CreateDetailRow("Firmware Embedded Product Key", firmwareEmbeddedProductKey));
 			}
 
 			// ScrollViewer for the content
@@ -2036,21 +2033,6 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		{
 			Logger.Write(ex);
 		}
-	}
-
-	/// <summary>
-	/// Helper to create a TextBlock for activation details.
-	/// </summary>
-	private static TextBlock CreateActivationDetailRow(string label, string? value)
-	{
-		TextBlock tb = new()
-		{
-			TextWrapping = TextWrapping.Wrap,
-			IsTextSelectionEnabled = true
-		};
-		tb.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = label + ": ", FontWeight = Microsoft.UI.Text.FontWeights.SemiBold });
-		tb.Inlines.Add(new Microsoft.UI.Xaml.Documents.Run { Text = string.IsNullOrEmpty(value) ? "N/A" : value });
-		return tb;
 	}
 
 	/// <summary>
@@ -2177,7 +2159,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 						TextWrapping = TextWrapping.Wrap
 					});
 
-					devGroup.Children.Add(CreateGpuDetailRow("Hardware ID", dev.HardwareId));
+					devGroup.Children.Add(CreateDetailRow("Hardware ID", dev.HardwareId));
 
 					contentPanel.Children.Add(devGroup);
 

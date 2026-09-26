@@ -1,1 +1,1 @@
-* You can now deploy Signed policies right in the event logs policy creation and MDE Advanced Hunting pages, resolving the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1219
+* Updated dependencies to the latest versions.

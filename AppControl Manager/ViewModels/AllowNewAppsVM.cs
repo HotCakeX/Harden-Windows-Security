@@ -55,7 +55,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 		PolicyEditorViewModel = _PolicyEditorVM;
 		ScanLevelComboBoxSelectedItem = ScanLevelsSource[0];
 
-
 		// Initialize Local Files Column Manager
 		LocalFilesColumnManager = new ListViewColumnManager<FileIdentity>(
 		[
@@ -333,7 +332,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 	#endregion
 
-
 	#region Steps management
 
 	internal void DisableStep1(bool ResetInfoBar = true)
@@ -403,7 +401,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 	#endregion
 
-
 	#region LISTVIEW IMPLEMENTATIONS FOR EVENT LOGS
 
 	// Manager for the Event Logs Columns
@@ -419,7 +416,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 	#endregion
 
-
 	#region LISTVIEW IMPLEMENTATIONS FOR LOCAL FILES
 
 	// Manager for the Local Files Columns
@@ -434,7 +430,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	private void CalculateColumnWidthLocalFiles() => LocalFilesColumnManager.CalculateColumnWidths(LocalFilesFileIdentities);
 
 	#endregion
-
 
 	/// <summary>
 	/// Event handler for the Clear Data button - Local Files section
@@ -819,7 +814,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 
 	internal readonly List<ScanLevelsComboBoxType> ScanLevelsSource = ScanLevelFallbackCatalog.CreateSource(true);
 	internal ScanLevelsComboBoxType ScanLevelComboBoxSelectedItem { get; set => SP(ref field, value); }
-
 
 	/// <summary>
 	/// Step 1 validation
@@ -1276,7 +1270,6 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 			}
 		}
 	}
-
 
 	internal void _OpenInFileExplorer_LocalFiles() => OpenInFileExplorer(ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
 	internal void _OpenInFileExplorerShortCut_LocalFiles(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

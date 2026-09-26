@@ -246,7 +246,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	/// </summary>
 	private SiPolicy.PolicyFileRepresent? _FinalFilesAndFoldersSupplementalPolicy;
 
-
 	/// <summary>
 	/// Button to clear the list of selected file paths
 	/// </summary>
@@ -1404,7 +1403,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 		}
 	}
 
-
 	/// <summary>
 	/// Event handler for the create button
 	/// </summary>
@@ -1567,7 +1565,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 			StrictKernelModeInfoBar.IsClosable = true;
 		}
 	}
-
 
 	/// <summary>
 	/// Detects the kernel-mode drivers from the system and scans them
@@ -1800,7 +1797,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal bool PFNElementsAreEnabled { get; set => SP(ref field, value); } = true;
 
 	internal Visibility PFNInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
 
 	internal readonly InfoBarSettings PFNInfoBar = new();
 
@@ -2325,7 +2321,6 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 	internal bool CustomFilePathRulesSettingsExpanderIsExpanded { get; set => SP(ref field, value); }
 
 	internal Visibility CustomFilePathRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
-
 
 	internal readonly InfoBarSettings CustomFilePathRulesInfoBar = new();
 

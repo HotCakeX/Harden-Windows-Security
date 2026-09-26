@@ -289,7 +289,6 @@ internal sealed partial class TemporalPolarChart : UserControl, INPCImplant
 		return builder.ToString();
 	}
 
-
 	private void TemporalPolarChart_Loaded() => RenderChart();
 
 	private void RootGrid_SizeChanged() => RenderChart();

@@ -2138,7 +2138,6 @@ internal static class EXIFScrubber
 			currentOffset += 12;
 		}
 
-
 		// https://home.jeita.or.jp/tsc/std-pdf/CP3451C.pdf - 4.5.2
 		if (kind is ExifIfdKind.Primary or ExifIfdKind.Thumbnail)
 		{
@@ -2662,7 +2661,6 @@ internal static class EXIFScrubber
 		0x9010 => "OffsetTime",
 		0x9011 => "OffsetTimeOriginal",
 		0x9012 => "OffsetTimeDigitized",
-
 
 		_ => $"Unknown Tag (0x{tag:X4})",
 	};

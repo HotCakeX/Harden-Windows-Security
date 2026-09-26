@@ -57,7 +57,6 @@ internal sealed partial class UserConfiguration(
 	[JsonInclude]
 	internal Dictionary<string, DateTime>? SignedPolicyStage1RemovalTimes { get; set; } = signedPolicyStage1RemovalTimes;
 
-
 	/// <summary>
 	/// Sets user configuration settings to the JSON file
 	/// By default all params are null, so use named parameters when calling this method for easy invocation

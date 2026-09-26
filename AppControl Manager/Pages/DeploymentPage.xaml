@@ -340,7 +340,6 @@
                     </CCToolKit:SettingsExpander>
                 </Border>
 
-
                 <CCToolKit:SettingsCard x:Uid="DeployCIPFilesSettingsCard"
                                        IsClickEnabled="False"
                                        IsActionIconVisible="False"

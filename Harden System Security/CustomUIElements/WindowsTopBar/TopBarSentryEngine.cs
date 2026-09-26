@@ -15,11 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -187,7 +185,7 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 	/// <summary>
 	/// The default folder that captures are written to when the user has not chosen one of their own.
 	/// </summary>
-	internal static string DefaultOutputDirectory => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Harden System Security Sentry");
+	internal static string DefaultOutputDirectory => Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Harden System Security Sentry");
 
 	private readonly DispatcherQueue _dispatcherQueue;
 

@@ -102,7 +102,6 @@ internal sealed partial class PackagedAppView(
 	[JsonPropertyName("Install Location")]
 	internal string InstallLocation => installLocation;
 
-
 	[JsonInclude]
 	[JsonPropertyName("Installed Date")]
 	internal string InstalledDate => installedDate;

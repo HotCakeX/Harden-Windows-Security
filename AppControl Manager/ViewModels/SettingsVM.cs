@@ -29,7 +29,6 @@ using System.Linq;
 using WinRT;
 
 #if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity.WindowComponents;
 namespace HardenSystemSecurity.ViewModels;
 #endif
 

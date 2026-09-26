@@ -1117,7 +1117,6 @@ internal sealed partial class Main : ViewModelBase
 		}
 	} = DefaultCustomBrushAppPackageBackgroundPicture;
 
-
 	/// <summary>
 	/// Whether the feature highlights carousel has already been displayed automatically for this app installation.
 	/// Happens only one time after the app is installed.

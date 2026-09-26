@@ -80,8 +80,8 @@ internal static class WinGetPackageSearchService
 			throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "WinGet FindPackages failed with status {0}. Extended error: {1}.", findResult.Status, GetExtendedErrorCode(findResult)));
 		}
 
-		List<WinGetPackageSearchResult> results = new(Math.Min(findResult.Matches.Count, effectiveResultLimit));
 		int matchCount = Math.Min(findResult.Matches.Count, effectiveResultLimit);
+		List<WinGetPackageSearchResult> results = new(matchCount);
 		for (int index = 0; index < matchCount; index++)
 		{
 			cancellationToken.ThrowIfCancellationRequested();

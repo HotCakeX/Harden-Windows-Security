@@ -189,8 +189,7 @@ public sealed partial class WrapPanel : Panel
 			child.Measure(childAvailableSize);
 		}
 
-		Size requiredSize = UpdateRows(availableSize);
-		return requiredSize;
+		return UpdateRows(availableSize);
 	}
 
 	protected override Size ArrangeOverride(Size finalSize)

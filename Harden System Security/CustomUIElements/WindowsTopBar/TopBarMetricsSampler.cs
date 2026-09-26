@@ -425,7 +425,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 		return new(GetDisplayName(rootId, fallback), cpuUsage, memoryBytes, processCount);
 	}
 
-	private unsafe ReadOnlySpan<char> GetImageName(SYSTEM_PROCESS_INFORMATION* process) =>
+	private static unsafe ReadOnlySpan<char> GetImageName(SYSTEM_PROCESS_INFORMATION* process) =>
 		process->ImageName.Buffer == IntPtr.Zero ? [] : new ReadOnlySpan<char>((void*)process->ImageName.Buffer, process->ImageName.Length / sizeof(char));
 
 	private unsafe SYSTEM_PROCESS_INFORMATION* FindProcess(uint processId)

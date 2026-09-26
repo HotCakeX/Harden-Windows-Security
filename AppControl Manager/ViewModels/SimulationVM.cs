@@ -197,7 +197,6 @@ internal sealed partial class SimulationVM : ViewModelBase
 		_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 	}
 
-
 	#region Sort
 
 	private ListViewHelper.SortState SortState { get; set; } = new();

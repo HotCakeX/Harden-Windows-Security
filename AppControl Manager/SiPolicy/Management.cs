@@ -221,7 +221,7 @@ internal static class Management
 	/// <param name="policyDirectoryPath">Directory that contains SiPolicy XML files.</param>
 	internal static void VerifyPolicyXmlDirectory(string policyDirectoryPath)
 	{
-		string temporaryDirectoryPath = Path.Combine(Path.GetTempPath(), $"SiPolicyXmlVerification_{Guid.NewGuid():N}");
+		string temporaryDirectoryPath = Path.Join(Path.GetTempPath(), $"SiPolicyXmlVerification_{Guid.NewGuid():N}");
 
 		try
 		{
@@ -250,10 +250,10 @@ internal static class Management
 	private static void VerifyPolicyXmlRoundTrip(string policyXmlPath, string temporaryDirectoryPath)
 	{
 		string policyName = Path.GetFileNameWithoutExtension(policyXmlPath);
-		string firstBinaryPath = Path.Combine(temporaryDirectoryPath, $"{policyName}.First.cip");
-		string secondBinaryPath = Path.Combine(temporaryDirectoryPath, $"{policyName}.Second.cip");
-		string firstRoundTripXmlPath = Path.Combine(temporaryDirectoryPath, $"{policyName}.RoundTrip.xml");
-		string secondRoundTripXmlPath = Path.Combine(temporaryDirectoryPath, $"{policyName}.RoundTrip.FixedPoint.xml");
+		string firstBinaryPath = Path.Join(temporaryDirectoryPath, $"{policyName}.First.cip");
+		string secondBinaryPath = Path.Join(temporaryDirectoryPath, $"{policyName}.Second.cip");
+		string firstRoundTripXmlPath = Path.Join(temporaryDirectoryPath, $"{policyName}.RoundTrip.xml");
+		string secondRoundTripXmlPath = Path.Join(temporaryDirectoryPath, $"{policyName}.RoundTrip.FixedPoint.xml");
 
 		CiPolicyTest.TestCiPolicy(policyXmlPath);
 

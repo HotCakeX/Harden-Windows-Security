@@ -179,7 +179,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock x:Uid="ClipboardMonitorTeachingTipDescriptionTextBlock"
-                                           Grid.Column="0"                                          
+                                           Grid.Column="0"
                                            Grid.ColumnSpan="1"
                                            TextWrapping="Wrap"/>
                                 <HyperlinkButton NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Home-Page#clipboard-monitor"
@@ -187,12 +187,12 @@
                                                  AutomationProperties.Name="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Home-Page#clipboard-monitor"
                                                  VerticalAlignment="Center"
                                                  Grid.Column="1"
-                                                 Padding="2"                                                 
+                                                 Padding="2"
                                                  Grid.ColumnSpan="1">
                                     <FontIcon Glyph="&#xE946;" FontSize="16"/>
                                 </HyperlinkButton>
                             </Grid>
-                            <TextBox x:Uid="ClipboardMonitorCurrentStatusTextBox"                                     
+                            <TextBox x:Uid="ClipboardMonitorCurrentStatusTextBox"
                                      Text="{x:Bind ViewModel.ClipboardMonitorStatusText, Mode=OneWay}"
                                      IsReadOnly="True"/>
                             <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="8" VerticalSpacing="8">

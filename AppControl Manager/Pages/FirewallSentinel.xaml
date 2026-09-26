@@ -599,7 +599,6 @@
                         </customUI:InfoBarV2>
                     </CCToolKit:SettingsExpander.ItemsHeader>
 
-
                     <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="6" VerticalSpacing="10">
 
                         <customUI:AnimatedCancellableButton x:Uid="ExpandPinnedPolicyButton"

@@ -1778,7 +1778,6 @@ internal sealed partial class HomeLiveGraphsWindow
 		internal readonly List<double> Samples = new(GpuUsageMaxSamples);
 	}
 
-
 	[DynamicWindowsRuntimeCast(typeof(Grid))]
 	private void OnRootGridLoaded(object sender, RoutedEventArgs e)
 	{
@@ -3591,9 +3590,6 @@ internal sealed partial class HomeLiveGraphsWindow
 				accelerationX,
 				accelerationY,
 				accelerationZ,
-				angularVelocityX,
-				angularVelocityY,
-				angularVelocityZ,
 				gyrometerText,
 				simpleOrientationText,
 				physicalOrientationStatusText);

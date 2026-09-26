@@ -430,7 +430,6 @@ internal sealed class NamedPipeServer : IDisposable
 		catch (ObjectDisposedException) { }
 	}
 
-
 	/// <summary>
 	/// Executes a process command using the binary protocol, streams logs in real-time, and returns the final result.
 	/// </summary>

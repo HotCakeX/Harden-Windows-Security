@@ -23,7 +23,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.AppSettings;
-using CommonCore.Others;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -46,8 +45,8 @@ namespace HardenSystemSecurity.CustomUIElements.WindowsTopBar;
 /// A notch style top bar for Windows that is docked to the top center edge of the primary display.
 /// It stays collapsed as a small pill and expands into a compact panel when the pointer hovers over it,
 /// then it retracts back into the pill once the pointer leaves it.
-/// The panel currently offers five views: the applications launcher, the pinned folders, the metrics of the machine and the
-/// world clocks, and every one of them can be tailored by the user, whose choices are persisted via the app settings.
+/// The panel offers six views: applications, folders, performance, clocks, network quality and Sentry.
+/// Every one of them can be tailored by the user, whose choices are persisted via the app settings.
 /// </summary>
 internal sealed partial class TopBar : Window
 {
@@ -311,9 +310,6 @@ internal sealed partial class TopBar : Window
 	private bool _doesStorageDragContainItems;
 	private int _storageDragGeneration;
 	private bool _isClosed;
-
-	// Whether the bar is currently being driven by touch, which it has to retract differently from.
-	private bool _isTouchInteraction;
 
 	private TopBar()
 	{
@@ -1436,7 +1432,7 @@ internal sealed partial class TopBar : Window
 		};
 
 		// Close only after the destination reports that it accepted the drop. This only allows one successful drag & drop to be made per folder search.
-		// Without this, after a successful drag & drop, the flyout wouldn't get closed if we clicked anywhere outside of the flyout and TopBar, unless we first clicked on the TopBar and then clickeds somewhere else.
+		// Without this, after a successful drag & drop, the flyout wouldn't get closed if we clicked anywhere outside of the flyout and TopBar, unless we first clicked on the TopBar and then clicked somewhere else.
 		content.DropCompleted += (_, e) =>
 		{
 			if (e.DropResult != DataPackageOperation.None)
@@ -1532,7 +1528,7 @@ internal sealed partial class TopBar : Window
 		(byte)(argb >> 24), (byte)((argb >> 16) & 0xFFU), (byte)((argb >> 8) & 0xFFU), (byte)(argb & 0xFFU));
 
 	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
-	private void OnElementRightTapped(object sender, RightTappedRoutedEventArgs e)
+	private static void OnElementRightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
 		if (sender is not FrameworkElement element || element.ContextFlyout is not FlyoutBase flyout)
 		{
@@ -2172,8 +2168,8 @@ internal sealed partial class TopBar : Window
 	}
 
 	/// <summary>
-	/// The metrics of the machine and the world clocks are only sampled while the view that displays them is on
-	/// display and the bar is expanded, so a collapsed bar costs nothing at all.
+	/// The system metrics and clocks are sampled only while their view is selected on display,
+	/// or while the standard collapsed notch displays their live readings.
 	/// </summary>
 	private void UpdateLiveRefreshTimer()
 	{
@@ -2660,7 +2656,7 @@ internal sealed partial class TopBar : Window
 	}
 
 	/// <summary>
-	/// Begins an animation towards the supplied amount of the expansion, starting from wherever the bar currently is.
+	/// Restores the expanded subtree to its original position before the bar expands.
 	/// </summary>
 	private void AttachExpandedHost()
 	{
@@ -2827,14 +2823,14 @@ internal sealed partial class TopBar : Window
 	{
 		// A touch contact reports itself as entering the bar the moment the finger lands on it, so the bar is remembered
 		// as being driven by touch and stays open once it is opened by a tap.
-		_isTouchInteraction = e.Pointer.PointerDeviceType == PointerDeviceType.Touch;
+		bool isTouchInteraction = e.Pointer.PointerDeviceType == PointerDeviceType.Touch;
 
 		_retractionTimer.Stop();
 
 		// A bar that is set to only open when it is asked to must not follow a pointer that is merely travelling over
 		// it on its way somewhere else. A finger is never merely travelling over the bar though, because a contact only
 		// ever begins exactly where the user put it, so a touch always opens the bar however the option is set.
-		if (!Atlas.Settings.WindowsTopBarOpenOnHover && !_isTouchInteraction)
+		if (!Atlas.Settings.WindowsTopBarOpenOnHover && !isTouchInteraction)
 		{
 			return;
 		}
@@ -3661,7 +3657,7 @@ internal sealed partial class TopBar : Window
 			await Task.Run(() =>
 			{
 				// Find all the existing recordings
-				(IEnumerable<string> Paths, int Count) = FileUtility.GetFilesFast(
+				(IEnumerable<string> Paths, int _) = FileUtility.GetFilesFast(
 					directories: new[] { ResolveSentryOutputDirectory() },
 					files: null,
 					extensionsToFilterBy: [".wav"]);

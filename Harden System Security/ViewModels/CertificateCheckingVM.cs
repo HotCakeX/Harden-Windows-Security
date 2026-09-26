@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -678,8 +679,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 							continue;
 						}
 
-						string rootSubject = rootCert.Subject;
-						string rootSha256Hex = AuthRootProcessor.ComputeCertSha256Hex(rootCert);
+						string rootSha256Hex = rootCert.GetCertHashString(HashAlgorithmName.SHA256);
 
 						NonStlRootCert item = new(
 							storeLocationString: loc.ToString(),
@@ -687,7 +687,7 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 							subject: leaf.Subject,
 							issuer: leaf.Issuer,
 							leafThumbprintSha1: leafSha1,
-							rootSubject: rootSubject,
+							rootSubject: rootCert.Subject,
 							rootSha256Hex: string.IsNullOrEmpty(rootSha256Hex) ? Atlas.GetStr("NoCertificateHash") : rootSha256Hex
 						);
 						results.Add(item);

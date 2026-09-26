@@ -49,7 +49,6 @@ internal static class Generator
 		return (score, viewModel.AllMUnits);
 	}
 
-
 	/// <summary>
 	/// The MAIN method that generates the complete system report.
 	/// </summary>

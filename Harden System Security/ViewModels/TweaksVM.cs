@@ -26,7 +26,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using CommonCore.GroupPolicy;
-using CommonCore.Interop;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Win32;
 using WinRT;
@@ -1047,7 +1046,6 @@ internal sealed partial class TweaksVM : ViewModelBase
 		}
 	}
 
-
 	// Traverses the supported Common Dialog MRU trees and collects only resolvable records.
 	private static List<RegistryHistoryEntry> ReadCommonDialogHistory()
 	{
@@ -1263,7 +1261,6 @@ internal sealed partial class TweaksVM : ViewModelBase
 			RecentDocsHistoryInfoBar.IsClosable = true;
 		}
 	}
-
 
 	// Reads RecentDocs values recursively because Windows stores a general MRU list at the root
 	// and additional MRU lists under file-extension and Folder subkeys.

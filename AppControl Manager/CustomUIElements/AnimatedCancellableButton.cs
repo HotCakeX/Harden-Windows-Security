@@ -1187,7 +1187,6 @@ internal sealed partial class AnimatedCancellableButton : Button, IDisposable, I
 				_hasShadowApplied = false;
 			}
 
-
 			if (_shadowTimer is not null)
 			{
 				_shadowTimer.Stop();

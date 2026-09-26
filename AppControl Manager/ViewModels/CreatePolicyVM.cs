@@ -494,7 +494,6 @@ internal sealed partial class CreatePolicyVM : ViewModelBase
 
 	internal Visibility RecommendedUserModeBlockRulesInfoBarActionButtonVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
-
 	internal readonly InfoBarSettings UserModeBlockListInfoBar = new();
 
 	/// <summary>

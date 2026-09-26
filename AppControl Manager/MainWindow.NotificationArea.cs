@@ -25,12 +25,10 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 
 #if APP_CONTROL_MANAGER
-using AppControlManager.ViewModels;
 namespace AppControlManager;
 #endif
 
 #if HARDEN_SYSTEM_SECURITY
-using HardenSystemSecurity.ViewModels;
 namespace HardenSystemSecurity;
 #endif
 

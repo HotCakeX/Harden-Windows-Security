@@ -41,7 +41,6 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 	// Subscribe to collection changes so EmptyStatePlaceholderVisibility stays in sync with the UI
 	internal DuplicatePhotoFinderVM() => FilteredDuplicateGroups.CollectionChanged += (s, e) => OnPropertyChanged(nameof(EmptyStatePlaceholderVisibility));
 
-
 	internal readonly InfoBarSettings MainInfoBar = new();
 
 	// Whether the UI elements are enabled or disabled
@@ -314,7 +313,6 @@ internal sealed partial class DuplicatePhotoFinderVM : ViewModelBase
 			MainInfoBar.WriteError(ex);
 		}
 	}
-
 
 	private void DeleteFileInternal(DuplicateFile file)
 	{

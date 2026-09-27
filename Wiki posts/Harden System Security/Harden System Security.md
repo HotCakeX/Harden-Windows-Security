@@ -468,7 +468,7 @@ You can use them in the Visual Studio Code by simply [adding a new MCP Server](h
 
 <img alt="image" src="https://github.com/user-attachments/assets/61ddb258-f5cc-43cd-b929-2dff3f52276a" />
 
-<img alt="image" src="https://github.com/user-attachments/assets/42f5620f-d5e7-49f6-b4af-6d52d786ce7c" />
+<img alt="MCP" src="https://github.com/user-attachments/assets/69753256-a0b5-42cb-b77f-c5d388d899eb" />
 
 </div>
 

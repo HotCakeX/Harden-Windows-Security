@@ -3220,7 +3220,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>There was an error during logs scan:</value>
   </data>
   <data name="ScanCompleteLogsFoundMessage" xml:space="preserve">
-    <value>Scan complete. {0} logs were found.</value>
+    <value>Scan complete. {0} events were found.</value>
   </data>
   <data name="SelectedCodeIntegrityEvtxForScanning" xml:space="preserve">
     <value>Selected {0} for Code Integrity EVTX log scanning</value>
@@ -3229,7 +3229,7 @@ NOTE: This option is always enforced if any App Control UMCI policy enables it. 
     <value>Selected {0} for AppLocker EVTX log scanning</value>
   </data>
   <data name="TotalLogsCountMessage" xml:space="preserve">
-    <value>Total logs: {0}</value>
+    <value>Total events: {0}</value>
   </data>
   <data name="SelectedFileToAddLogsToMessage" xml:space="preserve">
     <value>Selected {0} to add the logs to.</value>

@@ -173,7 +173,7 @@ internal static class EccCurveManager
 			try
 			{
 				status = NativeMethods.BCryptGetProperty(hAlg, BCRYPT_ECC_CURVE_NAME_LIST, pBuffer, cbNeeded, out uint cbCopied, 0);
-				if (status != 0 || cbCopied < 8)
+				if (status != 0 || cbCopied < (uint)(IntPtr.Size * 2))
 				{
 					return result;
 				}
@@ -257,6 +257,7 @@ internal static class EccCurveManager
 	private static EccCurveCng? GetCurveDetails(string curveName)
 	{
 		IntPtr hAlgLocal = IntPtr.Zero;
+		IntPtr hKeyLocal = IntPtr.Zero;
 		IntPtr pCurveName = IntPtr.Zero;
 
 		try
@@ -284,48 +285,67 @@ internal static class EccCurveManager
 				);
 			}
 
-			// Query the key length property to get the actual bit length
-			status = NativeMethods.BCryptGetProperty(hAlgLocal, "KeyLengths", IntPtr.Zero, 0, out uint cbKeyLengths, 0);
-
+			// Query a key created for this curve.
 			uint bits = 0;
 
-			if (status == 0 && cbKeyLengths >= 12)
+			status = NativeMethods.BCryptGenerateKeyPair(hAlgLocal, out hKeyLocal, 0, 0);
+			if (status == 0 && hKeyLocal != IntPtr.Zero && NativeMethods.BCryptFinalizeKeyPair(hKeyLocal, 0) == 0)
 			{
-				// BCRYPT_KEY_LENGTHS_STRUCT has three ULONG fields:
-				// ULONG dwMinLength;
-				// ULONG dwMaxLength;
-				// ULONG dwIncrement;
-				IntPtr pKeyLengths = Marshal.AllocHGlobal((nint)cbKeyLengths);
+				IntPtr pPublicKeyLength = Marshal.AllocHGlobal(sizeof(uint));
 				try
 				{
-					status = NativeMethods.BCryptGetProperty(hAlgLocal, "KeyLengths", pKeyLengths, cbKeyLengths, out uint cbCopied, 0);
-					if (status == 0 && cbCopied >= 12)
+					status = NativeMethods.BCryptGetProperty(hKeyLocal, "PublicKeyLength", pPublicKeyLength, sizeof(uint), out uint cbCopied, 0);
+					if (status == 0 && cbCopied == sizeof(uint))
 					{
-						// Read dwMaxLength (second DWORD at offset 4)
-						bits = unchecked((uint)Marshal.ReadInt32(pKeyLengths, 4));
+						bits = unchecked((uint)Marshal.ReadInt32(pPublicKeyLength));
 					}
 				}
 				finally
 				{
-					Marshal.FreeHGlobal(pKeyLengths);
+					Marshal.FreeHGlobal(pPublicKeyLength);
 				}
 			}
 
-			// If we couldn't get the key length from KeyLengths property, fall back to ECC parameters
+			// If the key-specific length is unavailable, fall back to ECC parameters.
 			if (bits == 0)
 			{
 				status = NativeMethods.BCryptGetProperty(hAlgLocal, BCRYPT_ECC_PARAMETERS, IntPtr.Zero, 0, out uint cbNeeded, 0);
-				if (status == 0 && cbNeeded >= 20)
+				if (status == 0 && cbNeeded >= 28)
 				{
 					IntPtr pParams = Marshal.AllocHGlobal((nint)cbNeeded);
 					try
 					{
 						status = NativeMethods.BCryptGetProperty(hAlgLocal, BCRYPT_ECC_PARAMETERS, pParams, cbNeeded, out uint cbCopied, 0);
-						if (status == 0 && cbCopied >= 20)
+						if (status == 0 && cbCopied >= 28)
 						{
-							// Read cbFieldLength at offset 16
-							uint cbFieldLength = unchecked((uint)Marshal.ReadInt32(pParams, 16));
-							bits = cbFieldLength * 8;
+							// The 28-byte ECC parameter header is followed by the big-endian field prime.
+							// Its byte length includes padding, so use the prime's significant bits.
+							// https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Security/Cryptography/ECCng.ImportExport.cs
+							uint curveType = unchecked((uint)Marshal.ReadInt32(pParams, 4));
+
+							// Read cbFieldLength at offset 12
+							// https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/Cryptography/struct.BCRYPT_ECC_PARAMETER_HEADER.html
+							// https://github.com/microsoft/SymCrypt-OpenSSL/blob/main/ScosslCommon/src/scossl_ecc.c
+							uint cbFieldLength = unchecked((uint)Marshal.ReadInt32(pParams, 12));
+
+							if ((curveType == 2 || curveType == 3) && cbFieldLength > 0 && cbFieldLength <= cbCopied - 28)
+							{
+								for (uint i = 0; i < cbFieldLength; i++)
+								{
+									byte firstSignificantByte = Marshal.ReadByte(pParams, checked((int)(28 + i)));
+									if (firstSignificantByte == 0)
+									{
+										continue;
+									}
+									bits = (cbFieldLength - i - 1) * 8;
+									while (firstSignificantByte != 0)
+									{
+										bits++;
+										firstSignificantByte >>= 1;
+									}
+									break;
+								}
+							}
 						}
 					}
 					finally
@@ -351,6 +371,10 @@ internal static class EccCurveManager
 		}
 		finally
 		{
+			if (hKeyLocal != IntPtr.Zero)
+			{
+				_ = NativeMethods.BCryptDestroyKey(hKeyLocal);
+			}
 			if (pCurveName != IntPtr.Zero)
 			{
 				Marshal.FreeHGlobal(pCurveName);

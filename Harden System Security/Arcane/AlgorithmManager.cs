@@ -22,29 +22,97 @@ namespace HardenSystemSecurity.Arcane;
 
 internal static class AlgorithmManager
 {
+	/// <summary>
+	/// https://docs.rs/winapi/latest/winapi/shared/bcrypt/constant.BCRYPT_CIPHER_OPERATION.html
+	/// </summary>
 	private const uint BCRYPT_CIPHER_OPERATION = 0x00000001;
+
+	/// <summary>
+	/// https://docs.rs/winapi/latest/winapi/shared/bcrypt/constant.BCRYPT_HASH_OPERATION.html
+	/// </summary>
 	private const uint BCRYPT_HASH_OPERATION = 0x00000002;
+
+	/// <summary>
+	/// https://docs.rs/winapi/latest/winapi/shared/bcrypt/constant.BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION.html
+	/// </summary>
 	private const uint BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION = 0x00000004;
+
+	/// <summary>
+	/// https://docs.rs/winapi/latest/winapi/shared/bcrypt/constant.BCRYPT_SECRET_AGREEMENT_OPERATION.html
+	/// </summary>
 	private const uint BCRYPT_SECRET_AGREEMENT_OPERATION = 0x00000008;
+
+	/// <summary>
+	/// https://docs.rs/winapi/latest/winapi/shared/bcrypt/constant.BCRYPT_SIGNATURE_OPERATION.html
+	/// </summary>
 	private const uint BCRYPT_SIGNATURE_OPERATION = 0x00000010;
+
+	/// <summary>
+	/// https://docs.rs/winapi/latest/winapi/shared/bcrypt/constant.BCRYPT_RNG_OPERATION.html
+	/// </summary>
 	private const uint BCRYPT_RNG_OPERATION = 0x00000020;
+
+	/// <summary>
+	/// https://docs.rs/winapi/latest/winapi/shared/bcrypt/constant.BCRYPT_KEY_DERIVATION_OPERATION.html
+	/// </summary>
 	private const uint BCRYPT_KEY_DERIVATION_OPERATION = 0x00000040;
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/seccng/cng-interface-identifiers
+	/// </summary>
+	private const uint BCRYPT_CIPHER_INTERFACE = 0x00000001;
+	private const uint BCRYPT_HASH_INTERFACE = 0x00000002;
+	private const uint BCRYPT_ASYMMETRIC_ENCRYPTION_INTERFACE = 0x00000003;
+	private const uint BCRYPT_SECRET_AGREEMENT_INTERFACE = 0x00000004;
+	private const uint BCRYPT_SIGNATURE_INTERFACE = 0x00000005;
+	private const uint BCRYPT_RNG_INTERFACE = 0x00000006;
+	private const uint BCRYPT_KEY_DERIVATION_INTERFACE = 0x00000007;
+	private const uint BCRYPT_KEY_ENCAPSULATION_INTERFACE = 0x00000008;
 
 	private const string BCRYPT_PARAMETER_SET_NAME = "ParameterSetName";
 
-	// Known post-quantum parameter sets
+	/// <summary>
+	/// Known post-quantum parameter sets.
+	/// https://learn.microsoft.com/en-us/windows/win32/seccng/bcrypt/ns-bcrypt-bcrypt_pqdsa_key_blob#cbparameterset
+	/// </summary>
 	private static readonly string[] MlDsaParameterSets =
 	[
-		"MLDSA44",
-		"MLDSA65",
-		"MLDSA87"
+		"44",
+		"65",
+		"87"
 	];
 
+	/// <summary>
+	/// https://learn.microsoft.com/en-us/windows/win32/seccng/bcrypt/ns-bcrypt-bcrypt_mlkem_key_blob#cbparameterset
+	/// </summary>
 	private static readonly string[] MlKemParameterSets =
 	[
-		"MLKEM512",
-		"MLKEM768",
-		"MLKEM1024"
+		"512",
+		"768",
+		"1024"
+	];
+
+	/// <summary>
+	/// Composite ML-DSA parameter sets are probed only on the composite algorithm.
+	/// https://learn.microsoft.com/en-us/windows/win32/seccng/bcrypt/ns-bcrypt-bcrypt_pqdsa_key_blob#cbparameterset
+	/// </summary>
+	private static readonly string[] CompositeMlDsaParameterSets =
+	[
+		"44-ECDSA-P256-SHA256",
+		"65-ECDSA-P256-SHA512",
+		"65-ECDSA-P384-SHA512",
+		"87-ECDSA-P384-SHA512"
+	];
+
+	/// <summary>
+	/// Composite ML-KEM parameter sets are probed only on the composite algorithm.
+	/// https://learn.microsoft.com/en-us/windows/win32/seccng/bcrypt/ns-bcrypt-bcrypt_mlkem_key_blob#cbparameterset
+	/// </summary>
+	private static readonly string[] CompositeMlKemParameterSets =
+	[
+		"768-P256",
+		"768-X25519",
+		"1024-P384"
 	];
 
 	private static readonly string[] SlhDsaParameterSets =
@@ -189,7 +257,7 @@ internal static class AlgorithmManager
 	/// BCryptFinalizeKeyPair before a key is considered valid, and parameter
 	/// set assignment must occur prior to finalization.
 	/// Strategy:
-	///  1. Do a simple generate+finalize once to decide SupportsKeyGeneration.
+	///  1. Generate+finalize once, setting a known parameter set first when available.
 	///  2. For each candidate parameter set:
 	///     a. Generate a fresh key pair.
 	///     b. Set the parameter set property (must be before finalization).
@@ -202,12 +270,15 @@ internal static class AlgorithmManager
 	private static void TestPostQuantumCapabilities(IntPtr hAlgorithm, CryptoAlgorithm alg)
 	{
 		// 1. Baseline key generation capability test
+		string[] parameterSetsToTest = GetParameterSetsForAlgorithm(alg.Name);
 		IntPtr hProbeKey = IntPtr.Zero;
 		try
 		{
 			int genStatus = NativeMethods.BCryptGenerateKeyPair(hAlgorithm, out hProbeKey, 0, 0);
-			if (genStatus == 0 && hProbeKey != IntPtr.Zero)
+			if (genStatus == 0 && hProbeKey != IntPtr.Zero &&
+				(parameterSetsToTest.Length == 0 || TestParameterSet(hProbeKey, parameterSetsToTest[0])))
 			{
+				// ML-DSA and ML-KEM require a parameter set before finalization.
 				int finalizeStatus = NativeMethods.BCryptFinalizeKeyPair(hProbeKey, 0);
 				if (finalizeStatus == 0)
 				{
@@ -227,7 +298,6 @@ internal static class AlgorithmManager
 		}
 
 		// 2. Parameter set probing (only if algorithm name maps to known parameter sets)
-		string[] parameterSetsToTest = GetParameterSetsForAlgorithm(alg.Name);
 		if (parameterSetsToTest.Length == 0)
 		{
 			return;
@@ -318,6 +388,17 @@ internal static class AlgorithmManager
 	/// </summary>
 	private static string[] GetParameterSetsForAlgorithm(string algorithmName)
 	{
+		// Composite identifiers contain the base names, so match them first.
+		if (string.Equals(algorithmName, "Composite-ML-DSA", StringComparison.OrdinalIgnoreCase))
+		{
+			return CompositeMlDsaParameterSets;
+		}
+
+		if (string.Equals(algorithmName, "Composite-ML-KEM", StringComparison.OrdinalIgnoreCase))
+		{
+			return CompositeMlKemParameterSets;
+		}
+
 		if (algorithmName.Contains("MLDSA", StringComparison.OrdinalIgnoreCase) ||
 			algorithmName.Contains("ML-DSA", StringComparison.OrdinalIgnoreCase) ||
 			algorithmName.Contains("DILITHIUM", StringComparison.OrdinalIgnoreCase))
@@ -441,39 +522,19 @@ internal static class AlgorithmManager
 		return providers;
 	}
 
-	private static string GetAlgorithmTypeDescription(uint dwClass)
+	/// <summary>
+	/// The algorithm class is a CNG interface identifier.
+	/// </summary>
+	private static string GetAlgorithmTypeDescription(uint dwClass) => dwClass switch
 	{
-		List<string> types = [];
-
-		if ((dwClass & BCRYPT_CIPHER_OPERATION) != 0)
-		{
-			types.Add("Cipher");
-		}
-		if ((dwClass & BCRYPT_HASH_OPERATION) != 0)
-		{
-			types.Add("Hash");
-		}
-		if ((dwClass & BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION) != 0)
-		{
-			types.Add("Asymmetric Encryption");
-		}
-		if ((dwClass & BCRYPT_SECRET_AGREEMENT_OPERATION) != 0)
-		{
-			types.Add("Secret Agreement");
-		}
-		if ((dwClass & BCRYPT_SIGNATURE_OPERATION) != 0)
-		{
-			types.Add("Signature");
-		}
-		if ((dwClass & BCRYPT_RNG_OPERATION) != 0)
-		{
-			types.Add("RNG");
-		}
-		if ((dwClass & BCRYPT_KEY_DERIVATION_OPERATION) != 0)
-		{
-			types.Add("Key Derivation");
-		}
-
-		return types.Count > 0 ? string.Join(", ", types) : "Unknown";
-	}
+		BCRYPT_CIPHER_INTERFACE => "Cipher",
+		BCRYPT_HASH_INTERFACE => "Hash",
+		BCRYPT_ASYMMETRIC_ENCRYPTION_INTERFACE => "Asymmetric Encryption",
+		BCRYPT_SECRET_AGREEMENT_INTERFACE => "Secret Agreement",
+		BCRYPT_SIGNATURE_INTERFACE => "Signature",
+		BCRYPT_RNG_INTERFACE => "RNG",
+		BCRYPT_KEY_DERIVATION_INTERFACE => "Key Derivation",
+		BCRYPT_KEY_ENCAPSULATION_INTERFACE => "Key Encapsulation",
+		_ => "Unknown"
+	};
 }

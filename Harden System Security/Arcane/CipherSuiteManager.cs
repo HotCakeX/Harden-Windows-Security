@@ -124,7 +124,7 @@ internal static class CipherSuiteManager
 						}
 
 						status = NativeMethods.SslOpenProvider(ref providerHandle, providerRef.pszProvider, 0U);
-						if (status < 0 || providerHandle == 0)
+						if (status != 0 || providerHandle == 0)
 						{
 							continue;
 						}
@@ -251,7 +251,7 @@ internal static class CipherSuiteManager
 			if (providerRefPtrs.Count == 0)
 			{
 				status = NativeMethods.SslOpenProvider(ref providerHandle, IntPtr.Zero, 0U);
-				if (status >= 0 && providerHandle != 0)
+				if (status == 0 && providerHandle != 0)
 				{
 					EnumerateFromProviderHandle(providerHandle, byName);
 					_ = NativeMethods.SslFreeObject(providerHandle, 0U);
@@ -270,7 +270,7 @@ internal static class CipherSuiteManager
 					}
 
 					status = NativeMethods.SslOpenProvider(ref providerHandle, providerRef.pszProvider, 0U);
-					if (status < 0 || providerHandle == 0)
+					if (status != 0 || providerHandle == 0)
 					{
 						continue;
 					}

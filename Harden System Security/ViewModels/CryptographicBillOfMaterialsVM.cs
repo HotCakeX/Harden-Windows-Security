@@ -47,9 +47,6 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 	internal bool ElementsAreEnabled { get; set => SP(ref field, value); } = true;
 
-	// ------------------------------------------------------------
-	// Crypto Algorithms
-	// ------------------------------------------------------------
 	#region Crypto Algorithms
 
 	internal readonly RangedObservableCollection<CryptoAlgorithm> CryptoAlgorithms = [];
@@ -99,19 +96,18 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			CryptoAlgorithms.Clear();
 			AllCryptoAlgorithms.Clear();
 
-			await Task.Run(() =>
+			List<CryptoAlgorithm> list = await Task.Run(() =>
 			{
-				List<CryptoAlgorithm> list = AlgorithmManager.EnumerateAllAlgorithms();
+				List<CryptoAlgorithm> _list = AlgorithmManager.EnumerateAllAlgorithms();
 
 				// Enrich with availability and PQ capability details
-				AlgorithmManager.TestAlgorithmAvailability(list);
+				AlgorithmManager.TestAlgorithmAvailability(_list);
 
-				_ = Atlas.AppDispatcher.EnqueueAsync(() =>
-				{
-					CryptoAlgorithms.AddRange(list);
-					AllCryptoAlgorithms.AddRange(list);
-				});
+				return _list;
 			});
+
+			CryptoAlgorithms.AddRange(list);
+			AllCryptoAlgorithms.AddRange(list);
 
 			CA_CalculateColumnWidths();
 			MainInfoBar.WriteSuccess("Loaded cryptographic algorithms.");
@@ -229,9 +225,6 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 	#endregion
 
-	// ------------------------------------------------------------
-	// CNG Curves
-	// ------------------------------------------------------------
 	#region CNG Curves
 
 	internal readonly RangedObservableCollection<EccCurveCng> CngCurves = [];
@@ -273,16 +266,10 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			CngCurves.Clear();
 			AllCngCurves.Clear();
 
-			await Task.Run(() =>
-			{
-				List<EccCurveCng> list = EccCurveManager.EnumerateCngCurves();
+			List<EccCurveCng> list = await Task.Run(EccCurveManager.EnumerateCngCurves);
 
-				_ = Atlas.AppDispatcher.EnqueueAsync(() =>
-				{
-					CngCurves.AddRange(list);
-					AllCngCurves.AddRange(list);
-				});
-			});
+			CngCurves.AddRange(list);
+			AllCngCurves.AddRange(list);
 
 			CNG_CalculateColumnWidths();
 			MainInfoBar.WriteSuccess("Loaded CNG curves.");
@@ -384,9 +371,6 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 	#endregion
 
-	// ------------------------------------------------------------
-	// SSL Provider Curves
-	// ------------------------------------------------------------
 	#region SSL Provider Curves
 
 	internal readonly RangedObservableCollection<EccCurveSslProvider> SslProviderCurves = [];
@@ -432,16 +416,10 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			SslProviderCurves.Clear();
 			AllSslProviderCurves.Clear();
 
-			await Task.Run(() =>
-			{
-				List<EccCurveSslProvider> list = EccCurveManager.EnumerateSslProviderCurves();
+			List<EccCurveSslProvider> list = await Task.Run(EccCurveManager.EnumerateSslProviderCurves);
 
-				_ = Atlas.AppDispatcher.EnqueueAsync(() =>
-				{
-					SslProviderCurves.AddRange(list);
-					AllSslProviderCurves.AddRange(list);
-				});
-			});
+			SslProviderCurves.AddRange(list);
+			AllSslProviderCurves.AddRange(list);
 
 			SSL_CalculateColumnWidths();
 			MainInfoBar.WriteSuccess("Loaded SSL Provider curves.");
@@ -550,9 +528,6 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 	#endregion
 
-	// ------------------------------------------------------------
-	// TLS Cipher Suites
-	// ------------------------------------------------------------
 	#region TLS Cipher Suites
 
 	internal readonly RangedObservableCollection<TlsCipherSuite> TlsCipherSuites = [];
@@ -618,18 +593,13 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 			bool configuredOnlyLocal = TlsConfiguredOnly;
 
-			await Task.Run(() =>
-			{
-				List<TlsCipherSuite> cipherSuites = configuredOnlyLocal
-					? CipherSuiteManager.EnumerateConfiguredCipherSuites()
-					: CipherSuiteManager.EnumerateAllCipherSuites();
+			List<TlsCipherSuite> cipherSuites = await Task.Run(() => configuredOnlyLocal ?
+				 CipherSuiteManager.EnumerateConfiguredCipherSuites() :
+				 CipherSuiteManager.EnumerateAllCipherSuites()
+			);
 
-				_ = Atlas.AppDispatcher.EnqueueAsync(() =>
-				{
-					TlsCipherSuites.AddRange(cipherSuites);
-					AllTlsCipherSuites.AddRange(cipherSuites);
-				});
-			});
+			TlsCipherSuites.AddRange(cipherSuites);
+			AllTlsCipherSuites.AddRange(cipherSuites);
 
 			TLS_CalculateColumnWidths();
 			MainInfoBar.WriteSuccess(configuredOnlyLocal ? "Loaded configured TLS cipher suites." : "Loaded all TLS cipher suites.");
@@ -770,9 +740,6 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 
 	#endregion
 
-	// ------------------------------------------------------------
-	// Registered Providers
-	// ------------------------------------------------------------
 	#region Registered Providers
 
 	internal readonly RangedObservableCollection<string> RegisteredProviders = [];
@@ -810,16 +777,10 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 			RegisteredProviders.Clear();
 			AllRegisteredProviders.Clear();
 
-			await Task.Run(() =>
-			{
-				List<string> list = AlgorithmManager.EnumerateRegisteredProviders();
+			List<string> list = await Task.Run(AlgorithmManager.EnumerateRegisteredProviders);
 
-				_ = Atlas.AppDispatcher.EnqueueAsync(() =>
-				{
-					RegisteredProviders.AddRange(list);
-					AllRegisteredProviders.AddRange(list);
-				});
-			});
+			RegisteredProviders.AddRange(list);
+			AllRegisteredProviders.AddRange(list);
 
 			REG_CalculateColumnWidths();
 			MainInfoBar.WriteSuccess("Loaded registered providers.");

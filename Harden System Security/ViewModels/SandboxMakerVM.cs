@@ -898,7 +898,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 			UseShellExecute = true
 		};
 
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("The sandbox file location could not be opened.");
+		using Process process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("The sandbox file location could not be opened.");
 	}
 
 	private static void LaunchSandbox(string sandboxConfigurationPath)
@@ -909,7 +909,7 @@ internal sealed partial class SandboxMakerVM : ViewModelBase
 			UseShellExecute = true
 		};
 
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Windows Sandbox could not be started from the generated configuration file.");
+		using Process process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Windows Sandbox could not be started from the generated configuration file.");
 	}
 
 	private static string? EncodeCustomPowerShellCodeForStorage(string? customPowerShellCode)

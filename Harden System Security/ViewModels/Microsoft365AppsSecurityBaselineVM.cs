@@ -439,7 +439,7 @@ internal sealed partial class Microsoft365AppsSecurityBaselineVM : ViewModelBase
 				? new Uri(CustomBaselineFilePath)
 				: new Uri(DownloadURLs[SecurityBaselinesComboBoxSelectedItem]);
 
-			List<VerificationResult>? results = await MSBaseline.DownloadAndProcessSecurityBaseline(
+			List<VerificationResult> results = await MSBaseline.DownloadAndProcessSecurityBaseline(
 				sourceUri,
 				MSBaseline.Action.Verify,
 				cancellationToken: VerifyAllCancellableButton.Cts?.Token) ?? throw new InvalidOperationException(Atlas.GetStr("NoResultsReturnedFromVerificationProcess"));

@@ -658,7 +658,7 @@ internal sealed partial class QRCodeManagerWindow : Window, IDisposable
 			mediaCapture = new MediaCapture();
 			await mediaCapture.InitializeAsync(settings);
 
-			MediaFrameSource? colorSource = mediaCapture.FrameSources.Values.FirstOrDefault(
+			MediaFrameSource colorSource = mediaCapture.FrameSources.Values.FirstOrDefault(
 				static source => source.Info.SourceKind is MediaFrameSourceKind.Color) ?? throw new InvalidOperationException("The selected camera does not provide a color video stream.");
 			CameraPreviewElement.Source = MediaSource.CreateFromMediaFrameSource(colorSource);
 			CameraPreviewBorder.Visibility = Visibility.Visible;

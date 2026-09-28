@@ -1,3 +1,7 @@
+* New TopBar feature: Websites. You can now add your favorite and most frequently visited websites to the TopBar in order to launch and open them directly from your desktop. You can add websites by typing their addresses manually or by simply dragging and dropping a Microsoft Edge or Google Chrome Tab/Window over the TopBar, it will be added automatically.
+
+* New TopBar behavior: You can now quickly change views via mouse wheel or track pad.
+
 * New feature in the Installed Apps Management page: Added an installed-apps action that builds an inverted package dependency graph and displays which packages depend on each app. Basically like how Windows Services display dependencies and dependents of each service. This helps you make an informed decision when deciding to uninstall a framework package or an app.
 
 * Updated dependencies to the latest versions.

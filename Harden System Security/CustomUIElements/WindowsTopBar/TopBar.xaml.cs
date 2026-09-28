@@ -17,9 +17,12 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.AppSettings;
@@ -36,6 +39,7 @@ using Windows.Foundation;
 using Windows.Graphics;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
+using Windows.Storage.Streams;
 using Windows.UI.ViewManagement;
 using WinRT;
 
@@ -45,7 +49,7 @@ namespace HardenSystemSecurity.CustomUIElements.WindowsTopBar;
 /// A notch style top bar for Windows that is docked to the top center edge of the primary display.
 /// It stays collapsed as a small pill and expands into a compact panel when the pointer hovers over it,
 /// then it retracts back into the pill once the pointer leaves it.
-/// The panel offers six views: applications, folders, performance, clocks, network quality and Sentry.
+/// The panel offers seven views: applications, folders, websites, performance, clocks, network quality and Sentry.
 /// Every one of them can be tailored by the user, whose choices are persisted via the app settings.
 /// </summary>
 internal sealed partial class TopBar : Window
@@ -253,7 +257,16 @@ internal sealed partial class TopBar : Window
 	private readonly IntPtr _windowHandle;
 
 	// The cells of every view, so that switching a view only swaps which list the animations are applied to.
-	private readonly Dictionary<TopBarView, List<TopBarTile>> _viewTiles = new(6);
+	private readonly Dictionary<TopBarView, List<TopBarTile>> _viewTiles = new(7);
+
+	/// <summary>
+	/// Follow the order shown by the view switcher menu, not the persisted enum values.
+	/// </summary>
+	private static readonly TopBarView[] ViewSwitcherOrder =
+	[
+		TopBarView.Apps, TopBarView.Folders, TopBarView.Websites, TopBarView.Performance,
+		TopBarView.Clocks, TopBarView.NetworkQuality, TopBarView.Sentry
+	];
 
 	private readonly TopBarConfiguration _configuration = TopBarConfigurationManager.Load();
 
@@ -345,6 +358,7 @@ internal sealed partial class TopBar : Window
 		// The two menus carry no text of their own in the markup, so every one of their items is named from here.
 		AppsViewMenuItem.Text = Atlas.GetStr("TopBarViewApps");
 		FoldersViewMenuItem.Text = Atlas.GetStr("TopBarViewFolders");
+		WebsitesViewMenuItem.Text = "Websites";
 		PerformanceViewMenuItem.Text = Atlas.GetStr("TopBarViewPerformance");
 		ClocksViewMenuItem.Text = Atlas.GetStr("TopBarViewClocks");
 		NetworkQualityViewMenuItem.Text = "Network quality";
@@ -375,12 +389,16 @@ internal sealed partial class TopBar : Window
 		ToolTipService.SetToolTip(OpenOnHoverMenuItem, Atlas.GetStr("TopBarOpenOnHoverToolTip"));
 		ToolTipService.SetToolTip(AlwaysOnTopMenuItem, Atlas.GetStr("TopBarAlwaysOnTopToolTip"));
 
+		// Buttons can consume wheel input before it reaches the root.
+		ViewSwitcherButton.AddHandler(UIElement.PointerWheelChangedEvent, new PointerEventHandler(OnViewSwitcherWheelChanged), true);
+
 		// Both hosts keep a fixed size so that the visual tree is not re-laid out while the window is being resized.
 		ApplyNotchStyle(_notchStyle);
 		ExpandedHost.Height = ExpandedHeightDips;
 
 		AppsPanel.Spacing = TileSpacingDips;
 		FoldersPanel.Spacing = TileSpacingDips;
+		WebsitesPanel.Spacing = TileSpacingDips;
 
 		// Explorer normally runs unelevated, and Windows blocks drag and drop across the lower-to-higher integrity boundary.
 		// The root remains present while the bar is collapsed, so it owns the drop target and can reveal the folders view
@@ -805,20 +823,24 @@ internal sealed partial class TopBar : Window
 		int dragGeneration = ++_storageDragGeneration;
 		e.AcceptedOperation = DataPackageOperation.None;
 
-		if (Atlas.IsElevated || !e.DataView.Contains(StandardDataFormats.StorageItems))
+		// A dragged link opens the Websites view, and dragged files and folders open the Apps and Folders views.
+		bool carriesWebsite = CarriesWebsite(e.DataView);
+		if (Atlas.IsElevated || (!carriesWebsite && !e.DataView.Contains(StandardDataFormats.StorageItems)))
 		{
 			return;
 		}
 
 		try
 		{
-			IReadOnlyList<IStorageItem> storageItems = await e.DataView.GetStorageItemsAsync();
+			Uri? website = carriesWebsite ? await GetDraggedWebsiteAsync(e.DataView) : null;
+			IReadOnlyList<IStorageItem> storageItems = carriesWebsite ? [] : await e.DataView.GetStorageItemsAsync();
 			if (!_isStorageDragInProgress || dragGeneration != _storageDragGeneration)
 			{
 				return;
 			}
 
-			TopBarView targetView = TopBarView.Folders;
+			TopBarView targetView = carriesWebsite ? TopBarView.Websites : TopBarView.Folders;
+			_doesStorageDragContainItems = website is not null;
 			foreach (IStorageItem storageItem in storageItems)
 			{
 				if (storageItem is StorageFile)
@@ -830,27 +852,9 @@ internal sealed partial class TopBar : Window
 				_doesStorageDragContainItems |= storageItem is StorageFolder;
 			}
 
-			if (!_doesStorageDragContainItems)
+			if (_doesStorageDragContainItems)
 			{
-				return;
-			}
-
-			bool isOpening = _isExpansionAnimating && _animationTargetProgress > 0.0;
-			bool canAcceptWhileCollapsed = Atlas.Settings.WindowsTopBarOpenOnHover;
-			if (!canAcceptWhileCollapsed && _progress <= 0.0 && !isOpening)
-			{
-				_doesStorageDragContainItems = false;
-				return;
-			}
-
-			_retractionTimer.Stop();
-			if (_activeView != targetView)
-			{
-				SetActiveView(targetView, animate: _progress > 0.0);
-			}
-			if (canAcceptWhileCollapsed && !isOpening && _progress < 1.0)
-			{
-				StartAnimation(1.0);
+				_doesStorageDragContainItems = TryOpenForDrag(targetView);
 			}
 		}
 		catch (Exception ex)
@@ -870,7 +874,7 @@ internal sealed partial class TopBar : Window
 		}
 
 		e.AcceptedOperation = DataPackageOperation.Copy;
-		e.DragUIOverride.Caption = _activeView == TopBarView.Apps ? "Add file to Top Bar" : "Add folder to Top Bar";
+		e.DragUIOverride.Caption = _activeView == TopBarView.Websites ? "Pin website to Top Bar" : _activeView == TopBarView.Apps ? "Add file to Top Bar" : "Add folder to Top Bar";
 		e.DragUIOverride.IsCaptionVisible = true;
 		e.DragUIOverride.IsContentVisible = true;
 		e.Handled = true;
@@ -902,6 +906,14 @@ internal sealed partial class TopBar : Window
 		}
 		try
 		{
+			if (CarriesWebsite(e.DataView))
+			{
+				if (await GetDraggedWebsiteAsync(e.DataView) is Uri website && !WebsiteExists(website))
+				{
+					AddWebsite(website, null);
+				}
+				return;
+			}
 			IReadOnlyList<IStorageItem> storageItems = await e.DataView.GetStorageItemsAsync();
 			bool appsChanged = false;
 			bool foldersChanged = false;
@@ -950,6 +962,30 @@ internal sealed partial class TopBar : Window
 			}
 		}
 		return false;
+	}
+
+	/// <summary>
+	/// Opens the bar into the supplied view for something that is dragged onto it, and returns whether the bar takes it.
+	/// A collapsed bar only takes it when it opens on hover, which is the same rule for files, links and browser windows.
+	/// </summary>
+	private bool TryOpenForDrag(TopBarView targetView)
+	{
+		bool isOpening = _isExpansionAnimating && _animationTargetProgress > 0.0;
+		if (!Atlas.Settings.WindowsTopBarOpenOnHover && _progress <= 0.0 && !isOpening)
+		{
+			return false;
+		}
+
+		_retractionTimer.Stop();
+		if (_activeView != targetView)
+		{
+			SetActiveView(targetView, animate: _progress > 0.0);
+		}
+		if (Atlas.Settings.WindowsTopBarOpenOnHover && !isOpening && _progress < 1.0)
+		{
+			StartAnimation(1.0);
+		}
+		return true;
 	}
 
 	/// <summary>
@@ -1006,7 +1042,7 @@ internal sealed partial class TopBar : Window
 		}
 	}
 
-	private TopBarTile CreateTile(FrameworkElement icon, string displayName, Action onInvoked, Action onRemove, Action onRemoveAll, Action? onSetColor = null, Action? onSearch = null)
+	private TopBarTile CreateTile(FrameworkElement icon, string displayName, Action onInvoked, Action onRemove, Action onRemoveAll, Action? onSetColor = null, Action? onSearch = null, Func<Task>? onInvokedAsync = null, Action? onEdit = null)
 	{
 		// A name that does not fit on a single line is wrapped onto a second one instead of being cut short, which is
 		// what lets a name of two words be read in full. Anything that still does not fit is trimmed, and the whole
@@ -1049,9 +1085,16 @@ internal sealed partial class TopBar : Window
 
 		CompositeTransform transform = AttachEntranceTransform(tile);
 
-		tile.Click += (_, _) => onInvoked();
+		if (onInvokedAsync is not null)
+		{
+			tile.Click += async (_, _) => await onInvokedAsync();
+		}
+		else
+		{
+			tile.Click += (_, _) => onInvoked();
+		}
 
-		AttachRemoveMenu(tile, onRemove, onRemoveAll, onSetColor, onSearch);
+		AttachRemoveMenu(tile, onRemove, onRemoveAll, onSetColor, onSearch, onEdit);
 
 		return new TopBarTile(tile, transform);
 	}
@@ -1242,7 +1285,7 @@ internal sealed partial class TopBar : Window
 	/// The menu is not constrained to the bounds of the bar because the bar is only a few tiles tall and its window is
 	/// clipped into a rounded silhouette, so a menu that had to fit inside of it would not be usable.
 	/// </summary>
-	private void AttachRemoveMenu(FrameworkElement element, Action onRemove, Action onRemoveAll, Action? onSetColor = null, Action? onSearch = null)
+	private void AttachRemoveMenu(FrameworkElement element, Action onRemove, Action onRemoveAll, Action? onSetColor = null, Action? onSearch = null, Action? onEdit = null)
 	{
 		MenuFlyoutItem removeItem = new()
 		{
@@ -1277,6 +1320,14 @@ internal sealed partial class TopBar : Window
 			MenuFlyoutItem colorItem = new() { Text = "Set color", Icon = new FontIcon { Glyph = "\uE790" } };
 			colorItem.Click += (_, _) => onSetColor();
 			menu.Items.Add(colorItem);
+			menu.Items.Add(new MenuFlyoutSeparator());
+		}
+
+		if (onEdit is not null)
+		{
+			MenuFlyoutItem editItem = new() { Text = "Edit", Icon = new FontIcon { Glyph = "\uE70F" } };
+			editItem.Click += (_, _) => onEdit();
+			menu.Items.Add(editItem);
 			menu.Items.Add(new MenuFlyoutSeparator());
 		}
 
@@ -1575,6 +1626,7 @@ internal sealed partial class TopBar : Window
 
 		AppsPanel.Visibility = view == TopBarView.Apps ? Visibility.Visible : Visibility.Collapsed;
 		FoldersPanel.Visibility = view == TopBarView.Folders ? Visibility.Visible : Visibility.Collapsed;
+		WebsitesPanel.Visibility = view == TopBarView.Websites ? Visibility.Visible : Visibility.Collapsed;
 		PerformancePanel.Visibility = view == TopBarView.Performance ? Visibility.Visible : Visibility.Collapsed;
 		ClocksPanel.Visibility = view == TopBarView.Clocks ? Visibility.Visible : Visibility.Collapsed;
 		NetworkQualityPanel.Visibility = view == TopBarView.NetworkQuality ? Visibility.Visible : Visibility.Collapsed;
@@ -1582,6 +1634,8 @@ internal sealed partial class TopBar : Window
 
 		AppsViewMenuItem.IsChecked = view == TopBarView.Apps;
 		FoldersViewMenuItem.IsChecked = view == TopBarView.Folders;
+		WebsitesViewMenuItem.IsChecked = view == TopBarView.Websites;
+		NetworkQualityViewMenuItem.IsChecked = view == TopBarView.NetworkQuality;
 		PerformanceViewMenuItem.IsChecked = view == TopBarView.Performance;
 		ClocksViewMenuItem.IsChecked = view == TopBarView.Clocks;
 		SentryViewMenuItem.IsChecked = view == TopBarView.Sentry;
@@ -1602,9 +1656,11 @@ internal sealed partial class TopBar : Window
 		CollapsedGlyph.Glyph = GetViewGlyph(view);
 		UpdateCollapsedPerformanceVisibility();
 
+		if (view == TopBarView.Websites) EnsureWebsitesLoaded();
 		_tiles = _viewTiles.TryGetValue(view, out List<TopBarTile>? tiles) ? tiles : [];
 
 		UpdateLiveRefreshTimer();
+		UpdateBrowserDragWatch();
 
 		if (animate && _progress > 0.0)
 		{
@@ -1623,6 +1679,31 @@ internal sealed partial class TopBar : Window
 		}
 	}
 
+	/// <summary>
+	/// Changes views via mouse wheel only over the switcher button or the otherwise empty surface of the bar.
+	/// Other controls retain their own wheel behavior.
+	/// </summary>
+	private void OnViewSwitcherWheelChanged(object sender, PointerRoutedEventArgs e)
+	{
+		if (ReferenceEquals(sender, RootGrid) &&
+			!ReferenceEquals(e.OriginalSource, RootGrid) &&
+			!ReferenceEquals(e.OriginalSource, BarBorder))
+		{
+			return;
+		}
+		int delta = e.GetCurrentPoint(RootGrid).Properties.MouseWheelDelta;
+		if (delta == 0)
+		{
+			return;
+		}
+		int index = Array.IndexOf(ViewSwitcherOrder, _activeView);
+		int nextIndex = delta < 0
+			? (index + 1) % ViewSwitcherOrder.Length
+			: (index + ViewSwitcherOrder.Length - 1) % ViewSwitcherOrder.Length;
+		SetActiveView(ViewSwitcherOrder[nextIndex], animate: true);
+		e.Handled = true;
+	}
+
 	private void OnAppsViewButtonClick() => SetActiveView(TopBarView.Apps, animate: true);
 
 	/// <summary>
@@ -1631,6 +1712,7 @@ internal sealed partial class TopBar : Window
 	private static string GetViewName(TopBarView view) => view switch
 	{
 		TopBarView.Folders => Atlas.GetStr("TopBarViewFolders"),
+		TopBarView.Websites => "Websites",
 		TopBarView.Performance => Atlas.GetStr("TopBarViewPerformance"),
 		TopBarView.Clocks => Atlas.GetStr("TopBarViewClocks"),
 		TopBarView.NetworkQuality => "Network quality",
@@ -1644,6 +1726,7 @@ internal sealed partial class TopBar : Window
 	private static string GetViewGlyph(TopBarView view) => view switch
 	{
 		TopBarView.Folders => "\uE8B7",
+		TopBarView.Websites => "\uE774",
 		TopBarView.Performance => "\uE9D9",
 		TopBarView.Clocks => "\uE823",
 		TopBarView.NetworkQuality => "\uE968",
@@ -1721,6 +1804,9 @@ internal sealed partial class TopBar : Window
 
 			case TopBarView.Folders:
 				AddFolderEntry();
+				break;
+			case TopBarView.Websites:
+				ShowAddWebsiteFlyout();
 				break;
 
 			case TopBarView.Clocks:
@@ -2900,7 +2986,8 @@ internal sealed partial class TopBar : Window
 	{
 		_retractionTimer.Stop();
 
-		if (_isPinned || _openFlyoutCount > 0)
+		// A browser window that is being carried over the bar keeps it open until it is dropped or carried away.
+		if (_isPinned || _openFlyoutCount > 0 || _isBrowserDragOverBar)
 		{
 			return;
 		}
@@ -3205,6 +3292,1093 @@ internal sealed partial class TopBar : Window
 
 		return totalWidthDips;
 	}
+
+	#region Websites
+
+	// The cache and tile visuals live for this Top Bar instance, not for the selected view.
+	private const int MaximumFaviconBytes = 256 * 1024;
+
+	// Only the start of a page is read, which is where the head that declares its icons lives.
+	private const int MaximumWebsitePageBytes = 512 * 1024;
+
+	// The same limit that browsers apply to a chain of redirects.
+	private const int MaximumWebsiteRedirects = 20;
+
+	// The overall budget for resolving the address of a website or for loading its icon.
+	private static readonly TimeSpan WebsiteTimeout = TimeSpan.FromSeconds(15);
+
+	// The page only gets part of the budget so that a slow page still leaves time for the conventional favicons.
+	private static readonly TimeSpan WebsitePageTimeout = TimeSpan.FromSeconds(6);
+
+	// Redirects are followed by GetFollowingRedirectsAsync instead of the handler, because otherwise not all redirects for all websites will work properly like in a browser.
+	private static readonly HttpClient _websiteClient = new(new HttpClientHandler { AllowAutoRedirect = false, CheckCertificateRevocationList = true })
+	{
+		DefaultRequestHeaders = { { "User-Agent", Atlas.UserAgent } }
+	};
+
+	/// <summary>
+	/// What a pinned website holds while the bar is open. A request that finishes after its website was removed finds no state.
+	/// </summary>
+	private sealed class WebsiteState
+	{
+		// Only icons that were found are kept. A website whose icon was not found is never requested again, because icons
+		// are only requested once when the view is first loaded and once for every website that is added afterwards.
+		internal ImageSource? Icon;
+
+		// The icon container of the current tile, which holds the globe until the icon arrives.
+		internal Border? IconHost;
+
+		internal CancellationTokenSource? Request;
+
+		// Set for a website that was just added, whose address is replaced by the one it redirects to.
+		internal bool ResolveAddress;
+
+		internal void ShowIcon()
+		{
+			IconHost?.Child = Icon is null
+					? CreateGlyphIcon("\uE774")
+					: new Image { Width = TileGlyphHeightDips, Height = TileGlyphHeightDips, Stretch = Stretch.Uniform, Source = Icon };
+		}
+	}
+
+	private readonly Dictionary<TopBarWebsiteEntry, WebsiteState> _websiteStates = new();
+
+	private bool _websitesLoaded;
+
+	private void OnWebsitesViewButtonClick() => SetActiveView(TopBarView.Websites, animate: true);
+
+	private static bool TryGetWebsiteUri(string? text, [NotNullWhen(true)] out Uri? uri)
+	{
+		uri = null;
+		string address = text?.Trim() ?? string.Empty;
+
+		// An address that names no scheme is opened over https. It must then name a dotted host
+		// so that a plain word that is dropped on the bar is not mistaken for a website.
+		bool hasScheme = address.Contains("://", StringComparison.Ordinal);
+		if (address.Length > 2048 ||
+			!Uri.TryCreate(hasScheme ? address : "https://" + address, UriKind.Absolute, out Uri? candidate) ||
+			!IsWebUri(candidate) ||
+			(!hasScheme && !candidate.Host.Contains('.')))
+		{
+			return false;
+		}
+		uri = candidate;
+		return true;
+	}
+
+	private static bool IsWebUri(Uri uri) => uri.Host.Length > 0 && uri.UserInfo.Length == 0 &&
+		(string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase) ||
+		 string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase));
+
+	private bool WebsiteExists(Uri uri)
+	{
+		foreach (TopBarWebsiteEntry entry in _configuration.Websites)
+		{
+			if (IsSameWebsite(entry, uri))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static bool IsSameWebsite(TopBarWebsiteEntry entry, Uri uri) => Uri.TryCreate(entry.Url, UriKind.Absolute, out Uri? existing) &&
+		Uri.Compare(existing, uri, UriComponents.HttpRequestUrl, UriFormat.Unescaped, StringComparison.OrdinalIgnoreCase) == 0;
+
+	private void EnsureWebsitesLoaded()
+	{
+		if (_websitesLoaded) return;
+
+		_websitesLoaded = true;
+
+		RebuildWebsiteTiles();
+
+		foreach (TopBarWebsiteEntry entry in _configuration.Websites)
+		{
+			StartFaviconLoad(entry);
+		}
+	}
+
+	private void RebuildWebsiteTiles()
+	{
+		WebsitesPanel.Children.Clear();
+		List<TopBarTile> tiles = new(_configuration.Websites.Count);
+		foreach (TopBarWebsiteEntry entry in _configuration.Websites)
+		{
+			ref WebsiteState? state = ref CollectionsMarshal.GetValueRefOrAddDefault(_websiteStates, entry, out _);
+			state ??= new WebsiteState();
+			Border iconHost = new() { Width = TileGlyphHeightDips, Height = TileGlyphHeightDips };
+			state.IconHost = iconHost;
+			state.ShowIcon();
+			TopBarTile tile = CreateTile(iconHost, entry.DisplayName, () => { }, () => RemoveWebsite(entry), RemoveAllWebsites, onInvokedAsync: () => OpenWebsiteAsync(entry), onEdit: () => ShowEditWebsiteFlyout(entry));
+			ToolTipService.SetToolTip(tile.Element, entry.Url);
+			WebsitesPanel.Children.Add(tile.Element);
+			tiles.Add(tile);
+		}
+		_viewTiles[TopBarView.Websites] = tiles;
+		if (_activeView == TopBarView.Websites)
+		{
+			_tiles = tiles;
+			// The new tiles start out hidden, so they are brought to the state of the bar right away. This matters when
+			// the tiles are rebuilt in the background, where no view switch follows to reveal them.
+			ApplyTileStagger(_progress);
+		}
+	}
+
+	private void StartFaviconLoad(TopBarWebsiteEntry entry)
+	{
+		if (_isClosed || !_websiteStates.TryGetValue(entry, out WebsiteState? state) || state.Icon is not null || state.Request is not null ||
+			!TryGetWebsiteUri(entry.Url, out Uri? site))
+		{
+			return;
+		}
+
+		// The request is canceled once its time is up, or earlier when the website is removed or the bar is closed.
+		CancellationTokenSource request = new(WebsiteTimeout);
+		state.Request = request;
+		_ = LoadFaviconAsync(entry, state, site, request);
+	}
+
+	private async Task LoadFaviconAsync(TopBarWebsiteEntry entry, WebsiteState state, Uri site, CancellationTokenSource request)
+	{
+		try
+		{
+			(List<Uri> candidates, Uri page) = await GetFaviconCandidatesAsync(site, request.Token);
+
+			// A website that was removed, or a bar that was closed, no longer has a state of its own.
+			// A changed address owns a new state. Results from the old request must not update it.
+			if (!_websiteStates.TryGetValue(entry, out WebsiteState? currentState) || !ReferenceEquals(currentState, state))
+			{
+				return;
+			}
+			if (state.ResolveAddress)
+			{
+				state.ResolveAddress = false;
+				if (!KeepResolvedAddress(entry, page))
+				{
+					return;
+				}
+			}
+			foreach (Uri candidate in candidates)
+			{
+				ImageSource? icon = await TryLoadIconAsync(candidate, request.Token);
+				if (icon is null) continue;
+				if (!_websiteStates.TryGetValue(entry, out WebsiteState? latestState) || !ReferenceEquals(latestState, state))
+				{
+					return;
+				}
+				state.Icon = icon;
+				state.ShowIcon();
+				return;
+			}
+		}
+		catch (OperationCanceledException) { }
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+		finally
+		{
+			// A website only ever has one request, so this cannot clear a newer one.
+			state.Request = null;
+			request.Dispose();
+		}
+	}
+
+	/// <summary>
+	/// Stores the address that a newly added website finally redirected to, which is the one a browser ends up on.
+	/// Returns false when the final address was already pinned, in which case the new website is removed again.
+	/// </summary>
+	private bool KeepResolvedAddress(TopBarWebsiteEntry entry, Uri page)
+	{
+		if (!TryGetWebsiteUri(page.AbsoluteUri, out Uri? final) || IsSameWebsite(entry, final))
+		{
+			return true;
+		}
+		if (WebsiteExists(final))
+		{
+			_ = _configuration.Websites.Remove(entry);
+			_ = _websiteStates.Remove(entry);
+		}
+		else
+		{
+			// A name that was taken from the entered address follows the final address. A name the user typed is kept.
+			if (Uri.TryCreate(entry.Url, UriKind.Absolute, out Uri? entered) &&
+				string.Equals(entry.DisplayName, entered.Host, StringComparison.OrdinalIgnoreCase))
+			{
+				entry.DisplayName = final.Host;
+			}
+			entry.Url = final.AbsoluteUri;
+		}
+
+		TopBarConfigurationManager.Save(_configuration);
+
+		// The tiles are rebuilt without switching the view, because the user may have moved on to another one.
+		RebuildWebsiteTiles();
+
+		return _configuration.Websites.Contains(entry);
+	}
+
+	// Every link tag of a page, and the rel and href attributes inside one, which is how a page declares its icons.
+	[GeneratedRegex(@"<link\b[^>]*>", RegexOptions.IgnoreCase)]
+	private static partial Regex LinkTagRegex();
+
+	[GeneratedRegex(@"(?<![\w-])(?<name>rel|href)\s*=\s*(?:""(?<value>[^""]*)""|'(?<value>[^']*)'|(?<value>[^\s""'>]+))", RegexOptions.IgnoreCase)]
+	private static partial Regex LinkAttributeRegex();
+
+	/// <summary>
+	/// The icons that the site declares on its page, in page order, followed by the conventional favicon of the host
+	/// that the site redirected to and of the host that was pinned. The address that the page finally came from is
+	/// returned alongside, and it is the pinned address when the page could not be read.
+	/// </summary>
+	private async Task<(List<Uri> Candidates, Uri Page)> GetFaviconCandidatesAsync(Uri site, CancellationToken token)
+	{
+		List<Uri> candidates = [];
+		Uri page = site;
+		try
+		{
+			using CancellationTokenSource pageTimeout = CancellationTokenSource.CreateLinkedTokenSource(token);
+
+			pageTimeout.CancelAfter(WebsitePageTimeout);
+
+			// Relative icon links belong to the address that the site finally redirected to.
+			(byte[] html, page, _) = await DownloadAsync(site, MaximumWebsitePageBytes, pageTimeout.Token);
+
+			foreach (Match tag in LinkTagRegex().Matches(System.Text.Encoding.UTF8.GetString(html)))
+			{
+				string rel = string.Empty;
+				string href = string.Empty;
+
+				foreach (Match attribute in LinkAttributeRegex().Matches(tag.Value))
+				{
+					if (string.Equals(attribute.Groups["name"].Value, "rel", StringComparison.OrdinalIgnoreCase))
+					{
+						rel = attribute.Groups["value"].Value;
+					}
+					else
+					{
+						href = attribute.Groups["value"].Value;
+					}
+				}
+
+				// Regular and touch icons are used. A mask icon is a monochrome silhouette, so it is skipped.
+				bool isIcon = Array.Exists(rel.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries), relType =>
+					string.Equals(relType, "icon", StringComparison.OrdinalIgnoreCase) ||
+					relType.StartsWith("apple-touch-icon", StringComparison.OrdinalIgnoreCase));
+
+				if (isIcon && href.Length > 0 && Uri.TryCreate(page, System.Net.WebUtility.HtmlDecode(href), out Uri? icon) && IsWebUri(icon) && !candidates.Contains(icon))
+				{
+					candidates.Add(icon);
+				}
+			}
+		}
+		catch (Exception) when (!token.IsCancellationRequested)
+		{
+			// A page that cannot be read or that timed out still leaves the conventional favicons below to try.
+		}
+
+		Uri[] origins = [page, site];
+
+		foreach (Uri origin in origins)
+		{
+			Uri favicon = new(origin, "/favicon.ico");
+			if (!candidates.Contains(favicon))
+			{
+				candidates.Add(favicon);
+			}
+		}
+		return (candidates, page);
+	}
+
+	/// <summary>
+	/// Sends a GET request and follows its redirects the way a browser does, including a redirect from https to http.
+	/// The request message of the returned response carries the final address.
+	/// </summary>
+	private async Task<HttpResponseMessage> GetFollowingRedirectsAsync(Uri uri, CancellationToken token)
+	{
+		for (int redirect = 0; ; redirect++)
+		{
+			HttpResponseMessage response = await _websiteClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, token);
+
+			// A response that is not a redirect ends the chain, and so does a redirect that goes nowhere a browser would follow.
+			if ((int)response.StatusCode is < 300 or > 399 || response.Headers.Location is null || redirect == MaximumWebsiteRedirects ||
+				!Uri.TryCreate(uri, response.Headers.Location, out Uri? next) || !IsWebUri(next))
+			{
+				return response;
+			}
+			response.Dispose();
+			uri = next;
+		}
+	}
+
+	/// <summary>
+	/// Downloads at most the supplied amount of bytes and reports the address that the response finally came from.
+	/// A failed response carries no bytes, but its final address is still reported so that its host can be tried.
+	/// </summary>
+	private async Task<(byte[] Data, Uri Location, string? MediaType)> DownloadAsync(Uri uri, int maximumBytes, CancellationToken token)
+	{
+		using HttpResponseMessage response = await GetFollowingRedirectsAsync(uri, token);
+		Uri location = response.RequestMessage?.RequestUri ?? uri;
+		if (!response.IsSuccessStatusCode)
+		{
+			return ([], location, null);
+		}
+		byte[] data = new byte[maximumBytes];
+		await using Stream stream = await response.Content.ReadAsStreamAsync(token);
+		int length = await stream.ReadAtLeastAsync(data, data.Length, throwOnEndOfStream: false, cancellationToken: token);
+		Array.Resize(ref data, length);
+		return (data, location, response.Content.Headers.ContentType?.MediaType);
+	}
+
+	/// <summary>
+	/// Downloads and decodes a single icon candidate. A candidate that fails returns null so the next one is tried.
+	/// </summary>
+	private async Task<ImageSource?> TryLoadIconAsync(Uri uri, CancellationToken token)
+	{
+		try
+		{
+			// One byte past the limit is read so that an icon that is too large is told apart from one that fits exactly.
+			// A text response is the page that some sites serve in place of a missing icon.
+			(byte[] data, Uri location, string? mediaType) = await DownloadAsync(uri, MaximumFaviconBytes + 1, token);
+			if (data.Length is 0 or > MaximumFaviconBytes ||
+				mediaType?.StartsWith("text/", StringComparison.OrdinalIgnoreCase) == true)
+			{
+				return null;
+			}
+
+			using IRandomAccessStream stream = new MemoryStream(data).AsRandomAccessStream();
+
+			// Bitmap decoding does not understand SVG, which many sites declare as their icon.
+			if (string.Equals(mediaType, "image/svg+xml", StringComparison.OrdinalIgnoreCase) ||
+				location.AbsolutePath.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+			{
+				SvgImageSource svg = new();
+				return await svg.SetSourceAsync(stream) == SvgImageSourceLoadStatus.Success ? svg : null;
+			}
+
+			// Only the width is set so that the aspect ratio of the icon is preserved.
+			BitmapImage bitmap = new() { DecodePixelWidth = 40 };
+
+			await bitmap.SetSourceAsync(stream);
+
+			return bitmap;
+		}
+		catch (Exception ex) when (ex is not OperationCanceledException)
+		{
+			return null;
+		}
+	}
+
+	private async Task OpenWebsiteAsync(TopBarWebsiteEntry entry)
+	{
+		if (!TryGetWebsiteUri(entry.Url, out Uri? uri))
+		{
+			return;
+		}
+
+		try
+		{
+			_ = await Windows.System.Launcher.LaunchUriAsync(uri);
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+
+		if (!_isPinned)
+		{
+			StartAnimation(0.0);
+		}
+	}
+
+	/// <summary>
+	/// Edits a pinned website without changing its identity or the other website entries.
+	/// </summary>
+	private void ShowEditWebsiteFlyout(TopBarWebsiteEntry entry)
+	{
+		if (!_configuration.Websites.Contains(entry))
+		{
+			return;
+		}
+
+		TextBox nameBox = new() { Header = "Name", Text = entry.DisplayName, Width = 290.0 };
+		TextBox urlBox = new() { Header = "Website", Text = entry.Url, Width = 290.0 };
+		TextBlock error = new() { FontSize = 10.0, Visibility = Visibility.Collapsed };
+		Button save = new() { Content = "Save", HorizontalAlignment = HorizontalAlignment.Right };
+		StackPanel content = new() { Spacing = 8.0, Children = { nameBox, urlBox, error, save } };
+		Flyout flyout = new() { Content = content, ShouldConstrainToRootBounds = false };
+		TrackFlyout(flyout);
+
+		save.Click += (_, _) =>
+		{
+			if (!_configuration.Websites.Contains(entry))
+			{
+				flyout.Hide();
+				return;
+			}
+
+			string name = nameBox.Text.Trim();
+			if (name.Length == 0)
+			{
+				error.Text = "Enter a name.";
+				error.Visibility = Visibility.Visible;
+				return;
+			}
+			if (!TryGetWebsiteUri(urlBox.Text, out Uri? uri))
+			{
+				error.Text = "Enter a valid website address.";
+				error.Visibility = Visibility.Visible;
+				return;
+			}
+			foreach (TopBarWebsiteEntry other in _configuration.Websites)
+			{
+				if (!ReferenceEquals(other, entry) && IsSameWebsite(other, uri))
+				{
+					error.Text = "This website is already pinned.";
+					error.Visibility = Visibility.Visible;
+					return;
+				}
+			}
+
+			bool addressChanged = !string.Equals(entry.Url, uri.AbsoluteUri, StringComparison.OrdinalIgnoreCase);
+			if (addressChanged)
+			{
+				// Retire the old icon request so it cannot overwrite the icon for the new address.
+				if (_websiteStates.Remove(entry, out WebsiteState? state))
+				{
+					state.Request?.Cancel();
+				}
+				entry.Url = uri.AbsoluteUri;
+			}
+			if (addressChanged || !entry.DisplayName.AsSpan().SequenceEqual(name.AsSpan()))
+			{
+				entry.DisplayName = name;
+				TopBarConfigurationManager.Save(_configuration);
+				RebuildWebsiteTiles();
+				if (addressChanged)
+				{
+					StartFaviconLoad(entry);
+				}
+			}
+			flyout.Hide();
+		};
+
+		flyout.ShowAt(AddButton);
+		_ = nameBox.Focus(FocusState.Programmatic);
+	}
+
+	private void ShowAddWebsiteFlyout()
+	{
+		TextBox nameBox = new() { Header = "Name (optional)", Width = 290.0 };
+		TextBox urlBox = new() { Header = "Website", PlaceholderText = "example.com", Width = 290.0 };
+		TextBlock error = new() { Text = "Enter a website address, such as example.com.", FontSize = 10.0 };
+		Button add = new() { Content = "Pin website", HorizontalAlignment = HorizontalAlignment.Right };
+		StackPanel content = new() { Spacing = 8.0, Children = { nameBox, urlBox, error, add } };
+		Flyout flyout = new() { Content = content, ShouldConstrainToRootBounds = false };
+		TrackFlyout(flyout);
+		add.Click += (_, _) =>
+		{
+			if (!TryGetWebsiteUri(urlBox.Text, out Uri? uri))
+			{
+				error.Text = "Enter a valid website address.";
+				return;
+			}
+			if (WebsiteExists(uri))
+			{
+				error.Text = "This website is already pinned.";
+				return;
+			}
+
+			AddWebsite(uri, nameBox.Text);
+
+			flyout.Hide();
+		};
+
+		flyout.ShowAt(AddButton);
+	}
+
+	/// <summary>
+	/// Pins the website at once by the address that was entered. The address that it redirects to replaces that one
+	/// in the background, together with its icon, so adding a website never waits on the network.
+	/// </summary>
+	private void AddWebsite(Uri uri, string? name)
+	{
+		TopBarWebsiteEntry entry = new() { Url = uri.AbsoluteUri, DisplayName = string.IsNullOrWhiteSpace(name) ? uri.Host : name.Trim() };
+		_configuration.Websites.Add(entry);
+		_websiteStates[entry] = new WebsiteState { ResolveAddress = true };
+		TopBarConfigurationManager.Save(_configuration);
+
+		if (_websitesLoaded)
+		{
+			RebuildWebsiteTiles();
+			StartFaviconLoad(entry);
+		}
+
+		SetActiveView(TopBarView.Websites, animate: true);
+	}
+
+	private void RemoveWebsite(TopBarWebsiteEntry entry)
+	{
+		if (!_configuration.Websites.Remove(entry))
+		{
+			return;
+		}
+		if (_websiteStates.Remove(entry, out WebsiteState? state))
+		{
+			state.Request?.Cancel();
+		}
+
+		TopBarConfigurationManager.Save(_configuration);
+
+		RebuildWebsiteTiles();
+		SetActiveView(TopBarView.Websites, animate: true);
+	}
+
+	private void RemoveAllWebsites()
+	{
+		if (_configuration.Websites.Count == 0)
+		{
+			return;
+		}
+		ClearWebsiteStates();
+		_configuration.Websites.Clear();
+		TopBarConfigurationManager.Save(_configuration);
+		RebuildWebsiteTiles();
+		SetActiveView(TopBarView.Websites, animate: true);
+	}
+
+	/// <summary>
+	/// Whether a drag carries a link, or text without any files, which is how a dragged website arrives.
+	/// </summary>
+	private static bool CarriesWebsite(DataPackageView data) => data.Contains(StandardDataFormats.WebLink) ||
+		(!data.Contains(StandardDataFormats.StorageItems) && data.Contains(StandardDataFormats.Text));
+
+	/// <summary>
+	/// Reads the website that a drag carries, or returns null when what it carries is not a website address.
+	/// </summary>
+	private static async Task<Uri?> GetDraggedWebsiteAsync(DataPackageView data)
+	{
+		string? text = data.Contains(StandardDataFormats.WebLink)
+			? (await data.GetWebLinkAsync()).AbsoluteUri
+			: await data.GetTextAsync();
+		return TryGetWebsiteUri(text, out Uri? uri) ? uri : null;
+	}
+
+	/// <summary>
+	/// Cancels every icon request that is in flight and forgets everything that the websites hold.
+	/// </summary>
+	private void ClearWebsiteStates()
+	{
+		foreach (WebsiteState state in _websiteStates.Values)
+		{
+			state.Request?.Cancel();
+		}
+		_websiteStates.Clear();
+	}
+
+	private void TeardownWebsites()
+	{
+		ClearWebsiteStates();
+		_websiteClient.Dispose();
+	}
+
+	#endregion
+
+	#region Browser Windows Dropped On The Bar
+
+	// Dragging a window of Edge or Chrome, or a tab that was pulled out of either of them into a window of its own,
+	// moves the window instead of starting drag and drop, so the bar never receives a drop for it. The bar listens for
+	// windows being moved instead, follows the pointer while a browser window is on the move, and reads the address of
+	// the page from the address bar of the window once it is released over the bar.
+	// All of it only exists while the Websites view is the active view. Switching to any other view removes the hook,
+	// stops the timer and forgets the window that was being followed, so nothing watches the desktop at any other time.
+
+	/// <summary>
+	/// Raised when a window starts and stops being moved or resized.
+	/// https://learn.microsoft.com/windows/win32/winauto/event-constants
+	/// </summary>
+	private const uint EVENT_SYSTEM_MOVESIZESTART = 0x000A;
+	private const uint EVENT_SYSTEM_MOVESIZEEND = 0x000B;
+
+	/// <summary>
+	/// The callback runs on the UI thread through its message loop, and the events of this app itself are skipped.
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setwineventhook
+	/// </summary>
+	private const uint WINEVENT_OUTOFCONTEXT = 0x0000;
+	private const uint WINEVENT_SKIPOWNPROCESS = 0x0002;
+
+	/// <summary>
+	/// An event that names the window itself rather than a part of it.
+	/// https://learn.microsoft.com/windows/win32/winauto/object-identifiers
+	/// </summary>
+	private const int OBJID_WINDOW = 0;
+	private const int CHILDID_SELF = 0;
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/procthread/process-security-and-access-rights
+	/// </summary>
+	private const uint PROCESS_QUERY_LIMITED_INFORMATION = 0x1000;
+
+	/// <summary>
+	/// The UI Automation client that reads the address bar of the dropped window.
+	/// https://learn.microsoft.com/windows/win32/api/uiautomationclient/nn-uiautomationclient-iuiautomation
+	/// </summary>
+	private static readonly Guid CLSID_CUIAutomation8 = new("E22AD333-B25F-460C-83D0-0581107395C9");
+	private static readonly Guid IID_IUIAutomation = new("30CBE57D-D9D0-452A-AB13-7AC5AC4825EE");
+	private const uint CLSCTX_INPROC_SERVER = 0x1;
+	private const uint COINIT_MULTITHREADED = 0x0;
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/winauto/uiauto-automation-element-propids
+	/// https://learn.microsoft.com/windows/win32/winauto/uiauto-controltype-ids
+	/// </summary>
+	private const int UIA_ControlTypePropertyId = 30003;
+	private const int UIA_NamePropertyId = 30005;
+	private const int UIA_ValueValuePropertyId = 30045;
+	private const int UIA_SelectionItemIsSelectedPropertyId = 30079;
+	private const int UIA_EditControlTypeId = 50004;
+	private const int UIA_TabItemControlTypeId = 50019;
+	private const int TreeScope_Descendants = 0x4;
+	private const ushort VT_I4 = 3;
+	private const ushort VT_BSTR = 8;
+	private const ushort VT_BOOL = 11;
+	private const short VARIANT_TRUE = -1;
+
+	// How often the pointer is looked at while a browser window is being moved. Nothing is polled at any other time.
+	private static readonly TimeSpan BrowserDragPollInterval = TimeSpan.FromMilliseconds(30.0);
+
+	private readonly DispatcherTimer _browserDragTimer = new() { Interval = BrowserDragPollInterval };
+
+	// The hook that reports windows being moved. It is zero whenever the Websites view is not the active view.
+	private IntPtr _moveSizeEventHook;
+
+	// Advances every time the watcher is discarded, so that a drop that was still being read when the user left the
+	// Websites view is thrown away instead of being pinned.
+	private int _browserDragWatchGeneration;
+
+	// The browser window that is currently being moved, and where it was on the previous tick.
+	private IntPtr _browserDragWindow;
+	private RECT _browserDragLastBounds;
+
+	// Whether the window has actually been moved, as opposed to resized, since the drag started.
+	private bool _isBrowserWindowMoved;
+
+	// Whether the dragged window is currently over the bar and the bar is willing to take it.
+	private bool _isBrowserDragOverBar;
+
+	/// <summary>
+	/// Starts the watcher while the Websites view is the active view and discards it completely otherwise.
+	/// </summary>
+	private void UpdateBrowserDragWatch()
+	{
+		if (!_isClosed && _activeView == TopBarView.Websites)
+		{
+			StartBrowserDragWatch();
+		}
+		else
+		{
+			StopBrowserDragWatch();
+		}
+	}
+
+	/// <summary>
+	/// Starts listening for windows being moved. Only the start and the end of a move are listened for, so a window that
+	/// is not being moved costs nothing.
+	/// </summary>
+	private void StartBrowserDragWatch()
+	{
+		if (_moveSizeEventHook != IntPtr.Zero)
+		{
+			return;
+		}
+
+		_moveSizeEventHook = NativeMethods.SetWinEventHook(
+			EVENT_SYSTEM_MOVESIZESTART,
+			EVENT_SYSTEM_MOVESIZEEND,
+			IntPtr.Zero,
+			GetMoveSizeEventProcedure(),
+			0U,
+			0U,
+			WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+
+		if (_moveSizeEventHook == IntPtr.Zero)
+		{
+			Logger.Write("Failed to listen for windows being moved, so browser windows cannot be dropped on the top bar.", LogTypeIntel.Error);
+			return;
+		}
+
+		_browserDragTimer.Tick += OnBrowserDragTimerTick;
+	}
+
+	/// <summary>
+	/// Removes the hook, stops following any window and puts the bar back the way the user set it up.
+	/// The hook is removed on the UI thread that installed it.
+	/// </summary>
+	private void StopBrowserDragWatch()
+	{
+		if (_moveSizeEventHook == IntPtr.Zero)
+		{
+			return;
+		}
+
+		LeaveBrowserDrag(endDrag: true);
+		_browserDragTimer.Tick -= OnBrowserDragTimerTick;
+		_ = NativeMethods.UnhookWinEvent(_moveSizeEventHook);
+		_moveSizeEventHook = IntPtr.Zero;
+		_browserDragWatchGeneration++;
+	}
+
+	/// <summary>
+	/// The address of the callback that receives the move events.
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nc-winuser-wineventproc
+	/// </summary>
+	private static IntPtr GetMoveSizeEventProcedure() => (IntPtr)(delegate* unmanaged[Stdcall]<IntPtr, uint, IntPtr, int, int, uint, uint, void>)&OnMoveSizeEvent_Unmanaged;
+
+	/// <summary>
+	/// Callback for the move events of every window on the desktop. It runs on the UI thread of the bar.
+	/// </summary>
+	[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvStdcall) })]
+	private static void OnMoveSizeEvent_Unmanaged(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint idEventThread, uint dwmsEventTime)
+	{
+		// Only a whole window is ever moved, so an event that names a part of a window is of no interest.
+		// An event that was already queued when its hook was removed belongs to a watcher that no longer exists.
+		if (idObject != OBJID_WINDOW || idChild != CHILDID_SELF || _currentInstance is not TopBar bar ||
+			hWinEventHook == IntPtr.Zero || hWinEventHook != bar._moveSizeEventHook)
+		{
+			return;
+		}
+
+		// Nothing is allowed to escape into the native caller.
+		try
+		{
+			if (eventType == EVENT_SYSTEM_MOVESIZESTART)
+			{
+				bar.OnWindowMoveStarted(hwnd);
+			}
+			else
+			{
+				bar.OnWindowMoveEnded(hwnd);
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+
+	private void OnWindowMoveStarted(IntPtr window)
+	{
+		// A move that never reported its end is abandoned, so that a newer one always starts from a clean state.
+		LeaveBrowserDrag(endDrag: true);
+
+		if (_isClosed || !IsSupportedBrowserWindow(window) || !NativeMethods.GetWindowRect(window, out RECT bounds))
+		{
+			return;
+		}
+
+		_browserDragWindow = window;
+		_browserDragLastBounds = bounds;
+		_browserDragTimer.Start();
+	}
+
+	private void OnWindowMoveEnded(IntPtr window)
+	{
+		if (window == IntPtr.Zero || window != _browserDragWindow)
+		{
+			return;
+		}
+
+		// Check the pointer once more at release, because the timer last checked it up to 30 ms ago and the window may have just reached or left the bar.
+		UpdateBrowserDrag();
+		bool isDroppedOnBar = _isBrowserDragOverBar;
+		LeaveBrowserDrag(endDrag: true);
+
+		if (isDroppedOnBar)
+		{
+			_ = PinBrowserWebsiteAsync(window);
+		}
+	}
+
+	private void OnBrowserDragTimerTick(object? sender, object e) => UpdateBrowserDrag();
+
+	/// <summary>
+	/// Follows the dragged window and opens the bar while the pointer carries it over the bar, the very same way that a
+	/// dragged link or file opens it.
+	/// </summary>
+	private void UpdateBrowserDrag()
+	{
+		if (_browserDragWindow == IntPtr.Zero || !NativeMethods.GetWindowRect(_browserDragWindow, out RECT bounds))
+		{
+			return;
+		}
+
+		// A move keeps the size of the window while its position changes, which is what tells it apart from a resize,
+		// so that resizing a window against the top of the display never opens the bar. Consecutive ticks are compared
+		// instead of the start of the drag, because a maximized window is restored to another size once it is dragged.
+		if (bounds.Width == _browserDragLastBounds.Width && bounds.Height == _browserDragLastBounds.Height &&
+			(bounds.left != _browserDragLastBounds.left || bounds.top != _browserDragLastBounds.top))
+		{
+			_isBrowserWindowMoved = true;
+		}
+
+		_browserDragLastBounds = bounds;
+
+		bool isOverBar = _isBrowserWindowMoved && IsCursorOverBar();
+		if (isOverBar == _isBrowserDragOverBar)
+		{
+			return;
+		}
+
+		if (!isOverBar)
+		{
+			LeaveBrowserDrag(endDrag: false);
+			return;
+		}
+
+		// The watcher only runs while the Websites view is active, so the bar is already showing it.
+		if (!TryOpenForDrag(TopBarView.Websites))
+		{
+			return;
+		}
+
+		_isBrowserDragOverBar = true;
+
+		// The dragged window sits above every other window, so the bar is raised above it while the window is over it.
+		_ = NativeMethods.SetWindowPos(_windowHandle, NativeMethods.HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+	}
+
+	/// <summary>
+	/// Puts the bar back once the dragged window leaves it. Ending the drag also stops following the window.
+	/// </summary>
+	private void LeaveBrowserDrag(bool endDrag)
+	{
+		if (endDrag)
+		{
+			_browserDragTimer.Stop();
+			_browserDragWindow = IntPtr.Zero;
+			_isBrowserWindowMoved = false;
+		}
+
+		if (!_isBrowserDragOverBar)
+		{
+			return;
+		}
+
+		_isBrowserDragOverBar = false;
+
+		if (_isClosed)
+		{
+			return;
+		}
+
+		ApplyAlwaysOnTop();
+
+		if (!_isPinned)
+		{
+			_retractionTimer.Stop();
+			_retractionTimer.Start();
+		}
+	}
+
+	/// <summary>
+	/// Both positions are physical pixels, because the app is aware of the scaling of every display.
+	/// </summary>
+	private bool IsCursorOverBar() => NativeMethods.GetCursorPos(out POINT cursor) && NativeMethods.GetWindowRect(_windowHandle, out RECT bar) &&
+		cursor.x >= bar.left && cursor.x < bar.right && cursor.y >= bar.top && cursor.y < bar.bottom;
+
+	/// <summary>
+	/// Whether the window belongs to a supported browser, which is told apart by the executable of the process that owns it.
+	/// </summary>
+	private static unsafe bool IsSupportedBrowserWindow(IntPtr window)
+	{
+		_ = NativeMethods.GetWindowThreadProcessId(window, out uint processId);
+		IntPtr process = processId == 0U ? IntPtr.Zero : NativeMethods.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, processId);
+		if (process == IntPtr.Zero)
+		{
+			return false;
+		}
+
+		try
+		{
+			const int PathCapacity = 1024;
+			char* path = stackalloc char[PathCapacity];
+			uint length = PathCapacity;
+			return NativeMethods.QueryFullProcessImageNameW(process, 0U, path, ref length) &&
+				IsSupportedBrowserExecutable(Path.GetFileName(new ReadOnlySpan<char>(path, (int)length)));
+		}
+		finally
+		{
+			_ = NativeMethods.CloseHandle(process);
+		}
+	}
+
+	/// <summary>
+	/// Microsoft Edge and Google Chrome are both built on Chromium, so their windows are laid out alike for UI Automation.
+	/// The WebView2 runtime runs as a process of its own name, so the windows of the apps that host it are never taken.
+	/// </summary>
+	private static bool IsSupportedBrowserExecutable(ReadOnlySpan<char> fileName) =>
+		fileName.Equals("msedge.exe", StringComparison.OrdinalIgnoreCase) ||
+		fileName.Equals("chrome.exe", StringComparison.OrdinalIgnoreCase);
+
+	/// <summary>
+	/// Reads the address of the page that the dropped window shows and pins it through the very same path as an address
+	/// that is typed in, so it is added at once and its final address and icon follow in the background.
+	/// </summary>
+	private async Task PinBrowserWebsiteAsync(IntPtr window)
+	{
+		int generation = _browserDragWatchGeneration;
+		string? address = null;
+		string? title = null;
+		try
+		{
+			// UI Automation talks to the browser across processes, so it runs off the UI thread and can never stall the bar.
+			(address, title) = await Task.Run(() => ReadBrowserTab(window));
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+
+		// The browser can leave the scheme out of the address it shows, which the same checks as a typed address take care of.
+		// The title of the tab names the website, and a tab without one falls back to the host like a typed address does.
+		// A drop that was still being read when the user left the Websites view is discarded together with the watcher.
+		if (!_isClosed && generation == _browserDragWatchGeneration && TryGetWebsiteUri(address, out Uri? uri) && !WebsiteExists(uri))
+		{
+			AddWebsite(uri, title);
+		}
+	}
+
+	/// <summary>
+	/// Reads the address and the title of the active tab of a browser window through UI Automation. Either of them is
+	/// null when it cannot be read.
+	/// The address bar is the first edit control of the window, because the toolbar comes before the page in the tree of
+	/// the window, so the search stops long before it reaches the page itself.
+	/// The title is the name of the selected tab of the tab strip, which is the title of the page without the name of the
+	/// browser and of the profile that the title of the window carries. The tab strip also comes before the page.
+	/// </summary>
+	private static unsafe (string? Address, string? Title) ReadBrowserTab(IntPtr window)
+	{
+		// UI Automation clients belong in the multithreaded apartment.
+		int initializeResult = NativeMethods.CoInitializeEx(IntPtr.Zero, COINIT_MULTITHREADED);
+
+		IntPtr automation = IntPtr.Zero;
+		IntPtr root = IntPtr.Zero;
+		IntPtr editCondition = IntPtr.Zero;
+		IntPtr tabItemCondition = IntPtr.Zero;
+		IntPtr selectedCondition = IntPtr.Zero;
+		IntPtr selectedTabCondition = IntPtr.Zero;
+
+		try
+		{
+			if (NativeMethods.CoCreateInstance(in CLSID_CUIAutomation8, IntPtr.Zero, CLSCTX_INPROC_SERVER, in IID_IUIAutomation, out automation) < 0 || automation == IntPtr.Zero)
+			{
+				return (null, null);
+			}
+
+			// IUIAutomation::ElementFromHandle is the seventh slot of the vtable, after the three IUnknown methods,
+			// CompareElements, CompareRuntimeIds and GetRootElement.
+			IntPtr rootLocal;
+			int rootResult = ((delegate* unmanaged[Stdcall]<IntPtr, IntPtr, IntPtr*, int>)(*(*(void***)automation + 6)))(automation, window, &rootLocal);
+			if (rootResult < 0 || rootLocal == IntPtr.Zero)
+			{
+				return (null, null);
+			}
+			root = rootLocal;
+
+			editCondition = CreatePropertyCondition(automation, UIA_ControlTypePropertyId, VT_I4, UIA_EditControlTypeId);
+			tabItemCondition = CreatePropertyCondition(automation, UIA_ControlTypePropertyId, VT_I4, UIA_TabItemControlTypeId);
+			selectedCondition = CreatePropertyCondition(automation, UIA_SelectionItemIsSelectedPropertyId, VT_BOOL, VARIANT_TRUE);
+
+			// IUIAutomation::CreateAndCondition is the twenty sixth slot of the vtable.
+			if (tabItemCondition != IntPtr.Zero && selectedCondition != IntPtr.Zero)
+			{
+				IntPtr selectedTabConditionLocal;
+				if (((delegate* unmanaged[Stdcall]<IntPtr, IntPtr, IntPtr, IntPtr*, int>)(*(*(void***)automation + 25)))(automation, tabItemCondition, selectedCondition, &selectedTabConditionLocal) >= 0)
+				{
+					selectedTabCondition = selectedTabConditionLocal;
+				}
+			}
+
+			return (ReadFirstMatchingString(root, editCondition, UIA_ValueValuePropertyId), ReadFirstMatchingString(root, selectedTabCondition, UIA_NamePropertyId));
+		}
+		finally
+		{
+			NativeMethods.ReleaseComObject(selectedTabCondition);
+			NativeMethods.ReleaseComObject(selectedCondition);
+			NativeMethods.ReleaseComObject(tabItemCondition);
+			NativeMethods.ReleaseComObject(editCondition);
+			NativeMethods.ReleaseComObject(root);
+			NativeMethods.ReleaseComObject(automation);
+
+			// Every successful initialization, including one that found the apartment already initialized, is balanced.
+			if (initializeResult >= 0)
+			{
+				NativeMethods.CoUninitialize();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Creates a condition that matches a single numeric or boolean property value, or returns zero when it cannot be
+	/// created. IUIAutomation::CreatePropertyCondition is the twenty fourth slot of the vtable. The VARIANT is passed by
+	/// value and only ever carries a number here, so it owns nothing that has to be cleared.
+	/// </summary>
+	private static unsafe IntPtr CreatePropertyCondition(IntPtr automation, int propertyId, ushort type, int number)
+	{
+		VARIANT value = default;
+		value.vt = type;
+		if (type == VT_BOOL)
+		{
+			value.boolVal = (short)number;
+		}
+		else
+		{
+			value.lVal = number;
+		}
+
+		IntPtr condition;
+		int result = ((delegate* unmanaged[Stdcall]<IntPtr, int, VARIANT, IntPtr*, int>)(*(*(void***)automation + 23)))(automation, propertyId, value, &condition);
+		return result < 0 ? IntPtr.Zero : condition;
+	}
+
+	/// <summary>
+	/// Reads a string property of the first descendant of the supplied element that matches the condition, or returns
+	/// null when nothing matches or the property is not a string.
+	/// </summary>
+	private static unsafe string? ReadFirstMatchingString(IntPtr root, IntPtr condition, int propertyId)
+	{
+		if (condition == IntPtr.Zero)
+		{
+			return null;
+		}
+
+		IntPtr element = IntPtr.Zero;
+		VARIANT value = default;
+		try
+		{
+			// IUIAutomationElement::FindFirst is the sixth slot of the vtable. It hands back null when nothing matches.
+			IntPtr elementLocal;
+			int findResult = ((delegate* unmanaged[Stdcall]<IntPtr, int, IntPtr, IntPtr*, int>)(*(*(void***)root + 5)))(root, TreeScope_Descendants, condition, &elementLocal);
+			if (findResult < 0 || elementLocal == IntPtr.Zero)
+			{
+				return null;
+			}
+			element = elementLocal;
+
+			// IUIAutomationElement::GetCurrentPropertyValue is the eleventh slot of the vtable.
+			int valueResult = ((delegate* unmanaged[Stdcall]<IntPtr, int, VARIANT*, int>)(*(*(void***)element + 10)))(element, propertyId, &value);
+			return valueResult >= 0 && value.vt == VT_BSTR && value.bstrVal != IntPtr.Zero
+				? new string((char*)value.bstrVal, 0, checked((int)NativeMethods.SysStringLen(value.bstrVal)))
+				: null;
+		}
+		finally
+		{
+			_ = NativeMethods.VariantClear(ref value);
+			NativeMethods.ReleaseComObject(element);
+		}
+	}
+
+	#endregion
 
 	#region Sentry
 
@@ -3690,6 +4864,8 @@ internal sealed partial class TopBar : Window
 		DetachExpandedHost();
 		StopNetworkQualityTest();
 		TeardownSentry();
+		TeardownWebsites();
+		StopBrowserDragWatch();
 
 		DetachRenderHook();
 

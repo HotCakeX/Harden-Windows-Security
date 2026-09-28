@@ -19,6 +19,7 @@
     <Grid x:Name="RootGrid"
           Loaded="{x:Bind OnRootGridLoaded}"
           PointerEntered="{x:Bind OnRootPointerEntered}"
+          PointerWheelChanged="{x:Bind OnViewSwitcherWheelChanged}"
           PointerExited="{x:Bind OnRootPointerExited}"
           PointerPressed="{x:Bind OnRootPointerPressed}"
           DragEnter="{x:Bind OnStorageDragEnter}"
@@ -118,6 +119,13 @@
                                 <FontIcon Glyph="&#xE8B7;"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem x:Name="WebsitesViewMenuItem"
+                                             GroupName="TopBarViewSwitcher"
+                                             Click="{x:Bind OnWebsitesViewButtonClick}">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE774;"/>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem x:Name="PerformanceViewMenuItem"
                                              GroupName="TopBarViewSwitcher"
                                              Click="{x:Bind OnPerformanceViewButtonClick}">
@@ -195,6 +203,14 @@
 
                     <!-- The pinned folder tiles are generated in the code behind from the entries of the bar. -->
                     <StackPanel x:Name="FoldersPanel"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                XYFocusKeyboardNavigation="Enabled"
+                                Visibility="Collapsed"/>
+
+                    <!-- Website tiles are created when the Websites view is first selected. -->
+                    <StackPanel x:Name="WebsitesPanel"
                                 Orientation="Horizontal"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"

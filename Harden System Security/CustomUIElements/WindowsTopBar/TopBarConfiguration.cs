@@ -33,7 +33,8 @@ internal enum TopBarView
 	Performance = 2,
 	Clocks = 3,
 	NetworkQuality = 4,
-	Sentry = 5
+	Sentry = 5,
+	Websites = 6
 }
 
 /// <summary>
@@ -93,6 +94,15 @@ internal sealed class TopBarFolderEntry
 }
 
 /// <summary>
+/// A single website pinned to the Websites view.
+/// </summary>
+internal sealed class TopBarWebsiteEntry
+{
+	public string DisplayName { get; set; } = string.Empty;
+	public string Url { get; set; } = string.Empty;
+}
+
+/// <summary>
 /// A single world clock of the top bar.
 /// </summary>
 internal sealed class TopBarClockEntry
@@ -119,13 +129,41 @@ internal sealed class TopBarClockEntry
 /// </summary>
 internal sealed class TopBarConfiguration
 {
-	public List<TopBarAppEntry> Apps { get; set; } = [];
-
-	public List<TopBarFolderEntry> Folders { get; set; } = [];
-
-	public List<TopBarClockEntry> Clocks { get; set; } = [];
-
-	public TopBarCompanion Companion { get; set; } = TopBarCompanion.None;
+	public List<TopBarAppEntry> Apps { get; set; } =
+	[
+		new TopBarAppEntry { DisplayName = "Settings", Glyph = "\uE713", LaunchTarget = "ms-settings:" },
+		new TopBarAppEntry { DisplayName = "Explorer", Glyph = "\uEC50", LaunchTarget = "explorer.exe" },
+		new TopBarAppEntry { DisplayName = "Notepad", Glyph = "\uE70F", LaunchTarget = "notepad.exe" },
+		new TopBarAppEntry { DisplayName = "Calculator", Glyph = "\uE8EF", LaunchTarget = "calc.exe" },
+		new TopBarAppEntry { DisplayName = "Task Manager", Glyph = "\uE9D9", LaunchTarget = "taskmgr.exe" }
+	];
+	public List<TopBarFolderEntry> Folders { get; set; } =
+	[
+		new TopBarFolderEntry { DisplayName = "Downloads", FolderPath = "shell:Downloads" },
+		new TopBarFolderEntry { DisplayName = "Documents", FolderPath = "shell:Personal" },
+		new TopBarFolderEntry { DisplayName = "Desktop", FolderPath = "shell:Desktop" }
+	];
+	public List<TopBarWebsiteEntry> Websites { get; set; } =
+	[
+		new TopBarWebsiteEntry { DisplayName = "Microsoft", Url = "https://microsoft.com/" },
+		new TopBarWebsiteEntry { DisplayName = "GitHub", Url = "https://github.com/" },
+		new TopBarWebsiteEntry { DisplayName = "Grokipedia", Url = "https://grokipedia.com/" },
+		new TopBarWebsiteEntry { DisplayName = "Bing", Url = "https://bing.com/" },
+		new TopBarWebsiteEntry { DisplayName = "Spotify", Url = "https://open.spotify.com/" },
+		new TopBarWebsiteEntry { DisplayName = "YouTube", Url = "https://YouTube.com/" },
+		new TopBarWebsiteEntry { DisplayName = "X", Url = "https://X.com/" },
+		new TopBarWebsiteEntry { DisplayName = "Instagram", Url = "https://instagram.com/" }
+	];
+	public List<TopBarClockEntry> Clocks { get; set; } =
+	[
+		new TopBarClockEntry { DisplayName = "Local", TimeZoneId = string.Empty, DisplayOnNotch = true },
+		new TopBarClockEntry { DisplayName = "UTC", TimeZoneId = "UTC", DisplayOnNotch = true },
+		new TopBarClockEntry { DisplayName = "Washington, D.C.", TimeZoneId = "Eastern Standard Time" },
+		new TopBarClockEntry { DisplayName = "Central", TimeZoneId = "Central Standard Time" },
+		new TopBarClockEntry { DisplayName = "Pacific", TimeZoneId = "Pacific Standard Time" },
+		new TopBarClockEntry { DisplayName = "Israel", TimeZoneId = "Israel Standard Time" }
+	];
+	public TopBarCompanion Companion { get; set; } = TopBarCompanion.PrisMatrix;
 }
 
 /// <summary>
@@ -161,38 +199,6 @@ internal enum TopBarNotchStyle
 /// </summary>
 internal static class TopBarConfigurationManager
 {
-	/// <summary>
-	/// The entries that a brand new configuration starts out with.
-	/// </summary>
-	private static TopBarConfiguration CreateDefaultConfiguration() => new()
-	{
-		Companion = TopBarCompanion.PrisMatrix,
-
-		Apps =
-		[
-			new TopBarAppEntry { DisplayName = "Settings", Glyph = "\uE713", LaunchTarget = "ms-settings:" },
-			new TopBarAppEntry { DisplayName = "Explorer", Glyph = "\uEC50", LaunchTarget = "explorer.exe" },
-			new TopBarAppEntry { DisplayName = "Notepad", Glyph = "\uE70F", LaunchTarget = "notepad.exe" },
-			new TopBarAppEntry { DisplayName = "Calculator", Glyph = "\uE8EF", LaunchTarget = "calc.exe" },
-			new TopBarAppEntry { DisplayName = "Task Manager", Glyph = "\uE9D9", LaunchTarget = "taskmgr.exe" }
-		],
-		Folders =
-		[
-			new TopBarFolderEntry { DisplayName = "Downloads", FolderPath = "shell:Downloads" },
-			new TopBarFolderEntry { DisplayName = "Documents", FolderPath = "shell:Personal" },
-			new TopBarFolderEntry { DisplayName = "Desktop", FolderPath = "shell:Desktop" }
-		],
-		Clocks =
-		[
-			new TopBarClockEntry { DisplayName = "Local", TimeZoneId = string.Empty, DisplayOnNotch = true },
-			new TopBarClockEntry { DisplayName = "UTC", TimeZoneId = "UTC", DisplayOnNotch = true },
-			new TopBarClockEntry { DisplayName = "Washington, D.C.", TimeZoneId = "Eastern Standard Time" },
-			new TopBarClockEntry { DisplayName = "Central", TimeZoneId = "Central Standard Time" },
-			new TopBarClockEntry { DisplayName = "Pacific", TimeZoneId = "Pacific Standard Time" },
-			new TopBarClockEntry { DisplayName = "Israel", TimeZoneId = "Israel Standard Time" }
-		]
-	};
-
 	private const string ConfigurationFileName = "WindowsTopBarConfiguration.json";
 	private const string TemporaryConfigurationFileName = "WindowsTopBarConfiguration.json.tmp";
 
@@ -207,19 +213,17 @@ internal static class TopBarConfigurationManager
 			string configurationFilePath = GetConfigurationFilePath();
 			if (!File.Exists(configurationFilePath))
 			{
-				return CreateDefaultConfiguration();
+				return new TopBarConfiguration();
 			}
 
 			string content = File.ReadAllText(configurationFilePath);
-			TopBarConfiguration? configuration = JsonSerializer.Deserialize(content, TopBarConfigurationJsonContext.Default.TopBarConfiguration);
-
-			return configuration ?? CreateDefaultConfiguration();
+			return JsonSerializer.Deserialize(content, TopBarConfigurationJsonContext.Default.TopBarConfiguration) ?? new TopBarConfiguration();
 		}
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
 
-			return CreateDefaultConfiguration();
+			return new TopBarConfiguration();
 		}
 	}
 

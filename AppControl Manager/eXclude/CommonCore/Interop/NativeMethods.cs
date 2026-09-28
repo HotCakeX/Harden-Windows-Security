@@ -4237,4 +4237,46 @@ internal static unsafe partial class NativeMethods
 		[Out] char[]?
 		packageFamilyName);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setwineventhook
+	/// </summary>
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr SetWinEventHook(
+		uint eventMin,
+		uint eventMax,
+		IntPtr hmodWinEventProc,
+		IntPtr pfnWinEventProc,
+		uint idProcess,
+		uint idThread,
+		uint dwFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-unhookwinevent
+	/// </summary>
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool UnhookWinEvent(IntPtr hWinEventHook);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getcursorpos
+	/// </summary>
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetCursorPos(out POINT lpPoint);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowrect
+	/// </summary>
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
 }

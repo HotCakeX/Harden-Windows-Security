@@ -111,7 +111,7 @@ internal sealed partial class FilePathWildcardRulesResources : ResourceDictionar
 		}
 	}
 
-	private void QueueDirectorySuggestions(AutoSuggestBox sender, string? input)
+	private void QueueDirectorySuggestions(AutoSuggestBox sender, string input)
 	{
 		directorySuggestionRequestVersion++;
 		pendingDirectorySuggestionBox = sender;

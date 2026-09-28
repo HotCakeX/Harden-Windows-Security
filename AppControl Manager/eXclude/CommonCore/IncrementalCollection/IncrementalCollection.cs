@@ -607,8 +607,8 @@ internal sealed partial class IncrementalCollection<T>(
 					_filterCancellationTokenSource = null;
 				}
 
-				_filterSemaphore?.Dispose();
-				_loadMoreSemaphore?.Dispose();
+				_filterSemaphore.Dispose();
+				_loadMoreSemaphore.Dispose();
 			}
 		}
 	}
@@ -771,8 +771,8 @@ internal sealed partial class MemoryMappedFileDataProvider : IFileDataProvider
 	{
 		if (!_disposed)
 		{
-			_accessor?.Dispose();
-			_mmf?.Dispose();
+			_accessor.Dispose();
+			_mmf.Dispose();
 			_disposed = true;
 		}
 	}

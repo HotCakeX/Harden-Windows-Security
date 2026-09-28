@@ -104,12 +104,12 @@ internal sealed partial class FileReputationVM : ViewModelBase
 			ElementsAreEnabled = false;
 			MainInfoBar.IsClosable = false;
 
-			FileTrustChecker.FileTrustResult? result = await Task.Run(() => FileTrustChecker.CheckFileTrust(filePath));
+			FileTrustChecker.FileTrustResult result = await Task.Run(() => FileTrustChecker.CheckFileTrust(filePath));
 
-			ReputationText = result?.Reputation;
-			SourceText = result?.Source.ToString();
-			DurationText = result?.Duration;
-			HandleText = result?.Handle;
+			ReputationText = result.Reputation;
+			SourceText = result.Source.ToString();
+			DurationText = result.Duration;
+			HandleText = result.Handle;
 		}
 		catch (Exception ex)
 		{

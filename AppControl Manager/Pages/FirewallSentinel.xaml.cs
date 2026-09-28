@@ -401,11 +401,8 @@ internal sealed partial class FirewallSentinel : Page, CommonCore.UI.IPageHeader
 		public void Dispose()
 		{
 			// Unsubscribe from event
-			if (_hostGrid != null)
-			{
-				_hostGrid.SizeChanged -= HostGrid_SizeChanged;
-				ElementCompositionPreview.SetElementChildVisual(_hostGrid, null);
-			}
+			_hostGrid.SizeChanged -= HostGrid_SizeChanged;
+			ElementCompositionPreview.SetElementChildVisual(_hostGrid, null);
 
 			// Dispose Composition objects
 			LeftLine.Dispose();

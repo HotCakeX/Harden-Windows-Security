@@ -111,7 +111,7 @@ internal static class CiFileHash
 		}
 
 		// Handle all other algorithms using manual calculation with single file read
-		string?[] manualResults = GetAllAuthenticodeHashesManual(filePath);
+		string[] manualResults = GetAllAuthenticodeHashesManual(filePath);
 
 		// Copy manual results to the main results array
 		// results indices: 2=SHA384, 3=SHA512, 4=SHA3-256, 5=SHA3-384, 6=SHA3-512
@@ -124,10 +124,10 @@ internal static class CiFileHash
 		return results;
 	}
 
-	private static unsafe string?[] GetAllAuthenticodeHashesManual(string filePath)
+	private static unsafe string[] GetAllAuthenticodeHashesManual(string filePath)
 	{
 		// Results array with same order as input hashAlgorithms array
-		string?[] results = new string?[HashAlgorithmsManual.Length];
+		string[] results = new string[HashAlgorithmsManual.Length];
 		nint[] algorithmHandles = new nint[HashAlgorithmsManual.Length];
 		nint[] hashObjectHandles = new nint[HashAlgorithmsManual.Length];
 		nint[] hashObjects = new nint[HashAlgorithmsManual.Length];
@@ -296,7 +296,7 @@ internal static class CiFileHash
 	/// <param name="fileStreamHandle">Used to hash the file.</param>
 	/// <param name="hashAlgorithm">The hashing algorithm to use.</param>
 	/// <exception cref="InvalidOperationException"></exception>
-	private static string? GetAuthenticodeHashLegacy(string filePath, nint fileStreamHandle, string hashAlgorithm)
+	private static string GetAuthenticodeHashLegacy(string filePath, nint fileStreamHandle, string hashAlgorithm)
 	{
 		nint contextHandle = nint.Zero;
 		nint hashValue = nint.Zero;
@@ -506,10 +506,10 @@ internal static class CiFileHash
 	/// Calculates Flat file hashes.
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
-	private static (string?, string?) GetFlatHash(string fileName)
+	private static (string, string) GetFlatHash(string fileName)
 	{
-		string? SHA3_512Hash = null;
-		string? SHA3_384Hash = null;
+		string SHA3_512Hash;
+		string SHA3_384Hash;
 
 		// Calculate SHA3-512 hash using native BCrypt functions
 		nint sha3_512AlgorithmHandle = nint.Zero;

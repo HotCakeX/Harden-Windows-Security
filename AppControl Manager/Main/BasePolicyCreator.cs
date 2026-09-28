@@ -137,7 +137,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		using ZipArchive zipArchive = new(zipStream, ZipArchiveMode.Read);
 
 		// Locate the current XML policy file in the archive so this method can still return a PolicyFileRepresent obj.
-		ZipArchiveEntry? xmlEntry = zipArchive.Entries.FirstOrDefault(static entry =>
+		ZipArchiveEntry xmlEntry = zipArchive.Entries.FirstOrDefault(static entry =>
 			string.Equals(entry.Name, "DriverPolicy_Enforced.xml", StringComparison.OrdinalIgnoreCase))
 			?? throw new FileNotFoundException("DriverPolicy_Enforced.xml was not found in the downloaded Vulnerable Driver Block List zip file.");
 
@@ -182,7 +182,7 @@ scheduledtasks --name "MSFT Driver Block list update" --exe "PowerShell.exe" --a
 		using ZipArchive zipArchive = new(zipStream, ZipArchiveMode.Read);
 
 		// Locate the DriverPolicy_Enforced.xml file within the zip archive
-		ZipArchiveEntry? xmlEntry = zipArchive.Entries.FirstOrDefault(static entry => entry.Name.Equals("DriverPolicy_Enforced.xml", StringComparison.OrdinalIgnoreCase)) ?? throw new FileNotFoundException("DriverPolicy_Enforced.xml was not found in the downloaded zip file.");
+		ZipArchiveEntry xmlEntry = zipArchive.Entries.FirstOrDefault(static entry => entry.Name.Equals("DriverPolicy_Enforced.xml", StringComparison.OrdinalIgnoreCase)) ?? throw new FileNotFoundException("DriverPolicy_Enforced.xml was not found in the downloaded zip file.");
 
 		// Load the content of the XML file into an XmlDocument
 		XmlDocument xmlDoc = new();

@@ -141,7 +141,7 @@ internal static class Main
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static byte[] SignCIP(byte[] fileContent, string? CertCN = null, X509Certificate2? Cert = null)
 	{
-		X509Certificate2? signingCertificate = (Cert ??
+		X509Certificate2 signingCertificate = (Cert ??
 			Helper.FindCertificateBySubjectName(CertCN ??
 			throw new ArgumentNullException(nameof(CertCN)))) ??
 			throw new InvalidOperationException("No certificate was found");

@@ -519,14 +519,14 @@ internal sealed partial class LogsVM : ViewModelBase, IDisposable
 		// Dispose the semaphore
 		try
 		{
-			_displaySemaphore?.Dispose();
+			_displaySemaphore.Dispose();
 		}
 		catch { }
 
 		// Dispose the LogCollection
 		try
 		{
-			LogCollection?.Dispose();
+			LogCollection.Dispose();
 		}
 		catch { }
 

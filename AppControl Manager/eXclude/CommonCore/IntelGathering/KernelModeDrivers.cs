@@ -469,12 +469,12 @@ internal static class KernelModeDrivers
 			isPE = true;
 
 			// Retrieve a pointer to the specified directory entry data in the mapped file image.
-			// - fileMappingView: A pointer to the mapped view of the file (memory-mapped region).
-			// - 0: The index of the directory entry to access (0 refers to the Export Table in PE headers).
-			// - 1: The type of data being accessed (1 indicates the Data Directory in PE format).
-			// - ref size: A reference to the variable that will hold the size of the retrieved data.
-			// - ref foundHeader: A reference to the variable that will store the header information of the directory entry.
-			IntPtr dataEx = NativeMethods.ImageDirectoryEntryToDataEx(fileMappingView, 0, 1, ref size, ref foundHeader);
+			IntPtr dataEx = NativeMethods.ImageDirectoryEntryToDataEx(
+				Base: fileMappingView,
+				MappedAsImage: 0,
+				DirectoryEntry: 1,
+				Size: ref size,
+				FoundHeader: ref foundHeader);
 
 			if (dataEx == IntPtr.Zero)
 			{

@@ -225,11 +225,7 @@ internal static class EccCurveManager
 						}
 
 						// Get detailed information about this curve
-						EccCurveCng? curveInfo = GetCurveDetails(curveName);
-						if (curveInfo != null)
-						{
-							result.Add(curveInfo);
-						}
+						result.Add(GetCurveDetails(curveName));
 					}
 					catch
 					{
@@ -254,7 +250,7 @@ internal static class EccCurveManager
 		return result;
 	}
 
-	private static EccCurveCng? GetCurveDetails(string curveName)
+	private static EccCurveCng GetCurveDetails(string curveName)
 	{
 		IntPtr hAlgLocal = IntPtr.Zero;
 		IntPtr hKeyLocal = IntPtr.Zero;

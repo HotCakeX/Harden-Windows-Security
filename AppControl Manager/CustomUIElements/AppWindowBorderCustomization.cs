@@ -276,14 +276,15 @@ internal static class AppWindowBorderCustomization
 	}
 
 	/// <summary>
-	/// Resets the border color to 0 (clears custom color).
+	/// Resets the border color (clears custom color).
 	/// </summary>
 	internal static void ResetBorderColor()
 	{
 		try
 		{
-			uint color = 0;
-			int result = NativeMethods.DwmSetWindowAttribute(Atlas.hWnd, DWMWA_BORDER_COLOR, ref color, sizeof(uint));
+			// https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
+			uint DWMWA_COLOR_DEFAULT = 0xFFFFFFFF;
+			int result = NativeMethods.DwmSetWindowAttribute(Atlas.hWnd, DWMWA_BORDER_COLOR, ref DWMWA_COLOR_DEFAULT, sizeof(uint));
 			if (result != 0)
 				Logger.Write($"Failed to reset window border color. DwmSetWindowAttribute returned: {result}", LogTypeIntel.Error);
 

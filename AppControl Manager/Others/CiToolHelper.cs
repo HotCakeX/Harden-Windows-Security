@@ -96,7 +96,7 @@ internal static class CiToolHelper
 		};
 
 		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+		using Process process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
 			Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
@@ -194,7 +194,7 @@ internal static class CiToolHelper
 		};
 
 		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+		using Process process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
 			Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string
@@ -251,7 +251,7 @@ internal static class CiToolHelper
 			};
 
 			// Start the process and capture the output
-			using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+			using Process process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
 				Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 			// Read all output as a string
@@ -310,7 +310,7 @@ internal static class CiToolHelper
 			};
 
 			// Start the process and capture the output
-			using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+			using Process process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
 				Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 			// Read all output as a string
@@ -354,7 +354,7 @@ internal static class CiToolHelper
 		};
 
 		// Start the process and capture the output
-		using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
+		using Process process = Process.Start(processStartInfo) ?? throw new InvalidOperationException(
 			Atlas.GetStr("GetPoliciesCiToolExeErrorMessage"));
 
 		// Read all output as a string

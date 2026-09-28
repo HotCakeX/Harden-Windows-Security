@@ -372,8 +372,7 @@ internal sealed partial class DeploymentVM : ViewModelBase, IGraphAuthHost, IDis
 	{
 		if (AuthCompanionCLS.CurrentActiveAccount is null)
 		{
-			MainInfoBar.WriteWarning(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
-			return;
+			throw new InvalidOperationException(Atlas.GetStr("SignInAuthenticationRequiredMsg"));
 		}
 
 		// Name of the policy that will be uploaded

@@ -1220,8 +1220,6 @@ internal sealed partial class FileIdentityAnalysis : ViewModelBase
 	/// </summary>
 	private static T? FindVisualChildByName<T>(DependencyObject parent, string name) where T : FrameworkElement
 	{
-		if (parent == null) return null;
-
 		int count = VisualTreeHelper.GetChildrenCount(parent);
 		for (int i = 0; i < count; i++)
 		{

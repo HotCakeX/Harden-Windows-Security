@@ -107,6 +107,27 @@ internal static class GetAppsList
 	}
 
 	/// <summary>
+	/// Returns a display ready name for a package, falling back to the family name when the manifest declares no usable display name.
+	/// </summary>
+	internal static string GetPackageDisplayName(Package package)
+	{
+		try
+		{
+			string displayName = package.DisplayName;
+			if (!string.IsNullOrWhiteSpace(displayName))
+			{
+				return displayName;
+			}
+		}
+		catch
+		{
+			// Some packages cannot resolve their display name; use the package family name instead.
+		}
+
+		return package.Id.FamilyName;
+	}
+
+	/// <summary>
 	/// Reads PNG image dimensions from header
 	/// </summary>
 	private static (int width, int height) ReadPngDimensions(BinaryReader reader)
@@ -291,7 +312,7 @@ internal static class GetAppsList
 
 					// Create a new instance of the class that displays each app in the ListView
 					apps.Add(new PackagedAppView(
-						displayName: item.DisplayName,
+						displayName: GetPackageDisplayName(item),
 						version: FormatPackageVersion(packageId.Version),
 						packageFamilyName: packageId.FamilyName,
 						logo: logoStr,

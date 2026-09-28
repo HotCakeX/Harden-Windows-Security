@@ -188,13 +188,8 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	}
 
 	// Method for recursive shadow removal
-	private static void DisableAllBorderShadows(DependencyObject? parent)
+	private static void DisableAllBorderShadows(DependencyObject parent)
 	{
-		if (parent is null)
-		{
-			return;
-		}
-
 		try
 		{
 			// If this element is a Border, remove its shadow using pattern matching
@@ -1323,15 +1318,10 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	}
 
 	// Method for finding child of type
-	private static T? FindChildOfType<T>(DependencyObject? parent) where T : DependencyObject
+	private static T? FindChildOfType<T>(DependencyObject parent) where T : DependencyObject
 	{
 		try
 		{
-			if (parent is null)
-			{
-				return null;
-			}
-
 			int childCount = VisualTreeHelper.GetChildrenCount(parent);
 			for (int i = 0; i < childCount; i++)
 			{
@@ -1366,15 +1356,10 @@ internal partial class ContentDialogV2 : ContentDialog, IDisposable
 	}
 
 	// Method for finding child by name
-	private static FrameworkElement? FindChildByName(DependencyObject? parent, string name)
+	private static FrameworkElement? FindChildByName(DependencyObject parent, string name)
 	{
 		try
 		{
-			if (parent is null)
-			{
-				return null;
-			}
-
 			int childCount = VisualTreeHelper.GetChildrenCount(parent);
 			for (int i = 0; i < childCount; i++)
 			{

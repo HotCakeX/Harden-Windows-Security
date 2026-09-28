@@ -289,9 +289,9 @@ internal static class PolicySettingsManager
 		return output;
 	}
 
-	private static string GetValueString(SettingValueType? settingValue)
+	private static string GetValueString(SettingValueType settingValue)
 	{
-		if (settingValue?.Item is null)
+		if (settingValue.Item is null)
 			return "null";
 
 		return settingValue.Item switch

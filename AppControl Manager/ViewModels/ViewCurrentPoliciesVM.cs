@@ -544,7 +544,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 							// If not then find the corresponding CIP file and use that instead
 							else
 							{
-								string? cipFilePathToDecode = GetLocalCIPFile(policy) ?? throw new InvalidOperationException("Could not find the CIP path of the Signed policy you're trying to remove on the system.");
+								string cipFilePathToDecode = GetLocalCIPFile(policy) ?? throw new InvalidOperationException("Could not find the CIP path of the Signed policy you're trying to remove on the system.");
 
 								policyObj = Management.ConvertBinaryToXmlFile(cipFilePathToDecode);
 

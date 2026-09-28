@@ -126,7 +126,7 @@ internal static class DependentsAnalyzer
 		{
 			try
 			{
-				string dependentDisplayName = GetPackageDisplayName(package);
+				string dependentDisplayName = GetAppsList.GetPackageDisplayName(package);
 
 				foreach (Package dependency in package.Dependencies)
 				{
@@ -143,27 +143,6 @@ internal static class DependentsAnalyzer
 		}
 
 		return dependentsByFullName;
-	}
-
-	/// <summary>
-	/// Returns a display ready name for a package, falling back to the family name when the manifest declares no usable display name.
-	/// </summary>
-	private static string GetPackageDisplayName(Package package)
-	{
-		try
-		{
-			string displayName = package.DisplayName;
-			if (!string.IsNullOrWhiteSpace(displayName))
-			{
-				return displayName;
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
-
-		return package.Id.FamilyName;
 	}
 
 	/// <summary>

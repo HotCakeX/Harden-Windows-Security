@@ -3,3 +3,5 @@
 * Updated dependencies to the latest versions.
 
 * Updated the Cryptographic bill of material generation to include more Post-Quantum algorithms supported by the latest versions of Windows.
+
+* Restoring the app window's border now uses the default theme-aware color.

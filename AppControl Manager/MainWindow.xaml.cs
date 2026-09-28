@@ -97,7 +97,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	/// <summary>
 	/// Timer to reset the scroll update lock after an animation completes.
 	/// </summary>
-	private readonly DispatcherQueueTimer? _resetScrollUpdateTimer;
+	private readonly DispatcherQueueTimer _resetScrollUpdateTimer;
 
 #endif
 

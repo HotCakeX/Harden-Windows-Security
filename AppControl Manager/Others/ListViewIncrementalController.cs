@@ -815,7 +815,7 @@ internal sealed partial class ListViewIncrementalController(
 
 		// No filter active:
 		// - Let the incremental collection repopulate from page 1 under new order.
-		_ = observableCollection.ForceReloadAsync();
+		await observableCollection.ForceReloadAsync();
 
 		// Restore the exact horizontal position saved before.
 		double clamped = sv.HorizontalOffset;

@@ -416,7 +416,7 @@ internal partial class SettingsCard : ButtonBase
 		}
 
 		// Even smaller widths (RightWrappedNoIcon) need a bit more separation between the header text and the now-stacked content.
-		if (contentAlignmentStateName == RightWrappedNoIconState)
+		if (string.Equals(contentAlignmentStateName, RightWrappedNoIconState, StringComparison.OrdinalIgnoreCase))
 		{
 			_ = VisualStateManager.GoToState(this, ContentSpacingNarrowState, true);
 			return;

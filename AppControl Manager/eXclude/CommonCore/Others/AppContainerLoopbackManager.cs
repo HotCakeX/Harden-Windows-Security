@@ -28,8 +28,12 @@ internal static class AppContainerLoopbackManager
 	private static readonly StringComparer SidComparer = StringComparer.OrdinalIgnoreCase;
 	private static readonly StringComparer AppContainerNameComparer = StringComparer.OrdinalIgnoreCase;
 
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/netfw/ne-netfw-netiso_flag
+	/// </summary>
 	private enum NETISO_FLAG : uint
 	{
+		FORCE_COMPUTE_BINARIES = 0x1,
 		MAX = 0x2
 	}
 

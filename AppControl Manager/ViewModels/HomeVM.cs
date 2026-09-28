@@ -1444,8 +1444,8 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 				const int OffsetMemoryType = 18; // (0x12): Memory Type (BYTE)
 				const int OffsetSpeed = 21; // (0x15): Speed (WORD)
 				const int OffsetConfiguredSpeed = 32; // (0x20): Configured Memory Clock Speed (WORD)
-				const int OffsetExtendedSpeed = 57; // (0x39): Extended Speed (DWORD) - SMBIOS 3.3+
-				const int OffsetExtendedConfiguredSpeed = 61; // (0x3D): Extended Configured Memory Speed (DWORD) - SMBIOS 3.3+
+				const int OffsetExtendedSpeed = 84; // Extended Speed (DWORD) - SMBIOS 3.3+
+				const int OffsetExtendedConfiguredSpeed = 88; // (0x58): Extended Configured Memory Speed (DWORD) - SMBIOS 3.3+
 
 				while (pos + 4 <= max)
 				{
@@ -1484,13 +1484,13 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 							configuredSpeed = (ushort)Marshal.ReadInt16(buffer, pos + OffsetConfiguredSpeed);
 						}
 
-						// 3. Extended Speed (Offset 57) - DWORD
+						// 3. Extended Speed (Offset 84) - DWORD
 						if (length >= OffsetExtendedSpeed + 4)
 						{
 							extendedSpeed = (uint)Marshal.ReadInt32(buffer, pos + OffsetExtendedSpeed);
 						}
 
-						// 4. Extended Configured Speed (Offset 61) - DWORD
+						// 4. Extended Configured Speed (Offset 88) - DWORD
 						if (length >= OffsetExtendedConfiguredSpeed + 4)
 						{
 							extendedConfiguredSpeed = (uint)Marshal.ReadInt32(buffer, pos + OffsetExtendedConfiguredSpeed);
@@ -1522,9 +1522,8 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 							selected = baseSpeed;
 						}
 
-						// Filter out plausible garbage or "Unknown" (0)
-						// MT/s is typically >= 300 for DDR1 and up to ~10000+ for future DDR5/6.
-						if (selected >= 300 && selected <= 30000)
+						// Filter out unknown speeds and values with the reserved bit 31 set.
+						if (selected != 0 && selected <= 0x7FFFFFFF)
 						{
 							chosenSpeeds.Add(selected);
 
@@ -1586,8 +1585,10 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 				{
 					0x18 => "DDR3",
 					0x1A => "DDR4",
-					0x1B => "LPDDR3",
-					0x1C => "LPDDR4",
+					0x1B => "LPDDR",
+					0x1C => "LPDDR2",
+					0x1D => "LPDDR3",
+					0x1E => "LPDDR4",
 					0x22 => "DDR5",
 					0x23 => "LPDDR5",
 					_ => string.Empty

@@ -40,7 +40,7 @@ While collapsed, the TopBar appears as a slim pill at the top of your display. I
 
 ## The Views
 
-The TopBar can display one tool at a time, and you switch between them from a small menu inside the expanded bar. Whichever view you pick, the bar automatically resizes itself to fit that view's content. Below is an overview of the available views:
+The TopBar can display one tool at a time, and you switch between them from a small menu inside the expanded bar. You can also **use your mouse wheel or scroll on a trackpad** while your pointer is over the view switcher button or an empty part of the bar to move through the views. Scroll down to go forward and up to go back; the selection wraps around when you reach either end. Scrolling over tiles and other controls keeps their usual behavior. Whichever view you pick, the bar automatically resizes itself to fit that view's content. Below is an overview of the available views:
 
 ### Apps
 
@@ -63,6 +63,18 @@ A strip of pinned folders for one‑click access to the places you use most. It 
 </div>
 
 <br>
+
+### Websites
+
+A quick-launch strip of your favorite websites. Each site appears as a tile with its name and icon; click one to open it in your default browser. You can:
+
+- **Pin a website** by entering its address, with an optional name. The bar comes preloaded with a few familiar sites. The icons of the pinned websites are only fetched during the first load of this view when you launch the TopBar.
+
+- **Drag a link or browser tab/window onto the bar** to pin it. If you're running the app normally (not as an administrator), you can drag a browser window or tab onto the Websites view to add its current page. It currently only works for Microsoft Edge and Google Chrome.
+
+- **Remove a website** or clear the whole list from a tile's right-click menu.
+
+- **Edit an existing website** by right-clicking or tap + holding on it and selecting the Edit option.
 
 ### Performance
 
@@ -213,7 +225,7 @@ There are also quick buttons to **add** a new item to the current view, and to *
 
 - **It's light on your system.** The live tools only do their work while you're actually looking at them and the bar is open. A collapsed bar costs practically nothing.
 
-- **Your choices are remembered.** Your pinned apps, folders, clocks, companion choice, notch style, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
+- **Your choices are remembered.** Your pinned apps, folders, websites, clocks, companion choice, notch style, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
 
 - **One bar at a time.** Even if you have more than one copy of the app running, only a single TopBar is shown, so it never clutters your screen.
 
@@ -221,4 +233,4 @@ There are also quick buttons to **add** a new item to the current view, and to *
 
 ### In Short
 
-The TopBar is a compact, always‑at‑hand command center that tucks neatly into the top of your screen. Whether you're launching apps, jumping to folders, watching your system's performance, keeping time across the world, checking your connection quality, or letting the Acoustic Sentry listen for you, it's all a quick glance (and a gentle hover) away, wrapped up with a bit of animated charm.
+The TopBar is a compact, always‑at‑hand command center that tucks neatly into the top of your screen. Whether you're launching apps, jumping to folders, opening websites, watching your system's performance, keeping time across the world, checking your connection quality, or letting the Acoustic Sentry listen for you, it's all a quick glance (and a gentle hover) away, wrapped up with a bit of animated charm.

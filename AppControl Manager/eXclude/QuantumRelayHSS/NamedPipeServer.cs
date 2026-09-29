@@ -45,17 +45,6 @@ internal sealed class NamedPipeServer : IDisposable
 	/// </summary>
 	private const int IdleTimeoutSeconds = 120;
 
-	/// <summary>
-	/// The package family name of the Harden System Security app. Only clients whose token carries this exact
-	/// package identity are allowed to use the service, and the named pipe is the only way to reach it.
-	/// </summary>
-	private const string AuthorizedPackageFamilyName = "VioletHansen.HardenSystemSecurity_ea7andspwdn10";
-
-	/// <summary>
-	/// Returned by the first GetPackageFamilyNameFromToken call because no output buffer is supplied to it.
-	/// </summary>
-	private const int ERROR_INSUFFICIENT_BUFFER = 122;
-
 	private readonly CancellationTokenSource CTS = new();
 
 	/// <summary>
@@ -605,7 +594,7 @@ internal sealed class NamedPipeServer : IDisposable
 
 					isAllowed = NativeMethods.CheckTokenMembership(IntPtr.Zero, pSid, out bool isMember)
 						&& isMember
-						&& IsTokenFromAuthorizedPackage(clientIdentity.Token);
+						&& Atlas.IsTokenFromAuthorizedPackage(clientIdentity.Token);
 				}
 				catch
 				{
@@ -626,25 +615,6 @@ internal sealed class NamedPipeServer : IDisposable
 		}
 
 		return isAllowed;
-	}
-
-	// Reads the package family name out of the client's token with the documented two-call pattern and compares it.
-	// A token with no package identity makes the first call return APPMODEL_ERROR_NO_PACKAGE instead, so it is denied.
-	private static bool IsTokenFromAuthorizedPackage(IntPtr token)
-	{
-		uint length = 0;
-
-		// The first call supplies no buffer and only reports the required character count, including the null terminator.
-		if (NativeMethods.GetPackageFamilyNameFromToken(token, ref length, null) != ERROR_INSUFFICIENT_BUFFER
-			|| length != AuthorizedPackageFamilyName.Length + 1)
-		{
-			return false;
-		}
-
-		char[] packageFamilyName = new char[length];
-
-		return NativeMethods.GetPackageFamilyNameFromToken(token, ref length, packageFamilyName) == 0
-			&& AuthorizedPackageFamilyName.AsSpan().Equals(packageFamilyName.AsSpan(0, (int)length - 1), StringComparison.OrdinalIgnoreCase);
 	}
 }
 

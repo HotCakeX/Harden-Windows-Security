@@ -126,4 +126,34 @@ internal static partial class Atlas
 
 #endif
 
+	/// <summary>
+	/// The package family name of the Harden System Security app.
+	/// </summary>
+	private const string HardenSystemSecurityPackageFamilyName = "VioletHansen.HardenSystemSecurity_ea7andspwdn10";
+
+	/// <summary>
+	/// Reads the package family name out of the token with the documented two-call pattern and compares it.
+	/// A token with no package identity makes the first call return APPMODEL_ERROR_NO_PACKAGE instead, so it is denied.
+	/// </summary>
+	internal static bool IsTokenFromAuthorizedPackage(IntPtr token, string PFN = HardenSystemSecurityPackageFamilyName)
+	{
+		/// <summary>
+		/// Returned by the first GetPackageFamilyNameFromToken call because no output buffer is supplied to it.
+		/// </summary>
+		const int ERROR_INSUFFICIENT_BUFFER = 122;
+
+		uint length = 0;
+
+		// The first call supplies no buffer and only reports the required character count, including the null terminator.
+		if (NativeMethods.GetPackageFamilyNameFromToken(token, ref length, null) != ERROR_INSUFFICIENT_BUFFER
+			|| length != PFN.Length + 1)
+		{
+			return false;
+		}
+
+		char[] packageFamilyName = new char[length];
+
+		return NativeMethods.GetPackageFamilyNameFromToken(token, ref length, packageFamilyName) == 0
+			&& PFN.AsSpan().Equals(packageFamilyName.AsSpan(0, (int)length - 1), StringComparison.OrdinalIgnoreCase);
+	}
 }

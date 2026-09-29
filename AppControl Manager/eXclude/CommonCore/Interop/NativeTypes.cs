@@ -2590,3 +2590,17 @@ internal enum AMSI_RESULT
 	BLOCKED_BY_ADMIN_END = 0x4FFF,
 	DETECTED = 0x8000
 }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/shellapi/ns-shellapi-appbardata
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct APPBARDATA
+{
+	internal uint cbSize;
+	internal IntPtr hWnd;
+	internal uint uCallbackMessage;
+	internal uint uEdge;
+	internal RECT rc;
+	internal IntPtr lParam;
+}

@@ -39,6 +39,9 @@ internal static unsafe partial class NativeMethods
 	internal const uint SWP_NOSIZE = 0x0001;
 	internal const uint SWP_NOMOVE = 0x0002;
 	internal const uint SWP_NOACTIVATE = 0x0010;
+	internal const uint ABM_NEW = 0x00000000;
+	internal const uint ABM_REMOVE = 0x00000001;
+	internal const uint ABN_FULLSCREENAPP = 0x00000002;
 	internal const uint NIM_ADD = 0x00000000;
 	internal const uint NIM_MODIFY = 0x00000001;
 	internal const uint NIM_DELETE = 0x00000002;
@@ -4278,5 +4281,40 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-msgwaitformultipleobjects
+	/// </summary>
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint MsgWaitForMultipleObjects(
+		uint nCount,
+		in nint pHandles,
+		[MarshalAs(UnmanagedType.Bool)] bool fWaitAll,
+		uint dwMilliseconds,
+		uint dwWakeMask);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-peekmessagew
+	/// </summary>
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool PeekMessageW(
+		out MSG lpMsg,
+		nint hWnd,
+		uint wMsgFilterMin,
+		uint wMsgFilterMax,
+		uint wRemoveMsg);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/shellapi/nf-shellapi-shappbarmessage
+	/// </summary>
+	[LibraryImport("shell32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nuint SHAppBarMessage(uint dwMessage, ref APPBARDATA pData);
 
 }

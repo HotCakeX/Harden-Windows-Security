@@ -107,7 +107,7 @@ internal static partial class Atlas
 	/// </summary>
 	internal static readonly int PackageSource = string.Equals(PFN, "AppControlManager_sadt7br7jpt02", StringComparison.OrdinalIgnoreCase) ?
 		0 :
-		(string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) || string.Equals(PFN, "VioletHansen.HardenSystemSecurity_ea7andspwdn10", StringComparison.OrdinalIgnoreCase)
+		(string.Equals(PFN, "VioletHansen.AppControlManager_ea7andspwdn10", StringComparison.OrdinalIgnoreCase) || string.Equals(PFN, HardenSystemSecurityPackageFamilyName, StringComparison.OrdinalIgnoreCase)
 		? 1 : 2);
 
 	/// <summary>

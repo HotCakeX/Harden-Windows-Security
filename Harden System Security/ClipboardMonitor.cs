@@ -29,8 +29,9 @@ internal static class ClipboardMonitor
 {
 	private const uint CF_UNICODETEXT = 13;
 	private const uint WM_CLIPBOARDUPDATE = 0x031D;
-	private const uint WM_CLOSE = 0x0010;
-	private const uint WM_DESTROY = 0x0002;
+	private const uint WM_NCCREATE = 0x0081;
+	private const uint QS_ALLINPUT = 0x04FF;
+	private const uint PM_REMOVE = 0x0001;
 	private const int ClipboardMaximumCharacters = 131_072;
 	private const string MonitorMutexName = "Local\\HardenSystemSecurity.ClipboardMonitor";
 	private const string MonitorStopEventName = "Local\\HardenSystemSecurity.ClipboardMonitor.Stop";
@@ -83,7 +84,7 @@ internal static class ClipboardMonitor
 		}
 	}
 
-	internal static bool IsRunning() => ProcessExists() && IsEventSignaled(MonitorReadyEventName);
+	internal static bool IsRunning() => ProcessExists() && IsEventSignaled();
 
 	private static bool ProcessExists()
 	{
@@ -103,11 +104,11 @@ internal static class ClipboardMonitor
 		}
 	}
 
-	private static bool IsEventSignaled(string eventName)
+	private static bool IsEventSignaled()
 	{
 		try
 		{
-			using EventWaitHandle monitorEvent = EventWaitHandle.OpenExisting(eventName);
+			using EventWaitHandle monitorEvent = EventWaitHandle.OpenExisting(MonitorReadyEventName);
 			return monitorEvent.WaitOne(0);
 		}
 		catch (WaitHandleCannotBeOpenedException)
@@ -207,7 +208,6 @@ internal static class ClipboardMonitor
 			nint window = 0;
 			using CancellationTokenSource cancellation = new();
 			Thread? worker = null;
-			Thread? stopListener = null;
 			try
 			{
 				window = NativeMethods.CreateWindowExW(
@@ -242,38 +242,37 @@ internal static class ClipboardMonitor
 				};
 				clipboardWorker.Start();
 				worker = clipboardWorker;
-				Thread stopThread = new(() => WaitForStopRequest(window, stopEvent, cancellation.Token))
-				{
-					IsBackground = true,
-					Name = "HSS Clipboard Monitor Stop Listener"
-				};
-				stopThread.Start();
-				stopListener = stopThread;
 				_ = readyEvent.Set();
 				// Include the current clipboard instead of waiting for the first new copy.
 				_ = clipboardUpdateEvent.Set();
 
+				// The stop event alone requests shutdown; messages only deliver clipboard updates.
+				nint stopHandle = stopEvent.SafeWaitHandle.DangerousGetHandle();
 				while (true)
 				{
-					int result = NativeMethods.GetMessageW(out MSG message, 0, 0, 0);
-					if (result == -1)
-					{
-						throw new Win32Exception(Marshal.GetLastPInvokeError(), "GetMessageW failed.");
-					}
-
-					if (result == 0)
+					uint waitResult = NativeMethods.MsgWaitForMultipleObjects(1, in stopHandle, false, uint.MaxValue, QS_ALLINPUT);
+					if (waitResult == 0)
 					{
 						break;
 					}
-
-					_ = NativeMethods.DispatchMessageW(in message);
+					if (waitResult == uint.MaxValue)
+					{
+						throw new Win32Exception(Marshal.GetLastPInvokeError(), "MsgWaitForMultipleObjects failed.");
+					}
+					if (waitResult != 1)
+					{
+						throw new InvalidOperationException($"Unexpected message wait result: {waitResult}.");
+					}
+					while (!stopEvent.WaitOne(0) && NativeMethods.PeekMessageW(out MSG message, 0, 0, 0, PM_REMOVE))
+					{
+						_ = NativeMethods.DispatchMessageW(in message);
+					}
 				}
 			}
 			finally
 			{
 				_ = readyEvent.Reset();
 				cancellation.Cancel();
-				stopListener?.Join();
 				// Never dispose the AMSI context or clipboard window while the worker is using them.
 				worker?.Join();
 				if (window != 0)
@@ -294,25 +293,6 @@ internal static class ClipboardMonitor
 		}
 	}
 
-	private static void WaitForStopRequest(nint window, EventWaitHandle stopEvent, CancellationToken cancellation)
-	{
-		WaitHandle[] waitHandles = [cancellation.WaitHandle, stopEvent];
-		if (WaitHandle.WaitAny(waitHandles) != 1)
-		{
-			return;
-		}
-
-		// Marshal shutdown to the window thread so its finally blocks run.
-		// If the message queue is full, retry without leaking or abandoning this listener thread.
-		while (!NativeMethods.PostMessageW(window, (WinMsg)WM_CLOSE, 0, 0))
-		{
-			if (cancellation.WaitHandle.WaitOne(100))
-			{
-				return;
-			}
-		}
-	}
-
 	[UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
 	private static nint WindowProc(nint hWnd, uint uMsg, nuint wParam, nint lParam)
 	{
@@ -320,21 +300,20 @@ internal static class ClipboardMonitor
 		{
 			switch (uMsg)
 			{
+				case WM_NCCREATE:
+					// Default creation handling is required; all other messages are explicitly handled or ignored.
+					return NativeMethods.DefWindowProcW(hWnd, uMsg, wParam, lParam);
 				case WM_CLIPBOARDUPDATE:
 					_ = ClipboardUpdateEvent?.Set();
 					return 0;
-				case WM_CLOSE:
-				case WM_DESTROY:
-					NativeMethods.PostQuitMessage(0);
-					return 0;
 				default:
-					return NativeMethods.DefWindowProcW(hWnd, uMsg, wParam, lParam);
+					return 0;
 			}
 		}
 		catch (Exception exception)
 		{
 			Logger.Write(exception);
-			return NativeMethods.DefWindowProcW(hWnd, uMsg, wParam, lParam);
+			return 0;
 		}
 	}
 
@@ -570,5 +549,3 @@ internal static class ClipboardMonitor
 		throw new Win32Exception(lastError, "OpenClipboard failed after 6 attempts. Monitoring will retry.");
 	}
 }
-
-

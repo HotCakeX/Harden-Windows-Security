@@ -323,6 +323,10 @@ internal sealed partial class TopBar : Window
 	private bool _doesStorageDragContainItems;
 	private int _storageDragGeneration;
 	private bool _isClosed;
+	private readonly uint _appBarCallbackMessage = NativeMethods.RegisterWindowMessageW("HardenSystemSecurity.WindowsTopBar.AppBar");
+	private readonly uint _taskbarCreatedMessage = NativeMethods.RegisterWindowMessageW("TaskbarCreated");
+	private bool _isAppBarRegistered;
+	private bool _isAutoHidden;
 
 	private TopBar()
 	{
@@ -378,6 +382,8 @@ internal sealed partial class TopBar : Window
 		PopForgeCompanionMenuItem.Text = "PopForge";
 
 		AlwaysOnTopMenuItem.IsChecked = Atlas.Settings.WindowsTopBarAlwaysOnTop;
+		AutoHideFullScreenMenuItem.Text = "Auto-hide in full screen";
+		Atlas.Settings.WindowsTopBarAutoHideInFullScreenChanged += OnAutoHideFullScreenSettingChanged;
 
 		ToolTipService.SetToolTip(ViewSwitcherButton, Atlas.GetStr("TopBarViewSwitcherToolTip"));
 		ToolTipService.SetToolTip(SettingsButton, Atlas.GetStr("TopBarSettingsToolTip"));
@@ -447,6 +453,7 @@ internal sealed partial class TopBar : Window
 			_currentInstance.Activate();
 			_currentInstance.RemoveWindowBorder();
 			_currentInstance.ApplyAlwaysOnTop();
+			_currentInstance.UpdateFullScreenRegistration();
 
 			return;
 		}
@@ -467,6 +474,7 @@ internal sealed partial class TopBar : Window
 		// Showing the window makes the presenter lay out its own frame again, so the frame is stripped once more afterwards.
 		_currentInstance.RemoveWindowBorder();
 		_currentInstance.ApplyAlwaysOnTop();
+		_currentInstance.UpdateFullScreenRegistration();
 	}
 
 	/// <summary>
@@ -595,6 +603,37 @@ internal sealed partial class TopBar : Window
 	[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvStdcall) })]
 	private static IntPtr SubClassProc_Unmanaged(IntPtr hWnd, WinMsg Msg, UIntPtr wParam, IntPtr lParam, uint uIdSubclass, IntPtr dwRefData)
 	{
+		TopBar? bar = _currentInstance;
+		if (bar is not null && !bar._isClosed && hWnd == bar._windowHandle)
+		{
+			uint message = (uint)Msg;
+			if (bar._isAppBarRegistered && message == bar._appBarCallbackMessage && wParam.ToUInt64() == NativeMethods.ABN_FULLSCREENAPP)
+			{
+				try
+				{
+					bar.SetFullScreenVisibility(lParam != IntPtr.Zero);
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ex);
+				}
+				return IntPtr.Zero;
+			}
+			if (bar._isAppBarRegistered && bar._taskbarCreatedMessage != 0U && message == bar._taskbarCreatedMessage)
+			{
+				try
+				{
+					// Explorer lost its registration and full-screen state when its taskbar restarted.
+					bar._isAppBarRegistered = false;
+					bar.SetFullScreenVisibility(false);
+					bar.UpdateFullScreenRegistration();
+				}
+				catch (Exception ex)
+				{
+					Logger.Write(ex);
+				}
+			}
+		}
 #pragma warning disable IDE0010
 		switch (Msg)
 		{
@@ -620,6 +659,7 @@ internal sealed partial class TopBar : Window
 			// The subclass has to be released while the window still exists, otherwise it outlives the window.
 			// https://learn.microsoft.com/windows/win32/winmsg/wm-ncdestroy
 			case WinMsg.WM_NCDESTROY:
+				bar?.StopFullScreenRegistration();
 				_ = NativeMethods.RemoveWindowSubclass(hWnd, GetSubclassProcedure(), uIdSubclass);
 				break;
 
@@ -3023,6 +3063,66 @@ internal sealed partial class TopBar : Window
 		ApplyAlwaysOnTop();
 	}
 
+	/// <summary>
+	/// Registers the floating bar for Shell full-screen notifications without reserving desktop space.
+	/// </summary>
+	private void OnAutoHideFullScreenSettingChanged(object? sender, bool enabled) => UpdateFullScreenRegistration();
+
+	private void UpdateFullScreenRegistration()
+	{
+		if (_isClosed || !Atlas.Settings.WindowsTopBarAutoHideInFullScreen)
+		{
+			StopFullScreenRegistration();
+			SetFullScreenVisibility(false);
+			return;
+		}
+		if (_isAppBarRegistered)
+		{
+			return;
+		}
+		if (_appBarCallbackMessage == 0U)
+		{
+			Logger.Write("Failed to register the Top Bar appbar callback message.", LogTypeIntel.Error);
+			return;
+		}
+		APPBARDATA data = new() { cbSize = (uint)sizeof(APPBARDATA), hWnd = _windowHandle, uCallbackMessage = _appBarCallbackMessage };
+		_isAppBarRegistered = NativeMethods.SHAppBarMessage(NativeMethods.ABM_NEW, ref data) != 0U;
+		if (!_isAppBarRegistered)
+		{
+			Logger.Write("Failed to register the Top Bar for full-screen notifications.", LogTypeIntel.Error);
+		}
+	}
+
+	private void StopFullScreenRegistration()
+	{
+		if (!_isAppBarRegistered)
+		{
+			return;
+		}
+		APPBARDATA data = new() { cbSize = (uint)sizeof(APPBARDATA), hWnd = _windowHandle };
+		_ = NativeMethods.SHAppBarMessage(NativeMethods.ABM_REMOVE, ref data);
+		_isAppBarRegistered = false;
+	}
+
+	private void SetFullScreenVisibility(bool shouldHide)
+	{
+		if (_isClosed || shouldHide == _isAutoHidden)
+		{
+			return;
+		}
+		_isAutoHidden = shouldHide;
+		if (shouldHide)
+		{
+			_retractionTimer.Stop();
+			StartAnimation(0.0);
+			AppWindow.Hide();
+		}
+		else
+		{
+			AppWindow.Show(false);
+		}
+	}
+
 	private void OnCloseButtonClick() => Close();
 
 	/// <summary>
@@ -3125,7 +3225,7 @@ internal sealed partial class TopBar : Window
 		NotchStyleMenuItem.IsChecked = isCompact;
 	}
 
-	private async void OnRootGridLoaded(object sender, RoutedEventArgs e)
+	private async void OnRootGridLoaded()
 	{
 		_xamlRoot = RootGrid.XamlRoot;
 
@@ -4861,6 +4961,8 @@ internal sealed partial class TopBar : Window
 	private void OnWindowClosed()
 	{
 		_isClosed = true;
+		StopFullScreenRegistration();
+		Atlas.Settings.WindowsTopBarAutoHideInFullScreenChanged -= OnAutoHideFullScreenSettingChanged;
 		DetachExpandedHost();
 		StopNetworkQualityTest();
 		TeardownSentry();

@@ -367,6 +367,7 @@ internal static class SettingsBackupRestoreSerializer
 		CreateBoolean(nameof(Main.WindowsTopBarLaunchAtStartup), static settings => settings.WindowsTopBarLaunchAtStartup, static (settings, value) => settings.WindowsTopBarLaunchAtStartup = value),
 		CreateBoolean(nameof(Main.WindowsTopBarOpenOnHover), static settings => settings.WindowsTopBarOpenOnHover, static (settings, value) => settings.WindowsTopBarOpenOnHover = value),
 		CreateBoolean(nameof(Main.WindowsTopBarAlwaysOnTop), static settings => settings.WindowsTopBarAlwaysOnTop, static (settings, value) => settings.WindowsTopBarAlwaysOnTop = value),
+		CreateBoolean(nameof(Main.WindowsTopBarAutoHideInFullScreen), static settings => settings.WindowsTopBarAutoHideInFullScreen, static (settings, value) => settings.WindowsTopBarAutoHideInFullScreen = value),
 		CreateDouble(nameof(Main.WindowsTopBarSentryTriggerDecibel), "Number in range -90-0", -90D, 0D, static settings => settings.WindowsTopBarSentryTriggerDecibel, static (settings, value) => settings.WindowsTopBarSentryTriggerDecibel = value),
 		CreateInt(nameof(Main.WindowsTopBarSentryRecordingDurationSeconds), "Integer in range 1-3600", 1, 3600, static settings => settings.WindowsTopBarSentryRecordingDurationSeconds, static (settings, value) => settings.WindowsTopBarSentryRecordingDurationSeconds = value),
 		CreateInt(nameof(Main.WindowsTopBarSentryCooldownSeconds), "Integer in range 0-3600", 0, 3600, static settings => settings.WindowsTopBarSentryCooldownSeconds, static (settings, value) => settings.WindowsTopBarSentryCooldownSeconds = value),

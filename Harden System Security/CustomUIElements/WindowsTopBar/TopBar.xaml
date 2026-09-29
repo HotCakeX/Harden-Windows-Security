@@ -759,6 +759,12 @@
                                 <FontIcon Glyph="&#xE840;"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
+                        <ToggleMenuFlyoutItem x:Name="AutoHideFullScreenMenuItem"
+                                              IsChecked="{x:Bind CC:Atlas.Settings.WindowsTopBarAutoHideInFullScreen, Mode=TwoWay}">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8A7;"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
                         <ToggleMenuFlyoutItem x:Name="PinMenuItem"
                                               Click="{x:Bind OnPinToggleClick}">
                             <ToggleMenuFlyoutItem.Icon>

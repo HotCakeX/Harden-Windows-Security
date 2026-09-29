@@ -134,6 +134,7 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarLaunchAtStartup = ReadValue(nameof(WindowsTopBarLaunchAtStartup), WindowsTopBarLaunchAtStartup);
 		WindowsTopBarOpenOnHover = ReadValue(nameof(WindowsTopBarOpenOnHover), WindowsTopBarOpenOnHover);
 		WindowsTopBarAlwaysOnTop = ReadValue(nameof(WindowsTopBarAlwaysOnTop), WindowsTopBarAlwaysOnTop);
+		WindowsTopBarAutoHideInFullScreen = ReadValue(nameof(WindowsTopBarAutoHideInFullScreen), WindowsTopBarAutoHideInFullScreen);
 		WindowsTopBarSentryTriggerDecibel = ReadValue(nameof(WindowsTopBarSentryTriggerDecibel), WindowsTopBarSentryTriggerDecibel);
 		WindowsTopBarSentryRecordingDurationSeconds = ReadValue(nameof(WindowsTopBarSentryRecordingDurationSeconds), WindowsTopBarSentryRecordingDurationSeconds);
 		WindowsTopBarSentryCooldownSeconds = ReadValue(nameof(WindowsTopBarSentryCooldownSeconds), WindowsTopBarSentryCooldownSeconds);
@@ -1204,6 +1205,22 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = true;
+
+	/// <summary>
+	/// Whether the Top Bar hides while a foreground app covers its display.
+	/// </summary>
+	internal bool WindowsTopBarAutoHideInFullScreen
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarAutoHideInFullScreen), field);
+				WindowsTopBarAutoHideInFullScreenChanged?.Invoke(this, field);
+			}
+		}
+	} = true;
+	internal event EventHandler<bool>? WindowsTopBarAutoHideInFullScreenChanged;
 
 	/// <summary>
 	/// The dBFS signal level at or above which the Top Bar Sentry view begins an audio capture cycle.

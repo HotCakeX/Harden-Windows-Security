@@ -21,26 +21,31 @@ namespace CommonCore.Others;
 
 internal static unsafe class Relaunch
 {
+	internal enum Context : int
+	{
+		Elevated = 0x20000000, // Administrator privileges
+		Unelevated = 0x00000000 // AO_NONE
+	}
+
 	/// <summary>
-	/// Relaunches the application with Administrator privileges using Rust implementation.
+	/// Relaunches the application with the specified <see cref="Context"/> using the Rust implementation.
 	/// </summary>
 	/// <param name="aumid">Application User Model ID of the app to relaunch</param>
 	/// <param name="arguments">Optional command line arguments for the app</param>
-	/// <returns>True if elevation was successful and user accepted the UAC prompt</returns>
+	/// <param name="context"></param>
+	/// <returns>True if launch was successful</returns>
 	/// <exception cref="InvalidOperationException"></exception>
-	internal static bool RelaunchAppElevated(string aumid, string? arguments = null)
+	internal static bool Start(string aumid, string? arguments, Context context)
 	{
 		uint processId = 0;
-		int hr = NativeMethods.launch_app(aumid, arguments, &processId, 0x20000000);
+		int hr = NativeMethods.launch_app(aumid, arguments, &processId, (int)context);
 
 		if (hr < 0)
 		{
 			// Check for specific error code that indicates user cancelled UAC prompt
-			if (hr == -2147023673) // ERROR_CANCELLED (0x800704C7)
+			if (context is Context.Elevated && hr == -2147023673) // ERROR_CANCELLED (0x800704C7)
 			{
-				Logger.Write(
-					Atlas.GetStr("ElevationRequestCancelledByUserMessage")
-				);
+				Logger.Write(Atlas.GetStr("ElevationRequestCancelledByUserMessage"));
 				return false;
 			}
 

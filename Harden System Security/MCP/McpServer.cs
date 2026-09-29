@@ -490,7 +490,7 @@ internal static class McpServer
 		string channelId = Guid.CreateVersion7().ToString("N");
 		string nonce = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
 		await using NamedPipeServerStream pipe = new($"{ProtectOperationPipePrefix}{channelId}", PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
-		ProcessStartInfo startInfo = new("HSS.exe") { UseShellExecute = true, Verb = "runas" };
+		ProcessStartInfo startInfo = new(Environment.ProcessPath ?? "HSS.exe") { UseShellExecute = true, Verb = "runas" };
 		startInfo.ArgumentList.Add("--mcp-protect-worker");
 		startInfo.ArgumentList.Add(channelId);
 		startInfo.ArgumentList.Add(nonce);

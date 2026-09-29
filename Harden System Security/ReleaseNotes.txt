@@ -1,3 +1,5 @@
 * You can now set the TopBar to auto-hide when you're in a full-screen window, such as when watching a video or movie or playing a game.
 
 * Improved the integrity of the Clipboard monitor.
+
+* The app's Windows alias being enabled or not no longer affects the app's functionalities.

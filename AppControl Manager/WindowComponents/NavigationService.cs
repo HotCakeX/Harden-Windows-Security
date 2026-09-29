@@ -251,7 +251,7 @@ internal sealed class NavigationService
 					string navArg = $"--navtag={taggedEntry.Key}";
 
 					// Relaunch elevated with the navigation argument
-					if (Relaunch.RelaunchAppElevated(Atlas.AUMID, navArg))
+					if (Relaunch.Start(Atlas.AUMID, navArg, Relaunch.Context.Elevated))
 					{
 						Application.Current.Exit();
 					}

@@ -456,12 +456,7 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 		{
 			// The Widgets Board never runs elevated, so this simply launches the app the same way that double clicking
 			// its Start menu entry would.
-			int launchResult = NativeMethods.launch_unelevated(UnelevatedOperations.AppAliasExecutableName, "--navtag=WinGetManagement", null);
-
-			if (launchResult < 0)
-			{
-				Logger.Write($"App Updates widget: launching the app failed with HRESULT 0x{launchResult:X8}", LogTypeIntel.Error);
-			}
+			_ = Relaunch.Start(Atlas.AUMID, "--navtag=WinGetManagement", Relaunch.Context.Unelevated);
 		}
 		catch (Exception ex)
 		{

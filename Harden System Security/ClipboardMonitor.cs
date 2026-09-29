@@ -121,11 +121,7 @@ internal static class ClipboardMonitor
 	{
 		if (!ProcessExists())
 		{
-			string executablePath = Environment.ProcessPath ?? throw new InvalidOperationException("The application executable path is unavailable.");
-			using Process process = Process.Start(new ProcessStartInfo(executablePath, "--startClipBoardMonitor")
-			{
-				UseShellExecute = true
-			}) ?? throw new InvalidOperationException("The clipboard monitor process could not be started.");
+			_ = Relaunch.Start(Atlas.AUMID, "--startClipBoardMonitor", Relaunch.Context.Unelevated);
 		}
 
 		for (int attempt = 0; attempt < StateTransitionMaximumAttempts; attempt++)

@@ -41,12 +41,6 @@ internal static class UnelevatedOperations
 {
 	private const char ToastFieldSeparator = '\u001F';
 
-#if HARDEN_SYSTEM_SECURITY
-	internal const string AppAliasExecutableName = "HSS.exe";
-#else
-	internal const string AppAliasExecutableName = "AppControl.exe";
-#endif
-
 	internal static class ToastNotifications
 	{
 		/// <summary>
@@ -129,7 +123,7 @@ internal static class UnelevatedOperations
 
 				string encodedPayload = Convert.ToBase64String(Encoding.UTF8.GetBytes(payload));
 				string launchArguments = string.Concat("STARTUPREDIRECT TOAST", " ", encodedPayload);
-				_ = NativeMethods.launch_unelevated(AppAliasExecutableName, launchArguments, null);
+				_ = Relaunch.Start(Atlas.AUMID, launchArguments, Relaunch.Context.Unelevated);
 			}
 			catch (Exception ex)
 			{
@@ -140,7 +134,7 @@ internal static class UnelevatedOperations
 		/// <summary>
 		/// Relaunches the App Alias executable unelevated to remove all app notifications from Notification Center.
 		/// </summary>
-		internal static void ClearAllToastNotifications() => _ = NativeMethods.launch_unelevated(AppAliasExecutableName, "STARTUPREDIRECT TOASTCLEARALL", null);
+		internal static void ClearAllToastNotifications() => _ = Relaunch.Start(Atlas.AUMID, "STARTUPREDIRECT TOASTCLEARALL", Relaunch.Context.Unelevated);
 
 		/// <summary>
 		/// Removes all app notifications from Notification Center.
@@ -217,8 +211,7 @@ internal static class UnelevatedOperations
 		{
 			try
 			{
-				string arguments = string.Concat("STARTUPREDIRECT BADGE", " ", (int)glyph);
-				_ = NativeMethods.launch_unelevated(AppAliasExecutableName, arguments, null);
+				_ = Relaunch.Start(Atlas.AUMID, string.Concat("STARTUPREDIRECT BADGE", " ", (int)glyph), Relaunch.Context.Unelevated);
 			}
 			catch (Exception ex)
 			{
@@ -229,7 +222,7 @@ internal static class UnelevatedOperations
 		/// <summary>
 		/// Relaunches the App Alias executable unelevated to clear the active taskbar badge.
 		/// </summary>
-		internal static void ClearTaskbarBadge() => _ = NativeMethods.launch_unelevated(AppAliasExecutableName, "STARTUPREDIRECT BADGECLEAR", null);
+		internal static void ClearTaskbarBadge() => _ = Relaunch.Start(Atlas.AUMID, "STARTUPREDIRECT BADGECLEAR", Relaunch.Context.Unelevated);
 
 		/// <summary>
 		/// Parses the integer glyph value and applies it as the taskbar badge.
@@ -252,12 +245,12 @@ internal static class UnelevatedOperations
 		/// <summary>
 		/// Relaunches the App Alias executable unelevated to request taskbar pinning.
 		/// </summary>
-		internal static void PinToTaskbar() => _ = NativeMethods.launch_unelevated(AppAliasExecutableName, "STARTUPREDIRECT TASKBARPIN", null);
+		internal static void PinToTaskbar() => _ = Relaunch.Start(Atlas.AUMID, "STARTUPREDIRECT TASKBARPIN", Relaunch.Context.Unelevated);
 
 		/// <summary>
 		/// Relaunches the App Alias executable unelevated to request Start menu pinning.
 		/// </summary>
-		internal static void PinToStartMenu() => _ = NativeMethods.launch_unelevated(AppAliasExecutableName, "STARTUPREDIRECT STARTPIN", null);
+		internal static void PinToStartMenu() => _ = Relaunch.Start(Atlas.AUMID, "STARTUPREDIRECT STARTPIN", Relaunch.Context.Unelevated);
 
 		/// <summary>
 		/// Asks Windows to pin the current app to the taskbar after the user confirms the system prompt.

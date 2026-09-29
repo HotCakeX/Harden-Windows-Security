@@ -245,11 +245,6 @@ internal sealed partial class TopBar : Window
 	// The handle that holds the desktop wide ownership of the bar for as long as this instance of the app shows one.
 	private static Mutex? _singleInstanceGuard;
 
-	/// <summary>
-	/// Whether a top bar is currently open, which is what the access point of the app reflects.
-	/// </summary>
-	internal static bool IsOpen => _currentInstance is not null;
-
 	private readonly Stopwatch _animationClock = Stopwatch.StartNew();
 	private readonly DispatcherTimer _retractionTimer = new();
 	private readonly DispatcherTimer _liveRefreshTimer = new();
@@ -442,30 +437,14 @@ internal sealed partial class TopBar : Window
 	}
 
 	/// <summary>
-	/// Shows the top bar, creating it first if it does not exist yet.
-	/// Only a single bar can ever exist on the desktop, even when several instances of the app run at the same time,
-	/// which is what the cross process guard below enforces.
+	/// Shows the top bar only when this process creates its single-instance guard.
+	/// A bar-only process that cannot acquire the guard exits without opening a window.
 	/// </summary>
 	internal static void Launch()
 	{
-		if (_currentInstance is not null)
-		{
-			_currentInstance.Activate();
-			_currentInstance.RemoveWindowBorder();
-			_currentInstance.ApplyAlwaysOnTop();
-			_currentInstance.UpdateFullScreenRegistration();
-
-			return;
-		}
-
 		if (!TryAcquireSingleInstanceGuard())
 		{
-			// Another instance of the app already owns the bar, so the access point is put back into the state that
-			// reflects that this instance does not own one.
-#if DEBUG
-			Logger.Write("The Windows top bar is already open in another instance of the app. Only one top bar can be shown at a time.");
-#endif
-			return;
+			Environment.Exit(0);
 		}
 
 		_currentInstance = new TopBar();
@@ -502,11 +481,9 @@ internal sealed partial class TopBar : Window
 		}
 		catch (Exception ex)
 		{
-			// A machine that refuses to hand out the guard must not be left without a bar, so the bar is allowed
-			// through and only the desktop wide uniqueness of it is given up.
+			// Never create a bar without the guard, or another process could already own one.
 			Logger.Write(ex);
-
-			return true;
+			return false;
 		}
 	}
 

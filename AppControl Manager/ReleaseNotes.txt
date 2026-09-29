@@ -1,1 +1,3 @@
 * Updated dependencies to the latest versions.
+
+* The app's Windows alias being enabled or not no longer affects the app's functionalities.

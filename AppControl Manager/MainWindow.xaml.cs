@@ -2332,18 +2332,12 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	{
 		if (Atlas.IsElevated)
 		{
-			// If the app alias is not enabled in the OS, this call still succeeds but the OS will display an error message saying the executable cannot be found.
-#if APP_CONTROL_MANAGER
-			int deElevationResult = NativeMethods.launch_unelevated("AppControl.exe", null, null);
-#else
-			int deElevationResult = NativeMethods.launch_unelevated("HSS.exe", null, null);
-#endif
-			Logger.Write($"de-elevation result: {deElevationResult}");
+			_ = Relaunch.Start(Atlas.AUMID, null, Relaunch.Context.Unelevated);
 			Application.Current.Exit();
 		}
 		else
 		{
-			if (Relaunch.RelaunchAppElevated(Atlas.AUMID, null))
+			if (Relaunch.Start(Atlas.AUMID, null, Relaunch.Context.Elevated))
 			{
 				Application.Current.Exit();
 			}

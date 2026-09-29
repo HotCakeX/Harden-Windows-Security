@@ -339,7 +339,7 @@ public sealed partial class App : Application
 		if (!Atlas.IsElevated && (Atlas.Settings.PromptForElevationOnStartup || requireAdminPrivilege))
 		{
 			// Build passthrough arguments.
-			if (Relaunch.RelaunchAppElevated(Atlas.AUMID, BuildRelaunchArguments()))
+			if (Relaunch.Start(Atlas.AUMID, BuildRelaunchArguments(), Relaunch.Context.Elevated))
 			{
 				// Exit the process; the app was successfully relaunched elevated.
 				Environment.Exit(0);

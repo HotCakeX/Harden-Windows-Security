@@ -348,15 +348,11 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	}
 
 	/// <summary>
-	/// Opens the Windows top bar when it is not already open.
+	/// Launches the Windows top bar through the shared command-line startup path.
 	/// </summary>
-	internal void OpenWindowsTopBar()
-	{
-		if (!HardenSystemSecurity.CustomUIElements.WindowsTopBar.TopBar.IsOpen)
-		{
-			HardenSystemSecurity.CustomUIElements.WindowsTopBar.TopBar.Launch();
-		}
-	}
+	internal void OpenWindowsTopBar() =>
+		_ = Relaunch.Start(Atlas.AUMID, HardenSystemSecurity.CustomUIElements.WindowsTopBar.TopBarStartupManager.WindowsTopBarLaunchArgument, Relaunch.Context.Unelevated);
+
 #endif
 
 	private static readonly Uri CloudflareTraceUri = new("https://www.cloudflare.com/cdn-cgi/trace");

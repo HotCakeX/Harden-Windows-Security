@@ -62,21 +62,11 @@ public sealed partial class App : Application
 			Environment.Exit(0);
 		}
 
-		// Whether Windows started the app at sign in through the startup task of the package, which it only does to
-		// put the Windows top bar on the desktop.
+		// Startup task, Jump List launch and Home page button's launch use the same top-bar-only command-line path which is intercepted and processed here.
 		if (launchArguments.Length >= 1 && string.Equals(launchArguments[0], CustomUIElements.WindowsTopBar.TopBarStartupManager.WindowsTopBarLaunchArgument, StringComparison.OrdinalIgnoreCase))
 		{
-			// Windows started the app at sign in only to put the bar on the desktop, so no main window is created and
-			// the bar becomes the only thing that this session ever shows.
+			// No main window needs to be created. The TopBar becomes the only thing that this session ever shows.
 			CustomUIElements.WindowsTopBar.TopBar.Launch();
-
-			// Another instance of the app may already own the only bar that the desktop is allowed to have, in which
-			// case this session has nothing left to show and must not linger on as a process without any window.
-			if (!CustomUIElements.WindowsTopBar.TopBar.IsOpen)
-			{
-				Environment.Exit(0);
-			}
-
 			return;
 		}
 
@@ -413,7 +403,7 @@ public sealed partial class App : Application
 		if (!Atlas.IsElevated && (Atlas.Settings.PromptForElevationOnStartup || requireAdminPrivilege))
 		{
 			// Build passthrough arguments so the elevated instance can reconstruct intent.
-			if (Relaunch.RelaunchAppElevated(Atlas.AUMID, BuildRelaunchArguments()))
+			if (Relaunch.Start(Atlas.AUMID, BuildRelaunchArguments(), Relaunch.Context.Elevated))
 			{
 				// Exit the process
 				Environment.Exit(0);

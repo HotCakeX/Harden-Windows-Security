@@ -5,3 +5,7 @@
 * The app's Windows alias being enabled or not no longer affects the app's functionalities.
 
 * You can now customize the background of the TopBar and choose between Acrylic, Mica, Mica alt or solid color.
+
+* Improved the folder search functionality in the TopBar's folders view. Also, there are now more preloaded folders available in this view.
+
+* Added the newly released Microsoft Security Baseline version 26H2 to the Microsoft Security Baselines page.

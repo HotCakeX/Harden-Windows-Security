@@ -14,8 +14,9 @@
          region, so the visual tree below never needs to be re-laid out while the bar expands or retracts.
          The whole client area is painted with the color of the bar so that no lighter pixel of the window itself
          can ever show up along the edges that the region clips.
-         The theme of the bar follows the theme of the app, so every brush below is a theme resource and the two
-         opaque backgrounds are assigned from the code behind whenever the effective theme changes. -->
+         In solid mode the client area is painted with the bar color; material modes use the Window backdrop
+         behind the content instead. The window region remains the silhouette in every mode.
+         The theme of the bar follows the app, and its brushes are updated when the effective theme changes. -->
     <Grid x:Name="RootGrid"
           Loaded="{x:Bind OnRootGridLoaded}"
           PointerEntered="{x:Bind OnRootPointerEntered}"
@@ -772,6 +773,27 @@
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
                         <MenuFlyoutSeparator/>
+                        <MenuFlyoutSubItem x:Name="BackdropMenuItem" Text="Background">
+                            <MenuFlyoutSubItem.Icon>
+                                <FontIcon Glyph="&#xE790;"/>
+                            </MenuFlyoutSubItem.Icon>
+                            <RadioMenuFlyoutItem x:Name="SolidBackdropMenuItem"
+                                                 Text="Solid"
+                                                 GroupName="TopBarBackdrop"
+                                                 Click="{x:Bind OnSolidBackdropClick}"/>
+                            <RadioMenuFlyoutItem x:Name="MicaBackdropMenuItem"
+                                                 Text="Mica"
+                                                 GroupName="TopBarBackdrop"
+                                                 Click="{x:Bind OnMicaBackdropClick}"/>
+                            <RadioMenuFlyoutItem x:Name="MicaAltBackdropMenuItem"
+                                                 Text="Mica Alt"
+                                                 GroupName="TopBarBackdrop"
+                                                 Click="{x:Bind OnMicaAltBackdropClick}"/>
+                            <RadioMenuFlyoutItem x:Name="AcrylicBackdropMenuItem"
+                                                 Text="Acrylic"
+                                                 GroupName="TopBarBackdrop"
+                                                 Click="{x:Bind OnAcrylicBackdropClick}"/>
+                        </MenuFlyoutSubItem>
                         <MenuFlyoutSubItem x:Name="CompanionMenuItem">
                             <MenuFlyoutSubItem.Icon>
                                 <FontIcon Glyph="&#xEA86;"/>

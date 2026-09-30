@@ -4317,4 +4317,12 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial nuint SHAppBarMessage(uint dwMessage, ref APPBARDATA pData);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/dwmapi/nf-dwmapi-dwmenableblurbehindwindow
+	/// </summary>
+	[LibraryImport("dwmapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int DwmEnableBlurBehindWindow(IntPtr hWnd, DWM_BLURBEHIND* pBlurBehind);
+
 }

@@ -2604,3 +2604,15 @@ internal struct APPBARDATA
 	internal RECT rc;
 	internal IntPtr lParam;
 }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/dwmapi/ns-dwmapi-dwm_blurbehind
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct DWM_BLURBEHIND
+{
+	internal uint dwFlags;
+	internal int fEnable;
+	internal IntPtr hRgnBlur;
+	internal int fTransitionOnMaximized;
+}

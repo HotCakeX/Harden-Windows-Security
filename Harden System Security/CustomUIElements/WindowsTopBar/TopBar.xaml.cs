@@ -26,6 +26,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.AppSettings;
+using Microsoft.UI.Composition;
+using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Input;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -46,13 +48,169 @@ using WinRT;
 namespace HardenSystemSecurity.CustomUIElements.WindowsTopBar;
 
 /// <summary>
+/// Keeps the selected material visually active without changing which window receives input.
+/// The instance belongs to one Window and owns one controller at a time. Once attached it stays attached, and
+/// switching materials only swaps or releases its controller so the window-level backdrop target remains stable.
+/// </summary>
+internal sealed partial class TopBarActiveBackdrop(TopBarBackdrop kind) : SystemBackdrop
+{
+	private ISystemBackdropControllerWithTargets? _controller;
+
+	// The material that this backdrop currently shows. Solid means that no controller is attached to the target.
+	private TopBarBackdrop _kind = kind;
+
+	// The target and the XamlRoot that the element connected this backdrop to, kept so that the material can be
+	// switched later on without the element having to disconnect and reconnect the target.
+	private ICompositionSupportsSystemBackdrop? _target;
+	private XamlRoot? _xamlRoot;
+
+	protected override void OnTargetConnected(ICompositionSupportsSystemBackdrop connectedTarget, XamlRoot xamlRoot)
+	{
+		if (_target is not null)
+		{
+			throw new InvalidOperationException("A Top Bar backdrop cannot be shared between targets.");
+		}
+
+		base.OnTargetConnected(connectedTarget, xamlRoot);
+		_target = connectedTarget;
+		_xamlRoot = xamlRoot;
+		try
+		{
+			AttachController();
+		}
+		catch
+		{
+			// A failed connection must not retain the target or the default configuration.
+			_target = null;
+			_xamlRoot = null;
+			base.OnTargetDisconnected(connectedTarget);
+			throw;
+		}
+	}
+
+	protected override void OnDefaultSystemBackdropConfigurationChanged(ICompositionSupportsSystemBackdrop target, XamlRoot xamlRoot)
+	{
+		base.OnDefaultSystemBackdropConfigurationChanged(target, xamlRoot);
+		if (_controller is ISystemBackdropControllerWithTargets controller)
+		{
+			ApplyConfiguration(controller, target, xamlRoot);
+		}
+	}
+
+	private void ApplyConfiguration(ISystemBackdropControllerWithTargets controller, ICompositionSupportsSystemBackdrop target, XamlRoot xamlRoot)
+	{
+		SystemBackdropConfiguration system = GetDefaultSystemBackdropConfiguration(target, xamlRoot);
+		// Retain theme and accessibility policy; override only the inactive appearance.
+		SystemBackdropConfiguration configuration = new()
+		{
+			Theme = system.Theme,
+			IsHighContrast = system.IsHighContrast,
+			HighContrastBackgroundColor = system.HighContrastBackgroundColor,
+			IsInputActive = true
+		};
+		controller.SetSystemBackdropConfiguration(configuration);
+	}
+
+	/// <summary>
+	/// Switches the material on the target that is already connected. Solid releases the controller and leaves the
+	/// target, and therefore the ContentExternalBackdropLink of the element, alive and empty.
+	/// </summary>
+	internal void SetKind(TopBarBackdrop newKind)
+	{
+		if (_kind == newKind)
+		{
+			return;
+		}
+		_kind = newKind;
+		ReleaseController();
+		AttachController();
+	}
+
+	/// <summary>
+	/// Creates the controller of the current material and adds the connected target to it.
+	/// It does nothing for the solid appearance or while no target is connected yet.
+	/// </summary>
+	private void AttachController()
+	{
+		if (_kind == TopBarBackdrop.Solid ||
+			_target is not ICompositionSupportsSystemBackdrop target ||
+			_xamlRoot is not XamlRoot xamlRoot)
+		{
+			return;
+		}
+
+		ISystemBackdropControllerWithTargets controller = _kind == TopBarBackdrop.DesktopAcrylic
+			? new DesktopAcrylicController
+			{
+				Kind = DesktopAcrylicKind.Thin,
+				TintOpacity = 0F,
+				LuminosityOpacity = 0F
+			}
+			: new MicaController { Kind = _kind == TopBarBackdrop.MicaAlt ? MicaKind.BaseAlt : MicaKind.Base };
+		try
+		{
+			ApplyConfiguration(controller, target, xamlRoot);
+			if (!controller.AddSystemBackdropTarget(target))
+			{
+				throw new InvalidOperationException("The Top Bar backdrop target could not be added.");
+			}
+			_controller = controller;
+		}
+		catch
+		{
+			// A failed attachment must not retain the controller.
+			controller.Dispose();
+			throw;
+		}
+	}
+
+	/// <summary>
+	/// Removes the connected target from the current controller and disposes the controller.
+	/// </summary>
+	private void ReleaseController()
+	{
+		ISystemBackdropControllerWithTargets? controller = _controller;
+		_controller = null;
+		if (controller is null)
+		{
+			return;
+		}
+		try
+		{
+			if (_target is ICompositionSupportsSystemBackdrop target)
+			{
+				_ = controller.RemoveSystemBackdropTarget(target);
+			}
+		}
+		finally
+		{
+			controller.Dispose();
+		}
+	}
+
+	protected override void OnTargetDisconnected(ICompositionSupportsSystemBackdrop disconnectedTarget)
+	{
+		try
+		{
+			ReleaseController();
+		}
+		finally
+		{
+			_target = null;
+			_xamlRoot = null;
+			base.OnTargetDisconnected(disconnectedTarget);
+		}
+	}
+}
+
+/// <summary>
 /// A notch style top bar for Windows that is docked to the top center edge of the primary display.
 /// It stays collapsed as a small pill and expands into a compact panel when the pointer hovers over it,
 /// then it retracts back into the pill once the pointer leaves it.
 /// The panel offers seven views: applications, folders, websites, performance, clocks, network quality and Sentry.
 /// Every one of them can be tailored by the user, whose choices are persisted via the app settings.
 /// </summary>
-internal sealed partial class TopBar : Window
+internal sealed partial class TopBar : Window, IDisposable
 {
 
 	/// <summary>
@@ -175,6 +333,12 @@ internal sealed partial class TopBar : Window
 	private const uint DWMWA_COLOR_NONE = 0xFFFFFFFE;
 
 	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/dwmapi/ns-dwmapi-dwm_blurbehind
+	/// </summary>
+	private const uint DWM_BB_ENABLE = 0x00000001;
+	private const uint DWM_BB_BLURREGION = 0x00000002;
+
+	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-getwindowlongptrw
 	/// </summary>
 	private const int GWL_STYLE = -16;
@@ -225,8 +389,8 @@ internal sealed partial class TopBar : Window
 	private const int RegionError = 0;
 
 	/// <summary>
-	/// The opaque colors that the whole client area of the bar is painted with. The bar has to be painted with a solid
-	/// color so that no lighter pixel of the window itself can show up along the edges that the window region clips.
+	/// The opaque colors used by the solid backdrop that the whole client area of the bar is painted with.
+	/// Material modes use a transparent client background so that the window-level backdrop remains visible inside the window region.
 	/// </summary>
 	private static readonly Windows.UI.Color DarkBarColor = Windows.UI.Color.FromArgb(255, 12, 12, 16);
 	private static readonly Windows.UI.Color LightBarColor = Windows.UI.Color.FromArgb(255, 243, 243, 245);
@@ -249,7 +413,7 @@ internal sealed partial class TopBar : Window
 	private readonly DispatcherTimer _retractionTimer = new();
 	private readonly DispatcherTimer _liveRefreshTimer = new();
 	private readonly UISettings _uiSettings = new();
-	private readonly IntPtr _windowHandle;
+	private static IntPtr _windowHandle;
 
 	// The cells of every view, so that switching a view only swaps which list the animations are applied to.
 	private readonly Dictionary<TopBarView, List<TopBarTile>> _viewTiles = new(7);
@@ -274,6 +438,10 @@ internal sealed partial class TopBar : Window
 
 	private List<TopBarTile> _tiles = [];
 	private TopBarMetricsSampler? _metricsSampler;
+	private readonly TopBarMetricsSampler _foregroundMetricsSampler = new();
+	private CancellationTokenSource? _foregroundSampleCancellation;
+	private Task? _foregroundSampleTask;
+	private int _foregroundSampleGeneration;
 	private TopBarNetworkQualitySampler? _networkQualitySampler;
 	private CancellationTokenSource? _networkQualityCancellation;
 	private Task? _networkQualityTask;
@@ -303,6 +471,9 @@ internal sealed partial class TopBar : Window
 
 	// The shape that the notch is currently taking, which the collapsed end of every animation is built from.
 	private TopBarNotchStyle _notchStyle = TopBarConfigurationManager.LoadNotchStyle();
+	private TopBarBackdrop _backdrop = TopBarBackdrop.Solid;
+	// The single backdrop that is attached to the Window the first time a material is selected. It is never detached at runtime.
+	private TopBarActiveBackdrop? _barBackdrop;
 
 	// Whether the views are currently leaving room underneath themselves for the horizontal scroll bar.
 	private bool _isScrollBarClearanceApplied;
@@ -418,12 +589,12 @@ internal sealed partial class TopBar : Window
 		RebuildClocks();
 		ApplyCompanion(_configuration.Companion);
 
-		SetActiveView(TopBarView.Apps, animate: false);
+		SetActiveView(TopBarView.Performance, animate: false);
 
 		// The bar follows the theme of the app, exactly like the main window of the app does.
 		AppThemeManager.AppThemeChanged += OnAppThemeChanged;
 		_uiSettings.ColorValuesChanged += SystemWideThemeChangedEventHandler;
-		ApplyTheme(Atlas.Settings.AppTheme);
+		ApplyBackdrop(_configuration.Backdrop);
 
 		_retractionTimer.Interval = TimeSpan.FromMilliseconds(RetractionDelayMilliseconds);
 		_retractionTimer.Tick += OnRetractionTimerTick;
@@ -451,8 +622,8 @@ internal sealed partial class TopBar : Window
 		_currentInstance.Activate();
 
 		// Showing the window makes the presenter lay out its own frame again, so the frame is stripped once more afterwards.
-		_currentInstance.RemoveWindowBorder();
-		_currentInstance.ApplyAlwaysOnTop();
+		RemoveWindowBorder();
+		ApplyAlwaysOnTop();
 		_currentInstance.UpdateFullScreenRegistration();
 	}
 
@@ -493,7 +664,7 @@ internal sealed partial class TopBar : Window
 	/// which is what produces the thin outline around the bar, so the window is turned into a plain pop up window that
 	/// owns no frame at all and the frame related attributes of the desktop window manager are switched off on top of that.
 	/// </summary>
-	private void RemoveWindowBorder()
+	private static void RemoveWindowBorder()
 	{
 		if (_windowHandle == IntPtr.Zero)
 		{
@@ -513,6 +684,7 @@ internal sealed partial class TopBar : Window
 		_ = NativeMethods.SetWindowLongPtrW(_windowHandle, GWL_EXSTYLE, (nint)extendedStyle);
 
 		// A system drawn backdrop is painted behind the non client area as well and it brings its own outline with it.
+		// Keep the DWM-selected backdrop disabled. Material modes are supplied by Window.SystemBackdrop instead.
 		ApplyWindowAttribute(DWMWA_SYSTEMBACKDROP_TYPE, DWMSBT_NONE);
 
 		// The silhouette of the bar is produced by the window region, so the corner rounding of the system,
@@ -523,6 +695,9 @@ internal sealed partial class TopBar : Window
 		// This is applied last so that none of the attributes above can bring the border back.
 		ApplyWindowAttribute(DWMWA_BORDER_COLOR, DWMWA_COLOR_NONE);
 
+		// Makes DWM honor the alpha channel of the window instead of the opaque theme colored surface.
+		EnableTransparentComposition();
+
 		// The changed styles only take effect once the frame of the window is recalculated.
 		_ = NativeMethods.SetWindowPos(_windowHandle, IntPtr.Zero, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
 	}
@@ -530,13 +705,46 @@ internal sealed partial class TopBar : Window
 	/// <summary>
 	/// Applies a single desktop window manager attribute on the bar.
 	/// </summary>
-	private void ApplyWindowAttribute(int attribute, uint value)
+	private static void ApplyWindowAttribute(int attribute, uint value)
 	{
 		int result = NativeMethods.DwmSetWindowAttribute(_windowHandle, attribute, ref value, sizeof(uint));
 
 		if (result != 0)
 		{
 			Logger.Write($"Failed to apply the window attribute {attribute} on the top bar. DwmSetWindowAttribute returned: {result}", LogTypeIntel.Error);
+		}
+	}
+
+	/// <summary>
+	/// Enables blur behind with an empty region that lies outside of the window. Nothing is blurred, but DWM starts
+	/// composing the window with its alpha channel, so pixels that are not covered by the backdrop yet are transparent
+	/// instead of showing the white or black surface while the bar expands.
+	/// This is used only as a workaround for this WinUI3 bug: https://github.com/microsoft/microsoft-ui-xaml/issues/5148
+	/// </summary>
+	private static unsafe void EnableTransparentComposition()
+	{
+		IntPtr region = NativeMethods.CreateRectRgn(-2, -2, -1, -1);
+		if (region == IntPtr.Zero)
+		{
+			Logger.Write("Failed to create the blur region of the top bar.", LogTypeIntel.Error);
+			return;
+		}
+
+		DWM_BLURBEHIND blurBehind = new()
+		{
+			dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION,
+			fEnable = 1,
+			hRgnBlur = region
+		};
+
+		int result = NativeMethods.DwmEnableBlurBehindWindow(_windowHandle, &blurBehind);
+
+		// DWM keeps its own copy of the region, so the caller always releases it.
+		_ = NativeMethods.DeleteObject(region);
+
+		if (result != 0)
+		{
+			Logger.Write($"Failed to enable transparent composition on the top bar. DwmEnableBlurBehindWindow returned: {result}", LogTypeIntel.Error);
 		}
 	}
 
@@ -581,7 +789,7 @@ internal sealed partial class TopBar : Window
 	private static IntPtr SubClassProc_Unmanaged(IntPtr hWnd, WinMsg Msg, UIntPtr wParam, IntPtr lParam, uint uIdSubclass, IntPtr dwRefData)
 	{
 		TopBar? bar = _currentInstance;
-		if (bar is not null && !bar._isClosed && hWnd == bar._windowHandle)
+		if (bar is not null && !bar._isClosed && hWnd == _windowHandle)
 		{
 			uint message = (uint)Msg;
 			if (bar._isAppBarRegistered && message == bar._appBarCallbackMessage && wParam.ToUInt64() == NativeMethods.ABN_FULLSCREENAPP)
@@ -670,8 +878,9 @@ internal sealed partial class TopBar : Window
 
 	/// <summary>
 	/// Applies the supplied theme on the bar. Every brush of the bar is a theme resource, so assigning the requested
-	/// theme is enough for all of them, while the two opaque backgrounds are picked here because they have to stay
+	/// theme is enough for all of them. While the solid color is used as the TopBar's backdrop, two opaque backgrounds are picked here because they have to stay
 	/// opaque and therefore cannot be theme resources.
+	/// Material modes leave the client background transparent to reveal the window-level backdrop.
 	/// </summary>
 	private void ApplyTheme(string? themeName)
 	{
@@ -699,11 +908,66 @@ internal sealed partial class TopBar : Window
 			? Application.Current.RequestedTheme == ApplicationTheme.Dark
 			: requestedTheme == ElementTheme.Dark;
 
-		SolidColorBrush barBrush = new(isDark ? DarkBarColor : LightBarColor);
+		// Because Thin Acrylic the way designed here looks only great on dark theme.
+		AcrylicBackdropMenuItem.IsEnabled = isDark;
+		if (!isDark && _backdrop == TopBarBackdrop.DesktopAcrylic)
+		{
+			SetBackdrop(TopBarBackdrop.MicaAlt);
+			return;
+		}
+
+		// Keep the root hit-testable in material modes without covering the backdrop.
+		SolidColorBrush barBrush = new(_backdrop == TopBarBackdrop.Solid
+			? (isDark ? DarkBarColor : LightBarColor)
+			: Microsoft.UI.Colors.Transparent);
 
 		RootGrid.Background = barBrush;
 		BarBorder.Background = barBrush;
 	}
+
+	/// <summary>
+	/// Switches the material behind the bar while preserving the custom window region and frame settings.
+	/// Unknown persisted values fall back to the original solid appearance.
+	/// </summary>
+	private void ApplyBackdrop(TopBarBackdrop backdrop)
+	{
+		_backdrop = backdrop is TopBarBackdrop.Mica or TopBarBackdrop.MicaAlt or TopBarBackdrop.DesktopAcrylic
+			? backdrop : TopBarBackdrop.Solid;
+
+		// Never create a system backdrop for the default mode, and never assign null to the element afterwards.
+		// Once attached, the same backdrop is reused and only its controller is swapped or released.
+		if (_barBackdrop is not null)
+		{
+			_barBackdrop.SetKind(_backdrop);
+		}
+		else if (_backdrop != TopBarBackdrop.Solid)
+		{
+			_barBackdrop = new TopBarActiveBackdrop(_backdrop);
+			SystemBackdrop = _barBackdrop;
+		}
+
+		SolidBackdropMenuItem.IsChecked = _backdrop == TopBarBackdrop.Solid;
+		MicaBackdropMenuItem.IsChecked = _backdrop == TopBarBackdrop.Mica;
+		MicaAltBackdropMenuItem.IsChecked = _backdrop == TopBarBackdrop.MicaAlt;
+		AcrylicBackdropMenuItem.IsChecked = _backdrop == TopBarBackdrop.DesktopAcrylic;
+		ApplyTheme(Atlas.Settings.AppTheme);
+	}
+
+	private void SetBackdrop(TopBarBackdrop backdrop)
+	{
+		if (_backdrop == backdrop)
+		{
+			return;
+		}
+		ApplyBackdrop(backdrop);
+		_configuration.Backdrop = _backdrop;
+		TopBarConfigurationManager.Save(_configuration);
+	}
+
+	private void OnSolidBackdropClick() => SetBackdrop(TopBarBackdrop.Solid);
+	private void OnMicaBackdropClick() => SetBackdrop(TopBarBackdrop.Mica);
+	private void OnMicaAltBackdropClick() => SetBackdrop(TopBarBackdrop.MicaAlt);
+	private void OnAcrylicBackdropClick() => SetBackdrop(TopBarBackdrop.DesktopAcrylic);
 
 	/// <summary>
 	/// Applies the localized caption of every metric of the performance view.
@@ -1395,28 +1659,30 @@ internal sealed partial class TopBar : Window
 		searchBox.IsEnabled = folderPath is not null;
 		searchBox.TextChanged += async (_, _) =>
 		{
+			// Cancellation only signals the previous handler. That handler retains ownership of its source
+			// and disposes it after every operation that reads its token has finished.
 			activeSearch?.Cancel();
-			activeSearch?.Dispose();
-			activeSearch = null;
 			resultsPanel.Children.Clear();
 
 			string searchText = searchBox.Text.Trim();
 			if (folderPath is null || searchText.Length == 0)
 			{
+				activeSearch = null;
 				statusText.Text = folderPath is null ? "This folder cannot be searched." : "Type a file name to search.";
 				return;
 			}
 
 			CancellationTokenSource searchCancellation = new();
+			CancellationToken searchToken = searchCancellation.Token;
 			activeSearch = searchCancellation;
 			statusText.Text = "Searching...";
 			try
 			{
-				await Task.Delay(FolderSearchDelay, searchCancellation.Token);
+				await Task.Delay(FolderSearchDelay, searchToken);
 				List<string> results = await Task.Run(
-					() => FileUtility.SearchFilesFast(folderPath, searchText, 10, searchCancellation.Token),
-					searchCancellation.Token);
-				searchCancellation.Token.ThrowIfCancellationRequested();
+					() => FileUtility.SearchFilesFast(folderPath, searchText, 10, searchToken),
+					searchToken);
+				searchToken.ThrowIfCancellationRequested();
 
 				foreach (string result in CollectionsMarshal.AsSpan(results))
 				{
@@ -1433,11 +1699,19 @@ internal sealed partial class TopBar : Window
 				Logger.Write(ex);
 				statusText.Text = "Unable to search this folder.";
 			}
+			finally
+			{
+				if (ReferenceEquals(activeSearch, searchCancellation))
+				{
+					activeSearch = null;
+				}
+				searchCancellation.Dispose();
+			}
 		};
 		flyout.Closed += (_, _) =>
 		{
+			// The active TextChanged handler performs disposal after it has observed cancellation.
 			activeSearch?.Cancel();
-			activeSearch?.Dispose();
 			activeSearch = null;
 		};
 		flyout.ShowAt(target);
@@ -1639,6 +1913,7 @@ internal sealed partial class TopBar : Window
 		{
 			StopNetworkQualityTest();
 		}
+		CancelForegroundPerformanceSample();
 		_activeView = view;
 
 		AppsPanel.Visibility = view == TopBarView.Apps ? Visibility.Visible : Visibility.Collapsed;
@@ -2312,7 +2587,7 @@ internal sealed partial class TopBar : Window
 		{
 			if (_progress <= 0.0 && _notchStyle == TopBarNotchStyle.Standard)
 			{
-				UpdateCollapsedPerformance();
+				QueueCollapsedPerformanceUpdate();
 			}
 			else if (_progress > 0.0)
 			{
@@ -2335,23 +2610,79 @@ internal sealed partial class TopBar : Window
 		CollapsedPerformanceHost.Visibility = showPerformance ? Visibility.Visible : Visibility.Collapsed;
 	}
 
-	private void UpdateCollapsedPerformance()
+	/// <summary>
+	/// Starts one cancellable foreground-process sample without occupying the UI dispatcher. A new timer tick is
+	/// ignored while a sample is active, and leaving the collapsed Performance notch cancels that active sample.
+	/// </summary>
+	private void QueueCollapsedPerformanceUpdate()
 	{
-		_metricsSampler ??= new TopBarMetricsSampler();
-
+		if (_isClosed || _activeView != TopBarView.Performance || _notchStyle != TopBarNotchStyle.Standard || _progress > 0.0 ||
+			_foregroundSampleTask is { IsCompleted: false })
+		{
+			return;
+		}
+		CancellationTokenSource cancellation = new();
+		_foregroundSampleCancellation = cancellation;
+		int generation = _foregroundSampleGeneration;
 		_ = NativeMethods.GetWindowThreadProcessId(NativeMethods.GetForegroundWindow(), out uint processId);
+		Task task = Task.Run(() => SampleForegroundProcessAsync(processId, generation, cancellation));
+		_foregroundSampleTask = task;
+	}
 
-		TopBarForegroundProcessSnapshot snapshot = _metricsSampler.SampleForegroundProcess(processId);
+	private void SampleForegroundProcessAsync(uint processId, int generation, CancellationTokenSource cancellation)
+	{
+		try
+		{
+			TopBarForegroundProcessSnapshot snapshot = _foregroundMetricsSampler.SampleForegroundProcess(processId, cancellation.Token);
+			cancellation.Token.ThrowIfCancellationRequested();
+			_ = DispatcherQueue.TryEnqueue(() => ApplyCollapsedPerformanceSnapshot(snapshot, generation, cancellation));
+		}
+		catch (OperationCanceledException)
+		{
+			_ = DispatcherQueue.TryEnqueue(() => CompleteForegroundPerformanceSample(cancellation));
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			_ = DispatcherQueue.TryEnqueue(() => CompleteForegroundPerformanceSample(cancellation));
+		}
+	}
 
-		string count = snapshot.ProcessCount > 1 ? " (" + snapshot.ProcessCount.ToString(CultureInfo.InvariantCulture) + ")" : string.Empty;
+	private void ApplyCollapsedPerformanceSnapshot(TopBarForegroundProcessSnapshot snapshot, int generation, CancellationTokenSource cancellation)
+	{
+		try
+		{
+			if (_isClosed || cancellation.IsCancellationRequested || generation != _foregroundSampleGeneration ||
+				_activeView != TopBarView.Performance || _notchStyle != TopBarNotchStyle.Standard || _progress > 0.0)
+			{
+				return;
+			}
+			string count = snapshot.ProcessCount > 1 ? " (" + snapshot.ProcessCount.ToString(CultureInfo.InvariantCulture) + ")" : string.Empty;
+			CollapsedProcessName.Text = (string.IsNullOrWhiteSpace(snapshot.Name) ? Atlas.GetStr("TopBarViewPerformance") : snapshot.Name) + count;
+			string cpu = double.IsNaN(snapshot.CpuUsagePercent) ? "CPU --" : "CPU " + snapshot.CpuUsagePercent.ToString("0.0", CultureInfo.InvariantCulture) + "%";
+			string memory = snapshot.MemoryBytes == 0UL ? "RAM --" : "RAM " + FormatBytes(snapshot.MemoryBytes);
+			CollapsedProcessMetrics.Text = cpu + "   " + memory;
+		}
+		finally
+		{
+			CompleteForegroundPerformanceSample(cancellation);
+		}
+	}
 
-		CollapsedProcessName.Text = (string.IsNullOrWhiteSpace(snapshot.Name) ? Atlas.GetStr("TopBarViewPerformance") : snapshot.Name) + count;
+	private void CompleteForegroundPerformanceSample(CancellationTokenSource cancellation)
+	{
+		if (ReferenceEquals(_foregroundSampleCancellation, cancellation))
+		{
+			_foregroundSampleCancellation = null;
+			_foregroundSampleTask = null;
+		}
+		cancellation.Dispose();
+	}
 
-		string cpu = double.IsNaN(snapshot.CpuUsagePercent) ? "CPU --" : "CPU " + snapshot.CpuUsagePercent.ToString("0.0", CultureInfo.InvariantCulture) + "%";
-
-		string memory = snapshot.MemoryBytes == 0UL ? "RAM --" : "RAM " + FormatBytes(snapshot.MemoryBytes);
-
-		CollapsedProcessMetrics.Text = cpu + "   " + memory;
+	private void CancelForegroundPerformanceSample()
+	{
+		_ = Interlocked.Increment(ref _foregroundSampleGeneration);
+		_foregroundSampleCancellation?.Cancel();
 	}
 
 	/// <summary>
@@ -2790,6 +3121,10 @@ internal sealed partial class TopBar : Window
 
 	private void StartAnimation(double targetProgress)
 	{
+		if (targetProgress > 0.0)
+		{
+			CancelForegroundPerformanceSample();
+		}
 		if (_isClosed)
 		{
 			return;
@@ -3028,7 +3363,7 @@ internal sealed partial class TopBar : Window
 	/// launched. Changing the z order of the window makes the presenter lay its own frame out again, so the frame of
 	/// the bar is stripped once more right afterwards.
 	/// </summary>
-	private void ApplyAlwaysOnTop() => _ = NativeMethods.SetWindowPos(
+	private static void ApplyAlwaysOnTop() => _ = NativeMethods.SetWindowPos(
 		_windowHandle,
 		Atlas.Settings.WindowsTopBarAlwaysOnTop ? NativeMethods.HWND_TOPMOST : NativeMethods.HWND_NOTOPMOST,
 		0, 0, 0, 0,
@@ -3187,6 +3522,7 @@ internal sealed partial class TopBar : Window
 	/// </summary>
 	private void ApplyNotchStyle(TopBarNotchStyle style)
 	{
+		CancelForegroundPerformanceSample();
 		_notchStyle = style;
 
 		bool isCompact = style == TopBarNotchStyle.Compact;
@@ -4027,14 +4363,14 @@ internal sealed partial class TopBar : Window
 	private readonly DispatcherTimer _browserDragTimer = new() { Interval = BrowserDragPollInterval };
 
 	// The hook that reports windows being moved. It is zero whenever the Websites view is not the active view.
-	private IntPtr _moveSizeEventHook;
+	private static IntPtr _moveSizeEventHook;
 
 	// Advances every time the watcher is discarded, so that a drop that was still being read when the user left the
 	// Websites view is thrown away instead of being pinned.
 	private int _browserDragWatchGeneration;
 
 	// The browser window that is currently being moved, and where it was on the previous tick.
-	private IntPtr _browserDragWindow;
+	private static IntPtr _browserDragWindow;
 	private RECT _browserDragLastBounds;
 
 	// Whether the window has actually been moved, as opposed to resized, since the drag started.
@@ -4120,7 +4456,7 @@ internal sealed partial class TopBar : Window
 		// Only a whole window is ever moved, so an event that names a part of a window is of no interest.
 		// An event that was already queued when its hook was removed belongs to a watcher that no longer exists.
 		if (idObject != OBJID_WINDOW || idChild != CHILDID_SELF || _currentInstance is not TopBar bar ||
-			hWinEventHook == IntPtr.Zero || hWinEventHook != bar._moveSizeEventHook)
+			hWinEventHook == IntPtr.Zero || hWinEventHook != _moveSizeEventHook)
 		{
 			return;
 		}
@@ -4935,13 +5271,35 @@ internal sealed partial class TopBar : Window
 
 	#endregion
 
-	private void OnWindowClosed()
+	private void OnWindowClosed() => Dispose();
+
+	/// <summary>
+	/// Releases every resource owned by the Top Bar. The closed-state guard makes disposal idempotent because the
+	/// WinUI close notification and an explicit disposal request can both reach this method.
+	/// </summary>
+	public void Dispose()
 	{
+		if (_isClosed)
+		{
+			return;
+		}
+
 		_isClosed = true;
+		// Dispose the material controller without assigning null to the element.
+		_barBackdrop?.SetKind(TopBarBackdrop.Solid);
 		StopFullScreenRegistration();
 		Atlas.Settings.WindowsTopBarAutoHideInFullScreenChanged -= OnAutoHideFullScreenSettingChanged;
 		DetachExpandedHost();
 		StopNetworkQualityTest();
+		Task? networkQualityTask = _networkQualityTask;
+		if (networkQualityTask is null || networkQualityTask.IsCompleted)
+		{
+			_networkQualityCancellation?.Dispose();
+			_networkQualityCancellation = null;
+			_networkQualitySampler?.Dispose();
+			_networkQualitySampler = null;
+			_networkQualityTask = null;
+		}
 		TeardownSentry();
 		TeardownWebsites();
 		StopBrowserDragWatch();
@@ -4963,10 +5321,38 @@ internal sealed partial class TopBar : Window
 		_metricsSampler?.Dispose();
 		_metricsSampler = null;
 
+		CancelForegroundPerformanceSample();
+		Task? foregroundSampleTask = _foregroundSampleTask;
+		if (foregroundSampleTask is null || foregroundSampleTask.IsCompleted)
+		{
+			_foregroundSampleCancellation?.Dispose();
+			_foregroundSampleCancellation = null;
+			_foregroundSampleTask = null;
+			_foregroundMetricsSampler.Dispose();
+		}
+		else
+		{
+			_ = foregroundSampleTask.ContinueWith(
+				static (_, state) => ((TopBarMetricsSampler)state!).Dispose(),
+				_foregroundMetricsSampler,
+				CancellationToken.None,
+				TaskContinuationOptions.ExecuteSynchronously,
+				TaskScheduler.Default);
+		}
+
 		_animationClock.Stop();
 
 		if (ReferenceEquals(_currentInstance, this))
 		{
+			// The WinEvent hook was removed on this UI thread by StopBrowserDragWatch above. Clear every remaining
+			// process-wide native value before publishing that no Top Bar instance remains, so late work cannot observe
+			// a stale hook or borrowed window handle.
+			_moveSizeEventHook = IntPtr.Zero;
+			_browserDragWindow = IntPtr.Zero;
+
+			// Every operation that needs the borrowed HWND has already been detached or stopped above. Clear the static
+			// value before publishing that no Top Bar instance remains, so late work can never observe a stale handle.
+			_windowHandle = IntPtr.Zero;
 			_currentInstance = null;
 
 			// The desktop wide ownership is handed back so that another instance of the app can show a bar afterwards.

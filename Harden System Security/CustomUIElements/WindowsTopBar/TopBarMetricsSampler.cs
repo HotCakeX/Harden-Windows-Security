@@ -20,6 +20,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using AppControlManager.Pages;
 using HardenSystemSecurity.Widgets;
 
@@ -101,6 +102,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 	private bool _disposed;
 	private IntPtr _processBuffer;
 	private uint _processBufferSize = 256U * 1024U;
+	private uint _processBufferValidBytes;
 	private uint _previousGroupRootId;
 	private ulong _previousGroupCpuTime;
 	private long _previousGroupTimestamp;
@@ -358,29 +360,46 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 		return counters.PrivateWorkingSetSize != 0U ? counters.PrivateWorkingSetSize : counters.WorkingSetSize;
 	}
 
-	internal unsafe TopBarForegroundProcessSnapshot SampleForegroundProcess(uint foregroundProcessId)
+	/// <summary>
+	/// Samples the foreground process group from one native process snapshot. A PID index is built once so parent
+	/// traversal uses constant-time lookups instead of rescanning the complete process buffer for every ancestor.
+	/// </summary>
+	internal unsafe TopBarForegroundProcessSnapshot SampleForegroundProcess(uint foregroundProcessId, CancellationToken cancellationToken)
 	{
 		if (foregroundProcessId == 0U || !TryCollectProcesses())
+		{
 			return new(string.Empty, double.NaN, 0UL, 0);
+		}
 
-		SYSTEM_PROCESS_INFORMATION* foreground = FindProcess(foregroundProcessId);
-
-		if (foreground is null || foreground->ImageName.Buffer == IntPtr.Zero)
+		cancellationToken.ThrowIfCancellationRequested();
+		Dictionary<uint, nint> processes = BuildProcessIndex(cancellationToken);
+		if (!processes.TryGetValue(foregroundProcessId, out nint foregroundAddress))
+		{
 			return new(string.Empty, double.NaN, 0UL, 0);
+		}
+
+		SYSTEM_PROCESS_INFORMATION* foreground = (SYSTEM_PROCESS_INFORMATION*)foregroundAddress;
+		if (foreground->ImageName.Buffer == IntPtr.Zero)
+		{
+			return new(string.Empty, double.NaN, 0UL, 0);
+		}
 
 		ReadOnlySpan<char> foregroundName = GetImageName(foreground);
 		uint rootId = foregroundProcessId;
 		SYSTEM_PROCESS_INFORMATION* root = foreground;
-
-		while (true)
+		for (int depth = 0; depth < 16; depth++)
 		{
+			cancellationToken.ThrowIfCancellationRequested();
 			uint parentId = (uint)(nuint)root->InheritedFromUniqueProcessId;
-
-			SYSTEM_PROCESS_INFORMATION* parent = FindProcess(parentId);
-
-			if (parent is null || !GetImageName(parent).Equals(foregroundName, StringComparison.OrdinalIgnoreCase))
+			if (parentId == 0U || parentId == rootId || !processes.TryGetValue(parentId, out nint parentAddress))
+			{
 				break;
-
+			}
+			SYSTEM_PROCESS_INFORMATION* parent = (SYSTEM_PROCESS_INFORMATION*)parentAddress;
+			if (!GetImageName(parent).Equals(foregroundName, StringComparison.OrdinalIgnoreCase))
+			{
+				break;
+			}
 			root = parent;
 			rootId = parentId;
 		}
@@ -388,78 +407,99 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 		ulong cpuTime = 0UL;
 		ulong memoryBytes = 0UL;
 		int processCount = 0;
-		byte* current = (byte*)_processBuffer;
-
-		while (true)
+		int inspectedCount = 0;
+		foreach (KeyValuePair<uint, nint> entry in processes)
 		{
-			SYSTEM_PROCESS_INFORMATION* process = (SYSTEM_PROCESS_INFORMATION*)current;
-			uint processId = (uint)(nuint)process->UniqueProcessId;
-
-			if (processId == rootId || IsDescendantOf(process, rootId))
+			if ((inspectedCount++ & 31) == 0)
 			{
-				cpuTime += (ulong)Math.Max(0L, process->KernelTime) + (ulong)Math.Max(0L, process->UserTime);
-				memoryBytes += (ulong)Math.Max(0L, process->WorkingSetPrivateSize);
-				processCount++;
+				cancellationToken.ThrowIfCancellationRequested();
 			}
-
-			if (process->NextEntryOffset == 0U)
-				break;
-
-			current += process->NextEntryOffset;
+			SYSTEM_PROCESS_INFORMATION* process = (SYSTEM_PROCESS_INFORMATION*)entry.Value;
+			if (entry.Key != rootId && !IsDescendantOf(process, rootId, processes))
+			{
+				continue;
+			}
+			cpuTime += (ulong)Math.Max(0L, process->KernelTime) + (ulong)Math.Max(0L, process->UserTime);
+			memoryBytes += (ulong)Math.Max(0L, process->WorkingSetPrivateSize);
+			processCount++;
 		}
+
 		long timestamp = Stopwatch.GetTimestamp();
 		double cpuUsage = double.NaN;
-
 		if (_previousGroupRootId == rootId && timestamp > _previousGroupTimestamp && cpuTime >= _previousGroupCpuTime)
 		{
 			double seconds = (timestamp - _previousGroupTimestamp) / (double)Stopwatch.Frequency;
 			cpuUsage = Math.Clamp((cpuTime - _previousGroupCpuTime) / 10_000_000.0 / seconds / Environment.ProcessorCount * 100.0, 0.0, 100.0);
 		}
-
 		_previousGroupRootId = rootId;
 		_previousGroupCpuTime = cpuTime;
 		_previousGroupTimestamp = timestamp;
 
+		cancellationToken.ThrowIfCancellationRequested();
 		string fallback = Path.GetFileNameWithoutExtension(GetImageName(root).ToString());
-
 		return new(GetDisplayName(rootId, fallback), cpuUsage, memoryBytes, processCount);
 	}
 
-	private static unsafe ReadOnlySpan<char> GetImageName(SYSTEM_PROCESS_INFORMATION* process) =>
-		process->ImageName.Buffer == IntPtr.Zero ? [] : new ReadOnlySpan<char>((void*)process->ImageName.Buffer, process->ImageName.Length / sizeof(char));
-
-	private unsafe SYSTEM_PROCESS_INFORMATION* FindProcess(uint processId)
+	private unsafe Dictionary<uint, nint> BuildProcessIndex(CancellationToken cancellationToken)
 	{
-		if (processId == 0U)
-			return null;
-
+		Dictionary<uint, nint> processes = new(256);
 		byte* current = (byte*)_processBuffer;
-
-		while (true) { SYSTEM_PROCESS_INFORMATION* process = (SYSTEM_PROCESS_INFORMATION*)current; if ((uint)(nuint)process->UniqueProcessId == processId) return process; if (process->NextEntryOffset == 0U) return null; current += process->NextEntryOffset; }
+		byte* end = current + _processBufferValidBytes;
+		int inspectedCount = 0;
+		while (current + sizeof(SYSTEM_PROCESS_INFORMATION) <= end)
+		{
+			if ((inspectedCount++ & 31) == 0)
+			{
+				cancellationToken.ThrowIfCancellationRequested();
+			}
+			SYSTEM_PROCESS_INFORMATION* process = (SYSTEM_PROCESS_INFORMATION*)current;
+			uint processId = (uint)(nuint)process->UniqueProcessId;
+			if (processId != 0U)
+			{
+				processes[processId] = (nint)process;
+			}
+			uint nextEntryOffset = process->NextEntryOffset;
+			if (nextEntryOffset == 0U)
+			{
+				break;
+			}
+			if (nextEntryOffset < sizeof(SYSTEM_PROCESS_INFORMATION) || nextEntryOffset > (nuint)(end - current))
+			{
+				break;
+			}
+			current += nextEntryOffset;
+		}
+		return processes;
 	}
 
-	private unsafe bool IsDescendantOf(SYSTEM_PROCESS_INFORMATION* process, uint rootId)
+	private static unsafe bool IsDescendantOf(SYSTEM_PROCESS_INFORMATION* process, uint rootId, Dictionary<uint, nint> processes)
 	{
 		uint parentId = (uint)(nuint)process->InheritedFromUniqueProcessId;
 		for (int depth = 0; depth < 16 && parentId != 0U; depth++)
 		{
 			if (parentId == rootId)
+			{
 				return true;
-
-			SYSTEM_PROCESS_INFORMATION* parent = FindProcess(parentId);
-
-			if (parent is null)
+			}
+			if (!processes.TryGetValue(parentId, out nint parentAddress))
+			{
 				break;
-
-			uint next = (uint)(nuint)parent->InheritedFromUniqueProcessId;
-
-			if (next == parentId)
+			}
+			SYSTEM_PROCESS_INFORMATION* parent = (SYSTEM_PROCESS_INFORMATION*)parentAddress;
+			uint nextParentId = (uint)(nuint)parent->InheritedFromUniqueProcessId;
+			if (nextParentId == parentId)
+			{
 				break;
-
-			parentId = next;
+			}
+			parentId = nextParentId;
 		}
 		return false;
 	}
+
+	private static unsafe ReadOnlySpan<char> GetImageName(SYSTEM_PROCESS_INFORMATION* process) =>
+		process->ImageName.Buffer == IntPtr.Zero
+			? []
+			: new ReadOnlySpan<char>((void*)process->ImageName.Buffer, process->ImageName.Length / sizeof(char));
 
 	private unsafe string GetDisplayName(uint processId, string fallback)
 	{
@@ -507,23 +547,37 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 	{
 		const int SystemProcessInformation = 5;
 		const int StatusInfoLengthMismatch = unchecked((int)0xC0000004);
-
+		_processBufferValidBytes = 0U;
 		if (_processBuffer == IntPtr.Zero)
-			_processBuffer = (IntPtr)NativeMemory.Alloc(_processBufferSize);
-
+		{
+			void* allocated = NativeMemory.Alloc(_processBufferSize);
+			if (allocated is null)
+			{
+				return false;
+			}
+			_processBuffer = (IntPtr)allocated;
+		}
 		for (int attempt = 0; attempt < 2; attempt++)
 		{
 			int required = 0;
 			int status = NativeMethods.NtQuerySystemInformation(SystemProcessInformation, _processBuffer, checked((int)_processBufferSize), ref required);
-
 			if (status >= 0)
-				return true;
-
+			{
+				_processBufferValidBytes = required > 0 ? Math.Min((uint)required, _processBufferSize) : _processBufferSize;
+				return _processBufferValidBytes >= sizeof(SYSTEM_PROCESS_INFORMATION);
+			}
 			if (status != StatusInfoLengthMismatch || required <= 0)
+			{
 				return false;
-
-			_processBufferSize = checked((uint)required + 65536U);
-			_processBuffer = (IntPtr)NativeMemory.Realloc((void*)_processBuffer, _processBufferSize);
+			}
+			uint newSize = checked((uint)required + 65536U);
+			void* resized = NativeMemory.Realloc((void*)_processBuffer, newSize);
+			if (resized is null)
+			{
+				return false;
+			}
+			_processBuffer = (IntPtr)resized;
+			_processBufferSize = newSize;
 		}
 		return false;
 	}

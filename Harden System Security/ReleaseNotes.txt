@@ -3,3 +3,5 @@
 * Improved the integrity of the Clipboard monitor.
 
 * The app's Windows alias being enabled or not no longer affects the app's functionalities.
+
+* You can now customize the background of the TopBar and choose between Acrylic, Mica, Mica alt or solid color.

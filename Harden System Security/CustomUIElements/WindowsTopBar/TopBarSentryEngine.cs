@@ -399,7 +399,8 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 		double decibel;
 		try
 		{
-			decibel = ComputeDecibels(frameOutputNode.GetFrame());
+			using AudioFrame frame = frameOutputNode.GetFrame();
+			decibel = ComputeDecibels(frame);
 		}
 		catch (Exception ex)
 		{

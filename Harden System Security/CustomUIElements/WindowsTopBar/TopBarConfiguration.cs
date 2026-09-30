@@ -38,6 +38,17 @@ internal enum TopBarView
 }
 
 /// <summary>
+/// Backdrops used by the TopBar.
+/// </summary>
+internal enum TopBarBackdrop
+{
+	Solid = 0,
+	Mica = 1,
+	MicaAlt = 2,
+	DesktopAcrylic = 3
+}
+
+/// <summary>
 /// The companion animation displayed beside the active Top Bar view.
 /// </summary>
 internal enum TopBarCompanion
@@ -139,9 +150,12 @@ internal sealed class TopBarConfiguration
 	];
 	public List<TopBarFolderEntry> Folders { get; set; } =
 	[
-		new TopBarFolderEntry { DisplayName = "Downloads", FolderPath = "shell:Downloads" },
-		new TopBarFolderEntry { DisplayName = "Documents", FolderPath = "shell:Personal" },
-		new TopBarFolderEntry { DisplayName = "Desktop", FolderPath = "shell:Desktop" }
+		new TopBarFolderEntry { DisplayName = "Downloads", FolderPath = "shell:Downloads", GlyphColor = 0xFF89CFF0U },
+		new TopBarFolderEntry { DisplayName = "Documents", FolderPath = "shell:Personal", GlyphColor = 0xFFCDB4DBU },
+		new TopBarFolderEntry { DisplayName = "Desktop", FolderPath = "shell:Desktop", GlyphColor = 0xFFA8D5BAU },
+		new TopBarFolderEntry { DisplayName = "Pictures", FolderPath = "shell:My Pictures", GlyphColor = 0xFFFFAFCCU },
+		new TopBarFolderEntry { DisplayName = "OneDrive", FolderPath = "shell:OneDrive", GlyphColor = 0xFFA2D2FFU },
+		new TopBarFolderEntry { DisplayName = "This PC", FolderPath = "shell:MyComputerFolder", GlyphColor = 0xFFFFD6A5U }
 	];
 	public List<TopBarWebsiteEntry> Websites { get; set; } =
 	[
@@ -164,6 +178,7 @@ internal sealed class TopBarConfiguration
 		new TopBarClockEntry { DisplayName = "Israel", TimeZoneId = "Israel Standard Time" }
 	];
 	public TopBarCompanion Companion { get; set; } = TopBarCompanion.PrisMatrix;
+	public TopBarBackdrop Backdrop { get; set; } = TopBarBackdrop.MicaAlt;
 }
 
 /// <summary>

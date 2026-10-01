@@ -222,9 +222,9 @@
                     <Grid x:Name="PerformancePanel"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
-                          Visibility="Collapsed"
-                          RowSpacing="2"
-                          ColumnSpacing="4">
+                          Visibility="Collapsed"                          
+                          RowSpacing="3"
+                          ColumnSpacing="12">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
@@ -239,146 +239,128 @@
 
                         <StackPanel Grid.Row="0"
                                     Grid.Column="0"
-                                    Width="86"
+                                    MinWidth="86"
                                     Spacing="1">
                             <TextBlock x:Name="CpuUsageCaption"
                                        FontSize="9"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                             <TextBlock x:Name="CpuUsageValue"
                                        FontSize="12"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="0"
                                     Grid.Column="1"
-                                    Width="86"
+                                    MinWidth="86"
                                     Spacing="1">
                             <TextBlock x:Name="CpuTemperatureCaption"
                                        FontSize="9"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                             <TextBlock x:Name="CpuTemperatureValue"
                                        FontSize="12"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="0"
                                     Grid.Column="2"
-                                    Width="86"
+                                    MinWidth="86"
                                     Spacing="1">
                             <TextBlock x:Name="MemoryCaption"
                                        FontSize="9"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                             <TextBlock x:Name="MemoryValue"
                                        FontSize="12"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="0"
                                     Grid.Column="3"
-                                    Width="86"
+                                    MinWidth="86"
                                     Spacing="1">
                             <TextBlock x:Name="StorageTemperatureCaption"
                                        FontSize="9"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                             <TextBlock x:Name="StorageTemperatureValue"
                                        FontSize="12"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="0"
                                     Grid.Column="4"
-                                    Width="118"
+                                    MinWidth="118"
                                     Spacing="1">
                             <TextBlock x:Name="DiskActivityCaption"
                                        FontSize="9"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                             <TextBlock x:Name="DiskActivityValue"
                                        FontSize="12"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="1"
                                     Grid.Column="4"
-                                    Width="118"
+                                    MinWidth="118"
                                     Spacing="1">
                             <TextBlock x:Name="NetworkCaption"
                                        FontSize="9"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                             <TextBlock x:Name="NetworkValue"
                                        FontSize="12"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="1"
                                     Grid.Column="0"
-                                    Width="86"
+                                    MinWidth="86"
                                     Spacing="1">
                             <TextBlock x:Name="SystemPowerCaption"
                                        FontSize="9"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                             <TextBlock x:Name="SystemPowerValue"
                                        FontSize="12"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="1"
                                     Grid.Column="1"
-                                    Width="86"
+                                    MinWidth="86"
                                     Spacing="1">
                             <TextBlock x:Name="BatteryDischargeCaption"
                                        FontSize="9"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                             <TextBlock x:Name="BatteryDischargeValue"
                                        FontSize="12"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Row="1"
                                     Grid.Column="2"
-                                    Width="86"
+                                    MinWidth="86"
                                     Spacing="1">
                             <TextBlock x:Name="AppMemoryCaption"
                                        FontSize="9"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
                             <TextBlock x:Name="AppMemoryValue"
                                        FontSize="12"
                                        FontWeight="SemiBold"
-                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                       TextTrimming="CharacterEllipsis"/>
+                                       Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
                         </StackPanel>
                     </Grid>
 

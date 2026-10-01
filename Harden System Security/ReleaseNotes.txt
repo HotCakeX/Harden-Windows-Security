@@ -9,3 +9,5 @@
 * Improved the folder search functionality in the TopBar's folders view. Also, there are now more preloaded folders available in this view.
 
 * Added the newly released Microsoft Security Baseline version 26H2 to the Microsoft Security Baselines page.
+
+* The Performance view of the TopBar has been optimized. It now uses less system resources and also displays better for different languages that might have longer labels.

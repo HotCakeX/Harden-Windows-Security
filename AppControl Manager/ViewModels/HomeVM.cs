@@ -484,6 +484,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 	private void StopHomeOnlyTelemetry()
 	{
+		_internetSpeedSampler = null;
 		if (_clockTimer is not null)
 		{
 			_clockTimer.Stop();
@@ -622,7 +623,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		UpdateAppRamUsage();
 		if (_isHomePageTelemetryActive)
 		{
-			UpdateInternetSpeed(first: false);
+			UpdateInternetSpeed();
 		}
 		UpdateCpuTemperature();
 		UpdateStorageTemperature();
@@ -966,127 +967,36 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		return totalBytes == 0UL ? "0" : ByteToString(totalBytes);
 	}
 
-	// Cached interface index for the best route to the internet.
-	private uint _netIfIndex;
+	// Home and the top bar keep separate baselines for the same route-based sampler.
+	private HomeNetworkThroughputSampler? _internetSpeedSampler;
 
-	// 64-bit previous counters and timestamp to compute deltas.
-	private ulong _prevInBytes;
-	private ulong _prevOutBytes;
-	private long _prevSampleTicks;
-
-	/// <summary>
-	/// Initializes and starts the internet speed (throughput) updater.
-	/// Picks the interface Windows routes to 8.8.8.8 and computes bytes per second from 64-bit octet deltas.
-	/// </summary>
 	private void InitializeInternetSpeedUpdater()
 	{
-		// Resolve the interface once at start; re-resolved automatically if needed later.
-		_netIfIndex = ResolveBestInterfaceIndex();
-
-		_prevInBytes = 0UL;
-		_prevOutBytes = 0UL;
-		_prevSampleTicks = 0;
-
-		// Take an initial baseline sample (shows zeros first, as there's no prior delta yet).
-		UpdateInternetSpeed(first: true);
+		_internetSpeedSampler = new HomeNetworkThroughputSampler();
+		UpdateInternetSpeed();
 	}
 
 	/// <summary>
-	/// Samples interface counters and updates InternetSpeedText with decimal byte-per-second units.
-	/// Uses 64-bit byte counters to avoid 32-bit wrap issues on high-speed links.
-	/// Handles adapter changes and resets gracefully.
+	/// Formats the selected interface's throughput and cumulative counters for the Home tile.
 	/// </summary>
-	private void UpdateInternetSpeed(bool first)
+	private void UpdateInternetSpeed()
 	{
-		// If we do not have a valid interface index, try to resolve again.
-		if (_netIfIndex == 0)
+		HomeNetworkThroughputSampler sampler = _internetSpeedSampler ??= new HomeNetworkThroughputSampler();
+		if (!sampler.TrySample(out double down, out double up, out ulong totalIn, out ulong totalOut))
 		{
-			_netIfIndex = ResolveBestInterfaceIndex();
-
-			if (_netIfIndex == 0)
-			{
-				InternetSpeedText = "0 B/s ↓ / 0 B/s ↑";
-				InternetTotalText = "Total: 0 B ↓ / 0 B ↑";
-				return;
-			}
-		}
-
-		MIB_IF_ROW2 row = default;
-		row.InterfaceIndex = _netIfIndex;
-
-		uint result = NativeMethods.GetIfEntry2(ref row);
-
-		// If call failed (like interface removed), try to re-resolve once.
-		if (result != 0)
-		{
-			_netIfIndex = ResolveBestInterfaceIndex();
-			if (_netIfIndex != 0)
-			{
-				row = default;
-				row.InterfaceIndex = _netIfIndex;
-				result = NativeMethods.GetIfEntry2(ref row);
-			}
-		}
-
-		if (result != 0)
-		{
-			// Still failed
 			InternetSpeedText = "0 B/s ↓ / 0 B/s ↑";
 			InternetTotalText = "Total: 0 B ↓ / 0 B ↑";
 			return;
 		}
 
-		long nowTicks = Environment.TickCount64;
-
-		// First sample just seeds the baseline (no delta yet).
-		if (first || _prevSampleTicks == 0)
-		{
-			_prevInBytes = row.InOctets;
-			_prevOutBytes = row.OutOctets;
-			_prevSampleTicks = nowTicks;
-			InternetSpeedText = "0 B/s ↓ / 0 B/s ↑";
-			InternetTotalText = "Total: " + FormatNetworkDataValue(_prevInBytes, isRate: false) + " ↓ / " + FormatNetworkDataValue(_prevOutBytes, isRate: false) + " ↑";
-			return;
-		}
-
-		double elapsedSec = (nowTicks - _prevSampleTicks) / 1000.0;
-		if (elapsedSec <= 0)
-		{
-			return;
-		}
-
-		ulong curIn = row.InOctets;
-		ulong curOut = row.OutOctets;
-
-		// Handle adapter reset (counters dropped), which manifests as a decreasing value even for 64-bit counters.
-		if (curIn < _prevInBytes || curOut < _prevOutBytes)
-		{
-			_prevInBytes = curIn;
-			_prevOutBytes = curOut;
-			_prevSampleTicks = nowTicks;
-			InternetSpeedText = "0 B/s ↓ / 0 B/s ↑";
-			InternetTotalText = "Total: " + FormatNetworkDataValue(_prevInBytes, isRate: false) + " ↓ / " + FormatNetworkDataValue(_prevOutBytes, isRate: false) + " ↑";
-			return;
-		}
-
-		ulong deltaIn = curIn - _prevInBytes;
-		ulong deltaOut = curOut - _prevOutBytes;
-
-		double bytesPerSecondDown = deltaIn / elapsedSec;
-		double bytesPerSecondUp = deltaOut / elapsedSec;
-
-		_prevInBytes = curIn;
-		_prevOutBytes = curOut;
-		_prevSampleTicks = nowTicks;
-
-		InternetSpeedText = FormatNetworkDataValue(bytesPerSecondDown, isRate: true) + " ↓ / " + FormatNetworkDataValue(bytesPerSecondUp, isRate: true) + " ↑";
-		InternetTotalText = "Total: " + FormatNetworkDataValue(curIn, isRate: false) + " ↓ / " + FormatNetworkDataValue(curOut, isRate: false) + " ↑";
+		InternetSpeedText = FormatNetworkDataValue(down, isRate: true) + " ↓ / " + FormatNetworkDataValue(up, isRate: true) + " ↑";
+		InternetTotalText = "Total: " + FormatNetworkDataValue(totalIn, isRate: false) + " ↓ / " + FormatNetworkDataValue(totalOut, isRate: false) + " ↑";
 	}
 
 	/// <summary>
 	/// Returns the Windows-selected interface index for reaching 8.8.8.8 (IPv4).
 	/// </summary>
-	private static uint ResolveBestInterfaceIndex()
+	internal static uint ResolveBestInterfaceIndex()
 	{
 		// 8.8.8.8 in network byte order as a 32-bit IPv4 address: 0x08 0x08 0x08 0x08
 		const uint destAddrNetworkOrder = (8 << 24) | (8 << 16) | (8 << 8) | 8;
@@ -3397,4 +3307,71 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 
 #endif
 
+}
+
+/// <summary>
+/// Samples the single interface selected by Home's IPv4 route logic; each consumer owns its baseline.
+/// </summary>
+internal sealed class HomeNetworkThroughputSampler
+{
+	private uint _interfaceIndex;
+	private ulong _previousInBytes;
+	private ulong _previousOutBytes;
+	private long _previousSampleTicks;
+
+	/// <summary>
+	/// Returns false if the selected interface is unavailable. Route changes and counter resets
+	/// start a new baseline and report zero throughput for that sample.
+	/// </summary>
+	internal bool TrySample(out double receiveBytesPerSecond, out double sendBytesPerSecond, out ulong totalInBytes, out ulong totalOutBytes)
+	{
+		receiveBytesPerSecond = 0.0;
+		sendBytesPerSecond = 0.0;
+		totalInBytes = 0UL;
+		totalOutBytes = 0UL;
+
+		// Refresh the route so a VPN change cannot leave a still-valid old adapter selected.
+		uint selectedIndex = HomeVM.ResolveBestInterfaceIndex();
+		if (selectedIndex == 0U)
+		{
+			_interfaceIndex = 0U;
+			_previousSampleTicks = 0;
+			return false;
+		}
+
+		MIB_IF_ROW2 row = default;
+		row.InterfaceIndex = selectedIndex;
+		if (NativeMethods.GetIfEntry2(ref row) != 0U)
+		{
+			_interfaceIndex = 0U;
+			_previousSampleTicks = 0;
+			return false;
+		}
+
+		totalInBytes = row.InOctets;
+		totalOutBytes = row.OutOctets;
+		long nowTicks = Environment.TickCount64;
+		if (_interfaceIndex != selectedIndex || _previousSampleTicks == 0 ||
+			totalInBytes < _previousInBytes || totalOutBytes < _previousOutBytes)
+		{
+			_interfaceIndex = selectedIndex;
+			_previousInBytes = totalInBytes;
+			_previousOutBytes = totalOutBytes;
+			_previousSampleTicks = nowTicks;
+			return true;
+		}
+
+		double elapsedSeconds = (nowTicks - _previousSampleTicks) / 1000.0;
+		if (elapsedSeconds <= 0.0)
+		{
+			return true;
+		}
+
+		receiveBytesPerSecond = (totalInBytes - _previousInBytes) / elapsedSeconds;
+		sendBytesPerSecond = (totalOutBytes - _previousOutBytes) / elapsedSeconds;
+		_previousInBytes = totalInBytes;
+		_previousOutBytes = totalOutBytes;
+		_previousSampleTicks = nowTicks;
+		return true;
+	}
 }

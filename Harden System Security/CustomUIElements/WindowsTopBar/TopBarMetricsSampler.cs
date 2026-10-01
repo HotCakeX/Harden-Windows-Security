@@ -22,6 +22,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using AppControlManager.Pages;
+using AppControlManager.ViewModels;
 using HardenSystemSecurity.Widgets;
 
 namespace HardenSystemSecurity.CustomUIElements.WindowsTopBar;
@@ -92,7 +93,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 	private const int SystemBatteryState = 5;
 
 	private PerformanceMetricsSampler? _performanceSampler;
-	private NetworkThroughputSampler? _networkSampler;
+	private HomeNetworkThroughputSampler? _networkSampler;
 	private List<EnergyMeterDevice>? _energyMeterDevices;
 
 	private IntPtr _diskQuery;
@@ -148,7 +149,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 			return;
 		}
 		_performanceSampler = new PerformanceMetricsSampler();
-		_networkSampler = new NetworkThroughputSampler();
+		_networkSampler = new HomeNetworkThroughputSampler();
 		_energyMeterDevices = [];
 		InitializeDiskCounters();
 		try
@@ -232,7 +233,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 	}
 
 	/// <summary>
-	/// Sums the throughput of every adapter of the machine that is currently connected.
+	/// Measures the same Windows-selected interface as HomeVM.
 	/// </summary>
 	private void SampleNetworkThroughput(out double receiveBytesPerSecond, out double sendBytesPerSecond)
 	{
@@ -241,37 +242,11 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 
 		try
 		{
-			NetworkThroughputSampler networkSampler = _networkSampler ?? throw new InvalidOperationException();
-			IReadOnlyList<NetworkAdapter> adapters = networkSampler.GetAdapters();
-
-			// Every adapter has to be measured within the same cycle so that a rate is only derived once per adapter.
-			networkSampler.BeginSampleCycle();
-
-			double receiveTotal = 0.0;
-			double sendTotal = 0.0;
-			bool measured = false;
-
-			foreach (NetworkAdapter adapter in adapters)
+			HomeNetworkThroughputSampler sampler = _networkSampler ?? throw new InvalidOperationException();
+			if (sampler.TrySample(out double receive, out double send, out _, out _))
 			{
-				if (!adapter.IsConnected)
-				{
-					continue;
-				}
-
-				if (!networkSampler.TrySample(adapter.InterfaceLuid, out NetworkAdapterSample sample))
-				{
-					continue;
-				}
-
-				receiveTotal += sample.ReceiveBytesPerSecond;
-				sendTotal += sample.SendBytesPerSecond;
-				measured = true;
-			}
-
-			if (measured)
-			{
-				receiveBytesPerSecond = receiveTotal;
-				sendBytesPerSecond = sendTotal;
+				receiveBytesPerSecond = receive;
+				sendBytesPerSecond = send;
 			}
 		}
 		catch (Exception ex)

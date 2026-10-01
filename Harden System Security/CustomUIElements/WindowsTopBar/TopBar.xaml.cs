@@ -2794,8 +2794,8 @@ internal sealed partial class TopBar : Window, IDisposable
 			unitIndex++;
 		}
 
-		string firstText = (first / divisor).ToString(divisor == 1.0 ? "0" : "0.0", CultureInfo.InvariantCulture);
-		string secondText = (second / divisor).ToString(divisor == 1.0 ? "0" : "0.0", CultureInfo.InvariantCulture);
+		string firstText = (first / divisor).ToString(divisor == 1.0 ? "0" : "0.00", CultureInfo.InvariantCulture);
+		string secondText = (second / divisor).ToString(divisor == 1.0 ? "0" : "0.00", CultureInfo.InvariantCulture);
 
 		return firstText + " / " + secondText + " " + Atlas.RateUnits[unitIndex];
 	}

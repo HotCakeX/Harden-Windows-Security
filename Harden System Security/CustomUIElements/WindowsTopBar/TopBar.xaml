@@ -9,7 +9,8 @@
     Activated="{x:Bind OnWindowActivated}"
     Closed="{x:Bind OnWindowClosed}">
 
-    <!-- The top bar is a border-less always on top window that is docked to the top center edge of the display.
+    <!-- The top bar is a border-less window docked opposite the taskbar on the display edge.
+         When the Taskbar position is at the bottom, this bar is at the top of the screen. If Taskbar position is at the top, this bar is at the bottom of the screen.
          The window itself is resized on every animation frame and its silhouette is clipped by a rounded window
          region, so the visual tree below never needs to be re-laid out while the bar expands or retracts.
          The whole client area is painted with the color of the bar so that no lighter pixel of the window itself
@@ -29,7 +30,7 @@
           Drop="{x:Bind OnStorageDrop}">
 
         <!-- The chrome of the bar. It carries no stroke at all and its corner radius is animated together with the window region.
-             Only the two bottom corners are ever rounded, because the two top ones are docked against the top edge of the display. -->
+             Only the two corners away from the docked display edge are rounded. -->
         <Border x:Name="BarBorder"
                 BorderThickness="0"
                 CornerRadius="0,0,17,17"/>

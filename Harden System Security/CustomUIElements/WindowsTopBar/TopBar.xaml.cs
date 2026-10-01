@@ -247,12 +247,11 @@ internal sealed partial class TopBar : Window, IDisposable
 	private const double MinimumExpandedWidthDips = 380.0;
 	private const double ExpandedContentPaddingDips = 20.0;
 
-	// The bar is docked against the top edge of the display, so its two top corners are never rounded the way that the
-	// two bottom ones are. They are flared outwards into the top edge instead, with a concave arc that leaves the side
+	// The corners against the docked edge are square; the opposite corners are rounded. They are flared outwards into the top edge instead, with a concave arc that leaves the side
 	// of the bar tangentially and meets the top edge of the display tangentially as well, so that the bar reads as
 	// something that grows out of the edge of the display rather than as a shape that merely sits against it.
 	// The window is widened by one of these on each side to leave the two arcs somewhere to be drawn.
-	private const double TopEdgeFilletRadiusDips = 9.0;
+	private const double EdgeFilletRadiusDips = 9.0;
 
 	// The smallest room that the views are ever left with, so that a display too narrow to hold the chrome of the bar
 	// still shows something of the active view instead of nothing at all.
@@ -376,6 +375,13 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// </summary>
 	private const uint WM_DISPLAYCHANGE = 0x007E;
 
+	// https://learn.microsoft.com/windows/win32/winmsg/wm-settingchange
+	private const uint WM_SETTINGCHANGE = 0x001A;
+
+	// https://learn.microsoft.com/windows/win32/shell/abn-poschanged
+	private const ulong ABN_POSCHANGED = 1UL;
+	private const uint ABM_GETTASKBARPOS = 0x00000005;
+
 	/// <summary>
 	/// The identifier of the subclass that suppresses the non client area of the bar.
 	/// </summary>
@@ -461,6 +467,8 @@ internal sealed partial class TopBar : Window, IDisposable
 	private double _widthTransitionTargetDips;
 	private int _displayLeft;
 	private int _displayTop;
+	private int _displayBottom;
+	private bool _dockToBottom;
 	private int _displayWidth;
 
 	// How many flyouts of the bar are currently open. The bar must not retract while any of them is, because a flyout
@@ -804,14 +812,24 @@ internal sealed partial class TopBar : Window, IDisposable
 				}
 				return IntPtr.Zero;
 			}
-			if (bar._isAppBarRegistered && bar._taskbarCreatedMessage != 0U && message == bar._taskbarCreatedMessage)
+			if (bar._isAppBarRegistered && message == bar._appBarCallbackMessage && wParam.ToUInt64() == ABN_POSCHANGED)
+			{
+				// Reuse the existing appbar callback when full-screen registration is enabled.
+				bar.QueueDisplayMetricsRefresh();
+				return IntPtr.Zero;
+			}
+			if (bar._taskbarCreatedMessage != 0U && message == bar._taskbarCreatedMessage)
 			{
 				try
 				{
 					// Explorer lost its registration and full-screen state when its taskbar restarted.
-					bar._isAppBarRegistered = false;
-					bar.SetFullScreenVisibility(false);
-					bar.UpdateFullScreenRegistration();
+					if (bar._isAppBarRegistered)
+					{
+						bar._isAppBarRegistered = false;
+						bar.SetFullScreenVisibility(false);
+						bar.UpdateFullScreenRegistration();
+					}
+					bar.QueueDisplayMetricsRefresh();
 				}
 				catch (Exception ex)
 				{
@@ -838,6 +856,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			// is not sufficient to refresh the cached display bounds. Windows sends this message specifically when the
 			// display resolution changes, which makes it the authoritative point at which to recalculate the bar.
 			case (WinMsg)WM_DISPLAYCHANGE:
+			case (WinMsg)WM_SETTINGCHANGE:
 				_currentInstance?.QueueDisplayMetricsRefresh();
 				break;
 
@@ -1886,12 +1905,18 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// </summary>
 	private void TrackFlyout(FlyoutBase flyout)
 	{
+		flyout.Placement = _dockToBottom ? FlyoutPlacementMode.Top : FlyoutPlacementMode.Bottom;
 		flyout.Opened += OnFlyoutOpened;
 		flyout.Closed += OnFlyoutClosed;
 	}
 
+	[DynamicWindowsRuntimeCast(typeof(FlyoutBase))]
 	private void OnFlyoutOpened(object? sender, object e)
 	{
+		if (sender is FlyoutBase flyout)
+		{
+			flyout.Placement = _dockToBottom ? FlyoutPlacementMode.Top : FlyoutPlacementMode.Bottom;
+		}
 		_openFlyoutCount++;
 		_retractionTimer.Stop();
 	}
@@ -2841,12 +2866,35 @@ internal sealed partial class TopBar : Window, IDisposable
 	{
 		DisplayArea display = DisplayArea.GetFromWindowId(AppWindow.Id, DisplayAreaFallback.Primary);
 
-		// The outer bounds are used instead of the work area so the bar can hug the very top edge of the display.
 		RectInt32 bounds = display.OuterBounds;
-
+		RectInt32 workArea = display.WorkArea;
 		_displayLeft = bounds.X;
-		_displayTop = bounds.Y;
+		_displayTop = bounds.Y + Math.Clamp(workArea.Y, 0, bounds.Height);
+		_displayBottom = bounds.Y + bounds.Height;
 		_displayWidth = bounds.Width;
+
+		// Query the system taskbar even when auto-hide leaves no work-area inset.
+		// Side-mounted taskbars leave the bar at the top.
+		APPBARDATA taskbar = new() { cbSize = (uint)sizeof(APPBARDATA) };
+		if (NativeMethods.SHAppBarMessage(ABM_GETTASKBARPOS, ref taskbar) != 0U)
+		{
+			_dockToBottom = taskbar.rc.top <= bounds.Y && taskbar.rc.bottom > bounds.Y &&
+				taskbar.rc.right > bounds.X && taskbar.rc.left < bounds.X + bounds.Width &&
+				taskbar.rc.right - taskbar.rc.left >= bounds.Width / 2 &&
+				taskbar.rc.bottom - taskbar.rc.top < bounds.Height / 2;
+		}
+		else
+		{
+			// Preserve the work-area fallback if Explorer is not ready to report the taskbar.
+			_dockToBottom = workArea.Y > 0 && workArea.Y >= bounds.Height - (workArea.Y + workArea.Height);
+		}
+
+		FlyoutPlacementMode placement = _dockToBottom ? FlyoutPlacementMode.Top : FlyoutPlacementMode.Bottom;
+		ViewSwitcherMenu.Placement = placement;
+		SettingsMenu.Placement = placement;
+		SentryActionsMenu.Placement = placement;
+		CollapsedHost.VerticalAlignment = _dockToBottom ? VerticalAlignment.Bottom : VerticalAlignment.Top;
+		ExpandedHost.VerticalAlignment = _dockToBottom ? VerticalAlignment.Bottom : VerticalAlignment.Top;
 	}
 
 	/// <summary>
@@ -2870,7 +2918,7 @@ internal sealed partial class TopBar : Window, IDisposable
 
 		// The two flares sit outside of the body of the bar, so the window has to carry one of them on each side on top
 		// of whatever the body itself takes.
-		int filletRadius = (int)Math.Round(TopEdgeFilletRadiusDips * _rasterizationScale);
+		int filletRadius = (int)Math.Round(EdgeFilletRadiusDips * _rasterizationScale);
 		int height = (int)Math.Round(heightDips * _rasterizationScale);
 		int width = (int)Math.Round(widthDips * _rasterizationScale) + (filletRadius * 2);
 
@@ -2882,12 +2930,14 @@ internal sealed partial class TopBar : Window, IDisposable
 
 		int left = _displayLeft + ((_displayWidth - width) / 2);
 
-		AppWindow.MoveAndResize(new RectInt32(left, _displayTop, width, height));
+		AppWindow.MoveAndResize(new RectInt32(left, _dockToBottom ? _displayBottom - height : _displayTop, width, height));
 
 		ApplyRoundedRegion(width, height, filletRadius, cornerRadiusDips);
 
-		// The two top corners of the bar are never rounded inwards, so only the bottom two follow the expansion.
-		BarBorder.CornerRadius = new CornerRadius(0.0, 0.0, cornerRadiusDips, cornerRadiusDips);
+		// Only the corners away from the docked edge follow the expansion.
+		BarBorder.CornerRadius = _dockToBottom
+			? new CornerRadius(cornerRadiusDips, cornerRadiusDips, 0.0, 0.0)
+			: new CornerRadius(0.0, 0.0, cornerRadiusDips, cornerRadiusDips);
 
 		// The content of the notch leaves as soon as the bar starts to grow.
 		CollapsedHost.Opacity = Math.Clamp(1.0 - (clampedProgress * CollapsedFadeOutRate), 0.0, 1.0);
@@ -2919,7 +2969,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			double tileScale = TileMinimumScale + ((1.0 - TileMinimumScale) * easedTileProgress);
 
 			tile.Element.Opacity = easedTileProgress;
-			tile.Transform.TranslateY = (1.0 - easedTileProgress) * TileEntranceOffsetDips;
+			tile.Transform.TranslateY = (1.0 - easedTileProgress) * TileEntranceOffsetDips * (_dockToBottom ? -1.0 : 1.0);
 			tile.Transform.ScaleX = tileScale;
 			tile.Transform.ScaleY = tileScale;
 		}
@@ -2929,9 +2979,9 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// Clips the window into the silhouette of the bar. The clipped away area is also excluded from the
 	/// hit testing of the window, so the parts of the window that are not visible never swallow any input.
 	/// The body of the bar is inset by the radius of the flare on both sides, and the strip that is left over on
-	/// either side of it only holds the concave arc that carries the bar into the top edge of the display.
+	/// either side of it only holds the concave arc that carries the bar into the docked display edge.
 	/// </summary>
-	private void ApplyRoundedRegion(int width, int height, int filletRadius, double bottomCornerRadiusDips)
+	private void ApplyRoundedRegion(int width, int height, int filletRadius, double cornerRadiusDips)
 	{
 		if (_windowHandle == IntPtr.Zero || width <= 0 || height <= 0)
 		{
@@ -2946,16 +2996,16 @@ internal sealed partial class TopBar : Window, IDisposable
 		int bodyRight = width - fillet;
 
 		// The ellipse of the round rectangle region is the diameter of the corner radius in physical pixels.
-		int bottomDiameter = Math.Clamp((int)Math.Round(bottomCornerRadiusDips * _rasterizationScale * 2.0), 0, Math.Min(bodyRight - bodyLeft, height));
+		int cornerDiameter = Math.Clamp((int)Math.Round(cornerRadiusDips * _rasterizationScale * 2.0), 0, Math.Min(bodyRight - bodyLeft, height));
 
-		IntPtr region = CreateBodyRegion(bodyLeft, bodyRight, height, bottomDiameter);
+		IntPtr region = CreateBodyRegion(bodyLeft, bodyRight, height, cornerDiameter, _dockToBottom);
 
 		if (region == IntPtr.Zero)
 		{
 			return;
 		}
 
-		if (fillet > 0 && !TryAddTopEdgeFillets(region, width, fillet))
+		if (fillet > 0 && !TryAddEdgeFillets(region, width, height, fillet, _dockToBottom))
 		{
 			_ = NativeMethods.DeleteObject(region);
 			return;
@@ -2969,12 +3019,12 @@ internal sealed partial class TopBar : Window, IDisposable
 	}
 
 	/// <summary>
-	/// Builds the body of the bar, which is square along its two top corners and rounded along its two bottom ones.
+	/// Builds a body with square docked corners and rounded corners away from the display edge.
 	/// </summary>
-	private static IntPtr CreateBodyRegion(int left, int right, int height, int bottomDiameter)
+	private static IntPtr CreateBodyRegion(int left, int right, int height, int cornerDiameter, bool dockToBottom)
 	{
 		// The right and the bottom edges of a region are exclusive, so the region ends up covering exactly the body.
-		if (bottomDiameter <= 0)
+		if (cornerDiameter <= 0)
 		{
 			return NativeMethods.CreateRectRgn(left, 0, right, height);
 		}
@@ -2986,21 +3036,21 @@ internal sealed partial class TopBar : Window, IDisposable
 			return IntPtr.Zero;
 		}
 
-		// A round rectangle rounds all four of its corners by the same amount, so the one that carries the two bottom
-		// corners is started far enough above the bar for its own two top corners to land outside of the body entirely.
-		// Intersecting it with the plain body therefore rounds the bottom of the bar and leaves the top of it square.
-		IntPtr bottomRegion = NativeMethods.CreateRoundRectRgn(left, -(height + bottomDiameter), right, height, bottomDiameter, bottomDiameter);
+		// Extend the round rectangle past the docked edge so only the opposite corners are rounded.
+		IntPtr roundedRegion = dockToBottom
+			? NativeMethods.CreateRoundRectRgn(left, 0, right, (height * 2) + cornerDiameter, cornerDiameter, cornerDiameter)
+			: NativeMethods.CreateRoundRectRgn(left, -(height + cornerDiameter), right, height, cornerDiameter, cornerDiameter);
 
-		if (bottomRegion == IntPtr.Zero)
+		if (roundedRegion == IntPtr.Zero)
 		{
 			_ = NativeMethods.DeleteObject(bodyRegion);
 			return IntPtr.Zero;
 		}
 
-		int combineResult = NativeMethods.CombineRgn(bodyRegion, bodyRegion, bottomRegion, RegionAnd);
+		int combineResult = NativeMethods.CombineRgn(bodyRegion, bodyRegion, roundedRegion, RegionAnd);
 
 		// The rounded rectangle is only ever an ingredient of the intersection, so it is released either way.
-		_ = NativeMethods.DeleteObject(bottomRegion);
+		_ = NativeMethods.DeleteObject(roundedRegion);
 
 		if (combineResult == RegionError)
 		{
@@ -3012,13 +3062,13 @@ internal sealed partial class TopBar : Window, IDisposable
 	}
 
 	/// <summary>
-	/// Flares the two top corners of the supplied body outwards into the top edge of the display.
+	/// Flares the two docked corners of the body outwards into the display edge.
 	/// Every row of the flare is added as a single rectangle that runs across the whole bar rather than as two separate
 	/// pieces that are butted against the sides of the body, so the flare and the body can never meet along a seam.
 	/// Both ends of each of those rows are placed from the very same inset as well, which keeps the two flares exact
 	/// mirrors of one another instead of leaving one of them a pixel wider than the other.
 	/// </summary>
-	private static bool TryAddTopEdgeFillets(IntPtr region, int width, int fillet)
+	private static bool TryAddEdgeFillets(IntPtr region, int width, int height, int fillet, bool dockToBottom)
 	{
 		// Consecutive rows that share an inset are added as one rectangle, and a row whose inset has already reached
 		// the side of the body adds nothing at all because the body itself already covers it.
@@ -3030,7 +3080,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		for (int row = fillet - 1; row >= 0; row--)
 		{
 			// No row is allowed to reach more than a single pixel past the row underneath it. The arc is almost flat
-			// where it meets the top edge of the display, so sampling those last rows on their own lets them jump
+			// where it meets the display edge, so sampling those last rows on their own lets them jump
 			// several pixels outwards at once and leaves a spur sticking out of the top of the flare, which reads as a
 			// cut in an otherwise continuous curve. Holding every step down to one pixel keeps the curve unbroken, and
 			// because both ends of every row are placed from the very same inset the two flares stay exact mirrors.
@@ -3042,7 +3092,8 @@ internal sealed partial class TopBar : Window, IDisposable
 			}
 
 			// The run that was open covers every row between the one below the current row and the row it started at.
-			if (runInset < fillet && !TryAddRow(region, runInset, row + 1, width - runInset, runBottom))
+			if (runInset < fillet && !TryAddRow(region, runInset, dockToBottom ? height - runBottom : row + 1,
+				width - runInset, dockToBottom ? height - (row + 1) : runBottom))
 			{
 				return false;
 			}
@@ -3051,14 +3102,15 @@ internal sealed partial class TopBar : Window, IDisposable
 			runBottom = row + 1;
 		}
 
-		// Whatever run is still open by the time the top of the flare is reached ends at the top edge of the display.
-		return runInset >= fillet || TryAddRow(region, runInset, 0, width - runInset, runBottom);
+		// Whatever run is still open by the time the top of the flare is reached ends at the docked display edge.
+		return runInset >= fillet || TryAddRow(region, runInset, dockToBottom ? height - runBottom : 0,
+			width - runInset, dockToBottom ? height : runBottom);
 	}
 
 	/// <summary>
 	/// Measures how far the supplied row of the flare sits away from the edge of the window.
 	/// The arc is the quarter of the circle that is centred on the point where the side of the body meets the depth of
-	/// the flare, which leaves the side of the body vertically and reaches the top edge of the display horizontally.
+	/// the flare, which leaves the side of the body vertically and reaches the docked display edge horizontally.
 	/// The row is sampled through its middle so that the arc is not biased towards either of its two ends.
 	/// </summary>
 	private static int MeasureFilletInset(int row, int fillet)
@@ -3660,7 +3712,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 
 		double availableWidthDips = Math.Max(
-			displayWidthDips - (TopEdgeFilletRadiusDips * 2.0) - MeasureChromeWidthDips() - (ExpandedContentPaddingDips * 2.0),
+			displayWidthDips - (EdgeFilletRadiusDips * 2.0) - MeasureChromeWidthDips() - (ExpandedContentPaddingDips * 2.0),
 			MinimumViewsWidthDips);
 
 		if (Math.Abs(availableWidthDips - ViewsScrollViewer.MaxWidth) < ProgressEpsilon)

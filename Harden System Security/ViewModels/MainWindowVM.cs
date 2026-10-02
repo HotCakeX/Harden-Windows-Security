@@ -1550,4 +1550,28 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			IsRestoreMicrosoftPrintToPdfButtonEnabled = true;
 		}
 	}
+
+	private int _searchVersion;
+	/// <summary>
+	/// Updates ranked suggestions when the search box text changes.
+	/// </summary>
+	internal async void TitleBarSearchBox_TextChanged(AutoSuggestBox sender, AutoSuggestBoxTextChangedEventArgs args)
+	{
+		try
+		{
+			int version = System.Threading.Interlocked.Increment(ref _searchVersion);
+			if (string.IsNullOrWhiteSpace(sender.Text))
+			{
+				UnifiedSearchBarSuggestionsCollection = new(0);
+				return;
+			}
+			List<UnifiedSearchBarResult> matches = await Traverse.MUnitCatalog.SearchAsync(sender.Text);
+			if (version == _searchVersion)
+				UnifiedSearchBarSuggestionsCollection = matches;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
 }

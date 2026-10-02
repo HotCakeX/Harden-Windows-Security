@@ -244,7 +244,7 @@
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.3.12" />
         <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.9" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260903100">
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260930100">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

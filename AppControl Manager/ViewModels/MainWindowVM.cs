@@ -19,7 +19,6 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -1581,6 +1580,18 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			{
 				MainInfoBar.WriteError(ex, "Error removing color from cache.");
 			}
+		}
+	}
+
+	/// <summary>
+	/// The text typed in the AutoSuggestBox on the Main Window.
+	/// </summary>
+	internal string? UnifiedSearchBarText
+	{
+		get; set
+		{
+			if (SPT(ref field, value))
+				UnifiedSearchBarSuggestionsCollection = WindowComponents.SearchPageCatalog.GetPageFromQuery(field);
 		}
 	}
 }

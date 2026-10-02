@@ -75,6 +75,13 @@
 	   <!-- Disabling runtime marshaling is better because of predictability, and problems arise during compilation rather than runtime. -->
 	   <!-- It's also a best practice to disable runtime marshaling so we will be explicit rather than relying on implicit details. -->
 	   <DisableRuntimeMarshalling>True</DisableRuntimeMarshalling>
+
+       <!-- This is necessary to ensure visual studio doesn't override the max version tested.
+        Without this, the MaxVersionTested value we define in the Package.appxmanifest file won't always be the same MaxVersionTested value
+        that we will see in the AppxManifest.xml inside the package after building and packaging the MSIX. -->
+       <!-- https://learn.microsoft.com/en-us/windows/ai/apis/get-started?tabs=winget%2Cwinui%2Cwinui2 -->
+       <AppxOSMinVersionReplaceManifestVersion>false</AppxOSMinVersionReplaceManifestVersion>
+       <AppxOSMaxVersionTestedReplaceManifestVersion>false</AppxOSMaxVersionTestedReplaceManifestVersion>
    </PropertyGroup>
 
     <!-- .NET SDK projects only -->

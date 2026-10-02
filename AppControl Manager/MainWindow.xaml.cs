@@ -1048,6 +1048,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			ViewModel.RebuildBreadcrumbMappings();
 			ViewModel.RebuildNavigationPageToItemContentMapForSearch();
 
+#if HARDEN_SYSTEM_SECURITY
+			HardenSystemSecurity.Traverse.MUnitCatalog.MarkContentSearchStale();
+#endif
+
 			HomeNavItem.Content = Atlas.GetStr("HomeNavItem/Content");
 			AutomationProperties.SetHelpText(HomeNavItem, Atlas.GetStr("HomeNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(HomeNavItem, Atlas.GetStr("HomeNavItem/ToolTipService/ToolTip"));

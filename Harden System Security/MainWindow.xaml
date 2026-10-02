@@ -240,8 +240,8 @@
                                 HorizontalAlignment="Stretch"
                                 AutomationProperties.LandmarkType="Search"
                                 ItemsSource="{x:Bind ViewModel.UnifiedSearchBarSuggestionsCollection, Mode=OneWay}"
-                                Text="{x:Bind ViewModel.UnifiedSearchBarText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 SuggestionChosen="{x:Bind Nav.SearchBox_SuggestionChosen}"
+                                TextChanged="{x:Bind ViewModel.TitleBarSearchBox_TextChanged}"
                                 x:Uid="MainSearchAutoSuggestBox"
                                 Margin="0"
                                 UpdateTextOnSelect="False">
@@ -293,7 +293,7 @@
                             VerticalAlignment="Center"
                             HorizontalAlignment="Right"
                             Margin="0,0,45,0"
-                            Visibility="{x:Bind IsSearchBoxEmpty(ViewModel.UnifiedSearchBarText), Mode=OneWay}">
+                            Visibility="{x:Bind IsSearchBoxEmpty(TitleBarSearchBox.Text), Mode=OneWay}">
 
                     <!-- Ctrl Key -->
                     <Border Background="{ThemeResource ControlFillColorSecondaryBrush}"

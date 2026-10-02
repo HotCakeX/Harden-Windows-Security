@@ -487,20 +487,4 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Collection of suggestions for the AutoSuggestBox in the Main Window.
 	/// </summary>
 	internal List<UnifiedSearchBarResult> UnifiedSearchBarSuggestionsCollection { get; set => SP(ref field, value); } = [];
-
-	/// <summary>
-	/// The text typed in the AutoSuggestBox on the Main Window.
-	/// </summary>
-	internal string? UnifiedSearchBarText
-	{
-		get; set
-		{
-			if (SPT(ref field, value))
-#if APP_CONTROL_MANAGER
-				UnifiedSearchBarSuggestionsCollection = WindowComponents.SearchPageCatalog.GetPageFromQuery(field);
-#else
-				UnifiedSearchBarSuggestionsCollection = Traverse.MUnitCatalog.GetPageFromQuery(field);
-#endif
-		}
-	}
 }

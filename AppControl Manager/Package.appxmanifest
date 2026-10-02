@@ -48,6 +48,7 @@
     <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
     <Description>ms-resource:AppDescription</Description>
     <Logo>Assets\StoreLogo.png</Logo>
+    <!-- https://devblogs.microsoft.com/insidemsix/msix-chain-of-trust/ -->
     <uap10:PackageIntegrity>
       <uap10:Content Enforcement="on" />
     </uap10:PackageIntegrity>
@@ -69,8 +70,8 @@
   <!-- https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-f-targetdevicefamily#examples -->
   <!-- "Windows.Universal" includes all device types. We only define other device types explicitly if we want to set a more restrict Min/Max versions for them. -->
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26226.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26226.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.26100.0" MaxVersionTested="10.0.28000.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.26100.0" MaxVersionTested="10.0.28000.0" />
   </Dependencies>
 
   <!-- https://learn.microsoft.com/windows/apps/winui/winui3/localize-winui3-app -->
@@ -94,6 +95,7 @@
 
   <Applications>
     <!-- https://learn.microsoft.com/en-us/windows/msix/desktop/desktop-to-uwp-behind-the-scenes#types-of-desktop-app -->
+    <!-- https://devblogs.microsoft.com/insidemsix/types-of-packaged-applications/ -->
     <Application Id="App"
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$" uap18:TrustLevel="mediumIL" uap18:RuntimeBehavior="packagedClassicApp">

@@ -30,9 +30,10 @@
   xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
   xmlns:virtualization="http://schemas.microsoft.com/appx/manifest/virtualization/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:systemai="http://schemas.microsoft.com/appx/manifest/systemai/windows10"
   xmlns:appdata="http://schemas.microsoft.com/appx/manifest/appdata/windows10"
   xmlns:trustedlaunch="http://schemas.microsoft.com/appx/manifest/trustedlaunch/windows10"
-  IgnorableNamespaces="mp uap uap3 uap17 uap18 desktop desktop5 com virtualization appdata trustedlaunch">
+  IgnorableNamespaces="mp uap uap3 uap17 uap18 desktop desktop5 com virtualization appdata trustedlaunch systemai">
   <!-- IgnorableNamespaces are evaluated during package creation and installation/registration so any optional feature's namespace should be added to it as long as the app can properly function without it. -->
 
   <Identity
@@ -47,6 +48,7 @@
     <PublisherDisplayName>Violet Hansen</PublisherDisplayName>
     <Description>ms-resource:AppDescription</Description>
     <Logo>Assets\StoreLogo.png</Logo>
+    <!-- https://devblogs.microsoft.com/insidemsix/msix-chain-of-trust/ -->
     <uap10:PackageIntegrity>
       <uap10:Content Enforcement="on" />
     </uap10:PackageIntegrity>
@@ -73,8 +75,8 @@
   <!-- https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-f-targetdevicefamily#examples -->
   <!-- "Windows.Universal" includes all device types. We only define other device types explicitly if we want to set a more restrict Min/Max versions for them. -->
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26226.0" />
-    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.26100.0" MaxVersionTested="10.0.26226.0" />
+    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.26100.0" MaxVersionTested="10.0.28000.0" />
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.26100.0" MaxVersionTested="10.0.28000.0" />
   </Dependencies>
 
   <!-- https://learn.microsoft.com/windows/apps/winui/winui3/localize-winui3-app -->
@@ -93,6 +95,7 @@
 
   <Applications>
     <!-- https://learn.microsoft.com/en-us/windows/msix/desktop/desktop-to-uwp-behind-the-scenes#types-of-desktop-app -->
+    <!-- https://devblogs.microsoft.com/insidemsix/types-of-packaged-applications/ -->
     <Application Id="App"
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$" uap18:TrustLevel="mediumIL" uap18:RuntimeBehavior="packagedClassicApp">
@@ -303,12 +306,22 @@
             </desktop6:Service>
         </desktop6:Extension>
 
+        <!-- https://learn.microsoft.com/windows/apps/develop/windows-integration/assistant-extensibility -->
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="com.microsoft.windows.assistantExtension"
+                             Id="HardenSystemSecurity"
+                             DisplayName="Harden System Security"
+                             Description="Assists with the security of the system through the main interface or the optional always-on TopBar. Uses AI to enable natural search for the advanced security features of the operating system."
+                             PublicFolder="Public" />
+        </uap3:Extension>
+
       </Extensions>
 
     </Application>
   </Applications>
 
   <Capabilities>
+    <systemai:Capability Name="systemAIModels" />
     <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
     <rescap:Capability Name="allowElevation" />

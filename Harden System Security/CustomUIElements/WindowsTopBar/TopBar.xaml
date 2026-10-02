@@ -223,7 +223,7 @@
                     <Grid x:Name="PerformancePanel"
                           HorizontalAlignment="Center"
                           VerticalAlignment="Center"
-                          Visibility="Collapsed"                          
+                          Visibility="Collapsed"
                           RowSpacing="3"
                           ColumnSpacing="12">
                         <Grid.RowDefinitions>

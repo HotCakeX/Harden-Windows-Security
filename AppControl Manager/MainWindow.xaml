@@ -554,6 +554,7 @@
             <!-- Split view to create the sidebar -->
             <SplitView x:Name="SidebarSplitView"
                        PaneBackground="Transparent"
+                       PaneOpened="{x:Bind SidebarPoliciesLibraryPaneOpened}"
                        IsPaneOpen="{x:Bind ViewModel.SidebarPaneIsOpen, Mode=TwoWay}"
                        OpenPaneLength="340"
                        CompactPaneLength="150"
@@ -591,6 +592,17 @@
 
                                     <TextBlock x:Name="SidebarMainCaptionTextBlock" x:Uid="SidebarMainCaptionTextBlock" Style="{ThemeResource CaptionTextBlockStyle}" HorizontalAlignment="Center" HorizontalTextAlignment="Center"/>
 
+                                    <!-- Administrator Protection can change the elevated Policies Library profile. -->
+                                    <InfoBar x:Name="AdministratorProtectionInfoBar"
+                                             Severity="Warning"
+                                             IsClosable="True"
+                                             Title="Administrator Protection and your Policies Library"
+                                             Message="Administrator Protection can use a separate profile for elevated apps. Your Policies Library may appear empty even when its policies remain in your original profile. Please choose a custom Policies Library location accessible in both contexts.">
+                                        <InfoBar.ActionButton>
+                                            <HyperlinkButton Content="View related issue"
+                                                             NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/1218"/>
+                                        </InfoBar.ActionButton>
+                                    </InfoBar>
                                     <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
                                                         Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
                                                         Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"

@@ -2459,4 +2459,32 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			Atlas.Settings.SidebarPaneDisplayMode = 0; // Save the change to the app settings.
 		}
 	}
+
+#if APP_CONTROL_MANAGER
+	private bool AdminApprovalModeWarningShown;
+	private void SidebarPoliciesLibraryPaneOpened()
+	{
+		// Only display the warning once to the user.
+		if (AdminApprovalModeWarningShown) return;
+
+		// If user already set a custom Policies Library location then this warning isn't necessary to be displayed.
+		if (!string.IsNullOrEmpty(Atlas.Settings.CustomSidebarPoliciesLibraryCacheLocation))
+		{
+			AdminApprovalModeWarningShown = true;
+			return;
+		}
+
+		try
+		{
+			using Microsoft.Win32.RegistryKey? systemPolicy = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System");
+			AdministratorProtectionInfoBar.IsOpen = systemPolicy?.GetValue("TypeOfAdminApprovalMode") is 2;
+			AdminApprovalModeWarningShown = true;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+		}
+	}
+#endif
+
 }

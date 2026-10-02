@@ -1,3 +1,5 @@
 * Updated dependencies to the latest versions.
 
 * The app's Windows alias being enabled or not no longer affects the app's functionalities.
+
+* Added a warning to the Policies Library when it is detected that the system is using Administrator Protection. Related issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1218

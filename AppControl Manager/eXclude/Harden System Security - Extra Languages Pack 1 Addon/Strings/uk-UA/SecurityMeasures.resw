@@ -1006,4 +1006,7 @@
 <data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
     <value>Налаштовує Microsoft Edge на пріоритет шифрів, потрібних для відповідності версіям Commercial National Security Algorithm Suite 1.0 і 2.0 (CNSA 1.0 and 2.0). Впливає лише на TLS 1.3 і QUIC.</value>
 </data>
+<data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
+    <value>Вимагати дозволу на перегляд вмісту каталогу перед надсиланням сповіщень про зміни в ньому, щоб запобігти несанкціонованому розкриттю шляхів до файлів і папок на томах NTFS і ReFS.</value>
+</data>
 </root>

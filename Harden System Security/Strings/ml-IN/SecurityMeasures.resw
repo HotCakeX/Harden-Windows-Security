@@ -1006,4 +1006,7 @@
 <data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
     <value>Commercial National Security Algorithm Suite പതിപ്പുകൾ 1.0, 2.0 (CNSA 1.0, 2.0) അനുസരിക്കാൻ ആവശ്യമായ സൈഫറുകൾക്ക് മുൻഗണന നൽകുന്നതിനായി Microsoft Edge നെ ക്രമീകരിക്കുന്നു. TLS 1.3 നെയും QUIC നെയും മാത്രമാണ് ഇത് ബാധിക്കുന്നത്.</value>
 </data>
+<data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
+    <value>ഡയറക്ടറിയിലെ മാറ്റങ്ങളെക്കുറിച്ചുള്ള അറിയിപ്പുകൾ നൽകുന്നതിന് മുമ്പ് ഡയറക്ടറിയിലെ ഉള്ളടക്കം പട്ടികപ്പെടുത്താനുള്ള അനുമതി നിർബന്ധമാക്കുക, അതുവഴി NTFS, ReFS വോള്യങ്ങളിലെ ഫയലുകളുടെയും ഫോൾഡറുകളുടെയും പാതകൾ അനധികൃതമായി വെളിപ്പെടുന്നത് തടയാം.</value>
+</data>
 </root>

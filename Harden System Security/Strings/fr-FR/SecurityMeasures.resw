@@ -1006,4 +1006,7 @@
 <data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
     <value>Configure Microsoft Edge pour privilégier les suites de chiffrement requises afin de respecter la Commercial National Security Algorithm Suite versions 1.0 et 2.0 (CNSA 1.0 et 2.0). Affecte uniquement TLS 1.3 et QUIC.</value>
 </data>
+<data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
+    <value>Exiger l’autorisation de répertorier le contenu du répertoire avant de signaler les notifications de modification du répertoire, afin d’empêcher la divulgation non autorisée des chemins d’accès aux fichiers et aux dossiers sur les volumes NTFS et ReFS.</value>
+</data>
 </root>

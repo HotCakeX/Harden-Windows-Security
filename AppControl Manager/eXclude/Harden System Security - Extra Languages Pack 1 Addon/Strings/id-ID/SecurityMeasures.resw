@@ -1006,4 +1006,7 @@
 <data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
     <value>Mengkonfigurasi Microsoft Edge untuk memilih sandi yang diperlukan untuk kepatuhan dengan Keamanan Nasional Algoritma Suite versi 1.0 dan 2.0 (CNSA 1.0 dan 2.0). Hanya mempengaruhi TLS 1.3 dan QUIC.</value>
 </data>
+<data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
+    <value>Wajibkan izin untuk mencantumkan isi direktori sebelum melaporkan pemberitahuan perubahan direktori, guna mencegah pengungkapan tanpa izin atas jalur file dan folder pada volume NTFS dan ReFS.</value>
+</data>
 </root>

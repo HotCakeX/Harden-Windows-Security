@@ -15,3 +15,6 @@
 * The TopBar is now compatible with Taskbar being on top/left/right/bottom. Since Windows 11 26H2, you have the ability to move the Taskbar to other locations so now the TopBar is compatible with this new behavior. Now when the Taskbar is at the bottom/right/left, the Topbar remains at top, but when you move the Taskbar to the top, the TopBar moves to the bottom of the screen. This provides the greatest value based on the screen size and Taskbar setting and makes the most sense for user experience.
 
 * The Harden System Security app's top search bar is now smarter. You can perform more natural searches and if using a device that has NPU, the app will automatically use that to provide semantic AI-based search functionality, allowing you to find the security measure or feature you are looking for easier without having to type the exact matching words into the text box.
+
+* Added a new policy to the Miscellaneous category: Require directory listing permission before reporting directory change notifications, preventing unauthorized disclosure of file and folder paths on NTFS and ReFS volumes.
+   * Completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1225

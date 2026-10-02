@@ -1006,4 +1006,7 @@
 <data name="PreferSlowCiphers-HardcoreMode-Edge" xml:space="preserve">
     <value>配置Microsoft Edge来取用符合"商业国家安全算法"的1.0和2.0版本(CNSA 1.0和2.0)所需的密码. 只影响TLS 1.3和QUIC.</value>
 </data>
+<data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
+    <value>在报告目录更改通知之前，要求具有列出目录内容的权限，以防止未经授权泄露 NTFS 和 ReFS 卷上的文件及文件夹路径.</value>
+</data>
 </root>

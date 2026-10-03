@@ -3,3 +3,5 @@
     * To apply the new exploit mitigation adjustments, all you have to do is applying the Microsoft Defender security category.
 
     * Fixes an issue with the MCP Server reported on the GitHub: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1223
+
+* Fixed an issue where the Chinese language pack was not being applied properly: https://github.com/HotCakeX/Harden-Windows-Security/issues/1227

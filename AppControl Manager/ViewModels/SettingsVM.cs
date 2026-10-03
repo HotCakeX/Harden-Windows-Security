@@ -226,6 +226,20 @@ internal sealed partial class SettingsVM : ViewModelBase
 		string.Equals(language, ThaiLanguageToken, StringComparison.OrdinalIgnoreCase) ||
 		string.Equals(language, ThaiLanguageResourceId, StringComparison.OrdinalIgnoreCase);
 
+	/// <summary>
+	/// Handles cases where a language fed to the "ApplicationLanguages.PrimaryLanguageOverride" needs to be in a special form.
+	/// </summary>
+	private static string GetLanguageResourceId(string language)
+	{
+		// "ApplicationLanguages.PrimaryLanguageOverride" doesn't accept "zh" so we give it "zh-CN"
+		if (string.Equals(language, MandarinChineseLanguageToken, StringComparison.OrdinalIgnoreCase))
+		{
+			return MandarinChineseLanguageResourceId;
+		}
+
+		return language;
+	}
+
 	private static bool IsUnavailableLanguageAddonResource(string language) => IsLanguageAddonResource(language) && !ExtraLanguagesPack1Installed;
 
 	private static Package? GetLanguageAddonsPackage() => Package.Current.Dependencies.FirstOrDefault(static package => string.Equals(package.Id.ResourceId, LanguageAddonsResourceId, StringComparison.OrdinalIgnoreCase));
@@ -249,7 +263,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				}
 
 				// Set the language of the application to the user's preferred language
-				ApplicationLanguages.PrimaryLanguageOverride = Atlas.Settings.ApplicationGlobalLanguage;
+				ApplicationLanguages.PrimaryLanguageOverride = GetLanguageResourceId(Atlas.Settings.ApplicationGlobalLanguage);
 
 				return;
 			}
@@ -272,7 +286,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 					}
 
 					// Set the app's language
-					ApplicationLanguages.PrimaryLanguageOverride = language;
+					ApplicationLanguages.PrimaryLanguageOverride = GetLanguageResourceId(language);
 
 					// Save the configuration to the app's settings.
 					Atlas.Settings.ApplicationGlobalLanguage = language;
@@ -293,7 +307,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 							continue;
 						}
 						// Set the app's language
-						ApplicationLanguages.PrimaryLanguageOverride = neutralLanguage;
+						ApplicationLanguages.PrimaryLanguageOverride = GetLanguageResourceId(neutralLanguage);
 
 						// Save the configuration to the app's settings.
 						Atlas.Settings.ApplicationGlobalLanguage = neutralLanguage;
@@ -469,7 +483,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 			{
 				string x = SupportedLanguagesReverse[field];
 
-				ApplicationLanguages.PrimaryLanguageOverride = x;
+				ApplicationLanguages.PrimaryLanguageOverride = GetLanguageResourceId(x);
 				Atlas.Settings.ApplicationGlobalLanguage = x;
 
 				// Get reference to the MainWindow and refresh the localized content

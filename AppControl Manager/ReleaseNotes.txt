@@ -1,0 +1,1 @@
+* Fixed an issue where the Chinese language pack was not being applied properly: https://github.com/HotCakeX/Harden-Windows-Security/issues/1227

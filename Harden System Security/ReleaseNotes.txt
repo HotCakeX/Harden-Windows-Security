@@ -1,20 +1,5 @@
-* You can now set the TopBar to auto-hide when you're in a full-screen window, such as when watching a video or movie or playing a game.
+* Updated the Exploit Mitigations based on the latest Microsoft recommendations available here: https://learn.microsoft.com/en-us/defender-endpoint/evaluate-exploit-protection
 
-* Improved the integrity of the Clipboard monitor.
+    * To apply the new exploit mitigation adjustments, all you have to do is applying the Microsoft Defender security category.
 
-* The app's Windows alias being enabled or not no longer affects the app's functionalities.
-
-* You can now customize the background of the TopBar and choose between Acrylic, Mica, Mica alt or solid color.
-
-* Improved the folder search functionality in the TopBar's folders view. Also, there are now more preloaded folders available in this view.
-
-* Added the newly released Microsoft Security Baseline version 26H2 to the Microsoft Security Baselines page.
-
-* The Performance view of the TopBar has been optimized. It now uses less system resources and also displays better for different languages that might have longer labels.
-
-* The TopBar is now compatible with Taskbar being on top/left/right/bottom. Since Windows 11 26H2, you have the ability to move the Taskbar to other locations so now the TopBar is compatible with this new behavior. Now when the Taskbar is at the bottom/right/left, the Topbar remains at top, but when you move the Taskbar to the top, the TopBar moves to the bottom of the screen. This provides the greatest value based on the screen size and Taskbar setting and makes the most sense for user experience.
-
-* The Harden System Security app's top search bar is now smarter. You can perform more natural searches and if using a device that has NPU, the app will automatically use that to provide semantic AI-based search functionality, allowing you to find the security measure or feature you are looking for easier without having to type the exact matching words into the text box.
-
-* Added a new policy to the Miscellaneous category: Require directory listing permission before reporting directory change notifications, preventing unauthorized disclosure of file and folder paths on NTFS and ReFS volumes.
-   * Completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1225
+    * Fixes an issue with the MCP Server reported on the GitHub: https://github.com/HotCakeX/Harden-Windows-Security/discussions/1223

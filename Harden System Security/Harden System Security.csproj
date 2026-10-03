@@ -29,7 +29,7 @@
         Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
 
         https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref -->
-        <WindowsSdkPackageVersion>10.0.26100.87</WindowsSdkPackageVersion>
+        <WindowsSdkPackageVersion>10.0.28000.87</WindowsSdkPackageVersion>
 
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
@@ -67,7 +67,7 @@
         <AssemblyName>HardenSystemSecurity</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>1.0.92.0</FileVersion>
+        <FileVersion>1.0.93.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <AssemblyProduct>HardenSystemSecurity</AssemblyProduct>
         <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>

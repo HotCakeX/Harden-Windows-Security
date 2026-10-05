@@ -59,7 +59,7 @@ internal static unsafe class Relaunch
 			throw new InvalidOperationException(
 				string.Format(
 					Atlas.GetStr("ActivationManagerFailedWithHRESULTMessage"),
-					(uint)hr
+					hr
 				)
 			);
 		}

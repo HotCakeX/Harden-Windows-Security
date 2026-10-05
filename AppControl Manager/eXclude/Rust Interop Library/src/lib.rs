@@ -1648,8 +1648,10 @@ pub unsafe extern "system" fn launch_app(
 ) -> i32 {
     // Initialize COM on this thread
     let init_hr: HRESULT = unsafe { CoInitializeEx(None, COINIT_APARTMENTTHREADED) };
-    if init_hr.is_err() {
-        return init_hr.0 as i32;
+    // RPC_E_CHANGED_MODE means the caller already owns a different COM apartment.
+    // Use that apartment without taking ownership of its initialization.
+    if init_hr.is_err() && init_hr.0 != 0x80010106u32 as i32 {
+        return init_hr.0;
     }
 
     // Create the out-of-proc Activation Manager
@@ -1702,8 +1704,10 @@ pub unsafe extern "system" fn launch_app(
         inst.unwrap_err().code().0 as i32
     };
 
-    // Uninitialize COM
-    unsafe { CoUninitialize() };
+    // Only balance a successful CoInitializeEx call (S_OK or S_FALSE).
+    if init_hr.is_ok() {
+        unsafe { CoUninitialize() };
+    }
     hr
 }
 

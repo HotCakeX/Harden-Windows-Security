@@ -450,7 +450,7 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 	/// It runs on the thread pool because it performs cross process COM calls into the shell and the Widgets Board
 	/// callback that requested it has to return immediately.
 	/// </summary>
-	private static void OpenApp() => _ = Task.Run(static () =>
+	private static void OpenApp()
 	{
 		try
 		{
@@ -462,7 +462,7 @@ internal sealed partial class WidgetProvider : IWidgetProvider
 		{
 			Logger.Write(ex);
 		}
-	});
+	}
 
 	/// <summary>
 	/// Starts a WinGet update check unless one is already running, and immediately reflects the busy state on every

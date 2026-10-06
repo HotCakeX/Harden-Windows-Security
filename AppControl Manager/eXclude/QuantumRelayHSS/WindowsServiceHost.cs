@@ -83,7 +83,7 @@ internal static class WindowsServiceHost
 
 				NativeEventLogger.WriteEntry(
 					$"{Atlas.QuantumRelayHSSServiceName} StartServiceCtrlDispatcherW failed with error {error}. The executable must be started by the Service Control Manager.",
-					NativeEventLogger.EventLogEntryType.Error);
+					NativeEventLogger.EventLogEntryType.Error, Atlas.QuantumRelayHSSServiceName);
 
 				return error != 0 ? error : 1;
 			}
@@ -94,7 +94,7 @@ internal static class WindowsServiceHost
 		{
 			NativeEventLogger.WriteEntry(
 				$"{Atlas.QuantumRelayHSSServiceName} Service dispatcher error: {ex.Message}\n{ex.StackTrace}",
-				NativeEventLogger.EventLogEntryType.Error);
+				NativeEventLogger.EventLogEntryType.Error, Atlas.QuantumRelayHSSServiceName);
 
 			return 1;
 		}
@@ -125,7 +125,7 @@ internal static class WindowsServiceHost
 
 				NativeEventLogger.WriteEntry(
 					$"{Atlas.QuantumRelayHSSServiceName} RegisterServiceCtrlHandlerExW failed with error {error}",
-					NativeEventLogger.EventLogEntryType.Error);
+					NativeEventLogger.EventLogEntryType.Error, Atlas.QuantumRelayHSSServiceName);
 
 				return;
 			}
@@ -154,7 +154,7 @@ internal static class WindowsServiceHost
 				{
 					NativeEventLogger.WriteEntry(
 						$"{Atlas.QuantumRelayHSSServiceName} Worker error: {ex.Message}\n{ex.StackTrace}",
-						NativeEventLogger.EventLogEntryType.Error);
+						NativeEventLogger.EventLogEntryType.Error, Atlas.QuantumRelayHSSServiceName);
 
 					// Trigger stop sequence if worker crashes
 					RequestStop();
@@ -183,7 +183,7 @@ internal static class WindowsServiceHost
 		{
 			NativeEventLogger.WriteEntry(
 				$"{Atlas.QuantumRelayHSSServiceName} ServiceMain error: {ex.Message}\n{ex.StackTrace}",
-				NativeEventLogger.EventLogEntryType.Error);
+				NativeEventLogger.EventLogEntryType.Error, Atlas.QuantumRelayHSSServiceName);
 
 			// Best-effort stop report
 			try
@@ -269,7 +269,7 @@ internal static class WindowsServiceHost
 				{
 					NativeEventLogger.WriteEntry(
 						$"{Atlas.QuantumRelayHSSServiceName} Job object closed (kill-on-close). CloseHandle result={closed}.",
-						NativeEventLogger.EventLogEntryType.Information);
+						NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 				}
 			}
 		}
@@ -304,7 +304,7 @@ internal static class WindowsServiceHost
 				{
 					NativeEventLogger.WriteEntry(
 						$"{Atlas.QuantumRelayHSSServiceName} CreateJobObjectW failed with error {error}.",
-						NativeEventLogger.EventLogEntryType.Information);
+						NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 				}
 				return;
 			}
@@ -331,7 +331,7 @@ internal static class WindowsServiceHost
 				{
 					NativeEventLogger.WriteEntry(
 						$"{Atlas.QuantumRelayHSSServiceName} SetInformationJobObject failed with error {error}.",
-						NativeEventLogger.EventLogEntryType.Information);
+						NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 				}
 				// Keep the handle anyway; Assign may still work, but kill-on-close might not be set.
 			}
@@ -345,7 +345,7 @@ internal static class WindowsServiceHost
 				{
 					NativeEventLogger.WriteEntry(
 						$"{Atlas.QuantumRelayHSSServiceName} AssignProcessToJobObject failed with error {error}. The service may already be in a job.",
-						NativeEventLogger.EventLogEntryType.Information);
+						NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 				}
 			}
 			else
@@ -354,7 +354,7 @@ internal static class WindowsServiceHost
 				{
 					NativeEventLogger.WriteEntry(
 						$"{Atlas.QuantumRelayHSSServiceName} Job object setup complete. Kill-on-close is enabled.",
-						NativeEventLogger.EventLogEntryType.Information);
+						NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 				}
 			}
 		}

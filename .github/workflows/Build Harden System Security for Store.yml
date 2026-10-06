@@ -444,6 +444,20 @@ jobs:
               dotnet publish '..\AppControl Manager\eXclude\QuantumRelayHSS\QuantumRelayHSS.csproj' --configuration Release --runtime win-arm64 --verbosity minimal /p:Platform=arm64 /p:PublishProfile=win-arm64
               if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing QuantumRelayHSS for ARM64. Exit Code: $LASTEXITCODE") }
 
+              # Global Search Service
+
+              dotnet clean '..\AppControl Manager\eXclude\GlobalSearchHSS\GlobalSearchHSS.csproj' --configuration Release
+              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning GlobalSearchHSS (first pass). Exit Code: $LASTEXITCODE") }
+
+              dotnet publish '..\AppControl Manager\eXclude\GlobalSearchHSS\GlobalSearchHSS.csproj' --configuration Release --runtime win-x64 --verbosity minimal /p:Platform=x64 /p:PublishProfile=win-x64
+              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing GlobalSearchHSS for x64. Exit Code: $LASTEXITCODE") }
+
+              dotnet clean '..\AppControl Manager\eXclude\GlobalSearchHSS\GlobalSearchHSS.csproj' --configuration Release
+              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed cleaning GlobalSearchHSS (second pass). Exit Code: $LASTEXITCODE") }
+
+              dotnet publish '..\AppControl Manager\eXclude\GlobalSearchHSS\GlobalSearchHSS.csproj' --configuration Release --runtime win-arm64 --verbosity minimal /p:Platform=arm64 /p:PublishProfile=win-arm64
+              if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed publishing GlobalSearchHSS for ARM64. Exit Code: $LASTEXITCODE") }
+
               #endregion
 
               [string]$CsProjFilePath = (Resolve-Path -Path '.\Harden System Security.csproj').Path
@@ -461,6 +475,7 @@ jobs:
               Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputX64\DISMService.exe' -Destination '.\DISMService.exe' -Force
 
               Copy-Item -Path '..\AppControl Manager\eXclude\QuantumRelayHSS\OutputX64\QuantumRelayHSS.exe' -Destination '.\QuantumRelayHSS.exe' -Force
+              Copy-Item -Path '..\AppControl Manager\eXclude\GlobalSearchHSS\OutputX64\GlobalSearchHSS.exe' -Destination '.\GlobalSearchHSS.exe' -Force
 
               # Generate for X64 architecture
               dotnet clean 'Harden System Security.csproj' --configuration Release
@@ -476,6 +491,7 @@ jobs:
               Copy-Item -Path '..\AppControl Manager\eXclude\DISMService\OutputARM64\DISMService.exe' -Destination '.\DISMService.exe' -Force
 
               Copy-Item -Path '..\AppControl Manager\eXclude\QuantumRelayHSS\OutputARM64\QuantumRelayHSS.exe' -Destination '.\QuantumRelayHSS.exe' -Force
+              Copy-Item -Path '..\AppControl Manager\eXclude\GlobalSearchHSS\OutputARM64\GlobalSearchHSS.exe' -Destination '.\GlobalSearchHSS.exe' -Force
 
               # Generate for ARM64 architecture
               dotnet clean 'Harden System Security.csproj' --configuration Release

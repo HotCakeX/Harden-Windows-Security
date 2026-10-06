@@ -342,6 +342,9 @@
         <Content Include="DISMService.exe">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="GlobalSearchHSS.exe">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="QuantumRelayHSS.exe">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -546,6 +549,36 @@
         <!-- Place the service executable in the app project root for its existing Content item. -->
         <Error Condition="!Exists('$(_QuantumRelayHSSPublishedExecutable)')" Text="QuantumRelayHSS was published, but '$(_QuantumRelayHSSPublishedExecutable)' was not produced." />
         <Copy SourceFiles="$(_QuantumRelayHSSPublishedExecutable)" DestinationFiles="$(MSBuildProjectDirectory)\QuantumRelayHSS.exe" />
+    </Target>
+
+    <!-- Build GlobalSearchHSS only when its executable is missing from this project directory. -->
+    <Target Name="EnsureGlobalSearchHSSExecutable" BeforeTargets="PrepareForBuild" Condition="'$(HardenWindowsSecurityDisableAutomaticArchitectureSpecificComponentBuilds)' != 'true' AND !Exists('$(MSBuildProjectDirectory)\GlobalSearchHSS.exe')">
+        <PropertyGroup>
+            <!-- Resolve all paths from this project so the target is independent of the current working directory. -->
+            <_GlobalSearchHSSProject>$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\GlobalSearchHSS\GlobalSearchHSS.csproj</_GlobalSearchHSSProject>
+
+            <!-- Map the active Harden System Security architecture to its GlobalSearchHSS RID, publish profile and output. -->
+            <_GlobalSearchHSSRuntimeIdentifier Condition="'$(Platform)' == 'x64'">win-x64</_GlobalSearchHSSRuntimeIdentifier>
+            <_GlobalSearchHSSRuntimeIdentifier Condition="'$(Platform)' == 'arm64'">win-arm64</_GlobalSearchHSSRuntimeIdentifier>
+            <_GlobalSearchHSSPublishProfile>$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\GlobalSearchHSS\Properties\PublishProfiles\$(_GlobalSearchHSSRuntimeIdentifier).pubxml</_GlobalSearchHSSPublishProfile>
+            <_GlobalSearchHSSPublishDirectory Condition="'$(Platform)' == 'x64'">$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\GlobalSearchHSS\OutputX64</_GlobalSearchHSSPublishDirectory>
+            <_GlobalSearchHSSPublishDirectory Condition="'$(Platform)' == 'arm64'">$(MSBuildProjectDirectory)\..\AppControl Manager\eXclude\GlobalSearchHSS\OutputARM64</_GlobalSearchHSSPublishDirectory>
+            <_GlobalSearchHSSPublishedExecutable>$(_GlobalSearchHSSPublishDirectory)\GlobalSearchHSS.exe</_GlobalSearchHSSPublishedExecutable>
+        </PropertyGroup>
+
+        <!-- Fail early if the active project platform is not one of the two supported architectures. -->
+        <Error Condition="'$(_GlobalSearchHSSRuntimeIdentifier)' == ''" Text="GlobalSearchHSS supports only the x64 and arm64 platforms. Current platform: '$(Platform)'." />
+        <Error Condition="!Exists('$(_GlobalSearchHSSProject)')" Text="The GlobalSearchHSS project was not found at '$(_GlobalSearchHSSProject)'." />
+        <Error Condition="!Exists('$(_GlobalSearchHSSPublishProfile)')" Text="The GlobalSearchHSS publish profile was not found at '$(_GlobalSearchHSSPublishProfile)'." />
+
+        <!-- Clean and publish only the architecture selected for the current app build. -->
+        <Exec Command="dotnet clean &quot;$(_GlobalSearchHSSProject)&quot; --configuration Release" WorkingDirectory="$(MSBuildProjectDirectory)" />
+        <RemoveDir Directories="$(_GlobalSearchHSSPublishDirectory)" />
+        <Exec Command="dotnet publish &quot;$(_GlobalSearchHSSProject)&quot; --configuration Release --runtime $(_GlobalSearchHSSRuntimeIdentifier) --verbosity minimal /p:Platform=$(Platform) /p:PublishProfileFullPath=&quot;$(_GlobalSearchHSSPublishProfile)&quot; /p:PublishDir=&quot;$(_GlobalSearchHSSPublishDirectory)&quot;" WorkingDirectory="$(MSBuildProjectDirectory)" />
+
+        <!-- Place the service executable in the app project root for its existing Content item. -->
+        <Error Condition="!Exists('$(_GlobalSearchHSSPublishedExecutable)')" Text="GlobalSearchHSS was published, but '$(_GlobalSearchHSSPublishedExecutable)' was not produced." />
+        <Copy SourceFiles="$(_GlobalSearchHSSPublishedExecutable)" DestinationFiles="$(MSBuildProjectDirectory)\GlobalSearchHSS.exe" />
     </Target>
 
     <!-- Build ComManager only when its executable is missing from the CppInterop directory. -->

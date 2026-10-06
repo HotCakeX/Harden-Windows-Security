@@ -29,7 +29,7 @@ internal static class Program
 		{
 			NativeEventLogger.WriteEntry(
 				$"{Atlas.QuantumRelayHSSServiceName} Fatal error starting service: {ex.Message}\n{ex.StackTrace}",
-				NativeEventLogger.EventLogEntryType.Error);
+				NativeEventLogger.EventLogEntryType.Error, Atlas.QuantumRelayHSSServiceName);
 
 			return 1;
 		}

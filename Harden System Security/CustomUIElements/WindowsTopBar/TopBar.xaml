@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CC="using:CommonCore"
+    xmlns:search="using:HardenSystemSecurity.CustomUIElements.WindowsTopBar"
     Title="Top Bar"
     Activated="{x:Bind OnWindowActivated}"
     Closed="{x:Bind OnWindowClosed}">
@@ -154,6 +155,13 @@
                                              Click="{x:Bind OnSentryViewButtonClick}">
                             <RadioMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE720;"/>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem x:Name="SearchViewMenuItem"
+                                             GroupName="TopBarViewSwitcher"
+                                             Click="{x:Bind OnSearchViewButtonClick}">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE721;"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                     </MenuFlyout>
@@ -688,6 +696,90 @@
                                              Click="{x:Bind OnSentryOpenPrivacyClick}"/>
                         </StackPanel>
                     </Grid>
+                    <!-- Global Search results arrive from the independent service pipe. -->
+                    <Grid x:Name="SearchPanel"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Visibility="Collapsed">
+                        <StackPanel Spacing="8">
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="SearchStatusText"
+                                           Grid.Column="0"
+                                           FontSize="10"
+                                           Text="Type to search"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock x:Name="SearchIndexCountText"
+                                           Grid.Column="1"
+                                           FontSize="10"
+                                           Text="Indexed items: --"/>
+                            </Grid>
+                            <TextBox x:Name="SearchTextBox"
+                                     PlaceholderText="Search"
+                                     TextChanged="{x:Bind OnSearchTextChanged}"/>
+                            <ListView x:Name="SearchResultsListView"
+                                      Height="400"
+                                      ScrollViewer.HorizontalScrollMode="Enabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                      ItemsSource="{x:Bind _searchResults, Mode=OneWay}">
+                                <ListView.Resources>
+                                    <ResourceDictionary>
+                                        <ResourceDictionary.MergedDictionaries>
+                                            <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
+                                        </ResourceDictionary.MergedDictionaries>
+                                    </ResourceDictionary>
+                                </ListView.Resources>
+                                <ListView.Header>
+                                    <Border Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
+                                            Canvas.ZIndex="1"
+                                            customUI:StickyHeaderBehaviorV2.IsEnabled="True">
+                                        <Grid Height="32">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[0].Width, Mode=TwoWay}"/>
+                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchPathWidth.Width, Mode=TwoWay}"/>
+                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=TwoWay}"/>
+                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=TwoWay}"/>
+                                            </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="Name" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                        <TextBlock Grid.Column="1" Text="Path" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="2" Text="Size" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                        <!-- One Search-only resize handle; it does not resize the Size column. -->
+                                        <Thumb Grid.Column="2"
+                                               Width="8"
+                                               Height="28"
+                                               HorizontalAlignment="Left"
+                                               Background="{ThemeResource ControlAltFillColorSecondaryBrush}"
+                                               DragDelta="OnSearchPathDragDelta"/>
+                                        <TextBlock Grid.Column="3" Text="Date modified" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                        </Grid>
+                                    </Border>
+                                </ListView.Header>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="search:TopBarSearchResult">
+                                        <Grid Height="30"
+                                              Background="Transparent"
+                                              DoubleTapped="OnSearchResultDoubleTapped"
+                                              RightTapped="OnSearchResultRightTapped">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[0].Width, Mode=OneWay}"/>
+                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchPathWidth.Width, Mode=OneWay}"/>
+                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=OneWay}"/>
+                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=OneWay}"/>
+                                            </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind Path}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="2" Text="{x:Bind Size}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                        <TextBlock Grid.Column="3" Text="{x:Bind DateModified}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </ScrollViewer>
 
@@ -805,6 +897,16 @@
                                               Click="{x:Bind OnStartupToggleClick}">
                             <ToggleMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE7E8;"/>
+                            </ToggleMenuFlyoutItem.Icon>
+                        </ToggleMenuFlyoutItem>
+                        <MenuFlyoutSeparator/>
+                        <ToggleMenuFlyoutItem x:Name="SearchOsDriveOnlyToggle"
+                                              Text="Index OS Drive Only"
+                                              IsEnabled="False"
+                                              Loaded="{x:Bind OnSearchScopeLoaded}"
+                                              Click="{x:Bind OnSearchScopeToggled}">
+                            <ToggleMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xED37;"/>
                             </ToggleMenuFlyoutItem.Icon>
                         </ToggleMenuFlyoutItem>
                     </customUI:MenuFlyoutV2>

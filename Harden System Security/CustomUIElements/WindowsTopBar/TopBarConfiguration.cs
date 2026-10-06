@@ -34,7 +34,8 @@ internal enum TopBarView
 	Clocks = 3,
 	NetworkQuality = 4,
 	Sentry = 5,
-	Websites = 6
+	Websites = 6,
+	Search = 7
 }
 
 /// <summary>

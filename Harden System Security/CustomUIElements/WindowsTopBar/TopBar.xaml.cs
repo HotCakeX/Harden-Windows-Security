@@ -26,6 +26,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.AppSettings;
+using CommonCore.IncrementalCollection;
 using Microsoft.UI.Composition;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Input;
@@ -207,7 +208,7 @@ internal sealed partial class TopBarActiveBackdrop(TopBarBackdrop kind) : System
 /// A notch style top bar for Windows that is docked to the top center edge of the primary display.
 /// It stays collapsed as a small pill and expands into a compact panel when the pointer hovers over it,
 /// then it retracts back into the pill once the pointer leaves it.
-/// The panel offers seven views: applications, folders, websites, performance, clocks, network quality and Sentry.
+/// The panel offers eight views: applications, folders, websites, performance, clocks, network quality, Sentry and Search.
 /// Every one of them can be tailored by the user, whose choices are persisted via the app settings.
 /// </summary>
 internal sealed partial class TopBar : Window, IDisposable
@@ -243,6 +244,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private const double CompactCollapsedSpacingDips = 5.0;
 
 	private const double ExpandedHeightDips = 92.0;
+	private const double SearchExpandedHeightDips = 500.0;
 	private const double ExpandedCornerRadiusDips = 24.0;
 	private const double MinimumExpandedWidthDips = 380.0;
 	private const double ExpandedContentPaddingDips = 20.0;
@@ -422,7 +424,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private static IntPtr _windowHandle;
 
 	// The cells of every view, so that switching a view only swaps which list the animations are applied to.
-	private readonly Dictionary<TopBarView, List<TopBarTile>> _viewTiles = new(7);
+	private readonly Dictionary<TopBarView, List<TopBarTile>> _viewTiles = new(8);
 
 	/// <summary>
 	/// Follow the order shown by the view switcher menu, not the persisted enum values.
@@ -430,7 +432,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private static readonly TopBarView[] ViewSwitcherOrder =
 	[
 		TopBarView.Apps, TopBarView.Folders, TopBarView.Websites, TopBarView.Performance,
-		TopBarView.Clocks, TopBarView.NetworkQuality, TopBarView.Sentry
+		TopBarView.Clocks, TopBarView.NetworkQuality, TopBarView.Sentry, TopBarView.Search
 	];
 
 	private readonly TopBarConfiguration _configuration = TopBarConfigurationManager.Load();
@@ -454,6 +456,11 @@ internal sealed partial class TopBar : Window, IDisposable
 	private XamlRoot? _xamlRoot;
 	private double _rasterizationScale = 1.0;
 	private double _expandedWidthDips = MinimumExpandedWidthDips;
+	private double _expandedHeightDips = ExpandedHeightDips;
+	private double _heightTransitionStartDips;
+	private double _heightTransitionTargetDips;
+	private double _heightTransitionStartSeconds;
+	private bool _isHeightTransitionAnimating;
 
 	// The current amount of the expansion of the bar. 0 is fully collapsed and 1 is fully expanded.
 	private double _progress;
@@ -470,6 +477,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private int _displayBottom;
 	private bool _dockToBottom;
 	private int _displayWidth;
+	private int _displayHeight;
 
 	// How many flyouts of the bar are currently open. The bar must not retract while any of them is, because a flyout
 	// lives in a window of its own, so moving the pointer onto it makes the pointer leave the bar.
@@ -541,6 +549,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		ClocksViewMenuItem.Text = Atlas.GetStr("TopBarViewClocks");
 		NetworkQualityViewMenuItem.Text = "Network quality";
 		SentryViewMenuItem.Text = "Sentry";
+		SearchViewMenuItem.Text = "Search";
 
 		NotchStyleMenuItem.Text = Atlas.GetStr("TopBarNotchStyleMenuItem");
 		OpenOnHoverMenuItem.Text = Atlas.GetStr("TopBarOpenOnHoverMenuItem");
@@ -590,6 +599,15 @@ internal sealed partial class TopBar : Window, IDisposable
 		PrepareNetworkQualityView();
 		NetworkQualityDestinationBox.SelectedIndex = 0;
 
+		// Keep the compact empty header readable until the first search results are measured.
+		SearchColumnManager.ColumnWidths[0].Width = new GridLength(160.0);
+		SearchColumnManager.ColumnWidths[1].Width = new GridLength(80.0);
+		SearchColumnManager.ColumnWidths[2].Width = new GridLength(150.0);
+		// Recompute Path only when a measured, non-resizable column changes.
+		foreach (BindableColumnWidth column in SearchColumnManager.ColumnWidths)
+			column.PropertyChanged += OnSearchFixedColumnWidthChanged;
+		// Animate Search as one cell while the list scrolls independently.
+		_viewTiles[TopBarView.Search] = [new TopBarTile(SearchPanel, AttachEntranceTransform(SearchPanel))];
 		InitializeSentryView();
 
 		RebuildAppTiles();
@@ -799,6 +817,10 @@ internal sealed partial class TopBar : Window, IDisposable
 		TopBar? bar = _currentInstance;
 		if (bar is not null && !bar._isClosed && hWnd == _windowHandle)
 		{
+			if (bar.ForwardShellMenuMessage((uint)Msg, wParam, lParam, out IntPtr shellResult))
+			{
+				return shellResult;
+			}
 			uint message = (uint)Msg;
 			if (bar._isAppBarRegistered && message == bar._appBarCallbackMessage && wParam.ToUInt64() == NativeMethods.ABN_FULLSCREENAPP)
 			{
@@ -1941,6 +1963,25 @@ internal sealed partial class TopBar : Window, IDisposable
 		CancelForegroundPerformanceSample();
 		_activeView = view;
 
+		// Animate only Search to a taller height; keep the existing window edge anchored.
+		double targetHeight = view == TopBarView.Search
+			? Math.Min(SearchExpandedHeightDips, _displayHeight > 0 ? _displayHeight / _rasterizationScale : SearchExpandedHeightDips)
+			: ExpandedHeightDips;
+		ExpandedHost.Height = targetHeight;
+		if (animate && _progress > 0.0 && Math.Abs(targetHeight - _expandedHeightDips) >= ProgressEpsilon)
+		{
+			_heightTransitionStartDips = _expandedHeightDips;
+			_heightTransitionTargetDips = targetHeight;
+			_heightTransitionStartSeconds = _animationClock.Elapsed.TotalSeconds;
+			_isHeightTransitionAnimating = true;
+			AttachRenderHook();
+		}
+		else if (!animate || _progress <= 0.0)
+		{
+			_expandedHeightDips = targetHeight;
+			_isHeightTransitionAnimating = false;
+		}
+
 		AppsPanel.Visibility = view == TopBarView.Apps ? Visibility.Visible : Visibility.Collapsed;
 		FoldersPanel.Visibility = view == TopBarView.Folders ? Visibility.Visible : Visibility.Collapsed;
 		WebsitesPanel.Visibility = view == TopBarView.Websites ? Visibility.Visible : Visibility.Collapsed;
@@ -1948,6 +1989,15 @@ internal sealed partial class TopBar : Window, IDisposable
 		ClocksPanel.Visibility = view == TopBarView.Clocks ? Visibility.Visible : Visibility.Collapsed;
 		NetworkQualityPanel.Visibility = view == TopBarView.NetworkQuality ? Visibility.Visible : Visibility.Collapsed;
 		SentryPanel.Visibility = view == TopBarView.Sentry ? Visibility.Visible : Visibility.Collapsed;
+		SearchPanel.Visibility = view == TopBarView.Search ? Visibility.Visible : Visibility.Collapsed;
+		if (view != TopBarView.Search)
+		{
+			SearchPanel.Width = double.NaN;
+			ViewsScrollViewer.Width = double.NaN;
+		}
+		// The results list owns horizontal scrolling; the outer scroller remains available to the other views.
+		ViewsScrollViewer.HorizontalScrollMode = view == TopBarView.Search ? ScrollMode.Disabled : ScrollMode.Enabled;
+		ViewsScrollViewer.HorizontalScrollBarVisibility = view == TopBarView.Search ? ScrollBarVisibility.Disabled : ScrollBarVisibility.Auto;
 
 		AppsViewMenuItem.IsChecked = view == TopBarView.Apps;
 		FoldersViewMenuItem.IsChecked = view == TopBarView.Folders;
@@ -1956,9 +2006,10 @@ internal sealed partial class TopBar : Window, IDisposable
 		PerformanceViewMenuItem.IsChecked = view == TopBarView.Performance;
 		ClocksViewMenuItem.IsChecked = view == TopBarView.Clocks;
 		SentryViewMenuItem.IsChecked = view == TopBarView.Sentry;
+		SearchViewMenuItem.IsChecked = view == TopBarView.Search;
 
-		// There is nothing to add to the metrics of the machine or to the fixed network quality destination list or the Sentry.
-		AddButton.Visibility = view is TopBarView.Performance or TopBarView.NetworkQuality or TopBarView.Sentry
+		// There is nothing to add to Performance, Network quality, Sentry or Search.
+		AddButton.Visibility = view is TopBarView.Performance or TopBarView.NetworkQuality or TopBarView.Sentry or TopBarView.Search
 			? Visibility.Collapsed
 			: Visibility.Visible;
 
@@ -1967,6 +2018,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		{
 			AddButton.Visibility = Visibility.Collapsed;
 		}
+		if (view == TopBarView.Search && _searchResults.Count > 0) UpdateViewsMaximumWidth();
 
 		// The notch names the view that the bar opens into, so the collapsed bar always tells what it currently holds.
 		CollapsedLabel.Text = GetViewName(view);
@@ -1993,6 +2045,18 @@ internal sealed partial class TopBar : Window, IDisposable
 		else
 		{
 			ApplyTileStagger(_progress);
+		}
+
+		if (view == TopBarView.Search && _progress > 0.0)
+		{
+			// Switching views is intentional; activate after the switcher's menu has dismissed.
+			_ = DispatcherQueue.TryEnqueue(() =>
+			{
+				if (_isClosed || !_isExpandedHostAttached || _activeView != TopBarView.Search || _progress <= 0.0) return;
+				Activate();
+				if (NativeMethods.GetForegroundWindow() == _windowHandle)
+					_ = SearchTextBox.Focus(FocusState.Programmatic);
+			});
 		}
 	}
 
@@ -2034,6 +2098,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		TopBarView.Clocks => Atlas.GetStr("TopBarViewClocks"),
 		TopBarView.NetworkQuality => "Network quality",
 		TopBarView.Sentry => "Sentry",
+		TopBarView.Search => "Search",
 		_ => Atlas.GetStr("TopBarViewApps")
 	};
 
@@ -2048,6 +2113,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		TopBarView.Clocks => "\uE823",
 		TopBarView.NetworkQuality => "\uE968",
 		TopBarView.Sentry => "\uE720",
+		TopBarView.Search => "\uE721",
 		_ => "\uECAA"
 	};
 
@@ -2058,6 +2124,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private void OnClocksViewButtonClick() => SetActiveView(TopBarView.Clocks, animate: true);
 
 	private void OnNetworkQualityViewButtonClick() => SetActiveView(TopBarView.NetworkQuality, animate: true);
+	private void OnSearchViewButtonClick() => SetActiveView(TopBarView.Search, animate: true);
 
 	/// <summary>
 	/// Replaces the small animation beside the active view and persists the selection.
@@ -2133,6 +2200,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			case TopBarView.Performance: // The metrics of the machine are read from the machine itself, so there is nothing to add to them.
 			case TopBarView.NetworkQuality:
 			case TopBarView.Sentry:
+			case TopBarView.Search:
 			default:
 				break;
 		}
@@ -2872,6 +2940,16 @@ internal sealed partial class TopBar : Window, IDisposable
 		_displayTop = bounds.Y + Math.Clamp(workArea.Y, 0, bounds.Height);
 		_displayBottom = bounds.Y + bounds.Height;
 		_displayWidth = bounds.Width;
+		_displayHeight = bounds.Height;
+		// Preserve space for the TextBox when the display is shorter than the Search panel.
+		SearchResultsListView.Height = Math.Min(400.0, Math.Max(0.0, bounds.Height / _rasterizationScale - 100.0));
+		UpdateViewsMaximumWidth();
+		if (_activeView == TopBarView.Search)
+		{
+			ExpandedHost.Height = Math.Min(SearchExpandedHeightDips, bounds.Height / _rasterizationScale);
+			_expandedHeightDips = ExpandedHost.Height;
+			_isHeightTransitionAnimating = false;
+		}
 
 		// Query the system taskbar even when auto-hide leaves no work-area inset.
 		// Side-mounted taskbars leave the bar at the top.
@@ -2913,13 +2991,18 @@ internal sealed partial class TopBar : Window, IDisposable
 		double collapsedCornerRadiusDips = _notchStyle == TopBarNotchStyle.Compact ? CompactCollapsedCornerRadiusDips : StandardCollapsedCornerRadiusDips;
 
 		double widthDips = collapsedWidthDips + ((_expandedWidthDips - collapsedWidthDips) * clampedProgress);
-		double heightDips = collapsedHeightDips + ((ExpandedHeightDips - collapsedHeightDips) * clampedProgress);
+		double heightDips = collapsedHeightDips + ((_expandedHeightDips - collapsedHeightDips) * clampedProgress);
 		double cornerRadiusDips = collapsedCornerRadiusDips + ((ExpandedCornerRadiusDips - collapsedCornerRadiusDips) * expansion);
 
 		// The two flares sit outside of the body of the bar, so the window has to carry one of them on each side on top
 		// of whatever the body itself takes.
 		int filletRadius = (int)Math.Round(EdgeFilletRadiusDips * _rasterizationScale);
 		int height = (int)Math.Round(heightDips * _rasterizationScale);
+		// Search can fill a short display, so cap the expansion overshoot.
+		if (_activeView == TopBarView.Search && _displayHeight > 0)
+		{
+			height = Math.Min(height, _displayHeight);
+		}
 		int width = (int)Math.Round(widthDips * _rasterizationScale) + (filletRadius * 2);
 
 		// The overshoot of the expansion must never push the bar outside of the display.
@@ -3228,6 +3311,19 @@ internal sealed partial class TopBar : Window, IDisposable
 	private void OnRendering(object? sender, object e)
 	{
 		double now = _animationClock.Elapsed.TotalSeconds;
+		bool wasHeightTransitionAnimating = _isHeightTransitionAnimating;
+
+		// Ease height changes on the same render loop as width and expansion.
+		if (_isHeightTransitionAnimating)
+		{
+			double heightProgress = Math.Clamp((now - _heightTransitionStartSeconds) / WidthTransitionDurationSeconds, 0.0, 1.0);
+			_expandedHeightDips = _heightTransitionStartDips + ((_heightTransitionTargetDips - _heightTransitionStartDips) * EaseInOutCubic(heightProgress));
+			if (heightProgress >= 1.0)
+			{
+				_expandedHeightDips = _heightTransitionTargetDips;
+				_isHeightTransitionAnimating = false;
+			}
+		}
 
 		// The bar grows into the width of the newly selected view instead of snapping into it.
 		if (_isWidthTransitionAnimating)
@@ -3263,6 +3359,12 @@ internal sealed partial class TopBar : Window, IDisposable
 			}
 
 			ApplyState(_progress);
+
+			// Hover expansion must not steal focus from another foreground application.
+			if (animationCompleted && _animationTargetProgress > 0.0 && _activeView == TopBarView.Search &&
+				NativeMethods.GetForegroundWindow() == _windowHandle)
+				_ = SearchTextBox.Focus(FocusState.Programmatic);
+
 			if (animationCompleted && _animationTargetProgress <= 0.0)
 			{
 				DetachExpandedHost();
@@ -3270,7 +3372,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 		else
 		{
-			if (_isWidthTransitionAnimating)
+			if (_isWidthTransitionAnimating || wasHeightTransitionAnimating)
 			{
 				ApplyState(_progress);
 			}
@@ -3290,7 +3392,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 
 		// The bar has settled so no more frames are needed.
-		if (!_isExpansionAnimating && !_isViewSwitchAnimating && !_isWidthTransitionAnimating)
+		if (!_isExpansionAnimating && !_isViewSwitchAnimating && !_isWidthTransitionAnimating && !_isHeightTransitionAnimating)
 		{
 			DetachRenderHook();
 		}
@@ -3336,6 +3438,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private void OnRootPointerPressed()
 	{
 		_retractionTimer.Stop();
+		if (_activeView == TopBarView.Search && _progress < 1.0) Activate();
 		StartAnimation(1.0);
 	}
 
@@ -3715,12 +3818,28 @@ internal sealed partial class TopBar : Window, IDisposable
 			displayWidthDips - (EdgeFilletRadiusDips * 2.0) - MeasureChromeWidthDips() - (ExpandedContentPaddingDips * 2.0),
 			MinimumViewsWidthDips);
 
-		if (Math.Abs(availableWidthDips - ViewsScrollViewer.MaxWidth) < ProgressEpsilon)
+		// Only populated Search fills the display; the empty header keeps its compact natural width.
+		if (_activeView == TopBarView.Search && _searchResults.Count > 0)
 		{
-			return;
+			// Size the Search viewport to the available display width.
+			if (double.IsNaN(ViewsScrollViewer.Width) || Math.Abs(ViewsScrollViewer.Width - availableWidthDips) >= ProgressEpsilon)
+			{
+				ViewsScrollViewer.Width = availableWidthDips;
+			}
+			if (double.IsNaN(SearchPanel.Width) || Math.Abs(SearchPanel.Width - availableWidthDips) >= ProgressEpsilon)
+			{
+				SearchPanel.Width = availableWidthDips;
+			}
+			// Default layout fits the viewport. A manually widened Path may overflow into the ListView's scrollbar.
+			if (!_searchPathResized)
+				SearchPathWidth.Width = new GridLength(Math.Max(80.0, availableWidthDips -
+					SearchColumnManager.ColumnWidths[0].Width.Value - SearchColumnManager.ColumnWidths[1].Width.Value -
+					SearchColumnManager.ColumnWidths[2].Width.Value - 24.0));
 		}
-
-		ViewsScrollViewer.MaxWidth = availableWidthDips;
+		if (Math.Abs(availableWidthDips - ViewsScrollViewer.MaxWidth) >= ProgressEpsilon)
+		{
+			ViewsScrollViewer.MaxWidth = availableWidthDips;
+		}
 	}
 
 	/// <summary>
@@ -5323,7 +5442,329 @@ internal sealed partial class TopBar : Window, IDisposable
 
 	#endregion
 
-	private void OnWindowClosed() => Dispose();
+	#region Search
+
+	// The fixed columns are measured once per search result set. Only Path can be resized.
+	internal static readonly ListViewColumnManager<TopBarSearchResult> SearchColumnManager = new(
+	[
+		new("Name", "Name", static item => item.Name, useRawHeader: true),
+		new("Size", "Size", static item => item.Size, useRawHeader: true),
+		new("DateModified", "Date modified", static item => item.DateModified, useRawHeader: true)
+	]);
+	internal static readonly BindableColumnWidth SearchPathWidth = new(new GridLength(160.0));
+	private bool _searchPathResized;
+	private readonly RangedObservableCollection<TopBarSearchResult> _searchResults = [];
+	private TopBarSearchClient? _searchClient;
+	private bool _searchScopeReady;
+	private bool _searchScopePending;
+	private Task _searchDisposalTask = Task.CompletedTask;
+	private IntPtr _shellContextMenu2;
+	private IntPtr _shellContextMenu3;
+	private bool _shellContextMenuOpen;
+	private static readonly Guid ShellFolderInterfaceId = new("000214E6-0000-0000-C000-000000000046");
+	private static readonly Guid ContextMenuInterfaceId = new("000214E4-0000-0000-C000-000000000046");
+	private static readonly Guid ContextMenu2InterfaceId = new("000214F4-0000-0000-C000-000000000046");
+	private static readonly Guid ContextMenu3InterfaceId = new("BCFCE0A0-EC17-11D0-8D10-00A0C90F2719");
+
+	private void OnSearchScopeLoaded(object sender, RoutedEventArgs e)
+	{
+		if (_searchScopePending) return;
+		_searchScopeReady = false;
+		try
+		{
+			SearchOsDriveOnlyToggle.IsChecked = string.Equals(
+				Environment.GetEnvironmentVariable(HardenSystemSecurity.Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
+				"OS", StringComparison.OrdinalIgnoreCase);
+			SearchOsDriveOnlyToggle.IsEnabled = true;
+			_searchScopeReady = true;
+		}
+		catch (Exception exception)
+		{
+			Logger.Write(exception);
+			SearchOsDriveOnlyToggle.IsEnabled = false;
+		}
+	}
+
+	private async void OnSearchScopeToggled(object sender, RoutedEventArgs e)
+	{
+		if (!_searchScopeReady) return;
+		_searchScopeReady = false;
+		_searchScopePending = true;
+		SearchOsDriveOnlyToggle.IsEnabled = false;
+		string requested = SearchOsDriveOnlyToggle.IsChecked ? "OS" : "ALL";
+		bool saved = false;
+		try
+		{
+			if (CommonCore.Others.Relaunch.Start(Atlas.AUMID, $"--global-search-scope {requested}",
+				CommonCore.Others.Relaunch.Context.Elevated))
+			{
+				// Activation completes before the elevated process writes the machine value.
+				for (int attempt = 0; attempt < 50 && !saved && !_isClosed; attempt++)
+				{
+					await Task.Delay(100);
+					saved = string.Equals(Environment.GetEnvironmentVariable(
+						HardenSystemSecurity.Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
+						requested, StringComparison.OrdinalIgnoreCase);
+				}
+			}
+		}
+		catch (Exception exception) { Logger.Write(exception); }
+		if (_isClosed) return;
+		_searchScopePending = false;
+		OnSearchScopeLoaded(sender, e);
+		if (SearchOsDriveOnlyToggle.IsEnabled)
+			SearchStatusText.Text = saved
+				? "Scope saved; takes effect on the next index build."
+				: "Scope change was not saved.";
+	}
+
+	/// <summary>
+	/// Shows the selected filesystem item's classic shell menu, including extension submenus.
+	/// </summary>
+	private void OnSearchResultRightTapped(object sender, RightTappedRoutedEventArgs e)
+	{
+		if (_shellContextMenuOpen || _isClosed) return;
+		if (sender is not FrameworkElement { DataContext: TopBarSearchResult result }) return;
+		e.Handled = true;
+		try
+		{
+			ShowSearchShellMenu(result.Path);
+		}
+		catch (Exception exception)
+		{
+			Logger.Write(exception);
+		}
+	}
+
+	/// <summary>
+	/// Opens a file or folder with its registered Shell action on a double-click.
+	/// </summary>
+	private void OnSearchResultDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+	{
+		if (sender is not FrameworkElement { DataContext: TopBarSearchResult result }) return;
+		e.Handled = true;
+		try
+		{
+			using Process? opened = Process.Start(new ProcessStartInfo
+			{
+				FileName = result.Path,
+				UseShellExecute = true
+			});
+		}
+		catch (Exception exception)
+		{
+			// Show the underlying Windows error without logging a stack trace or the inaccessible path.
+			string reason = exception is System.ComponentModel.Win32Exception win32
+				? new System.ComponentModel.Win32Exception(win32.NativeErrorCode).Message
+				: exception.Message;
+			SearchStatusText.Text = "Could not open result: " + reason;
+		}
+	}
+
+	/// <summary>
+	/// Keeps shell PIDLs and COM objects alive until the menu closes and its chosen verb has run.
+	/// </summary>
+	private unsafe void ShowSearchShellMenu(string path)
+	{
+		const uint OpenLocationCommand = 0x8000U;
+		const uint CopyLocationCommand = 0x8001U;
+		const uint CopyNameCommand = 0x8002U;
+		IntPtr pidl = IntPtr.Zero;
+		IntPtr folder = IntPtr.Zero;
+		IntPtr contextMenu = IntPtr.Zero;
+		IntPtr menu = IntPtr.Zero;
+		try
+		{
+			if (NativeMethods.SHParseDisplayName(path, IntPtr.Zero, out pidl, 0U, IntPtr.Zero) < 0 || pidl == IntPtr.Zero) return;
+			Guid folderId = ShellFolderInterfaceId;
+			if (NativeMethods.SHBindToParent(pidl, in folderId, out folder, out IntPtr child) < 0 || folder == IntPtr.Zero || child == IntPtr.Zero) return;
+			Guid menuId = ContextMenuInterfaceId;
+			IntPtr* children = stackalloc IntPtr[1] { child };
+			int hr = ((delegate* unmanaged[Stdcall]<IntPtr, IntPtr, uint, IntPtr*, Guid*, IntPtr, IntPtr*, int>)(*(void***)folder)[10])
+				(folder, _windowHandle, 1U, children, &menuId, IntPtr.Zero, &contextMenu);
+			if (hr < 0 || contextMenu == IntPtr.Zero) return;
+			menu = NativeMethods.CreatePopupMenu();
+			if (menu == IntPtr.Zero) return;
+			// Shell verbs use 1..0x7fff; these Top Bar actions use separate command IDs.
+			if (!NativeMethods.AppendMenuW(menu, NativeMethods.MF_STRING, OpenLocationCommand, "Open Location") ||
+				!NativeMethods.AppendMenuW(menu, NativeMethods.MF_STRING, CopyLocationCommand, "Copy Location") ||
+				!NativeMethods.AppendMenuW(menu, NativeMethods.MF_STRING, CopyNameCommand, "Copy Name") ||
+				!NativeMethods.AppendMenuW(menu, NativeMethods.MF_SEPARATOR, UIntPtr.Zero, null))
+				throw new InvalidOperationException("Could not add Search actions to the shell menu.");
+			// Reserve IDs 1..0x7fff. InvokeCommand receives the selected ID minus one.
+			// Insert shell commands after the three Top Bar actions and their separator.
+			hr = ((delegate* unmanaged[Stdcall]<IntPtr, IntPtr, uint, uint, uint, uint, int>)(*(void***)contextMenu)[3])
+				(contextMenu, menu, 4U, 1U, 0x7fffU, 0U);
+			if (hr < 0 || (hr & 0xffff) == 0) return;
+			Guid menu3Id = ContextMenu3InterfaceId;
+			IntPtr menu3 = IntPtr.Zero;
+			_ = ((delegate* unmanaged[Stdcall]<IntPtr, Guid*, IntPtr*, int>)(*(void***)contextMenu)[0])(contextMenu, &menu3Id, &menu3);
+			_shellContextMenu3 = menu3;
+			if (_shellContextMenu3 == IntPtr.Zero)
+			{
+				Guid menu2Id = ContextMenu2InterfaceId;
+				IntPtr menu2 = IntPtr.Zero;
+				_ = ((delegate* unmanaged[Stdcall]<IntPtr, Guid*, IntPtr*, int>)(*(void***)contextMenu)[0])(contextMenu, &menu2Id, &menu2);
+				_shellContextMenu2 = menu2;
+			}
+			if (!NativeMethods.GetCursorPos(out POINT position)) return;
+			_shellContextMenuOpen = true;
+			_openFlyoutCount++;
+			_retractionTimer.Stop();
+			_ = NativeMethods.SetForegroundWindow(_windowHandle);
+			uint command = NativeMethods.TrackPopupMenuEx(menu,
+				NativeMethods.TPM_RETURNCMD | NativeMethods.TPM_RIGHTBUTTON | NativeMethods.TPM_LEFTALIGN,
+				position.x, position.y, _windowHandle, IntPtr.Zero);
+			if (command == OpenLocationCommand)
+			{
+				// A fully qualified item PIDL selects its item in the parent folder.
+				hr = NativeMethods.SHOpenFolderAndSelectItems(pidl, 0U, IntPtr.Zero, 0U);
+				if (hr < 0) Logger.Write($"Opening Search result location failed: 0x{hr:X8}");
+			}
+			else if (command is CopyLocationCommand or CopyNameCommand)
+			{
+				string trimmed = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+				string text = command == CopyLocationCommand
+					? Path.GetDirectoryName(trimmed) ?? path
+					: Path.GetFileName(trimmed);
+				DataPackage data = new();
+				data.SetText(string.IsNullOrEmpty(text) ? path : text);
+				Clipboard.SetContent(data);
+			}
+			else if (command is >= 1 and <= 0x7fff)
+			{
+				CMINVOKECOMMANDINFOEX invoke = new()
+				{
+					cbSize = (uint)sizeof(CMINVOKECOMMANDINFOEX),
+					fMask = 0x00004000U, // CMIC_MASK_UNICODE
+					hwnd = _windowHandle,
+					lpVerb = (IntPtr)(command - 1U),
+					lpVerbW = (IntPtr)(command - 1U),
+					nShow = 1
+				};
+				hr = ((delegate* unmanaged[Stdcall]<IntPtr, CMINVOKECOMMANDINFOEX*, int>)(*(void***)contextMenu)[4])(contextMenu, &invoke);
+				if (hr < 0) Logger.Write($"Shell context menu command failed: 0x{hr:X8}");
+			}
+			// Allow the owner to leave the foreground after the native popup is dismissed.
+			_ = NativeMethods.PostMessageW(_windowHandle, 0, UIntPtr.Zero, IntPtr.Zero);
+		}
+		finally
+		{
+			if (_shellContextMenuOpen) _openFlyoutCount--;
+			_shellContextMenuOpen = false;
+			NativeMethods.ReleaseComObject(_shellContextMenu3);
+			NativeMethods.ReleaseComObject(_shellContextMenu2);
+			_shellContextMenu3 = IntPtr.Zero;
+			_shellContextMenu2 = IntPtr.Zero;
+			if (menu != IntPtr.Zero) _ = NativeMethods.DestroyMenu(menu);
+			NativeMethods.ReleaseComObject(contextMenu);
+			NativeMethods.ReleaseComObject(folder);
+			NativeMethods.CoTaskMemFree(pidl);
+			if (!_isClosed && !_isPinned && !IsCursorOverBar()) _retractionTimer.Start();
+		}
+	}
+
+	/// <summary>
+	/// Forwards owner-drawn and submenu messages to the active shell extension.
+	/// </summary>
+	private unsafe bool ForwardShellMenuMessage(uint message, UIntPtr wParam, IntPtr lParam, out IntPtr result)
+	{
+		result = IntPtr.Zero;
+		if (!_shellContextMenuOpen || message is not (0x0117U or 0x002BU or 0x002CU or 0x0120U)) return false;
+		if (_shellContextMenu3 != IntPtr.Zero)
+		{
+			IntPtr nativeResult = IntPtr.Zero;
+			int hr = ((delegate* unmanaged[Stdcall]<IntPtr, uint, UIntPtr, IntPtr, IntPtr*, int>)(*(void***)_shellContextMenu3)[7])
+				(_shellContextMenu3, message, wParam, lParam, &nativeResult);
+			if (hr >= 0)
+			{
+				result = message == 0x0120U ? nativeResult : message is 0x002BU or 0x002CU ? new IntPtr(1) : IntPtr.Zero;
+				return true;
+			}
+		}
+		else if (_shellContextMenu2 != IntPtr.Zero && message != 0x0120U)
+		{
+			int hr = ((delegate* unmanaged[Stdcall]<IntPtr, uint, UIntPtr, IntPtr, int>)(*(void***)_shellContextMenu2)[6])
+				(_shellContextMenu2, message, wParam, lParam);
+			if (hr >= 0)
+			{
+				result = message is 0x002BU or 0x002CU ? new IntPtr(1) : IntPtr.Zero;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+	{
+		if (_isClosed) return;
+		string query = SearchTextBox.Text;
+		_searchResults.Clear();
+		SearchIndexCountText.Text = "Indexed items: --";
+		// Empty searches return to the compact header width until results are available.
+		SearchPanel.Width = double.NaN;
+		ViewsScrollViewer.Width = double.NaN;
+		_searchPathResized = false;
+		SearchPathWidth.Width = new GridLength(160.0);
+		if (string.IsNullOrWhiteSpace(query))
+		{
+			if (_searchClient is null || _searchClient.IsIndexReady) SearchStatusText.Text = "Type to search";
+			_searchClient?.SetQuery(string.Empty);
+			return;
+		}
+		_searchClient ??= new TopBarSearchClient(DispatcherQueue, OnSearchStatus, OnSearchResults);
+		_searchClient.SetQuery(query);
+	}
+
+	private void OnSearchFixedColumnWidthChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+	{
+		if (!_isClosed && _activeView == TopBarView.Search && _searchResults.Count > 0 && !_searchPathResized)
+			UpdateViewsMaximumWidth();
+	}
+
+	// The Search-only handle changes Path, never the neighboring Size column.
+	private void OnSearchPathDragDelta(object sender, DragDeltaEventArgs e)
+	{
+		_searchPathResized = true;
+		SearchPathWidth.Width = new GridLength(Math.Max(80.0, SearchPathWidth.Width.Value + e.HorizontalChange));
+	}
+
+	private void OnSearchStatus(string message)
+	{
+		if (!_isClosed) SearchStatusText.Text = message;
+	}
+
+	private void OnSearchResults(string query, List<TopBarSearchResult> results, long indexedItems)
+	{
+		if (_isClosed || !string.Equals(SearchTextBox.Text, query, StringComparison.OrdinalIgnoreCase)) return;
+		if (indexedItems == -1) // Explicit service rejection; preserve any newer text.
+		{
+			SearchTextBox.Text = string.Empty;
+			SearchStatusText.Text = "The service rejected the search query because it is too long.";
+			return;
+		}
+		_searchResults.Clear();
+		_searchResults.AddRange(results);
+		SearchIndexCountText.Text = "Indexed items: " + indexedItems.ToString("N0", CultureInfo.CurrentCulture);
+		if (results.Count > 0)
+		{
+			SearchColumnManager.CalculateColumnWidths(results);
+			UpdateViewsMaximumWidth();
+		}
+		SearchStatusText.Text = results.Count == 0 ? "No matching files." : $"{results.Count} result(s) shown (limit 100). Search is by filename, not full path.";
+	}
+
+	#endregion
+
+	private async void OnWindowClosed()
+	{
+		try { Dispose(); }
+		finally
+		{
+			try { await _searchDisposalTask; }
+			catch (Exception exception) { Logger.Write(exception); }
+		}
+	}
 
 	/// <summary>
 	/// Releases every resource owned by the Top Bar. The closed-state guard makes disposal idempotent because the
@@ -5337,6 +5778,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 
 		_isClosed = true;
+		if (_searchClient is not null) _searchDisposalTask = _searchClient.DisposeAsync().AsTask();
+		_searchClient = null;
 		// Dispose the material controller without assigning null to the element.
 		_barBackdrop?.SetKind(TopBarBackdrop.Solid);
 		StopFullScreenRegistration();
@@ -5352,6 +5795,10 @@ internal sealed partial class TopBar : Window, IDisposable
 			_networkQualitySampler = null;
 			_networkQualityTask = null;
 		}
+
+		foreach (BindableColumnWidth column in SearchColumnManager.ColumnWidths)
+			column.PropertyChanged -= OnSearchFixedColumnWidthChanged;
+
 		TeardownSentry();
 		TeardownWebsites();
 		StopBrowserDragWatch();

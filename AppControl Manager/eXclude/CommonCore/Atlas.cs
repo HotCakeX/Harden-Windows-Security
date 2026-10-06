@@ -31,6 +31,7 @@ internal static partial class Atlas
 {
 	internal const string QuantumRelayHSSServiceName = "QuantumRelayHSS";
 	internal const string QuantumRelayHSSPipeName = $"{QuantumRelayHSSServiceName}_CommandPipe";
+	internal const string GlobalSearchPipeName = "GlobalSearchHSS_SearchPipe";
 
 	// User Mode block rules
 	//internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");
@@ -106,7 +107,7 @@ internal static partial class Atlas
 	/// <summary>
 	/// The User Agent used by the entire app.
 	/// </summary>
-	internal const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36 Edg/154.0.0.0";
+	internal const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0";
 
 	internal const string DefaultMaxVersion = "65535.65535.65535.65535";
 

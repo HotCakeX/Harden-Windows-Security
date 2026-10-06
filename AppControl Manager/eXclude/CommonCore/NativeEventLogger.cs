@@ -18,7 +18,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace QuantumRelayHSS;
+namespace CommonCore;
 
 internal static class NativeEventLogger
 {
@@ -33,12 +33,12 @@ internal static class NativeEventLogger
 	/// Used to write logs to Windows Event Logs when the log can't be sent to the client because
 	/// the client is unavailable or the log needs to be written before client is connected or after it is disconnected.
 	/// </summary>
-	internal static void WriteEntry(string message, EventLogEntryType type)
+	internal static void WriteEntry(string message, EventLogEntryType type, string sourceName)
 	{
 		try
 		{
 			// Register the source (returns handle even if registry not pre-created)
-			IntPtr hEventLog = NativeMethods.RegisterEventSourceW(null, Atlas.QuantumRelayHSSServiceName);
+			IntPtr hEventLog = NativeMethods.RegisterEventSourceW(null, sourceName);
 			if (hEventLog == IntPtr.Zero)
 			{
 				return;

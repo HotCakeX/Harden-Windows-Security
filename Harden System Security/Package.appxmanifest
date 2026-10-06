@@ -300,7 +300,11 @@
           </uap:FileTypeAssociation>
         </uap:Extension>
 
-        <!-- Service -->
+        <!-- Global Search Service -->
+        <desktop6:Extension Category="windows.service" Executable="GlobalSearchHSS.exe" EntryPoint="main">
+            <desktop6:Service Name="GlobalSearchHSS" StartupType="auto" StartAccount="localSystem" />
+        </desktop6:Extension>
+        <!-- Quantum Relay Service -->
         <desktop6:Extension Category="windows.service" Executable="QuantumRelayHSS.exe" EntryPoint="main">
             <desktop6:Service Name="QuantumRelayHSS" StartupType="manual" StartAccount="localSystem">
             </desktop6:Service>

@@ -1,3 +1,7 @@
+Introducing Global Search™
+
+The Global Search is the newest addition to the Topbar, allowing you to search among every single file on your entire system instantly. Every search result offers rich native right-click features. It uses the fastest methods possible to index all of the files in your NTFS and ReFS drives and then provides real-time search results as you type. It uses a background service for the indexing job that starts automatically with Windows and releases its indexes from memory if no search is performed within 10 minutes after the initial indexing finishes. After the first search or initial unload, it releases the indexes after 1 hour of search inactivity so it won't consume unnecessary resources. It is orders of magnitude faster than the built-in Windows search and in terms of performance and speed, is on par with the best third-party search tools available.
+
 * Updated the Exploit Mitigations based on the latest Microsoft recommendations available here: https://learn.microsoft.com/en-us/defender-endpoint/evaluate-exploit-protection
 
     * To apply the new exploit mitigation adjustments, all you have to do is applying the Microsoft Defender security category.

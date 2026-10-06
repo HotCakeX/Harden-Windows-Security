@@ -4325,4 +4325,51 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int DwmEnableBlurBehindWindow(IntPtr hWnd, DWM_BLURBEHIND* pBlurBehind);
 
+
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetFileInformationByHandleEx(SafeFileHandle handle, int infoClass, void* output, uint size);
+
+
+	[LibraryImport("kernel32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetVolumeInformationW(string root, char* volumeName, uint volumeNameSize, uint* serial, uint* maxComponent, uint* flags, char* fileSystemName, uint fileSystemNameSize);
+
+
+	[LibraryImport("kernel32.dll", EntryPoint = "CreateFileW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial SafeFileHandle CreateFileW_Unsafe(string path, uint access, uint share, void* security, uint disposition, uint flags, nint template);
+
+
+	[LibraryImport("kernel32.dll", EntryPoint = "DeviceIoControl", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool DeviceIoControl_Safe(SafeFileHandle handle, uint code, void* input, uint inputSize, void* output, uint outputSize, out uint returned, void* overlapped);
+
+
+	[LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SHParseDisplayName(string name, IntPtr bindContext, out IntPtr pidl, uint attributes, IntPtr returnedAttributes);
+
+
+	[LibraryImport("shell32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SHBindToParent(IntPtr pidl, in Guid iid, out IntPtr parent, out IntPtr child);
+
+
+	[LibraryImport("shell32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SHOpenFolderAndSelectItems(IntPtr pidlFolder, uint cidl, IntPtr apidl, uint dwFlags);
+
+
+	/// <summary>
+	/// Returns a Win32 error code directly; no GetLastError or runtime marshaling is required.
+	/// https://learn.microsoft.com/windows/win32/api/appmodel/nf-appmodel-getapplicationusermodelidfromtoken
+	/// </summary>
+	[LibraryImport("kernelbase.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int GetApplicationUserModelIdFromToken(nint token, ref uint length, char* applicationUserModelId);
+
 }

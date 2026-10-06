@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<Version>$(FileVersion)</Version>
+		<FileVersion>1.0.0.0</FileVersion>
+		<AssemblyVersion>$(FileVersion)</AssemblyVersion>
+		<Title>Harden System Security Global Search</Title>
+		<Copyright>Violet Hansen</Copyright>
+		<Description>Global Search Service for the Harden System Security App</Description>
+		<StartupObject>GlobalSearchService.SearchServiceHost</StartupObject>
+		<DebugSymbols>false</DebugSymbols>
+		<DebugType>none</DebugType>
+        <OptimizationPreference>Speed</OptimizationPreference>
+		<!--Trim And Native AOT-->
+		<PublishAot>True</PublishAot>
+		<PublishTrimmed>True</PublishTrimmed>
+		<TrimMode>full</TrimMode>
+		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+		<ILLinkTreatWarningsAsErrors>true</ILLinkTreatWarningsAsErrors>
+		<TrimmerSingleWarn>false</TrimmerSingleWarn>
+		<UseNativeHttpHandler>true</UseNativeHttpHandler>
+		<MetricsSupport>false</MetricsSupport>
+		<MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
+		<Http3Support>false</Http3Support>
+	</PropertyGroup>
+
+	<Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />
+</Project>

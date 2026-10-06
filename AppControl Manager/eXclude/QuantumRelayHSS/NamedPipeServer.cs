@@ -104,7 +104,7 @@ internal sealed class NamedPipeServer : IDisposable
 		{
 			NativeEventLogger.WriteEntry(
 				$"{Atlas.QuantumRelayHSSServiceName} Named pipe server error: {ex.Message}",
-				NativeEventLogger.EventLogEntryType.Error);
+				NativeEventLogger.EventLogEntryType.Error, Atlas.QuantumRelayHSSServiceName);
 
 			throw;
 		}
@@ -130,7 +130,7 @@ internal sealed class NamedPipeServer : IDisposable
 
 		NativeEventLogger.WriteEntry(
 			$"{Atlas.QuantumRelayHSSServiceName} Service stopped",
-			NativeEventLogger.EventLogEntryType.Information);
+			NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 	}
 
 	// Main loop to handle incoming client connections' requests.
@@ -178,7 +178,7 @@ internal sealed class NamedPipeServer : IDisposable
 			{
 				NativeEventLogger.WriteEntry(
 					$"{Atlas.QuantumRelayHSSServiceName} Error handling client connection: {ex.Message}",
-					NativeEventLogger.EventLogEntryType.Error);
+					NativeEventLogger.EventLogEntryType.Error, Atlas.QuantumRelayHSSServiceName);
 			}
 
 			if (IsRunning && !cancellationToken.IsCancellationRequested)
@@ -379,7 +379,7 @@ internal sealed class NamedPipeServer : IDisposable
 		{
 			NativeEventLogger.WriteEntry(
 				$"{Atlas.QuantumRelayHSSServiceName} Error in client session: {ex.Message}",
-				NativeEventLogger.EventLogEntryType.Error);
+				NativeEventLogger.EventLogEntryType.Error, Atlas.QuantumRelayHSSServiceName);
 		}
 		finally
 		{
@@ -483,7 +483,7 @@ internal sealed class NamedPipeServer : IDisposable
 			{
 				NativeEventLogger.WriteEntry(
 					$"{Atlas.QuantumRelayHSSServiceName} First client connected. ActiveSessions={count}. Idle timer stopped.",
-					NativeEventLogger.EventLogEntryType.Information);
+					NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 			}
 		}
 	}
@@ -518,7 +518,7 @@ internal sealed class NamedPipeServer : IDisposable
 				{
 					NativeEventLogger.WriteEntry(
 						$"{Atlas.QuantumRelayHSSServiceName} No active clients. Idle timer armed for {IdleTimeoutSeconds} seconds.",
-						NativeEventLogger.EventLogEntryType.Information);
+						NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 				}
 			}
 			catch (ObjectDisposedException) { }
@@ -536,7 +536,7 @@ internal sealed class NamedPipeServer : IDisposable
 				{
 					NativeEventLogger.WriteEntry(
 						$"{Atlas.QuantumRelayHSSServiceName} Idle timeout reached ({IdleTimeoutSeconds}s) with no clients. Initiating shutdown.",
-						NativeEventLogger.EventLogEntryType.Information);
+						NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 				}
 
 				try
@@ -650,7 +650,7 @@ internal sealed class ClientSessionContext : IDisposable
 		{
 			NativeEventLogger.WriteEntry(
 				$"{Atlas.QuantumRelayHSSServiceName}: {message}",
-				NativeEventLogger.EventLogEntryType.Information);
+				NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 			return;
 		}
 
@@ -668,7 +668,7 @@ internal sealed class ClientSessionContext : IDisposable
 		{
 			NativeEventLogger.WriteEntry(
 				$"{Atlas.QuantumRelayHSSServiceName}: {message}",
-				NativeEventLogger.EventLogEntryType.Information);
+				NativeEventLogger.EventLogEntryType.Information, Atlas.QuantumRelayHSSServiceName);
 		}
 		finally
 		{

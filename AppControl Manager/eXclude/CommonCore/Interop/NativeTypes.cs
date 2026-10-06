@@ -2616,3 +2616,39 @@ internal struct DWM_BLURBEHIND
 	internal IntPtr hRgnBlur;
 	internal int fTransitionOnMaximized;
 }
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct MftV0 { internal ulong Start; internal long Low; internal long High; }
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct ReadV1
+{
+	internal long Start;
+	internal uint ReasonMask;
+	internal uint ReturnOnlyOnClose;
+	internal ulong Timeout;
+	internal ulong BytesToWaitFor;
+	internal ulong JournalId;
+	internal ushort Min;
+	internal ushort Max;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+internal struct CMINVOKECOMMANDINFOEX
+{
+	internal uint cbSize;
+	internal uint fMask;
+	internal IntPtr hwnd;
+	internal IntPtr lpVerb;
+	internal IntPtr lpParameters;
+	internal IntPtr lpDirectory;
+	internal int nShow;
+	internal uint dwHotKey;
+	internal IntPtr hIcon;
+	internal IntPtr lpTitle;
+	internal IntPtr lpVerbW;
+	internal IntPtr lpParametersW;
+	internal IntPtr lpDirectoryW;
+	internal IntPtr lpTitleW;
+	internal POINT ptInvoke;
+}

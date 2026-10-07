@@ -3454,12 +3454,13 @@ internal sealed partial class TopBar : Window, IDisposable
 		// A finger leaves the bar as soon as it is lifted off the display, which is the very moment the user is about to
 		// reach for whatever they just uncovered, so a touch driven bar is never retracted by the contact ending.
 		// It is retracted instead when it is tapped away from, which arrives as the window being deactivated.
-		if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
+		if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch || IsCursorOverBar())
 		{
 			return;
 		}
 
 		// The retraction is delayed so that briefly leaving the bar does not immediately collapse it.
+		// Only a confirmed window exit starts the delay; XAML hit-test changes can also report an exit.
 		_retractionTimer.Stop();
 		_retractionTimer.Start();
 	}
@@ -3832,7 +3833,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			}
 			// Default layout fits the viewport. A manually widened Path may overflow into the ListView's scrollbar.
 			if (!_searchPathResized)
-				SearchPathWidth.Width = new GridLength(Math.Max(80.0, availableWidthDips -
+				SearchPathWidth.Width = new GridLength(Math.Max(80.0, availableWidthDips - SearchThumbnailColumnWidth -
 					SearchColumnManager.ColumnWidths[0].Width.Value - SearchColumnManager.ColumnWidths[1].Width.Value -
 					SearchColumnManager.ColumnWidths[2].Width.Value - 24.0));
 		}
@@ -4293,7 +4294,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		Flyout flyout = new() { Content = content, ShouldConstrainToRootBounds = false };
 		TrackFlyout(flyout);
 
-		save.Click += (_, _) =>
+		// Share the existing save logic between the "Save" button and Enter key.
+		void SaveWebsite()
 		{
 			if (!_configuration.Websites.Contains(entry))
 			{
@@ -4345,6 +4347,15 @@ internal sealed partial class TopBar : Window, IDisposable
 				}
 			}
 			flyout.Hide();
+		}
+		save.Click += (_, _) => SaveWebsite();
+		urlBox.KeyDown += (sender, e) =>
+		{
+			if (e.Key == Windows.System.VirtualKey.Enter)
+			{
+				e.Handled = true;
+				SaveWebsite();
+			}
 		};
 
 		flyout.ShowAt(AddButton);
@@ -4360,7 +4371,9 @@ internal sealed partial class TopBar : Window, IDisposable
 		StackPanel content = new() { Spacing = 8.0, Children = { nameBox, urlBox, error, add } };
 		Flyout flyout = new() { Content = content, ShouldConstrainToRootBounds = false };
 		TrackFlyout(flyout);
-		add.Click += (_, _) =>
+
+		// Share the existing pinning logic between the "Pin Website" button and Enter key.
+		void PinWebsite()
 		{
 			if (!TryGetWebsiteUri(urlBox.Text, out Uri? uri))
 			{
@@ -4376,6 +4389,15 @@ internal sealed partial class TopBar : Window, IDisposable
 			AddWebsite(uri, nameBox.Text);
 
 			flyout.Hide();
+		}
+		add.Click += (_, _) => PinWebsite();
+		urlBox.KeyDown += (sender, e) =>
+		{
+			if (e.Key == Windows.System.VirtualKey.Enter)
+			{
+				e.Handled = true;
+				PinWebsite();
+			}
 		};
 
 		flyout.ShowAt(AddButton);
@@ -5444,6 +5466,75 @@ internal sealed partial class TopBar : Window, IDisposable
 
 	#region Search
 
+	/// <summary>
+	/// Fixed leading column is excluded from text measurement and Path resizing.
+	/// It is set manually in the XAML too and must match it always.
+	/// </summary>
+	internal const double SearchThumbnailColumnWidth = 36.0;
+
+	[DynamicWindowsRuntimeCast(typeof(Image))]
+	private async void OnSearchThumbnailLoaded(object sender, RoutedEventArgs e)
+	{
+		if (sender is Image icon) await LoadSearchThumbnailAsync(icon);
+	}
+
+	[DynamicWindowsRuntimeCast(typeof(Image))]
+	private async void OnSearchThumbnailDataContextChanged(FrameworkElement sender, DataContextChangedEventArgs e)
+	{
+		if (sender is not Image icon) return;
+
+		// Clear the previous item's image immediately when a container is recycled.
+		icon.Source = null;
+		if (icon.IsLoaded) await LoadSearchThumbnailAsync(icon);
+	}
+
+	private async Task LoadSearchThumbnailAsync(Image icon)
+	{
+		if (_isClosed || !icon.IsLoaded || icon.DataContext is not TopBarSearchResult result) return;
+		if (result.ThumbnailAttempted)
+		{
+			icon.Source = result.Thumbnail;
+			return;
+		}
+		// Reuse the existing gate. Obsolete queued rows do no storage work.
+		await FileIconLoadGate.WaitAsync();
+		try
+		{
+			if (_isClosed || !icon.IsLoaded || !ReferenceEquals(icon.DataContext, result)) return;
+			if (!result.ThumbnailAttempted)
+			{
+				result.ThumbnailAttempted = true;
+				StorageItemThumbnail? thumbnail;
+				if (result.IsDirectory)
+				{
+					StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(result.Path);
+					thumbnail = await folder.GetThumbnailAsync(ThumbnailMode.ListView, 40U, ThumbnailOptions.UseCurrentScale);
+				}
+				else
+				{
+					StorageFile file = await StorageFile.GetFileFromPathAsync(result.Path);
+					thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 40U, ThumbnailOptions.UseCurrentScale);
+				}
+				using (thumbnail)
+				{
+					if (thumbnail is not null)
+					{
+						BitmapImage bitmap = new() { DecodePixelWidth = 40 };
+						await bitmap.SetSourceAsync(thumbnail);
+						result.Thumbnail = bitmap;
+					}
+				}
+			}
+			// A late completion must never paint a different result or a closed window.
+			if (!_isClosed && icon.IsLoaded && ReferenceEquals(icon.DataContext, result)) icon.Source = result.Thumbnail;
+		}
+		catch
+		{
+			// Missing or inaccessible indexed items remain searchable without a thumbnail.
+		}
+		finally { _ = FileIconLoadGate.Release(); }
+	}
+
 	// The fixed columns are measured once per search result set. Only Path can be resized.
 	internal static readonly ListViewColumnManager<TopBarSearchResult> SearchColumnManager = new(
 	[
@@ -5466,14 +5557,14 @@ internal sealed partial class TopBar : Window, IDisposable
 	private static readonly Guid ContextMenu2InterfaceId = new("000214F4-0000-0000-C000-000000000046");
 	private static readonly Guid ContextMenu3InterfaceId = new("BCFCE0A0-EC17-11D0-8D10-00A0C90F2719");
 
-	private void OnSearchScopeLoaded(object sender, RoutedEventArgs e)
+	private void OnSearchScopeLoaded()
 	{
 		if (_searchScopePending) return;
 		_searchScopeReady = false;
 		try
 		{
 			SearchOsDriveOnlyToggle.IsChecked = string.Equals(
-				Environment.GetEnvironmentVariable(HardenSystemSecurity.Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
+				Environment.GetEnvironmentVariable(Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
 				"OS", StringComparison.OrdinalIgnoreCase);
 			SearchOsDriveOnlyToggle.IsEnabled = true;
 			_searchScopeReady = true;
@@ -5495,15 +5586,14 @@ internal sealed partial class TopBar : Window, IDisposable
 		bool saved = false;
 		try
 		{
-			if (CommonCore.Others.Relaunch.Start(Atlas.AUMID, $"--global-search-scope {requested}",
-				CommonCore.Others.Relaunch.Context.Elevated))
+			if (Relaunch.Start(Atlas.AUMID, $"--global-search-scope {requested}", Relaunch.Context.Elevated))
 			{
 				// Activation completes before the elevated process writes the machine value.
 				for (int attempt = 0; attempt < 50 && !saved && !_isClosed; attempt++)
 				{
 					await Task.Delay(100);
 					saved = string.Equals(Environment.GetEnvironmentVariable(
-						HardenSystemSecurity.Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
+						Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
 						requested, StringComparison.OrdinalIgnoreCase);
 				}
 			}
@@ -5511,7 +5601,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		catch (Exception exception) { Logger.Write(exception); }
 		if (_isClosed) return;
 		_searchScopePending = false;
-		OnSearchScopeLoaded(sender, e);
+		OnSearchScopeLoaded();
 		if (SearchOsDriveOnlyToggle.IsEnabled)
 			SearchStatusText.Text = saved
 				? "Scope saved; takes effect on the next index build."
@@ -5695,7 +5785,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		return false;
 	}
 
-	private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+	private void OnSearchTextChanged()
 	{
 		if (_isClosed) return;
 		string query = SearchTextBox.Text;

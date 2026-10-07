@@ -4326,27 +4326,27 @@ internal static unsafe partial class NativeMethods
 	internal static partial int DwmEnableBlurBehindWindow(IntPtr hWnd, DWM_BLURBEHIND* pBlurBehind);
 
 
-	[LibraryImport("kernel32.dll", SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static partial bool GetFileInformationByHandleEx(SafeFileHandle handle, int infoClass, void* output, uint size);
-
-
 	[LibraryImport("kernel32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool GetVolumeInformationW(string root, char* volumeName, uint volumeNameSize, uint* serial, uint* maxComponent, uint* flags, char* fileSystemName, uint fileSystemNameSize);
 
 
-	[LibraryImport("kernel32.dll", EntryPoint = "CreateFileW", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
-	internal static partial SafeFileHandle CreateFileW_Unsafe(string path, uint access, uint share, void* security, uint disposition, uint flags, nint template);
-
-
-	[LibraryImport("kernel32.dll", EntryPoint = "DeviceIoControl", SetLastError = true)]
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-getfileinformationbyhandleex
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
-	internal static partial bool DeviceIoControl_Safe(SafeFileHandle handle, uint code, void* input, uint inputSize, void* output, uint outputSize, out uint returned, void* overlapped);
+	internal static partial bool GetFileInformationByHandleEx(nint handle, int infoClass, void* output, uint size);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winbase/nf-winbase-openfilebyid
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint OpenFileById(nint volumeHint, FILE_ID_DESCRIPTOR* fileId, uint desiredAccess, uint shareMode, void* securityAttributes, uint flagsAndAttributes);
 
 
 	[LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)]

@@ -2652,3 +2652,28 @@ internal struct CMINVOKECOMMANDINFOEX
 	internal IntPtr lpTitleW;
 	internal POINT ptInvoke;
 }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winbase/ne-winbase-file_id_type
+/// </summary>
+internal enum FILE_ID_TYPE
+{
+	FileIdType = 0,
+	ObjectIdType = 1,
+	ExtendedFileIdType = 2
+}
+
+/// <summary>
+/// Native FILE_ID_DESCRIPTOR union. The layout is 24 bytes on both X64 and ARM64.
+/// https://learn.microsoft.com/windows/win32/api/winbase/ns-winbase-file_id_descriptor
+/// </summary>
+[StructLayout(LayoutKind.Explicit, Size = 24)]
+internal struct FILE_ID_DESCRIPTOR
+{
+	[FieldOffset(0)] internal uint dwSize;
+	[FieldOffset(4)] internal FILE_ID_TYPE Type;
+	[FieldOffset(8)] internal long FileId;
+	[FieldOffset(8)] internal Guid ObjectId;
+	[FieldOffset(8)] internal ulong ExtendedFileIdLow;
+	[FieldOffset(16)] internal ulong ExtendedFileIdHigh;
+}

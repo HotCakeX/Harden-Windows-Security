@@ -722,6 +722,7 @@
                                      TextChanged="{x:Bind OnSearchTextChanged}"/>
                             <ListView x:Name="SearchResultsListView"
                                       Height="400"
+                                      Padding="0"
                                       ScrollViewer.HorizontalScrollMode="Enabled"
                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                                       ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -733,28 +734,36 @@
                                         </ResourceDictionary.MergedDictionaries>
                                     </ResourceDictionary>
                                 </ListView.Resources>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem"
+                                           BasedOn="{StaticResource DefaultListViewItemStyle}">
+                                        <Setter Property="Padding" Value="5,0,0,0"/>                                       
+                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
                                 <ListView.Header>
                                     <Border Background="{ThemeResource SolidBackgroundFillColorBaseBrush}"
                                             Canvas.ZIndex="1"
                                             customUI:StickyHeaderBehaviorV2.IsEnabled="True">
                                         <Grid Height="32">
                                             <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="36"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[0].Width, Mode=TwoWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchPathWidth.Width, Mode=TwoWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=TwoWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=TwoWay}"/>
                                             </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="Name" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
-                                        <TextBlock Grid.Column="1" Text="Path" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Grid.Column="2" Text="Size" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                        <TextBlock Grid.Column="1" Text="Name" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                        <TextBlock Grid.Column="2" Text="Path" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="3" Text="Size" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
                                         <!-- One Search-only resize handle; it does not resize the Size column. -->
-                                        <Thumb Grid.Column="2"
+                                        <Thumb Grid.Column="3"
                                                Width="8"
                                                Height="28"
                                                HorizontalAlignment="Left"
                                                Background="{ThemeResource ControlAltFillColorSecondaryBrush}"
                                                DragDelta="OnSearchPathDragDelta"/>
-                                        <TextBlock Grid.Column="3" Text="Date modified" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                        <TextBlock Grid.Column="4" Text="Date modified" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
                                         </Grid>
                                     </Border>
                                 </ListView.Header>
@@ -765,15 +774,24 @@
                                               DoubleTapped="OnSearchResultDoubleTapped"
                                               RightTapped="OnSearchResultRightTapped">
                                             <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="36"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[0].Width, Mode=OneWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchPathWidth.Width, Mode=OneWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=OneWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=OneWay}"/>
                                             </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
-                                        <TextBlock Grid.Column="1" Text="{x:Bind Path}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Grid.Column="2" Text="{x:Bind Size}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
-                                        <TextBlock Grid.Column="3" Text="{x:Bind DateModified}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                        <Image Grid.Column="0"
+                                               Width="20"
+                                               Height="20"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               Stretch="Uniform"
+                                               Loaded="OnSearchThumbnailLoaded"
+                                               DataContextChanged="OnSearchThumbnailDataContextChanged"/>
+                                        <TextBlock Grid.Column="1" Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                        <TextBlock Grid.Column="2" Text="{x:Bind Path}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="3" Text="{x:Bind Size}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                        <TextBlock Grid.Column="4" Text="{x:Bind DateModified}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>

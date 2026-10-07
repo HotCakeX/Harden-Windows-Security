@@ -25,11 +25,17 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace HardenSystemSecurity.CustomUIElements.WindowsTopBar;
 
 // Search metadata is resolved on the pipe worker.
-internal sealed record TopBarSearchResult(string Name, string Path, string Size, string DateModified);
+internal sealed record TopBarSearchResult(string Name, string Path, string Size, string DateModified, bool IsDirectory = false)
+{
+	// UI-thread-only cache lives with this result set, not with recycled ListView containers.
+	internal BitmapImage? Thumbnail;
+	internal bool ThumbnailAttempted;
+}
 
 internal sealed partial class TopBarSearchClient : IAsyncDisposable
 {
@@ -86,8 +92,6 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 					_pipe = pipe;
 					_receivedResponse = false;
 					await pipe.ConnectAsync(30000, token);
-					// Send a byte before server impersonation and PFN validation.
-					pipe.WriteByte(1);
 					// Reissue current text after reconnecting; explicit rejection clears it before the next attempt.
 					if (!string.IsNullOrWhiteSpace(_query)) _ = _queryChanged.Writer.TryWrite(true);
 					NamedPipeClientStream connectedPipe = pipe;
@@ -123,6 +127,8 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 
 	private string? Exchange(NamedPipeClientStream pipe)
 	{
+		// Send a byte before server impersonation and PFN validation.
+		pipe.WriteByte(1);
 		using BinaryReader input = new(pipe, Encoding.UTF8, leaveOpen: true);
 		using BinaryWriter output = new(pipe, Encoding.UTF8, leaveOpen: true);
 		if (input.ReadByte() != 1 || !string.Equals(input.ReadString(), "Search index ready.", StringComparison.OrdinalIgnoreCase))
@@ -168,7 +174,7 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			bool isDirectory = (attributes & FileAttributes.Directory) != 0;
 			FileSystemInfo info = isDirectory ? new DirectoryInfo(path) : new FileInfo(path);
 			string size = isDirectory ? string.Empty : FormatFileSize(((FileInfo)info).Length);
-			return new(name, path, size, info.LastWriteTime.ToString("g", CultureInfo.CurrentCulture));
+			return new(name, path, size, info.LastWriteTime.ToString("g", CultureInfo.CurrentCulture), isDirectory);
 		}
 		catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
 		{

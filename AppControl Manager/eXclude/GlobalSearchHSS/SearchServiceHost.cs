@@ -229,7 +229,7 @@ internal static class SearchServiceHost
 					index.Build();
 					// SearchLog.Report($"{drive}:\\ indexed {index.Count:N0} file IDs.");
 					if (index.InaccessibleDirectoryCount != 0)
-						SearchLog.ReportWarning($"WARNING: {drive}:\\ index is PARTIAL: {index.InaccessibleDirectoryCount:N0} access-denied director{(index.InaccessibleDirectoryCount == 1 ? "y" : "ies")} not traversed.");
+						SearchLog.ReportWarning($"WARNING: {drive}:\\ index is PARTIAL: {index.InaccessibleDirectoryCount:N0} inaccessible director{(index.InaccessibleDirectoryCount == 1 ? "y" : "ies")} not traversed.");
 					indexes.Add(index);
 					index = null; // Ownership transferred to indexes.
 				}
@@ -420,8 +420,14 @@ internal static class SearchServiceHost
 			SearchLog.ReportWarning("Rejected search query exceeding 1,000 UTF-8 bytes.");
 			return null;
 		}
-		byte[] bytes = reader.ReadBytes(length);
-		if (bytes.Length != length) throw new EndOfStreamException();
+		Span<byte> bytes = stackalloc byte[length];
+		int offset = 0;
+		while (offset < bytes.Length)
+		{
+			int read = reader.Read(bytes[offset..]);
+			if (read == 0) throw new EndOfStreamException();
+			offset += read;
+		}
 		return Encoding.UTF8.GetString(bytes);
 	}
 

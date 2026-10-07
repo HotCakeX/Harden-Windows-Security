@@ -674,6 +674,11 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	*/
 
 	/// <summary>
+	/// Restores the persisted NavigationView location once the window visual tree is loaded.
+	/// </summary>
+	private void RestoreNavigationViewLocation(object sender, RoutedEventArgs e) => OnNavigationViewLocationChanged(null, new(Atlas.Settings.NavViewPaneDisplayMode));
+
+	/// <summary>
 	/// Event handler for the global NavigationView location change event
 	/// </summary>
 	private void OnNavigationViewLocationChanged(object? sender, NavigationViewLocationChangedEventArgs e)

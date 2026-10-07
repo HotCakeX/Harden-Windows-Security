@@ -150,7 +150,7 @@ internal sealed partial class SettingsVM : ViewModelBase
 				Atlas.Settings.NavViewPaneDisplayMode = x;
 			}
 		}
-	}
+	} = Enum.TryParse(Atlas.Settings.NavViewPaneDisplayMode, true, out NavViewLocation location) ? (int)location : (int)NavViewLocation.Left;
 
 	internal static readonly Dictionary<string, int> SupportedLanguages = CreateSupportedLanguages();
 

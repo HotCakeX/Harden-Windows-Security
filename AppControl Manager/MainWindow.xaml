@@ -458,7 +458,8 @@
                         Margin="{x:Bind ViewModel.NavViewMargin, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.NavViewSelectedItem, Mode=TwoWay}"
                         IsTitleBarAutoPaddingEnabled="False"
-                        IsPaneToggleButtonVisible="False">
+                        IsPaneToggleButtonVisible="False"
+                        Loaded="{x:Bind RestoreNavigationViewLocation}">
 
             <!--
              Being controlled from MainWindow.xaml.cs

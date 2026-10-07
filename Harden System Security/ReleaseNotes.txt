@@ -3,3 +3,5 @@
 * Improved keyboard handling in the Topbar's websites view.
 
 * Significantly improved the Global Search's performance.
+
+* Based on user feedback, the position of the main app menu is now remembered: Left or Top.

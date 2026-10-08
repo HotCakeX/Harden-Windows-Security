@@ -64,6 +64,55 @@ A strip of pinned folders for one‑click access to the places you use most. It 
 
 <br>
 
+### Search
+
+The **Search** view provides instant, system-wide file search directly from the TopBar. Start typing part of a file name and matching files from the indexed drives appear in real time, without waiting for Windows Search to scan each location.
+
+<div align="center">
+
+<img alt="image" src="https://github.com/user-attachments/assets/55de4ee0-7b5c-4596-8f9f-40ef9e6b1b5a" />
+
+</div>
+
+Global Search is designed for fast searches across every local **NTFS** and **ReFS** drives.
+
+- **Search as you type.** Results update in real time as the search text changes.
+
+- **Search the OS drive or every available drive.** You can configure the indexing scope based on whether you want an OS-drive-only index or broader coverage across all supported drives.
+
+- **Open results immediately.** Double click or tap a result to launch the file with its associated app.
+
+- **Use native file actions.** Right-click or tap and hold on a result to access rich Windows file operations and other actions relevant to that item.
+
+- **Automatic background indexing.** A dedicated LocalSystem service builds and maintains the search indexes using the fastest available file-system mechanisms. The service has 2 modes, either starts automatically with Windows so Global Search is ready when you need it, or it can start indexing as soon as you start typing in the search box. (this is the default behavior)
+
+- **Resource-conscious index lifetime.** After the initial index finishes building, the service releases inactive indexes from memory if no search is performed within 10 minutes. After the first search or the initial idle unload, indexes are released after one hour of search inactivity and rebuilt automatically when they are needed again.
+
+> [!NOTE]\
+> The first search after an idle unload can take longer because the service must rebuild the required indexes.
+
+#### Drive Statistics
+
+<div align="center">
+
+<img alt="image" src="https://github.com/user-attachments/assets/390ee505-355f-4de3-90e5-f99436e28fa3" />
+
+<br>
+
+<img width="227" height="347" alt="image" src="https://github.com/user-attachments/assets/2f643756-abb5-4b71-9f04-247acaeb4d3a" />
+
+</div>
+
+The Search view also includes **Drive Statistics**, which provides a quick snapshot of the types of files stored on a selected drive.
+
+- Choose an available drive and select **Load statistics** to calculate the snapshot.
+
+- View the results in a color-coded chart and legend, with both the file count and percentage shown for each category.
+
+- Hover over a chart segment for its detailed count and percentage.
+
+- See counts for **Pictures**, **Audio**, **Video**, **DLL files**, **EXE files**, **Documents**, **Archives**, **Source and data files**, files with **no extension**, and **Other** file types.
+
 ### Websites
 
 A quick-launch strip of your favorite websites. Each site appears as a tile with its name and icon; click one to open it in your default browser. You can:
@@ -233,4 +282,4 @@ There are also quick buttons to **add** a new item to the current view, and to *
 
 ### In Short
 
-The TopBar is a compact, always‑at‑hand command center that tucks neatly into the top of your screen. Whether you're launching apps, jumping to folders, opening websites, watching your system's performance, keeping time across the world, checking your connection quality, or letting the Acoustic Sentry listen for you, it's all a quick glance (and a gentle hover) away, wrapped up with a bit of animated charm.
+The TopBar is a compact, always‑at‑hand command center that tucks neatly into the top of your screen. Whether you're launching apps, jumping to folders, searching among every file in your system, reviewing drive statistics, opening websites, watching your system's performance, keeping time across the world, checking your connection quality, or letting the Acoustic Sentry listen for you, it's all a quick glance (and a gentle hover) away, wrapped up with a bit of animated charm.

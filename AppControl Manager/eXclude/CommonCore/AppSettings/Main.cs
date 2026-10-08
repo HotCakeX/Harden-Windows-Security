@@ -142,6 +142,7 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarSentryOutputDirectory = ReadValue(nameof(WindowsTopBarSentryOutputDirectory), WindowsTopBarSentryOutputDirectory);
 		WindowsTopBarSentryEncryptionMode = ReadValue(nameof(WindowsTopBarSentryEncryptionMode), WindowsTopBarSentryEncryptionMode);
 		CustomizableScanLevelsFallbackOrder = ReadValue(nameof(CustomizableScanLevelsFallbackOrder), CustomizableScanLevelsFallbackOrder);
+		AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation = ReadValue(nameof(AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation);
 	}
 
 	/// <summary>
@@ -1363,4 +1364,18 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = string.Empty;
+
+	/// <summary>
+	/// Whether the AppControl Manager should only include the items that the user has selected in the policy creation process, instead of including all items from the scan results.
+	/// </summary>
+	internal bool AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), field);
+			}
+		}
+	}
 }

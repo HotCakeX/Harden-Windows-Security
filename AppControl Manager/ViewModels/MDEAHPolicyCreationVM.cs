@@ -211,8 +211,6 @@ internal sealed partial class MDEAHPolicyCreationVM : ViewModelBase, IGraphAuthH
 
 	internal bool DeployPolicyToggle { get; set => SP(ref field, value); }
 
-	internal bool OnlyIncludeSelectedItemsToggleButton { get; set => SP(ref field, value); }
-
 	internal string CreatePolicyButtonContent { get; set => SP(ref field, value); } = Atlas.GetStr("CreatePolicyForSelectedBase");
 
 	internal int SelectedCreationMethod
@@ -651,7 +649,7 @@ DeviceEvents
 			ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.MDE_AdvancedHunting);
 
 			// Check if there are selected items in the ListView and user chose to use them only in the policy
-			if (OnlyIncludeSelectedItemsToggleButton && lv?.SelectedItems.Count > 0)
+			if (Atlas.Settings.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation && lv?.SelectedItems.Count > 0)
 			{
 				MainInfoBar.WriteInfo(string.Format(
 					Atlas.GetStr("CreatingSupplementalPolicyForFilesMessage"),

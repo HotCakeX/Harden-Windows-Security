@@ -456,7 +456,7 @@
 
                                 <MenuFlyoutSeparator />
 
-                                <ToggleMenuFlyoutItem IsChecked="{x:Bind ViewModel.OnlyIncludeSelectedItemsToggleButton, Mode=TwoWay}"
+                                <ToggleMenuFlyoutItem IsChecked="{x:Bind ViewModel.AppSettings.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation, Mode=TwoWay}"
                                                       IsEnabled="{x:Bind ViewModel.AreElementsEnabled, Mode=OneWay}"
                                                       x:Uid="OnlyIncludeSelectedItemsToggleMenuFlyoutItem">
                                     <ToggleMenuFlyoutItem.Icon>

@@ -199,8 +199,6 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 
 	internal bool DeployPolicyToggle { get; set => SP(ref field, value); }
 
-	internal bool OnlyIncludeSelectedItemsToggleButton { get; set => SP(ref field, value); }
-
 	/// <summary>
 	/// Determines whether event log file paths should be resolved to paths on the local system.
 	/// E.g., changing "\Device\HarddiskVolume3" to "C:\".
@@ -598,7 +596,7 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 			ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Event_Logs);
 
 			// Check if there are selected items in the ListView and user chose to use them only in the policy
-			if (OnlyIncludeSelectedItemsToggleButton && lv?.SelectedItems.Count > 0)
+			if (Atlas.Settings.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation && lv?.SelectedItems.Count > 0)
 			{
 				// convert every selected item to FileIdentity and store it in the list
 				foreach (object? item in lv.SelectedItems)

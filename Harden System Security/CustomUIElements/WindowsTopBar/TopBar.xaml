@@ -7,6 +7,7 @@
     xmlns:CC="using:CommonCore"
     xmlns:search="using:HardenSystemSecurity.CustomUIElements.WindowsTopBar"
     Title="Top Bar"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     Activated="{x:Bind OnWindowActivated}"
     Closed="{x:Bind OnWindowClosed}">
 
@@ -737,7 +738,7 @@
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="ListViewItem"
                                            BasedOn="{StaticResource DefaultListViewItemStyle}">
-                                        <Setter Property="Padding" Value="5,0,0,0"/>                                       
+                                        <Setter Property="Padding" Value="5,0,0,0"/>
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                                     </Style>
                                 </ListView.ItemContainerStyle>
@@ -753,17 +754,17 @@
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=TwoWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=TwoWay}"/>
                                             </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="1" Text="Name" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
-                                        <TextBlock Grid.Column="2" Text="Path" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Grid.Column="3" Text="Size" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
-                                        <!-- One Search-only resize handle; it does not resize the Size column. -->
-                                        <Thumb Grid.Column="3"
+                                            <TextBlock Grid.Column="1" Text="Name" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                            <TextBlock Grid.Column="2" Text="Path" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Column="3" Text="Size" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                            <!-- One Search-only resize handle; it does not resize the Size column. -->
+                                            <Thumb Grid.Column="3"
                                                Width="8"
                                                Height="28"
                                                HorizontalAlignment="Left"
                                                Background="{ThemeResource ControlAltFillColorSecondaryBrush}"
                                                DragDelta="OnSearchPathDragDelta"/>
-                                        <TextBlock Grid.Column="4" Text="Date modified" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                            <TextBlock Grid.Column="4" Text="Date modified" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
                                         </Grid>
                                     </Border>
                                 </ListView.Header>
@@ -780,7 +781,7 @@
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=OneWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=OneWay}"/>
                                             </Grid.ColumnDefinitions>
-                                        <Image Grid.Column="0"
+                                            <Image Grid.Column="0"
                                                Width="20"
                                                Height="20"
                                                VerticalAlignment="Center"
@@ -788,10 +789,10 @@
                                                Stretch="Uniform"
                                                Loaded="OnSearchThumbnailLoaded"
                                                DataContextChanged="OnSearchThumbnailDataContextChanged"/>
-                                        <TextBlock Grid.Column="1" Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
-                                        <TextBlock Grid.Column="2" Text="{x:Bind Path}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Grid.Column="3" Text="{x:Bind Size}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
-                                        <TextBlock Grid.Column="4" Text="{x:Bind DateModified}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                            <TextBlock Grid.Column="1" Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                            <TextBlock Grid.Column="2" Text="{x:Bind Path}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Column="3" Text="{x:Bind Size}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                            <TextBlock Grid.Column="4" Text="{x:Bind DateModified}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
@@ -806,144 +807,177 @@
                     VerticalAlignment="Center"
                     Background="{ThemeResource DividerStrokeColorDefaultBrush}"/>
 
-            <!-- Adds a new entry to the active view. It is hidden for the view that has nothing to add to. -->
-            <Button x:Name="AddButton"
-                    Width="28"
-                    Height="28"
-                    Padding="0"
-                    MinWidth="0"
-                    CornerRadius="14"
-                    VerticalAlignment="Center"
-                    Click="{x:Bind OnAddButtonClick}">
-                <FontIcon Glyph="&#xE710;"
-                          FontSize="12"/>
-            </Button>
+            <CCToolKit:WrapPanel Orientation="Vertical"
+                                 VerticalSpacing="6"
+                                 VerticalAlignment="Center"
+                                 HorizontalSpacing="6">
 
-            <!-- Carries every general option of the bar. The options are offered as a vertical list.
+                <!-- Drive statistics are available only in Search. -->
+                <Button x:Name="DriveStatisticsButton"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        MinWidth="0"
+                        CornerRadius="14"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed"
+                        ToolTipService.ToolTip="Drive file statistics"
+                        AutomationProperties.Name="Drive file statistics"
+                        Click="{x:Bind OnDriveStatisticsClick}">
+                    <FontIcon Glyph="&#xE9D2;"
+                              FontSize="12"/>
+                </Button>
+                <!-- Adds a new entry to the active view. It is hidden for the view that has nothing to add to. -->
+                <Button x:Name="AddButton"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        MinWidth="0"
+                        CornerRadius="14"
+                        VerticalAlignment="Center"
+                        Click="{x:Bind OnAddButtonClick}">
+                    <FontIcon Glyph="&#xE710;"
+                              FontSize="12"/>
+                </Button>
+
+                <!-- Carries every general option of the bar. The options are offered as a vertical list.
                  The menu is the one that stays open while the pointer is over it, which is what lets several options be
                  flipped in a row without the menu closing after each of them. -->
-            <Button x:Name="SettingsButton"
-                    Width="28"
-                    Height="28"
-                    Padding="0"
-                    MinWidth="0"
-                    CornerRadius="14"
-                    VerticalAlignment="Center">
-                <Button.Flyout>
-                    <customUI:MenuFlyoutV2 x:Name="SettingsMenu"
-                                           Opened="{x:Bind OnFlyoutOpened}"
-                                           Closed="{x:Bind OnFlyoutClosed}"
-                                           Placement="Bottom"
-                                           ShouldConstrainToRootBounds="False">
-                        <ToggleMenuFlyoutItem x:Name="NotchStyleMenuItem"
-                                              Click="{x:Bind OnNotchStyleToggleClick}">
-                            <ToggleMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE73F;"/>
-                            </ToggleMenuFlyoutItem.Icon>
-                        </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem x:Name="OpenOnHoverMenuItem"
-                                              IsChecked="{x:Bind CC:Atlas.Settings.WindowsTopBarOpenOnHover, Mode=TwoWay}">
-                            <ToggleMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE962;"/>
-                            </ToggleMenuFlyoutItem.Icon>
-                        </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem x:Name="AlwaysOnTopMenuItem"
-                                              Click="{x:Bind OnAlwaysOnTopMenuItemClick}">
-                            <ToggleMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE840;"/>
-                            </ToggleMenuFlyoutItem.Icon>
-                        </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem x:Name="AutoHideFullScreenMenuItem"
-                                              IsChecked="{x:Bind CC:Atlas.Settings.WindowsTopBarAutoHideInFullScreen, Mode=TwoWay}">
-                            <ToggleMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE8A7;"/>
-                            </ToggleMenuFlyoutItem.Icon>
-                        </ToggleMenuFlyoutItem>
-                        <ToggleMenuFlyoutItem x:Name="PinMenuItem"
-                                              Click="{x:Bind OnPinToggleClick}">
-                            <ToggleMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE718;"/>
-                            </ToggleMenuFlyoutItem.Icon>
-                        </ToggleMenuFlyoutItem>
-                        <MenuFlyoutSeparator/>
-                        <MenuFlyoutSubItem x:Name="BackdropMenuItem" Text="Background">
-                            <MenuFlyoutSubItem.Icon>
-                                <FontIcon Glyph="&#xE790;"/>
-                            </MenuFlyoutSubItem.Icon>
-                            <RadioMenuFlyoutItem x:Name="SolidBackdropMenuItem"
-                                                 Text="Solid"
-                                                 GroupName="TopBarBackdrop"
-                                                 Click="{x:Bind OnSolidBackdropClick}"/>
-                            <RadioMenuFlyoutItem x:Name="MicaBackdropMenuItem"
-                                                 Text="Mica"
-                                                 GroupName="TopBarBackdrop"
-                                                 Click="{x:Bind OnMicaBackdropClick}"/>
-                            <RadioMenuFlyoutItem x:Name="MicaAltBackdropMenuItem"
-                                                 Text="Mica Alt"
-                                                 GroupName="TopBarBackdrop"
-                                                 Click="{x:Bind OnMicaAltBackdropClick}"/>
-                            <RadioMenuFlyoutItem x:Name="AcrylicBackdropMenuItem"
-                                                 Text="Acrylic"
-                                                 GroupName="TopBarBackdrop"
-                                                 Click="{x:Bind OnAcrylicBackdropClick}"/>
-                        </MenuFlyoutSubItem>
-                        <MenuFlyoutSubItem x:Name="CompanionMenuItem">
-                            <MenuFlyoutSubItem.Icon>
-                                <FontIcon Glyph="&#xEA86;"/>
-                            </MenuFlyoutSubItem.Icon>
-                            <RadioMenuFlyoutItem x:Name="NoCompanionMenuItem"
-                                                 GroupName="TopBarCompanion"
-                                                 Click="{x:Bind OnNoCompanionClick}"/>
-                            <RadioMenuFlyoutItem x:Name="PrisMatrixCompanionMenuItem"
-                                                 GroupName="TopBarCompanion"
-                                                 Click="{x:Bind OnPrisMatrixCompanionClick}"/>
-                            <RadioMenuFlyoutItem x:Name="NullCatCompanionMenuItem"
-                                                 GroupName="TopBarCompanion"
-                                                 Click="{x:Bind OnNullCatCompanionClick}"/>
-                            <RadioMenuFlyoutItem x:Name="BunnyCompanionMenuItem"
-                                                 GroupName="TopBarCompanion"
-                                                 Click="{x:Bind OnBunnyCompanionClick}"/>
-                            <RadioMenuFlyoutItem x:Name="SquirrelCompanionMenuItem"
-                                                 GroupName="TopBarCompanion"
-                                                 Click="{x:Bind OnSquirrelCompanionClick}"/>
-                            <RadioMenuFlyoutItem x:Name="PopForgeCompanionMenuItem"
-                                                 GroupName="TopBarCompanion"
-                                                 Click="{x:Bind OnPopForgeCompanionClick}"/>
-                        </MenuFlyoutSubItem>
-                        <MenuFlyoutSeparator/>
-                        <ToggleMenuFlyoutItem x:Name="StartupMenuItem"
-                                              Click="{x:Bind OnStartupToggleClick}">
-                            <ToggleMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xE7E8;"/>
-                            </ToggleMenuFlyoutItem.Icon>
-                        </ToggleMenuFlyoutItem>
-                        <MenuFlyoutSeparator/>
-                        <ToggleMenuFlyoutItem x:Name="SearchOsDriveOnlyToggle"
-                                              Text="Index OS Drive Only"
-                                              IsEnabled="False"
-                                              Loaded="{x:Bind OnSearchScopeLoaded}"
-                                              Click="{x:Bind OnSearchScopeToggled}">
-                            <ToggleMenuFlyoutItem.Icon>
-                                <FontIcon Glyph="&#xED37;"/>
-                            </ToggleMenuFlyoutItem.Icon>
-                        </ToggleMenuFlyoutItem>
-                    </customUI:MenuFlyoutV2>
-                </Button.Flyout>
-                <FontIcon Glyph="&#xE713;"
-                          FontSize="12"/>
-            </Button>
+                <Button x:Name="SettingsButton"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        MinWidth="0"
+                        CornerRadius="14"
+                        VerticalAlignment="Center">
+                    <Button.Flyout>
+                        <customUI:MenuFlyoutV2 x:Name="SettingsMenu"
+                                               Opened="{x:Bind OnFlyoutOpened}"
+                                               Closed="{x:Bind OnFlyoutClosed}"
+                                               Placement="Bottom"
+                                               ShouldConstrainToRootBounds="False">
+                            <ToggleMenuFlyoutItem x:Name="NotchStyleMenuItem"
+                                                  Click="{x:Bind OnNotchStyleToggleClick}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE73F;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+                            <ToggleMenuFlyoutItem x:Name="OpenOnHoverMenuItem"
+                                                  IsChecked="{x:Bind CC:Atlas.Settings.WindowsTopBarOpenOnHover, Mode=TwoWay}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE962;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+                            <ToggleMenuFlyoutItem x:Name="AlwaysOnTopMenuItem"
+                                                  Click="{x:Bind OnAlwaysOnTopMenuItemClick}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE840;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+                            <ToggleMenuFlyoutItem x:Name="AutoHideFullScreenMenuItem"
+                                                  IsChecked="{x:Bind CC:Atlas.Settings.WindowsTopBarAutoHideInFullScreen, Mode=TwoWay}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE8A7;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+                            <ToggleMenuFlyoutItem x:Name="PinMenuItem"
+                                                  Click="{x:Bind OnPinToggleClick}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE718;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+                            <MenuFlyoutSeparator/>
+                            <MenuFlyoutSubItem x:Name="BackdropMenuItem" Text="Background">
+                                <MenuFlyoutSubItem.Icon>
+                                    <FontIcon Glyph="&#xE790;"/>
+                                </MenuFlyoutSubItem.Icon>
+                                <RadioMenuFlyoutItem x:Name="SolidBackdropMenuItem"
+                                                     Text="Solid"
+                                                     GroupName="TopBarBackdrop"
+                                                     Click="{x:Bind OnSolidBackdropClick}"/>
+                                <RadioMenuFlyoutItem x:Name="MicaBackdropMenuItem"
+                                                     Text="Mica"
+                                                     GroupName="TopBarBackdrop"
+                                                     Click="{x:Bind OnMicaBackdropClick}"/>
+                                <RadioMenuFlyoutItem x:Name="MicaAltBackdropMenuItem"
+                                                     Text="Mica Alt"
+                                                     GroupName="TopBarBackdrop"
+                                                     Click="{x:Bind OnMicaAltBackdropClick}"/>
+                                <RadioMenuFlyoutItem x:Name="AcrylicBackdropMenuItem"
+                                                     Text="Acrylic"
+                                                     GroupName="TopBarBackdrop"
+                                                     Click="{x:Bind OnAcrylicBackdropClick}"/>
+                            </MenuFlyoutSubItem>
+                            <MenuFlyoutSubItem x:Name="CompanionMenuItem">
+                                <MenuFlyoutSubItem.Icon>
+                                    <FontIcon Glyph="&#xEA86;"/>
+                                </MenuFlyoutSubItem.Icon>
+                                <RadioMenuFlyoutItem x:Name="NoCompanionMenuItem"
+                                                     GroupName="TopBarCompanion"
+                                                     Click="{x:Bind OnNoCompanionClick}"/>
+                                <RadioMenuFlyoutItem x:Name="PrisMatrixCompanionMenuItem"
+                                                     GroupName="TopBarCompanion"
+                                                     Click="{x:Bind OnPrisMatrixCompanionClick}"/>
+                                <RadioMenuFlyoutItem x:Name="NullCatCompanionMenuItem"
+                                                     GroupName="TopBarCompanion"
+                                                     Click="{x:Bind OnNullCatCompanionClick}"/>
+                                <RadioMenuFlyoutItem x:Name="BunnyCompanionMenuItem"
+                                                     GroupName="TopBarCompanion"
+                                                     Click="{x:Bind OnBunnyCompanionClick}"/>
+                                <RadioMenuFlyoutItem x:Name="SquirrelCompanionMenuItem"
+                                                     GroupName="TopBarCompanion"
+                                                     Click="{x:Bind OnSquirrelCompanionClick}"/>
+                                <RadioMenuFlyoutItem x:Name="PopForgeCompanionMenuItem"
+                                                     GroupName="TopBarCompanion"
+                                                     Click="{x:Bind OnPopForgeCompanionClick}"/>
+                            </MenuFlyoutSubItem>
+                            <MenuFlyoutSeparator/>
+                            <ToggleMenuFlyoutItem x:Name="StartupMenuItem"
+                                                  Click="{x:Bind OnStartupToggleClick}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE7E8;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+                            <MenuFlyoutSeparator/>
+                            <ToggleMenuFlyoutItem x:Name="SearchOsDriveOnlyToggle"
+                                                  Text="Index OS Drive Only"
+                                                  IsEnabled="False"
+                                                  Loaded="{x:Bind OnSearchScopeLoaded}"
+                                                  Click="{x:Bind OnSearchScopeToggled}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xED37;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+                            <!-- Only an explicit startup opt-in bypasses request-driven indexing. -->
+                            <ToggleMenuFlyoutItem x:Name="SearchIndexAtStartupToggle"
+                                                  Text="Index at Windows startup"
+                                                  IsEnabled="False"
+                                                  Loaded="{x:Bind OnSearchScopeLoaded}"
+                                                  Click="{x:Bind OnSearchScopeToggled}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xF71C;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+                        </customUI:MenuFlyoutV2>
+                    </Button.Flyout>
+                    <FontIcon Glyph="&#xE713;"
+                              FontSize="12"/>
+                </Button>
 
-            <Button x:Name="CloseButton"
-                    Width="28"
-                    Height="28"
-                    Padding="0"
-                    MinWidth="0"
-                    CornerRadius="14"
-                    VerticalAlignment="Center"
-                    Click="{x:Bind OnCloseButtonClick}">
-                <FontIcon Glyph="&#xE711;"
-                          FontSize="12"/>
-            </Button>
+                <Button x:Name="CloseButton"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        MinWidth="0"
+                        CornerRadius="14"
+                        VerticalAlignment="Center"
+                        Click="{x:Bind OnCloseButtonClick}">
+                    <FontIcon Glyph="&#xE711;"
+                              FontSize="12"/>
+                </Button>
+
+            </CCToolKit:WrapPanel>
+
         </StackPanel>
     </Grid>
 </Window>

@@ -247,7 +247,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private const double SearchExpandedHeightDips = 500.0;
 	private const double ExpandedCornerRadiusDips = 24.0;
 	private const double MinimumExpandedWidthDips = 380.0;
-	private const double ExpandedContentPaddingDips = 20.0;
+	private const double ExpandedContentPaddingDips = 14.0;
 
 	// The corners against the docked edge are square; the opposite corners are rounded. They are flared outwards into the top edge instead, with a concave arc that leaves the side
 	// of the bar tangentially and meets the top edge of the display tangentially as well, so that the bar reads as
@@ -1990,6 +1990,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		NetworkQualityPanel.Visibility = view == TopBarView.NetworkQuality ? Visibility.Visible : Visibility.Collapsed;
 		SentryPanel.Visibility = view == TopBarView.Sentry ? Visibility.Visible : Visibility.Collapsed;
 		SearchPanel.Visibility = view == TopBarView.Search ? Visibility.Visible : Visibility.Collapsed;
+		DriveStatisticsButton.Visibility = view == TopBarView.Search ? Visibility.Visible : Visibility.Collapsed;
 		if (view != TopBarView.Search)
 		{
 			SearchPanel.Width = double.NaN;
@@ -5566,13 +5567,18 @@ internal sealed partial class TopBar : Window, IDisposable
 			SearchOsDriveOnlyToggle.IsChecked = string.Equals(
 				Environment.GetEnvironmentVariable(Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
 				"OS", StringComparison.OrdinalIgnoreCase);
+			SearchIndexAtStartupToggle.IsChecked = string.Equals(
+				Environment.GetEnvironmentVariable(Program.GlobalSearchStartupVariable, EnvironmentVariableTarget.Machine),
+				"STARTUP", StringComparison.OrdinalIgnoreCase);
 			SearchOsDriveOnlyToggle.IsEnabled = true;
+			SearchIndexAtStartupToggle.IsEnabled = true;
 			_searchScopeReady = true;
 		}
 		catch (Exception exception)
 		{
 			Logger.Write(exception);
 			SearchOsDriveOnlyToggle.IsEnabled = false;
+			SearchIndexAtStartupToggle.IsEnabled = false;
 		}
 	}
 
@@ -5582,18 +5588,24 @@ internal sealed partial class TopBar : Window, IDisposable
 		_searchScopeReady = false;
 		_searchScopePending = true;
 		SearchOsDriveOnlyToggle.IsEnabled = false;
-		string requested = SearchOsDriveOnlyToggle.IsChecked ? "OS" : "ALL";
+		SearchIndexAtStartupToggle.IsEnabled = false;
+		// Both settings share elevation, read-back and pending-state handling.
+		bool scope = ReferenceEquals(sender, SearchOsDriveOnlyToggle);
+		string variable = scope ? Program.GlobalSearchScopeVariable : Program.GlobalSearchStartupVariable;
+		string argument = scope ? "--global-search-scope" : "--global-search-startup";
+		string requested = scope ? (SearchOsDriveOnlyToggle.IsChecked ? "OS" : "ALL")
+			: (SearchIndexAtStartupToggle.IsChecked ? "STARTUP" : "REQUEST");
 		bool saved = false;
 		try
 		{
-			if (Relaunch.Start(Atlas.AUMID, $"--global-search-scope {requested}", Relaunch.Context.Elevated))
+			if (Relaunch.Start(Atlas.AUMID, $"{argument} {requested}", Relaunch.Context.Elevated))
 			{
 				// Activation completes before the elevated process writes the machine value.
 				for (int attempt = 0; attempt < 50 && !saved && !_isClosed; attempt++)
 				{
 					await Task.Delay(100);
 					saved = string.Equals(Environment.GetEnvironmentVariable(
-						Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
+						variable, EnvironmentVariableTarget.Machine),
 						requested, StringComparison.OrdinalIgnoreCase);
 				}
 			}
@@ -5604,8 +5616,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		OnSearchScopeLoaded();
 		if (SearchOsDriveOnlyToggle.IsEnabled)
 			SearchStatusText.Text = saved
-				? "Scope saved; takes effect on the next index build."
-				: "Scope change was not saved.";
+				? (scope ? "Scope saved; takes effect on the next index build." : "Startup indexing saved; takes effect on the next service start.")
+				: "Search setting change was not saved.";
 	}
 
 	/// <summary>
@@ -5798,7 +5810,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		SearchPathWidth.Width = new GridLength(160.0);
 		if (string.IsNullOrWhiteSpace(query))
 		{
-			if (_searchClient is null || _searchClient.IsIndexReady) SearchStatusText.Text = "Type to search";
+			if (_searchClient is null || _searchClient.IsServiceReady) SearchStatusText.Text = "Type to search";
 			_searchClient?.SetQuery(string.Empty);
 			return;
 		}
@@ -5868,6 +5880,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 
 		_isClosed = true;
+		_statisticsCancellation?.Cancel();
+		_statisticsFlyout?.Hide();
 		if (_searchClient is not null) _searchDisposalTask = _searchClient.DisposeAsync().AsTask();
 		_searchClient = null;
 		// Dispose the material controller without assigning null to the element.

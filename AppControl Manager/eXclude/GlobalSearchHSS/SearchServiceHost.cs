@@ -37,8 +37,9 @@ internal static class SearchLog
 	internal static void ReportError(Exception exception) => NativeEventLogger.WriteEntry(exception.ToString(), NativeEventLogger.EventLogEntryType.Error, SearchServiceHost.ServiceName);
 }
 
-internal static class SearchServiceHost
+internal static partial class SearchServiceHost
 {
+	internal const string SDDLFORM = "D:P(D;;GA;;;NU)(A;;GA;;;SY)(A;;GA;;;BA)(A;;0x00100083;;;IU)S:(ML;;NW;;;ME)";
 	internal const string ServiceName = "GlobalSearchHSS";
 	internal const string PipeName = "GlobalSearchHSS_SearchPipe";
 	// Application Id="App" in the package manifest; shared by the main app and Top Bar.
@@ -114,8 +115,9 @@ internal static class SearchServiceHost
 		try
 		{
 			SetStatus(SERVICE_STATE.SERVICE_START_PENDING);
-			// Report RUNNING promptly while the worker builds the startup index.
-			Task worker = Task.Run(() => ServeAsync(stop.Token));
+			EnableStartupSecurityPrivilege();
+			// Report RUNNING promptly while the worker starts the listeners and optional startup index.
+			Task worker = Task.Run(() => ServeWithStatisticsAsync(stop.Token));
 			SetStatus(SERVICE_STATE.SERVICE_RUNNING, NativeMethods.SERVICE_ACCEPT_STOP | NativeMethods.SERVICE_ACCEPT_SHUTDOWN);
 			worker.GetAwaiter().GetResult();
 		}
@@ -135,27 +137,24 @@ internal static class SearchServiceHost
 		? $"{win32.Message} (Win32 error {win32.NativeErrorCode}: {new Win32Exception(win32.NativeErrorCode).Message})"
 		: exception.Message;
 
-	private static async Task ServeAsync(CancellationToken cancellationToken)
+	private static async Task ServeAsync(IndexState state, CancellationToken cancellationToken)
 	{
-		using IndexState state = new();
 		try
 		{
 			// NETWORK is denied; INTERACTIVE gets data read/write, attribute read and synchronization only.
 			// the medium mandatory label allows writes across the SYSTEM integrity boundary.
 			PipeSecurity security = new();
-			security.SetSecurityDescriptorSddlForm(
-				"D:P(D;;GA;;;NU)(A;;GA;;;SY)(A;;GA;;;BA)(A;;0x00100083;;;IU)S:(ML;;NW;;;ME)",
-				AccessControlSections.All);
+			security.SetSecurityDescriptorSddlForm(SDDLFORM, AccessControlSections.All);
 			// Publish the first pipe before indexing; the client can connect while awaiting readiness.
 			using NamedPipeServerStream startupPipe = CreatePipeWithMandatoryLabel(security);
 			_pipe = startupPipe;
 			bool firstPipe = true;
-			// Start indexing without a client; the initial idle window starts when this build finishes.
+			// Missing, invalid or unreadable machine values leave indexing request-driven.
 			try
 			{
-				BuildIndexes(state.Indexes, cancellationToken);
-				state.Unloaded = false;
-				state.ResetIdleTimer();
+				if (string.Equals(Environment.GetEnvironmentVariable("HardenSystemSecurity_GlobalSearchIndexAtStartup",
+					EnvironmentVariableTarget.Machine), "STARTUP", StringComparison.OrdinalIgnoreCase))
+					state.EnsureIndexes(cancellationToken);
 			}
 			catch (Exception exception) when (!cancellationToken.IsCancellationRequested) { SearchLog.ReportError(exception); }
 			while (!cancellationToken.IsCancellationRequested)
@@ -169,19 +168,8 @@ internal static class SearchServiceHost
 					await pipe.WaitForConnectionAsync(cancellationToken).ConfigureAwait(false);
 					// The first byte enables RunAsClient impersonation; no query is processed yet.
 					if (pipe.ReadByte() != 1 || !IsClientAuthorized(pipe)) continue;
-					// Rebuild after idle unload or a failed startup build, before the ready handshake.
-					lock (state.Sync)
-					{
-						if (state.Unloaded)
-						{
-							buildingIndexes = true;
-							BuildIndexes(state.Indexes, cancellationToken);
-							buildingIndexes = false;
-							state.Unloaded = false;
-							state.ResetIdleTimer();
-						}
-					}
-					HandleSession(pipe, state, cancellationToken);
+					// Authentication alone never starts indexing; wait for an admitted query.
+					HandleSession(pipe, state, cancellationToken, ref buildingIndexes);
 				}
 				catch (IOException) when (!cancellationToken.IsCancellationRequested && !buildingIndexes && !pipe.IsConnected) { }
 				catch (Exception exception) when (!cancellationToken.IsCancellationRequested)
@@ -253,6 +241,15 @@ internal static class SearchServiceHost
 		}
 	}
 
+	// Call only after releasing an index and returning from its owning frame.
+	// This is process-wide collection, not a working-set trim: live search indexes remain intact.
+	private static void ReclaimReleasedIndexMemory()
+	{
+		System.Runtime.GCSettings.LargeObjectHeapCompactionMode =
+			System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
+		GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, blocking: true, compacting: true);
+	}
+
 	// One service-wide index and one one-shot timer. All index operations use the
 	// same lock, so the timer cannot dispose a volume during refresh or search.
 	private sealed class IndexState : IDisposable
@@ -268,6 +265,19 @@ internal static class SearchServiceHost
 
 		internal IndexState() => IdleTimer = new(static value => ((IndexState)value!).OnIdleTimerTick(),
 			this, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+
+		// Startup, queries and statistics share one build gate, including retries after unload.
+		internal void EnsureIndexes(CancellationToken token)
+		{
+			lock (Sync)
+			{
+				token.ThrowIfCancellationRequested();
+				if (!Unloaded) return;
+				BuildIndexes(Indexes, token);
+				Unloaded = false;
+				ResetIdleTimer();
+			}
+		}
 
 		private void OnIdleTimerTick()
 		{
@@ -306,9 +316,7 @@ internal static class SearchServiceHost
 				IdleDelay = TimeSpan.FromHours(1);
 				// Collect only once per idle unload, after ReleaseIndexes has returned
 				// so its last VolumeIndex local cannot keep the final volume alive.
-				System.Runtime.GCSettings.LargeObjectHeapCompactionMode =
-					System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-				GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, blocking: true, compacting: true);
+				ReclaimReleasedIndexMemory();
 			}
 		}
 
@@ -332,17 +340,15 @@ internal static class SearchServiceHost
 		}
 	}
 
-	// A mandatory integrity label lives in the SACL. LocalSystem normally has
-	// SeSecurityPrivilege disabled, so enable it only while creating the pipe.
-	private static NamedPipeServerStream CreatePipeWithMandatoryLabel(PipeSecurity security)
+	// Enable the process-token privilege before the listeners start.
+	private static void EnableStartupSecurityPrivilege()
 	{
 		const uint TokenAdjustPrivileges = 0x0020;
-		const uint TokenQuery = 0x0008;
 		const uint SePrivilegeEnabled = 0x00000002;
 		const int ErrorNotAllAssigned = 1300;
 
 		if (!NativeMethods.OpenProcessToken(NativeMethods.GetCurrentProcess(),
-				TokenAdjustPrivileges | TokenQuery, out nint token))
+				TokenAdjustPrivileges, out nint token))
 			throw new Win32Exception(Marshal.GetLastPInvokeError(), "OpenProcessToken failed");
 
 		try
@@ -355,35 +361,25 @@ internal static class SearchServiceHost
 				PrivilegeCount = 1,
 				Privileges = new LUID_AND_ATTRIBUTES { Luid = luid, Attributes = SePrivilegeEnabled }
 			};
-			TOKEN_PRIVILEGES previous = default;
-			uint previousLength = 0;
+			// No previous-state buffer is needed because startup does not restore the privilege.
 			if (!NativeMethods.AdjustTokenPrivileges(token, false, ref enabled,
-					(uint)sizeof(TOKEN_PRIVILEGES), (nint)(&previous), (nint)(&previousLength)))
+					0, nint.Zero, nint.Zero))
 				throw new Win32Exception(Marshal.GetLastPInvokeError(), "Enabling SeSecurityPrivilege failed");
+			// A nonzero API return does not guarantee that the token held the privilege.
 			int privilegeError = Marshal.GetLastPInvokeError();
 			if (privilegeError == ErrorNotAllAssigned)
 				throw new Win32Exception(privilegeError, "SeSecurityPrivilege is not assigned to the service token");
 			if (privilegeError != 0)
 				throw new Win32Exception(privilegeError, "Enabling SeSecurityPrivilege failed");
-
-			try
-			{
-				return NamedPipeServerStreamAcl.Create(
-					PipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte,
-					PipeOptions.Asynchronous | PipeOptions.FirstPipeInstance, 0, 0, security);
-			}
-			finally
-			{
-				// PreviousState contains only privileges changed by this call.
-				if (previous.PrivilegeCount != 0 &&
-					!NativeMethods.AdjustTokenPrivileges(token, false, ref previous,
-						0, nint.Zero, nint.Zero))
-					SearchLog.ReportError(new Win32Exception(Marshal.GetLastPInvokeError(),
-						"Restoring SeSecurityPrivilege failed"));
-			}
 		}
 		finally { _ = NativeMethods.CloseHandle(token); }
 	}
+
+	// The startup-enabled process token supplies the privilege needed for the SACL.
+	private static NamedPipeServerStream CreatePipeWithMandatoryLabel(PipeSecurity security, string pipeName = PipeName) =>
+		NamedPipeServerStreamAcl.Create(
+			pipeName, PipeDirection.InOut, 1, PipeTransmissionMode.Byte,
+			PipeOptions.Asynchronous | PipeOptions.FirstPipeInstance, 0, 0, security);
 
 	private static unsafe bool IsClientAuthorized(NamedPipeServerStream pipe)
 	{
@@ -459,12 +455,13 @@ internal static class SearchServiceHost
 		return results;
 	}
 
-	private static void HandleSession(NamedPipeServerStream pipe, IndexState state, CancellationToken token)
+	private static void HandleSession(NamedPipeServerStream pipe, IndexState state, CancellationToken token, ref bool buildingIndexes)
 	{
 		using BinaryReader reader = new(pipe, Encoding.UTF8, leaveOpen: true);
 		using BinaryWriter writer = new(pipe, Encoding.UTF8, leaveOpen: true);
 		writer.Write((byte)1);
-		writer.Write("Search index ready.");
+		// The handshake confirms listener readiness, not that an index has been built.
+		writer.Write("Search service ready.");
 		writer.Flush();
 		while (!token.IsCancellationRequested)
 		{
@@ -487,8 +484,13 @@ internal static class SearchServiceHost
 				{
 					if (state.Unloaded && !string.IsNullOrEmpty(query))
 					{
-						BuildIndexes(state.Indexes, token);
-						state.Unloaded = false;
+						// Notify the client before the synchronous build, including rebuilds after idle unload.
+						writer.Write((byte)5); // Indexing; the normal result frame still follows.
+						writer.Flush();
+						// Keep build failures distinct from ordinary client disconnects.
+						buildingIndexes = true;
+						state.EnsureIndexes(token);
+						buildingIndexes = false;
 					}
 					List<string> results = SearchIndexes(query, state.Indexes);
 					// Snapshot the indexes currently held after this query's refresh, without walking their entries.

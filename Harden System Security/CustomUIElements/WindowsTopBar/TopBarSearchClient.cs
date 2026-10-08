@@ -54,9 +54,9 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 	private string _query = string.Empty;
 	private bool _disposed;
 	private bool _receivedResponse;
-	// Readiness belongs to the current pipe handshake.
-	private volatile bool _indexReady;
-	internal bool IsIndexReady => _indexReady;
+	// Service readiness belongs to the current pipe handshake, not the index lifetime.
+	private volatile bool _serviceReady;
+	internal bool IsServiceReady => _serviceReady;
 
 	internal TopBarSearchClient(DispatcherQueue dispatcher, Action<string> status, Action<string, List<TopBarSearchResult>, long> results)
 	{
@@ -114,7 +114,7 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 				}
 				finally
 				{
-					_indexReady = false;
+					_serviceReady = false;
 					try { if (pipe is not null) await pipe.DisposeAsync(); }
 					catch (Exception exception) when (!token.IsCancellationRequested) { Logger.Write(exception); }
 					if (ReferenceEquals(_pipe, pipe)) _pipe = null;
@@ -131,10 +131,10 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 		pipe.WriteByte(1);
 		using BinaryReader input = new(pipe, Encoding.UTF8, leaveOpen: true);
 		using BinaryWriter output = new(pipe, Encoding.UTF8, leaveOpen: true);
-		if (input.ReadByte() != 1 || !string.Equals(input.ReadString(), "Search index ready.", StringComparison.OrdinalIgnoreCase))
+		if (input.ReadByte() != 1 || !string.Equals(input.ReadString(), "Search service ready.", StringComparison.OrdinalIgnoreCase))
 			throw new InvalidDataException("The Global Search rejected the connection.");
-		_indexReady = true;
-		_ = _dispatcher.TryEnqueue(() => { if (!_disposed) _status("Search index ready."); });
+		_serviceReady = true;
+		_ = _dispatcher.TryEnqueue(() => { if (!_disposed) _status("Search service ready."); });
 		while (_queryChanged.Reader.WaitToReadAsync().AsTask().GetAwaiter().GetResult())
 		{
 			_ = _queryChanged.Reader.TryRead(out _);
@@ -142,6 +142,7 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			string query = _query;
 			if (string.IsNullOrWhiteSpace(query)) continue;
 			_receivedResponse = false;
+			QueueSearchStatus(query, "Searching, please wait...");
 			// Only the service decides whether the declared UTF-8 length is acceptable.
 			output.Write7BitEncodedInt(Encoding.UTF8.GetByteCount(query));
 			output.Flush();
@@ -150,7 +151,14 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			if (admission != 4) throw new InvalidDataException("Unexpected search admission response.");
 			output.Write(query.AsSpan()); // Raw payload; its length has already been sent.
 			output.Flush();
-			if (input.ReadByte() != 2) throw new InvalidDataException("Unexpected search response.");
+			// Status frames precede, but never replace, the existing result frame.
+			byte response = input.ReadByte();
+			while (response == 5)
+			{
+				QueueSearchStatus(query, "Please wait, indexing...");
+				response = input.ReadByte();
+			}
+			if (response != 2) throw new InvalidDataException("Unexpected search response.");
 			int count = input.ReadInt32();
 			if (count is < 0 or > 100) throw new InvalidDataException("Invalid search result count.");
 			// The service writes this snapshot immediately after the result count.
@@ -163,6 +171,12 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 		}
 		return null;
 	}
+
+	// Ignore queued status updates after the user changes or clears the query, or closes the bar.
+	private void QueueSearchStatus(string query, string message) => _ = _dispatcher.TryEnqueue(() =>
+	{
+		if (!_disposed && string.Equals(_query, query, StringComparison.OrdinalIgnoreCase)) _status(message);
+	});
 
 	private static TopBarSearchResult CreateResult(string path)
 	{

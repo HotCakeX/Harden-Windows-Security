@@ -138,7 +138,7 @@ internal readonly record struct NtfsEntry(ulong Parent, NameRef Name);
 
 internal readonly record struct Journal(ulong Id, long First, long Next);
 
-internal sealed unsafe class VolumeIndex : IDisposable
+internal sealed unsafe partial class VolumeIndex : IDisposable
 {
 	private const int BufferSize = 1024 * 1024;
 	private const int DirectoryBufferSize = 64 * 1024;
@@ -667,8 +667,18 @@ internal sealed unsafe class VolumeIndex : IDisposable
 	{
 		if (disposed) return;
 		disposed = true;
-		if (volume == 0 || volume == InvalidHandleValue) return;
-		_ = NativeMethods.CloseHandle(volume);
-		volume = InvalidHandleValue;
+		// A disposed request index may remain referenced by the listener's async state.
+		// Release its managed payload as well as its native handle.
+		wideEntries = null;
+		ntfsEntries = null;
+		nameArena.Clear();
+		inaccessibleDirectories.Clear();
+		refreshBuffer = null;
+		built = false;
+		if (volume != 0 && volume != InvalidHandleValue)
+		{
+			_ = NativeMethods.CloseHandle(volume);
+			volume = InvalidHandleValue;
+		}
 	}
 }

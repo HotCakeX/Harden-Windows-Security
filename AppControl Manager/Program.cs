@@ -32,6 +32,7 @@ internal static class Program
 	private static string[] _launchArguments = [];
 #if HARDEN_SYSTEM_SECURITY
 	internal const string GlobalSearchScopeVariable = "HardenSystemSecurity_GlobalSearchScope";
+	internal const string GlobalSearchStartupVariable = "HardenSystemSecurity_GlobalSearchIndexAtStartup";
 #endif
 
 	/// <summary>
@@ -98,16 +99,19 @@ internal static class Program
 			{
 				Environment.Exit(ClipboardMonitor.Run());
 			}
-			// Persist only the two supported scopes in the machine-wide environment.
-			if (string.Equals(args[0], "--global-search-scope", StringComparison.OrdinalIgnoreCase))
+			// Persist only supported search settings in the machine-wide environment.
+			if (string.Equals(args[0], "--global-search-scope", StringComparison.OrdinalIgnoreCase) ||
+				string.Equals(args[0], "--global-search-startup", StringComparison.OrdinalIgnoreCase))
 			{
 				try
 				{
+					bool scope = string.Equals(args[0], "--global-search-scope", StringComparison.OrdinalIgnoreCase);
 					if (args.Length != 2 ||
-						(!string.Equals(args[1], "OS", StringComparison.OrdinalIgnoreCase) &&
-						 !string.Equals(args[1], "ALL", StringComparison.OrdinalIgnoreCase)))
-						throw new ArgumentException("Invalid Global Search scope.");
-					Environment.SetEnvironmentVariable(GlobalSearchScopeVariable, args[1], EnvironmentVariableTarget.Machine);
+						(!string.Equals(args[1], scope ? "OS" : "STARTUP", StringComparison.OrdinalIgnoreCase) &&
+						 !string.Equals(args[1], scope ? "ALL" : "REQUEST", StringComparison.OrdinalIgnoreCase)))
+						throw new ArgumentException("Invalid Global Search setting.");
+					Environment.SetEnvironmentVariable(scope ? GlobalSearchScopeVariable : GlobalSearchStartupVariable,
+						args[1], EnvironmentVariableTarget.Machine);
 					Environment.Exit(0);
 				}
 				catch (Exception exception)

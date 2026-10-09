@@ -3,3 +3,11 @@
 * Based on user feedback, the position of the main app menu is now remembered: Left or Top.
 
 * Your configuration of whether the policy creation in certain pages should include all results vs only the selected results is now remembered by the app. Completes the following request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1232
+
+* Updated dependencies to the latest versions
+
+* The HVCI level of the policy is now respected after you make modifications to it. Resolves the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1231
+
+* In the System Information page, you can now right-click on any policy to add them directly to the Policies Library.
+
+* Improved UI interactions when using right-click in list views.

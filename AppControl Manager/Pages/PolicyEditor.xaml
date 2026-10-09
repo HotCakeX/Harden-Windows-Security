@@ -87,7 +87,7 @@
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
                         x:Uid="LoadPolicyButton"
-                        Click="{x:Bind ViewModel.ProcessData}">
+                        Click="{x:Bind ViewModel.LoadPolicy}">
 
                     <Button.ContentTemplate>
                         <DataTemplate x:DataType="x:String">

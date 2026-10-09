@@ -290,7 +290,7 @@ internal static class CiRuleOptions
 			policyObj.Rules.Add(new RuleType(item: rule));
 		}
 
-		// Set the HVCI to Strict
+		// Set the HVCI to Strict if the policy doesn't have it.
 		policyObj = PolicySettingsManager.UpdateHVCIOptions(policyObj);
 
 		// Return the updated policy object

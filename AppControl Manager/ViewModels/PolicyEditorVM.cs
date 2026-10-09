@@ -276,9 +276,14 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 	}
 
 	/// <summary>
+	/// Event handler for the UI load policy button.
+	/// </summary>
+	internal async void LoadPolicy() => await ProcessData();
+
+	/// <summary>
 	/// Extracts the data from the user-selected policy XML file and puts them in the UI elements such as the ListViews
 	/// </summary>
-	internal async void ProcessData()
+	private async Task ProcessData()
 	{
 		if (SelectedPolicy is null)
 		{
@@ -1556,7 +1561,7 @@ internal sealed partial class PolicyEditorVM : ViewModelBase
 			// Assign the policy file path to the local variable
 			SelectedPolicy = policy;
 
-			await Task.Run(ProcessData);
+			await ProcessData();
 		}
 		catch (Exception ex)
 		{

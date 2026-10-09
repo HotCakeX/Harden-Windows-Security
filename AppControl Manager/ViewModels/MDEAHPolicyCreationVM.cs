@@ -726,7 +726,7 @@ DeviceEvents
 									PolicyToAddLogsTo.PolicyObj = SetCiPolicyInfo.Set(PolicyToAddLogsTo.PolicyObj, false, PolicyNameTextBox, null);
 								}
 
-								// Set the HVCI to Strict
+								// Set the HVCI to Strict if the policy doesn't have it.
 								PolicyToAddLogsTo.PolicyObj = PolicySettingsManager.UpdateHVCIOptions(PolicyToAddLogsTo.PolicyObj);
 
 								// A signed update must not have a lower version than the signed policy already deployed.

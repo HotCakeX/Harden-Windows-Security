@@ -134,17 +134,30 @@ internal sealed partial class ListViewV2 : ListView
 	// keep the current selection and just show the context menu for that selection.
 	// - If we right-click on an unselected item, clear the previous selection and select only that item.
 	// P.S: We skip the next two SelectionChanged events to avoid unintended smooth scrolling due to programmatic changes.
+	// Also when right-clicking on a row:
+	// - If the ListView uses single selection, select the right-clicked item.
+	// - If we right-click on one of multiple selected items, keep the current selection.
+	// - If we right-click on an unselected item in a multiple-selection mode, clear the previous selection and select only that item.
 	[DynamicWindowsRuntimeCast(typeof(ListViewItem))]
 	private void OnListViewV2ItemRightTapped(object sender, RightTappedRoutedEventArgs e)
 	{
-		// Don't proceed further if the sender is not a ListViewItem or if the ListView is in None or Single selection mode because then SelectedItems property is readonly and we get COM error if we attempt to clear it.
-		if (sender is not ListViewItem item || SelectionMode is ListViewSelectionMode.None or ListViewSelectionMode.Single)
+		// Don't proceed further if the sender is not a ListViewItem or if the ListView is in None selection mode because then SelectedItems property is readonly and we get COM error if we attempt to clear it.
+		if (sender is not ListViewItem item || SelectionMode is ListViewSelectionMode.None)
 			return;
 
 		// If the item is already selected, do nothing so multi-selection is preserved.
 		// This allows right-click actions (copy/delete) to apply to the full current selection.
 		if (item.IsSelected)
 			return;
+
+		// If using single-selection mode, select the right-clicked item.
+		if (SelectionMode is ListViewSelectionMode.Single)
+		{
+			// Replacing the selected item raises one SelectionChanged event.
+			_skipSelectionChangedCount = 1;
+			SelectedItem = item.Content;
+			return;
+		}
 
 		// Otherwise, switch to single-selection on this item.
 		// SelectionChanged will fire for Clear and for the new selection; suppress both.

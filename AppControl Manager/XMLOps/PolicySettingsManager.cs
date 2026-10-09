@@ -305,14 +305,20 @@ internal static class PolicySettingsManager
 	}
 
 	/// <summary>
-	/// Sets the HVCI option to Strict or (2) in an App Control policy.
+	/// Sets the HVCI option to Strict or (2) in an App Control policy if it isn't already one of the following values:
+	/// 2 => "Enabled - Strict"
+	/// 1 => "Enabled"
+	/// 4 => "Debug Mode"
+	/// 8 => "Disable is Allowed"
+	/// <see cref="ViewModels.PolicyEditorVM.GetHVCIOptionKey"/> for valid values.
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
 	internal static SiPolicy.SiPolicy UpdateHVCIOptions(SiPolicy.SiPolicy policyObj)
 	{
-		policyObj.HvciOptions = 2;
+		if (policyObj.HvciOptions is not (1 or 2 or 4 or 8))
+		{
+			policyObj.HvciOptions = 2;
+		}
 		return policyObj;
 	}
-
 }
-

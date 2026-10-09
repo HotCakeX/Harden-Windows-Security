@@ -125,7 +125,7 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	/// <summary>
 	/// Path to the selected policy file on disk, if any.
 	/// </summary>
-	internal string? SelectedPolicyLocalFilePath { get; set => SPT(ref field, value); }
+	private string? SelectedPolicyLocalFilePath;
 
 	#endregion
 
@@ -722,39 +722,41 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	}
 
 	/// <summary>
-	/// Event handler for when a policy is selected from the ListView. It will contain the selected policy.
+	/// Synchronizes the selected policy and its dependent UI state directly from the ListView that raised the event.
+	/// When the collection is cleared, the selection and all dependent state are reset.
 	/// When the Refresh button is pressed, this event is fired again, but due to clearing the existing data in the refresh event handler, ListView's SelectedItem property will be null,
 	/// so we detect it here and return from the method without assigning null to the selectedPolicy class instance.
 	/// </summary>
-	internal void DeployedPolicies_SelectionChanged()
+	[DynamicWindowsRuntimeCast(typeof(ListView))]
+	internal void DeployedPolicies_SelectionChanged(object sender, SelectionChangedEventArgs e)
 	{
-		if (ListViewSelectedPolicy is null)
+		if (sender is not ListView listView)
 		{
-			SelectedPolicyLocalFilePath = null;
 			return;
 		}
 
-		// Check if:
-		if (
-			// It's a non-system policy
-			!ListViewSelectedPolicy.IsSystemPolicy &&
-			// It's available on disk
-			ListViewSelectedPolicy.IsOnDisk)
+		// Read the authoritative selection directly from the control that raised the event.
+		CiPolicyInfo? selectedPolicy = listView.SelectedItem as CiPolicyInfo;
+
+		// Keep the ViewModel selection synchronized before updating any dependent state.
+		ListViewSelectedPolicy = selectedPolicy;
+
+		if (selectedPolicy is null)
 		{
-			// Enable the RemovePolicyButton
-			RemovePolicyButtonState = true;
-		}
-		else
-		{
-			// Disable the button if no proper policy is selected
+			SelectedPolicyLocalFilePath = null;
 			RemovePolicyButtonState = false;
+			SwapPolicyComboBoxState = false;
+			return;
 		}
 
-		// Enable the Swap Policy ComboBox only when the selected policy is a base type, unsigned and non-system
-		SwapPolicyComboBoxState = string.Equals(ListViewSelectedPolicy.BasePolicyID, ListViewSelectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && !ListViewSelectedPolicy.IsSignedPolicy && !ListViewSelectedPolicy.IsSystemPolicy;
+		// Enable the Remove Policy button only for a non-system policy that is available on disk.
+		RemovePolicyButtonState = !selectedPolicy.IsSystemPolicy && selectedPolicy.IsOnDisk;
 
-		// Get the local CIP file path of the selected policy, if it exists on the system.
-		SelectedPolicyLocalFilePath = GetLocalCIPFile(ListViewSelectedPolicy);
+		// Enable the Swap Policy ComboBox only when the selected policy is a base type, unsigned and non-system.
+		SwapPolicyComboBoxState = string.Equals(selectedPolicy.BasePolicyID, selectedPolicy.PolicyID, StringComparison.OrdinalIgnoreCase) && !selectedPolicy.IsSignedPolicy && !selectedPolicy.IsSystemPolicy;
+
+		// Get the local policy file path from the exact item selected by the ListView.
+		SelectedPolicyLocalFilePath = GetLocalCIPFile(selectedPolicy);
 	}
 
 	/// <summary>
@@ -922,6 +924,57 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		}
 
 		return output;
+	}
+
+	/// <summary>
+	/// Event handler for the button that adds the selected policy to the Policies Library.
+	/// </summary>
+	internal async void AddPolicyToLibrary_Click()
+	{
+		if (SelectedPolicyLocalFilePath is null)
+			return;
+
+		try
+		{
+			UIElementsEnabledState = false;
+			PolicyFileRepresent policy = await Task.Run(() =>
+			{
+				UIElementsEnabledState = false;
+
+				SiPolicy.PolicyFileRepresent? policy = null;
+
+				// First see if the policy is P7B type so we can get its object from the dictionary instead of decoding it again.
+				if (P7BPoliciesPathToID.TryGetValue(SelectedPolicyLocalFilePath, out string? possibleP7BPolicyID))
+				{
+					if (P7BPoliciesDictionary.TryGetValue(possibleP7BPolicyID, out SiPolicy.SiPolicy? policyObj))
+					{
+						policy = new(policyObj);
+					}
+				}
+
+				// If the policy couldn't be found among P7B files that have been already decoded then decode it via the provided file path which is for CIP files.
+				policy ??= PolicyEditorVM.ParseFilePathAsPolicyRepresent(SelectedPolicyLocalFilePath);
+
+				// Keep the library copy independent of the deployed file's path.
+				policy.FilePath = null;
+
+				return policy;
+			});
+
+			await ViewModelProvider.MainWindowVM.AssignToSidebar(policy);
+
+			// Since this is from a right-click context menu, the animation needs a more visible element to start.
+			if (ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Locally_Deployed_Policies) is UIElement lv)
+				MainWindow.TriggerTransferIconAnimationStatic(lv);
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			UIElementsEnabledState = true;
+		}
 	}
 
 	/// <summary>

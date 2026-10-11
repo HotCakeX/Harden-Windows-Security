@@ -1,0 +1,1 @@
+* Added an option in the Backup and Restore settings page to open application data folders in file explorer.

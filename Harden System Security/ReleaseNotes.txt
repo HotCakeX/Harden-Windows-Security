@@ -1,1 +1,13 @@
 * Updated dependencies to the latest versions.
+
+* Added an option in the Backup and Restore settings page to open application data folders in the File Explorer.
+
+* Added a new option to the TopBar that you can use to reduce the RAM usage of it. It is disabled by default and you can enable it via the TopBar's settings panel. It will take effect the next time TopBar is started.
+
+* Added a new option to the Tweaks page called "System Controls", it has the following tweaks at the moment:
+
+    1. Ability to force enable Mica and Acrylic materials for the Windows visuals and apps in Virtual Machines, and also enable rounded corners. This is especially useful for virtual machines that don't have a GPU.
+
+* Added a new policy to the Miscellaneous category: Block access to the Run command from the Start menu and Task Manager, and prevent opening the Run dialog with Windows + R shortcuts. This also restricts UNC paths, local drives, and local folders entered in the legacy Internet Explorer address bar. This is a good restriction to minimize the ClickFix social engineering attacks success rates.
+
+* Added 6 new policies to the BitLocker page: Whether on battery or while plugged in, closing the laptop lid or pressing the sleep or power button on your device will hibernate the system instead of the default sleep which is insecure. Completes the following feature request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1230

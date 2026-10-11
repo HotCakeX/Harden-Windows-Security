@@ -29,6 +29,12 @@
                     <FontIcon Glyph="&#xE9D9;"/>
                 </SelectorBarItem.Icon>
             </SelectorBarItem>
+            <SelectorBarItem x:Uid="TweaksSystemControlsSelectorBarItem"
+                             IsEnabled="{x:Bind CC:Atlas.IsElevated}">
+                <SelectorBarItem.Icon>
+                    <FontIcon Glyph="&#xE713;"/>
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
         </SelectorBar>
 
         <!-- Cleanup section -->
@@ -715,5 +721,38 @@
 
             </StackPanel>
         </ScrollViewer>
+
+        <!-- System Controls section -->
+        <ScrollViewer Grid.Row="1"
+                      Visibility="{x:Bind ViewModel.SystemControlsSectionVisibility, Mode=OneWay}">
+            <StackPanel HorizontalAlignment="Stretch"
+                        Spacing="12">
+                <StackPanel.ChildrenTransitions>
+                    <EntranceThemeTransition FromVerticalOffset="50"/>
+                    <RepositionThemeTransition IsStaggeringEnabled="False"/>
+                </StackPanel.ChildrenTransitions>
+
+                <!-- Rounded corners and Mica in virtual machines -->
+                <StackPanel>
+                    <customUI:InfoBarV2 IsIconVisible="True"
+                                        Margin="0,0,0,-1"
+                                        Title="{x:Bind ViewModel.VirtualMachineEffectsInfoBar.Title, Mode=OneWay}"
+                                        Message="{x:Bind ViewModel.VirtualMachineEffectsInfoBar.Message, Mode=OneWay}"
+                                        IsOpen="{x:Bind ViewModel.VirtualMachineEffectsInfoBar.IsOpen, Mode=TwoWay}"
+                                        IsClosable="{x:Bind ViewModel.VirtualMachineEffectsInfoBar.IsClosable, Mode=OneWay}"
+                                        Severity="{x:Bind ViewModel.VirtualMachineEffectsInfoBar.Severity, Mode=OneWay}"/>
+                    <customUI:SettingsCardV2 x:Uid="VirtualMachineEffectsSettingsCard">
+                        <customUI:SettingsCardV2.HeaderIcon>
+                            <FontIcon Glyph="&#xE7F4;"/>
+                        </customUI:SettingsCardV2.HeaderIcon>
+                        <ToggleSwitch IsOn="{x:Bind ViewModel.VirtualMachineEffectsIsOn, Mode=OneWay}"
+                                      IsEnabled="{x:Bind ViewModel.VirtualMachineEffectsIsEnabled, Mode=OneWay}"
+                                      Toggled="{x:Bind ViewModel.VirtualMachineEffects_Toggled}"/>
+                    </customUI:SettingsCardV2>
+                </StackPanel>
+            </StackPanel>
+
+        </ScrollViewer>
+
     </Grid>
 </Page>

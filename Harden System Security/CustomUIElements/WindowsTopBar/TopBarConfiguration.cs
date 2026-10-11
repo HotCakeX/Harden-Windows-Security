@@ -180,6 +180,11 @@ internal sealed class TopBarConfiguration
 	];
 	public TopBarCompanion Companion { get; set; } = TopBarCompanion.PrisMatrix;
 	public TopBarBackdrop Backdrop { get; set; } = TopBarBackdrop.MicaAlt;
+
+	/// <summary>
+	/// Whether the next TopBar-only process launch requests the system composition engine before XAML startup.
+	/// </summary>
+	public bool UseSystemComposition { get; set; }
 }
 
 /// <summary>

@@ -8039,4 +8039,34 @@
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 秒</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>依存しているコンポーネント</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>依存しているコンポーネントを分析</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>システム制御</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>仮想マシンでの角の丸みと Mica</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>この仮想マシンで Windows 11 の角の丸みと Mica を強制的に有効にします. このオプションをオフにすると、既定の動作に戻ります. この設定を変更した後、仮想マシンを再起動してください.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>この仮想マシンで Windows 11 の角の丸みと Mica を強制的に有効にします. このオプションをオフにすると、既定の動作に戻ります. この設定を変更した後、仮想マシンを再起動してください.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>この仮想マシンで Windows 11 の角の丸みと Mica を強制的に有効にします. このオプションをオフにすると、既定の動作に戻ります. この設定を変更した後、仮想マシンを再起動してください.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>アプリケーション データ</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>アプリで使用するアプリケーション データ フォルダーを開きます.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>アプリで使用するアプリケーション データ フォルダーを開きます.</value>
+  </data>
 </root>

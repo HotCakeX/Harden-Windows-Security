@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>Απαιτείται δικαίωμα προβολής των περιεχομένων του καταλόγου πριν από την αναφορά ειδοποιήσεων για αλλαγές στον κατάλογο, ώστε να αποτρέπεται η μη εξουσιοδοτημένη αποκάλυψη διαδρομών αρχείων και φακέλων σε τόμους NTFS και ReFS.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>Αποκλείστε την πρόσβαση στην εντολή «Εκτέλεση» από το μενού Έναρξη και τη Διαχείριση εργασιών και αποτρέψτε το άνοιγμα του παραθύρου διαλόγου «Εκτέλεση» με τη συντόμευση πληκτρολογίου Windows + R. Αυτή η ρύθμιση περιορίζει επίσης τη χρήση διαδρομών UNC, τοπικών μονάδων δίσκου και τοπικών φακέλων που εισάγονται στη γραμμή διευθύνσεων του παλαιού Internet Explorer. Αυτός ο περιορισμός συμβάλλει στη μείωση των ποσοστών επιτυχίας των επιθέσεων κοινωνικής μηχανικής τύπου ClickFix.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Ρυθμίστε το σύστημα ώστε να μεταβαίνει σε αδρανοποίηση όταν κλείνει το καπάκι του φορητού υπολογιστή (με τροφοδοσία από το ηλεκτρικό δίκτυο).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Ρυθμίστε το σύστημα ώστε να μεταβαίνει σε αδρανοποίηση όταν πατιέται το κουμπί τροφοδοσίας (με τροφοδοσία από το ηλεκτρικό δίκτυο).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Ρυθμίστε το σύστημα ώστε να μεταβαίνει σε αδρανοποίηση όταν πατιέται το κουμπί αναστολής λειτουργίας (με τροφοδοσία από το ηλεκτρικό δίκτυο).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Ρυθμίστε το σύστημα ώστε να μεταβαίνει σε αδρανοποίηση όταν κλείνει το καπάκι του φορητού υπολογιστή (με τροφοδοσία από την μπαταρία).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Ρυθμίστε το σύστημα ώστε να μεταβαίνει σε αδρανοποίηση όταν πατιέται το κουμπί τροφοδοσίας (με τροφοδοσία από την μπαταρία).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Ρυθμίστε το σύστημα ώστε να μεταβαίνει σε αδρανοποίηση όταν πατιέται το κουμπί αναστολής λειτουργίας (με τροφοδοσία από την μπαταρία).</value>
+</data>
 </root>

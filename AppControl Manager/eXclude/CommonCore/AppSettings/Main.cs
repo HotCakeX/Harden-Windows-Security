@@ -48,9 +48,7 @@ internal sealed partial class Main : ViewModelBase
 	/// </summary>
 	private readonly ApplicationDataContainer _localSettings;
 
-	internal Main(ApplicationDataContainer LocalSettings) : this(LocalSettings, true)
-	{
-	}
+	internal Main(ApplicationDataContainer LocalSettings) : this(LocalSettings, true) { }
 
 	internal static Main CreateDefaultSettingsSnapshot() => new(Atlas.Settings._localSettings, false);
 

@@ -716,5 +716,29 @@
             99
         ],
         "ID": "01a0fba3-51ba-7dfa-afdf-a63c5a32d66a"
+    },
+    {
+        "Source": 0,
+        "KeyName": "Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer",
+        "ValueName": "NoRun",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AQAAAA==",
+        "RegValue": "1",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "NoRun-Miscellaneous",
+        "URL": "https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-startmenu#norun",
+        "Category": 12,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            1,
+            2,
+            3,
+            4,
+            5
+        ],
+        "ID": "01a12a9f-6024-7eb0-a60f-b5823c77bb8a"
     }
 ]

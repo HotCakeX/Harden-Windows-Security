@@ -8039,4 +8039,34 @@
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 δευτερόλεπτα</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>Εξαρτώμενα στοιχεία</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>Ανάλυση εξαρτώμενων στοιχείων</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>Ρυθμίσεις συστήματος</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>Στρογγυλεμένες γωνίες και Mica σε εικονικές μηχανές</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>Επιβάλετε τη χρήση των στρογγυλεμένων γωνιών και του Mica των Windows 11 σε αυτή την εικονική μηχανή. Η απενεργοποίηση αυτής της επιλογής επαναφέρει την προεπιλεγμένη συμπεριφορά. Επανεκκινήστε την εικονική μηχανή μετά την αλλαγή αυτής της ρύθμισης.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Επιβάλετε τη χρήση των στρογγυλεμένων γωνιών και του Mica των Windows 11 σε αυτή την εικονική μηχανή. Η απενεργοποίηση αυτής της επιλογής επαναφέρει την προεπιλεγμένη συμπεριφορά. Επανεκκινήστε την εικονική μηχανή μετά την αλλαγή αυτής της ρύθμισης.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Επιβάλετε τη χρήση των στρογγυλεμένων γωνιών και του Mica των Windows 11 σε αυτή την εικονική μηχανή. Η απενεργοποίηση αυτής της επιλογής επαναφέρει την προεπιλεγμένη συμπεριφορά. Επανεκκινήστε την εικονική μηχανή μετά την αλλαγή αυτής της ρύθμισης.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>Δεδομένα εφαρμογής</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ανοίξτε τους φακέλους δεδομένων εφαρμογής που χρησιμοποιεί η εφαρμογή.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ανοίξτε τους φακέλους δεδομένων εφαρμογής που χρησιμοποιεί η εφαρμογή.</value>
+  </data>
 </root>

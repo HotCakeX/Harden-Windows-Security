@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>Wajibkan izin untuk mencantumkan isi direktori sebelum melaporkan pemberitahuan perubahan direktori, guna mencegah pengungkapan tanpa izin atas jalur file dan folder pada volume NTFS dan ReFS.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>Blokir akses ke perintah Jalankan dari menu Mulai dan Pengelola Tugas, serta cegah pembukaan kotak dialog Jalankan menggunakan pintasan keyboard Windows + R. Pengaturan ini juga membatasi penggunaan jalur UNC, drive lokal, dan folder lokal yang dimasukkan ke bilah alamat Internet Explorer versi lama. Pembatasan ini berguna untuk mengurangi tingkat keberhasilan serangan rekayasa sosial jenis ClickFix.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Atur sistem agar masuk ke mode hibernasi saat penutup laptop ditutup (terhubung ke sumber listrik).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Atur sistem agar masuk ke mode hibernasi saat tombol daya ditekan (terhubung ke sumber listrik).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Atur sistem agar masuk ke mode hibernasi saat tombol tidur ditekan (terhubung ke sumber listrik).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Atur sistem agar masuk ke mode hibernasi saat penutup laptop ditutup (menggunakan daya baterai).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Atur sistem agar masuk ke mode hibernasi saat tombol daya ditekan (menggunakan daya baterai).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Atur sistem agar masuk ke mode hibernasi saat tombol tidur ditekan (menggunakan daya baterai).</value>
+</data>
 </root>

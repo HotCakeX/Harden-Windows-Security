@@ -8039,4 +8039,34 @@
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 സെക്കൻഡ്</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>ആശ്രിത ഘടകങ്ങൾ</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>ആശ്രിത ഘടകങ്ങൾ വിശകലനം ചെയ്യുക</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>സിസ്റ്റം നിയന്ത്രണങ്ങൾ</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>വെർച്വൽ മെഷീനുകളിൽ വൃത്താകൃതിയിലുള്ള കോണുകളും Mica-യും</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>ഈ വെർച്വൽ മെഷീനിൽ Windows 11-ന്റെ വൃത്താകൃതിയിലുള്ള കോണുകളും Mica-യും നിർബന്ധമായും ഉപയോഗിക്കുക. ഈ ഓപ്ഷൻ ഓഫാക്കുന്നത് ഡിഫോൾട്ട് പ്രവർത്തനരീതി പുനഃസ്ഥാപിക്കും. ഈ ക്രമീകരണം മാറ്റിയ ശേഷം വെർച്വൽ മെഷീൻ പുനരാരംഭിക്കുക.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ വെർച്വൽ മെഷീനിൽ Windows 11-ന്റെ വൃത്താകൃതിയിലുള്ള കോണുകളും Mica-യും നിർബന്ധമായും ഉപയോഗിക്കുക. ഈ ഓപ്ഷൻ ഓഫാക്കുന്നത് ഡിഫോൾട്ട് പ്രവർത്തനരീതി പുനഃസ്ഥാപിക്കും. ഈ ക്രമീകരണം മാറ്റിയ ശേഷം വെർച്വൽ മെഷീൻ പുനരാരംഭിക്കുക.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഈ വെർച്വൽ മെഷീനിൽ Windows 11-ന്റെ വൃത്താകൃതിയിലുള്ള കോണുകളും Mica-യും നിർബന്ധമായും ഉപയോഗിക്കുക. ഈ ഓപ്ഷൻ ഓഫാക്കുന്നത് ഡിഫോൾട്ട് പ്രവർത്തനരീതി പുനഃസ്ഥാപിക്കും. ഈ ക്രമീകരണം മാറ്റിയ ശേഷം വെർച്വൽ മെഷീൻ പുനരാരംഭിക്കുക.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>ആപ്പ് ഡാറ്റ</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ആപ്പ് ഉപയോഗിക്കുന്ന ആപ്പ് ഡാറ്റ ഫോൾഡറുകൾ തുറക്കുക.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ആപ്പ് ഉപയോഗിക്കുന്ന ആപ്പ് ഡാറ്റ ഫോൾഡറുകൾ തുറക്കുക.</value>
+  </data>
 </root>

@@ -73,6 +73,24 @@
                                 </DataTemplate>
                             </Button.ContentTemplate>
                         </Button>
+
+                        <DropDownButton Content="Application Data"
+                                        ToolTipService.ToolTip="The application data folders used by the app">
+                            <DropDownButton.Flyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Temporary Path"
+                                                    Click="{x:Bind ViewModel.OpenTemporaryPath}"/>
+                                    <MenuFlyoutItem Text="Shared Local Path"
+                                                    Click="{x:Bind ViewModel.OpenSharedLocalPath}"/>
+                                    <MenuFlyoutItem Text="Machine Path"
+                                                    Click="{x:Bind ViewModel.OpenMachinePath}"/>
+                                    <MenuFlyoutItem Text="Local Cache Path"
+                                                    Click="{x:Bind ViewModel.OpenLocalCachePath}"/>
+                                    <MenuFlyoutItem Text="Local Path"
+                                                    Click="{x:Bind ViewModel.OpenLocalPath}"/>
+                                </MenuFlyout>
+                            </DropDownButton.Flyout>
+                        </DropDownButton>
                     </CCToolKit:WrapPanel>
 
                 </Border>
@@ -95,12 +113,15 @@
 
                             <TextBlock Grid.Column="0"
                                        FontWeight="SemiBold"
+                                       TextWrapping="Wrap"
                                        x:Uid="SettingNameColumnHeaderTextBlock" />
                             <TextBlock Grid.Column="1"
                                        FontWeight="SemiBold"
+                                       TextWrapping="Wrap"
                                        x:Uid="SettingValueColumnHeaderTextBlock" />
                             <TextBlock Grid.Column="2"
                                        FontWeight="SemiBold"
+                                       TextWrapping="Wrap"
                                        x:Uid="SettingAcceptedFormatColumnHeaderTextBlock" />
                         </Grid>
 
@@ -120,15 +141,15 @@
                                             <TextBlock Grid.Column="0"
                                                        Text="{x:Bind Name}"
                                                        IsTextSelectionEnabled="True"
-                                                       TextWrapping="WrapWholeWords" />
+                                                       TextWrapping="Wrap" />
                                             <TextBlock Grid.Column="1"
                                                        Text="{x:Bind CurrentValue}"
                                                        IsTextSelectionEnabled="True"
-                                                       TextWrapping="WrapWholeWords" />
+                                                       TextWrapping="Wrap" />
                                             <TextBlock Grid.Column="2"
                                                        Text="{x:Bind AcceptedFormat}"
                                                        IsTextSelectionEnabled="True"
-                                                       TextWrapping="WrapWholeWords" />
+                                                       TextWrapping="Wrap" />
                                         </Grid>
                                     </Border>
                                 </DataTemplate>

@@ -443,5 +443,125 @@
             4
         ],
         "ID": "019a8dfa-2395-758e-a7c9-ac1bbe9e5d4f"
+    },
+    {
+        "Source": 0,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Power\\PowerSettings\\5ca83367-6e45-459f-a27b-476b1d01c936",
+        "ValueName": "ACSettingIndex",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AgAAAA==",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "SelectLidCloseActionPluggedIn-BitLocker",
+        "URL": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectlidcloseactionpluggedin",
+        "Category": 4,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ],
+        "ID": "01a12bff-8856-718c-a26b-eb25db3f8b15"
+    },
+    {
+        "Source": 0,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Power\\PowerSettings\\7648efa3-dd9c-4e3e-b566-50f929386280",
+        "ValueName": "ACSettingIndex",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AgAAAA==",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "SelectPowerButtonActionPluggedIn-BitLocker",
+        "URL": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectpowerbuttonactionpluggedin",
+        "Category": 4,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ],
+        "ID": "01a12bff-6ac6-79c4-bfed-0af324f10771"
+    },
+    {
+        "Source": 0,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Power\\PowerSettings\\96996bc0-ad50-47ec-923b-6f41874dd9eb",
+        "ValueName": "ACSettingIndex",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AgAAAA==",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "SelectSleepButtonActionPluggedIn-BitLocker",
+        "URL": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectsleepbuttonactionpluggedin",
+        "Category": 4,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ],
+        "ID": "01a12bff-41a0-7728-8ac9-788f9f023950"
+    },
+    {
+        "Source": 0,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Power\\PowerSettings\\5ca83367-6e45-459f-a27b-476b1d01c936",
+        "ValueName": "DCSettingIndex",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AgAAAA==",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "SelectLidCloseActionOnBattery-BitLocker",
+        "URL": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectlidcloseactiononbattery",
+        "Category": 4,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ],
+        "ID": "01a12bff-1163-71bd-85a2-5a05bbe1acfe"
+    },
+    {
+        "Source": 0,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Power\\PowerSettings\\7648efa3-dd9c-4e3e-b566-50f929386280",
+        "ValueName": "DCSettingIndex",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AgAAAA==",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "SelectPowerButtonActionOnBattery-BitLocker",
+        "URL": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectpowerbuttonactiononbattery",
+        "Category": 4,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ],
+        "ID": "01a12bfe-f24f-771c-a462-df512de6d5f5"
+    },
+    {
+        "Source": 0,
+        "KeyName": "SOFTWARE\\Policies\\Microsoft\\Power\\PowerSettings\\96996bc0-ad50-47ec-923b-6f41874dd9eb",
+        "ValueName": "DCSettingIndex",
+        "Type": 4,
+        "Size": 4,
+        "Data": "AgAAAA==",
+        "RegValue": "2",
+        "Hive": 0,
+        "PolicyAction": 0,
+        "FriendlyName": "SelectSleepButtonActionOnBattery-BitLocker",
+        "URL": "https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectsleepbuttonactiononbattery",
+        "Category": 4,
+        "SubCategory": null,
+        "DefaultRegValue": null,
+        "DeviceIntents": [
+            99
+        ],
+        "ID": "01a12bfe-d413-7bbc-b425-961d41644c3e"
     }
 ]

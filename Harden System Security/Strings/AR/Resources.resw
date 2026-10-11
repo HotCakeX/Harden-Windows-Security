@@ -8039,4 +8039,34 @@
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 ثانية</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>المكونات التابعة</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>تحليل المكونات التابعة</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>عناصر التحكم في النظام</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>الزوايا المستديرة وMica في الأجهزة الظاهرية</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>فرض استخدام الزوايا المستديرة وMica في Windows 11 على هذا الجهاز الظاهري. يؤدي إيقاف تشغيل هذا الخيار إلى استعادة السلوك الافتراضي. أعد تشغيل الجهاز الظاهري بعد تغيير هذا الإعداد.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>فرض استخدام الزوايا المستديرة وMica في Windows 11 على هذا الجهاز الظاهري. يؤدي إيقاف تشغيل هذا الخيار إلى استعادة السلوك الافتراضي. أعد تشغيل الجهاز الظاهري بعد تغيير هذا الإعداد.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>فرض استخدام الزوايا المستديرة وMica في Windows 11 على هذا الجهاز الظاهري. يؤدي إيقاف تشغيل هذا الخيار إلى استعادة السلوك الافتراضي. أعد تشغيل الجهاز الظاهري بعد تغيير هذا الإعداد.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>بيانات التطبيق</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>افتح مجلدات بيانات التطبيق التي يستخدمها التطبيق.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>افتح مجلدات بيانات التطبيق التي يستخدمها التطبيق.</value>
+  </data>
 </root>

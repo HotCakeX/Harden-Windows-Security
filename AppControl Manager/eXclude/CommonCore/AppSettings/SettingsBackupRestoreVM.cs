@@ -22,6 +22,7 @@ using System.IO;
 using System.Text.Json;
 using CommonCore.MicrosoftGraph;
 using Microsoft.UI.Xaml;
+using System.Threading.Tasks;
 
 #if HARDEN_SYSTEM_SECURITY
 using HardenSystemSecurity;
@@ -168,6 +169,61 @@ internal sealed partial class SettingsBackupRestoreVM : ViewModelBase
 		App.MainWindow?.RefreshLocalizedContent();
 		App.MainWindow?.SetRegionsForCustomTitleBar();
 	}
+
+	#region Application Data Folders
+
+	internal async void OpenTemporaryPath() => await OpenApplicationDataFolderAsync(ApplicationDataFolder.Temporary);
+	internal async void OpenSharedLocalPath() => await OpenApplicationDataFolderAsync(ApplicationDataFolder.SharedLocal);
+	internal async void OpenMachinePath() => await OpenApplicationDataFolderAsync(ApplicationDataFolder.Machine);
+	internal async void OpenLocalCachePath() => await OpenApplicationDataFolderAsync(ApplicationDataFolder.LocalCache);
+	internal async void OpenLocalPath() => await OpenApplicationDataFolderAsync(ApplicationDataFolder.Local);
+
+	private enum ApplicationDataFolder
+	{
+		Temporary,
+		SharedLocal,
+		Machine,
+		LocalCache,
+		Local
+	}
+
+	/// <summary>
+	/// Opens the selected data folder.
+	/// </summary>
+	private async Task OpenApplicationDataFolderAsync(ApplicationDataFolder folder)
+	{
+		try
+		{
+			using Microsoft.Windows.Storage.ApplicationData applicationData = Microsoft.Windows.Storage.ApplicationData.GetDefault();
+
+			string path = folder switch
+			{
+				ApplicationDataFolder.Temporary => applicationData.TemporaryPath,
+				ApplicationDataFolder.SharedLocal => applicationData.SharedLocalPath,
+				ApplicationDataFolder.Machine => applicationData.MachinePath,
+				ApplicationDataFolder.LocalCache => applicationData.LocalCachePath,
+				ApplicationDataFolder.Local => applicationData.LocalPath,
+				_ => throw new ArgumentOutOfRangeException(nameof(folder))
+			};
+
+			if (string.IsNullOrWhiteSpace(path))
+			{
+				MainInfoBar.WriteWarning($"The application data folder {folder} is unavailable.");
+				return;
+			}
+
+			if (!await Windows.System.Launcher.LaunchFolderPathAsync(path))
+			{
+				MainInfoBar.WriteWarning($"File Explorer could not open the application data folder {folder}: {path}");
+			}
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteWarning(ex.Message);
+		}
+	}
+
+	#endregion
 }
 
 internal sealed class SettingsImportResult

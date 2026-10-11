@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>在报告目录更改通知之前，要求具有列出目录内容的权限，以防止未经授权泄露 NTFS 和 ReFS 卷上的文件及文件夹路径.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>阻止通过开始菜单和任务管理器访问“运行”命令，并禁止使用 Windows + R 快捷键打开“运行”对话框. 此设置还会限制使用在旧版 Internet Explorer 地址栏中输入的 UNC 路径、本地驱动器和本地文件夹. 此限制有助于降低 ClickFix 类型的社会工程攻击的成功率.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>将系统设置为在合上笔记本电脑盖时进入休眠状态(接通电源时).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>将系统设置为在按下电源按钮时进入休眠状态(接通电源时).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>将系统设置为在按下睡眠按钮时进入休眠状态(接通电源时).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>将系统设置为在合上笔记本电脑盖时进入休眠状态(使用电池时).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>将系统设置为在按下电源按钮时进入休眠状态(使用电池时).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>将系统设置为在按下睡眠按钮时进入休眠状态(使用电池时).</value>
+</data>
 </root>

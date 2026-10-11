@@ -8039,4 +8039,34 @@ Thumbprint: {3}</value>
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 ثانیه</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>مؤلفه‌های وابسته</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>تحلیل مؤلفه‌های وابسته</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>کنترل‌های سیستم</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>گوشه‌های گرد و Mica در ماشین‌های مجازی</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>استفاده از گوشه‌های گرد و Mica در Windows 11 را در این ماشین مجازی اجباری کنید. خاموش کردن این گزینه، رفتار پیش‌فرض را بازیابی می‌کند. پس از تغییر این تنظیم، ماشین مجازی را دوباره راه‌اندازی کنید.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استفاده از گوشه‌های گرد و Mica در Windows 11 را در این ماشین مجازی اجباری کنید. خاموش کردن این گزینه، رفتار پیش‌فرض را بازیابی می‌کند. پس از تغییر این تنظیم، ماشین مجازی را دوباره راه‌اندازی کنید.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استفاده از گوشه‌های گرد و Mica در Windows 11 را در این ماشین مجازی اجباری کنید. خاموش کردن این گزینه، رفتار پیش‌فرض را بازیابی می‌کند. پس از تغییر این تنظیم، ماشین مجازی را دوباره راه‌اندازی کنید.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>داده‌های برنامه</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>پوشه‌های داده‌ای را که برنامه از آن‌ها استفاده می‌کند باز کنید.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>پوشه‌های داده‌ای را که برنامه از آن‌ها استفاده می‌کند باز کنید.</value>
+  </data>
 </root>

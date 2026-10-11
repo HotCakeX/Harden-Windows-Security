@@ -8039,4 +8039,34 @@
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 секунд</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>Залежні компоненти</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>Аналізувати залежні компоненти</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>Елементи керування системою</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>Заокруглені кути та Mica у віртуальних машинах</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>Примусово ввімкніть заокруглені кути та Mica з Windows 11 у цій віртуальній машині. Вимкнення цієї опції відновлює поведінку за замовчуванням. Перезапустіть віртуальну машину після зміни цього налаштування.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Примусово ввімкніть заокруглені кути та Mica з Windows 11 у цій віртуальній машині. Вимкнення цієї опції відновлює поведінку за замовчуванням. Перезапустіть віртуальну машину після зміни цього налаштування.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Примусово ввімкніть заокруглені кути та Mica з Windows 11 у цій віртуальній машині. Вимкнення цієї опції відновлює поведінку за замовчуванням. Перезапустіть віртуальну машину після зміни цього налаштування.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>Дані програми</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Відкрийте папки даних програми, які використовує ця програма.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Відкрийте папки даних програми, які використовує ця програма.</value>
+  </data>
 </root>

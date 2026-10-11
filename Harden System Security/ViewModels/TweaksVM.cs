@@ -41,11 +41,20 @@ internal sealed partial class TweaksVM : ViewModelBase
 
 	internal Microsoft.UI.Xaml.Visibility DiagnosticsSectionVisibility { get; set => SP(ref field, value); } = Microsoft.UI.Xaml.Visibility.Collapsed;
 
+	internal Microsoft.UI.Xaml.Visibility SystemControlsSectionVisibility { get; set => SP(ref field, value); } = Microsoft.UI.Xaml.Visibility.Collapsed;
+
 	internal async void SectionSelectorBar_SelectionChanged(SelectorBar sender, SelectorBarSelectionChangedEventArgs args)
 	{
 		int selectedIndex = sender.SelectedItem is null ? 0 : sender.Items.IndexOf(sender.SelectedItem);
 		CleanupSectionVisibility = selectedIndex == 0 ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
 		DiagnosticsSectionVisibility = selectedIndex == 1 ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+		SystemControlsSectionVisibility = selectedIndex == 2 ? Microsoft.UI.Xaml.Visibility.Visible : Microsoft.UI.Xaml.Visibility.Collapsed;
+
+		// Keep the toggle statuses up to date whenever user switched to this tab
+		if (selectedIndex == 2)
+		{
+			RefreshVirtualMachineEffectsConfiguration();
+		}
 
 		// Keep the toggle statuses up to date whenever user switched to this tab
 		if (selectedIndex == 1)
@@ -2187,4 +2196,96 @@ internal sealed partial class TweaksVM : ViewModelBase
 
 	#endregion
 
+	#region System Controls
+
+	#region Rounded corners and Mica in virtual machines
+
+	internal readonly InfoBarSettings VirtualMachineEffectsInfoBar = new();
+	internal bool VirtualMachineEffectsIsEnabled { get; set => SP(ref field, value); }
+	internal bool VirtualMachineEffectsIsOn { get; set => SP(ref field, value); }
+
+	private const string VirtualMachineEffectsRegistryPath = @"SOFTWARE\Microsoft\Windows\Dwm";
+	private const string VirtualMachineEffectsValueName = "ForceEffectMode";
+
+	[DynamicWindowsRuntimeCast(typeof(ToggleSwitch))]
+	internal void VirtualMachineEffects_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs args)
+	{
+		ToggleSwitch toggle = (ToggleSwitch)sender;
+		bool isOn = toggle.IsOn;
+		if (!VirtualMachineEffectsIsEnabled || isOn == VirtualMachineEffectsIsOn)
+		{
+			return;
+		}
+
+		VirtualMachineEffectsIsEnabled = false;
+		VirtualMachineEffectsInfoBar.IsClosable = false;
+		try
+		{
+			SetVirtualMachineEffectsConfiguration(isOn);
+			VirtualMachineEffectsIsOn = IsVirtualMachineEffectsConfigured();
+			if (VirtualMachineEffectsIsOn != isOn)
+			{
+				throw new InvalidOperationException("The virtual machine visual effects configuration could not be verified after the change.");
+			}
+			VirtualMachineEffectsInfoBar.WriteSuccess(isOn
+				? "Rounded corners and Mica are configured to be forced on. Restart the virtual machine to apply the change."
+				: "Default visual effects behavior has been restored. Restart the virtual machine to apply the change.");
+		}
+		catch (Exception ex)
+		{
+			VirtualMachineEffectsInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			// Re-read even after failure. Explicitly restore the control as well.
+			RefreshVirtualMachineEffectsConfiguration();
+			toggle.IsOn = VirtualMachineEffectsIsOn;
+			VirtualMachineEffectsInfoBar.IsClosable = true;
+		}
+	}
+
+	private void RefreshVirtualMachineEffectsConfiguration()
+	{
+		VirtualMachineEffectsIsEnabled = false;
+		try
+		{
+			VirtualMachineEffectsIsOn = IsVirtualMachineEffectsConfigured();
+		}
+		catch (Exception ex)
+		{
+			// Leave the toggle disabled when the state cannot be verified.
+			VirtualMachineEffectsInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			VirtualMachineEffectsIsEnabled = true;
+		}
+	}
+
+	private static bool IsVirtualMachineEffectsConfigured()
+	{
+		using RegistryKey? key = Registry.LocalMachine.OpenSubKey(VirtualMachineEffectsRegistryPath, writable: false);
+		return key?.GetValue(VirtualMachineEffectsValueName, null, RegistryValueOptions.DoNotExpandEnvironmentNames) is int value && value == 2;
+	}
+
+	private static void SetVirtualMachineEffectsConfiguration(bool enable)
+	{
+		if (enable)
+		{
+			using RegistryKey key = Registry.LocalMachine.CreateSubKey(VirtualMachineEffectsRegistryPath, writable: true);
+			key.SetValue(VirtualMachineEffectsValueName, 2, RegistryValueKind.DWord);
+		}
+		else
+		{
+			// Removing only the override restores defaults without deleting the Dwm key.
+			// Do not create a missing key just to turn an already absent override off.
+			using RegistryKey? key = Registry.LocalMachine.OpenSubKey(VirtualMachineEffectsRegistryPath, writable: true);
+			key?.DeleteValue(VirtualMachineEffectsValueName, throwOnMissingValue: false);
+		}
+	}
+
+	#endregion
+
+
+	#endregion
 }

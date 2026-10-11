@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>پیش از گزارش اعلان‌های تغییرات پوشه، داشتن مجوز فهرست‌کردن محتویات پوشه را الزامی کنید تا از افشای غیرمجاز مسیر فایل‌ها و پوشه‌ها در درایوهای NTFS و ReFS جلوگیری شود.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>دسترسی به فرمان «اجرا» را از منوی شروع و مدیر وظایف مسدود کنید و از باز شدن کادر محاوره‌ای «اجرا» با میانبر صفحه‌کلید Windows + R جلوگیری کنید. این تنظیم همچنین استفاده از مسیرهای UNC، درایوهای محلی و پوشه‌های محلی واردشده در نوار نشانی مرورگر قدیمی Internet Explorer را محدود می‌کند. این محدودیت برای کاهش نرخ موفقیت حملات مهندسی اجتماعی از نوع ClickFix مفید است.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>سیستم را طوری تنظیم کنید که هنگام بسته شدن درِ لپ‌تاپ به حالت خواب زمستانی برود (هنگام اتصال به برق).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>سیستم را طوری تنظیم کنید که هنگام فشردن دکمهٔ روشن/خاموش به حالت خواب زمستانی برود (هنگام اتصال به برق).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>سیستم را طوری تنظیم کنید که هنگام فشردن دکمهٔ خواب به حالت خواب زمستانی برود (هنگام اتصال به برق).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>سیستم را طوری تنظیم کنید که هنگام بسته شدن درِ لپ‌تاپ به حالت خواب زمستانی برود (هنگام استفاده از باتری).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>سیستم را طوری تنظیم کنید که هنگام فشردن دکمهٔ روشن/خاموش به حالت خواب زمستانی برود (هنگام استفاده از باتری).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>سیستم را طوری تنظیم کنید که هنگام فشردن دکمهٔ خواب به حالت خواب زمستانی برود (هنگام استفاده از باتری).</value>
+</data>
 </root>

@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>Vor dem Melden von Benachrichtigungen über Verzeichnisänderungen muss die Berechtigung zum Auflisten des Verzeichnisinhalts vorliegen, um die unbefugte Offenlegung von Datei- und Ordnerpfaden auf NTFS- und ReFS-Volumes zu verhindern.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>Sperren Sie den Zugriff auf den Befehl „Ausführen“ über das Startmenü und den Task-Manager, und verhindern Sie das Öffnen des Dialogfelds „Ausführen“ mit der Tastenkombination Windows + R. Diese Einstellung schränkt auch die Verwendung von UNC-Pfaden, lokalen Laufwerken und lokalen Ordnern ein, die in die Adressleiste des veralteten Internet Explorer eingegeben werden. Diese Einschränkung trägt dazu bei, die Erfolgsquote von Social-Engineering-Angriffen des Typs ClickFix zu senken.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Versetzen Sie das System beim Zuklappen des Laptops in den Ruhezustand (im Netzbetrieb).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Versetzen Sie das System beim Drücken des Netzschalters in den Ruhezustand (im Netzbetrieb).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Versetzen Sie das System beim Drücken der Energiespartaste in den Ruhezustand (im Netzbetrieb).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Versetzen Sie das System beim Zuklappen des Laptops in den Ruhezustand (im Akkubetrieb).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Versetzen Sie das System beim Drücken des Netzschalters in den Ruhezustand (im Akkubetrieb).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Versetzen Sie das System beim Drücken der Energiespartaste in den Ruhezustand (im Akkubetrieb).</value>
+</data>
 </root>

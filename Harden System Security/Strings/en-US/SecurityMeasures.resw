@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>Require directory listing permission before reporting directory change notifications, preventing unauthorized disclosure of file and folder paths on NTFS and ReFS volumes.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>Block access to the Run command from the Start menu and Task Manager, and prevent opening the Run dialog with Windows + R shortcuts. This also restricts UNC paths, local drives, and local folders entered in the legacy Internet Explorer address bar. This is a good restriction to minimize the ClickFix social engineering attacks success rates.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Set the system to Hibernate when the laptop lid is closed (plugged in).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Set the system to Hibernate when the power button is pressed (plugged in).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Set the system to Hibernate when the sleep button is pressed (plugged in).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Set the system to Hibernate when the laptop lid is closed (on battery).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Set the system to Hibernate when the power button is pressed (on battery).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Set the system to Hibernate when the sleep button is pressed (on battery).</value>
+</data>
 </root>

@@ -8039,4 +8039,34 @@ Thumbprint: {3}</value>
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 secondi</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>Componenti dipendenti</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>Analizza componenti dipendenti</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>Controlli di sistema</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>Angoli arrotondati e Mica nelle macchine virtuali</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>Forza l’uso degli angoli arrotondati e di Mica di Windows 11 in questa macchina virtuale. La disattivazione di questa opzione ripristina il comportamento predefinito. Riavvia la macchina virtuale dopo aver modificato questa impostazione.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Forza l’uso degli angoli arrotondati e di Mica di Windows 11 in questa macchina virtuale. La disattivazione di questa opzione ripristina il comportamento predefinito. Riavvia la macchina virtuale dopo aver modificato questa impostazione.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Forza l’uso degli angoli arrotondati e di Mica di Windows 11 in questa macchina virtuale. La disattivazione di questa opzione ripristina il comportamento predefinito. Riavvia la macchina virtuale dopo aver modificato questa impostazione.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>Dati dell’applicazione</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Apri le cartelle dei dati dell’applicazione utilizzate dall’app.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Apri le cartelle dei dati dell’applicazione utilizzate dall’app.</value>
+  </data>
 </root>

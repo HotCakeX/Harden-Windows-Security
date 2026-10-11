@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>निर्देशिका में हुए बदलावों की सूचनाएँ देने से पहले उसकी सामग्री सूचीबद्ध करने की अनुमति आवश्यक करें, ताकि NTFS और ReFS वॉल्यूम पर फ़ाइलों और फ़ोल्डरों के पथों का अनधिकृत प्रकटीकरण रोका जा सके.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>स्टार्ट मेनू और कार्य प्रबंधक से चलाएँ कमांड तक पहुँच अवरुद्ध करें और Windows + R कीबोर्ड शॉर्टकट से चलाएँ संवाद बॉक्स खुलने से रोकें. यह सेटिंग पुराने Internet Explorer के पता बार में दर्ज किए गए UNC पथों, स्थानीय ड्राइव और स्थानीय फ़ोल्डरों के उपयोग को भी प्रतिबंधित करती है. यह प्रतिबंध ClickFix प्रकार के सोशल इंजीनियरिंग हमलों की सफलता दर कम करने में उपयोगी है.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>लैपटॉप का ढक्कन बंद होने पर सिस्टम को हाइबरनेट मोड में जाने के लिए सेट करें (बिजली से जुड़े होने पर).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>पावर बटन दबाए जाने पर सिस्टम को हाइबरनेट मोड में जाने के लिए सेट करें (बिजली से जुड़े होने पर).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>स्लीप बटन दबाए जाने पर सिस्टम को हाइबरनेट मोड में जाने के लिए सेट करें (बिजली से जुड़े होने पर).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>लैपटॉप का ढक्कन बंद होने पर सिस्टम को हाइबरनेट मोड में जाने के लिए सेट करें (बैटरी पर चलने के दौरान).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>पावर बटन दबाए जाने पर सिस्टम को हाइबरनेट मोड में जाने के लिए सेट करें (बैटरी पर चलने के दौरान).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>स्लीप बटन दबाए जाने पर सिस्टम को हाइबरनेट मोड में जाने के लिए सेट करें (बैटरी पर चलने के दौरान).</value>
+</data>
 </root>

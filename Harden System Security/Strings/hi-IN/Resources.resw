@@ -8039,4 +8039,34 @@
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 सेकंड</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>निर्भर घटक</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>निर्भर घटकों का विश्लेषण करें</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>सिस्टम नियंत्रण</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>वर्चुअल मशीनों में गोल कोने और Mica</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>इस वर्चुअल मशीन में Windows 11 के गोल कोनों और Mica का उपयोग अनिवार्य करें. इस विकल्प को बंद करने से डिफ़ॉल्ट व्यवहार बहाल हो जाता है. इस सेटिंग को बदलने के बाद वर्चुअल मशीन को पुनः प्रारंभ करें.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>इस वर्चुअल मशीन में Windows 11 के गोल कोनों और Mica का उपयोग अनिवार्य करें. इस विकल्प को बंद करने से डिफ़ॉल्ट व्यवहार बहाल हो जाता है. इस सेटिंग को बदलने के बाद वर्चुअल मशीन को पुनः प्रारंभ करें.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>इस वर्चुअल मशीन में Windows 11 के गोल कोनों और Mica का उपयोग अनिवार्य करें. इस विकल्प को बंद करने से डिफ़ॉल्ट व्यवहार बहाल हो जाता है. इस सेटिंग को बदलने के बाद वर्चुअल मशीन को पुनः प्रारंभ करें.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>ऐप डेटा</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ऐप द्वारा उपयोग किए जाने वाले ऐप डेटा फ़ोल्डर खोलें.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ऐप द्वारा उपयोग किए जाने वाले ऐप डेटा फ़ोल्डर खोलें.</value>
+  </data>
 </root>

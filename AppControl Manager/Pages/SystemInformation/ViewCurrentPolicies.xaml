@@ -216,7 +216,7 @@
                         <Grid.ContextFlyout>
                             <MenuFlyout>
 
-                                <MenuFlyoutItem Text="Add to Library"                                                
+                                <MenuFlyoutItem Text="Add to Library"
                                                 IsEnabled="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.UIElementsEnabledState, Mode=OneWay}"
                                                 Click="{x:Bind VMs:ViewModelProvider.ViewCurrentPoliciesVM.AddPolicyToLibrary_Click}">
                                     <MenuFlyoutItem.Icon>

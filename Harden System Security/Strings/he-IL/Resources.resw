@@ -8039,4 +8039,34 @@
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 שניות</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>רכיבים תלויים</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>ניתוח רכיבים תלויים</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>בקרות מערכת</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>פינות מעוגלות ו-Mica במכונות וירטואליות</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>כפה שימוש בפינות המעוגלות וב-Mica של Windows 11 במכונה וירטואלית זו. כיבוי אפשרות זו מחזיר את התנהגות ברירת המחדל. הפעל מחדש את המכונה הווירטואלית לאחר שינוי הגדרה זו.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>כפה שימוש בפינות המעוגלות וב-Mica של Windows 11 במכונה וירטואלית זו. כיבוי אפשרות זו מחזיר את התנהגות ברירת המחדל. הפעל מחדש את המכונה הווירטואלית לאחר שינוי הגדרה זו.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>כפה שימוש בפינות המעוגלות וב-Mica של Windows 11 במכונה וירטואלית זו. כיבוי אפשרות זו מחזיר את התנהגות ברירת המחדל. הפעל מחדש את המכונה הווירטואלית לאחר שינוי הגדרה זו.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>נתוני האפליקציה</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>פתח את תיקיות הנתונים שבהן האפליקציה משתמשת.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>פתח את תיקיות הנתונים שבהן האפליקציה משתמשת.</value>
+  </data>
 </root>

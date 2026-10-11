@@ -31,6 +31,10 @@
           DragLeave="{x:Bind OnStorageDragLeave}"
           Drop="{x:Bind OnStorageDrop}">
 
+        <!-- Only reason we use this is because of a bug in System composition engine not working with Window backdrops at the moment.
+         Once that gets fixed, this should be removed. This extra element and the commented out line in code behind are the ONLY 2 things that are temporary and need to go after that bug gets fixed.-->
+        <SystemBackdropElement x:Name="BackdropHost" IsHitTestVisible="False"/>
+
         <!-- The chrome of the bar. It carries no stroke at all and its corner radius is animated together with the window region.
              Only the two corners away from the docked display edge are rounded. -->
         <Border x:Name="BarBorder"
@@ -887,6 +891,15 @@
                                 </ToggleMenuFlyoutItem.Icon>
                             </ToggleMenuFlyoutItem>
                             <MenuFlyoutSeparator/>
+                            <ToggleMenuFlyoutItem x:Name="SystemCompositionMenuItem"
+                                                  Text="Use system composition (next launch)"
+                                                  ToolTipService.ToolTip="This will only take effect on the next launch of TopBar. It will make the TopBar use less RAM."
+                                                  Loaded="{x:Bind OnSystemCompositionLoaded}"
+                                                  Click="{x:Bind OnSystemCompositionToggleClick}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xF120;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
                             <MenuFlyoutSubItem x:Name="BackdropMenuItem" Text="Background">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xE790;"/>

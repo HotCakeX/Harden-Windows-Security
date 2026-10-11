@@ -8039,4 +8039,34 @@
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 วินาที</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>คอมโพเนนต์ที่ขึ้นต่อกัน</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>วิเคราะห์คอมโพเนนต์ที่ขึ้นต่อกัน</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>การควบคุมระบบ</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>มุมโค้งมนและ Mica ในเครื่องเสมือน</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>บังคับใช้มุมโค้งมนและ Mica ของ Windows 11 ในเครื่องเสมือนนี้. การปิดตัวเลือกนี้จะคืนค่าลักษณะการทำงานเริ่มต้น. รีสตาร์ทเครื่องเสมือนหลังจากเปลี่ยนการตั้งค่านี้.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>บังคับใช้มุมโค้งมนและ Mica ของ Windows 11 ในเครื่องเสมือนนี้. การปิดตัวเลือกนี้จะคืนค่าลักษณะการทำงานเริ่มต้น. รีสตาร์ทเครื่องเสมือนหลังจากเปลี่ยนการตั้งค่านี้.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>บังคับใช้มุมโค้งมนและ Mica ของ Windows 11 ในเครื่องเสมือนนี้. การปิดตัวเลือกนี้จะคืนค่าลักษณะการทำงานเริ่มต้น. รีสตาร์ทเครื่องเสมือนหลังจากเปลี่ยนการตั้งค่านี้.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>ข้อมูลแอป</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>เปิดโฟลเดอร์ข้อมูลแอปที่แอปใช้งาน.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>เปิดโฟลเดอร์ข้อมูลแอปที่แอปใช้งาน.</value>
+  </data>
 </root>

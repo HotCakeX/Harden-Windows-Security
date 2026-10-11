@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>Richiedere l’autorizzazione a elencare il contenuto della directory prima di segnalare le notifiche delle modifiche alla directory, per impedire la divulgazione non autorizzata dei percorsi di file e cartelle nei volumi NTFS e ReFS.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>Blocca l’accesso al comando Esegui dal menu Start e da Gestione attività e impedisci l’apertura della finestra di dialogo Esegui tramite la scelta rapida da tastiera Windows + R. Questa impostazione limita anche l’utilizzo di percorsi UNC, unità locali e cartelle locali inseriti nella barra degli indirizzi del vecchio Internet Explorer. Questa restrizione è utile per ridurre il tasso di successo degli attacchi di ingegneria sociale di tipo ClickFix.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Imposta il sistema affinché entri in ibernazione alla chiusura del coperchio del portatile (con alimentazione da rete elettrica).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Imposta il sistema affinché entri in ibernazione alla pressione del pulsante di alimentazione (con alimentazione da rete elettrica).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>Imposta il sistema affinché entri in ibernazione alla pressione del pulsante di sospensione (con alimentazione da rete elettrica).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Imposta il sistema affinché entri in ibernazione alla chiusura del coperchio del portatile (con alimentazione a batteria).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Imposta il sistema affinché entri in ibernazione alla pressione del pulsante di alimentazione (con alimentazione a batteria).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>Imposta il sistema affinché entri in ibernazione alla pressione del pulsante di sospensione (con alimentazione a batteria).</value>
+</data>
 </root>

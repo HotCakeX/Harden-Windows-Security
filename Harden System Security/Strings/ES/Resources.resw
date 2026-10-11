@@ -8039,4 +8039,34 @@ Huella Digital: {3}</value>
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 segundos</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>Componentes dependientes</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>Analizar componentes dependientes</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>Controles del sistema</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>Esquinas redondeadas y Mica en máquinas virtuales</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>Fuerza el uso de las esquinas redondeadas y Mica de Windows 11 en esta máquina virtual. Al desactivar esta opción, se restablece el comportamiento predeterminado. Reinicia la máquina virtual después de cambiar esta configuración.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Fuerza el uso de las esquinas redondeadas y Mica de Windows 11 en esta máquina virtual. Al desactivar esta opción, se restablece el comportamiento predeterminado. Reinicia la máquina virtual después de cambiar esta configuración.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Fuerza el uso de las esquinas redondeadas y Mica de Windows 11 en esta máquina virtual. Al desactivar esta opción, se restablece el comportamiento predeterminado. Reinicia la máquina virtual después de cambiar esta configuración.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>Datos de la aplicación</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Abre las carpetas de datos de la aplicación que utiliza esta aplicación.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Abre las carpetas de datos de la aplicación que utiliza esta aplicación.</value>
+  </data>
 </root>

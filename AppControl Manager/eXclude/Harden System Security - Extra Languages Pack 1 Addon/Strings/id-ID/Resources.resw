@@ -8039,4 +8039,34 @@ Thumbprint: {3}</value>
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 Detik</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>Komponen yang bergantung</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>Analisis komponen yang bergantung</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>Kontrol sistem</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>Sudut membulat dan Mica di mesin virtual</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>Paksa penggunaan sudut membulat dan Mica dari Windows 11 di mesin virtual ini. Menonaktifkan opsi ini akan memulihkan perilaku default. Mulai ulang mesin virtual setelah mengubah pengaturan ini.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Paksa penggunaan sudut membulat dan Mica dari Windows 11 di mesin virtual ini. Menonaktifkan opsi ini akan memulihkan perilaku default. Mulai ulang mesin virtual setelah mengubah pengaturan ini.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Paksa penggunaan sudut membulat dan Mica dari Windows 11 di mesin virtual ini. Menonaktifkan opsi ini akan memulihkan perilaku default. Mulai ulang mesin virtual setelah mengubah pengaturan ini.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>Data aplikasi</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Buka folder data aplikasi yang digunakan oleh aplikasi.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Buka folder data aplikasi yang digunakan oleh aplikasi.</value>
+  </data>
 </root>

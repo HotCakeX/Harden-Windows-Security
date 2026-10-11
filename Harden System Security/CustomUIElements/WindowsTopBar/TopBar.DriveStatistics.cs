@@ -74,13 +74,7 @@ internal sealed partial class TopBar
 		Flyout flyout = new()
 		{
 			ShouldConstrainToRootBounds = false,
-			Content = new ScrollViewer
-			{
-				MaxHeight = Math.Max(120.0, Math.Min(720.0, _displayHeight / _rasterizationScale - 64.0)),
-				VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-				HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled,
-				Content = content
-			}
+			Content = content
 		};
 		_statisticsFlyout = flyout;
 		TrackFlyout(flyout);

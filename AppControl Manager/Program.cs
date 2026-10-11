@@ -120,28 +120,30 @@ internal static class Program
 					Environment.Exit(1);
 				}
 			}
+
+			// Only request the System composition engine for a TopBar-only launch when its saved preference is enabled.
+			if (string.Equals(args[0], CustomUIElements.WindowsTopBar.TopBarStartupManager.WindowsTopBarLaunchArgument, StringComparison.OrdinalIgnoreCase) &&
+				CustomUIElements.WindowsTopBar.TopBarConfigurationManager.Load().UseSystemComposition)
+			{
+				// Currently has an issue with system backdrops: https://github.com/microsoft/microsoft-ui-xaml/issues/11515
+				Windows.ApplicationModel.LimitedAccessFeatureRequestResult access = Windows.ApplicationModel.LimitedAccessFeatures.TryUnlockFeature(
+					"com.microsoft.windows.composition.engine",
+					"bxIuumw7+zs6kfPLWDkftg==",
+					"ea7andspwdn10 has registered their use of com.microsoft.windows.composition.engine with Microsoft and agrees to the terms of use.");
+				if ((access.Status == Windows.ApplicationModel.LimitedAccessFeatureStatus.Available) ||
+					(access.Status == Windows.ApplicationModel.LimitedAccessFeatureStatus.AvailableWithoutToken))
+				{
+					// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.composition.compositionengine
+					bool result = Microsoft.UI.Composition.CompositionEngine.TrySetProcessEngine(Microsoft.UI.Composition.CompositionEngineType.System);
+
+					Logger.Write($"System composition engine result: {result}, status: {access.Status}");
+				}
+			}
 		}
 #endif
 
 		// Assign the launch arguments to the static property so that they can be accessed from the OnLaunched method.
 		_launchArguments = args;
-
-		/*
-		 Currently has an issue with system backdrops: https://github.com/microsoft/microsoft-ui-xaml/issues/11515 
-		 
-		Windows.ApplicationModel.LimitedAccessFeatureRequestResult access = Windows.ApplicationModel.LimitedAccessFeatures.TryUnlockFeature(
-			"com.microsoft.windows.composition.engine",
-			"bxIuumw7+zs6kfPLWDkftg==",
-			"ea7andspwdn10 has registered their use of com.microsoft.windows.composition.engine with Microsoft and agrees to the terms of use.");
-		if ((access.Status == Windows.ApplicationModel.LimitedAccessFeatureStatus.Available) ||
-			(access.Status == Windows.ApplicationModel.LimitedAccessFeatureStatus.AvailableWithoutToken))
-		{
-			// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.composition.compositionengine
-			bool result = Microsoft.UI.Composition.CompositionEngine.TrySetProcessEngine(Microsoft.UI.Composition.CompositionEngineType.System);
-
-			Logger.Write($"System composition engine result: {result}, status: {access.Status}");
-		}
-		*/
 
 		// Nothing can run after this, so this should always be at the end.
 		XamlGeneratedProgram.XamlGeneratedMain();

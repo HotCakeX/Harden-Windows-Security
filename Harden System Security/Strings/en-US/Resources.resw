@@ -8039,11 +8039,34 @@ Thumbprint: {3}</value>
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 Seconds</value>
   </data>
-  <!--NEW-->
   <data name="PFNDependentsLabel.Text" xml:space="preserve">
     <value>Dependents</value>
   </data>
   <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
     <value>Analyze Dependents</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>System Controls</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>Rounded Corners and Mica in Virtual Machines</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>Force Windows 11 rounded corners and Mica in this virtual machine. Turning this off restores default behavior. Restart the virtual machine after changing this setting.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Force Windows 11 rounded corners and Mica in this virtual machine. Turning this off restores default behavior. Restart the virtual machine after changing this setting.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Force Windows 11 rounded corners and Mica in this virtual machine. Turning this off restores default behavior. Restart the virtual machine after changing this setting.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>Application Data</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open the application data folders used by the app.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Open the application data folders used by the app.</value>
   </data>
 </root>

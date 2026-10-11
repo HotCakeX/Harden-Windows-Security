@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>יש לדרוש הרשאה להצגת תוכן הספרייה לפני דיווח על התראות בדבר שינויים בספרייה, כדי למנוע חשיפה בלתי מורשית של נתיבי קבצים ותיקיות באמצעי אחסון מסוג NTFS ו-ReFS.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>חסום את הגישה לפקודת ההפעלה מתפריט ההתחלה וממנהל המשימות, ומנע את פתיחת תיבת הדו־שיח להפעלה באמצעות קיצור המקשים Windows + R. הגבלה זו חלה גם על נתיבי UNC, כוננים מקומיים ותיקיות מקומיות המוזנים בשורת הכתובת של Internet Explorer הישן. זוהי הגבלה מועילה לצמצום שיעורי ההצלחה של מתקפות הנדסה חברתית מסוג ClickFix.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>הגדר את המערכת לעבור למצב תרדמה בעת סגירת מכסה המחשב הנייד (בחיבור לחשמל).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>הגדר את המערכת לעבור למצב תרדמה בעת לחיצה על לחצן ההפעלה (בחיבור לחשמל).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>הגדר את המערכת לעבור למצב תרדמה בעת לחיצה על לחצן השינה (בחיבור לחשמל).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>הגדר את המערכת לעבור למצב תרדמה בעת סגירת מכסה המחשב הנייד (בהפעלה באמצעות סוללה).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>הגדר את המערכת לעבור למצב תרדמה בעת לחיצה על לחצן ההפעלה (בהפעלה באמצעות סוללה).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>הגדר את המערכת לעבור למצב תרדמה בעת לחיצה על לחצן השינה (בהפעלה באמצעות סוללה).</value>
+</data>
 </root>

@@ -1009,4 +1009,25 @@
 <data name="EnforceDirectoryChangeNotificationPermissionCheck-Miscellaneous" xml:space="preserve">
     <value>กำหนดให้ต้องมีสิทธิ์แสดงรายการเนื้อหาไดเรกทอรีก่อนรายงานการแจ้งเตือนการเปลี่ยนแปลงไดเรกทอรี เพื่อป้องกันการเปิดเผยเส้นทางไฟล์และโฟลเดอร์โดยไม่ได้รับอนุญาตบนโวลุ่ม NTFS และ ReFS.</value>
 </data>
+<data name="NoRun-Miscellaneous" xml:space="preserve">
+    <value>บล็อกการเข้าถึงคำสั่งเรียกใช้จากเมนูเริ่มและตัวจัดการงาน และป้องกันการเปิดกล่องโต้ตอบเรียกใช้ด้วยแป้นพิมพ์ลัด Windows + R. การตั้งค่านี้ยังจำกัดการใช้งานเส้นทาง UNC ไดรฟ์ภายในเครื่อง และโฟลเดอร์ภายในเครื่องที่ป้อนในแถบที่อยู่ของ Internet Explorer รุ่นเก่าอีกด้วย. ข้อจำกัดนี้ช่วยลดอัตราความสำเร็จของการโจมตีแบบวิศวกรรมสังคมประเภท ClickFix.</value>
+</data>
+<data name="SelectLidCloseActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>ตั้งค่าให้ระบบเข้าสู่โหมดไฮเบอร์เนตเมื่อปิดฝาแล็ปท็อป (ขณะเสียบปลั๊ก).</value>
+</data>
+<data name="SelectPowerButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>ตั้งค่าให้ระบบเข้าสู่โหมดไฮเบอร์เนตเมื่อกดปุ่มเปิด/ปิดเครื่อง (ขณะเสียบปลั๊ก).</value>
+</data>
+<data name="SelectSleepButtonActionPluggedIn-BitLocker" xml:space="preserve">
+    <value>ตั้งค่าให้ระบบเข้าสู่โหมดไฮเบอร์เนตเมื่อกดปุ่มสลีป (ขณะเสียบปลั๊ก).</value>
+</data>
+<data name="SelectLidCloseActionOnBattery-BitLocker" xml:space="preserve">
+    <value>ตั้งค่าให้ระบบเข้าสู่โหมดไฮเบอร์เนตเมื่อปิดฝาแล็ปท็อป (ขณะใช้แบตเตอรี่).</value>
+</data>
+<data name="SelectPowerButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>ตั้งค่าให้ระบบเข้าสู่โหมดไฮเบอร์เนตเมื่อกดปุ่มเปิด/ปิดเครื่อง (ขณะใช้แบตเตอรี่).</value>
+</data>
+<data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
+    <value>ตั้งค่าให้ระบบเข้าสู่โหมดไฮเบอร์เนตเมื่อกดปุ่มสลีป (ขณะใช้แบตเตอรี่).</value>
+</data>
 </root>

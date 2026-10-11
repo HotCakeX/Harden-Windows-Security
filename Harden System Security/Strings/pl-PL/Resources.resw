@@ -8039,4 +8039,34 @@ Odcisk Palca: {3}</value>
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 sekund</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>Składniki zależne</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>Analizuj składniki zależne</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>Ustawienia systemowe</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>Zaokrąglone narożniki i Mica w maszynach wirtualnych</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>Wymuś zaokrąglone narożniki i Mica z systemu Windows 11 w tej maszynie wirtualnej. Wyłączenie tej opcji przywraca domyślne działanie. Po zmianie tego ustawienia uruchom ponownie maszynę wirtualną.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wymuś zaokrąglone narożniki i Mica z systemu Windows 11 w tej maszynie wirtualnej. Wyłączenie tej opcji przywraca domyślne działanie. Po zmianie tego ustawienia uruchom ponownie maszynę wirtualną.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wymuś zaokrąglone narożniki i Mica z systemu Windows 11 w tej maszynie wirtualnej. Wyłączenie tej opcji przywraca domyślne działanie. Po zmianie tego ustawienia uruchom ponownie maszynę wirtualną.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>Dane aplikacji</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Otwórz foldery danych aplikacji używane przez tę aplikację.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Otwórz foldery danych aplikacji używane przez tę aplikację.</value>
+  </data>
 </root>

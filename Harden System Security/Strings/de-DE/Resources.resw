@@ -8039,4 +8039,34 @@ Fingerabdruck: {3}</value>
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 Sekunden</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>Abhängige Komponenten</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>Abhängige Komponenten analysieren</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>Systemsteuerung</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>Abgerundete Ecken und Mica in virtuellen Maschinen</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>Erzwingen Sie die abgerundeten Ecken und Mica von Windows 11 in dieser virtuellen Maschine. Wenn Sie diese Option deaktivieren, wird das Standardverhalten wiederhergestellt. Starten Sie die virtuelle Maschine nach dem Ändern dieser Einstellung neu.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Erzwingen Sie die abgerundeten Ecken und Mica von Windows 11 in dieser virtuellen Maschine. Wenn Sie diese Option deaktivieren, wird das Standardverhalten wiederhergestellt. Starten Sie die virtuelle Maschine nach dem Ändern dieser Einstellung neu.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Erzwingen Sie die abgerundeten Ecken und Mica von Windows 11 in dieser virtuellen Maschine. Wenn Sie diese Option deaktivieren, wird das Standardverhalten wiederhergestellt. Starten Sie die virtuelle Maschine nach dem Ändern dieser Einstellung neu.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>Anwendungsdaten</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Öffnen Sie die von der App verwendeten Anwendungsdatenordner.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Öffnen Sie die von der App verwendeten Anwendungsdatenordner.</value>
+  </data>
 </root>

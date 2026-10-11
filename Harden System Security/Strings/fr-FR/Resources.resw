@@ -8039,4 +8039,34 @@ Empreinte : {3}</value>
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 seconde</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>Composants dépendants</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>Analyser les composants dépendants</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>Contrôles du système</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>Coins arrondis et Mica dans les machines virtuelles</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>Forcez l’utilisation des coins arrondis et de Mica de Windows 11 dans cette machine virtuelle. La désactivation de cette option rétablit le comportement par défaut. Redémarrez la machine virtuelle après avoir modifié ce paramètre.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Forcez l’utilisation des coins arrondis et de Mica de Windows 11 dans cette machine virtuelle. La désactivation de cette option rétablit le comportement par défaut. Redémarrez la machine virtuelle après avoir modifié ce paramètre.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Forcez l’utilisation des coins arrondis et de Mica de Windows 11 dans cette machine virtuelle. La désactivation de cette option rétablit le comportement par défaut. Redémarrez la machine virtuelle après avoir modifié ce paramètre.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>Données de l’application</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Ouvrez les dossiers de données de l’application utilisés par celle-ci.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Ouvrez les dossiers de données de l’application utilisés par celle-ci.</value>
+  </data>
 </root>

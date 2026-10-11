@@ -8039,4 +8039,34 @@
   <data name="ZeroSecondsChartLabel.Text" xml:space="preserve">
     <value>0 秒</value>
   </data>
+    <data name="PFNDependentsLabel.Text" xml:space="preserve">
+    <value>依赖此项的组件</value>
+  </data>
+  <data name="AnalyzeDependentsButton.Content" xml:space="preserve">
+    <value>分析依赖此项的组件</value>
+  </data>
+  <data name="TweaksSystemControlsSelectorBarItem.Text" xml:space="preserve">
+    <value>系统控制</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Header" xml:space="preserve">
+    <value>虚拟机中的圆角和 Mica</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.Description" xml:space="preserve">
+    <value>在此虚拟机中强制启用 Windows 11 的圆角和 Mica. 关闭此选项将恢复默认行为. 更改此设置后，请重启虚拟机.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.ToolTipService.ToolTip" xml:space="preserve">
+    <value>在此虚拟机中强制启用 Windows 11 的圆角和 Mica. 关闭此选项将恢复默认行为. 更改此设置后，请重启虚拟机.</value>
+  </data>
+  <data name="VirtualMachineEffectsSettingsCard.AutomationProperties.HelpText" xml:space="preserve">
+    <value>在此虚拟机中强制启用 Windows 11 的圆角和 Mica. 关闭此选项将恢复默认行为. 更改此设置后，请重启虚拟机.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.Content" xml:space="preserve">
+    <value>应用数据</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>打开此应用使用的应用数据文件夹.</value>
+  </data>
+  <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>打开此应用使用的应用数据文件夹.</value>
+  </data>
 </root>

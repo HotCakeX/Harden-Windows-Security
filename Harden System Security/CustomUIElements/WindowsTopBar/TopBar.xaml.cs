@@ -984,7 +984,12 @@ internal sealed partial class TopBar : Window, IDisposable
 		else if (_backdrop != TopBarBackdrop.Solid)
 		{
 			_barBackdrop = new TopBarActiveBackdrop(_backdrop);
-			SystemBackdrop = _barBackdrop;
+
+			// Commented out because using SystemBackdropElement to work around the bug for System composition engine not working with Window backdrops.
+			// SystemBackdrop = _barBackdrop;
+
+			// Remove this and use the line above once the system composition engine bug gets fixed.
+			BackdropHost.SystemBackdrop = _barBackdrop;
 		}
 
 		SolidBackdropMenuItem.IsChecked = _backdrop == TopBarBackdrop.Solid;
@@ -3312,7 +3317,8 @@ internal sealed partial class TopBar : Window, IDisposable
 	private void OnRendering(object? sender, object e)
 	{
 		double now = _animationClock.Elapsed.TotalSeconds;
-		bool wasHeightTransitionAnimating = _isHeightTransitionAnimating;
+		// Preserve size activity before completion clears either animation flag.
+		bool wasSizeTransitionAnimating = _isWidthTransitionAnimating || _isHeightTransitionAnimating;
 
 		// Ease height changes on the same render loop as width and expansion.
 		if (_isHeightTransitionAnimating)
@@ -3373,7 +3379,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 		else
 		{
-			if (_isWidthTransitionAnimating || wasHeightTransitionAnimating)
+			if (wasSizeTransitionAnimating)
 			{
 				ApplyState(_progress);
 			}
@@ -3525,6 +3531,20 @@ internal sealed partial class TopBar : Window, IDisposable
 		Atlas.Settings.WindowsTopBarAlwaysOnTop ? NativeMethods.HWND_TOPMOST : NativeMethods.HWND_NOTOPMOST,
 		0, 0, 0, 0,
 		SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+
+	/// <summary>
+	/// Initializes the toggle from the saved preference when the System Composition Usage settings item is loaded.
+	/// </summary>
+	private void OnSystemCompositionLoaded() => SystemCompositionMenuItem.IsChecked = _configuration.UseSystemComposition;
+
+	/// <summary>
+	/// Saves the composition-engine preference for the TopBar-only process launch.
+	/// </summary>
+	private void OnSystemCompositionToggleClick()
+	{
+		_configuration.UseSystemComposition = SystemCompositionMenuItem.IsChecked;
+		TopBarConfigurationManager.Save(_configuration);
+	}
 
 	private void OnAlwaysOnTopMenuItemClick()
 	{
@@ -3749,7 +3769,8 @@ internal sealed partial class TopBar : Window, IDisposable
 			expandedWidthDips = Math.Min(expandedWidthDips, displayWidthDips);
 		}
 
-		if (Math.Abs(expandedWidthDips - _expandedWidthDips) < ProgressEpsilon)
+		// Compare against the pending destination so a rapid layout reversal replaces a stale target.
+		if (Math.Abs(expandedWidthDips - (_isWidthTransitionAnimating ? _widthTransitionTargetDips : _expandedWidthDips)) < ProgressEpsilon)
 		{
 			return;
 		}

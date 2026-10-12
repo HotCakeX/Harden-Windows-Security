@@ -150,3 +150,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the Execution Policy of the Windows PowerShell to **Restricted**.
 
 <br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Block access to the Run command from the Start menu and Task Manager, and prevent opening the Run dialog with Windows + R shortcuts. This also restricts UNC paths, local drives, and local folders entered in the legacy Internet Explorer address bar. This is a good restriction to minimize the [ClickFix social engineering](https://www.microsoft.com/security/blog/2025/08/21/think-before-you-clickfix-analyzing-the-clickfix-social-engineering-technique) attacks success rates. [CSP](https://learn.microsoft.com/windows/client-management/mdm/policy-csp-admx-startmenu#norun)
+
+<br>

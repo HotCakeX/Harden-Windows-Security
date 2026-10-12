@@ -65,6 +65,30 @@
 
 <br>
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Set the system to Hibernate when the laptop lid is closed (plugged in). The default is **Sleep** mode which is insecure because it leaves sensitive data in RAM unencrypted, instead of saving them to the encrypted BitLocker OS drive. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectlidcloseactionpluggedin)
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Set the system to Hibernate when the power button is pressed (plugged in). The default is **Sleep** mode which is insecure because it leaves sensitive data in RAM unencrypted, instead of saving them to the encrypted BitLocker OS drive. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectpowerbuttonactionpluggedin)
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Set the system to Hibernate when the sleep button is pressed (plugged in). The default is **Sleep** mode which is insecure because it leaves sensitive data in RAM unencrypted, instead of saving them to the encrypted BitLocker OS drive. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectsleepbuttonactionpluggedin)
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Set the system to Hibernate when the laptop lid is closed (on battery). The default is **Sleep** mode which is insecure because it leaves sensitive data in RAM unencrypted, instead of saving them to the encrypted BitLocker OS drive. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectlidcloseactiononbattery)
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Set the system to Hibernate when the power button is pressed (on battery). The default is **Sleep** mode which is insecure because it leaves sensitive data in RAM unencrypted, instead of saving them to the encrypted BitLocker OS drive. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectpowerbuttonactiononbattery)
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Set the system to Hibernate when the sleep button is pressed (on battery). The default is **Sleep** mode which is insecure because it leaves sensitive data in RAM unencrypted, instead of saving them to the encrypted BitLocker OS drive. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#selectsleepbuttonactiononbattery)
+
+<br>
+
 Refer to this [official documentation about the countermeasures of BitLocker](https://learn.microsoft.com/windows/security/information-protection/bitlocker/bitlocker-countermeasures)
 
 <br>

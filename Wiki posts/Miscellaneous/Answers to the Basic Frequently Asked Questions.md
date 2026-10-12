@@ -155,6 +155,19 @@ Once the recovery steps are complete, use `lusrmgr.msc` to disable the built-in 
 
 <br>
 
+## Can Any of These Apps Cause BSOD On My System?
+
+**No.** All apps in this repository are only User-Mode. There is no kernel-mode code/driver involved in this repository.
+
+BSOD (Black Screen of Death) typically happens by faulty kernel-mode drivers installed by 3rd party programs. User-mode isolation protects kernel memory, and even though User-Mode applications can still request services from kernel components and drivers, a faulty kernel-mode driver installed and running on your system would ultimately be the only culprit to crash the entire system.
+
+Windows has an open ecosystem where third-party developers can create and distribute kernel-mode drivers. Kernel-mode code however needs much more care than User mode code, and naturally, not everyone is capable of writing good and correct kernel-mode code, so try to install as little 3rd party programs with kernel-mode drivers as possible in order to minimize the BSOD risk and increase the stability of your own system.
+
+> [!TIP]\
+> [Use AppControl Manager to control which drivers are allowed to run on your system.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
+
+<br>
+
 ## Have More Questions?
 
 Ask away by opening [a new Discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions)

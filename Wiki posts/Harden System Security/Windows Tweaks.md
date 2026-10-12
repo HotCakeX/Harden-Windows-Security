@@ -1,9 +1,11 @@
 ## Windows Tweaks
 
-The **Windows Tweaks** page brings together privacy cleanup tools and system diagnostics in one place. Use the **Cleanup** section to review and remove selected traces of previous activity, or open **Diagnostics** to troubleshoot networking, manage storage-health updates, and inspect or control the Windows Recovery Environment.
+Make Windows work more like you want it to. **Windows Tweaks** brings practical adjustments and focused utilities together in one place, giving you greater control over your system without sending you through scattered settings and manual workarounds.
+
+Whether you're tidying your workspace, investigating an issue, or changing how your system behaves, the page keeps the purpose of each action clear and its results visible. Explore the available tools, review what they do, and make the changes that suit your setup.
 
 > [!NOTE]
-> The Diagnostics section requires the app to be running with administrator privileges.
+> Some features require the app to run with administrator privileges.
 
 > [!TIP]
 > Many other new features and tweaks are on the way, so keep an eye on this page and future release notes for updates.
@@ -103,3 +105,15 @@ When you open Diagnostics, the page retrieves the current Windows RE configurati
 
 > [!WARNING]
 > Windows Recovery Environment provides recovery and repair capabilities that can be important when Windows cannot start normally. Disable it only when you understand the effect on your recovery options.
+
+## System Controls
+
+The System Controls section brings together settings that change how Windows behaves or presents itself. Each control includes a description and an associated status area for configuration changes.
+
+Whenever you open this section, the page reads the current configuration again and synchronizes its toggles with the actual system settings. This keeps the displayed state up to date even if a setting was changed outside the app.
+
+### Rounded Corners, Acrylic and Mica materials in Virtual Machines
+
+Configure Windows 11 to force enable rounded window corners, Acrylic and Mica materials in the current virtual machine that has no GPU. Run the app **inside the virtual machine** whose appearance you want to change. The virtual machine need to be restarted in order for the changes to take effect. This is confirmed to work in Hyper-V VMs, Azure VMs and may potentially work in other hypervisors too.
+
+<br>

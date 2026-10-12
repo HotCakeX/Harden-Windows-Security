@@ -28,6 +28,8 @@ Use this section in [AppControl Manager](https://github.com/HotCakeX/Harden-Wind
 
 * Easily open the selected deployed policy in [Policy Editor](https://github.com/HotCakeX/Harden-Windows-Security/wiki/PolicyEditor) where you can view all of its details, modify it and save it to a file. This is very useful to know what rules are included in the deployed policies on your system. It also supports protected System policies that come by default with the OS.
 
+* Add the deployed policies directly to your [Policies Library](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Sidebar#policies-library).
+
 <br>
 
 > [!TIP]\

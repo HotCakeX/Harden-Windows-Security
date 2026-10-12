@@ -47,6 +47,10 @@ Each app entry exposes a quick-actions menu with the following operations:
 * **Open Location** - opens the package installation directory in File Explorer
 * **Copy App Details** - copies the app's collected metadata to the clipboard
 
+### Analyze dependents
+
+This installed-apps action builds an inverted package dependency graph and displays which packages depend on each app. This is similar to how Windows Services display dependencies and dependents of each service. This helps you make an informed decision when deciding to uninstall a framework package or an app.
+
 ### Export to JSON
 
 The page can export the loaded app inventory to a `.json` file.

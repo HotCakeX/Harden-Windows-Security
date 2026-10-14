@@ -12,7 +12,6 @@
 		<DebugSymbols>false</DebugSymbols>
 		<DebugType>none</DebugType>
         <OptimizationPreference>Speed</OptimizationPreference>
-		<!--Trim And Native AOT-->
 		<PublishAot>True</PublishAot>
 		<PublishTrimmed>True</PublishTrimmed>
 		<TrimMode>full</TrimMode>

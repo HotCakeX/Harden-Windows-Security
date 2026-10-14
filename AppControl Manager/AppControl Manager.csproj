@@ -16,17 +16,6 @@
         <!-- https://learn.microsoft.com/microsoft-edge/webview2/how-to/static -->
         <WebView2LoaderPreference>Static</WebView2LoaderPreference>
 
-        <!-- CsWinRT has certain requirements for it: https://github.com/microsoft/CsWinRT
-        Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
-
-        https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
-
-        Note about CsWinRT: It is bundled by default with WinAppSDK but it's usually older version there, it's used to generate the WinUI C# projections.
-        By installing it ourselves as a NuGet package, we guarantee we use the latest and most up to date version, especially the preview versions.
-        If we don't install it as NuGet package ourselves, WinAppSDK's CsWinRT will be used during compilation.
-        -->
-        <WindowsSdkPackageVersion>10.0.28000.87</WindowsSdkPackageVersion>
-
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
         so that the App will be installable on any system that neither has the .NET runtime nor the latest AppSDK
@@ -232,9 +221,9 @@
         <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.91.0" />
         <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.91.0" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.1.26425.128" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.2.26504.105" />
         <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.9" />
-        <PackageReference Include="System.Diagnostics.EventLog" Version="11.0.0-rc.1.26425.128" />
+        <PackageReference Include="System.Diagnostics.EventLog" Version="11.0.0-rc.2.26504.105" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.23.0" />
@@ -244,11 +233,11 @@
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.3.12" />
         <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.9" />
-        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.261008100">
+        <PackageReference Include="Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.261012100-preview">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="11.0.0-rc.1.26425.128" />
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="11.0.0-rc.2.26504.105" />
 
     </ItemGroup>
 

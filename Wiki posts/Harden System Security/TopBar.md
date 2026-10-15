@@ -2,6 +2,16 @@
 
 <div align="center">
 
+<a href="https://youtu.be/jMl0Uzt4_1k?si=Q8pjbfawJYZvDSt2">
+<img width="800" src="https://github.com/HotCakeX/.github/blob/main/Pictures/PNG%20and%20JPG/TopBar%20Video%20Thumbnail%20HSS%20with%20YT%20Logo.png?raw=true" alt="TopBar video thumbnail"/>
+</a>
+
+</div>
+
+<br>
+
+<div align="center">
+
 <img alt="TopBarDemoHSS" src="https://github.com/user-attachments/assets/df25bf1f-6cce-4f33-9961-feeec5e72ab1" />
 
 </div>

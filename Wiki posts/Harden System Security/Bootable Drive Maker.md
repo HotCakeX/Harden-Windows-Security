@@ -34,7 +34,7 @@ The tool offers two distinct modes for preparing your USB drive. You can switch 
 
 Use this mode if you have already partitioned your USB drive or want to select specific existing partitions manually.
 * **BOOT Partition:** Select the partition designated for boot files. This must be a FAT32 partition (Minimum 2GB, Maximum 32GB).
-* **DATA Partition:** Select the partition where the heavy Windows installation files (like `install.wim`) will reside. This should be formatted as NTFS (Minimum 8GB).
+* **DATA Partition:** Select the partition where the heavy Windows installation files (like `install.wim`) will reside. This should be formatted as NTFS (Minimum 10GB).
 * *Note:* Use the **Refresh Drives** button to ensure your newly plugged-in or formatted partitions appear in the drop-down menus.
 
 ### Automatic Partitioning

@@ -157,7 +157,7 @@
 
                                 <!-- Data Drive -->
                                 <StackPanel Grid.Column="1" Grid.Row="1" Spacing="8">
-                                    <TextBlock Text="DATA Partition (Min 8GB)" FontWeight="SemiBold"/>
+                                    <TextBlock Text="DATA Partition (Min 10GB)" FontWeight="SemiBold"/>
                                     <ComboBox ItemsSource="{x:Bind ViewModel.AvailableDrives, Mode=OneWay}"
                                               SelectedItem="{x:Bind ViewModel.SelectedDataDrive, Mode=TwoWay}"
                                               IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"

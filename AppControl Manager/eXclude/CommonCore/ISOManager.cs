@@ -267,7 +267,7 @@ internal static partial class ISOManager
 				throw new InvalidOperationException($"Expected at least {expectedPartitions} partitions on Disk {diskNumber} after partitioning, but found {partitions.Count}.");
 			}
 
-			// Sort by Offset ascending - first is BOOT (~2GB), next is DATA (~8GB), last is Remaining Space (if exists)
+			// Sort by Offset ascending - first is BOOT (~2GB), next is DATA (~10GB), last is Remaining Space (if exists)
 			partitions.Sort(static (a, b) => a.Offset.CompareTo(b.Offset));
 
 			PartitionDriveLetterInfo bootPartition = partitions[0];
@@ -734,11 +734,11 @@ internal static partial class ISOManager
 
 			diskPath = GetDiskWmiPath(services, diskNumber);
 
-			// 4. Create DATA Partition (Size = 8192 MB = 8589934592 Bytes, AssignDriveLetter = true)
+			// 4. Create DATA Partition (Size = 10240 MB = 10737418240 Bytes, AssignDriveLetter = true)
 			// Remaining space on the disk will intentionally be left unallocated
 			Dictionary<string, VARIANT> dataParams = new()
 			{
-				{ "Size", new VARIANT { vt = 8, bstrVal = Marshal.StringToBSTR("8589934592") } },
+				{ "Size", new VARIANT { vt = 8, bstrVal = Marshal.StringToBSTR("10737418240") } },
 				{ "AssignDriveLetter", new VARIANT { vt = 11, boolVal = -1 } }
 			};
 
@@ -1720,7 +1720,7 @@ internal static partial class ISOManager
 		// BOOT partition is FAT32-capable and appropriately sized
 		const long minBootSizeBytes = 1900L * 1024 * 1024; // 1900 MB allowed minimum for overhead
 		const long maxFat32SizeBytes = 32L * 1024 * 1024 * 1024; // 32 GB maximum
-		const long minDataSizeBytes = 7900L * 1024 * 1024; // 7900 MB allowed minimum for overhead
+		const long minDataSizeBytes = 9948L * 1024 * 1024; // 9948 MB allowed minimum, preserving the 292 MB overhead allowance for a 10 GB partition
 
 		if (bootDrive.TotalSize < minBootSizeBytes)
 		{
@@ -1734,7 +1734,7 @@ internal static partial class ISOManager
 
 		if (dataDrive.TotalSize < minDataSizeBytes)
 		{
-			throw new InvalidOperationException($"DATA partition is smaller than the required 8 GB minimum. Current size: {dataDrive.TotalSize / (1024 * 1024)} MB.");
+			throw new InvalidOperationException($"DATA partition is smaller than the required 10 GB minimum. Current size: {dataDrive.TotalSize / (1024 * 1024)} MB.");
 		}
 
 		// DATA partition is the intended NTFS partition

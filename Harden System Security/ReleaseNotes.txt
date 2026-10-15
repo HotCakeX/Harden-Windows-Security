@@ -1,1 +1,3 @@
 * Updated dependencies to the latest versions.
+
+* The Bootable Drive Maker page now uses 10GB instead of 8GB for the data partition of the removable drive since the latest Windows ISO files are bigger.

@@ -2677,3 +2677,34 @@ internal struct FILE_ID_DESCRIPTOR
 	[FieldOffset(8)] internal ulong ExtendedFileIdLow;
 	[FieldOffset(16)] internal ulong ExtendedFileIdHigh;
 }
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader
+/// Blittable 40-byte header on X64 and ARM64.
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct BITMAPINFOHEADER
+{
+	internal uint biSize;
+	internal int biWidth;
+	internal int biHeight;
+	internal ushort biPlanes;
+	internal ushort biBitCount;
+	internal uint biCompression;
+	internal uint biSizeImage;
+	internal int biXPelsPerMeter;
+	internal int biYPelsPerMeter;
+	internal uint biClrUsed;
+	internal uint biClrImportant;
+}
+
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/wingdi/ns-wingdi-bitmapinfo
+/// The first RGBQUAD is four inline bytes. A 32-bit BI_RGB DIB needs no palette.
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct BITMAPINFO
+{
+	internal BITMAPINFOHEADER bmiHeader;
+	internal uint bmiColors;
+}

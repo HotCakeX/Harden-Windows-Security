@@ -4237,8 +4237,7 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int GetPackageFamilyNameFromToken(IntPtr token,
 		ref uint packageFamilyNameLength,
-		[Out] char[]?
-		packageFamilyName);
+		[Out] char[]? packageFamilyName);
 
 
 	/// <summary>
@@ -4371,5 +4370,65 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("kernelbase.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int GetApplicationUserModelIdFromToken(nint token, ref uint length, char* applicationUserModelId);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-createcompatibledc
+	/// </summary>
+	[LibraryImport("gdi32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr CreateCompatibleDC(IntPtr hdc);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-createdibsection
+	/// </summary>
+	[LibraryImport("gdi32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr CreateDIBSection(IntPtr hdc, in BITMAPINFO pbmi, uint usage, out IntPtr ppvBits, IntPtr hSection, uint offset);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-selectobject
+	/// </summary>
+	[LibraryImport("gdi32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr SelectObject(IntPtr hdc, IntPtr h);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-deletedc
+	/// </summary>
+	[LibraryImport("gdi32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool DeleteDC(IntPtr hdc);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-gdiflush
+	/// </summary>
+	[LibraryImport("gdi32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GdiFlush();
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-drawiconex
+	/// </summary>
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool DrawIconEx(IntPtr hdc, int xLeft, int yTop, IntPtr hIcon, int cxWidth, int cyWidth, uint istepIfAniCur, IntPtr hbrFlickerFreeDraw, uint diFlags);
+
+
+	/// <summary>
+	/// Creates an owned icon from the shared image list. Release it with DestroyIcon.
+	/// https://learn.microsoft.com/windows/win32/api/commctrl/nf-commctrl-imagelist_geticon
+	/// </summary>
+	[LibraryImport("comctl32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr ImageList_GetIcon(IntPtr himl, int i, uint flags);
 
 }

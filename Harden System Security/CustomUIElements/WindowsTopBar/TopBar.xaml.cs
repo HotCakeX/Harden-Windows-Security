@@ -22,6 +22,7 @@ using System.Globalization;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -1349,14 +1350,37 @@ internal sealed partial class TopBar : Window, IDisposable
 		{
 			return;
 		}
+		// Detach before awaiting to prevent duplicate work on repeated Loaded events.
+		icon.Loaded -= OnFileIconLoaded;
 		await FileIconLoadGate.WaitAsync();
 		try
 		{
-			StorageFile file = await StorageFile.GetFileFromPathAsync(path);
-			using StorageItemThumbnail thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 40U, ThumbnailOptions.UseCurrentScale);
-			BitmapImage bitmap = new();
-			await bitmap.SetSourceAsync(thumbnail);
-			icon.Source = bitmap;
+			if (string.Equals(Path.GetExtension(path), ".lnk", StringComparison.OrdinalIgnoreCase))
+			{
+				// StorageFile cannot represent shortcuts. Use the Shell's shortcut icon
+				// without changing the saved launch target or shortcut arguments.
+				int size = Math.Clamp((int)Math.Ceiling(40.0 * (icon.XamlRoot?.RasterizationScale ?? 1.0)), 16, 256);
+				byte[] pixels = await Task.Run(() => LoadShortcutIconPixels(path, size));
+				WriteableBitmap bitmap = new(size, size);
+				using (Stream stream = bitmap.PixelBuffer.AsStream())
+				{
+					stream.Write(pixels, 0, pixels.Length);
+				}
+				bitmap.Invalidate();
+				icon.Source = bitmap;
+			}
+			else
+			{
+				StorageFile file = await StorageFile.GetFileFromPathAsync(path);
+				using StorageItemThumbnail? thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 40U, ThumbnailOptions.UseCurrentScale);
+				if (thumbnail is null || thumbnail.Size is 0)
+				{
+					return;
+				}
+				BitmapImage bitmap = new();
+				await bitmap.SetSourceAsync(thumbnail);
+				icon.Source = bitmap;
+			}
 		}
 		catch (Exception ex)
 		{
@@ -1364,8 +1388,131 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 		finally
 		{
-			icon.Loaded -= OnFileIconLoaded;
 			_ = FileIconLoadGate.Release();
+		}
+	}
+
+	/// <summary>
+	/// Extracts shortcut pixels on a background thread. COM and native resources
+	/// are initialized and released on that same thread, without runtime marshaling.
+	/// </summary>
+	private static byte[] LoadShortcutIconPixels(string path, int size)
+	{
+		/// <summary>
+		/// Retrieves the base icon index without creating a shortcut-overlay icon.
+		/// https://learn.microsoft.com/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow
+		/// </summary>
+		const uint SHGFI_SYSICONINDEX = 0x00004000;
+
+		int initializationResult = NativeMethods.CoInitializeEx(IntPtr.Zero, 0U);
+		// RPC_E_CHANGED_MODE means COM is already initialized in a different apartment.
+		// Do not balance that failed initialization call with CoUninitialize.
+		if (initializationResult < 0 && initializationResult != unchecked((int)0x80010106))
+		{
+			Marshal.ThrowExceptionForHR(initializationResult);
+		}
+		SHFILEINFOW info = default;
+		IntPtr icon = IntPtr.Zero;
+		try
+		{
+			// Retrieve the base image without the shortcut overlay. The shared system
+			// image list belongs to the Shell and must not be modified or destroyed.
+			IntPtr imageList = NativeMethods.SHGetFileInfoW(path, 0U, ref info, (uint)sizeof(SHFILEINFOW), SHGFI_SYSICONINDEX);
+			if (imageList == IntPtr.Zero || (icon = NativeMethods.ImageList_GetIcon(imageList, info.iIcon, 0U)) == IntPtr.Zero)
+			{
+				throw new IOException("The Shell could not retrieve the shortcut icon.");
+			}
+			return RenderShortcutIconPixels(icon, size);
+		}
+		finally
+		{
+			if (icon != IntPtr.Zero)
+			{
+				_ = NativeMethods.DestroyIcon(icon);
+			}
+			if (initializationResult >= 0)
+			{
+				NativeMethods.CoUninitialize();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Renders on black and white to recover premultiplied BGRA transparency.
+	/// DrawIconEx handles both alpha-blended icons and legacy AND/XOR masks.
+	/// </summary>
+	private static byte[] RenderShortcutIconPixels(IntPtr icon, int size)
+	{
+		int byteCount = checked(size * size * 4);
+		IntPtr dc = NativeMethods.CreateCompatibleDC(IntPtr.Zero);
+		if (dc == IntPtr.Zero)
+		{
+			throw new IOException("Could not create an icon device context.");
+		}
+		IntPtr bitmap = IntPtr.Zero;
+		IntPtr previousBitmap = IntPtr.Zero;
+		try
+		{
+			BITMAPINFO bitmapInfo = new()
+			{
+				bmiHeader = new BITMAPINFOHEADER
+				{
+					biSize = (uint)sizeof(BITMAPINFOHEADER),
+					biWidth = size,
+					biHeight = -size, // Top-down rows match the XAML pixel buffer.
+					biPlanes = 1,
+					biBitCount = 32,
+					biSizeImage = (uint)byteCount
+				}
+			};
+			bitmap = NativeMethods.CreateDIBSection(dc, in bitmapInfo, 0U, out IntPtr bits, IntPtr.Zero, 0U);
+			if (bitmap == IntPtr.Zero || bits == IntPtr.Zero)
+			{
+				throw new IOException("Could not create an icon bitmap.");
+			}
+			previousBitmap = NativeMethods.SelectObject(dc, bitmap);
+			if (previousBitmap == IntPtr.Zero || previousBitmap == new IntPtr(-1))
+			{
+				previousBitmap = IntPtr.Zero;
+				throw new IOException("Could not select the icon bitmap.");
+			}
+			Span<byte> surface = new(bits.ToPointer(), byteCount);
+			surface.Clear();
+			if (!NativeMethods.DrawIconEx(dc, 0, 0, icon, size, size, 0U, IntPtr.Zero, 3U) || !NativeMethods.GdiFlush())
+			{
+				throw new IOException("Could not render the shortcut icon.");
+			}
+			byte[] pixels = surface.ToArray();
+			surface.Fill(255);
+			if (!NativeMethods.DrawIconEx(dc, 0, 0, icon, size, size, 0U, IntPtr.Zero, 3U) || !NativeMethods.GdiFlush())
+			{
+				throw new IOException("Could not render the shortcut icon mask.");
+			}
+			for (int offset = 0; offset < byteCount; offset += 4)
+			{
+				int backgroundContribution = Math.Max(surface[offset] - pixels[offset],
+					Math.Max(surface[offset + 1] - pixels[offset + 1], surface[offset + 2] - pixels[offset + 2]));
+				byte alpha = (byte)(255 - Math.Clamp(backgroundContribution, 0, 255));
+				// Black-background RGB is premultiplied. Clamp legacy XOR pixels to alpha.
+				pixels[offset] = Math.Min(pixels[offset], alpha);
+				pixels[offset + 1] = Math.Min(pixels[offset + 1], alpha);
+				pixels[offset + 2] = Math.Min(pixels[offset + 2], alpha);
+				pixels[offset + 3] = alpha;
+			}
+			return pixels;
+		}
+		finally
+		{
+			if (previousBitmap != IntPtr.Zero)
+			{
+				_ = NativeMethods.SelectObject(dc, previousBitmap);
+			}
+			// Delete the DC first so a failed restoration cannot leave the DIB selected.
+			_ = NativeMethods.DeleteDC(dc);
+			if (bitmap != IntPtr.Zero)
+			{
+				_ = NativeMethods.DeleteObject(bitmap);
+			}
 		}
 	}
 

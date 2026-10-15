@@ -16,6 +16,17 @@
         <!-- https://learn.microsoft.com/microsoft-edge/webview2/how-to/static -->
         <WebView2LoaderPreference>Static</WebView2LoaderPreference>
 
+        <!-- CsWinRT has certain requirements for it: https://github.com/microsoft/CsWinRT
+        Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
+
+        https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref
+
+        Note about CsWinRT: It is bundled by default with WinAppSDK but it's usually older version there, it's used to generate the WinUI C# projections.
+        By installing it ourselves as a NuGet package, we guarantee we use the latest and most up to date version, especially the preview versions.
+        If we don't install it as NuGet package ourselves, WinAppSDK's CsWinRT will be used during compilation.
+        -->
+        <WindowsSdkPackageVersion>10.0.28000.87</WindowsSdkPackageVersion>
+
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
         so that the App will be installable on any system that neither has the .NET runtime nor the latest AppSDK

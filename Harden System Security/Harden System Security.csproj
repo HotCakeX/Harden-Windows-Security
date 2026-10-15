@@ -26,6 +26,13 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>true</EnableMsixTooling>
+
+        <!-- CsWinRT has certain requirements for it: https://github.com/microsoft/CsWinRT
+        Using the latest version as defined in the CsWinRT release notes guarantees that we use the latest CsWinRT projections features.
+
+        https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref -->
+        <WindowsSdkPackageVersion>10.0.28000.87</WindowsSdkPackageVersion>
+
         <!--
         By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
         so that the App will be installable on any system that neither has the .NET runtime nor the latest AppSDK

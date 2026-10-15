@@ -6,6 +6,7 @@
         <ApplicationManifest>app.manifest</ApplicationManifest>
         <StartupObject>HardenSystemSecurityMCP.Program</StartupObject>
         <EnableMsixTooling>true</EnableMsixTooling>
+        <WindowsSdkPackageVersion>10.0.28000.87</WindowsSdkPackageVersion>
         <Version>$(FileVersion)</Version>
         <FileVersion>1.0.3.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>

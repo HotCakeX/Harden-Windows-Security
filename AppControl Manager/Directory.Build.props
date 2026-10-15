@@ -4,6 +4,12 @@
 
    <!-- .NET SDK projects only -->
    <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+
+       <!-- .NET 11 RC2 bug workaround: https://github.com/dotnet/sdk/issues/56645 -->
+       <!-- https://github.com/dotnet/sdk/issues/55911 -->
+       <!-- https://github.com/dotnet/sdk/blob/main/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.Publish.targets#L167 -->
+       <UseOptimizedPublish>false</UseOptimizedPublish>
+
        <TargetFramework>net11.0-windows10.0.26100.0</TargetFramework>
        <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
        <!-- https://learn.microsoft.com/dotnet/standard/frameworks#support-older-os-versions -->

@@ -582,7 +582,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 	internal async Task InitialPoliciesLibrarySetup()
 	{
 		// If Persistent library is enabled, populate the policies library on the Sidebar with the local cache content
-		if (AppSettings.PersistentPoliciesLibrary)
+		if (Atlas.Settings.PersistentPoliciesLibrary)
 		{
 			await Task.Run(async () =>
 			{
@@ -628,7 +628,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 							// Try to decrypt the file content to check its state
 							try
 							{
-								decryptedBytes = ProtectedData.Unprotect(fileBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+								decryptedBytes = ProtectedData.Unprotect(fileBytes, PoliciesLibraryEntropyBytes, Atlas.Settings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
 							}
 							catch (CryptographicException)
 							{
@@ -638,7 +638,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 							// Ensure the file on disk matches the 'shouldEncrypt' setting.
 
 							// Setting: Encrypt
-							if (AppSettings.EncryptPoliciesLibrary)
+							if (Atlas.Settings.EncryptPoliciesLibrary)
 							{
 								if (decryptedBytes is not null)
 								{
@@ -655,7 +655,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 									// The current file is plain text, so 'fileBytes' is the policy content.
 									try
 									{
-										byte[] encrypted = ProtectedData.Protect(fileBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+										byte[] encrypted = ProtectedData.Protect(fileBytes, PoliciesLibraryEntropyBytes, Atlas.Settings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
 										if (File.Exists(file))
 											File.Delete(file);
 										await File.WriteAllBytesAsync(file, encrypted);
@@ -1052,7 +1052,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 			});
 
 			// If the library should be persistent
-			if (AppSettings.PersistentPoliciesLibrary)
+			if (Atlas.Settings.PersistentPoliciesLibrary)
 			{
 				await Task.Run(() =>
 				{
@@ -1073,11 +1073,11 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						xmlObj.Save(xmlWriter);
 					}
 
-					if (AppSettings.EncryptPoliciesLibrary)
+					if (Atlas.Settings.EncryptPoliciesLibrary)
 					{
 						try
 						{
-							byte[] enc = ProtectedData.Protect(memoryStream.ToArray(), PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+							byte[] enc = ProtectedData.Protect(memoryStream.ToArray(), PoliciesLibraryEntropyBytes, Atlas.Settings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
 							if (File.Exists(filePath))
 								File.Delete(filePath);
 							File.WriteAllBytes(filePath, enc);
@@ -1138,7 +1138,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						// Determine if the file is currently encrypted by attempting to decrypt it
 						try
 						{
-							plainBytes = ProtectedData.Unprotect(currentBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+							plainBytes = ProtectedData.Unprotect(currentBytes, PoliciesLibraryEntropyBytes, Atlas.Settings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
 							isEncrypted = true;
 						}
 						catch (CryptographicException)
@@ -1151,7 +1151,7 @@ internal sealed partial class MainWindowVM : ViewModelBase, IDisposable
 						// Encrypt if requested and currently plain text
 						if (shouldEncrypt && !isEncrypted)
 						{
-							byte[] encrypted = ProtectedData.Protect(plainBytes, PoliciesLibraryEntropyBytes, AppSettings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+							byte[] encrypted = ProtectedData.Protect(plainBytes, PoliciesLibraryEntropyBytes, Atlas.Settings.EncryptionScopePoliciesLibrary ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
 							if (File.Exists(file))
 								File.Delete(file);
 							File.WriteAllBytes(file, encrypted);

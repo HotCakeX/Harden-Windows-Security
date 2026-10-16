@@ -16,7 +16,7 @@
 
     <Grid x:Name="RootGrid"
           Loaded="{x:Bind DisplayFeatureHighlightsCarousel_FirstAppLaunch}"
-          FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+          FlowDirection="{x:Bind CommonCore:Atlas.Settings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
         <Grid.RowDefinitions>
             <!-- Titlebar Row -->
@@ -173,7 +173,7 @@
         <Border x:Name="CardBackgroundFillColorDefaultBrush_Helper" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" Visibility="Collapsed" Opacity="0" />
         <Border x:Name="SolidBackgroundFillColorSecondaryBrush_Helper" Background="{ThemeResource SolidBackgroundFillColorSecondaryBrush}" Visibility="Collapsed" Opacity="0" />
 
-        <Image Source="{x:Bind ViewModel.AppSettings.BackdropCustomBrushPictureSelection, Mode=OneWay}"
+        <Image Source="{x:Bind CommonCore:Atlas.Settings.BackdropCustomBrushPictureSelection, Mode=OneWay}"
                Visibility="{x:Bind ViewModel.MainWindowPictureBackgroundVisibility, Mode=OneWay}"
                Stretch="UniformToFill"
                Grid.RowSpan="2" />
@@ -446,7 +446,7 @@
 
         <!-- Navigation View -->
         <NavigationView x:Name="MainNavigation"
-                        FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
+                        FlowDirection="{x:Bind CommonCore:Atlas.Settings.ApplicationGlobalFlowDirection, Mode=OneWay}"
                         IsTabStop="True"
                         IsPaneOpen="{x:Bind ViewModel.MainNavigationIsPaneOpen, Mode=TwoWay}"
                         ItemInvoked="{x:Bind Nav.MainNavigation_ItemInvoked}"
@@ -868,7 +868,7 @@
                                                                                     </MenuFlyoutItem.Icon>
                                                                                 </MenuFlyoutItem>
 
-                                                                                <MenuFlyoutItem x:Uid="DeployPolicyFlyoutItem" IsEnabled="{x:Bind IsElevated}" Click="OnDeployClicked" DataContext="{x:Bind}">
+                                                                                <MenuFlyoutItem x:Uid="DeployPolicyFlyoutItem" IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}" Click="OnDeployClicked" DataContext="{x:Bind}">
                                                                                     <MenuFlyoutItem.Icon>
                                                                                         <FontIcon Glyph="&#xE896;" />
                                                                                     </MenuFlyoutItem.Icon>
@@ -1090,13 +1090,13 @@
                                         </customUI:SettingsCardV2.HeaderIcon>
                                         <ToggleSwitch x:Uid="ToggleSwitchGeneral"
                                                       x:Name="PersistentPoliciesLibraryToggleSwitch"
-                                                      IsOn="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}"/>
+                                                      IsOn="{x:Bind CommonCore:Atlas.Settings.PersistentPoliciesLibrary, Mode=TwoWay}"/>
                                     </customUI:SettingsCardV2>
 
                                     <customUI:SettingsCardV2 HorizontalContentAlignment="Center"
                                                              x:Name="PersistentPoliciesLibraryEncryptionSettingsCard"
                                                              x:Uid="PersistentPoliciesLibraryEncryptionSettingsCard"
-                                                             IsEnabled="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}">
+                                                             IsEnabled="{x:Bind CommonCore:Atlas.Settings.PersistentPoliciesLibrary, Mode=TwoWay}">
                                         <customUI:SettingsCardV2.HeaderIcon>
                                             <FontIcon Glyph="&#xEC19;"/>
                                         </customUI:SettingsCardV2.HeaderIcon>
@@ -1104,14 +1104,14 @@
                                         <ToggleSwitch x:Uid="ToggleSwitchGeneral"
                                                       HorizontalAlignment="Center"
                                                       x:Name="PersistentPoliciesLibraryEncryptionToggleSwitch"
-                                                      IsOn="{x:Bind ViewModel.AppSettings.EncryptPoliciesLibrary, Mode=TwoWay}"/>
+                                                      IsOn="{x:Bind CommonCore:Atlas.Settings.EncryptPoliciesLibrary, Mode=TwoWay}"/>
 
                                     </customUI:SettingsCardV2>
 
                                     <customUI:SettingsCardV2 HorizontalContentAlignment="Center"
                                                              x:Name="PersistentPoliciesLibraryEncryptionScopeSettingsCard"
                                                              x:Uid="PersistentPoliciesLibraryEncryptionScopeSettingsCard"
-                                                             IsEnabled="{x:Bind ViewModel.AppSettings.PersistentPoliciesLibrary, Mode=TwoWay}">
+                                                             IsEnabled="{x:Bind CommonCore:Atlas.Settings.PersistentPoliciesLibrary, Mode=TwoWay}">
                                         <customUI:SettingsCardV2.HeaderIcon>
                                             <FontIcon Glyph="&#xE748;"/>
                                         </customUI:SettingsCardV2.HeaderIcon>
@@ -1119,7 +1119,7 @@
                                         <ToggleSwitch x:Uid="PersistentPoliciesLibraryEncryptionScopeToggleSwitch"
                                                       HorizontalAlignment="Center"
                                                       x:Name="PersistentPoliciesLibraryEncryptionScopeToggleSwitch"
-                                                      IsOn="{x:Bind ViewModel.AppSettings.EncryptionScopePoliciesLibrary, Mode=TwoWay}"/>
+                                                      IsOn="{x:Bind CommonCore:Atlas.Settings.EncryptionScopePoliciesLibrary, Mode=TwoWay}"/>
 
                                     </customUI:SettingsCardV2>
 

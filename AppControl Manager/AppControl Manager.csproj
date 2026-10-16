@@ -7,6 +7,8 @@
         <!-- Exclude the following files and folders from compilation, build, search, solution explorer etc. -->
         <DefaultItemExcludes>$(DefaultItemExcludes);eXclude\**;MSIXOutputX64\**;MSIXOutputARM64\**;MSIXBundleOutput\**;Animated Icon Sources\**;target\**;ReleaseNotes.txt;version.txt;MSIXBundleDownloadURL.txt;*.binlog</DefaultItemExcludes>
 
+        <Features>$(Features);runtime-async=on</Features>
+
         <OutputType>WinExe</OutputType>
         <RootNamespace>AppControlManager</RootNamespace>
         <ApplicationManifest>app.manifest</ApplicationManifest>

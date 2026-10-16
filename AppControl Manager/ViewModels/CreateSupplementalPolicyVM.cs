@@ -437,7 +437,7 @@ internal sealed partial class CreateSupplementalPolicyVM : ViewModelBase, IDispo
 					// Without auto-resize, the column width calculation will run for all items, freezing the UI.
 					if (LVController.FullSource.Count > 80000)
 					{
-						AppSettings.AutoResizeListViewColumns = true;
+						Atlas.Settings.AutoResizeListViewColumns = true;
 					}
 
 					FilesAndFoldersCancellableButton.Cts?.Token.ThrowIfCancellationRequested();

@@ -509,7 +509,7 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	/// <summary>
 	/// Converts the properties of a CiPolicyInfo row into a labeled, formatted string for copying to clipboard.
 	/// </summary>
-	internal void CopySelectedPolicies_Click()
+	internal static void CopySelectedPolicies_Click()
 	{
 		ListView? lv = ListViewHelper.GetListViewFromCache(ListViewHelper.ListViewsRegistry.Online_Deployed_Policies);
 

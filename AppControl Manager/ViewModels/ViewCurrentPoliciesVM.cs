@@ -26,7 +26,9 @@ using AppControlManager.Main;
 using AppControlManager.Others;
 using AppControlManager.SiPolicy;
 using AppControlManager.SiPolicyIntel;
+using AppControlManager.XMLOps;
 using CommonCore.IntelGathering;
+using CommonCore.ToolKits;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -130,9 +132,14 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 	#endregion
 
 	/// <summary>
+	/// Event handler for the Ui.
+	/// </summary>
+	internal async void RetrievePolicies() => await RetrievePoliciesAsync();
+
+	/// <summary>
 	/// Retrieve the policies from the system
 	/// </summary>
-	internal async void RetrievePolicies()
+	private async Task RetrievePoliciesAsync()
 	{
 		try
 		{
@@ -924,6 +931,83 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 		}
 
 		return output;
+	}
+
+	/// <summary>
+	/// Eligibility for being able to enable/disable Audit mode in a policy or Rename it, it should be:
+	/// 1) Non-System
+	/// 2) Base policy
+	/// 3) On disk
+	/// 4) Unsigned (can add support for signed policies later)
+	/// </summary>
+	internal static bool CanEditPolicy(bool isSystemPolicy, bool isOnDisk, bool isSignedPolicy, string? policyID, string? basePolicyID) =>
+		!isSystemPolicy && isOnDisk && !isSignedPolicy &&
+		!string.IsNullOrWhiteSpace(policyID) && !string.IsNullOrWhiteSpace(basePolicyID) &&
+		string.Equals(policyID, basePolicyID, StringComparison.OrdinalIgnoreCase);
+
+	internal static Visibility GetEditPolicyVisibility(bool isSystemPolicy, bool isOnDisk, bool isSignedPolicy, string? policyID, string? basePolicyID) =>
+		CanEditPolicy(isSystemPolicy, isOnDisk, isSignedPolicy, policyID, basePolicyID) ? Visibility.Visible : Visibility.Collapsed;
+
+	/// <summary>
+	/// Edits the context-menu row.
+	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(MenuFlyoutItem))]
+	internal async void EditPolicy_Click(object sender, RoutedEventArgs e)
+	{
+		if (!UIElementsEnabledState || sender is not MenuFlyoutItem { Tag: CiPolicyInfo policy } item || !CanEditPolicy(policy.IsSystemPolicy, policy.IsOnDisk, policy.IsSignedPolicy, policy.PolicyID, policy.BasePolicyID)) return;
+		try
+		{
+			UIElementsEnabledState = false;
+			bool rename = string.Equals(item.Name, "RenamePolicyMenuItem", StringComparison.OrdinalIgnoreCase);
+			bool enableAudit = string.Equals(item.Name, "EnableAuditModeMenuItem", StringComparison.OrdinalIgnoreCase);
+			TextBox nameBox = new() { Text = policy.FriendlyName ?? string.Empty, Header = Atlas.GetStr("FriendlyNameHeader/Text") };
+			using ContentDialogV2 dialog = new()
+			{
+				Title = item.Text,
+				Content = rename ? nameBox : enableAudit
+					? "Enable audit mode? This policy will log violations instead of blocking them."
+					: "Disable audit mode? This policy will enforce its rules and may block applications or drivers.",
+				PrimaryButtonText = Atlas.GetStr("OK"),
+				CloseButtonText = Atlas.GetStr("Cancel")
+			};
+			if (await dialog.ShowAsync() is not ContentDialogResult.Primary) return;
+
+			string name = nameBox.Text.Trim();
+
+			if (rename && (string.IsNullOrWhiteSpace(name) || string.Equals(name, policy.FriendlyName, StringComparison.OrdinalIgnoreCase))) return;
+
+			await Task.Run(() =>
+			{
+				string path = GetLocalCIPFile(policy) ?? throw new FileNotFoundException("The policy file could not be located.");
+				SiPolicy.SiPolicy policyObj = Management.ConvertBinaryToXmlFile(path);
+
+				// Check the decoded identity and unsigned option before editing the deployed policy.
+				if (!string.Equals(policyObj.PolicyID.Trim('{', '}'), policy.PolicyID.Trim('{', '}'), StringComparison.OrdinalIgnoreCase) ||
+					!string.Equals(policyObj.PolicyID, policyObj.BasePolicyID, StringComparison.OrdinalIgnoreCase) ||
+					!policyObj.Rules.Any(static rule => rule.Item is OptionType.EnabledUnsignedSystemIntegrityPolicy))
+					throw new InvalidOperationException("The policy file is not the expected unsigned base policy.");
+
+				if (rename)
+					PolicySettingsManager.SetPolicyName(policyObj, name);
+				else
+					policyObj = CiRuleOptions.Set(policyObj, EnableAuditMode: enableAudit);
+
+				// Increment the version of the policy
+				policyObj = SetCiPolicyInfo.Set(policyObj, VersionIncrementer.AddVersion(new Version(policyObj.VersionEx)));
+
+				// Update the deployed policy by redeploying it
+				CiToolHelper.UpdatePolicy(Management.ConvertXMLToBinary(policyObj));
+			});
+			await RetrievePoliciesAsync();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			UIElementsEnabledState = true;
+		}
 	}
 
 	/// <summary>

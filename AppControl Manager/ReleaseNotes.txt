@@ -1,3 +1,5 @@
-* Added an option in the Backup and Restore settings page to open application data folders in file explorer.
+* Added an option in the Backup and Restore settings page to open application data folders in the File Explorer.
 
-* Updated dependencies to the latest versions.
+* Updated many dependencies to the latest versions.
+
+* In the System Information page's locally deployed policies section, you can now right-click on any eligible deployed policy to rename it or enable/disable Audit mode in it.

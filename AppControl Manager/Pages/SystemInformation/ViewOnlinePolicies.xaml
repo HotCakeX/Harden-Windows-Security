@@ -204,9 +204,9 @@
 
                                 <MenuFlyoutSeparator />
 
-                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.CopySelectedPolicies_Click}">
+                                <MenuFlyoutItem x:Uid="CopyRow" Click="{x:Bind VMs:ViewOnlinePoliciesVM.CopySelectedPolicies_Click}">
                                     <MenuFlyoutItem.KeyboardAccelerators>
-                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewModelProvider.ViewOnlinePoliciesVM.CopySelectedPolicies_Click}"/>
+                                        <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="{x:Bind VMs:ViewOnlinePoliciesVM.CopySelectedPolicies_Click}"/>
                                     </MenuFlyoutItem.KeyboardAccelerators>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE8C8;" />

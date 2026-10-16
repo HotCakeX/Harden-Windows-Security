@@ -162,7 +162,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		}
 
 		// Set the window display affinity upon window creation to exclude it from capture if ScreenShield is enabled, otherwise set it to
-		WindowDisplayAffinity.SetWindowDisplayAffinity(Atlas.hWnd, ViewModel.AppSettings.ScreenShield ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
+		WindowDisplayAffinity.SetWindowDisplayAffinity(Atlas.hWnd, Atlas.Settings.ScreenShield ? WindowDisplayAffinity.DisplayAffinity.WDA_EXCLUDEFROMCAPTURE : WindowDisplayAffinity.DisplayAffinity.WDA_NONE);
 
 		// https://learn.microsoft.com/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.extendscontentintotitlebar
 		// Make title bar Mica
@@ -354,8 +354,8 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	private async void CloseWindow_Click()
 	{
-		if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 0 ||
-			(ViewModel.AppSettings.AppCloseConfirmationBehavior == 1 && TaskTracking.AppNeedsCloseConfirmation))
+		if (Atlas.Settings.AppCloseConfirmationBehavior == 0 ||
+			(Atlas.Settings.AppCloseConfirmationBehavior == 1 && TaskTracking.AppNeedsCloseConfirmation))
 		{
 			await AskForConfirmation(Close);
 		}
@@ -369,10 +369,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 
 	private async void DisplayFeatureHighlightsCarousel_FirstAppLaunch()
 	{
-		if (!ViewModel.AppSettings.FeatureHighlightsCarouselShownAutomatically)
+		if (!Atlas.Settings.FeatureHighlightsCarouselShownAutomatically)
 		{
 			await DisplayFeatureHighlightsCarousel();
-			ViewModel.AppSettings.FeatureHighlightsCarouselShownAutomatically = true;
+			Atlas.Settings.FeatureHighlightsCarouselShownAutomatically = true;
 		}
 	}
 
@@ -1021,8 +1021,8 @@ internal sealed partial class MainWindow : Window, INPCImplant
 	{
 		// If confirmation is never required, or automatic confirmation is selected and no activity requires confirmation,
 		// allow the existing close operation to continue without showing a confirmation dialog.
-		if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 2 ||
-			(ViewModel.AppSettings.AppCloseConfirmationBehavior == 1 && !TaskTracking.AppNeedsCloseConfirmation))
+		if (Atlas.Settings.AppCloseConfirmationBehavior == 2 ||
+			(Atlas.Settings.AppCloseConfirmationBehavior == 1 && !TaskTracking.AppNeedsCloseConfirmation))
 		{
 			return;
 		}
@@ -1920,7 +1920,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			}
 
 			// If the library should be persistent
-			if (ViewModel.AppSettings.PersistentPoliciesLibrary)
+			if (Atlas.Settings.PersistentPoliciesLibrary)
 			{
 				await Task.Run(async () =>
 				{
@@ -1973,7 +1973,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			ViewModel.SidebarElementsAreEnabled = false;
 
 			// If library is persistent then remove one by one from the cache first
-			if (ViewModel.AppSettings.PersistentPoliciesLibrary)
+			if (Atlas.Settings.PersistentPoliciesLibrary)
 			{
 				await Task.Run(() =>
 				{
@@ -2391,12 +2391,12 @@ internal sealed partial class MainWindow : Window, INPCImplant
 		try
 		{
 			// If we should always ask for confirmation
-			if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 0)
+			if (Atlas.Settings.AppCloseConfirmationBehavior == 0)
 			{
 				await AskForConfirmation(ContextSwitchAction);
 			}
 			// If we should automatically/conditionally ask for confirmation
-			else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 1)
+			else if (Atlas.Settings.AppCloseConfirmationBehavior == 1)
 			{
 				if (!TaskTracking.AppNeedsCloseConfirmation)
 				{
@@ -2408,7 +2408,7 @@ internal sealed partial class MainWindow : Window, INPCImplant
 				}
 			}
 			// If we should never ask for confirmation
-			else if (ViewModel.AppSettings.AppCloseConfirmationBehavior == 2)
+			else if (Atlas.Settings.AppCloseConfirmationBehavior == 2)
 			{
 				ContextSwitchAction();
 			}

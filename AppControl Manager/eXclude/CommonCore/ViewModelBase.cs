@@ -47,11 +47,6 @@ internal abstract class ViewModelBase : INotifyPropertyChanged
 	internal CommonCore.AppSettings.Main AppSettings => Atlas.Settings;
 
 	/// <summary>
-	/// An instance property so pages can bind to.
-	/// </summary>
-	internal bool IsElevated => Atlas.IsElevated;
-
-	/// <summary>
 	/// Same as IsElevated but in reverse.
 	/// </summary>
 	internal static bool IsNotElevated => !Atlas.IsElevated;

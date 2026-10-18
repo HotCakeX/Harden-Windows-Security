@@ -604,9 +604,6 @@ internal sealed partial class TopBar : Window, IDisposable
 		SearchColumnManager.ColumnWidths[0].Width = new GridLength(160.0);
 		SearchColumnManager.ColumnWidths[1].Width = new GridLength(80.0);
 		SearchColumnManager.ColumnWidths[2].Width = new GridLength(150.0);
-		// Recompute Path only when a measured, non-resizable column changes.
-		foreach (BindableColumnWidth column in SearchColumnManager.ColumnWidths)
-			column.PropertyChanged += OnSearchFixedColumnWidthChanged;
 		// Animate Search as one cell while the list scrolls independently.
 		_viewTiles[TopBarView.Search] = [new TopBarTile(SearchPanel, AttachEntranceTransform(SearchPanel))];
 		InitializeSentryView();
@@ -781,7 +778,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// while this makes it impossible for one to exist at all, because the size of the frame is what the window itself
 	/// reports back when the system asks it to measure its own client area.
 	/// </summary>
-	private void SuppressNonClientArea()
+	private static void SuppressNonClientArea()
 	{
 		if (_windowHandle == IntPtr.Zero)
 		{
@@ -4285,7 +4282,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// that the site redirected to and of the host that was pinned. The address that the page finally came from is
 	/// returned alongside, and it is the pinned address when the page could not be read.
 	/// </summary>
-	private async Task<(List<Uri> Candidates, Uri Page)> GetFaviconCandidatesAsync(Uri site, CancellationToken token)
+	private static async Task<(List<Uri> Candidates, Uri Page)> GetFaviconCandidatesAsync(Uri site, CancellationToken token)
 	{
 		List<Uri> candidates = [];
 		Uri page = site;
@@ -4316,7 +4313,7 @@ internal sealed partial class TopBar : Window, IDisposable
 				}
 
 				// Regular and touch icons are used. A mask icon is a monochrome silhouette, so it is skipped.
-				bool isIcon = Array.Exists(rel.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries), relType =>
+				bool isIcon = Array.Exists(rel.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries), static relType =>
 					string.Equals(relType, "icon", StringComparison.OrdinalIgnoreCase) ||
 					relType.StartsWith("apple-touch-icon", StringComparison.OrdinalIgnoreCase));
 
@@ -4348,7 +4345,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// Sends a GET request and follows its redirects the way a browser does, including a redirect from https to http.
 	/// The request message of the returned response carries the final address.
 	/// </summary>
-	private async Task<HttpResponseMessage> GetFollowingRedirectsAsync(Uri uri, CancellationToken token)
+	private static async Task<HttpResponseMessage> GetFollowingRedirectsAsync(Uri uri, CancellationToken token)
 	{
 		for (int redirect = 0; ; redirect++)
 		{
@@ -4369,7 +4366,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// Downloads at most the supplied amount of bytes and reports the address that the response finally came from.
 	/// A failed response carries no bytes, but its final address is still reported so that its host can be tried.
 	/// </summary>
-	private async Task<(byte[] Data, Uri Location, string? MediaType)> DownloadAsync(Uri uri, int maximumBytes, CancellationToken token)
+	private static async Task<(byte[] Data, Uri Location, string? MediaType)> DownloadAsync(Uri uri, int maximumBytes, CancellationToken token)
 	{
 		using HttpResponseMessage response = await GetFollowingRedirectsAsync(uri, token);
 		Uri location = response.RequestMessage?.RequestUri ?? uri;
@@ -4387,7 +4384,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// <summary>
 	/// Downloads and decodes a single icon candidate. A candidate that fails returns null so the next one is tried.
 	/// </summary>
-	private async Task<ImageSource?> TryLoadIconAsync(Uri uri, CancellationToken token)
+	private static async Task<ImageSource?> TryLoadIconAsync(Uri uri, CancellationToken token)
 	{
 		try
 		{
@@ -5660,20 +5657,15 @@ internal sealed partial class TopBar : Window, IDisposable
 	private async Task LoadSearchThumbnailAsync(Image icon)
 	{
 		if (_isClosed || !icon.IsLoaded || icon.DataContext is not TopBarSearchResult result) return;
-		if (result.ThumbnailAttempted)
-		{
-			icon.Source = result.Thumbnail;
-			return;
-		}
-		// Reuse the existing gate. Obsolete queued rows do no storage work.
-		await FileIconLoadGate.WaitAsync();
+		CancellationToken cancellationToken = _searchThumbnailCancellation.Token;
 		try
 		{
-			if (_isClosed || !icon.IsLoaded || !ReferenceEquals(icon.DataContext, result)) return;
-			if (!result.ThumbnailAttempted)
+			await FileIconLoadGate.WaitAsync(cancellationToken);
+			try
 			{
-				result.ThumbnailAttempted = true;
-				StorageItemThumbnail? thumbnail;
+				if (_isClosed || cancellationToken.IsCancellationRequested || !icon.IsLoaded || !ReferenceEquals(icon.DataContext, result))
+					return;
+				StorageItemThumbnail thumbnail;
 				if (result.IsDirectory)
 				{
 					StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(result.Path);
@@ -5686,22 +5678,19 @@ internal sealed partial class TopBar : Window, IDisposable
 				}
 				using (thumbnail)
 				{
-					if (thumbnail is not null)
-					{
-						BitmapImage bitmap = new() { DecodePixelWidth = 40 };
-						await bitmap.SetSourceAsync(thumbnail);
-						result.Thumbnail = bitmap;
-					}
+					if (cancellationToken.IsCancellationRequested || !icon.IsLoaded || !ReferenceEquals(icon.DataContext, result))
+						return;
+
+					BitmapImage bitmap = new() { DecodePixelWidth = 40 };
+					await bitmap.SetSourceAsync(thumbnail);
+
+					if (!cancellationToken.IsCancellationRequested && icon.IsLoaded && ReferenceEquals(icon.DataContext, result))
+						icon.Source = bitmap;
 				}
 			}
-			// A late completion must never paint a different result or a closed window.
-			if (!_isClosed && icon.IsLoaded && ReferenceEquals(icon.DataContext, result)) icon.Source = result.Thumbnail;
+			finally { _ = FileIconLoadGate.Release(); }
 		}
-		catch
-		{
-			// Missing or inaccessible indexed items remain searchable without a thumbnail.
-		}
-		finally { _ = FileIconLoadGate.Release(); }
+		catch { } // A newer query replaced this result set while its thumbnail was queued, or missing or inaccessible indexed items remain searchable without a thumbnail.
 	}
 
 	// The fixed columns are measured once per search result set. Only Path can be resized.
@@ -5715,6 +5704,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private bool _searchPathResized;
 	private readonly RangedObservableCollection<TopBarSearchResult> _searchResults = [];
 	private TopBarSearchClient? _searchClient;
+	private CancellationTokenSource _searchThumbnailCancellation = new();
 	private bool _searchScopeReady;
 	private bool _searchScopePending;
 	private Task _searchDisposalTask = Task.CompletedTask;
@@ -5969,6 +5959,9 @@ internal sealed partial class TopBar : Window, IDisposable
 	{
 		if (_isClosed) return;
 		string query = SearchTextBox.Text;
+		_searchThumbnailCancellation.Cancel();
+		_searchThumbnailCancellation.Dispose();
+		_searchThumbnailCancellation = new();
 		_searchResults.Clear();
 		SearchIndexCountText.Text = "Indexed items: --";
 		// Empty searches return to the compact header width until results are available.
@@ -5986,7 +5979,10 @@ internal sealed partial class TopBar : Window, IDisposable
 		_searchClient.SetQuery(query);
 	}
 
-	private void OnSearchFixedColumnWidthChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+	// The Path column uses the horizontal space left after the fixed Name, Size, and Date modified columns are measured.
+	// Recalculate the Search layout when one of those header elements changes size, but only while the Path width is still managed automatically.
+	// After the user manually resizes Path, preserve their selected width instead of overwriting it during later layout passes.
+	private void OnSearchFixedColumnSizeChanged(object sender, SizeChangedEventArgs e)
 	{
 		if (!_isClosed && _activeView == TopBarView.Search && _searchResults.Count > 0 && !_searchPathResized)
 			UpdateViewsMaximumWidth();
@@ -6050,6 +6046,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		_isClosed = true;
 		_statisticsCancellation?.Cancel();
 		_statisticsFlyout?.Hide();
+		_searchThumbnailCancellation.Cancel();
+		_searchThumbnailCancellation.Dispose();
 		if (_searchClient is not null) _searchDisposalTask = _searchClient.DisposeAsync().AsTask();
 		_searchClient = null;
 		// Dispose the material controller without assigning null to the element.
@@ -6067,9 +6065,6 @@ internal sealed partial class TopBar : Window, IDisposable
 			_networkQualitySampler = null;
 			_networkQualityTask = null;
 		}
-
-		foreach (BindableColumnWidth column in SearchColumnManager.ColumnWidths)
-			column.PropertyChanged -= OnSearchFixedColumnWidthChanged;
 
 		TeardownSentry();
 		TeardownWebsites();

@@ -1,0 +1,12 @@
+* Improved the TopBar's performance.
+
+* Significantly improved the Global Search's performance and resource usage by implementing new algorithms and mechanisms. The result:
+
+    1. It now consumes 75% Less RAM!
+    2. It now indexes the drives 25% faster.
+    3. The searches are at least X2 times faster.
+    4. Drive statistics do not increase the RAM usage.
+    5. Performing searches do not increase the RAM usage.
+    6. CPU usage has been decreased.
+
+The goal was to reduce the RAM usage as much as possible while at the same time boosting indexing and search speed, creating one of the most optimized file/folder searcher that exists.

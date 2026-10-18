@@ -4431,4 +4431,21 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr ImageList_GetIcon(IntPtr himl, int i, uint flags);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial void* VirtualAlloc(void* address, nuint size, uint allocationType, uint protect);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/memoryapi/nf-memoryapi-virtualfree
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool VirtualFree(void* address, nuint size, uint freeType);
+
 }

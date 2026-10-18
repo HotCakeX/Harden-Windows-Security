@@ -36,6 +36,7 @@
        <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
        <!-- Can't use and don't need Ready2Run when using Native AOT -->
        <PublishReadyToRun>false</PublishReadyToRun>
+       <!-- https://learn.microsoft.com/dotnet/standard/simd#instruction-set-configuration-knobs -->
        <IlcMaxVectorTBitWidth>512</IlcMaxVectorTBitWidth>
        <ImplicitUsings>disable</ImplicitUsings>
        <!-- https://learn.microsoft.com/dotnet/csharp/language-reference/unsafe-code -->

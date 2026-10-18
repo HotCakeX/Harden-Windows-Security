@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:CC="using:CommonCore.Others"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:VM="using:AppControlManager.ViewModels"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -46,7 +47,7 @@
                            x:Uid="UserConfigurations" />
 
                 <CCToolKit:SettingsExpander x:Uid="UserConfigsSettingsExpander"
-                                            IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}"
+                                            IsEnabled="{x:Bind CommonCore:Atlas.IsElevated, Mode=OneTime}"
                                             IsExpanded="{x:Bind ViewModel.MainUserConfigurationsSettingsExpanderIsExpanded, Mode=TwoWay}">
                     <CCToolKit:SettingsExpander.HeaderIcon>
                         <FontIcon Glyph="&#xE71D;" />

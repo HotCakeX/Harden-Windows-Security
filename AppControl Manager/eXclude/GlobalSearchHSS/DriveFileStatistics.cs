@@ -15,6 +15,9 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Frozen;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Pipes;
 using System.Security.AccessControl;
@@ -44,33 +47,48 @@ internal sealed partial class VolumeIndex
 	internal long[] CountFileCategories(CancellationToken token)
 	{
 		long[] counts = new long[10];
+		// Built per request so the lookup is reclaimed together with the private index.
+		FrozenDictionary<string, int>.AlternateLookup<ReadOnlySpan<char>> categories = CreateStatisticsCategories();
+		// ASCII names are stored as bytes; widen them here to classify the original UTF-16 name.
+		Span<char> scratch = stackalloc char[256];
 		if (wideEntries is not null)
 		{
-			foreach (Entry entry in wideEntries.Values)
+			WideEntryTable.Enumerator entries = wideEntries.GetEnumerator();
+			while (entries.MoveNext())
 			{
 				token.ThrowIfCancellationRequested();
-				if (!entry.Name.IsDirectory) counts[GetStatisticsCategory(nameArena.GetSpan(entry.Name))]++;
+				NameRef name = entries.Name;
+				if (!name.IsDirectory) counts[GetStatisticsCategory(categories, nameArena.GetChars(name, scratch))]++;
 			}
 		}
 		else
 		{
-			foreach (NtfsEntry entry in ntfsEntries!.Values)
+			NtfsEntryTable.Enumerator entries = ntfsEntries!.GetEnumerator();
+			while (entries.MoveNext())
 			{
 				token.ThrowIfCancellationRequested();
-				if (!entry.Name.IsDirectory) counts[GetStatisticsCategory(nameArena.GetSpan(entry.Name))]++;
+				NameRef name = entries.Name;
+				if (!name.IsDirectory) counts[GetStatisticsCategory(categories, nameArena.GetChars(name, scratch))]++;
 			}
 		}
 		return counts;
 	}
 
-	private static int GetStatisticsCategory(ReadOnlySpan<char> name)
+	// Maps each extension to its category, keeping the first category in StatisticsExtensions order.
+	private static FrozenDictionary<string, int>.AlternateLookup<ReadOnlySpan<char>> CreateStatisticsCategories()
+	{
+		Dictionary<string, int> categories = new(StringComparer.OrdinalIgnoreCase);
+		for (int category = 0; category < StatisticsExtensions.Length; category++)
+			foreach (string extension in StatisticsExtensions[category])
+				_ = categories.TryAdd(extension, category);
+		return categories.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase).GetAlternateLookup<ReadOnlySpan<char>>();
+	}
+
+	private static int GetStatisticsCategory(FrozenDictionary<string, int>.AlternateLookup<ReadOnlySpan<char>> categories, ReadOnlySpan<char> name)
 	{
 		ReadOnlySpan<char> extension = Path.GetExtension(name);
 		if (extension.IsEmpty) return 8;
-		for (int category = 0; category < StatisticsExtensions.Length; category++)
-			foreach (string candidate in StatisticsExtensions[category])
-				if (extension.Equals(candidate, StringComparison.OrdinalIgnoreCase)) return category;
-		return 9;
+		return categories.TryGetValue(extension, out int category) ? category : 9;
 	}
 }
 
@@ -96,15 +114,39 @@ internal static partial class SearchServiceHost
 	// Keep the private index out of the listener's async state and the collection frame.
 	// NoInlining ensures its local is no longer a GC root when reclamation starts.
 	[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-	private static (long[] Counts, int Skipped) CalculateDriveStatistics(char drive, CancellationToken token)
+	private static (long[] Counts, int Skipped) CalculateDriveStatistics(IndexState state, char drive, CancellationToken token)
 	{
+		// Count from the shared search index when it covers this drive, so a second
+		// index of the same volume is never built. Holding Sync blocks idle unload,
+		// searches and refreshes while the entries are enumerated.
+		lock (state.Sync)
+		{
+			foreach (VolumeIndex shared in state.Indexes)
+			{
+				if (shared.Drive != drive) continue;
+				try
+				{
+					// Brings the shared index up to date with the change journal first.
+					shared.Refresh();
+					return (shared.CountFileCategories(token), shared.InaccessibleDirectoryCount);
+				}
+				catch (Exception exception) when (exception is Win32Exception or IOException or NotSupportedException)
+				{
+					// The next search reports and removes the unusable shared index.
+					SearchLog.ReportWarning($"Shared index for {drive}:\\ could not be refreshed for statistics: {Describe(exception)}");
+				}
+				break;
+			}
+		}
+		// The drive is outside the indexed scope or its shared index failed, so a
+		// private index with its own handle, arena and dictionaries is built instead.
 		using VolumeIndex index = new(drive);
 		index.Build();
 		return (index.CountFileCategories(token), index.InaccessibleDirectoryCount);
 	}
 
 	// Idle cost is one independent listener. After shared index activation, the
-	// statistics snapshot still uses its own handle, arena and dictionaries.
+	// statistics snapshot reuses that index and only builds its own when needed.
 	private static async Task ServeStatisticsAsync(IndexState state, CancellationToken token)
 	{
 		try
@@ -129,7 +171,6 @@ internal static partial class SearchServiceHost
 					int skipped;
 					try
 					{
-						// A separate handle, arena and dictionaries isolate this request.
 						// Build is synchronous and observes shutdown only before and after
 						// its existing enumeration, rather than altering normal indexing.
 						token.ThrowIfCancellationRequested();
@@ -137,11 +178,11 @@ internal static partial class SearchServiceHost
 						state.EnsureIndexes(token);
 						try
 						{
-							(counts, skipped) = CalculateDriveStatistics((char)request[2], token);
+							(counts, skipped) = CalculateDriveStatistics(state, (char)request[2], token);
 						}
 						finally
 						{
-							// The calculation frame has unwound and disposed its private index.
+							// The calculation frame has unwound and disposed any private index.
 							// Reclaim after success, failure or cancellation, before the next drive.
 							ReclaimReleasedIndexMemory();
 						}
@@ -149,10 +190,7 @@ internal static partial class SearchServiceHost
 					catch (Exception exception) when (!token.IsCancellationRequested)
 					{
 						SearchLog.ReportWarning("Drive statistics failed: " + Describe(exception));
-						using BinaryWriter failure = new(pipe, Encoding.UTF8, leaveOpen: true);
-						failure.Write((byte)1);
-						failure.Write((byte)1);
-						failure.Flush();
+						pipe.Write([1, 1]); // Version, failure.
 						continue;
 					}
 					using BinaryWriter writer = new(pipe, Encoding.UTF8, leaveOpen: true);

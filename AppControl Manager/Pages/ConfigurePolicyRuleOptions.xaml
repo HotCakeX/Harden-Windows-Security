@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     xmlns:vm="using:AppControlManager.ViewModels"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
@@ -138,7 +139,7 @@
 
                         <ToggleButton x:Uid="DeployAfterApplyingRuleOptionsToggleButton"
                                       IsChecked="{x:Bind ViewModel.DeployAfterApplyingToggleButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.IsElevated, Mode=OneTime}" />
+                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated, Mode=OneTime}" />
 
                     </CCToolKit:WrapPanel>
 

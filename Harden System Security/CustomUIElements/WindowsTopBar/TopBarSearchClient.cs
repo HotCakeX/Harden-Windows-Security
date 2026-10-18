@@ -25,17 +25,11 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Xaml.Media.Imaging;
 
 namespace HardenSystemSecurity.CustomUIElements.WindowsTopBar;
 
 // Search metadata is resolved on the pipe worker.
-internal sealed record TopBarSearchResult(string Name, string Path, string Size, string DateModified, bool IsDirectory = false)
-{
-	// UI-thread-only cache lives with this result set, not with recycled ListView containers.
-	internal BitmapImage? Thumbnail;
-	internal bool ThumbnailAttempted;
-}
+internal sealed record TopBarSearchResult(string Name, string Path, string Size, string DateModified, bool IsDirectory = false);
 
 internal sealed partial class TopBarSearchClient : IAsyncDisposable
 {

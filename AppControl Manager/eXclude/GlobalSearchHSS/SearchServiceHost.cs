@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -25,6 +26,7 @@ using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Unicode;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -37,6 +39,81 @@ internal static class SearchLog
 	internal static void ReportError(Exception exception) => NativeEventLogger.WriteEntry(exception.ToString(), NativeEventLogger.EventLogEntryType.Error, SearchServiceHost.ServiceName);
 }
 
+// The search result frame, built in buffers reused by every query of a session and sent with one pipe write.
+// The pipe is asynchronous, so every separate write allocates its own I/O task and wait; writing each field
+// separately allocated hundreds of them per search. The bytes are identical to the BinaryWriter output the
+// client reads: tag 2, Int32 count, Int64 indexed items, then each path as a 7-bit encoded UTF-8 byte length
+// followed by its UTF-8 bytes.
+internal sealed class SearchResponse
+{
+	internal const int MaxResults = 100;
+	// Tag, count and indexed items.
+	private const int HeaderSize = 13;
+	private const int InitialFrameSize = 16 * 1024;
+	private const int InitialPathSize = 1024;
+	// Buffers grown by unusually long paths are released after the response instead of being kept for the session.
+	// 256 KB holds 100 paths averaging over 850 characters, even when each character takes 3 UTF-8 bytes.
+	private const int RetainedFrameSize = 256 * 1024;
+	private const int RetainedPathSize = 32 * 1024;
+	private byte[] frame = new byte[InitialFrameSize];
+	private char[] path = new char[InitialPathSize];
+	private int length = HeaderSize;
+
+	internal int Count { get; private set; }
+	internal bool IsFull => Count >= MaxResults;
+
+	internal void Clear()
+	{
+		length = HeaderSize;
+		Count = 0;
+	}
+
+	// Scratch for building one path; valid until the next call.
+	internal Span<char> GetPathBuffer(int pathLength)
+	{
+		if (path.Length < pathLength) path = new char[Math.Max(pathLength, path.Length * 2)];
+		return path.AsSpan(0, pathLength);
+	}
+
+	// Same bytes as BinaryWriter.Write(string) with Encoding.UTF8, including U+FFFD for each unpaired surrogate.
+	// Utf8.FromUtf16 replaces them without the allocations of Encoding.UTF8's replacement fallback, in one pass.
+	internal void Add(ReadOnlySpan<char> value)
+	{
+		// Each UTF-16 code unit takes at most 3 UTF-8 bytes; a surrogate pair takes 4.
+		int maxByteCount = value.Length * 3;
+		int reservedPrefix = GetPrefixSize(maxByteCount);
+		int required = length + reservedPrefix + maxByteCount;
+		if (frame.Length < required) Array.Resize(ref frame, Math.Max(required, frame.Length * 2));
+		// Encode after room for the longest possible length prefix, then close the gap if the prefix is shorter.
+		_ = Utf8.FromUtf16(value, frame.AsSpan(length + reservedPrefix), out _, out int byteCount);
+		int prefix = GetPrefixSize(byteCount);
+		if (prefix != reservedPrefix)
+			frame.AsSpan(length + reservedPrefix, byteCount).CopyTo(frame.AsSpan(length + prefix));
+		uint remaining = (uint)byteCount;
+		while (remaining > 0x7F)
+		{
+			frame[length++] = unchecked((byte)(remaining | 0x80));
+			remaining >>= 7;
+		}
+		frame[length++] = (byte)remaining;
+		length += byteCount;
+		Count++;
+	}
+
+	// Size of the 7-bit encoded length prefix.
+	private static int GetPrefixSize(int value) => value < 0x80 ? 1 : value < 0x4000 ? 2 : value < 0x20_0000 ? 3 : value < 0x1000_0000 ? 4 : 5;
+
+	internal void WriteTo(Stream stream, long indexedItems)
+	{
+		frame[0] = 2;
+		BinaryPrimitives.WriteInt32LittleEndian(frame.AsSpan(1, 4), Count);
+		BinaryPrimitives.WriteInt64LittleEndian(frame.AsSpan(5, 8), indexedItems);
+		stream.Write(frame, 0, length);
+		if (frame.Length > RetainedFrameSize) frame = new byte[InitialFrameSize];
+		if (path.Length > RetainedPathSize) path = new char[InitialPathSize];
+	}
+}
+
 internal static partial class SearchServiceHost
 {
 	internal const string SDDLFORM = "D:P(D;;GA;;;NU)(A;;GA;;;SY)(A;;GA;;;BA)(A;;0x00100083;;;IU)S:(ML;;NW;;;ME)";
@@ -44,6 +121,8 @@ internal static partial class SearchServiceHost
 	internal const string PipeName = "GlobalSearchHSS_SearchPipe";
 	// Application Id="App" in the package manifest; shared by the main app and Top Bar.
 	internal const string AuthorizedApplicationUserModelId = "VioletHansen.HardenSystemSecurity_ea7andspwdn10!App";
+	// Searches answered between two periodic memory reclamations.
+	private const int SearchesPerReclaim = 10;
 	private static nint _status;
 	private static CancellationTokenSource? _stop;
 	private static NamedPipeServerStream? _pipe;
@@ -126,8 +205,6 @@ internal static partial class SearchServiceHost
 		finally
 		{
 			SetStatus(SERVICE_STATE.SERVICE_STOP_PENDING);
-			_pipe?.Dispose();
-			_pipe = null;
 			_stop = null;
 			SetStatus(SERVICE_STATE.SERVICE_STOPPED);
 		}
@@ -211,11 +288,8 @@ internal static partial class SearchServiceHost
 				VolumeIndex? index = null;
 				try
 				{
-					// SearchLog.Report($"Building index for {drive}:\\; please wait...");
 					index = new VolumeIndex(drive);
-					// SearchLog.Report($"{drive}:\\ filesystem: {index.FileSystem}");
 					index.Build();
-					// SearchLog.Report($"{drive}:\\ indexed {index.Count:N0} file IDs.");
 					if (index.InaccessibleDirectoryCount != 0)
 						SearchLog.ReportWarning($"WARNING: {drive}:\\ index is PARTIAL: {index.InaccessibleDirectoryCount:N0} inaccessible director{(index.InaccessibleDirectoryCount == 1 ? "y" : "ies")} not traversed.");
 					indexes.Add(index);
@@ -231,6 +305,9 @@ internal static partial class SearchServiceHost
 			SearchLog.Report($"Completion time: {initialTime.Elapsed.TotalMilliseconds / 1000} seconds ");
 			if (indexes.Count == 0)
 				SearchLog.ReportWarning("No drives could be indexed. Check that an NTFS or ReFS volume with a USN journal is available.");
+			// Indexing leaves outgrown hash buckets, enumeration buffers and walk state behind. The large ones
+			// are only freed by a full collection, which may not happen for a long time, so collect once now.
+			ReclaimReleasedIndexMemory();
 
 		}
 		catch
@@ -241,9 +318,10 @@ internal static partial class SearchServiceHost
 		}
 	}
 
-	// Call only after releasing an index and returning from its owning frame.
+	// Call only after releasing an index and returning from its owning frame, after a build completes,
+	// or after every SearchesPerReclaim searches.
 	// This is process-wide collection, not a working-set trim: live search indexes remain intact.
-	private static void ReclaimReleasedIndexMemory()
+	internal static void ReclaimReleasedIndexMemory()
 	{
 		System.Runtime.GCSettings.LargeObjectHeapCompactionMode =
 			System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
@@ -258,7 +336,8 @@ internal static partial class SearchServiceHost
 		internal readonly List<VolumeIndex> Indexes = new();
 		internal readonly Timer IdleTimer;
 		internal bool Unloaded = true;
-		private bool disposed;
+		// Searches answered since the last periodic reclamation, across all sessions. Guarded by Sync.
+		internal int SearchesSinceReclaim;
 		private long idleDeadline = long.MaxValue;
 		// Ten minutes initially; one hour after the first query or initial idle unload.
 		internal TimeSpan IdleDelay = TimeSpan.FromMinutes(10);
@@ -302,7 +381,7 @@ internal static partial class SearchServiceHost
 		{
 			lock (Sync)
 			{
-				if (disposed || Unloaded || idleDeadline == long.MaxValue) return;
+				if (Unloaded || idleDeadline == long.MaxValue) return;
 				long now = Stopwatch.GetTimestamp();
 				if (now < idleDeadline)
 				{
@@ -331,8 +410,6 @@ internal static partial class SearchServiceHost
 		{
 			lock (Sync)
 			{
-				if (disposed) return;
-				disposed = true;
 				StopIdleTimer();
 				IdleTimer.Dispose();
 				ReleaseIndexes();
@@ -417,42 +494,34 @@ internal static partial class SearchServiceHost
 			return null;
 		}
 		Span<byte> bytes = stackalloc byte[length];
-		int offset = 0;
-		while (offset < bytes.Length)
-		{
-			int read = reader.Read(bytes[offset..]);
-			if (read == 0) throw new EndOfStreamException();
-			offset += read;
-		}
+		reader.BaseStream.ReadExactly(bytes);
 		return Encoding.UTF8.GetString(bytes);
 	}
 
-	private static List<string> SearchIndexes(string query, List<VolumeIndex> indexes)
+	private static void SearchIndexes(string query, List<VolumeIndex> indexes, SearchResponse response)
 	{
-		List<string> results = new(100);
-		if (!string.IsNullOrEmpty(query))
+		response.Clear();
+		if (query.Length == 0) return;
+		// Prepared once and shared by every volume.
+		NameQuery prepared = new(query);
+		// Refresh each volume separately so one journal failure does not hide other results.
+		for (int i = 0; i < indexes.Count;)
 		{
-			// Refresh each volume separately so one journal failure does not hide other results.
-			for (int i = 0; i < indexes.Count;)
+			VolumeIndex index = indexes[i];
+			try
 			{
-				VolumeIndex index = indexes[i];
-				try
-				{
-					index.Refresh();
-					foreach (string path in index.Search(query, 100 - results.Count))
-						results.Add(path);
-					i++;
-				}
-				catch (Exception exception) when (exception is Win32Exception or IOException or NotSupportedException)
-				{
-					SearchLog.ReportWarning($"Index for {index.Drive}:\\ is no longer usable: {Describe(exception)}");
-					index.Dispose();
-					indexes.RemoveAt(i);
-				}
-				if (results.Count >= 100) break;
+				index.Refresh();
+				index.Search(prepared, response);
+				i++;
 			}
+			catch (Exception exception) when (exception is Win32Exception or IOException or NotSupportedException)
+			{
+				SearchLog.ReportWarning($"Index for {index.Drive}:\\ is no longer usable: {Describe(exception)}");
+				index.Dispose();
+				indexes.RemoveAt(i);
+			}
+			if (response.IsFull) break;
 		}
-		return results;
 	}
 
 	private static void HandleSession(NamedPipeServerStream pipe, IndexState state, CancellationToken token, ref bool buildingIndexes)
@@ -463,6 +532,7 @@ internal static partial class SearchServiceHost
 		// The handshake confirms listener readiness, not that an index has been built.
 		writer.Write("Search service ready.");
 		writer.Flush();
+		SearchResponse response = new();
 		while (!token.IsCancellationRequested)
 		{
 			string? query;
@@ -473,7 +543,7 @@ internal static partial class SearchServiceHost
 				SearchLog.ReportWarning($"Rejected malformed search query: {exception.Message}");
 				break;
 			}
-			catch (EndOfStreamException) { break; }
+			// EndOfStreamException is an IOException; both end only this session.
 			catch (IOException) { break; }
 			if (query is null) break;
 			lock (state.Sync)
@@ -482,7 +552,7 @@ internal static partial class SearchServiceHost
 				state.StopIdleTimer();
 				try
 				{
-					if (state.Unloaded && !string.IsNullOrEmpty(query))
+					if (state.Unloaded && query.Length != 0)
 					{
 						// Notify the client before the synchronous build, including rebuilds after idle unload.
 						writer.Write((byte)5); // Indexing; the normal result frame still follows.
@@ -492,16 +562,18 @@ internal static partial class SearchServiceHost
 						state.EnsureIndexes(token);
 						buildingIndexes = false;
 					}
-					List<string> results = SearchIndexes(query, state.Indexes);
+					SearchIndexes(query, state.Indexes, response);
 					// Snapshot the indexes currently held after this query's refresh, without walking their entries.
 					long indexedItems = 0;
 					foreach (VolumeIndex index in state.Indexes) indexedItems += index.IndexedItemCount;
-					writer.Write((byte)2);
-					writer.Write(results.Count);
-					writer.Write(indexedItems);
-					foreach (string path in results) writer.Write(path);
-					writer.Flush();
+					response.WriteTo(pipe, indexedItems);
 					if (state.Indexes.Count == 0) SearchLog.ReportWarning("No usable indexes remain. Restart the service to rebuild.");
+					// Reclaim after the response is sent, so this response is never delayed by the collection.
+					if (++state.SearchesSinceReclaim >= SearchesPerReclaim)
+					{
+						state.SearchesSinceReclaim = 0;
+						ReclaimReleasedIndexMemory();
+					}
 				}
 				finally
 				{

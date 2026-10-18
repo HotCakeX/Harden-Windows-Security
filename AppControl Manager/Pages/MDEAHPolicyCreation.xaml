@@ -596,7 +596,7 @@
                                         <MenuFlyoutSeparator/>
 
                                         <ToggleMenuFlyoutItem x:Uid="DeployAfterCreationMenuFlyoutItem"
-                                                              IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                                              IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                                               IsChecked="{x:Bind ViewModel.DeployPolicyToggle, Mode=TwoWay}">
                                             <ToggleMenuFlyoutItem.Icon>
                                                 <FontIcon Glyph="&#xE896;"/>

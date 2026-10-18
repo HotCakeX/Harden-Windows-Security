@@ -4,6 +4,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:customUI="using:AppControlManager.CustomUIElements"
       xmlns:CCToolKit="using:CommonCore.ToolKits"
+      xmlns:CommonCore="using:CommonCore"
       xmlns:viewmodels="using:AppControlManager.ViewModels"
       FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
     <Page.Resources>
@@ -69,7 +70,7 @@
                             IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}"
                             Click="{x:Bind ViewModel.AllowMicrosoftCreate_Click}" />
                     <ToggleButton IsChecked="{x:Bind ViewModel.AllowMicrosoftCreateAndDeploy, Mode=TwoWay}"
-                                  IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                  IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />
                 </CCToolKit:WrapPanel>
@@ -84,7 +85,7 @@
                                       x:Uid="ToggleSwitchGeneral"
                                       IsEnabled="{x:Bind ViewModel.AllowMicrosoftSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
-                    <CCToolKit:SettingsCard x:Uid="LogSizeConfigSettingsCard" IsEnabled="{x:Bind ViewModel.IsElevated}">
+                    <CCToolKit:SettingsCard x:Uid="LogSizeConfigSettingsCard" IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}">
                         <NumberBox x:Uid="LogSizeNumberBox"
                                    Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
                                    SpinButtonPlacementMode="Inline"
@@ -173,7 +174,7 @@
                             Margin="0,0,15,0"
                             Click="{x:Bind ViewModel.DefaultWindowsCreate_Click}" />
                     <ToggleButton IsChecked="{x:Bind ViewModel.DefaultWindowsCreateAndDeploy, Mode=TwoWay}"
-                                  IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                  IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />
                 </CCToolKit:WrapPanel>
@@ -188,7 +189,7 @@
                                       x:Uid="ToggleSwitchGeneral"
                                       IsEnabled="{x:Bind ViewModel.DefaultWindowsSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
-                    <CCToolKit:SettingsCard x:Uid="LogSizeConfigSettingsCard" IsEnabled="{x:Bind ViewModel.IsElevated}">
+                    <CCToolKit:SettingsCard x:Uid="LogSizeConfigSettingsCard" IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}">
                         <NumberBox x:Uid="LogSizeNumberBox"
                                    IsEnabled="{x:Bind ViewModel.DefaultWindowsLogSizeInputIsEnabled, Mode=OneWay}"
                                    Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
@@ -277,7 +278,7 @@
                             Margin="0,0,15,0"
                             Click="{x:Bind ViewModel.SignedAndReputableCreate_Click}" />
                     <ToggleButton IsChecked="{x:Bind ViewModel.SignedAndReputableCreateAndDeploy, Mode=TwoWay}"
-                                  IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                  IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />
                 </CCToolKit:WrapPanel>
@@ -287,7 +288,7 @@
                                       x:Uid="ToggleSwitchGeneral"
                                       IsEnabled="{x:Bind ViewModel.SignedAndReputableSectionIsEnabled, Mode=OneWay}" />
                     </customUI:SettingsCardV2>
-                    <CCToolKit:SettingsCard x:Uid="LogSizeConfigSettingsCard" IsEnabled="{x:Bind ViewModel.IsElevated}">
+                    <CCToolKit:SettingsCard x:Uid="LogSizeConfigSettingsCard" IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}">
                         <NumberBox x:Uid="LogSizeNumberBox"
                                    IsEnabled="{x:Bind ViewModel.SignedAndReputableLogSizeInputIsEnabled, Mode=OneWay}"
                                    Value="{x:Bind ViewModel.EventLogsUtil.MaxSizeMB, Mode=TwoWay}"
@@ -376,12 +377,12 @@
                             IsEnabled="{x:Bind ViewModel.RecommendedDriverBlockRulesSectionIsEnabled, Mode=OneWay}"
                             Click="{x:Bind ViewModel.RecommendedDriverBlockRulesCreate_Click}" />
                     <ToggleButton IsChecked="{x:Bind ViewModel.RecommendedDriverBlockRulesCreateAndDeploy, Mode=TwoWay}"
-                                  IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                  IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />
                     <Button x:Uid="RecommendedDriverBlockRulesScheduledAutoUpdate"
                             Style="{StaticResource AccentButtonStyle}"
-                            IsEnabled="{x:Bind ViewModel.IsElevated}"
+                            IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                             Click="{x:Bind ViewModel.RecommendedDriverBlockRulesScheduledAutoUpdate_Click}"
                             Margin="0,0,15,0" />
                 </CCToolKit:WrapPanel>
@@ -447,7 +448,7 @@
                             Style="{StaticResource AccentButtonStyle}"
                             Margin="0,0,15,0"
                             Click="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreate_Click}" />
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated}"
+                    <ToggleButton IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   IsChecked="{x:Bind ViewModel.RecommendedUserModeBlockRulesCreateAndDeploy, Mode=TwoWay}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />
@@ -503,7 +504,7 @@
                             Style="{StaticResource AccentButtonStyle}"
                             Margin="0,0,15,0"
                             x:Uid="StrictKernelModePolicyCreateButton" />
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated}"
+                    <ToggleButton IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   IsChecked="{x:Bind ViewModel.StrictKernelModesCreateAndDeploy, Mode=TwoWay}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />
@@ -571,7 +572,7 @@
                             Style="{StaticResource AccentButtonStyle}"
                             Margin="0,0,15,0"
                             x:Uid="RMMBlockingCreateButton" />
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated}"
+                    <ToggleButton IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   IsChecked="{x:Bind ViewModel.RMMBlockingCreateAndDeploy, Mode=TwoWay}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />
@@ -634,7 +635,7 @@
                             Style="{StaticResource AccentButtonStyle}"
                             Margin="0,0,15,0"
                             x:Uid="DownloadsDefenseMeasureCreateButton" />
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated}"
+                    <ToggleButton IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   IsChecked="{x:Bind ViewModel.DownloadsDefenseMeasureCreateAndDeploy, Mode=TwoWay}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />
@@ -697,7 +698,7 @@
                             Style="{StaticResource AccentButtonStyle}"
                             Margin="0,0,15,0"
                             x:Uid="DangerousScriptHostsBlockingCreateButton" />
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated}"
+                    <ToggleButton IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   IsChecked="{x:Bind ViewModel.DangerousScriptHostsBlockingCreateAndDeploy, Mode=TwoWay}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />
@@ -759,7 +760,7 @@
                             Style="{StaticResource AccentButtonStyle}"
                             Margin="0,0,15,0"
                             x:Uid="AppManifestsCreateButton" />
-                    <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated}"
+                    <ToggleButton IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                   IsChecked="{x:Bind ViewModel.AppManifestsCreateAndDeploy, Mode=TwoWay}"
                                   x:Uid="DeployAfterCreationButton"
                                   Margin="0,0,15,0" />

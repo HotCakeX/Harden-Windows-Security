@@ -7,6 +7,7 @@
     xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
@@ -543,7 +544,7 @@
                                 ExternalOperationStarted="{x:Bind ViewModel.FilesAndFoldersCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.FilesAndFoldersDeployButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
 
@@ -826,7 +827,7 @@
                                 Margin="0,0,15,0" />
 
                         <ToggleButton x:Uid="DeployAfterCreationButton"
-                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                       IsChecked="{x:Bind ViewModel.CertificatesBasedDeployButton, Mode=TwoWay}"
                                       Margin="0,0,15,0" />
 
@@ -1018,7 +1019,7 @@
                                 Margin="0,0,15,0" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.ISGBasedDeployButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
 
@@ -1147,7 +1148,7 @@
 
                         <ToggleButton x:Uid="DeployAfterCreationButton"
                                       IsChecked="{x:Bind ViewModel.StrictKernelModeShouldDeploy, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                       Margin="0,0,15,0" />
 
                     </CCToolKit:WrapPanel>
@@ -1343,7 +1344,7 @@
                                 ExternalShadowAnimationRunning="{x:Bind ViewModel.PFNBasedCancellableButton.ShadowAnimationRunning, Mode=OneWay}"
                                 ExternalOperationStarted="{x:Bind ViewModel.PFNBasedCancellableButton.OperationStarted, Mode=OneWay}" />
 
-                        <ToggleButton IsEnabled="{x:Bind ViewModel.IsElevated}"
+                        <ToggleButton IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                       IsChecked="{x:Bind ViewModel.PFNBasedShouldDeploy, Mode=TwoWay}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
@@ -1585,7 +1586,7 @@
                                     ExternalOperationStarted="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDeployButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
 

@@ -758,17 +758,17 @@
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=TwoWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=TwoWay}"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="1" Text="Name" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                            <TextBlock Grid.Column="1" Text="Name" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap" SizeChanged="{x:Bind OnSearchFixedColumnSizeChanged}"/>
                                             <TextBlock Grid.Column="2" Text="Path" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
-                                            <TextBlock Grid.Column="3" Text="Size" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                            <TextBlock Grid.Column="3" Text="Size" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap" SizeChanged="{x:Bind OnSearchFixedColumnSizeChanged}"/>
                                             <!-- One Search-only resize handle; it does not resize the Size column. -->
                                             <Thumb Grid.Column="3"
                                                Width="8"
                                                Height="28"
                                                HorizontalAlignment="Left"
                                                Background="{ThemeResource ControlAltFillColorSecondaryBrush}"
-                                               DragDelta="OnSearchPathDragDelta"/>
-                                            <TextBlock Grid.Column="4" Text="Date modified" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap"/>
+                                               DragDelta="{x:Bind OnSearchPathDragDelta}"/>
+                                            <TextBlock Grid.Column="4" Text="Date modified" Margin="8,0" VerticalAlignment="Center" FontWeight="SemiBold" TextWrapping="NoWrap" SizeChanged="{x:Bind OnSearchFixedColumnSizeChanged}"/>
                                         </Grid>
                                     </Border>
                                 </ListView.Header>

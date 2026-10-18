@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:siPolicy="using:AppControlManager.SiPolicy"
     xmlns:intelgathering="using:CommonCore.IntelGathering"
     Unloaded="{x:Bind FirewallSentinel_Unloaded}"
@@ -621,7 +622,7 @@
                                 ExternalOperationStarted="{x:Bind ViewModel.FilesAndFoldersCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.FilesAndFoldersDeployButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
 
@@ -827,7 +828,7 @@
                                 Margin="0,0,15,0" />
 
                         <ToggleButton x:Uid="DeployAfterCreationButton"
-                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                       IsChecked="{x:Bind ViewModel.CertificatesBasedDeployButton, Mode=TwoWay}"
                                       Margin="0,0,15,0" />
 
@@ -953,7 +954,7 @@
                                     ExternalOperationStarted="{x:Bind ViewModel.PatternBasedFileRuleCancellableButton.OperationStarted, Mode=OneWay}" />
 
                         <ToggleButton IsChecked="{x:Bind ViewModel.CustomPatternBasedFileRuleBasedDeployButton, Mode=TwoWay}"
-                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                       x:Uid="DeployAfterCreationButton"
                                       Margin="0,0,15,0" />
 

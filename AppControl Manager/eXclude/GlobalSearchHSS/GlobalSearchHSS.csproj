@@ -25,7 +25,18 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
 		<Http3Support>false</Http3Support>
+		<!-- https://learn.microsoft.com/dotnet/core/runtime-config/garbage-collector#background-gc -->
+		<!-- https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/performance#workstation-or-server-garbage-collection -->
+		<!-- Disables background GC, so the runtime does not create its dedicated background GC thread. -->
+		<ConcurrentGarbageCollection>false</ConcurrentGarbageCollection>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- https://learn.microsoft.com/dotnet/core/runtime-config/garbage-collector#conserve-memory -->
+		<!-- 9 is the maximum: the GC keeps the heap as small as possible at the cost of more frequent full collections. -->
+		<!-- Native AOT embeds RuntimeHostConfigurationOption items into the executable, so no runtimeconfig.json is needed. -->
+		<RuntimeHostConfigurationOption Include="System.GC.ConserveMemory" Value="9" />
+	</ItemGroup>
 
 	<Import Project="..\CommonCore\CommonCore.projitems" Label="Shared" />
 </Project>

@@ -6,6 +6,7 @@
     xmlns:CCToolKit="using:CommonCore.ToolKits"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
     xmlns:intelgathering="using:CommonCore.IntelGathering"
+    xmlns:CommonCore="using:CommonCore"
     xmlns:animatedvisuals="using:AnimatedVisuals"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}"
     KeyboardAcceleratorPlacementMode="Hidden">
@@ -423,7 +424,7 @@
                                 <MenuFlyoutSeparator/>
 
                                 <ToggleMenuFlyoutItem x:Uid="DeployAfterCreationMenuFlyoutItem"
-                                                      IsEnabled="{x:Bind ViewModel.IsElevated}"
+                                                      IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}"
                                                       IsChecked="{x:Bind ViewModel.DeployPolicyToggle, Mode=TwoWay}">
                                     <ToggleMenuFlyoutItem.Icon>
                                         <FontIcon Glyph="&#xE896;"/>
@@ -433,7 +434,7 @@
                                 <MenuFlyoutSeparator/>
 
                                 <MenuFlyoutSubItem x:Uid="ClearOperatingSystemLogsMenuFlyoutItem"
-                                                   IsEnabled="{x:Bind ViewModel.IsElevated}">
+                                                   IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}">
                                     <MenuFlyoutSubItem.Icon>
                                         <FontIcon Glyph="&#xE814;"/>
                                     </MenuFlyoutSubItem.Icon>

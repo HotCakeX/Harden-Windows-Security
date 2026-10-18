@@ -65,7 +65,7 @@
         <CCToolKit:WrapPanel Margin="10,5,10,5" Grid.Row="2" Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10" HorizontalAlignment="Center" XYFocusKeyboardNavigation="Enabled">
 
             <DropDownButton x:Uid="FirmwareInfoDropdownButton"
-                            IsEnabled="{x:Bind ViewModel.IsElevated}">
+                            IsEnabled="{x:Bind CommonCore:Atlas.IsElevated}">
 
                 <DropDownButton.ContentTemplate>
                     <DataTemplate x:DataType="x:String">

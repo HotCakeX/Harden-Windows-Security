@@ -25,16 +25,21 @@ namespace HardenSystemSecurity.Protect;
 /// Type used by the ListView in the Protect page.
 /// </summary>
 /// <param name="subCategories">Any sub-categories that the main category might be using.</param>
-internal sealed class ProtectionCategoryListViewItem(
+internal sealed partial class ProtectionCategoryListViewItem(
 	Categories category,
 	string title,
 	string subTitle,
 	BitmapImage logo,
-	List<SubCategoryDefinition> subCategories)
+	List<SubCategoryDefinition> subCategories) : ViewModelBase
 {
 	internal Categories Category => category;
 	internal string Title => title;
 	internal string Subtitle => subTitle;
 	internal BitmapImage Logo => logo;
 	internal List<SubCategoryDefinition> SubCategories => subCategories;
+
+	/// <summary>
+	/// Whether this category is currently being processed. Used to highlight it in the ListView.
+	/// </summary>
+	internal bool IsProcessing { get; set => SP(ref field, value); }
 }

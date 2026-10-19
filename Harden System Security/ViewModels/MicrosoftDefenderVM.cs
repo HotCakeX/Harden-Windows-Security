@@ -17,7 +17,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -35,21 +34,8 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 {
-	[SetsRequiredMembers]
-	internal MicrosoftDefenderVM()
-	{
-		MainInfoBar = new();
-
-		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
-
-		IMUnitListViewModel.CreateUIValuesCategories(this);
-
-		// To size the listview columns with some padding after initial page load.
-		_ = Atlas.AppDispatcher.TryEnqueue(ComputeColumnWidths);
-	}
+	// To size the listview columns with some padding after initial page load.
+	internal MicrosoftDefenderVM() => _ = Atlas.AppDispatcher.TryEnqueue(ComputeColumnWidths);
 
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.

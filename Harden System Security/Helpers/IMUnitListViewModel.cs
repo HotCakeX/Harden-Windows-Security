@@ -172,33 +172,8 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 					viewModel.FilteredItemsCount = totalCount;
 					viewModel.SelectedItemsCount = 0;
 
-					// Compute initial status counts from AllMUnits.
-					int undetermined = 0;
-					int applied = 0;
-					int notApplied = 0;
-
-					foreach (MUnit m in CollectionsMarshal.AsSpan(viewModel.AllMUnits))
-					{
-						StatusState status = m.StatusState;
-						switch (status)
-						{
-							case StatusState.Undetermined:
-								undetermined++;
-								break;
-							case StatusState.Applied:
-								applied++;
-								break;
-							case StatusState.NotApplied:
-								notApplied++;
-								break;
-							default:
-								break;
-						}
-					}
-
-					viewModel.UndeterminedItemsCount = undetermined;
-					viewModel.AppliedItemsCount = applied;
-					viewModel.NotAppliedItemsCount = notApplied;
+					// Compute initial status counts from all MUnits (the backing field was just built from AllMUnits).
+					ComputeStatusCounts(viewModel);
 				});
 			}
 			catch (Exception ex)
@@ -210,6 +185,45 @@ internal interface IMUnitListViewModel : INotifyPropertyChanged
 				viewModel.ElementsAreEnabled = true;
 			}
 		});
+	}
+
+	/// <summary>
+	/// Counts the status of all MUnits in the <see cref="ListViewItemsSourceBackingField"/> (not just filtered ones)
+	/// and updates the Undetermined, Applied and NotApplied counts of the ViewModel.
+	/// </summary>
+	/// <param name="viewModel">The ViewModel instance</param>
+	static void ComputeStatusCounts(IMUnitListViewModel viewModel)
+	{
+		int undeterminedCount = 0;
+		int appliedCount = 0;
+		int notAppliedCount = 0;
+
+		foreach (GroupInfoListForMUnit group in CollectionsMarshal.AsSpan(viewModel.ListViewItemsSourceBackingField))
+		{
+			foreach (MUnit munit in group)
+			{
+				StatusState status = munit.StatusState;
+				switch (status)
+				{
+					case StatusState.Undetermined:
+						undeterminedCount++;
+						break;
+					case StatusState.Applied:
+						appliedCount++;
+						break;
+					case StatusState.NotApplied:
+						notAppliedCount++;
+						break;
+					default:
+						break;
+				}
+			}
+		}
+
+		// Update ViewModel with new counts
+		viewModel.UndeterminedItemsCount = undeterminedCount;
+		viewModel.AppliedItemsCount = appliedCount;
+		viewModel.NotAppliedItemsCount = notAppliedCount;
 	}
 
 	/// <summary>

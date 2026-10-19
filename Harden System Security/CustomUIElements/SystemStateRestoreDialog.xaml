@@ -1,0 +1,319 @@
+<customUI:ContentDialogV2
+    x:Class="HardenSystemSecurity.CustomUIElements.SystemStateRestoreDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:local="using:HardenSystemSecurity.CustomUIElements"
+    xmlns:Protect="using:HardenSystemSecurity.Protect"
+    xmlns:VMs="using:HardenSystemSecurity.ViewModels"
+    DefaultButton="Close"
+    SecondaryButtonClick="{x:Bind OnSecondaryButtonClick}">
+
+    <Grid RowSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Expander Grid.Row="0"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Stretch">
+            <Expander.Header>
+                <Grid ColumnSpacing="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <FontIcon Grid.Column="0"
+                              Glyph="&#xE946;"
+                              FontSize="16" />
+
+                    <TextBlock Grid.Column="1"
+                               Text="Backup Details"
+                               VerticalAlignment="Center" />
+
+                    <TextBlock Grid.Column="2"
+                               Text="{x:Bind RestorationMode}"
+                               VerticalAlignment="Center"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </Grid>
+            </Expander.Header>
+
+            <Grid ColumnSpacing="12"
+                  RowSpacing="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Created"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock Grid.Row="0"
+                           Grid.Column="1"
+                           Text="{x:Bind Created}"
+                           IsTextSelectionEnabled="True" />
+
+                <TextBlock Grid.Row="1"
+                           Grid.Column="0"
+                           Text="Machine Name"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock Grid.Row="1"
+                           Grid.Column="1"
+                           Text="{x:Bind MachineName}"
+                           IsTextSelectionEnabled="True" />
+
+                <TextBlock Grid.Row="2"
+                           Grid.Column="0"
+                           Text="User Name"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock Grid.Row="2"
+                           Grid.Column="1"
+                           Text="{x:Bind UserName}"
+                           IsTextSelectionEnabled="True" />
+
+                <TextBlock Grid.Row="3"
+                           Grid.Column="0"
+                           Text="App Version"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock Grid.Row="3"
+                           Grid.Column="1"
+                           Text="{x:Bind AppVersion}"
+                           IsTextSelectionEnabled="True" />
+
+                <TextBlock Grid.Row="4"
+                           Grid.Column="0"
+                           Text="Total"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock Grid.Row="4"
+                           Grid.Column="1"
+                           Text="{x:Bind Total}" />
+
+                <TextBlock Grid.Row="5"
+                           Grid.Column="0"
+                           Text="Compliant"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock Grid.Row="5"
+                           Grid.Column="1"
+                           Text="{x:Bind Compliant}" />
+
+                <TextBlock Grid.Row="6"
+                           Grid.Column="0"
+                           Text="Non-Compliant"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                <TextBlock Grid.Row="6"
+                           Grid.Column="1"
+                           Text="{x:Bind NonCompliant}" />
+
+                <TextBlock Grid.Row="7"
+                           Grid.ColumnSpan="2"
+                           Text="{x:Bind RestorationModeDescription}"
+                           Visibility="{x:Bind CanApply}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           TextWrapping="WrapWholeWords" />
+
+                <TextBlock Grid.Row="8"
+                           Grid.ColumnSpan="2"
+                           Text="{x:Bind Hint}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                           TextWrapping="WrapWholeWords" />
+            </Grid>
+        </Expander>
+
+        <customUI:InfoBarV2 Grid.Row="1"
+                            IsOpen="{x:Bind DialogInfoBar.IsOpen, Mode=TwoWay}"
+                            Title="{x:Bind DialogInfoBar.Title, Mode=OneWay}"
+                            Message="{x:Bind DialogInfoBar.Message, Mode=OneWay}"
+                            Severity="{x:Bind DialogInfoBar.Severity, Mode=OneWay}"
+                            IsClosable="{x:Bind DialogInfoBar.IsClosable, Mode=OneWay}" />
+
+        <TextBox Grid.Row="2"                 
+                 x:Uid="SearchSecurityMeasuresPlaceHolder"
+                 TextChanged="{x:Bind SearchBox_TextChanged}" />
+
+        <!-- One expander per category in the backup file -->
+        <ScrollViewer Grid.Row="3">
+            <ItemsControl ItemsSource="{x:Bind Sections}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="local:SystemStateRestoreSection">
+                        <Expander Margin="0,0,0,6"
+                                  HorizontalAlignment="Stretch"
+                                  HorizontalContentAlignment="Stretch"
+                                  IsExpanded="{x:Bind IsExpanded, Mode=TwoWay}"
+                                  Visibility="{x:Bind HasDisplayedItems, Mode=OneWay}">
+                            <Expander.Header>
+                                <Grid Padding="0,6"
+                                      ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Image Grid.Column="0"
+                                           Width="32"
+                                           Height="32"
+                                           Source="{x:Bind Header.Logo}" />
+
+                                    <StackPanel Grid.Column="1"
+                                                VerticalAlignment="Center">
+                                        <TextBlock Text="{x:Bind Header.Title}"
+                                                   Style="{ThemeResource BaseTextBlockStyle}" />
+                                        <TextBlock Text="{x:Bind Header.Subtitle}"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                   TextWrapping="WrapWholeWords" />
+                                    </StackPanel>
+
+                                    <Border Grid.Column="2"
+                                            Padding="8,2"
+                                            CornerRadius="10"
+                                            VerticalAlignment="Center"
+                                            Background="{ThemeResource AccentFillColorSecondaryBrush}">
+                                        <TextBlock Text="{x:Bind Count}"
+                                                   FontSize="12"
+                                                   Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                                    </Border>
+                                </Grid>
+                            </Expander.Header>
+
+                            <StackPanel>
+                                <!-- Microsoft Security Baselines: checked means compliant -->
+                                <ScrollViewer Visibility="{x:Bind BaselineItemsVisibility}"
+                                              MaxHeight="450"
+                                              Padding="16,0,12,0">
+                                    <ItemsRepeater ItemsSource="{x:Bind BaselineItems, Mode=OneWay}">
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate x:DataType="Protect:VerificationResult">
+                                                <StackPanel Padding="0,6"
+                                                            Spacing="2">
+                                                    <CheckBox IsChecked="{x:Bind IsCompliant, Mode=TwoWay}">
+                                                        <TextBlock Text="{x:Bind FriendlyName}"
+                                                                   TextWrapping="WrapWholeWords" />
+                                                    </CheckBox>
+
+                                                    <Grid Margin="28,0,0,0"
+                                                          ColumnSpacing="8">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+
+                                                        <TextBlock Grid.Row="0"
+                                                                   Grid.Column="0"
+                                                                   x:Uid="SourceHeader"
+                                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                        <TextBlock Grid.Row="0"
+                                                                   Grid.Column="1"
+                                                                   Text="{x:Bind SourceDisplay}"
+                                                                   TextWrapping="Wrap" />
+
+                                                        <TextBlock Grid.Row="1"
+                                                                   Grid.Column="0"
+                                                                   x:Uid="CurrentValueHeader"
+                                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                        <TextBlock Grid.Row="1"
+                                                                   Grid.Column="1"
+                                                                   Text="{x:Bind CurrentValue}"
+                                                                   TextWrapping="Wrap" />
+
+                                                        <TextBlock Grid.Row="2"
+                                                                   Grid.Column="0"
+                                                                   x:Uid="ExpectedValueHeader"
+                                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                                        <TextBlock Grid.Row="2"
+                                                                   Grid.Column="1"
+                                                                   Text="{x:Bind ExpectedValue}"
+                                                                   TextWrapping="Wrap" />
+                                                    </Grid>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+                                </ScrollViewer>
+
+                                <!-- Attack Surface Reduction Rules: each rule has a state -->
+                                <ScrollViewer Visibility="{x:Bind ASRItemsVisibility}"
+                                              MaxHeight="450"
+                                              Padding="16,0,12,0">
+                                    <ItemsRepeater ItemsSource="{x:Bind ASRItems, Mode=OneWay}">
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate x:DataType="VMs:ASRRuleEntry">
+                                                <Grid Padding="0,6"
+                                                      ColumnSpacing="12">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Grid.Column="0"
+                                                               Text="{x:Bind Name}"
+                                                               VerticalAlignment="Center"
+                                                               TextWrapping="WrapWholeWords" />
+
+                                                    <ComboBox Grid.Column="1"
+                                                              SelectedIndex="{x:Bind StateIndex, Mode=TwoWay}"
+                                                              MinWidth="140">
+                                                        <ComboBoxItem Content="Not Configured"/>
+                                                        <ComboBoxItem Content="Block"/>
+                                                        <ComboBoxItem Content="Audit"/>
+                                                        <ComboBoxItem Content="Warn"/>
+                                                    </ComboBox>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+                                </ScrollViewer>
+
+                                <!-- MUnit based categories: checked means applied -->
+                                <ScrollViewer Visibility="{x:Bind MUnitItemsVisibility}"
+                                              MaxHeight="450"
+                                              Padding="16,0,12,0">
+                                    <ItemsRepeater ItemsSource="{x:Bind MUnitItems, Mode=OneWay}">
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate x:DataType="Protect:MUnit">
+                                                <StackPanel Padding="0,6"
+                                                            Spacing="2">
+                                                    <CheckBox IsChecked="{x:Bind IsApplied, Mode=TwoWay}">
+                                                        <TextBlock Text="{x:Bind Name}"
+                                                                   TextWrapping="WrapWholeWords" />
+                                                    </CheckBox>
+
+                                                    <TextBlock Margin="28,0,0,0"
+                                                               Text="{x:Bind SubCategoryName}"
+                                                               Visibility="{x:Bind SubCategoryVisibility}"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                               TextWrapping="WrapWholeWords" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</customUI:ContentDialogV2>

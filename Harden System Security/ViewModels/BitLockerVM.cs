@@ -17,7 +17,6 @@
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -39,20 +38,7 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class BitLockerVM : MUnitListViewModelBase
 {
-	[SetsRequiredMembers]
-	internal BitLockerVM()
-	{
-		MainInfoBar = new();
-
-		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
-
-		IMUnitListViewModel.CreateUIValuesCategories(this);
-
-		_ = Atlas.AppDispatcher.TryEnqueue(ComputeColumnWidths);
-	}
+	internal BitLockerVM() => _ = Atlas.AppDispatcher.TryEnqueue(ComputeColumnWidths);
 
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.

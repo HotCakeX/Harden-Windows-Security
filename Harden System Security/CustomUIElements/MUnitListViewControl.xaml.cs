@@ -21,6 +21,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using AppControlManager.Others;
 using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
@@ -342,38 +343,7 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	private void UpdateStatusCounts()
 	{
 		if (ViewModel?.ListViewItemsSourceBackingField == null || _isDisposed) return;
-
-		int undeterminedCount = 0;
-		int appliedCount = 0;
-		int notAppliedCount = 0;
-
-		// Count status from all MUnits in the backing field (not just filtered ones)
-		foreach (GroupInfoListForMUnit group in CollectionsMarshal.AsSpan(ViewModel.ListViewItemsSourceBackingField))
-		{
-			foreach (MUnit munit in group)
-			{
-				StatusState status = munit.StatusState;
-				switch (status)
-				{
-					case StatusState.Undetermined:
-						undeterminedCount++;
-						break;
-					case StatusState.Applied:
-						appliedCount++;
-						break;
-					case StatusState.NotApplied:
-						notAppliedCount++;
-						break;
-					default:
-						break;
-				}
-			}
-		}
-
-		// Update ViewModel with new counts
-		ViewModel.UndeterminedItemsCount = undeterminedCount;
-		ViewModel.AppliedItemsCount = appliedCount;
-		ViewModel.NotAppliedItemsCount = notAppliedCount;
+		IMUnitListViewModel.ComputeStatusCounts(ViewModel);
 	}
 
 	/// <summary>
@@ -479,47 +449,40 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// Apply a single MUnit
 	/// </summary>
 	/// <param name="mUnit">The MUnit to apply</param>
-	internal async void ApplyMUnit(MUnit mUnit)
-	{
-		// If the UI is loading the ViewModel will be null initially due to x:Bind usage, so this check ensures ProcessMUnitsWithBulkOperations method always receives a valid ViewModel reference.
-		if (ViewModel is null || _isDisposed) return;
-
-		try
-		{
-			// Mark a per-item operation as running so the "All" animated buttons disable themselves.
-			BeginItemOperation();
-
-			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, [mUnit], MUnitOperation.Apply);
-		}
-		catch (Exception ex)
-		{
-			ViewModel?.MainInfoBar.WriteError(ex);
-		}
-		finally
-		{
-			// Clear the per-item operation running flag.
-			EndItemOperation();
-		}
-	}
+	internal async void ApplyMUnit(MUnit mUnit) => await ProcessSingleMUnit(mUnit, MUnitOperation.Apply);
 
 	/// <summary>
 	/// Remove a single MUnit
 	/// </summary>
 	/// <param name="mUnit">The MUnit to remove</param>
-	internal async void RemoveMUnit(MUnit mUnit)
+	internal async void RemoveMUnit(MUnit mUnit) => await ProcessSingleMUnit(mUnit, MUnitOperation.Remove);
+
+	/// <summary>
+	/// Verify a single MUnit
+	/// </summary>
+	/// <param name="mUnit">The MUnit to verify</param>
+	internal async void VerifyMUnit(MUnit mUnit) => await ProcessSingleMUnit(mUnit, MUnitOperation.Verify);
+
+	/// <summary>
+	/// Shared implementation of <see cref="ApplyMUnit"/>, <see cref="RemoveMUnit"/> and <see cref="VerifyMUnit"/>.
+	/// </summary>
+	/// <param name="mUnit">The MUnit to process</param>
+	/// <param name="operation">The operation to perform on the MUnit</param>
+	private async Task ProcessSingleMUnit(MUnit mUnit, MUnitOperation operation)
 	{
 		// If the UI is loading the ViewModel will be null initially due to x:Bind usage, so this check ensures ProcessMUnitsWithBulkOperations method always receives a valid ViewModel reference.
 		if (ViewModel is null || _isDisposed) return;
 
 		try
 		{
-			if (mUnit.RemoveStrategy == null)
+			// Remove and Verify are skipped for MUnits that don't have the corresponding strategy.
+			if (!HasStrategyFor(mUnit, operation))
 				return;
 
 			// Mark a per-item operation as running so the "All" animated buttons disable themselves.
 			BeginItemOperation();
 
-			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, [mUnit], MUnitOperation.Remove);
+			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, [mUnit], operation);
 		}
 		catch (Exception ex)
 		{
@@ -533,34 +496,17 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	}
 
 	/// <summary>
-	/// Verify a single MUnit
+	/// Whether the MUnit has the strategy required by the operation.
+	/// Remove and Verify require their own strategies, Apply is always allowed.
 	/// </summary>
-	/// <param name="mUnit">The MUnit to verify</param>
-	internal async void VerifyMUnit(MUnit mUnit)
+	/// <param name="mUnit">The MUnit to check</param>
+	/// <param name="operation">The operation to check for</param>
+	private static bool HasStrategyFor(MUnit mUnit, MUnitOperation operation) => operation switch
 	{
-		// If the UI is loading the ViewModel will be null initially due to x:Bind usage, so this check ensures ProcessMUnitsWithBulkOperations method always receives a valid ViewModel reference.
-		if (ViewModel is null || _isDisposed) return;
-
-		try
-		{
-			if (mUnit.VerifyStrategy == null)
-				return;
-
-			// Mark a per-item operation as running so the "All" animated buttons disable themselves.
-			BeginItemOperation();
-
-			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, [mUnit], MUnitOperation.Verify);
-		}
-		catch (Exception ex)
-		{
-			ViewModel?.MainInfoBar.WriteError(ex);
-		}
-		finally
-		{
-			// Clear the per-item operation running flag.
-			EndItemOperation();
-		}
-	}
+		MUnitOperation.Remove => mUnit.RemoveStrategy is not null,
+		MUnitOperation.Verify => mUnit.VerifyStrategy is not null,
+		_ => true
+	};
 
 	#endregion
 
@@ -599,52 +545,93 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <summary>
 	/// Apply all MUnits.
 	/// </summary>
-	internal async void ApplyAllMUnits()
+	internal async void ApplyAllMUnits() => await ProcessAllMUnits(
+		MUnitOperation.Apply,
+		"ApplyingAllSecurityMeasures",
+		"ApplyOperationCancelledByUser",
+		"ApplyingAllSecurityMeasuresSuccessful");
+
+	/// <summary>
+	/// Remove all MUnits.
+	/// </summary>
+	internal async void RemoveAllMUnits() => await ProcessAllMUnits(
+		MUnitOperation.Remove,
+		"RemovingAllSecurityMeasures",
+		"RemoveOperationCancelledByUser",
+		"RemovingAllSecurityMeasuresSuccessful");
+
+	/// <summary>
+	/// Verify all MUnits.
+	/// </summary>
+	internal async void VerifyAllMUnits() => await ProcessAllMUnits(
+		MUnitOperation.Verify,
+		"VerifyingAllSecurityMeasures",
+		"VerifyOperationCancelledByUser",
+		"VerifyingAllSecurityMeasuresSuccessful");
+
+	/// <summary>
+	/// Shared implementation of <see cref="ApplyAllMUnits"/>, <see cref="RemoveAllMUnits"/> and <see cref="VerifyAllMUnits"/>.
+	/// </summary>
+	/// <param name="operation">The operation to perform on the MUnits</param>
+	/// <param name="startedMsgKey">Resource key of the message displayed when the operation starts</param>
+	/// <param name="cancelledMsgKey">Resource key of the message displayed when the operation is cancelled</param>
+	/// <param name="successMsgKey">Resource key of the message displayed when the operation succeeds</param>
+	private async Task ProcessAllMUnits(MUnitOperation operation, string startedMsgKey, string cancelledMsgKey, string successMsgKey)
 	{
 		if (ViewModel is null || _isDisposed) return;
 
+		AnimatedCancellableButtonInitializer button = operation switch
+		{
+			MUnitOperation.Apply => ViewModel.ApplyAllCancellableButton,
+			MUnitOperation.Remove => ViewModel.RemoveAllCancellableButton,
+			_ => ViewModel.VerifyAllCancellableButton
+		};
+
 		bool errorsOccurred = false;
 
-		ViewModel.ApplyAllCancellableButton.Begin();
+		button.Begin();
 
 		using IDisposable taskTracker = TaskTracking.RegisterOperation();
 
 		try
 		{
 			ViewModel.ElementsAreEnabled = false;
-			ViewModel.MainInfoBar.WriteInfo(Atlas.GetStr("ApplyingAllSecurityMeasures"));
+			ViewModel.MainInfoBar.WriteInfo(Atlas.GetStr(startedMsgKey));
 
 			List<MUnit> allMUnits = [];
 			foreach (GroupInfoListForMUnit group in ListViewItemsSource)
 			{
-				// Only include MUnits whose sub-category is null for Apply All
-				// Because user might not be expecting to apply the more extreme sub-categories when using the "Apply All" button.
 				foreach (MUnit mUnit in group)
 				{
-					if (mUnit.SubCategory is null)
+					// Only include MUnits whose sub-category is null for Apply All
+					// Because user might not be expecting to apply the more extreme sub-categories when using the "Apply All" button.
+					// For Remove All and Verify All, only include MUnits that have the corresponding strategy.
+					bool include = operation is MUnitOperation.Apply ? mUnit.SubCategory is null : HasStrategyFor(mUnit, operation);
+
+					if (include)
 					{
 						allMUnits.Add(mUnit);
 					}
 				}
 			}
-			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, allMUnits, MUnitOperation.Apply, ViewModel.ApplyAllCancellableButton.Cts?.Token);
+			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, allMUnits, operation, button.Cts?.Token);
 		}
 		catch (Exception ex)
 		{
-			ViewModelBase.HandleExceptions(ex, ref errorsOccurred, ref ViewModel.ApplyAllCancellableButton.wasCancelled, ViewModel.MainInfoBar);
+			ViewModelBase.HandleExceptions(ex, ref errorsOccurred, ref button.wasCancelled, ViewModel.MainInfoBar);
 		}
 		finally
 		{
-			if (ViewModel.ApplyAllCancellableButton.wasCancelled)
+			if (button.wasCancelled)
 			{
-				ViewModel.MainInfoBar.WriteWarning(Atlas.GetStr("ApplyOperationCancelledByUser"));
+				ViewModel.MainInfoBar.WriteWarning(Atlas.GetStr(cancelledMsgKey));
 			}
 			else if (!errorsOccurred)
 			{
-				ViewModel.MainInfoBar.WriteSuccess(Atlas.GetStr("ApplyingAllSecurityMeasuresSuccessful"));
+				ViewModel.MainInfoBar.WriteSuccess(Atlas.GetStr(successMsgKey));
 			}
 
-			ViewModel.ApplyAllCancellableButton.End();
+			button.End();
 			ViewModel.ElementsAreEnabled = true;
 		}
 	}
@@ -652,162 +639,23 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 	/// <summary>
 	/// Apply only the selected MUnits.
 	/// </summary>
-	private async void ApplySelectedMUnits()
-	{
-		if (_isDisposed) return;
-
-		try
-		{
-
-			if (ViewModel?.ItemsSourceSelectedItems.Count > 0)
-			{
-				await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, ViewModel.ItemsSourceSelectedItems, MUnitOperation.Apply);
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
-	}
-
-	/// <summary>
-	/// Remove all MUnits - modified to use cancellable button pattern like CreateSupplementalPolicyVM
-	/// </summary>
-	internal async void RemoveAllMUnits()
-	{
-		if (ViewModel is null || _isDisposed) return;
-
-		bool errorsOccurred = false;
-
-		ViewModel.RemoveAllCancellableButton.Begin();
-
-		using IDisposable taskTracker = TaskTracking.RegisterOperation();
-
-		try
-		{
-			ViewModel.ElementsAreEnabled = false;
-			ViewModel.MainInfoBar.WriteInfo(Atlas.GetStr("RemovingAllSecurityMeasures"));
-
-			List<MUnit> allMUnits = [];
-			foreach (GroupInfoListForMUnit group in ListViewItemsSource)
-			{
-				foreach (MUnit mUnit in group)
-				{
-					if (mUnit.RemoveStrategy is not null)
-					{
-						allMUnits.Add(mUnit);
-					}
-				}
-			}
-			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, allMUnits, MUnitOperation.Remove, ViewModel.RemoveAllCancellableButton.Cts?.Token);
-		}
-		catch (Exception ex)
-		{
-			ViewModelBase.HandleExceptions(ex, ref errorsOccurred, ref ViewModel.RemoveAllCancellableButton.wasCancelled, ViewModel.MainInfoBar);
-		}
-		finally
-		{
-			if (ViewModel.RemoveAllCancellableButton.wasCancelled)
-			{
-				ViewModel.MainInfoBar.WriteWarning(Atlas.GetStr("RemoveOperationCancelledByUser"));
-			}
-			else if (!errorsOccurred)
-			{
-				ViewModel.MainInfoBar.WriteSuccess(Atlas.GetStr("RemovingAllSecurityMeasuresSuccessful"));
-			}
-
-			ViewModel.RemoveAllCancellableButton.End();
-			ViewModel.ElementsAreEnabled = true;
-		}
-	}
+	private async void ApplySelectedMUnits() => await ProcessSelectedMUnits(MUnitOperation.Apply);
 
 	/// <summary>
 	/// Remove only the selected MUnits.
 	/// </summary>
-	private async void RemoveSelectedMUnits()
-	{
-		if (_isDisposed) return;
-
-		try
-		{
-			if (ViewModel?.ItemsSourceSelectedItems != null)
-			{
-				List<MUnit> allMUnits = [];
-				foreach (MUnit mUnit in ViewModel.ItemsSourceSelectedItems)
-				{
-					if (mUnit.RemoveStrategy is not null)
-					{
-						allMUnits.Add(mUnit);
-					}
-				}
-
-				if (allMUnits.Count > 0)
-				{
-					await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, allMUnits, MUnitOperation.Remove);
-				}
-			}
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-		}
-	}
-
-	/// <summary>
-	/// Verify all MUnits - modified to use cancellable button pattern like CreateSupplementalPolicyVM
-	/// </summary>
-	internal async void VerifyAllMUnits()
-	{
-		if (ViewModel is null || _isDisposed) return;
-
-		bool errorsOccurred = false;
-
-		ViewModel.VerifyAllCancellableButton.Begin();
-
-		using IDisposable taskTracker = TaskTracking.RegisterOperation();
-
-		try
-		{
-			ViewModel.ElementsAreEnabled = false;
-			ViewModel.MainInfoBar.WriteInfo(Atlas.GetStr("VerifyingAllSecurityMeasures"));
-
-			List<MUnit> allMUnits = [];
-			foreach (GroupInfoListForMUnit group in ListViewItemsSource)
-			{
-				foreach (MUnit mUnit in group)
-				{
-					if (mUnit.VerifyStrategy is not null)
-					{
-						allMUnits.Add(mUnit);
-					}
-				}
-			}
-			await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, allMUnits, MUnitOperation.Verify, ViewModel.VerifyAllCancellableButton.Cts?.Token);
-		}
-		catch (Exception ex)
-		{
-			ViewModelBase.HandleExceptions(ex, ref errorsOccurred, ref ViewModel.VerifyAllCancellableButton.wasCancelled, ViewModel.MainInfoBar);
-		}
-		finally
-		{
-			if (ViewModel.VerifyAllCancellableButton.wasCancelled)
-			{
-				ViewModel.MainInfoBar.WriteWarning(Atlas.GetStr("VerifyOperationCancelledByUser"));
-			}
-			else if (!errorsOccurred)
-			{
-				ViewModel.MainInfoBar.WriteSuccess(Atlas.GetStr("VerifyingAllSecurityMeasuresSuccessful"));
-			}
-
-			ViewModel.VerifyAllCancellableButton.End();
-			ViewModel.ElementsAreEnabled = true;
-		}
-	}
+	private async void RemoveSelectedMUnits() => await ProcessSelectedMUnits(MUnitOperation.Remove);
 
 	/// <summary>
 	/// Verify only the selected MUnits.
 	/// </summary>
-	private async void VerifySelectedMUnits()
+	private async void VerifySelectedMUnits() => await ProcessSelectedMUnits(MUnitOperation.Verify);
+
+	/// <summary>
+	/// Shared implementation of <see cref="ApplySelectedMUnits"/>, <see cref="RemoveSelectedMUnits"/> and <see cref="VerifySelectedMUnits"/>.
+	/// </summary>
+	/// <param name="operation">The operation to perform on the selected MUnits</param>
+	private async Task ProcessSelectedMUnits(MUnitOperation operation)
 	{
 		if (_isDisposed) return;
 
@@ -815,19 +663,24 @@ internal sealed partial class MUnitListViewControl : UserControl, IDisposable
 		{
 			if (ViewModel?.ItemsSourceSelectedItems != null)
 			{
-				List<MUnit> allMUnits = [];
-
-				foreach (MUnit mUnit in ViewModel.ItemsSourceSelectedItems)
+				// Apply uses the selected MUnits as they are.
+				// Remove and Verify only include the selected MUnits that have the corresponding strategy.
+				List<MUnit> selectedMUnits = ViewModel.ItemsSourceSelectedItems;
+				if (operation is not MUnitOperation.Apply)
 				{
-					if (mUnit.VerifyStrategy is not null)
+					selectedMUnits = [];
+					foreach (MUnit mUnit in ViewModel.ItemsSourceSelectedItems)
 					{
-						allMUnits.Add(mUnit);
+						if (HasStrategyFor(mUnit, operation))
+						{
+							selectedMUnits.Add(mUnit);
+						}
 					}
 				}
 
-				if (allMUnits.Count > 0)
+				if (selectedMUnits.Count > 0)
 				{
-					await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, allMUnits, MUnitOperation.Verify);
+					await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, selectedMUnits, operation);
 				}
 			}
 		}

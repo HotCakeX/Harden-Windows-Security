@@ -133,5 +133,6 @@ internal static class ViewModelProvider
 		try { if (_WinGetManagementVM.IsValueCreated) _WinGetManagementVM.Value.Dispose(); } catch { }
 		try { if (_homeVM.IsValueCreated) _homeVM.Value.Dispose(); } catch { }
 		try { if (_intuneVM.IsValueCreated) _intuneVM.Value.Dispose(); } catch { }
+		try { if (_protectVM.IsValueCreated) _protectVM.Value.Dispose(); } catch { }
 	}
 }

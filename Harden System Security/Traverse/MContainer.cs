@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using AppControlManager.CustomUIElements;
 using CommonCore.GroupPolicy;
@@ -264,17 +265,21 @@ internal sealed class MContainer(
 internal sealed partial class MContainerJsonContext : JsonSerializerContext
 {
 	/// <summary>
+	/// Options used for writing the JSON files.
+	/// </summary>
+	private static readonly JsonWriterOptions WriterOptions = new()
+	{
+		Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+		Indented = true
+	};
+
+	/// <summary>
 	/// Serialize a single <see cref="MContainer"/> instance.
 	/// </summary>
 	internal static void SerializeSingle(MContainer unit, string filePath)
 	{
 		ArrayBufferWriter<byte> buffer = new();
-		JsonWriterOptions writerOptions = new()
-		{
-			Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-			Indented = true
-		};
-		Utf8JsonWriter writer = new(buffer, writerOptions);
+		Utf8JsonWriter writer = new(buffer, WriterOptions);
 
 		try
 		{
@@ -304,7 +309,59 @@ internal sealed partial class MContainerJsonContext : JsonSerializerContext
 	/// <summary>
 	/// Deserialize a JSON string into a single <see cref="MContainer"/> instance.
 	/// </summary>
-	internal static MContainer? DeserializeSingle(string json) =>
-		JsonSerializer.Deserialize(json, Default.MContainer);
+	internal static MContainer? DeserializeSingle(string json) => JsonSerializer.Deserialize(json, Default.MContainer);
+
+	/// <summary>
+	/// Loads a JSON file as an editable document and deserializes it into a <see cref="MContainer"/> instance.
+	/// The document is kept so the file can later be saved back via <see cref="SaveEdited"/> without losing the parts that are not deserialized.
+	/// </summary>
+	/// <param name="filePath">Path to the JSON file.</param>
+	/// <exception cref="InvalidOperationException">Thrown when the file content is invalid.</exception>
+	internal static (JsonObject Root, MContainer Container) LoadEditable(string filePath)
+	{
+		JsonObject? root = JsonNode.Parse(File.ReadAllText(filePath))?.AsObject();
+		MContainer? container = root?.Deserialize(Default.MContainer);
+
+		if (root is null || container is null)
+			throw new InvalidOperationException("Failed to deserialize the Traverse report into an MContainer instance.");
+
+		return (root, container);
+	}
+
+	/// <summary>
+	/// Saves the edited <see cref="MContainer"/> back to the JSON file it was loaded from via <see cref="LoadEditable"/>.
+	/// Only the category sections and the summary counts are replaced in the original document.
+	/// The metadata (Time, MachineName etc.) and the sections that are never deserialized (Optional Windows Features and CBOM) remain untouched.
+	/// </summary>
+	/// <param name="root">The document returned by <see cref="LoadEditable"/>.</param>
+	/// <param name="container">The edited container returned by <see cref="LoadEditable"/>.</param>
+	/// <param name="total">Total number of the items in all of the categories.</param>
+	/// <param name="compliant">Number of the items that are marked as applied or compliant.</param>
+	/// <param name="filePath">Path to the JSON file to overwrite.</param>
+	internal static void SaveEdited(JsonObject root, MContainer container, int total, int compliant, string filePath)
+	{
+		JsonObject edited = JsonSerializer.SerializeToNode(container, Default.MContainer)!.AsObject();
+
+		// Category sections are the only JSON objects among the top-level properties.
+		foreach (KeyValuePair<string, JsonNode?> property in edited)
+		{
+			if (property.Value is JsonObject section)
+			{
+				root[property.Key] = section.DeepClone();
+			}
+		}
+
+		root["Total"] = total;
+		root["Compliant"] = compliant;
+		root["NonCompliant"] = total - compliant;
+
+		ArrayBufferWriter<byte> buffer = new();
+		using (Utf8JsonWriter writer = new(buffer, WriterOptions))
+		{
+			root.WriteTo(writer);
+		}
+
+		File.WriteAllBytes(filePath, buffer.WrittenSpan);
+	}
 
 }

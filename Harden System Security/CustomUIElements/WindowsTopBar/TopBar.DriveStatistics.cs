@@ -28,10 +28,10 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Hosting;
 using Microsoft.UI.Xaml.Input;
-using WinRT;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Media.Animation;
 using Windows.Foundation;
+using WinRT;
 
 namespace HardenSystemSecurity.CustomUIElements.WindowsTopBar;
 

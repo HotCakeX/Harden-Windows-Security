@@ -16,7 +16,6 @@
 //
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using CommonCore.GroupPolicy;
@@ -27,19 +26,6 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class TLSVM : MUnitListViewModelBase
 {
-	[SetsRequiredMembers]
-	internal TLSVM()
-	{
-		MainInfoBar = new();
-
-		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
-
-		IMUnitListViewModel.CreateUIValuesCategories(this);
-	}
-
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>

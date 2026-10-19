@@ -105,6 +105,18 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
+                    <!-- Highlights the category while it is being processed.
+                         The negative margin extends it from the content area to the ListViewItem's rounded row (backplate), which is
+                         inset 4,2,4,2 from the item while the content starts after the 16px padding plus the 28px multi-select checkbox area and ends before the 12px padding. -->
+                    <Border Grid.RowSpan="3"
+                            Grid.ColumnSpan="2"
+                            Margin="-40,0,-8,0"
+                            BorderThickness="2"
+                            CornerRadius="{ThemeResource ListViewItemCornerRadius}"
+                            BorderBrush="DeepPink"
+                            IsHitTestVisible="False"
+                            Visibility="{x:Bind IsProcessing, Mode=OneWay}" />
                 </Grid>
             </DataTemplate>
 
@@ -579,6 +591,17 @@
                                         </MenuFlyoutItem.Icon>
                                     </MenuFlyoutItem>
                                     <MenuFlyoutSeparator/>
+                                    <!-- Opens a System State backup file for modification only, without applying it -->
+                                    <MenuFlyoutItem Text="Fine Tune"
+                                                    ToolTipService.ToolTip="Review and modify a previously created System State backup file and save the changes back to it without applying them to the system."
+                                                    AutomationProperties.HelpText="Review and modify a previously created System State backup file and save the changes back to it without applying them to the system."
+                                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                    Click="{x:Bind ViewModel.FineTuneSystemState}">
+                                        <MenuFlyoutItem.Icon>
+                                            <FontIcon Glyph="&#xE70F;"/>
+                                        </MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
                                     <MenuFlyoutSubItem x:Uid="RestoreModeMenuFlyoutItem"
                                                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
                                         <MenuFlyoutSubItem.Icon>
@@ -605,6 +628,12 @@
 
                         </Button>
 
+                        <!-- Cancels the running system state backup or restore operation -->
+                        <Button Content="Cancel"
+                                Visibility="{x:Bind ViewModel.IsSystemStateOperationRunning, Mode=OneWay}"
+                                Click="{x:Bind ViewModel.CancelSystemStateOperation}"
+                                VerticalAlignment="Center" />
+
                     </CCToolKit:WrapPanel>
 
                 </Border>
@@ -623,7 +652,12 @@
                       HorizontalAlignment="Center"
                       SelectionMode="Multiple"
                       SelectionChanged="{x:Bind ViewModel.ListView_SelectionChanged}"
-                      ItemTemplate="{StaticResource ProtectionCategoryListViewTemplate}"/>
+                      ItemTemplate="{StaticResource ProtectionCategoryListViewTemplate}">
+                <ListView.Resources>
+                    <!-- Keeps the highlighted category visible while the ListView is disabled during operations -->
+                    <x:Double x:Key="ListViewItemDisabledThemeOpacity">0.7</x:Double>
+                </ListView.Resources>
+            </ListView>
         </Grid>
 
         <!-- Verification Results Popup -->

@@ -17,7 +17,6 @@
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -35,19 +34,6 @@ namespace HardenSystemSecurity.ViewModels;
 
 internal sealed partial class WindowsUpdateVM : MUnitListViewModelBase
 {
-	[SetsRequiredMembers]
-	internal WindowsUpdateVM()
-	{
-		MainInfoBar = new();
-
-		// Initializing the cancellable buttons
-		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
-		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
-		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
-
-		IMUnitListViewModel.CreateUIValuesCategories(this);
-	}
-
 	/// <summary>
 	/// Creates all MUnits for this ViewModel.
 	/// </summary>

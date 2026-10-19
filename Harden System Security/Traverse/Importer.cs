@@ -40,21 +40,44 @@ internal static class Importer
 	/// </param>
 	/// <param name="cancellationToken">Cancellation token.</param>
 	/// <exception cref="InvalidOperationException">Thrown when deserialization fails or file content is invalid.</exception>
-	internal static async Task ImportAndApplyAsync(
-		string filePath,
-		bool synchronizeExact,
-		CancellationToken cancellationToken = default)
+	internal static async Task ImportAndApplyAsync(string filePath, bool synchronizeExact, CancellationToken cancellationToken = default)
 	{
 		cancellationToken.ThrowIfCancellationRequested();
 
-		await Task.Run(async () =>
+		MContainer container = await Task.Run(async () =>
 		{
 
 			string json = await File.ReadAllTextAsync(filePath, cancellationToken);
 
 			cancellationToken.ThrowIfCancellationRequested();
 
-			MContainer container = MContainerJsonContext.DeserializeSingle(json) ?? throw new InvalidOperationException("Failed to deserialize the Traverse report into an MContainer instance.");
+			return MContainerJsonContext.DeserializeSingle(json) ?? throw new InvalidOperationException("Failed to deserialize the Traverse report into an MContainer instance.");
+
+		}, cancellationToken);
+
+		await ApplyAsync(container: container, filePath: filePath, synchronizeExact: synchronizeExact, cancellationToken: cancellationToken);
+	}
+
+	/// <summary>
+	/// Apply an already loaded <see cref="MContainer"/> on the system.
+	/// </summary>
+	/// <param name="container">The container to apply.</param>
+	/// <param name="filePath">Path to the JSON report the container was loaded from. Used for logging.</param>
+	/// <param name="synchronizeExact">
+	/// If true: apply all MUnits marked applied in the container and remove all MUnits present in the container marked not applied.
+	/// If false: only apply items that are marked applied, ignore removals.
+	/// </param>
+	/// <param name="categoryStarted">Optional callback that receives each category before it is processed.</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	internal static async Task ApplyAsync(
+		MContainer container,
+		string filePath,
+		bool synchronizeExact,
+		Action<Categories?>? categoryStarted = null,
+		CancellationToken cancellationToken = default)
+	{
+		await Task.Run(async () =>
+		{
 
 			Logger.Write($"Importing system state from '{filePath}' (mode={(synchronizeExact ? "full" : "partial")})...");
 
@@ -69,6 +92,7 @@ internal static class Importer
 			// Microsoft Security Baseline import
 			if (container.MicrosoftSecurityBaseline?.Items.Count > 0)
 			{
+				categoryStarted?.Invoke(Categories.MicrosoftSecurityBaseline);
 				Logger.Write($"Importing Microsoft Security Baseline ({container.MicrosoftSecurityBaseline.Items.Count})...");
 
 				await ViewModelProvider.MicrosoftSecurityBaselineVM.ApplyImportedStates(container.MicrosoftSecurityBaseline.Items, synchronizeExact, cancellationToken);
@@ -79,6 +103,7 @@ internal static class Importer
 			// Microsoft 365 Apps Security Baseline import
 			if (container.Microsoft365AppsSecurityBaseline?.Items.Count > 0)
 			{
+				categoryStarted?.Invoke(Categories.Microsoft365AppsSecurityBaseline);
 				Logger.Write($"Importing Microsoft 365 Apps Security Baseline ({container.Microsoft365AppsSecurityBaseline.Items.Count})...");
 
 				await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.ApplyImportedStates(container.Microsoft365AppsSecurityBaseline.Items, synchronizeExact, cancellationToken);
@@ -89,6 +114,7 @@ internal static class Importer
 			// ASR rules import section
 			if (container.AttackSurfaceReductionRules?.Items.Count > 0)
 			{
+				categoryStarted?.Invoke(Categories.AttackSurfaceReductionRules);
 				Logger.Write($"Importing Attack Surface Reduction Rules ({container.AttackSurfaceReductionRules.Items.Count})...");
 
 				await ViewModelProvider.ASRVM.ApplyImportedStates(container.AttackSurfaceReductionRules.Items, synchronizeExact, cancellationToken);
@@ -164,6 +190,7 @@ internal static class Importer
 
 				IMUnitListViewModel viewModel = ResolveViewModel(kvp.Key);
 
+				categoryStarted?.Invoke(kvp.Key);
 				Logger.Write(string.Format(
 					Atlas.GetStr("ImportOperationIndividualApplyOperationMsg"),
 					finalApplyList.Count, kvp.Key)
@@ -217,6 +244,7 @@ internal static class Importer
 
 					IMUnitListViewModel viewModel = ResolveViewModel(kvp.Key);
 
+					categoryStarted?.Invoke(kvp.Key);
 					Logger.Write(string.Format(
 						Atlas.GetStr("ImportOperationIndividualRemoveOperationMsg"),
 						finalRemoveList.Count, kvp.Key)
@@ -283,21 +311,6 @@ internal static class Importer
 	/// <param name="category">The MUnit category.</param>
 	/// <returns>The ViewModel that manages that category.</returns>
 	/// <exception cref="InvalidOperationException">If the category is not MUnit based or unsupported here.</exception>
-	private static IMUnitListViewModel ResolveViewModel(Categories category) => category switch
-	{
-		Categories.MicrosoftDefender => ViewModelProvider.MicrosoftDefenderVM,
-		Categories.BitLockerSettings => ViewModelProvider.BitLockerVM,
-		Categories.TLSSecurity => ViewModelProvider.TLSVM,
-		Categories.LockScreen => ViewModelProvider.LockScreenVM,
-		Categories.UserAccountControl => ViewModelProvider.UACVM,
-		Categories.DeviceGuard => ViewModelProvider.DeviceGuardVM,
-		Categories.WindowsFirewall => ViewModelProvider.WindowsFirewallVM,
-		Categories.WindowsNetworking => ViewModelProvider.WindowsNetworkingVM,
-		Categories.MiscellaneousConfigurations => ViewModelProvider.MiscellaneousConfigsVM,
-		Categories.WindowsUpdateConfigurations => ViewModelProvider.WindowsUpdateVM,
-		Categories.EdgeBrowserConfigurations => ViewModelProvider.EdgeVM,
-		Categories.NonAdminCommands => ViewModelProvider.NonAdminVM,
-		Categories.MSFTSecBaselines_OptionalOverrides => ViewModelProvider.MicrosoftBaseLinesOverridesVM,
-		_ => throw new InvalidOperationException($"Category '{category}' is not supported for MUnit import/apply workflow.")
-	};
+	private static IMUnitListViewModel ResolveViewModel(Categories category) =>
+		CategoryProcessorFactory.GetMUnitViewModel(category) ?? throw new InvalidOperationException($"Category '{category}' is not supported for MUnit import/apply workflow.");
 }

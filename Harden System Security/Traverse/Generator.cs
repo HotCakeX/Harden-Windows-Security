@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CommonCore.GroupPolicy;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.ViewModels;
@@ -52,8 +53,18 @@ internal static class Generator
 	/// <summary>
 	/// The MAIN method that generates the complete system report.
 	/// </summary>
-	internal static async Task GenerateTraverseData(string filePath)
+	/// <param name="filePath">Path of the file to save the report to.</param>
+	/// <param name="cancellationToken">Cancellation token. Nothing is saved when cancelled.</param>
+	/// <param name="categoryStarted">Optional callback that receives each category before it is processed.</param>
+	internal static async Task GenerateTraverseData(string filePath, Action<Categories?>? categoryStarted = null, CancellationToken cancellationToken = default)
 	{
+		// Stops if cancellation was requested, otherwise reports the category that is about to be processed.
+		void Begin(Categories category)
+		{
+			cancellationToken.ThrowIfCancellationRequested();
+			categoryStarted?.Invoke(category);
+		}
+
 		if (Logger.CliRequested)
 			Logger.Write(Atlas.GetStr("SystemStateReportGenerationBeginsMsg"));
 
@@ -64,31 +75,36 @@ internal static class Generator
 		int nonCompliant = 0;
 
 		// Microsoft Security Baseline
+		Begin(Categories.MicrosoftSecurityBaseline);
 		Traverse.MicrosoftSecurityBaseline MSBaselineData = await ViewModelProvider.MicrosoftSecurityBaselineVM.GetTraverseData();
 		total += MSBaselineData.Items.Count;
 		compliant += MSBaselineData.Score;
 		nonCompliant += MSBaselineData.Items.Count - MSBaselineData.Score;
 
 		// Microsoft 365 Apps Security Baseline
+		Begin(Categories.Microsoft365AppsSecurityBaseline);
 		Traverse.Microsoft365AppsSecurityBaseline MS365BaselineData = await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.GetTraverseData();
 		total += MS365BaselineData.Items.Count;
 		compliant += MS365BaselineData.Score;
 		nonCompliant += MS365BaselineData.Items.Count - MS365BaselineData.Score;
 
 		// Attack Surface Reduction Rules
+		Begin(Categories.AttackSurfaceReductionRules);
 		Traverse.AttackSurfaceReductionRules ASR = await ViewModelProvider.ASRVM.GetTraverseData();
 		total += ASR.Items.Count;
 		compliant += ASR.Score;
 		nonCompliant += ASR.Items.Count - ASR.Score;
 
 		// CBOM
+		cancellationToken.ThrowIfCancellationRequested();
 		Arcane.CbomDocument CBOM = await ViewModelProvider.CryptographicBillOfMaterialsVM.GetTraverseData();
 
 		#region MUnit based items
 
-		CancellationToken ct = CancellationToken.None;
+		CancellationToken ct = cancellationToken;
 
 		// Microsoft Defender
+		Begin(Categories.MicrosoftDefender);
 		(int Score, List<MUnit> Items) = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.MicrosoftDefenderVM, ct);
 		HardenSystemSecurity.Traverse.MicrosoftDefender mdTraverse = new(Items) { Score = Score };
 		total += Items.Count;
@@ -96,6 +112,7 @@ internal static class Generator
 		nonCompliant += Items.Count - Score;
 
 		// BitLocker
+		Begin(Categories.BitLockerSettings);
 		(int Score, List<MUnit> Items) blTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.BitLockerVM, ct);
 		HardenSystemSecurity.Traverse.BitLockerSettings blTraverse = new(blTuple.Items) { Score = blTuple.Score };
 		total += blTuple.Items.Count;
@@ -103,6 +120,7 @@ internal static class Generator
 		nonCompliant += blTuple.Items.Count - blTuple.Score;
 
 		// TLS
+		Begin(Categories.TLSSecurity);
 		(int Score, List<MUnit> Items) tlsTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.TLSVM, ct);
 		HardenSystemSecurity.Traverse.TLSSecurity tlsTraverse = new(tlsTuple.Items) { Score = tlsTuple.Score };
 		total += tlsTuple.Items.Count;
@@ -110,6 +128,7 @@ internal static class Generator
 		nonCompliant += tlsTuple.Items.Count - tlsTuple.Score;
 
 		// Lock Screen
+		Begin(Categories.LockScreen);
 		(int Score, List<MUnit> Items) lsTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.LockScreenVM, ct);
 		HardenSystemSecurity.Traverse.LockScreen lsTraverse = new(lsTuple.Items) { Score = lsTuple.Score };
 		total += lsTuple.Items.Count;
@@ -117,6 +136,7 @@ internal static class Generator
 		nonCompliant += lsTuple.Items.Count - lsTuple.Score;
 
 		// UAC
+		Begin(Categories.UserAccountControl);
 		(int Score, List<MUnit> Items) uacTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.UACVM, ct);
 		HardenSystemSecurity.Traverse.UserAccountControl uacTraverse = new(uacTuple.Items) { Score = uacTuple.Score };
 		total += uacTuple.Items.Count;
@@ -124,6 +144,7 @@ internal static class Generator
 		nonCompliant += uacTuple.Items.Count - uacTuple.Score;
 
 		// Device Guard
+		Begin(Categories.DeviceGuard);
 		(int Score, List<MUnit> Items) dgTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.DeviceGuardVM, ct);
 		HardenSystemSecurity.Traverse.DeviceGuard dgTraverse = new(dgTuple.Items) { Score = dgTuple.Score };
 		total += dgTuple.Items.Count;
@@ -131,6 +152,7 @@ internal static class Generator
 		nonCompliant += dgTuple.Items.Count - dgTuple.Score;
 
 		// Windows Firewall
+		Begin(Categories.WindowsFirewall);
 		(int Score, List<MUnit> Items) wfTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.WindowsFirewallVM, ct);
 		HardenSystemSecurity.Traverse.WindowsFirewall wfTraverse = new(wfTuple.Items) { Score = wfTuple.Score };
 		total += wfTuple.Items.Count;
@@ -138,6 +160,7 @@ internal static class Generator
 		nonCompliant += wfTuple.Items.Count - wfTuple.Score;
 
 		// Windows Networking
+		Begin(Categories.WindowsNetworking);
 		(int Score, List<MUnit> Items) wnTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.WindowsNetworkingVM, ct);
 		HardenSystemSecurity.Traverse.WindowsNetworking wnTraverse = new(wnTuple.Items) { Score = wnTuple.Score };
 		total += wnTuple.Items.Count;
@@ -145,6 +168,7 @@ internal static class Generator
 		nonCompliant += wnTuple.Items.Count - wnTuple.Score;
 
 		// Miscellaneous Configurations
+		Begin(Categories.MiscellaneousConfigurations);
 		(int Score, List<MUnit> Items) miscTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.MiscellaneousConfigsVM, ct);
 		HardenSystemSecurity.Traverse.MiscellaneousConfigurations miscTraverse = new(miscTuple.Items) { Score = miscTuple.Score };
 		total += miscTuple.Items.Count;
@@ -152,6 +176,7 @@ internal static class Generator
 		nonCompliant += miscTuple.Items.Count - miscTuple.Score;
 
 		// Windows Update Configurations
+		Begin(Categories.WindowsUpdateConfigurations);
 		(int Score, List<MUnit> Items) wuTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.WindowsUpdateVM, ct);
 		HardenSystemSecurity.Traverse.WindowsUpdateConfigurations wuTraverse = new(wuTuple.Items) { Score = wuTuple.Score };
 		total += wuTuple.Items.Count;
@@ -159,6 +184,7 @@ internal static class Generator
 		nonCompliant += wuTuple.Items.Count - wuTuple.Score;
 
 		// Edge Browser Configurations
+		Begin(Categories.EdgeBrowserConfigurations);
 		(int Score, List<MUnit> Items) edgeTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.EdgeVM, ct);
 		HardenSystemSecurity.Traverse.EdgeBrowserConfigurations edgeTraverse = new(edgeTuple.Items) { Score = edgeTuple.Score };
 		total += edgeTuple.Items.Count;
@@ -166,6 +192,7 @@ internal static class Generator
 		nonCompliant += edgeTuple.Items.Count - edgeTuple.Score;
 
 		// Non-Admin Commands
+		Begin(Categories.NonAdminCommands);
 		(int Score, List<MUnit> Items) naTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.NonAdminVM, ct);
 		HardenSystemSecurity.Traverse.NonAdminCommands naTraverse = new(naTuple.Items) { Score = naTuple.Score };
 		total += naTuple.Items.Count;
@@ -173,6 +200,7 @@ internal static class Generator
 		nonCompliant += naTuple.Items.Count - naTuple.Score;
 
 		// MSFT Baselines Optional Overrides
+		Begin(Categories.MSFTSecBaselines_OptionalOverrides);
 		(int Score, List<MUnit> Items) ovTuple = await VerifyAndSnapshotMUnitCategoryAsync(ViewModelProvider.MicrosoftBaseLinesOverridesVM, ct);
 		HardenSystemSecurity.Traverse.MSFTSecBaselines_OptionalOverrides ovTraverse = new(ovTuple.Items) { Score = ovTuple.Score };
 		total += ovTuple.Items.Count;
@@ -180,6 +208,8 @@ internal static class Generator
 		nonCompliant += ovTuple.Items.Count - ovTuple.Score;
 
 		#endregion
+
+		cancellationToken.ThrowIfCancellationRequested();
 
 		await Task.Run(() =>
 		{
@@ -210,7 +240,7 @@ internal static class Generator
 
 			if (Logger.CliRequested)
 				Logger.Write(string.Format(Atlas.GetStr("SystemStateReportGenerationFinishedMsg"), filePath));
-		});
+		}, cancellationToken);
 	}
 
 	/// <summary>

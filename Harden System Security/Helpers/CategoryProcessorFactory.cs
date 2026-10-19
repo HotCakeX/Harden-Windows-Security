@@ -21,7 +21,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CommonCore.GroupPolicy;
-using HardenSystemSecurity.Protect;
 using HardenSystemSecurity.ViewModels;
 
 namespace HardenSystemSecurity.Helpers;
@@ -39,25 +38,49 @@ internal static class CategoryProcessorFactory
 	internal static ICategoryProcessor GetProcessor(Categories category) => category switch
 	{
 		Categories.MicrosoftSecurityBaseline => new MicrosoftSecurityBaselineProcessor(),
-		Categories.MSFTSecBaselines_OptionalOverrides => new MicrosoftSecurityBaselineOverridesProcessor(),
+		Categories.MSFTSecBaselines_OptionalOverrides => new MUnitCategoryProcessor(Categories.MSFTSecBaselines_OptionalOverrides, "ProtectCategory_MSFTSecBaselineOverrides"),
 		Categories.Microsoft365AppsSecurityBaseline => new Microsoft365AppsSecurityBaselineProcessor(),
-		Categories.MicrosoftDefender => new MicrosoftDefenderProcessor(),
+		Categories.MicrosoftDefender => new MUnitCategoryProcessor(Categories.MicrosoftDefender, "ProtectCategory_MSFTDefender"),
 		Categories.AttackSurfaceReductionRules => new AttackSurfaceReductionRulesProcessor(),
-		Categories.BitLockerSettings => new BitLockerSettingsProcessor(),
-		Categories.TLSSecurity => new TLSSecurityProcessor(),
-		Categories.LockScreen => new LockScreenProcessor(),
-		Categories.UserAccountControl => new UserAccountControlProcessor(),
-		Categories.DeviceGuard => new DeviceGuardProcessor(),
-		Categories.WindowsFirewall => new WindowsFirewallProcessor(),
+		Categories.BitLockerSettings => new MUnitCategoryProcessor(Categories.BitLockerSettings, "ProtectCategory_BitLocker"),
+		Categories.TLSSecurity => new MUnitCategoryProcessor(Categories.TLSSecurity, "ProtectCategory_TLS"),
+		Categories.LockScreen => new MUnitCategoryProcessor(Categories.LockScreen, "ProtectCategory_LockScreen"),
+		Categories.UserAccountControl => new MUnitCategoryProcessor(Categories.UserAccountControl, "ProtectCategory_UAC"),
+		Categories.DeviceGuard => new MUnitCategoryProcessor(Categories.DeviceGuard, "ProtectCategory_DeviceGuard"),
+		Categories.WindowsFirewall => new MUnitCategoryProcessor(Categories.WindowsFirewall, "ProtectCategory_WindowsFirewall"),
 		Categories.OptionalWindowsFeatures => new OptionalWindowsFeaturesProcessor(),
-		Categories.WindowsNetworking => new WindowsNetworkingProcessor(),
-		Categories.MiscellaneousConfigurations => new MiscellaneousConfigurationsProcessor(),
-		Categories.WindowsUpdateConfigurations => new WindowsUpdateConfigurationsProcessor(),
-		Categories.EdgeBrowserConfigurations => new EdgeBrowserConfigurationsProcessor(),
+		Categories.WindowsNetworking => new MUnitCategoryProcessor(Categories.WindowsNetworking, "ProtectCategory_WindowsNetworking"),
+		Categories.MiscellaneousConfigurations => new MUnitCategoryProcessor(Categories.MiscellaneousConfigurations, "ProtectCategory_MiscellaneousConfig"),
+		Categories.WindowsUpdateConfigurations => new MUnitCategoryProcessor(Categories.WindowsUpdateConfigurations, "ProtectCategory_WindowsUpdate"),
+		Categories.EdgeBrowserConfigurations => new MUnitCategoryProcessor(Categories.EdgeBrowserConfigurations, "ProtectCategory_Edge"),
 		Categories.CertificateChecking => throw new InvalidOperationException("Certificate Checking must be interacted with manually."),
 		Categories.CountryIPBlocking => new CountryIPBlockingProcessor(),
-		Categories.NonAdminCommands => new NonAdminCommandsProcessor(),
+		Categories.NonAdminCommands => new MUnitCategoryProcessor(Categories.NonAdminCommands, "ProtectCategory_NonAdmin"),
 		_ => throw new ArgumentException($"Unknown category: {category}", nameof(category))
+	};
+
+	/// <summary>
+	/// Single source of truth for mapping MUnit-based categories to the ViewModels that own their MUnits.
+	/// Only the ViewModel of the requested category is instantiated.
+	/// </summary>
+	/// <param name="category">The category to get the ViewModel for.</param>
+	/// <returns>The ViewModel that manages the category, or null if the category is not MUnit-based.</returns>
+	internal static IMUnitListViewModel? GetMUnitViewModel(Categories category) => category switch
+	{
+		Categories.MSFTSecBaselines_OptionalOverrides => ViewModelProvider.MicrosoftBaseLinesOverridesVM,
+		Categories.MicrosoftDefender => ViewModelProvider.MicrosoftDefenderVM,
+		Categories.BitLockerSettings => ViewModelProvider.BitLockerVM,
+		Categories.TLSSecurity => ViewModelProvider.TLSVM,
+		Categories.LockScreen => ViewModelProvider.LockScreenVM,
+		Categories.UserAccountControl => ViewModelProvider.UACVM,
+		Categories.DeviceGuard => ViewModelProvider.DeviceGuardVM,
+		Categories.WindowsFirewall => ViewModelProvider.WindowsFirewallVM,
+		Categories.WindowsNetworking => ViewModelProvider.WindowsNetworkingVM,
+		Categories.MiscellaneousConfigurations => ViewModelProvider.MiscellaneousConfigsVM,
+		Categories.WindowsUpdateConfigurations => ViewModelProvider.WindowsUpdateVM,
+		Categories.EdgeBrowserConfigurations => ViewModelProvider.EdgeVM,
+		Categories.NonAdminCommands => ViewModelProvider.NonAdminVM,
+		_ => null
 	};
 
 	/// <summary>
@@ -67,167 +90,17 @@ internal static class CategoryProcessorFactory
 	/// - <see cref="Categories.MSFTSecBaselines_OptionalOverrides"/> runs last
 	/// Lower numbers run earlier; higher numbers run later.
 	/// Default priority for all others is 0.
+	/// Maintains deterministic ordering among the "first" group by using distinct negative priorities.
 	/// </summary>
-	internal static int GetExecutionPriority(Categories category)
+	internal static int GetExecutionPriority(Categories category) => category switch
 	{
-		// Maintain deterministic ordering among the "first" group by using distinct negative priorities.
-		return category switch
-		{
-			Categories.MicrosoftSecurityBaseline => -1000,                // Apply first
-			Categories.Microsoft365AppsSecurityBaseline => -900,          // Apply second
-			Categories.MSFTSecBaselines_OptionalOverrides => 1000,        // Apply last
-			_ => 0                                                        // Default priority
-		};
-	}
+		Categories.MicrosoftSecurityBaseline => -1000,         // Apply first
+		Categories.Microsoft365AppsSecurityBaseline => -900,   // Apply second
+		Categories.MSFTSecBaselines_OptionalOverrides => 1000, // Apply last
+		_ => 0                                                 // Default priority
+	};
 
-	#region Concrete processor implementations for MUnit-based categories
-
-	private sealed class MicrosoftSecurityBaselineOverridesProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.MSFTSecBaselines_OptionalOverrides;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_MSFTSecBaselineOverrides");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.MicrosoftBaseLinesOverridesVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.MicrosoftBaseLinesOverridesVM.AllMUnits;
-	}
-
-	private sealed class MicrosoftDefenderProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.MicrosoftDefender;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_MSFTDefender");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.MicrosoftDefenderVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.MicrosoftDefenderVM.AllMUnits;
-	}
-
-	private sealed class BitLockerSettingsProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.BitLockerSettings;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_BitLocker");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.BitLockerVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.BitLockerVM.AllMUnits;
-	}
-
-	private sealed class TLSSecurityProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.TLSSecurity;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_TLS");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.TLSVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.TLSVM.AllMUnits;
-	}
-
-	private sealed class LockScreenProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.LockScreen;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_LockScreen");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.LockScreenVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.LockScreenVM.AllMUnits;
-	}
-
-	private sealed class UserAccountControlProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.UserAccountControl;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_UAC");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.UACVM;
-
-		// Use the ViewModel's CreateAllMUnits so both JSON and programmatic MUnits
-		// and all specialized registrations/dependencies are included for Protect flows.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.UACVM.AllMUnits;
-	}
-
-	private sealed class DeviceGuardProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.DeviceGuard;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_DeviceGuard");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.DeviceGuardVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.DeviceGuardVM.AllMUnits;
-	}
-
-	private sealed class WindowsFirewallProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.WindowsFirewall;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_WindowsFirewall");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.WindowsFirewallVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.WindowsFirewallVM.AllMUnits;
-	}
-
-	private sealed class WindowsNetworkingProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.WindowsNetworking;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_WindowsNetworking");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.WindowsNetworkingVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.WindowsNetworkingVM.AllMUnits;
-	}
-
-	private sealed class MiscellaneousConfigurationsProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.MiscellaneousConfigurations;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_MiscellaneousConfig");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.MiscellaneousConfigsVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.MiscellaneousConfigsVM.AllMUnits;
-	}
-
-	private sealed class WindowsUpdateConfigurationsProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.WindowsUpdateConfigurations;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_WindowsUpdate");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.WindowsUpdateVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.WindowsUpdateVM.AllMUnits;
-	}
-
-	private sealed class EdgeBrowserConfigurationsProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.EdgeBrowserConfigurations;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_Edge");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.EdgeVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.EdgeVM.AllMUnits;
-	}
-
-	private sealed class NonAdminCommandsProcessor : MUnitCategoryProcessor
-	{
-		public override Categories Category => Categories.NonAdminCommands;
-		public override string CategoryDisplayName => Atlas.GetStr("ProtectCategory_NonAdmin");
-		protected override IMUnitListViewModel ViewModel => ViewModelProvider.NonAdminVM;
-
-		// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
-		// and also benefit from any specialized registrations/dependencies the VM wires.
-		protected override List<MUnit> AllMUnits => ViewModelProvider.NonAdminVM.AllMUnits;
-	}
-
-	#endregion
-
-	#region Custom processor for Optional Windows Features
+	#region Custom processor
 
 	private sealed class MicrosoftSecurityBaselineProcessor : ICategoryProcessor
 	{

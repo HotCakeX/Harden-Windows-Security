@@ -76,7 +76,7 @@ internal sealed class VerificationResult(
 	[JsonInclude]
 	[JsonPropertyOrder(2)]
 	[JsonPropertyName("Is Compliant")]
-	internal bool IsCompliant => isCompliant;
+	internal bool IsCompliant { get; set; } = isCompliant; // Settable so the restore dialog in the Protect page can modify the imported items.
 
 	[JsonInclude]
 	[JsonPropertyOrder(3)]

@@ -19,9 +19,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json.Nodes;
+using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using CommonCore.GroupPolicy;
+using HardenSystemSecurity.CustomUIElements;
 using HardenSystemSecurity.Helpers;
 using HardenSystemSecurity.Protect;
 using Microsoft.UI.Xaml;
@@ -33,7 +36,7 @@ using WinRT;
 
 namespace HardenSystemSecurity.ViewModels;
 
-internal sealed partial class ProtectVM : ViewModelBase
+internal sealed partial class ProtectVM : ViewModelBase, IDisposable
 {
 	/// <summary>
 	/// Aggregate compliance statistics produced by a completed preset verification.
@@ -298,6 +301,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 				ICategoryProcessor processor = CategoryProcessorFactory.GetProcessor(cat);
 
 				MainInfoBar.WriteInfo($"Applying category {i + 1}/{categories.Count}: {processor.CategoryDisplayName}");
+				HighlightCategory(cat);
 
 				// Using the category processor like Presets, but we pass the selected intents.
 				await processor.ApplyAllAsync(
@@ -322,6 +326,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		{
 			// End animated button lifecycle and re-enable UI
 			ApplyIntentsCancellableButton.End();
+			HighlightCategory(null);
 
 			// Clear gating state and re-enable other buttons
 			CurrentRunningOperation = RunningOperation.None;
@@ -430,77 +435,61 @@ internal sealed partial class ProtectVM : ViewModelBase
 		// - Appears in preview when any of the three intents defined above is selected.
 		// - Real application is performed via CategoryProcessorFactory (by category),
 		//   so the strategy here is intentionally a no-op.
-		MUnit msSecurityBaselineProxy = new(
-			category: Categories.MicrosoftSecurityBaseline,
-			name: Atlas.GetStr("ProtectCategory_MSFTSecBaseline"),
-			deviceIntents: intentsForBaselinesAndOptional,
-			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
-			verifyStrategy: null,
-			removeStrategy: null,
-			subCategory: null,
-			url: "https://www.microsoft.com/en-us/download/details.aspx?id=55319",
-			id: Guid.CreateVersion7());
-
-		result.Add(msSecurityBaselineProxy);
+		result.Add(CreateProxyMUnit(
+			Categories.MicrosoftSecurityBaseline,
+			"ProtectCategory_MSFTSecBaseline",
+			intentsForBaselinesAndOptional,
+			"https://www.microsoft.com/en-us/download/details.aspx?id=55319"));
 
 		// Microsoft 365 Apps Security Baseline proxy (applied via its processor)
-		MUnit m365AppsBaselineProxy = new(
-			category: Categories.Microsoft365AppsSecurityBaseline,
-			name: Atlas.GetStr("ProtectCategory_MSFT365AppsSecBaseline"),
-			deviceIntents: intentsForBaselinesAndOptional,
-			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
-			verifyStrategy: null,
-			removeStrategy: null,
-			subCategory: null,
-			url: "https://www.microsoft.com/en-us/download/details.aspx?id=55319",
-			id: Guid.CreateVersion7());
-
-		result.Add(m365AppsBaselineProxy);
+		result.Add(CreateProxyMUnit(
+			Categories.Microsoft365AppsSecurityBaseline,
+			"ProtectCategory_MSFT365AppsSecBaseline",
+			intentsForBaselinesAndOptional,
+			"https://www.microsoft.com/en-us/download/details.aspx?id=55319"));
 
 		// Optional Windows Features proxy (applied via its processor)
-		MUnit optionalWindowsFeaturesProxy = new(
-			category: Categories.OptionalWindowsFeatures,
-			name: Atlas.GetStr("ProtectCategory_OptionalWinFeatures"),
-			deviceIntents: intentsForBaselinesAndOptional,
-			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
-			verifyStrategy: null,
-			removeStrategy: null,
-			subCategory: null,
-			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features",
-			id: Guid.CreateVersion7());
-
-		result.Add(optionalWindowsFeaturesProxy);
+		result.Add(CreateProxyMUnit(
+			Categories.OptionalWindowsFeatures,
+			"ProtectCategory_OptionalWinFeatures",
+			intentsForBaselinesAndOptional,
+			"https://github.com/HotCakeX/Harden-Windows-Security/wiki/Optional-Windows-Features"));
 
 		// Attack Surface Reduction (ASR) proxy (applied via its processor)
-		MUnit asrProxy = new(
-			category: Categories.AttackSurfaceReductionRules,
-			name: Atlas.GetStr("ProtectCategory_ASRRules"),
-			deviceIntents: intentsForBaselinesAndOptional,
-			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
-			verifyStrategy: null,
-			removeStrategy: null,
-			subCategory: null,
-			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction",
-			id: Guid.CreateVersion7());
-
-		result.Add(asrProxy);
+		result.Add(CreateProxyMUnit(
+			Categories.AttackSurfaceReductionRules,
+			"ProtectCategory_ASRRules",
+			intentsForBaselinesAndOptional,
+			"https://github.com/HotCakeX/Harden-Windows-Security/wiki/Attack-Surface-Reduction"));
 
 		// Country IP Blocking proxy (applied via its processor)
-		MUnit countryIPBlockingProxy = new(
-			category: Categories.CountryIPBlocking,
-			name: Atlas.GetStr("ProtectCategory_CountryIPBlock"),
-			deviceIntents: [Intent.All],
-			applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
-			verifyStrategy: null,
-			removeStrategy: null,
-			subCategory: null,
-			url: "https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking",
-			id: Guid.CreateVersion7());
-
-		result.Add(countryIPBlockingProxy);
+		result.Add(CreateProxyMUnit(
+			Categories.CountryIPBlocking,
+			"ProtectCategory_CountryIPBlock",
+			[Intent.All],
+			"https://github.com/HotCakeX/Harden-Windows-Security/wiki/Country-IP-Blocking"));
 
 		return result;
 	}
+
+	/// <summary>
+	/// Creates a proxy MUnit for a non-MUnit-based category so that it appears in the device-intents preview.
+	/// The apply strategy is intentionally a no-op because the real application is performed via its category processor.
+	/// </summary>
+	/// <param name="category">The non-MUnit-based category the proxy represents.</param>
+	/// <param name="nameKey">Resource key of the proxy's name.</param>
+	/// <param name="deviceIntents">The device intents that make the proxy appear in the preview.</param>
+	/// <param name="url">The URL of the proxy.</param>
+	private static MUnit CreateProxyMUnit(Categories category, string nameKey, List<Intent> deviceIntents, string url) => new(
+		category: category,
+		name: Atlas.GetStr(nameKey),
+		deviceIntents: deviceIntents,
+		applyStrategy: new DefaultApply(static () => { /* no-op: applied via category processor in intents flow */ }),
+		verifyStrategy: null,
+		removeStrategy: null,
+		subCategory: null,
+		url: url,
+		id: Guid.CreateVersion7());
 
 	/// <summary>
 	/// The main InfoBar for the Protect VM.
@@ -768,205 +757,61 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	private List<ProtectionCategoryListViewItem> GenerateCategories(int Preset)
 	{
-		List<ProtectionCategoryListViewItem> output = [];
+		List<ProtectionCategoryListViewItem> output;
 
 		switch (Preset)
 		{
 			case 0:
 				{
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MicrosoftSecurityBaseline,
-						title: Atlas.GetStr("ProtectCategory_MSFTSecBaseline"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFTSecBaseline"),
-						logo: CategoryImages[(int)Categories.MicrosoftSecurityBaseline],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MSFTSecBaselines_OptionalOverrides,
-						title: Atlas.GetStr("ProtectCategory_MSFTSecBaselineOverrides"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFTSecBaselineOverrides"),
-						logo: CategoryImages[(int)Categories.MSFTSecBaselines_OptionalOverrides],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.Microsoft365AppsSecurityBaseline,
-						title: Atlas.GetStr("ProtectCategory_MSFT365AppsSecBaseline"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFT365AppsSecBaseline"),
-						logo: CategoryImages[(int)Categories.Microsoft365AppsSecurityBaseline],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MicrosoftDefender,
-						title: Atlas.GetStr("ProtectCategory_MSFTDefender"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFTDefender"),
-						logo: CategoryImages[(int)Categories.MicrosoftDefender],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.DeviceGuard,
-						title: Atlas.GetStr("ProtectCategory_DeviceGuard"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_DeviceGuard"),
-						logo: CategoryImages[(int)Categories.DeviceGuard],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.OptionalWindowsFeatures,
-						title: Atlas.GetStr("ProtectCategory_OptionalWinFeatures"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_OptionalWinFeatures"),
-						logo: CategoryImages[(int)Categories.OptionalWindowsFeatures],
-						subCategories: [
-										new SubCategoryDefinition(
-										subCategory:SubCategories.OptionalWindowsFeatures_IncludeEnablements,
-										description: Atlas.GetStr("ProtectSubCategory_IncludeEnablements"),
-										tip: Atlas.GetStr("OptionalWindowsFeatures_IncludeEnablements"))
-										{ IsChecked = !IsSystemVM }
-										]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.NonAdminCommands,
-						title: Atlas.GetStr("ProtectCategory_NonAdmin"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_NonAdmin"),
-						logo: CategoryImages[(int)Categories.NonAdminCommands],
-						subCategories: []
-						));
+					output = [
+						CreateCategory(Categories.MicrosoftSecurityBaseline),
+						CreateCategory(Categories.MSFTSecBaselines_OptionalOverrides),
+						CreateCategory(Categories.Microsoft365AppsSecurityBaseline),
+						CreateCategory(Categories.MicrosoftDefender),
+						CreateCategory(Categories.DeviceGuard),
+						CreateCategory(Categories.OptionalWindowsFeatures, [
+							new SubCategoryDefinition(
+							subCategory: SubCategories.OptionalWindowsFeatures_IncludeEnablements,
+							description: Atlas.GetStr("ProtectSubCategory_IncludeEnablements"),
+							tip: Atlas.GetStr("OptionalWindowsFeatures_IncludeEnablements"))
+							{ IsChecked = !IsSystemVM }]),
+						CreateCategory(Categories.NonAdminCommands)
+						];
 
 					break;
 				}
 			case 1:
 				{
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MicrosoftSecurityBaseline,
-						title: Atlas.GetStr("ProtectCategory_MSFTSecBaseline"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFTSecBaseline"),
-						logo: CategoryImages[(int)Categories.MicrosoftSecurityBaseline],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MSFTSecBaselines_OptionalOverrides,
-						title: Atlas.GetStr("ProtectCategory_MSFTSecBaselineOverrides"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFTSecBaselineOverrides"),
-						logo: CategoryImages[(int)Categories.MSFTSecBaselines_OptionalOverrides],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.Microsoft365AppsSecurityBaseline,
-						title: Atlas.GetStr("ProtectCategory_MSFT365AppsSecBaseline"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFT365AppsSecBaseline"),
-						logo: CategoryImages[(int)Categories.Microsoft365AppsSecurityBaseline],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MicrosoftDefender,
-						title: Atlas.GetStr("ProtectCategory_MSFTDefender"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFTDefender"),
-						logo: CategoryImages[(int)Categories.MicrosoftDefender],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.AttackSurfaceReductionRules,
-						title: Atlas.GetStr("ProtectCategory_ASRRules"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_ASRRules"),
-						logo: CategoryImages[(int)Categories.AttackSurfaceReductionRules],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.BitLockerSettings,
-						title: Atlas.GetStr("ProtectCategory_BitLocker"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_BitLocker"),
-						logo: CategoryImages[(int)Categories.BitLockerSettings],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.TLSSecurity,
-						title: Atlas.GetStr("ProtectCategory_TLS"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_TLS"),
-						logo: CategoryImages[(int)Categories.TLSSecurity],
-						subCategories: [
+					output = [
+						CreateCategory(Categories.MicrosoftSecurityBaseline),
+						CreateCategory(Categories.MSFTSecBaselines_OptionalOverrides),
+						CreateCategory(Categories.Microsoft365AppsSecurityBaseline),
+						CreateCategory(Categories.MicrosoftDefender),
+						CreateCategory(Categories.AttackSurfaceReductionRules),
+						CreateCategory(Categories.BitLockerSettings),
+						CreateCategory(Categories.TLSSecurity, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.TLS_ForBattleNet,
 							description: Atlas.GetStr("ProtectSubCategory_TLS_ForBattleNet"),
 							tip: Atlas.GetStr("TLSSecurity_TLS_ForBattleNet"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.LockScreen,
-						title: Atlas.GetStr("ProtectCategory_LockScreen"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_LockScreen"),
-						logo: CategoryImages[(int)Categories.LockScreen],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.UserAccountControl,
-						title: Atlas.GetStr("ProtectCategory_UAC"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_UAC"),
-						logo: CategoryImages[(int)Categories.UserAccountControl],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.DeviceGuard,
-						title: Atlas.GetStr("ProtectCategory_DeviceGuard"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_DeviceGuard"),
-						logo: CategoryImages[(int)Categories.DeviceGuard],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.WindowsFirewall,
-						title: Atlas.GetStr("ProtectCategory_WindowsFirewall"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_WindowsFirewall"),
-						logo: CategoryImages[(int)Categories.WindowsFirewall],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.OptionalWindowsFeatures,
-						title: Atlas.GetStr("ProtectCategory_OptionalWinFeatures"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_OptionalWinFeatures"),
-						logo: CategoryImages[(int)Categories.OptionalWindowsFeatures],
-						subCategories: [
-										new SubCategoryDefinition(
-										subCategory:SubCategories.OptionalWindowsFeatures_IncludeEnablements,
-										description: Atlas.GetStr("ProtectSubCategory_IncludeEnablements"),
-										tip: Atlas.GetStr("OptionalWindowsFeatures_IncludeEnablements"))
-										{ IsChecked = !IsSystemVM }
-										]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.WindowsNetworking,
-						title: Atlas.GetStr("ProtectCategory_WindowsNetworking"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_WindowsNetworking"),
-						logo: CategoryImages[(int)Categories.WindowsNetworking],
-						subCategories: [
+							]),
+						CreateCategory(Categories.LockScreen),
+						CreateCategory(Categories.UserAccountControl),
+						CreateCategory(Categories.DeviceGuard),
+						CreateCategory(Categories.WindowsFirewall),
+						CreateCategory(Categories.OptionalWindowsFeatures, [
+							new SubCategoryDefinition(
+							subCategory: SubCategories.OptionalWindowsFeatures_IncludeEnablements,
+							description: Atlas.GetStr("ProtectSubCategory_IncludeEnablements"),
+							tip: Atlas.GetStr("OptionalWindowsFeatures_IncludeEnablements"))
+							{ IsChecked = !IsSystemVM }]),
+						CreateCategory(Categories.WindowsNetworking, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.WindowsNetworking_BlockNTLM,
 							description: Atlas.GetStr("ProtectSubCategory_BlockNTLM"),
 							tip: Atlas.GetStr("WindowsNetworking_BlockNTLMTIP"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MiscellaneousConfigurations,
-						title: Atlas.GetStr("ProtectCategory_MiscellaneousConfig"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MiscellaneousConfig"),
-						logo: CategoryImages[(int)Categories.MiscellaneousConfigurations],
-						subCategories: [
+							]),
+						CreateCategory(Categories.MiscellaneousConfigurations, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.MiscellaneousConfigurations_EnableLongPathSupport,
 							description: Atlas.GetStr("ProtectSubCategory_EnableLongPathSupport")),
@@ -980,81 +825,27 @@ internal sealed partial class ProtectVM : ViewModelBase
 							subCategory:SubCategories.MiscellaneousConfigurations_DriverLoadPolicyGoodOnly,
 							description: Atlas.GetStr("ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly"),
 							tip: Atlas.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.WindowsUpdateConfigurations,
-						title: Atlas.GetStr("ProtectCategory_WindowsUpdate"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_WindowsUpdate"),
-						logo: CategoryImages[(int)Categories.WindowsUpdateConfigurations],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.EdgeBrowserConfigurations,
-						title: Atlas.GetStr("ProtectCategory_Edge"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_Edge"),
-						logo: CategoryImages[(int)Categories.EdgeBrowserConfigurations],
-						subCategories: [
+							]),
+						CreateCategory(Categories.WindowsUpdateConfigurations),
+						CreateCategory(Categories.EdgeBrowserConfigurations, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.Edge_DynamicCodeSettings,
 							description: Atlas.GetSecurityStr("DynamicCodeSettings-Edge"),
 							tip: Atlas.GetStr("DynamicCodeSettings-Edge-TIP"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.CountryIPBlocking,
-						title: Atlas.GetStr("ProtectCategory_CountryIPBlock"),
-						subTitle: Atlas.GetStr("CountryIPBlockingNavItem/ToolTipService/ToolTip"),
-						logo: CategoryImages[(int)Categories.CountryIPBlocking],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.NonAdminCommands,
-						title: Atlas.GetStr("ProtectCategory_NonAdmin"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_NonAdmin"),
-						logo: CategoryImages[(int)Categories.NonAdminCommands],
-						subCategories: []
-						));
+							]),
+						CreateCategory(Categories.CountryIPBlocking),
+						CreateCategory(Categories.NonAdminCommands)
+						];
 
 					break;
 				}
 			case 2:
 				{
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MicrosoftSecurityBaseline,
-						title: Atlas.GetStr("ProtectCategory_MSFTSecBaseline"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFTSecBaseline"),
-						logo: CategoryImages[(int)Categories.MicrosoftSecurityBaseline],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MSFTSecBaselines_OptionalOverrides,
-						title: Atlas.GetStr("ProtectCategory_MSFTSecBaselineOverrides"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFTSecBaselineOverrides"),
-						logo: CategoryImages[(int)Categories.MSFTSecBaselines_OptionalOverrides],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.Microsoft365AppsSecurityBaseline,
-						title: Atlas.GetStr("ProtectCategory_MSFT365AppsSecBaseline"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFT365AppsSecBaseline"),
-						logo: CategoryImages[(int)Categories.Microsoft365AppsSecurityBaseline],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MicrosoftDefender,
-						title: Atlas.GetStr("ProtectCategory_MSFTDefender"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MSFTDefender"),
-						logo: CategoryImages[(int)Categories.MicrosoftDefender],
-						subCategories: [
+					output = [
+						CreateCategory(Categories.MicrosoftSecurityBaseline),
+						CreateCategory(Categories.MSFTSecBaselines_OptionalOverrides),
+						CreateCategory(Categories.Microsoft365AppsSecurityBaseline),
+						CreateCategory(Categories.MicrosoftDefender, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.MSDefender_SmartAppControl,
 							description: Atlas.GetStr("ProtectSubCategory_SmartAppControl")),
@@ -1062,44 +853,16 @@ internal sealed partial class ProtectVM : ViewModelBase
 							new SubCategoryDefinition(
 							subCategory:SubCategories.MSDefender_BetaUpdateChannelsForDefender,
 							description: Atlas.GetStr("ProtectSubCategory_BetaUpdateChannels"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.AttackSurfaceReductionRules,
-						title: Atlas.GetStr("ProtectCategory_ASRRules"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_ASRRules"),
-						logo: CategoryImages[(int)Categories.AttackSurfaceReductionRules],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.BitLockerSettings,
-						title: Atlas.GetStr("ProtectCategory_BitLocker"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_BitLocker"),
-						logo: CategoryImages[(int)Categories.BitLockerSettings],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.TLSSecurity,
-						title: Atlas.GetStr("ProtectCategory_TLS"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_TLS"),
-						logo: CategoryImages[(int)Categories.TLSSecurity],
-						subCategories: [
+							]),
+						CreateCategory(Categories.AttackSurfaceReductionRules),
+						CreateCategory(Categories.BitLockerSettings),
+						CreateCategory(Categories.TLSSecurity, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.TLS_ForBattleNet,
 							description: Atlas.GetStr("ProtectSubCategory_TLS_ForBattleNet"),
 							tip: Atlas.GetStr("TLSSecurity_TLS_ForBattleNet"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.LockScreen,
-						title: Atlas.GetStr("ProtectCategory_LockScreen"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_LockScreen"),
-						logo: CategoryImages[(int)Categories.LockScreen],
-						subCategories: [
+							]),
+						CreateCategory(Categories.LockScreen, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.LockScreen_NoLastSignedIn,
 							description: Atlas.GetStr("ProtectSubCategory_NoLastSignedIn"),
@@ -1108,15 +871,8 @@ internal sealed partial class ProtectVM : ViewModelBase
 							new SubCategoryDefinition(
 							subCategory:SubCategories.LockScreen_RequireCTRLAltDel,
 							description: Atlas.GetStr("ProtectSubCategory_RequireCTRLAltDel"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.UserAccountControl,
-						title: Atlas.GetStr("ProtectCategory_UAC"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_UAC"),
-						logo: CategoryImages[(int)Categories.UserAccountControl],
-						subCategories: [
+							]),
+						CreateCategory(Categories.UserAccountControl, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.UAC_NoFastUserSwitching,
 							description: Atlas.GetStr("ProtectSubCategory_NoFastUserSwitching"),
@@ -1125,61 +881,25 @@ internal sealed partial class ProtectVM : ViewModelBase
 							new SubCategoryDefinition(
 							subCategory:SubCategories.UAC_OnlyElevateSigned,
 							description: Atlas.GetStr("ProtectSubCategory_OnlyElevateSigned"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.DeviceGuard,
-						title: Atlas.GetStr("ProtectCategory_DeviceGuard"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_DeviceGuard"),
-						logo: CategoryImages[(int)Categories.DeviceGuard],
-						subCategories: [
+							]),
+						CreateCategory(Categories.DeviceGuard, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.DeviceGuard_MandatoryModeForVBS,
 							description: Atlas.GetStr("ProtectSubCategory_MandatoryModeForVBS"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.WindowsFirewall,
-						title: Atlas.GetStr("ProtectCategory_WindowsFirewall"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_WindowsFirewall"),
-						logo: CategoryImages[(int)Categories.WindowsFirewall],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.OptionalWindowsFeatures,
-						title: Atlas.GetStr("ProtectCategory_OptionalWinFeatures"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_OptionalWinFeatures"),
-						logo: CategoryImages[(int)Categories.OptionalWindowsFeatures],
-						subCategories: [
-										new SubCategoryDefinition(
-										subCategory:SubCategories.OptionalWindowsFeatures_IncludeEnablements,
-										description: Atlas.GetStr("ProtectSubCategory_IncludeEnablements"),
-										tip: Atlas.GetStr("OptionalWindowsFeatures_IncludeEnablements"))
-										{ IsChecked = !IsSystemVM }
-										]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.WindowsNetworking,
-						title: Atlas.GetStr("ProtectCategory_WindowsNetworking"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_WindowsNetworking"),
-						logo: CategoryImages[(int)Categories.WindowsNetworking],
-						subCategories: [
+							]),
+						CreateCategory(Categories.WindowsFirewall),
+						CreateCategory(Categories.OptionalWindowsFeatures, [
+							new SubCategoryDefinition(
+							subCategory: SubCategories.OptionalWindowsFeatures_IncludeEnablements,
+							description: Atlas.GetStr("ProtectSubCategory_IncludeEnablements"),
+							tip: Atlas.GetStr("OptionalWindowsFeatures_IncludeEnablements"))
+							{ IsChecked = !IsSystemVM }]),
+						CreateCategory(Categories.WindowsNetworking, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.WindowsNetworking_BlockNTLM,
 							description: Atlas.GetStr("ProtectSubCategory_BlockNTLM"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.MiscellaneousConfigurations,
-						title: Atlas.GetStr("ProtectCategory_MiscellaneousConfig"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_MiscellaneousConfig"),
-						logo: CategoryImages[(int)Categories.MiscellaneousConfigurations],
-						subCategories: [
+							]),
+						CreateCategory(Categories.MiscellaneousConfigurations, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.MiscellaneousConfigurations_ForceStrongKeyProtection,
 							description: Atlas.GetStr("ProtectSubCategory_ForceStrongKeyProtection")),
@@ -1201,45 +921,17 @@ internal sealed partial class ProtectVM : ViewModelBase
 							subCategory:SubCategories.MiscellaneousConfigurations_DriverLoadPolicyGoodOnly,
 							description: Atlas.GetStr("ProtectSubCategory_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly"),
 							tip: Atlas.GetStr("MiscellaneousConfigurations_MiscellaneousConfigurations_DriverLoadPolicyGoodOnly"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.WindowsUpdateConfigurations,
-						title: Atlas.GetStr("ProtectCategory_WindowsUpdate"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_WindowsUpdate"),
-						logo: CategoryImages[(int)Categories.WindowsUpdateConfigurations],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.EdgeBrowserConfigurations,
-						title: Atlas.GetStr("ProtectCategory_Edge"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_Edge"),
-						logo: CategoryImages[(int)Categories.EdgeBrowserConfigurations],
-						subCategories: [
+							]),
+						CreateCategory(Categories.WindowsUpdateConfigurations),
+						CreateCategory(Categories.EdgeBrowserConfigurations, [
 							new SubCategoryDefinition(
 							subCategory:SubCategories.Edge_DynamicCodeSettings,
 							description: Atlas.GetSecurityStr("DynamicCodeSettings-Edge"),
 							tip: Atlas.GetStr("DynamicCodeSettings-Edge-TIP"))
-							]
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.CountryIPBlocking,
-						title: Atlas.GetStr("ProtectCategory_CountryIPBlock"),
-						subTitle: Atlas.GetStr("CountryIPBlockingNavItem/ToolTipService/ToolTip"),
-						logo: CategoryImages[(int)Categories.CountryIPBlocking],
-						subCategories: []
-						));
-
-					output.Add(new ProtectionCategoryListViewItem(
-						category: Categories.NonAdminCommands,
-						title: Atlas.GetStr("ProtectCategory_NonAdmin"),
-						subTitle: Atlas.GetStr("ProtectCategory_Description_NonAdmin"),
-						logo: CategoryImages[(int)Categories.NonAdminCommands],
-						subCategories: []
-						));
+							]),
+						CreateCategory(Categories.CountryIPBlocking),
+						CreateCategory(Categories.NonAdminCommands)
+						];
 
 					break;
 				}
@@ -1251,6 +943,47 @@ internal sealed partial class ProtectVM : ViewModelBase
 		ProtectionCategoriesListItemsSourceSelectedItems = output;
 
 		return output;
+	}
+
+	/// <summary>
+	/// Creates a Protection category item for the <see cref="GenerateCategories"/> method and the <see cref="SystemStateRestoreDialog"/>.
+	/// </summary>
+	/// <param name="category">The category to create the item for.</param>
+	/// <param name="subCategories">Sub-categories of the item. They must be new instances for every item because their IsChecked state is per instance.</param>
+	/// <exception cref="ArgumentOutOfRangeException"></exception>
+	internal ProtectionCategoryListViewItem CreateCategory(Categories category, List<SubCategoryDefinition>? subCategories = null)
+	{
+		// Resource keys of the title and subtitle of each category.
+		(string titleKey, string subTitleKey) = category switch
+		{
+			Categories.MicrosoftSecurityBaseline => ("ProtectCategory_MSFTSecBaseline", "ProtectCategory_Description_MSFTSecBaseline"),
+			Categories.MSFTSecBaselines_OptionalOverrides => ("ProtectCategory_MSFTSecBaselineOverrides", "ProtectCategory_Description_MSFTSecBaselineOverrides"),
+			Categories.Microsoft365AppsSecurityBaseline => ("ProtectCategory_MSFT365AppsSecBaseline", "ProtectCategory_Description_MSFT365AppsSecBaseline"),
+			Categories.MicrosoftDefender => ("ProtectCategory_MSFTDefender", "ProtectCategory_Description_MSFTDefender"),
+			Categories.AttackSurfaceReductionRules => ("ProtectCategory_ASRRules", "ProtectCategory_Description_ASRRules"),
+			Categories.BitLockerSettings => ("ProtectCategory_BitLocker", "ProtectCategory_Description_BitLocker"),
+			Categories.TLSSecurity => ("ProtectCategory_TLS", "ProtectCategory_Description_TLS"),
+			Categories.LockScreen => ("ProtectCategory_LockScreen", "ProtectCategory_Description_LockScreen"),
+			Categories.UserAccountControl => ("ProtectCategory_UAC", "ProtectCategory_Description_UAC"),
+			Categories.DeviceGuard => ("ProtectCategory_DeviceGuard", "ProtectCategory_Description_DeviceGuard"),
+			Categories.WindowsFirewall => ("ProtectCategory_WindowsFirewall", "ProtectCategory_Description_WindowsFirewall"),
+			Categories.OptionalWindowsFeatures => ("ProtectCategory_OptionalWinFeatures", "ProtectCategory_Description_OptionalWinFeatures"),
+			Categories.WindowsNetworking => ("ProtectCategory_WindowsNetworking", "ProtectCategory_Description_WindowsNetworking"),
+			Categories.MiscellaneousConfigurations => ("ProtectCategory_MiscellaneousConfig", "ProtectCategory_Description_MiscellaneousConfig"),
+			Categories.WindowsUpdateConfigurations => ("ProtectCategory_WindowsUpdate", "ProtectCategory_Description_WindowsUpdate"),
+			Categories.EdgeBrowserConfigurations => ("ProtectCategory_Edge", "ProtectCategory_Description_Edge"),
+			Categories.CountryIPBlocking => ("ProtectCategory_CountryIPBlock", "CountryIPBlockingNavItem/ToolTipService/ToolTip"),
+			Categories.NonAdminCommands => ("ProtectCategory_NonAdmin", "ProtectCategory_Description_NonAdmin"),
+			_ => throw new ArgumentOutOfRangeException(nameof(category), category, "Category is not available in the Protect page.")
+		};
+
+		return new ProtectionCategoryListViewItem(
+			category: category,
+			title: Atlas.GetStr(titleKey),
+			subTitle: Atlas.GetStr(subTitleKey),
+			logo: CategoryImages[(int)category],
+			subCategories: subCategories ?? []
+			);
 	}
 
 	/// <summary>
@@ -1338,6 +1071,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 					// Update progress
 					processedCategories++;
 					MainInfoBar.WriteInfo($"{operationText} category {processedCategories}/{totalCategories}: {selectedCategory.Title}");
+					HighlightCategory(selectedCategory.Category);
 					if (progress is not null)
 					{
 						try
@@ -1479,6 +1213,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 			}
 
 			button.End();
+			HighlightCategory(null);
 			// Re-enable UI elements and clear current running operation
 			ElementsAreEnabled = true;
 			CurrentRunningOperation = RunningOperation.None;
@@ -1504,10 +1239,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Programmatically runs the same pipeline as the UI for a given preset index and operation.
 	/// </summary>
-	internal async Task<PresetOperationResult> RunPresetFromCliAsync(
-		int presetIndex,
-		HardenSystemSecurity.Helpers.MUnitOperation operation,
-		Func<int, int, string, Task>? progress = null)
+	internal async Task<PresetOperationResult> RunPresetFromCliAsync(int presetIndex, MUnitOperation operation, Func<int, int, string, Task>? progress = null)
 	{
 		// This setter triggers GenerateCategories and the same selection logic the UI uses.
 		ProtectionPresetsSelectedIndex = presetIndex;
@@ -1549,9 +1281,15 @@ internal sealed partial class ProtectVM : ViewModelBase
 
 			MainInfoBar.WriteInfo(Atlas.GetStr("SystemStateReportGenerationBeginsMsg"));
 
-			await Traverse.Generator.GenerateTraverseData(savePath);
+			using CancellationTokenSource cts = BeginSystemStateOperation();
+
+			await Traverse.Generator.GenerateTraverseData(filePath: savePath, categoryStarted: HighlightCategory, cancellationToken: cts.Token);
 
 			MainInfoBar.WriteSuccess(string.Format(Atlas.GetStr("SystemStateReportGenerationFinishedMsg"), savePath));
+		}
+		catch (Exception ex) when (IsCancellationException(ex))
+		{
+			MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 		}
 		catch (Exception ex)
 		{
@@ -1559,6 +1297,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 		finally
 		{
+			EndSystemStateOperation();
 			ElementsAreEnabled = true;
 			EnableDisableAnimatedButtons(true);
 		}
@@ -1567,7 +1306,18 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// <summary>
 	/// Event handler for the UI.
 	/// </summary>
-	internal async void RestoreSystemState()
+	internal async void RestoreSystemState() => await ReviewSystemStateAsync(apply: true);
+
+	/// <summary>
+	/// Event handler for the UI. Opens a backup file for modification only, without applying it.
+	/// </summary>
+	internal async void FineTuneSystemState() => await ReviewSystemStateAsync(apply: false);
+
+	/// <summary>
+	/// Loads a backup file and displays it in the <see cref="SystemStateRestoreDialog"/> for review and modification.
+	/// </summary>
+	/// <param name="apply">Whether the dialog offers applying the backup to the system.</param>
+	private async Task ReviewSystemStateAsync(bool apply)
 	{
 		try
 		{
@@ -1581,14 +1331,31 @@ internal sealed partial class ProtectVM : ViewModelBase
 			if (loadPath is null)
 				return;
 
+			// Load the file and let the user review and modify its contents before applying them.
+			(JsonObject root, Traverse.MContainer container) = await Task.Run(() => Traverse.MContainerJsonContext.LoadEditable(loadPath));
+
+			using SystemStateRestoreDialog dialog = new(loadPath, root, container, apply ? RestorationModeFull : null);
+
+			if (await dialog.ShowAsync() is not ContentDialogResult.Primary)
+				return;
+
 			MainInfoBar.WriteInfo(Atlas.GetStr("SystemStateRestorationBeginsMsg"));
 
-			await Traverse.Importer.ImportAndApplyAsync(
+			using CancellationTokenSource cts = BeginSystemStateOperation();
+
+			await Traverse.Importer.ApplyAsync(
+				container: container,
 				filePath: loadPath,
-				synchronizeExact: RestorationModeFull
+				synchronizeExact: RestorationModeFull,
+				categoryStarted: HighlightCategory,
+				cancellationToken: cts.Token
 				);
 
 			MainInfoBar.WriteSuccess(Atlas.GetStr("SystemStateRestorationFinishedMsg"));
+		}
+		catch (Exception ex) when (IsCancellationException(ex))
+		{
+			MainInfoBar.WriteWarning(Atlas.GetStr("OperationCancelledMsg"));
 		}
 		catch (Exception ex)
 		{
@@ -1596,9 +1363,70 @@ internal sealed partial class ProtectVM : ViewModelBase
 		}
 		finally
 		{
+			EndSystemStateOperation();
 			ElementsAreEnabled = true;
 			EnableDisableAnimatedButtons(true);
 		}
+	}
+
+	/// <summary>
+	/// Cancellation source of the running system state backup or restore operation.
+	/// </summary>
+	private CancellationTokenSource? SystemStateCts;
+
+	/// <summary>
+	/// Whether a system state backup or restore operation is running. Displays the Cancel button for it.
+	/// </summary>
+	internal bool IsSystemStateOperationRunning { get; private set => SP(ref field, value); }
+
+	/// <summary>
+	/// Starts tracking a cancellable system state operation. The caller owns and disposes the returned source.
+	/// </summary>
+	private CancellationTokenSource BeginSystemStateOperation()
+	{
+		SystemStateCts = new();
+		IsSystemStateOperationRunning = true;
+		return SystemStateCts;
+	}
+
+	/// <summary>
+	/// Stops tracking the system state operation and clears the category highlight.
+	/// </summary>
+	private void EndSystemStateOperation()
+	{
+		SystemStateCts = null;
+		IsSystemStateOperationRunning = false;
+		HighlightCategory(null);
+	}
+
+	/// <summary>
+	/// Event handler for the UI Cancel button of the system state operations.
+	/// </summary>
+	internal void CancelSystemStateOperation()
+	{
+		SystemStateCts?.Cancel();
+		MainInfoBar.WriteInfo(Atlas.GetStr("Cancelling"));
+	}
+
+	/// <summary>
+	/// Highlights the category that is currently being processed in the Protect page's ListView and scrolls it into view.
+	/// Pass null to remove the highlight.
+	/// </summary>
+	private void HighlightCategory(Categories? category)
+	{
+		ProtectionCategoryListViewItem? activeItem = null;
+
+		foreach (ProtectionCategoryListViewItem item in ProtectionCategoriesListItemsSource)
+		{
+			item.IsProcessing = item.Category == category;
+
+			if (item.IsProcessing)
+				activeItem = item;
+		}
+
+		// The ListView is disabled during operations so the user cannot scroll to the active item manually.
+		if (activeItem is not null)
+			_ = Atlas.AppDispatcher.TryEnqueue(() => UIListView?.ScrollIntoView(activeItem, ScrollIntoViewAlignment.Leading));
 	}
 
 	internal bool RestorationModePartial
@@ -1614,6 +1442,7 @@ internal sealed partial class ProtectVM : ViewModelBase
 			}
 		}
 	}
+
 	internal bool RestorationModeFull
 	{
 		get; set
@@ -1658,38 +1487,24 @@ internal sealed partial class ProtectVM : ViewModelBase
 	/// </summary>
 	private static async Task<(int Total, int Compliant)> GetCategoryStatsAsync(Categories category)
 	{
+#pragma warning disable IDE0010
 		switch (category)
 		{
 			case Categories.MicrosoftSecurityBaseline:
-				HardenSystemSecurity.Traverse.MicrosoftSecurityBaseline msb = await ViewModelProvider.MicrosoftSecurityBaselineVM.GetTraverseData();
+				Traverse.MicrosoftSecurityBaseline msb = await ViewModelProvider.MicrosoftSecurityBaselineVM.GetTraverseData();
 				return (msb.Items.Count, msb.Score);
 			case Categories.Microsoft365AppsSecurityBaseline:
-				HardenSystemSecurity.Traverse.Microsoft365AppsSecurityBaseline m365 = await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.GetTraverseData();
+				Traverse.Microsoft365AppsSecurityBaseline m365 = await ViewModelProvider.Microsoft365AppsSecurityBaselineVM.GetTraverseData();
 				return (m365.Items.Count, m365.Score);
 			case Categories.AttackSurfaceReductionRules:
-				HardenSystemSecurity.Traverse.AttackSurfaceReductionRules asr = await ViewModelProvider.ASRVM.GetTraverseData();
+				Traverse.AttackSurfaceReductionRules asr = await ViewModelProvider.ASRVM.GetTraverseData();
 				return (asr.Items.Count, asr.Score);
-			case Categories.OptionalWindowsFeatures:
-				return (0, 0); // Not tracked in the standard compliant/non-compliant way in traverse data yet
-			case Categories.MicrosoftDefender: return GetMUnitStats(ViewModelProvider.MicrosoftDefenderVM);
-			case Categories.BitLockerSettings: return GetMUnitStats(ViewModelProvider.BitLockerVM);
-			case Categories.TLSSecurity: return GetMUnitStats(ViewModelProvider.TLSVM);
-			case Categories.LockScreen: return GetMUnitStats(ViewModelProvider.LockScreenVM);
-			case Categories.UserAccountControl: return GetMUnitStats(ViewModelProvider.UACVM);
-			case Categories.DeviceGuard: return GetMUnitStats(ViewModelProvider.DeviceGuardVM);
-			case Categories.WindowsFirewall: return GetMUnitStats(ViewModelProvider.WindowsFirewallVM);
-			case Categories.WindowsNetworking: return GetMUnitStats(ViewModelProvider.WindowsNetworkingVM);
-			case Categories.MiscellaneousConfigurations: return GetMUnitStats(ViewModelProvider.MiscellaneousConfigsVM);
-			case Categories.WindowsUpdateConfigurations: return GetMUnitStats(ViewModelProvider.WindowsUpdateVM);
-			case Categories.EdgeBrowserConfigurations: return GetMUnitStats(ViewModelProvider.EdgeVM);
-			case Categories.NonAdminCommands: return GetMUnitStats(ViewModelProvider.NonAdminVM);
-			case Categories.MSFTSecBaselines_OptionalOverrides: return GetMUnitStats(ViewModelProvider.MicrosoftBaseLinesOverridesVM);
-			case Categories.CertificateChecking:
-				return (0, 0); // N/A
-			case Categories.CountryIPBlocking:
-				return (0, 0); // N/A
-			default: return (0, 0);
+			default:
+				// MUnit-based categories get their stats from the ViewModel that owns their MUnits.
+				IMUnitListViewModel? vm = CategoryProcessorFactory.GetMUnitViewModel(category);
+				return vm is null ? (0, 0) : GetMUnitStats(vm);
 		}
+#pragma warning restore IDE0010
 	}
 
 	private static (int Total, int Compliant) GetMUnitStats(IMUnitListViewModel vm)
@@ -1714,4 +1529,5 @@ internal sealed partial class ProtectVM : ViewModelBase
 			DisplayVerificationPopup();
 	}
 
+	public void Dispose() => SystemStateCts?.Dispose();
 }

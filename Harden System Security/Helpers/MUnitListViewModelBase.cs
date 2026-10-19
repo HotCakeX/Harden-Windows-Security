@@ -29,9 +29,25 @@ namespace HardenSystemSecurity.Helpers;
 internal abstract partial class MUnitListViewModelBase : ViewModelBase, IMUnitListViewModel
 {
 	/// <summary>
+	/// Common initialization shared by all of the ViewModels that inherit from this class.
+	/// Runs before the derived ViewModel's own constructor body.
+	/// </summary>
+	protected MUnitListViewModelBase()
+	{
+		MainInfoBar = new();
+
+		// Initializing the cancellable buttons
+		ApplyAllCancellableButton = new(Atlas.GetStr("ApplyAllButtonText/Text"));
+		RemoveAllCancellableButton = new(Atlas.GetStr("RemoveAllButtonText/Text"));
+		VerifyAllCancellableButton = new(Atlas.GetStr("VerifyAllButtonText"));
+
+		IMUnitListViewModel.CreateUIValuesCategories(this);
+	}
+
+	/// <summary>
 	/// The main InfoBar.
 	/// </summary>
-	public required InfoBarSettings MainInfoBar { get; init; } // Set in the Ctor of the VM class that inherits from this class.
+	public InfoBarSettings MainInfoBar { get; }
 
 	public Visibility ProgressBarVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
 
@@ -66,17 +82,17 @@ internal abstract partial class MUnitListViewModelBase : ViewModelBase, IMUnitLi
 	/// <summary>
 	/// Initialization details for the Apply All button
 	/// </summary>
-	public required AnimatedCancellableButtonInitializer ApplyAllCancellableButton { get; init; } // Set in the Ctor of the VM class that inherits from this class.
+	public AnimatedCancellableButtonInitializer ApplyAllCancellableButton { get; }
 
 	/// <summary>
 	/// Initialization details for the Remove All button
 	/// </summary>
-	public required AnimatedCancellableButtonInitializer RemoveAllCancellableButton { get; init; } // Set in the Ctor of the VM class that inherits from this class.
+	public AnimatedCancellableButtonInitializer RemoveAllCancellableButton { get; }
 
 	/// <summary>
 	/// Initialization details for the Verify All button
 	/// </summary>
-	public required AnimatedCancellableButtonInitializer VerifyAllCancellableButton { get; init; } // Set in the Ctor of the VM class that inherits from this class.
+	public AnimatedCancellableButtonInitializer VerifyAllCancellableButton { get; }
 
 	/// <summary>
 	/// Total number of items loaded (all MUnits)

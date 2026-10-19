@@ -26,20 +26,27 @@ using HardenSystemSecurity.Protect;
 namespace HardenSystemSecurity.Helpers;
 
 /// <summary>
-/// Base implementation for MUnit-based category processors.
+/// Processor used by all of the MUnit-based categories.
 /// </summary>
-internal abstract class MUnitCategoryProcessor : ICategoryProcessor
+/// <param name="category">The MUnit-based category this processor handles.</param>
+/// <param name="displayNameKey">Resource key of the category's display name.</param>
+internal sealed class MUnitCategoryProcessor(Categories category, string displayNameKey) : ICategoryProcessor
 {
-	public abstract Categories Category { get; }
-	public abstract string CategoryDisplayName { get; }
+	public Categories Category => category;
+	public string CategoryDisplayName => Atlas.GetStr(displayNameKey);
+
+	/// <summary>
+	/// The ViewModel that owns this category's MUnits.
+	/// Resolved on access so the ViewModel is only instantiated when it is actually needed.
+	/// </summary>
+	private IMUnitListViewModel ViewModel => CategoryProcessorFactory.GetMUnitViewModel(category)!;
 
 	/// <summary>
 	/// Gets all MUnits for this category.
+	/// Using the ViewModel so Protect flows include everything the VM defines (JSON + programmatic MUnits),
+	/// and also benefit from any specialized registrations/dependencies the VM wires.
 	/// </summary>
-	/// <returns>List of all MUnits</returns>
-	protected abstract List<MUnit> AllMUnits { get; }
-
-	protected abstract IMUnitListViewModel ViewModel { get; }
+	private List<MUnit> AllMUnits => ViewModel.AllMUnits;
 
 	/// <summary>
 	/// Filter MUnits based on selected sub-categories
@@ -150,9 +157,25 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 		return result;
 	}
 
-	public virtual async Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
+	public Task ApplyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null) =>
+		ProcessAllAsync(MUnitOperation.Apply, selectedSubCategories, selectedIntent, cancellationToken);
+
+	public Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null) =>
+		ProcessAllAsync(MUnitOperation.Remove, selectedSubCategories, selectedIntent, cancellationToken);
+
+	public Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null) =>
+		ProcessAllAsync(MUnitOperation.Verify, selectedSubCategories, selectedIntent, cancellationToken);
+
+	/// <summary>
+	/// Shared implementation of <see cref="ApplyAllAsync"/>, <see cref="RemoveAllAsync"/> and <see cref="VerifyAllAsync"/>.
+	/// </summary>
+	/// <param name="operation">The operation to perform on the filtered MUnits.</param>
+	/// <param name="selectedSubCategories">Selected sub-categories to include.</param>
+	/// <param name="selectedIntent">Selected device intent to include (null means ignore intents).</param>
+	/// <param name="cancellationToken">Cancellation token.</param>
+	private async Task ProcessAllAsync(MUnitOperation operation, List<SubCategories>? selectedSubCategories, Intent? selectedIntent, CancellationToken? cancellationToken)
 	{
-		// When applying based on intent (selectedIntent provided), do not use sub-category filtering.
+		// When processing based on intent (selectedIntent provided), do not use sub-category filtering.
 		// Otherwise (no intent filter), apply sub-category filter.
 		bool hasIntentFilter = selectedIntent != null;
 
@@ -167,48 +190,8 @@ internal abstract class MUnitCategoryProcessor : ICategoryProcessor
 		filteredMUnits = ResolvePolicyConflicts(filteredMUnits);
 
 		// Calling the core method as if we called it from each VM's UI.
-		await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, filteredMUnits, MUnitOperation.Apply, cancellationToken);
-	}
-
-	public virtual async Task RemoveAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
-	{
-		// When removing based on intent (selectedIntent provided), do not use sub-category filtering.
-		// Otherwise (no intent filter), apply sub-category filter.
-		bool hasIntentFilter = selectedIntent != null;
-
-		List<MUnit> baseList = hasIntentFilter
-			? AllMUnits
-			: FilterMUnitsBySubCategories(AllMUnits, selectedSubCategories);
-
-		// Apply any possible Intent-based filtration.
-		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntent);
-
-		// Resolve any conflicts (e.g. Same Key/Value but one is Specific and one is Generic)
-		filteredMUnits = ResolvePolicyConflicts(filteredMUnits);
-
-		// Include all MUnits regardless of whether they have a remove strategy
-		// The MUnit processing logic will handle cases where remove strategy is null
-		await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, filteredMUnits, MUnitOperation.Remove, cancellationToken);
-	}
-
-	public virtual async Task VerifyAllAsync(List<SubCategories>? selectedSubCategories = null, Intent? selectedIntent = null, CancellationToken? cancellationToken = null)
-	{
-		// When verifying based on intent (selectedIntent provided), do not use sub-category filtering.
-		// Otherwise (no intent filter), apply sub-category filter.
-		bool hasIntentFilter = selectedIntent != null;
-
-		List<MUnit> baseList = hasIntentFilter
-			? AllMUnits
-			: FilterMUnitsBySubCategories(AllMUnits, selectedSubCategories);
-
-		// Apply any possible Intent-based filtration.
-		List<MUnit> filteredMUnits = FilterMUnitsByIntents(baseList, selectedIntent);
-
-		// Resolve any conflicts (e.g. Same Key/Value but one is Specific and one is Generic)
-		filteredMUnits = ResolvePolicyConflicts(filteredMUnits);
-
-		// Include all MUnits regardless of whether they have a verify strategy
-		// The MUnit processing logic will handle cases where verify strategy is null
-		await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, filteredMUnits, MUnitOperation.Verify, cancellationToken);
+		// For Remove and Verify, include all MUnits regardless of whether they have a remove/verify strategy.
+		// The MUnit processing logic will handle cases where remove/verify strategy is null.
+		await MUnit.ProcessMUnitsWithBulkOperations(ViewModel, filteredMUnits, operation, cancellationToken);
 	}
 }

@@ -485,7 +485,7 @@ public sealed partial class App : Application
 							Environment.Exit(2);
 						}
 
-						await Traverse.Generator.GenerateTraverseData(_cliExportPath);
+						await Traverse.Generator.GenerateTraverseData(filePath: _cliExportPath);
 					}
 					else if (string.Equals(_cliAction, "ImportReport", StringComparison.OrdinalIgnoreCase))
 					{

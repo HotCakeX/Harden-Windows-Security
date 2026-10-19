@@ -731,12 +731,6 @@ internal sealed partial class MUnit(
 	internal MUnitListViewControl? UserControlReference { get; set; }
 
 	/// <summary>
-	/// Gets the unique identifier for this MUnit using Category|Name pattern (for non-JSON MUnits)
-	/// </summary>
-	[JsonIgnore]
-	internal string MUnitId => $"{Category}|{Name}";
-
-	/// <summary>
 	/// Gets the registry-based identifier for JSON-based MUnits using KeyName|ValueName pattern
 	/// Returns null for non-JSON based MUnits
 	/// </summary>

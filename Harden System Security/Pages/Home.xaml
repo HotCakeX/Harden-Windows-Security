@@ -170,8 +170,7 @@
                     <TeachingTip x:Name="ClipboardMonitorTeachingTip"
                                  x:Uid="ClipboardMonitorTeachingTip"
                                  Target="{x:Bind ClipboardMonitorButton}"
-                                 PreferredPlacement="Bottom"
-                                 IsLightDismissEnabled="True">
+                                 PreferredPlacement="Bottom">
                         <StackPanel Spacing="12">
                             <Grid>
                                 <Grid.ColumnDefinitions>

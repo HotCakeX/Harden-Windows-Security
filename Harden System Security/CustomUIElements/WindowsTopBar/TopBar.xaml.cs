@@ -1143,6 +1143,16 @@ internal sealed partial class TopBar : Window, IDisposable
 	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	private async void OnStorageDragEnter(object sender, DragEventArgs e)
 	{
+		// Ignore our own Search payload without tracking drag lifetime or blocking collapse.
+		// When we drag a search result, we don't want the TopBar to switch to Apps or Folders view.
+		if (e.DataView.Properties.ContainsKey(SearchDragSourceProperty))
+		{
+			_doesStorageDragContainItems = false;
+			e.AcceptedOperation = DataPackageOperation.None;
+			e.Handled = true;
+			return;
+		}
+
 		_isStorageDragInProgress = true;
 		_doesStorageDragContainItems = false;
 		int dragGeneration = ++_storageDragGeneration;
@@ -5632,6 +5642,9 @@ internal sealed partial class TopBar : Window, IDisposable
 
 	#region Search
 
+	// Package-local marker prevents outgoing Search drags from activating our pinning target.
+	private const string SearchDragSourceProperty = "HardenSystemSecurity.TopBar.SearchDrag";
+
 	/// <summary>
 	/// Fixed leading column is excluded from text measurement and Path resizing.
 	/// It is set manually in the XAML too and must match it always.
@@ -5793,6 +5806,52 @@ internal sealed partial class TopBar : Window, IDisposable
 		catch (Exception exception)
 		{
 			Logger.Write(exception);
+		}
+	}
+
+	/// <summary>
+	/// Let ListView own selection and drag gestures. Capture only the actual dragged item,
+	/// and provide its storage payload on demand without retaining a row or the TopBar.
+	/// </summary>
+	private void OnSearchDragItemsStarting(object sender, DragItemsStartingEventArgs e)
+	{
+		if (_isClosed || e.Items.Count != 1 || e.Items[0] is not TopBarSearchResult result)
+		{
+			e.Cancel = true;
+			return;
+		}
+		e.Data.Properties[SearchDragSourceProperty] = true;
+		e.Data.RequestedOperation = DataPackageOperation.Copy;
+
+		// This native void callback requires a deferral for asynchronous payload production.
+		// It belongs to this drag's DataPackage, not to a result row or search subscription.
+		e.Data.SetDataProvider(StandardDataFormats.StorageItems,
+			async request => await ProvideSearchDragDataAsync(request, result));
+	}
+
+	/// <summary>
+	/// Resolve the captured path only when a destination requests it. Complete the native deferral on failure too.
+	/// </summary>
+	private static async Task ProvideSearchDragDataAsync(DataProviderRequest request, TopBarSearchResult result)
+	{
+		DataProviderDeferral deferral = request.GetDeferral();
+		try
+		{
+			IStorageItem item = result.IsDirectory
+				? await StorageFolder.GetFolderFromPathAsync(result.Path)
+				: await StorageFile.GetFileFromPathAsync(result.Path);
+			DataPackage data = new();
+			data.SetStorageItems(new IStorageItem[] { item }, readOnly: true);
+			request.SetData(await data.GetView().GetDataAsync(StandardDataFormats.StorageItems));
+		}
+		catch (Exception exception)
+		{
+			// An indexed path may have disappeared or become inaccessible since the search.
+			Logger.Write(exception);
+		}
+		finally
+		{
+			deferral.Complete();
 		}
 	}
 

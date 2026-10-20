@@ -1,1 +1,3 @@
 * Updated dependencies to the latest versions.
+
+* You can now drag the search results from the TopBar and drop them on any other app.

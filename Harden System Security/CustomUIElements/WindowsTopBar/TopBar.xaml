@@ -726,6 +726,8 @@
                                      PlaceholderText="Search"
                                      TextChanged="{x:Bind OnSearchTextChanged}"/>
                             <ListView x:Name="SearchResultsListView"
+                                      CanDragItems="{x:Bind CC:ViewModelBase.IsNotElevated}"
+                                      DragItemsStarting="{x:Bind OnSearchDragItemsStarting}"
                                       Height="400"
                                       Padding="0"
                                       ScrollViewer.HorizontalScrollMode="Enabled"

@@ -106,3 +106,17 @@ Let's say you've configured a system to your liking and it's in a compliant gold
 **The great thing about all of this? You can totally automate it, thanks to the new CLI support. [Documentation for CLI usage available here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden-System-Security#commandline-interface-cli-support).**
 
 <br>
+
+### Fine Tuning the System State Backup
+
+<div align="center">
+
+<img alt="image" src="https://github.com/user-attachments/assets/f438806a-aa0c-4e47-8e74-0f0529711d9e" />
+
+<br>
+
+<img alt="image" src="https://github.com/user-attachments/assets/da23231f-9ade-4b1a-8f47-ed4b9b34b0d4" />
+
+</div>
+
+You can fine tune your backup file, modify it and save changes back to the file. This allows you to have more control over your system state backups and ensures that only the necessary data is included. There is also a search bar to find the security controls you are looking for quickly.

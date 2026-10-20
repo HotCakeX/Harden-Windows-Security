@@ -263,9 +263,9 @@
 
         <!-- Main Packages - Without these packages, there will be compilation errors related to missing types -->
         <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.4.0" />
-        <PackageReference Include="Microsoft.Identity.Client" Version="4.91.0" />
-        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.91.0" />
-        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.91.0" />
+        <PackageReference Include="Microsoft.Identity.Client" Version="4.91.1" />
+        <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.91.1" />
+        <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.91.1" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
         <PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="2.5.5" />
         <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.2.26504.105" />

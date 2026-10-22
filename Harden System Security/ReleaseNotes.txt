@@ -1,7 +1,1 @@
-* Updated dependencies to the latest versions.
-
-* You can now drag the search results from the TopBar and drop them on any other app.
-
-* The Audio Sentry in the TopBar now displays the environment audio level on the standard notch when armed in that mode.
-
-* Added a new mode to the Audio Sentry: Spoken Phrase detection. In this mode, instead of telling the Audio Sentry to start the recording when the ambient audio level reaches a certain point, you can now define a word, phrase or a sentence to watch for and if they are spoken when the sentry is armed, the recording will automatically start. The speech recognition engine works completely offline on your device and does not require an internet connection. As the words you defined are recognized, they light up on the TopBar and on the standard notch, so you can have real time feedback and assurances that the system is correctly detecting the spoken phrases.
+* The app can now be updated while in use, resolving the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1241

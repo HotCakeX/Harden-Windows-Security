@@ -1,1 +1,3 @@
 * Updated dependencies to the latest versions.
+
+* The app can now be updated while in use.

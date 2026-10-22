@@ -52,7 +52,7 @@
     <uap10:PackageIntegrity>
       <uap10:Content Enforcement="on" />
     </uap10:PackageIntegrity>
-    <uap17:UpdateWhileInUse>defer</uap17:UpdateWhileInUse>
+    <uap17:UpdateWhileInUse>allow</uap17:UpdateWhileInUse>
 
     <!-- This is required to execute the FWImportPolicy function from the "FirewallAPI.dll" in order to import policies to the GPO store.
          Otherwise we get error code: 1 (0x00000001) -->

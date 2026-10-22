@@ -33,7 +33,6 @@ internal sealed record TopBarSearchResult(string Name, string Path, string Size,
 
 internal sealed partial class TopBarSearchClient : IAsyncDisposable
 {
-	private int _searchesSinceReclaim;
 	private readonly DispatcherQueue _dispatcher;
 	private readonly Action<string> _status;
 	private readonly Action<string, List<TopBarSearchResult>, long> _results;
@@ -163,15 +162,6 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			for (int i = 0; i < count; i++) results.Add(CreateResult(input.ReadString()));
 			_receivedResponse = true;
 			_ = _dispatcher.TryEnqueue(() => { if (!_disposed) _results(query, results, indexedItems); });
-
-			// Reclaim on the existing pipe worker after queuing the response, just like we do on the Global Search service.
-			if (++_searchesSinceReclaim >= 10)
-			{
-				_searchesSinceReclaim = 0;
-				System.Runtime.GCSettings.LargeObjectHeapCompactionMode =
-					System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
-				GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, blocking: true, compacting: true);
-			}
 		}
 		return null;
 	}

@@ -35,8 +35,10 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
@@ -2859,7 +2861,9 @@ internal sealed partial class TopBar : Window, IDisposable
 		bool showPerformance = _activeView == TopBarView.Performance && _notchStyle == TopBarNotchStyle.Standard;
 		CollapsedNotchClocksHost.Visibility = showNotchClocks ? Visibility.Visible : Visibility.Collapsed;
 		CollapsedGlyph.Visibility = showNotchClocks ? Visibility.Collapsed : Visibility.Visible;
-		CollapsedLabel.Visibility = showNotchClocks || showPerformance ? Visibility.Collapsed : Visibility.Visible;
+		bool showSentryPhrase = _activeView == TopBarView.Sentry && _notchStyle == TopBarNotchStyle.Standard && _sentryEngine is { UsesPhraseTrigger: true };
+		CollapsedLabel.Visibility = showNotchClocks || showPerformance || showSentryPhrase ? Visibility.Collapsed : Visibility.Visible;
+		CollapsedSentryPhraseText.Visibility = showSentryPhrase ? Visibility.Visible : Visibility.Collapsed;
 		CollapsedPerformanceHost.Visibility = showPerformance ? Visibility.Visible : Visibility.Collapsed;
 	}
 
@@ -3548,6 +3552,9 @@ internal sealed partial class TopBar : Window, IDisposable
 				if (switchProgress >= 1.0)
 				{
 					_isViewSwitchAnimating = false;
+
+					// Force Garbage Collection after every view switch.
+					_ = Task.Run(ReclaimMemory);
 				}
 			}
 		}
@@ -3662,6 +3669,13 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 
 		StartAnimation(0.0);
+	}
+
+	private static void ReclaimMemory()
+	{
+		GC.Collect();
+		GC.WaitForPendingFinalizers();
+		GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, blocking: true, compacting: true);
 	}
 
 	private void OnPinToggleClick()
@@ -5167,10 +5181,15 @@ internal sealed partial class TopBar : Window, IDisposable
 	// The Acoustic Sentry engine lives only for as long as a session is armed and is null while it is idle, so that
 	// the microphone is only ever held open while the user has explicitly armed a capture session.
 	private TopBarSentryEngine? _sentryEngine;
+	private Task _sentryDisposalTask = Task.CompletedTask;
+	// Each phrase word has one run in the expanded panel and one on the notch. Both share the brush, so one storyboard lights up both.
+	private readonly List<(Run Run, Run NotchRun, SolidColorBrush Brush)> _sentryPhraseRuns = [];
+	private readonly Storyboard _sentryPhraseAnimation = new();
+	// Packed matched word range as produced by TopBarSentryEngine.MatchedPhraseWords.
+	private int _sentryMatchedPhraseWords;
 
-	// The live graph only ticks while the Sentry view is on display and expanded and a session is armed, so a
-	// collapsed bar, a different view and an idle Sentry all cost nothing while a session keeps running in the
-	// background.
+	// The meter ticks only while an armed Sentry is selected and either expanded or shown on the standard notch.
+	// Graph updates are expanded-only; the collapsed standard notch only refreshes its numeric reading.
 	private readonly DispatcherTimer _sentryMeterTimer = new();
 
 	// Guards the initial population of the controls so that assigning their starting values does not immediately
@@ -5206,6 +5225,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		_viewTiles[TopBarView.Sentry] = [new TopBarTile(SentryPanel, AttachEntranceTransform(SentryPanel))];
 
 		_isSentryInitializing = true;
+		SentryPhraseBox.Text = _configuration.SentryTriggerPhrase ?? string.Empty;
+		SentryModeBox.SelectedIndex = _configuration.SentryPhraseMode ? 1 : 0;
 
 		SentryThresholdSlider.Value = Atlas.Settings.WindowsTopBarSentryTriggerDecibel;
 		SentryDurationBox.Value = Atlas.Settings.WindowsTopBarSentryRecordingDurationSeconds;
@@ -5216,22 +5237,146 @@ internal sealed partial class TopBar : Window, IDisposable
 
 		SentryThresholdText.Text = FormatSentryDecibel(Atlas.Settings.WindowsTopBarSentryTriggerDecibel);
 		SetSentryFolderText();
+		RebuildSentryPhrase();
 		BuildSentryGraphBars();
 
 		_sentryMeterTimer.Interval = TimeSpan.FromMilliseconds(100.0);
 		_sentryMeterTimer.Tick += OnSentryMeterTimerTick;
 	}
 
+	/// <summary>
+	/// The next arm snapshots the phrase. Editing is disabled during a session so displayed text and the trigger
+	/// cannot drift apart. The phrase is used only in spoken phrase mode.
+	/// </summary>
+	private void OnSentryPhraseChanged()
+	{
+		if (_isSentryInitializing || _isClosed || _sentryEngine is not null) return;
+		_configuration.SentryTriggerPhrase = SentryPhraseBox.Text;
+		TopBarConfigurationManager.Save(_configuration);
+		RebuildSentryPhrase();
+	}
+
+	/// <summary>
+	/// Persists the trigger mode for the next arm. Like the phrase, it cannot change during a session.
+	/// </summary>
+	private void OnSentryModeChanged()
+	{
+		if (_isSentryInitializing || _isClosed || _sentryEngine is not null) return;
+		_configuration.SentryPhraseMode = SentryModeBox.SelectedIndex == 1;
+		TopBarConfigurationManager.Save(_configuration);
+		UpdateSentryPhraseControls();
+	}
+
+	/// <summary>
+	/// Shows only the controls of the selected trigger mode: the live level and the dBFS trigger, or the spoken phrase.
+	/// </summary>
+	private void UpdateSentryPhraseControls()
+	{
+		bool phraseMode = _configuration.SentryPhraseMode;
+		bool isEditable = _sentryEngine is null && SentryArmToggleButton.IsEnabled;
+		SentryPhraseBox.IsEnabled = isEditable;
+		SentryModeBox.IsEnabled = isEditable;
+		SentryPhrasePanel.Visibility = phraseMode ? Visibility.Visible : Visibility.Collapsed;
+		SentryLevelPanel.Visibility = phraseMode ? Visibility.Collapsed : Visibility.Visible;
+		SentryTriggerPanel.Visibility = phraseMode ? Visibility.Collapsed : Visibility.Visible;
+	}
+
+	private void RebuildSentryPhrase()
+	{
+		_sentryPhraseAnimation.Stop();
+		_sentryPhraseAnimation.Children.Clear();
+		_sentryPhraseRuns.Clear();
+		SentryPhraseProgressText.Inlines.Clear();
+		CollapsedSentryPhraseText.Inlines.Clear();
+		_sentryMatchedPhraseWords = 0;
+		string phrase = SentryPhraseBox.Text;
+		int previousEnd = 0;
+		List<(string Text, int End)> words = TopBarSentryEngine.GetPhraseWords(phrase);
+		_ = _sentryPhraseRuns.EnsureCapacity(words.Count);
+		foreach ((string _, int end) in words)
+		{
+			string text = phrase[previousEnd..end];
+			Run run = new() { Text = text };
+			Run notchRun = new() { Text = text };
+			SolidColorBrush brush = new(SentryCalmColor);
+			SentryPhraseProgressText.Inlines.Add(run);
+			CollapsedSentryPhraseText.Inlines.Add(notchRun);
+			_sentryPhraseRuns.Add((run, notchRun, brush));
+			previousEnd = end;
+		}
+		if (previousEnd < phrase.Length)
+		{
+			SentryPhraseProgressText.Inlines.Add(new Run { Text = phrase[previousEnd..] });
+			CollapsedSentryPhraseText.Inlines.Add(new Run { Text = phrase[previousEnd..] });
+		}
+		UpdateSentryPhraseControls();
+	}
+
+	/// <summary>
+	/// Light up the matched word range, which can be any partial run of the phrase. Only newly matched words pulse,
+	/// staggered left to right; words that stay matched stay lit and unmatched text retains the theme brush.
+	/// Revised hypotheses can remove highlights. All animated brushes belong to this view, not theme resources.
+	/// </summary>
+	private void UpdateSentryPhraseProgress(int matchedWords)
+	{
+		if (matchedWords == _sentryMatchedPhraseWords) return;
+		(int start, int count) = TopBarSentryEngine.UnpackPhraseWords(matchedWords);
+		(int previousStart, int previousCount) = TopBarSentryEngine.UnpackPhraseWords(_sentryMatchedPhraseWords);
+		_sentryPhraseAnimation.Stop();
+		_sentryPhraseAnimation.Children.Clear();
+		// The words animate in the expanded panel and on the standard notch alike.
+		bool animate = _activeView == TopBarView.Sentry && (_progress > 0.0 || _notchStyle == TopBarNotchStyle.Standard) && _uiSettings.AnimationsEnabled;
+		int staggered = 0;
+		for (int index = 0; index < _sentryPhraseRuns.Count; index++)
+		{
+			(Run run, Run notchRun, SolidColorBrush brush) = _sentryPhraseRuns[index];
+			bool matched = index >= start && index < start + count;
+			if (!matched)
+			{
+				run.ClearValue(TextElement.ForegroundProperty);
+				run.ClearValue(TextElement.FontWeightProperty);
+				notchRun.ClearValue(TextElement.ForegroundProperty);
+				notchRun.ClearValue(TextElement.FontWeightProperty);
+				continue;
+			}
+			run.Foreground = brush;
+			run.FontWeight = Microsoft.UI.Text.FontWeights.SemiBold;
+			notchRun.Foreground = brush;
+			notchRun.FontWeight = Microsoft.UI.Text.FontWeights.SemiBold;
+			bool wasMatched = index >= previousStart && index < previousStart + previousCount;
+			// Stopping the storyboard already restored every brush to its calm base color.
+			if (wasMatched || !animate) continue;
+			// A bright flash that settles into the calm green reads as the word lighting up as it is heard.
+			ColorAnimationUsingKeyFrames animation = new()
+			{
+				BeginTime = TimeSpan.FromMilliseconds(70.0 * staggered++),
+				EnableDependentAnimation = true
+			};
+			animation.KeyFrames.Add(new DiscreteColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.Zero), Value = Windows.UI.Color.FromArgb(255, 255, 255, 255) });
+			animation.KeyFrames.Add(new EasingColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(120.0)), Value = Windows.UI.Color.FromArgb(255, 160, 255, 180) });
+			animation.KeyFrames.Add(new EasingColorKeyFrame { KeyTime = KeyTime.FromTimeSpan(TimeSpan.FromMilliseconds(520.0)), Value = SentryCalmColor, EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } });
+			Storyboard.SetTarget(animation, brush);
+			Storyboard.SetTargetProperty(animation, "Color");
+			_sentryPhraseAnimation.Children.Add(animation);
+		}
+		_sentryMatchedPhraseWords = matchedWords;
+		if (_sentryPhraseAnimation.Children.Count > 0) _sentryPhraseAnimation.Begin();
+	}
+
 	private void OnSentryViewButtonClick() => SetActiveView(TopBarView.Sentry, animate: true);
 
 	/// <summary>
-	/// Starts the graph timer only while the Sentry view is expanded and a session is running, and stops it
-	/// otherwise. Called from the shared live refresh path so that expanding, collapsing and switching views all
+	/// Starts the meter timer while a session is running and the Sentry view is expanded or uses the standard notch.
+	/// Called from the shared live refresh path so that expanding, collapsing and switching views all
 	/// keep it correct.
 	/// </summary>
 	private void UpdateSentryMeterTimer()
 	{
-		bool isNeeded = !_isClosed && _activeView == TopBarView.Sentry && _progress > 0.0 && _sentryEngine is not null;
+		if (_activeView != TopBarView.Sentry || (_progress <= 0.0 && _notchStyle != TopBarNotchStyle.Standard)) _sentryPhraseAnimation.Stop();
+		if (!_isClosed && _activeView == TopBarView.Sentry) CollapsedLabel.Text = GetViewName(_activeView);
+		if (!_isClosed) UpdateCollapsedPerformanceVisibility();
+		bool isNeeded = !_isClosed && _activeView == TopBarView.Sentry &&
+			(_progress > 0.0 || _notchStyle == TopBarNotchStyle.Standard) && _sentryEngine is not null;
 		if (isNeeded)
 		{
 			if (!_sentryMeterTimer.IsEnabled)
@@ -5247,25 +5392,40 @@ internal sealed partial class TopBar : Window, IDisposable
 	}
 
 	/// <summary>
-	/// Pushes the newest ambient reading onto the live graph and refreshes the numeric readout, the state label and
-	/// the stop button. It never touches the arm toggle, so it cannot fight the user for its checked state.
+	/// Pushes the newest ambient reading onto the live graph and refreshes the numeric readout and the state label,
+	/// which also has to follow the cooldown expiring. The stop button and the cycle count only change with the status
+	/// events of the engine. It never touches the arm toggle, so it cannot fight the user for its checked state.
 	/// </summary>
 	private void OnSentryMeterTimerTick(object? sender, object e)
 	{
 		TopBarSentryEngine? engine = _sentryEngine;
-		if (engine is null)
+		if (_isClosed || _activeView != TopBarView.Sentry || engine is null ||
+			(_progress <= 0.0 && _notchStyle != TopBarNotchStyle.Standard))
 		{
 			return;
 		}
 
-		double decibel = engine.CurrentDecibel;
-		PushSentryLevel(decibel);
-		SentryLevelText.Text = decibel <= SentryMeterFloorDecibel ? "-- dBFS" : FormatSentryDecibel(decibel);
+		if (engine.UsesPhraseTrigger)
+		{
+			// The phrase words light up in the expanded panel and on the notch, which replace the live level.
+			UpdateSentryPhraseProgress(engine.MatchedPhraseWords);
+			if (_progress <= 0.0) return;
+		}
+		else
+		{
+			double decibel = engine.CurrentDecibel;
+			string levelText = decibel <= SentryMeterFloorDecibel ? "-- dBFS" : FormatSentryDecibel(decibel);
+			if (_progress <= 0.0)
+			{
+				// Reuse the notch label without updating the detached expanded graph or its controls.
+				CollapsedLabel.Text = levelText;
+				return;
+			}
+			PushSentryLevel(decibel);
+			SentryLevelText.Text = levelText;
+		}
 
-		TopBarSentryState state = engine.State;
-		SentryStopButton.IsEnabled = state == TopBarSentryState.Recording;
-		SentryStateText.Text = state == TopBarSentryState.Recording ? "Recording" : "Armed";
-		SentryCyclesText.Text = "Cycles: " + engine.CompletedCycles.ToString(CultureInfo.InvariantCulture);
+		SentryStateText.Text = GetSentryStateText(engine);
 	}
 
 	/// <summary>
@@ -5280,7 +5440,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 		else
 		{
-			await DisarmSentryAsync();
+			_sentryDisposalTask = DisarmSentryAsync();
+			await _sentryDisposalTask;
 		}
 	}
 
@@ -5290,35 +5451,51 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// </summary>
 	private async Task ArmSentryAsync()
 	{
+		if (_configuration.SentryPhraseMode && _sentryPhraseRuns.Count == 0)
+		{
+			ShowSentryError(new TopBarSentryArmResult(false, "Enter a spoken phrase that contains a word.", false));
+			return;
+		}
 		SentryArmToggleButton.IsEnabled = false;
+		UpdateSentryPhraseControls();
 		TopBarSentryEngine? engine = null;
 		try
 		{
 			engine = new TopBarSentryEngine(DispatcherQueue);
 			engine.StatusChanged += OnSentryEngineStatusChanged;
+			_sentryEngine = engine;
 			TopBarSentryArmResult result = await engine.ArmAsync(BuildSentrySettings());
+			if (_isClosed || !ReferenceEquals(_sentryEngine, engine)) return;
 			if (!result.Success)
 			{
+				_sentryEngine = null;
 				engine.StatusChanged -= OnSentryEngineStatusChanged;
 				ShowSentryError(result);
 				// The engine is left for the finally to dispose, which keeps a single disposal path.
 				return;
 			}
 
-			_sentryEngine = engine;
 			// Ownership has passed to the field, so the local is cleared to keep the finally from disposing the live engine.
 			engine = null;
 			HideSentryError();
 			ResetSentryGraph();
 			SentryArmToggleButton.IsChecked = true;
 			SentryArmToggleButton.Content = "ARMED";
-			SentryStateText.Text = "Armed";
 			UpdateSentryMeterTimer();
 		}
 		finally
 		{
-			engine?.Dispose();
-			SentryArmToggleButton.IsEnabled = true;
+			if (engine is not null)
+			{
+				engine.Dispose();
+				await engine.DisarmAsync();
+			}
+			if (!_isClosed)
+			{
+				SentryArmToggleButton.IsEnabled = true;
+				UpdateSentryPhraseControls();
+				UpdateCollapsedPerformanceVisibility();
+			}
 		}
 	}
 
@@ -5329,48 +5506,81 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// </summary>
 	private async Task DisarmSentryAsync()
 	{
+		SentryArmToggleButton.IsEnabled = false;
 		TopBarSentryEngine? engine = _sentryEngine;
 		_sentryEngine = null;
-
-		if (engine is not null)
+		UpdateSentryPhraseControls();
+		try
 		{
-			engine.StatusChanged -= OnSentryEngineStatusChanged;
-			await engine.DisarmAsync();
-			engine.Dispose();
+			if (engine is not null)
+			{
+				engine.StatusChanged -= OnSentryEngineStatusChanged;
+				await engine.DisarmAsync();
+			}
+			if (_isClosed) return;
+			SentryArmToggleButton.IsChecked = false;
+			SentryArmToggleButton.Content = "ARM";
+			SentryStopButton.IsEnabled = false;
+			SentryStateText.Text = "Idle";
+			SentryLevelText.Text = "-- dBFS";
+			UpdateSentryPhraseProgress(0);
+			ResetSentryGraph();
+			UpdateSentryMeterTimer();
 		}
-
-		SentryArmToggleButton.IsChecked = false;
-		SentryArmToggleButton.Content = "ARM";
-		SentryStopButton.IsEnabled = false;
-		SentryStateText.Text = "Idle";
-		SentryLevelText.Text = "-- dBFS";
-		ResetSentryGraph();
-		UpdateSentryMeterTimer();
+		finally
+		{
+			if (!_isClosed)
+			{
+				SentryArmToggleButton.IsEnabled = true;
+				UpdateSentryPhraseControls();
+			}
+		}
 	}
+
+	private async Task DisarmSentryAndReportAsync(string? error)
+	{
+		try
+		{
+			await DisarmSentryAsync();
+			if (!_isClosed && error is not null) ShowSentryError(new TopBarSentryArmResult(false, error, false));
+		}
+		catch (Exception ex) { Logger.Write(ex); }
+	}
+
+	/// <summary>
+	/// Do not label cooldown, stopped capture, or a reported speech-input problem as Armed.
+	/// Phrase readiness comes from whether the recognizer is listening right now.
+	/// </summary>
+	private static string GetSentryStateText(TopBarSentryEngine engine) =>
+		engine.State == TopBarSentryState.Idle ? "Idle" :
+		engine.State == TopBarSentryState.Recording ? "Recording" :
+		engine.IsCoolingDown ? "Cooldown" :
+		engine.IsListening ? "Armed" : "Speech not ready";
 
 	private void OnSentryStopClick() => _sentryEngine?.StopCurrentRecording();
 
 	/// <summary>
 	/// Handles the state transitions the engine raises, including the self disarm that happens once the cycle ceiling
-	/// has been reached.
+	/// has been reached or the engine ended the session with an error.
 	/// </summary>
-	private void OnSentryEngineStatusChanged(object? sender, TopBarSentryStatus status)
+	private void OnSentryEngineStatusChanged(object? sender, EventArgs e)
 	{
-		if (_isClosed || !ReferenceEquals(sender, _sentryEngine))
+		if (_isClosed || _sentryEngine is not TopBarSentryEngine engine || !ReferenceEquals(sender, engine))
 		{
 			return;
 		}
 
-		if (status.State == TopBarSentryState.Idle)
+		// Updated before the idle check too, so that the final capture of a cycle ceiling is counted on screen.
+		SentryCyclesText.Text = "Cycles: " + engine.CompletedCycles.ToString(CultureInfo.InvariantCulture);
+		if (engine.State == TopBarSentryState.Idle)
 		{
-			// The engine reached its cycle ceiling and stopped itself, so the view finishes the teardown.
-			_ = DisarmSentryAsync();
+			// The engine stopped itself, so the view finishes the teardown and then shows the error, if there was one.
+			_sentryDisposalTask = DisarmSentryAndReportAsync(engine.Error);
 			return;
 		}
 
-		SentryStateText.Text = status.State == TopBarSentryState.Recording ? "Recording" : "Armed";
-		SentryStopButton.IsEnabled = status.State == TopBarSentryState.Recording;
-		SentryCyclesText.Text = "Cycles: " + status.CompletedCycles.ToString(CultureInfo.InvariantCulture);
+		SentryStateText.Text = GetSentryStateText(engine);
+		SentryStopButton.IsEnabled = engine.State == TopBarSentryState.Recording;
 	}
 
 	/// <summary>
@@ -5406,18 +5616,17 @@ internal sealed partial class TopBar : Window, IDisposable
 	{
 		for (int index = 0; index < SentryGraphBarCount; index++)
 		{
-			_sentryGraphLevels[index] = SentryMeterFloorDecibel;
 			Border bar = new()
 			{
 				Width = SentryGraphBarWidth,
-				Height = 2.0,
 				CornerRadius = new CornerRadius(1.0),
-				VerticalAlignment = VerticalAlignment.Bottom,
-				Background = _sentryCalmBrush
+				VerticalAlignment = VerticalAlignment.Bottom
 			};
 			_sentryGraphBars.Add(bar);
 			SentryGraphPanel.Children.Add(bar);
 		}
+
+		ResetSentryGraph();
 	}
 
 	/// <summary>
@@ -5563,12 +5772,13 @@ internal sealed partial class TopBar : Window, IDisposable
 		ToolTipService.SetToolTip(SentryFolderText, directory);
 	}
 
-	private static TopBarSentrySettings BuildSentrySettings() => new(
+	private TopBarSentrySettings BuildSentrySettings() => new(
 		Atlas.Settings.WindowsTopBarSentryTriggerDecibel,
 		Atlas.Settings.WindowsTopBarSentryRecordingDurationSeconds,
 		Atlas.Settings.WindowsTopBarSentryCooldownSeconds,
 		Atlas.Settings.WindowsTopBarSentryMaxCycles,
-		Atlas.Settings.WindowsTopBarSentryOutputDirectory);
+		Atlas.Settings.WindowsTopBarSentryOutputDirectory,
+		_configuration.SentryPhraseMode ? SentryPhraseBox.Text : string.Empty);
 
 	private static string FormatSentryDecibel(double decibel) => decibel.ToString("0", CultureInfo.InvariantCulture) + " dBFS";
 
@@ -5579,6 +5789,11 @@ internal sealed partial class TopBar : Window, IDisposable
 	{
 		_sentryMeterTimer.Stop();
 		_sentryMeterTimer.Tick -= OnSentryMeterTimerTick;
+		_sentryPhraseAnimation.Stop();
+		_sentryPhraseAnimation.Children.Clear();
+		_sentryPhraseRuns.Clear();
+		SentryPhraseProgressText.Inlines.Clear();
+		CollapsedSentryPhraseText.Inlines.Clear();
 
 		TopBarSentryEngine? engine = _sentryEngine;
 		_sentryEngine = null;
@@ -5586,6 +5801,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		{
 			engine.StatusChanged -= OnSentryEngineStatusChanged;
 			engine.Dispose();
+			_sentryDisposalTask = Task.WhenAll(_sentryDisposalTask, engine.DisarmAsync());
 		}
 	}
 
@@ -6086,6 +6302,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		try { Dispose(); }
 		finally
 		{
+			try { await _sentryDisposalTask; }
+			catch (Exception exception) { Logger.Write(exception); }
 			try { await _searchDisposalTask; }
 			catch (Exception exception) { Logger.Write(exception); }
 		}

@@ -15,6 +15,7 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -22,12 +23,14 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.UI.Dispatching;
 using Windows.Media;
 using Windows.Media.Audio;
 using Windows.Media.Capture;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
+using Windows.Media.SpeechRecognition;
 using Windows.Media.Transcoding;
 using Windows.Storage;
 using WinRT;
@@ -56,25 +59,17 @@ internal enum TopBarSentryState
 }
 
 /// <summary>
-/// An immutable snapshot of the Sentry that is raised to the owner whenever the engine changes state.
-/// </summary>
-internal readonly struct TopBarSentryStatus(TopBarSentryState state, int completedCycles)
-{
-	internal TopBarSentryState State => state;
-	internal int CompletedCycles => completedCycles;
-}
-
-/// <summary>
 /// The values that arm a Sentry session. They are copied into the engine so that a later settings change does not
 /// alter a session that is already running unless it is pushed in explicitly through one of the Update methods.
 /// </summary>
-internal readonly struct TopBarSentrySettings(double thresholdDecibel, int recordingDurationSeconds, int cooldownSeconds, int maxCycles, string outputDirectory)
+internal readonly struct TopBarSentrySettings(double thresholdDecibel, int recordingDurationSeconds, int cooldownSeconds, int maxCycles, string outputDirectory, string triggerPhrase)
 {
 	internal double ThresholdDecibel => thresholdDecibel;
 	internal int RecordingDurationSeconds => recordingDurationSeconds;
 	internal int CooldownSeconds => cooldownSeconds;
 	internal int MaxCycles => maxCycles;
 	internal string OutputDirectory => outputDirectory;
+	internal string TriggerPhrase => triggerPhrase;
 }
 
 /// <summary>
@@ -150,11 +145,14 @@ internal static class TopBarSentryProtection
 /// <summary>
 /// The engine of the Acoustic Sentry view of the Top Bar.
 ///
-/// It opens the default microphone through an <see cref="AudioGraph"/> and watches the ambient loudness continuously.
-/// The moment the level crosses the user defined trigger it captures the environment to a high fidelity WAV file for
-/// a chosen duration, then it waits out a cooldown before it is allowed to trigger again. The whole session runs in
-/// the background independently of which Top Bar view is on display and it keeps capturing while the workstation is
-/// locked, because an <see cref="AudioGraph"/> capture is bound to the process rather than to the desktop.
+/// It only runs the trigger mode that was armed. In decibel mode it opens the default microphone through an
+/// <see cref="AudioGraph"/> and watches the ambient loudness continuously. In spoken phrase mode it listens through
+/// on-device speech recognition alone and opens a graph only while a capture is being written. The moment the level
+/// crosses the user defined trigger, or the configured spoken phrase is confirmed, it captures the environment to a
+/// high fidelity WAV file for a chosen duration, then it waits out a cooldown before it is allowed to trigger again.
+/// The whole session runs in the background independently of which Top Bar view is on display and it keeps capturing
+/// while the workstation is locked, because an <see cref="AudioGraph"/> capture is bound to the process rather than to
+/// the desktop.
 ///
 /// Everything about the capture is measured natively off the audio thread so that a capture never has to walk any
 /// managed process table and so that the level meter of the view can read the very same numbers without any cost.
@@ -177,7 +175,7 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 	private static readonly Guid IID_IAudioEndpointVolume = new("5CDF2C82-841E-4546-9722-0CF74078229A");
 
 	/// <summary>
-	/// The floor that a fully silent quantum is reported at, so that the logarithm never has to be taken of zero.
+	/// The floor that a fully silent quantum is reported at, because the logarithm of zero is negative infinity.
 	/// </summary>
 	private const double SilenceFloorDecibel = -100.0;
 	private static readonly TimeSpan InitializationTimeout = TimeSpan.FromSeconds(15.0);
@@ -193,8 +191,8 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 	private AudioDeviceInputNode? _deviceInputNode;
 	private AudioFrameOutputNode? _frameOutputNode;
 	private AudioFileOutputNode? _fileOutputNode;
-	private MediaEncodingProfile? _recordingProfile;
-	private CancellationTokenSource? _recordingStopSource;
+	// Cancels the capture in flight. The capture owns and disposes the token source behind it.
+	private Action? _stopRecording;
 
 	// The trigger and the current reading are kept as the raw bits of a double so that a 64-bit value can be shared
 	// between the audio thread and the UI thread without ever being read halfway through a write.
@@ -212,23 +210,62 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 	// The output directory is a reference and a reference assignment is atomic, so it needs no further guarding.
 	private string _outputDirectory = string.Empty;
 
-	private int _shutdownStarted;
-	private bool _disposed;
+	private readonly CancellationTokenSource _sessionCancellation = new();
+	private Task<TopBarSentryArmResult>? _armTask;
+	private Task? _recordingTask;
+	private Task? _shutdownTask;
+
+	// How many back to back sessions may end shortly after starting before the Sentry gives up.
+	private const int MaxSpeechRestartFailures = 5;
+	private SpeechRecognizer? _speechRecognizer;
+	private string? _speechGrammarPath;
+	// The only recognition restart. It is only replaced on the UI thread, so two starts never overlap.
+	private Task _listenTask = Task.CompletedTask;
+	// Raised right before a session starts and cleared before a capture cancels it, so that the Completed handler can
+	// tell a session that ended on its own from one that was ended on purpose.
+	private volatile bool _isListening;
+	private volatile int _speechFailures;
+	private long _speechStartTick;
+	private string[] _phraseWords = [];
+	// Packed matched word range of the trigger phrase: start word index in the high 16 bits, word count in the low 16 bits.
+	private int _matchedPhraseWords;
+	private long _speechProgressTick;
+
+	internal bool UsesPhraseTrigger => _phraseWords.Length > 0;
+	// The UI distinguishes an armed session from cooldown and recognizer initialization.
+	internal bool IsCoolingDown => Environment.TickCount64 < Volatile.Read(ref _cooldownUntilTick);
+	/// <summary>
+	/// Whether an armed session can hear its trigger. Decibel mode always can, phrase mode cannot while recognition is being restarted.
+	/// </summary>
+	internal bool IsListening => !UsesPhraseTrigger || _isListening;
+	/// <summary>
+	/// Why the engine ended the session by itself, if it did. The owner shows it once its teardown has finished.
+	/// </summary>
+	internal string? Error { get; private set; }
+
+	// Silence expires provisional feedback; confirmed feedback stays lit until the recording ends.
+	// The value is packed as described on _matchedPhraseWords. UnpackPhraseWords is for reading it.
+	internal int MatchedPhraseWords => State == TopBarSentryState.Recording ||
+		Environment.TickCount64 - Volatile.Read(ref _speechProgressTick) <= 3000L
+			? Volatile.Read(ref _matchedPhraseWords) : 0;
+
+	internal static (int Start, int Count) UnpackPhraseWords(int packed) => (packed >>> 16, packed & 0xFFFF);
 
 	internal TopBarSentryEngine(DispatcherQueue dispatcherQueue) => _dispatcherQueue = dispatcherQueue;
 
 	/// <summary>
-	/// Raised on the UI thread whenever the engine transitions between states or finishes a capture.
+	/// Raised on the UI thread whenever the engine transitions between states or finishes a capture. The owner reads
+	/// the current values straight from the engine.
 	/// </summary>
-	internal event EventHandler<TopBarSentryStatus>? StatusChanged;
+	internal event EventHandler? StatusChanged;
 
 	/// <summary>
 	/// The current lifecycle state of the engine.
 	/// </summary>
-	internal TopBarSentryState State => (TopBarSentryState)_state;
+	internal TopBarSentryState State => (TopBarSentryState)Volatile.Read(ref _state);
 
 	/// <summary>
-	/// The most recent ambient loudness reading in dBFS. It is refreshed on every audio quantum.
+	/// The most recent ambient loudness reading in dBFS. Decibel mode refreshes it on every audio quantum.
 	/// </summary>
 	internal double CurrentDecibel => BitConverter.Int64BitsToDouble(Volatile.Read(ref _currentDecibelBits));
 
@@ -238,76 +275,95 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 	internal int CompletedCycles => _completedCycles;
 
 	/// <summary>
-	/// Opens the microphone and starts watching the ambient level. The returned result reports why the microphone
-	/// could not be opened when that is the case, so that the view can surface it to the user.
+	/// Opens the microphone for the selected trigger mode and starts watching for its trigger. The returned result
+	/// reports why the microphone could not be opened when that is the case, so that the view can surface it to the user.
 	/// </summary>
-	internal async Task<TopBarSentryArmResult> ArmAsync(TopBarSentrySettings settings)
+	internal Task<TopBarSentryArmResult> ArmAsync(TopBarSentrySettings settings) => _armTask ??= ArmCoreAsync(settings);
+
+	private async Task<TopBarSentryArmResult> ArmCoreAsync(TopBarSentrySettings settings)
 	{
 		try
 		{
+			_phraseWords = GetPhraseWords(settings.TriggerPhrase).ConvertAll(static word => word.Text).ToArray();
 			Volatile.Write(ref _thresholdBits, BitConverter.DoubleToInt64Bits(settings.ThresholdDecibel));
 			_recordingDurationSeconds = Math.Max(1, settings.RecordingDurationSeconds);
 			_cooldownSeconds = Math.Max(0, settings.CooldownSeconds);
 			_maxCycles = Math.Max(0, settings.MaxCycles);
 			_outputDirectory = settings.OutputDirectory ?? string.Empty;
-			_completedCycles = 0;
-			Volatile.Write(ref _cooldownUntilTick, 0L);
 
-			// The render category is nominal for a capture only graph, but a category still has to be named.
-			AudioGraphSettings graphSettings = new(AudioRenderCategory.Media);
-			CreateAudioGraphResult graphResult;
-			try
-			{
-				graphResult = await AudioGraph.CreateAsync(graphSettings).AsTask().WaitAsync(InitializationTimeout);
-			}
-			catch (TimeoutException)
-			{
-				return new TopBarSentryArmResult(false, "The audio engine did not start within 15 seconds.", false);
-			}
-			if (graphResult.Status != AudioGraphCreationStatus.Success || graphResult.Graph is null)
-			{
-				return new TopBarSentryArmResult(false, "The audio engine could not start (" + graphResult.Status.ToString() + ").", false);
-			}
-
-			_graph = graphResult.Graph;
-
-			CreateAudioDeviceInputNodeResult inputResult;
-			try
-			{
-				inputResult = await _graph.CreateDeviceInputNodeAsync(MediaCategory.Media).AsTask().WaitAsync(InitializationTimeout);
-			}
-			catch (TimeoutException)
-			{
-				await ShutdownGraphAsync();
-				return new TopBarSentryArmResult(false, "The microphone did not open within 15 seconds.", false);
-			}
-			if (inputResult.Status != AudioDeviceNodeCreationStatus.Success || inputResult.DeviceInputNode is null)
-			{
-				await ShutdownGraphAsync();
-				bool permissionDenied = inputResult.Status == AudioDeviceNodeCreationStatus.AccessDenied;
-				string reason = inputResult.Status switch
-				{
-					AudioDeviceNodeCreationStatus.AccessDenied => "Microphone access is turned off for this app. Turn it on under Settings, Privacy and security, Microphone, and make sure app access is allowed.",
-					AudioDeviceNodeCreationStatus.DeviceNotAvailable => "No microphone was found. Connect a recording device and try again.",
-					AudioDeviceNodeCreationStatus.FormatNotSupported => "The microphone does not support a format the recorder can use.",
-					_ => "The microphone could not be opened (" + inputResult.Status.ToString() + ")."
-				};
-				return new TopBarSentryArmResult(false, reason, permissionDenied);
-			}
-
-			_deviceInputNode = inputResult.DeviceInputNode;
-
-			// The microphone opened, which confirms that a device is present and that access to it is allowed, but a
-			// device that is muted still opens and only ever delivers digital silence, which the availability and the
-			// permission checks above cannot see. The mute state of the endpoint is therefore read once here, in the
-			// same place, and a muted microphone is refused so that the Sentry is never armed on a device that cannot
-			// hear anything. It is a single read at arm time and is never polled afterwards.
+			// A device that is muted still opens and only ever delivers digital silence, which neither the availability
+			// and permission checks of the graph nor speech recognition can see. The mute state of the endpoint is
+			// therefore read once here for both trigger modes, and a muted microphone is refused so that the Sentry is
+			// never armed on a device that cannot hear anything. It is a single read at arm time and is never polled.
 			if (IsDefaultCaptureMuted() == true)
 			{
-				await ShutdownGraphAsync();
 				return new TopBarSentryArmResult(false, "The microphone is muted. Unmute it in the Windows sound settings and try again.", false);
 			}
 
+			// Only the audio path of the armed mode is opened, so the other mode costs nothing while the Sentry is armed.
+			if (UsesPhraseTrigger)
+			{
+				await StartSpeechRecognitionAsync();
+			}
+			else
+			{
+				await StartAudioGraphAsync(meter: true);
+			}
+
+			// A disarm that arrived during initialization must not be overwritten with an armed transition.
+			_sessionCancellation.Token.ThrowIfCancellationRequested();
+			Volatile.Write(ref _state, (int)TopBarSentryState.Armed);
+			// A session that ended while the arm was finishing is restarted like any other that ended on its own.
+			if (UsesPhraseTrigger) EnsureListening();
+
+			RaiseStatus();
+			return new TopBarSentryArmResult(true, null, false);
+		}
+		catch (Exception ex)
+		{
+			// The owner disarms the engine after a failed arm, which releases whatever was opened before the failure.
+			Logger.Write(ex);
+			string message = ex is TimeoutException ? "The microphone or the speech engine did not respond within 15 seconds." : ex.Message;
+			string reason = UsesPhraseTrigger
+				? "Speech recognition could not start. Make sure a speech language is installed under Settings, Time and language, Speech, and allow microphone access. " + message
+				: message;
+			return new TopBarSentryArmResult(false, reason, ex is UnauthorizedAccessException);
+		}
+	}
+
+	/// <summary>
+	/// Opens the default microphone in a capture only graph and starts it. Only decibel mode meters the graph, through
+	/// a frame node that stays connected for the whole session; phrase mode opens a graph for each capture alone.
+	/// Failures are thrown, and an <see cref="UnauthorizedAccessException"/> means the privacy setting blocked access.
+	/// </summary>
+	private async Task StartAudioGraphAsync(bool meter)
+	{
+		// The render category is nominal for a capture only graph, but a category still has to be named.
+		AudioGraphSettings graphSettings = new(AudioRenderCategory.Media);
+		CreateAudioGraphResult graphResult = await AudioGraph.CreateAsync(graphSettings).AsTask(_sessionCancellation.Token).WaitAsync(InitializationTimeout);
+		if (graphResult.Status != AudioGraphCreationStatus.Success || graphResult.Graph is null)
+		{
+			throw new InvalidOperationException("The audio engine could not start (" + graphResult.Status.ToString() + ").");
+		}
+
+		_graph = graphResult.Graph;
+
+		CreateAudioDeviceInputNodeResult inputResult = await _graph.CreateDeviceInputNodeAsync(MediaCategory.Media).AsTask(_sessionCancellation.Token).WaitAsync(InitializationTimeout);
+		_deviceInputNode = inputResult.DeviceInputNode;
+		if (inputResult.Status != AudioDeviceNodeCreationStatus.Success || _deviceInputNode is null)
+		{
+			Exception failure = inputResult.Status switch
+			{
+				AudioDeviceNodeCreationStatus.AccessDenied => new UnauthorizedAccessException("Microphone access is turned off for this app. Turn it on under Settings, Privacy and security, Microphone, and make sure app access is allowed."),
+				AudioDeviceNodeCreationStatus.DeviceNotAvailable => new InvalidOperationException("No microphone was found. Connect a recording device and try again."),
+				AudioDeviceNodeCreationStatus.FormatNotSupported => new InvalidOperationException("The microphone does not support a format the recorder can use."),
+				_ => new InvalidOperationException("The microphone could not be opened (" + inputResult.Status.ToString() + ").")
+			};
+			throw failure;
+		}
+
+		if (meter)
+		{
 			// The frame node carries a copy of every quantum so that its loudness can be measured for the meter and
 			// for the trigger. It stays connected for the whole session, recording or not.
 			_frameOutputNode = _graph.CreateFrameOutputNode();
@@ -317,29 +373,12 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 			// the meter never moves. This is the one step a device-input to frame-output capture graph cannot skip.
 			_frameOutputNode.Start();
 
-			// The capture is written exactly at the device sample rate and channel count so that nothing is resampled,
-			// at 24 bits per sample which is lossless for practical purposes while remaining universally playable.
-			AudioEncodingProperties graphProperties = _graph.EncodingProperties;
-			MediaEncodingProfile recordingProfile = MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
-			recordingProfile.Audio = AudioEncodingProperties.CreatePcm(graphProperties.SampleRate, graphProperties.ChannelCount, 24U);
-			_recordingProfile = recordingProfile;
-
 			// A device-input node pushes audio on its own, which drives the graph clock, so QuantumStarted fires on a
 			// regular cadence for reading the accumulated frame. That is the event Microsoft recommends for GetFrame.
 			_graph.QuantumStarted += OnQuantumStarted;
-			Volatile.Write(ref _state, (int)TopBarSentryState.Armed);
-			_graph.Start();
+		}
 
-			RaiseStatus();
-			return new TopBarSentryArmResult(true, null, false);
-		}
-		catch (Exception ex)
-		{
-			Logger.Write(ex);
-			await ShutdownGraphAsync();
-			Volatile.Write(ref _state, (int)TopBarSentryState.Idle);
-			return new TopBarSentryArmResult(false, ex.Message, false);
-		}
+		_graph.Start();
 	}
 
 	/// <summary>
@@ -371,16 +410,48 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 	/// Ends the capture that is currently in flight without waiting for its duration to elapse. It does nothing when
 	/// no capture is running.
 	/// </summary>
-	internal void StopCurrentRecording() => _recordingStopSource?.Cancel();
+	internal void StopCurrentRecording() => _stopRecording?.Invoke();
 
 	/// <summary>
 	/// Stops watching, ends any capture that is in flight and releases the microphone. It is safe to call more than
 	/// once.
 	/// </summary>
-	internal async Task DisarmAsync()
+	internal Task DisarmAsync() => _shutdownTask ??= DisarmCoreAsync();
+
+	/// <summary>
+	/// Await initialization, any capture in flight and any recognition restart before disposing their resources. An
+	/// idle transition is made first so queued callbacks and recording continuations cannot re-arm a stopped session.
+	/// </summary>
+	private async Task DisarmCoreAsync()
 	{
 		Volatile.Write(ref _state, (int)TopBarSentryState.Idle);
-		await ShutdownGraphAsync();
+		await _sessionCancellation.CancelAsync();
+		// Initialization owns its graph until it has finished. Waiting prevents close-during-arm resource races.
+		if (_armTask is not null) _ = await _armTask;
+		// The capture finalizes its own file and can queue a recognition restart, so it is awaited before the restart.
+		if (_recordingTask is not null) await _recordingTask;
+		await _listenTask;
+		ShutdownGraph();
+		if (_speechRecognizer is SpeechRecognizer recognizer)
+		{
+			try
+			{
+				SpeechContinuousRecognitionSession session = recognizer.ContinuousRecognitionSession;
+				recognizer.HypothesisGenerated -= OnSpeechHypothesisGenerated;
+				session.ResultGenerated -= OnSpeechResultGenerated;
+				session.Completed -= OnSpeechSessionCompleted;
+				// Microsoft's continuous recognition sample cancels a running session before it disposes the recognizer.
+				if (recognizer.State != SpeechRecognizerState.Idle) await session.CancelAsync();
+			}
+			catch (Exception ex) { Logger.Write(ex); }
+			try
+			{
+				recognizer.Dispose();
+				if (_speechGrammarPath is not null) File.Delete(_speechGrammarPath);
+			}
+			catch (Exception ex) { Logger.Write(ex); }
+		}
+		_sessionCancellation.Dispose();
 	}
 
 	/// <summary>
@@ -417,120 +488,112 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 
 		Volatile.Write(ref _currentDecibelBits, BitConverter.DoubleToInt64Bits(decibel));
 
-		if (Volatile.Read(ref _state) != (int)TopBarSentryState.Armed)
-		{
-			return;
-		}
-
-		if (Environment.TickCount64 < Volatile.Read(ref _cooldownUntilTick))
-		{
-			return;
-		}
-
-		int maxCycles = _maxCycles;
-		if (maxCycles > 0 && _completedCycles >= maxCycles)
-		{
-			return;
-		}
-
 		double threshold = BitConverter.Int64BitsToDouble(Volatile.Read(ref _thresholdBits));
 		if (decibel < threshold)
 		{
 			return;
 		}
 
-		// The transition is claimed atomically so that two quanta in a row can never both start a capture.
-		if (Interlocked.CompareExchange(ref _state, (int)TopBarSentryState.Recording, (int)TopBarSentryState.Armed) == (int)TopBarSentryState.Armed)
-		{
-			_ = _dispatcherQueue.TryEnqueue(() => _ = BeginRecordingCycleAsync());
-		}
+		TryStartRecordingCycle();
 	}
 
 	/// <summary>
-	/// Creates the capture file, wires it into the graph, lets it run for the chosen duration or until it is stopped,
-	/// and then finalizes it. This runs on the UI thread because that is where the graph was created.
+	/// Share the atomic claim, cycle ceiling and cooldown between both trigger modes. A queued capture is
+	/// rejected if disarm reached the UI thread first; its task is retained and awaited during shutdown.
 	/// </summary>
-	private async Task BeginRecordingCycleAsync()
+	private void TryStartRecordingCycle()
 	{
+		// The claim itself only succeeds from the armed state.
+		if (IsCoolingDown || (_maxCycles > 0 && _completedCycles >= _maxCycles) ||
+			Interlocked.CompareExchange(ref _state, (int)TopBarSentryState.Recording, (int)TopBarSentryState.Armed) != (int)TopBarSentryState.Armed) return;
+		if (!_dispatcherQueue.TryEnqueue(() =>
+		{
+			if (Volatile.Read(ref _state) == (int)TopBarSentryState.Recording)
+				_recordingTask = RunRecordingCycleAsync();
+		}))
+			_ = Interlocked.CompareExchange(ref _state, (int)TopBarSentryState.Armed, (int)TopBarSentryState.Recording);
+	}
+
+	/// <summary>
+	/// Runs one capture on the UI thread, where the graph is created. Phrase mode first stops recognition and opens a
+	/// recording only graph, which it closes again once the capture is finalized. The capture file is wired into the
+	/// graph for the chosen duration or until it is stopped, then it is finalized and the cooldown starts. A failure
+	/// ends the session with an error instead of retrying in a loop. The status is raised last, so that a disarm it
+	/// leads to never overlaps with the work of this cycle.
+	/// </summary>
+	private async Task RunRecordingCycleAsync()
+	{
+		using CancellationTokenSource stopSource = CancellationTokenSource.CreateLinkedTokenSource(_sessionCancellation.Token);
+		_stopRecording = stopSource.Cancel;
+		string? filePath = null;
+		string? error = null;
 		try
 		{
-			if (_graph is null || _deviceInputNode is null || _recordingProfile is null)
+			if (_speechRecognizer is SpeechRecognizer recognizer)
 			{
-				RevertToArmed();
-				return;
+				// The session is canceled rather than paused, because a paused session keeps buffering the microphone and
+				// would recognize the speech of this capture once it resumed. It is started again after the cooldown.
+				// https://learn.microsoft.com/uwp/api/windows.media.speechrecognition.speechrecognizerstate
+				_isListening = false;
+				// Hearing the phrase proves that recognition works, so earlier sessions that ended quickly are forgiven.
+				_speechFailures = 0;
+				try
+				{
+					await recognizer.ContinuousRecognitionSession.CancelAsync();
+				}
+				catch (Exception ex)
+				{
+					// The session may have ended on its own right before, which leaves nothing to cancel.
+					Logger.Write(ex);
+				}
+				await StartAudioGraphAsync(meter: false);
 			}
+
+			if (_graph is not AudioGraph graph || _deviceInputNode is not AudioDeviceInputNode deviceInputNode)
+			{
+				throw new InvalidOperationException("The microphone is not open.");
+			}
+
+			// The capture is written exactly at the device sample rate and channel count so that nothing is resampled,
+			// at 24 bits per sample which is lossless for practical purposes while remaining universally playable.
+			AudioEncodingProperties graphProperties = graph.EncodingProperties;
+			MediaEncodingProfile recordingProfile = MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
+			recordingProfile.Audio = AudioEncodingProperties.CreatePcm(graphProperties.SampleRate, graphProperties.ChannelCount, 24U);
 
 			StorageFolder folder = await ResolveOutputFolderAsync();
+			// A disarm during the setup above must not leave an empty capture file behind.
+			_sessionCancellation.Token.ThrowIfCancellationRequested();
 			string fileName = "Sentry-" + DateTimeOffset.Now.ToString("yyyyMMdd-HHmmss-fff", CultureInfo.InvariantCulture) + ".wav";
 			StorageFile file = await folder.CreateFileAsync(fileName, CreationCollisionOption.GenerateUniqueName);
-
-			CreateAudioFileOutputNodeResult result = await _graph.CreateFileOutputNodeAsync(file, _recordingProfile);
+			CreateAudioFileOutputNodeResult result = await graph.CreateFileOutputNodeAsync(file, recordingProfile);
 			if (result.Status != AudioFileNodeCreationStatus.Success || result.FileOutputNode is null)
 			{
-				RevertToArmed();
-				return;
+				throw new InvalidOperationException("The capture file could not be created (" + result.Status.ToString() + ").");
 			}
 
+			filePath = file.Path;
 			_fileOutputNode = result.FileOutputNode;
-			_deviceInputNode.AddOutgoingConnection(_fileOutputNode);
+			deviceInputNode.AddOutgoingConnection(_fileOutputNode);
 
 			RaiseStatus();
 
-			_recordingStopSource = new CancellationTokenSource();
-			try
-			{
-				await Task.Delay(TimeSpan.FromSeconds(_recordingDurationSeconds), _recordingStopSource.Token);
-			}
-			catch (OperationCanceledException)
-			{
-				// A manual stop ends the wait early and the capture is finalized with whatever it has so far.
-			}
-
-			await CompleteRecordingAsync(file.Path);
+			// A manual stop or a disarm ends the wait early and the capture is finalized with whatever it has so far.
+			await Task.Delay(TimeSpan.FromSeconds(_recordingDurationSeconds), stopSource.Token);
 		}
+		catch (OperationCanceledException) when (stopSource.IsCancellationRequested) { }
 		catch (Exception ex)
 		{
 			Logger.Write(ex);
-			RevertToArmed();
+			error = "A capture failed. " + ex.Message;
 		}
 		finally
 		{
-			_recordingStopSource?.Dispose();
-			_recordingStopSource = null;
-		}
-	}
-
-	/// <summary>
-	/// Detaches the capture file from the graph, finalizes it, records the cooldown, and either re-arms for the next
-	/// cycle or disarms the session when the cycle ceiling has been reached.
-	/// </summary>
-	private async Task CompleteRecordingAsync(string filePath)
-	{
-		AudioFileOutputNode? fileOutputNode = _fileOutputNode;
-		_fileOutputNode = null;
-		bool finalized = false;
-
-		if (fileOutputNode is not null)
-		{
-			try
-			{
-				_deviceInputNode?.RemoveOutgoingConnection(fileOutputNode);
-				fileOutputNode.Stop();
-				TranscodeFailureReason reason = await fileOutputNode.FinalizeAsync();
-				finalized = reason == TranscodeFailureReason.None;
-				if (!finalized)
-				{
-					Logger.Write("The Sentry could not finalize a capture: " + reason.ToString(), LogTypeIntel.Error);
-				}
-			}
-			catch (Exception ex)
-			{
-				Logger.Write(ex);
-			}
+			_stopRecording = null;
 		}
 
+		// The path is only known once the capture is attached, which is exactly when there is a capture to finalize.
 		// If finalized and user has selected for recording files to be encrypted
-		if (finalized && Atlas.Settings.WindowsTopBarSentryEncryptionMode != 0)
+		if (filePath is not null && await FinalizeRecordingNodeAsync() && Atlas.Settings.WindowsTopBarSentryEncryptionMode != 0)
 		{
 			try
 			{
@@ -542,33 +605,62 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 			}
 		}
 
-		int completed = Interlocked.Increment(ref _completedCycles);
-		Volatile.Write(ref _cooldownUntilTick, Environment.TickCount64 + (_cooldownSeconds * 1000L));
+		// Phrase mode releases the recording graph before speech recognition resumes.
+		if (UsesPhraseTrigger) ShutdownGraph();
 
-		int maxCycles = _maxCycles;
-		if (maxCycles > 0 && completed >= maxCycles)
+		// Do not overwrite a disarm that arrived during the capture with a new transition.
+		if (Volatile.Read(ref _state) != (int)TopBarSentryState.Recording) return;
+		if (error is not null)
 		{
-			// The ceiling has been reached, so the session releases the microphone and reports that it is idle.
-			await ShutdownGraphAsync();
-			Volatile.Write(ref _state, (int)TopBarSentryState.Idle);
-			RaiseStatus();
+			Fail(error);
 			return;
 		}
 
-		Volatile.Write(ref _state, (int)TopBarSentryState.Armed);
+		Volatile.Write(ref _matchedPhraseWords, 0);
+		int completed = Interlocked.Increment(ref _completedCycles);
+		Volatile.Write(ref _cooldownUntilTick, Environment.TickCount64 + (_cooldownSeconds * 1000L));
+
+		// Reaching the cycle ceiling reports Idle, and the owner then disarms the engine, which releases the microphone.
+		int maxCycles = _maxCycles;
+		Volatile.Write(ref _state, (int)(maxCycles > 0 && completed >= maxCycles ? TopBarSentryState.Idle : TopBarSentryState.Armed));
+		if (UsesPhraseTrigger) EnsureListening();
 		RaiseStatus();
 	}
 
 	/// <summary>
-	/// Returns the session to the armed state after a capture could not be started.
+	/// Transfer ownership out of the field before awaiting. Completed finalization closes the node;
+	/// explicit disposal also covers failures before finalization can complete.
 	/// </summary>
-	private void RevertToArmed()
+	private async Task<bool> FinalizeRecordingNodeAsync()
 	{
-		// Only step back to armed while the session is still meant to be running.
-		if (Volatile.Read(ref _state) == (int)TopBarSentryState.Recording)
+		AudioFileOutputNode? node = _fileOutputNode;
+		_fileOutputNode = null;
+		if (node is null) return false;
+		bool finalizationCompleted = false;
+		try
 		{
-			Volatile.Write(ref _state, (int)TopBarSentryState.Armed);
-			RaiseStatus();
+			_deviceInputNode?.RemoveOutgoingConnection(node);
+			node.Stop();
+			TranscodeFailureReason reason = await node.FinalizeAsync();
+			// FinalizeAsync closes the node on completion. Never dispose that closed node.
+			finalizationCompleted = true;
+			if (reason == TranscodeFailureReason.None) return true;
+			Logger.Write("The Sentry could not finalize a capture: " + reason.ToString(), LogTypeIntel.Error);
+			return false;
+		}
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			return false;
+		}
+		finally
+		{
+			// Dispose only when finalization did not complete normally.
+			if (!finalizationCompleted)
+			{
+				try { node.Dispose(); }
+				catch (Exception ex) { Logger.Write(ex); }
+			}
 		}
 	}
 
@@ -586,6 +678,192 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 		_ = Directory.CreateDirectory(directory);
 		return await StorageFolder.GetFolderFromPathAsync(directory);
 	}
+
+	#region Spoken Phrase Trigger
+
+	/// <summary>
+	/// Recognition uses an on-device SRGS grammar in the system speech language, so no audio leaves the device.
+	/// Recognition is opened only when the user explicitly arms a nonempty phrase. One recognizer serves the whole
+	/// armed session and its grammar is compiled once, here. Like Microsoft's continuous recognition sample, the session
+	/// is then only canceled and started again on that same recognizer, around every capture.
+	/// https://learn.microsoft.com/windows/apps/develop/input/define-custom-recognition-constraints
+	/// https://github.com/microsoft/Windows-universal-samples/blob/main/Samples/SpeechRecognitionAndSynthesis/cs/Scenario_ContinuousRecognitionSRGSGrammar.xaml.cs
+	/// </summary>
+	private async Task StartSpeechRecognitionAsync()
+	{
+		SpeechRecognizer recognizer = new(SpeechRecognizer.SystemSpeechLanguage);
+		_speechRecognizer = recognizer;
+		SpeechContinuousRecognitionSession session = recognizer.ContinuousRecognitionSession;
+		recognizer.HypothesisGenerated += OnSpeechHypothesisGenerated;
+		session.ResultGenerated += OnSpeechResultGenerated;
+		session.Completed += OnSpeechSessionCompleted;
+
+		// A list grammar only describes isolated commands. Allow unrelated speech around the
+		// complete phrase without adding competing single-word or partial-phrase commands.
+		XNamespace ns = "http://www.w3.org/2001/06/grammar";
+		XElement filler = new(ns + "item", new XAttribute("repeat", "0-1"),
+			new XElement(ns + "ruleref", new XAttribute("special", "GARBAGE")));
+		XElement grammar = new(ns + "grammar", new XAttribute("version", "1.0"),
+			new XAttribute(XNamespace.Xml + "lang", recognizer.CurrentLanguage.LanguageTag),
+			new XAttribute("root", "Sentry"), new XAttribute("mode", "voice"),
+			new XElement(ns + "rule", new XAttribute("id", "Sentry"),
+				new XAttribute("scope", "public"), filler,
+				new XElement(ns + "item", string.Join(' ', _phraseWords)), new XElement(filler)));
+		_speechGrammarPath = Path.Join(Path.GetTempPath(), "HSS-Sentry-" + Guid.CreateVersion7().ToString("N") + ".grxml");
+		await File.WriteAllTextAsync(_speechGrammarPath, grammar.ToString(SaveOptions.DisableFormatting), _sessionCancellation.Token);
+		StorageFile grammarFile = await StorageFile.GetFileFromPathAsync(_speechGrammarPath);
+		recognizer.Constraints.Add(new SpeechRecognitionGrammarFileConstraint(grammarFile, "Sentry"));
+		SpeechRecognitionCompilationResult compilation = await recognizer.CompileConstraintsAsync().AsTask(_sessionCancellation.Token).WaitAsync(InitializationTimeout);
+		if (compilation.Status != SpeechRecognitionResultStatus.Success)
+		{
+			throw new InvalidOperationException("Speech grammar compilation failed: " + compilation.Status.ToString());
+		}
+
+		// The Sentry waits for its phrase indefinitely, so the session must not end itself after a stretch of silence.
+		// https://learn.microsoft.com/uwp/api/windows.media.speechrecognition.speechcontinuousrecognitionsession.autostopsilencetimeout
+		session.AutoStopSilenceTimeout = TimeSpan.MaxValue;
+		_isListening = true;
+		Volatile.Write(ref _speechStartTick, Environment.TickCount64);
+		await session.StartAsync().AsTask(_sessionCancellation.Token).WaitAsync(InitializationTimeout);
+	}
+
+	/// <summary>
+	/// Makes sure that recognition is running again once a capture or a session that ended on its own has stopped it.
+	/// It runs on the UI thread only, which keeps a single restart in flight at any time.
+	/// </summary>
+	private void EnsureListening() => _listenTask = _listenTask.IsCompleted ? ListenAsync() : _listenTask;
+
+	/// <summary>
+	/// Starts the session again on the same recognizer once the cooldown has elapsed. Sessions that keep ending right
+	/// after they start are retried with a growing delay, and the Sentry gives up with an error once there are too many.
+	/// </summary>
+	private async Task ListenAsync()
+	{
+		try
+		{
+			// The session token is only read while armed, and disarm always leaves the armed state before disposing it.
+			while (State == TopBarSentryState.Armed && !_isListening && _speechRecognizer is SpeechRecognizer recognizer)
+			{
+				if (_speechFailures > MaxSpeechRestartFailures)
+				{
+					throw new InvalidOperationException("The speech session keeps ending right after it starts.");
+				}
+
+				long delay = Math.Max(Volatile.Read(ref _cooldownUntilTick), Volatile.Read(ref _speechStartTick) + (_speechFailures * 1000L)) - Environment.TickCount64;
+				// StartAsync is only valid while the recognizer is idle, as checked in Microsoft's sample.
+				if (delay > 0L || recognizer.State != SpeechRecognizerState.Idle)
+				{
+					await Task.Delay(TimeSpan.FromMilliseconds(Math.Max(delay, 100L)), _sessionCancellation.Token);
+					continue;
+				}
+
+				_isListening = true;
+				Volatile.Write(ref _speechStartTick, Environment.TickCount64);
+				await recognizer.ContinuousRecognitionSession.StartAsync().AsTask(_sessionCancellation.Token).WaitAsync(InitializationTimeout);
+			}
+		}
+		catch (OperationCanceledException) when (_sessionCancellation.IsCancellationRequested) { }
+		catch (Exception ex)
+		{
+			Logger.Write(ex);
+			Fail("Spoken-phrase monitoring stopped. Check the installed speech language and microphone access. " + ex.Message);
+		}
+	}
+
+	/// <summary>
+	/// The session also ends on its own, for example when the microphone becomes unavailable. Such an ending is
+	/// restarted from the UI thread, while one that a capture or a disarm caused is ignored.
+	/// </summary>
+	private void OnSpeechSessionCompleted(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionCompletedEventArgs args)
+	{
+		if (!_isListening) return;
+		_isListening = false;
+		// A session that stayed up for a while was healthy, so its ending does not count as a failure.
+		bool failedQuickly = args.Status is not (SpeechRecognitionResultStatus.Success or SpeechRecognitionResultStatus.TimeoutExceeded) &&
+			Environment.TickCount64 - Volatile.Read(ref _speechStartTick) < 10000L;
+		_speechFailures = failedQuickly ? _speechFailures + 1 : 0;
+		Logger.Write("The Sentry speech session ended on its own: " + args.Status.ToString(), LogTypeIntel.Warning);
+		_ = _dispatcherQueue.TryEnqueue(EnsureListening);
+	}
+
+	private void OnSpeechHypothesisGenerated(SpeechRecognizer sender, SpeechRecognitionHypothesisGeneratedEventArgs args) =>
+		OnPhraseHeard(args.Hypothesis.Text);
+
+	// The engine often rates short utterances Low even when the words are right, and the whole-word match below
+	// is the real filter, so only results the engine itself rejected are dropped.
+	private void OnSpeechResultGenerated(SpeechContinuousRecognitionSession sender, SpeechContinuousRecognitionResultGeneratedEventArgs args) =>
+		OnPhraseHeard(args.Result is { Status: SpeechRecognitionResultStatus.Success, Confidence: not SpeechRecognitionConfidence.Rejected } result ? result.Text : string.Empty);
+
+	/// <summary>
+	/// Shows how much of the phrase was heard and starts a capture once all of it was. This runs on a speech thread
+	/// and only ever hands the capture over to the dispatcher. A callback that was already queued when a capture
+	/// canceled the session finds the engine recording and is dropped.
+	/// </summary>
+	private void OnPhraseHeard(string text)
+	{
+		if (State != TopBarSentryState.Armed) return;
+		int matched = GetMatchedPhraseWords(text);
+		Volatile.Write(ref _matchedPhraseWords, matched);
+		Volatile.Write(ref _speechProgressTick, Environment.TickCount64);
+		// Results are only finalized after a pause and are frequently rated with a low confidence, so continuous
+		// speech would otherwise delay or never deliver the trigger. An exact whole-phrase hypothesis, which is
+		// exactly what lights every word up, is sufficient evidence to start a capture.
+		if ((matched & 0xFFFF) == _phraseWords.Length) TryStartRecordingCycle();
+	}
+
+	/// <summary>
+	/// Match the longest contiguous run of target words, starting at any target word, in "one" transcript so that
+	/// partial matches such as the end of the phrase are shown too. Hypotheses replace previous hypotheses;
+	/// separate utterances are never concatenated. Returns the packed range described on _matchedPhraseWords.
+	/// </summary>
+	private int GetMatchedPhraseWords(string transcript)
+	{
+		List<(string Text, int End)> heard = GetPhraseWords(transcript);
+		int bestStart = 0;
+		int bestCount = 0;
+		for (int target = 0; target < _phraseWords.Length && bestCount < _phraseWords.Length - target; target++)
+		{
+			for (int start = 0; start < heard.Count; start++)
+			{
+				int count = 0;
+				while (target + count < _phraseWords.Length && start + count < heard.Count &&
+					string.Equals(_phraseWords[target + count], heard[start + count].Text, StringComparison.OrdinalIgnoreCase)) count++;
+				if (count > bestCount)
+				{
+					bestStart = target;
+					bestCount = count;
+				}
+			}
+		}
+		return (bestStart << 16) | bestCount;
+	}
+
+	/// <summary>
+	/// Share token boundaries with the UI. Punctuation separates words; internal apostrophes are retained.
+	/// This is exact whole-word matching, not phonetic, fuzzy or substring matching.
+	/// </summary>
+	internal static List<(string Text, int End)> GetPhraseWords(string text)
+	{
+		List<(string Text, int End)> words = [];
+		int index = 0;
+		while (index < text.Length)
+		{
+			if (!char.IsLetterOrDigit(text[index])) { index++; continue; }
+			int start = index++;
+			while (index < text.Length)
+			{
+				char character = text[index];
+				UnicodeCategory category = char.GetUnicodeCategory(character);
+				bool apostrophe = (character is '\'' or '\u2019') && index + 1 < text.Length && char.IsLetterOrDigit(text[index + 1]);
+				if (!char.IsLetterOrDigit(character) && category is not (UnicodeCategory.NonSpacingMark or UnicodeCategory.SpacingCombiningMark) && !apostrophe) break;
+				index++;
+			}
+			words.Add((text[start..index].Replace('\u2019', '\''), index));
+		}
+		return words;
+	}
+
+	#endregion
 
 	/// <summary>
 	/// Reads the mute state of the default audio capture endpoint through Core Audio, without opening a stream on it.
@@ -717,11 +995,6 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 			}
 
 			double rootMeanSquare = Math.Sqrt(sumOfSquares / sampleCount);
-			if (rootMeanSquare <= 0.0)
-			{
-				return SilenceFloorDecibel;
-			}
-
 			return Math.Max(SilenceFloorDecibel, 20.0 * Math.Log10(rootMeanSquare));
 		}
 		finally
@@ -732,16 +1005,11 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 	}
 
 	/// <summary>
-	/// Stops and disposes the graph and every node of it. It is guarded so that the several paths that can lead to a
-	/// teardown only ever tear the graph down once.
+	/// Stops and disposes the graph and every node of it. A capture is always finalized by its own cycle before the
+	/// graph is shut down, and calling this without a graph does nothing.
 	/// </summary>
-	private async Task ShutdownGraphAsync()
+	private void ShutdownGraph()
 	{
-		if (Interlocked.Exchange(ref _shutdownStarted, 1) == 1)
-		{
-			return;
-		}
-
 		AudioGraph? graph = _graph;
 		if (graph is null)
 		{
@@ -751,28 +1019,6 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 		try
 		{
 			graph.QuantumStarted -= OnQuantumStarted;
-
-			if (_recordingStopSource is not null)
-			{
-				await _recordingStopSource.CancelAsync();
-			}
-
-			AudioFileOutputNode? fileOutputNode = _fileOutputNode;
-			_fileOutputNode = null;
-			if (fileOutputNode is not null)
-			{
-				try
-				{
-					_deviceInputNode?.RemoveOutgoingConnection(fileOutputNode);
-					fileOutputNode.Stop();
-					_ = await fileOutputNode.FinalizeAsync();
-				}
-				catch (Exception ex)
-				{
-					Logger.Write(ex);
-				}
-			}
-
 			graph.Stop();
 		}
 		catch (Exception ex)
@@ -794,35 +1040,29 @@ internal sealed partial class TopBarSentryEngine : IDisposable
 		_frameOutputNode = null;
 		_deviceInputNode = null;
 		_graph = null;
-		_recordingProfile = null;
-		Volatile.Write(ref _currentDecibelBits, BitConverter.DoubleToInt64Bits(SilenceFloorDecibel));
+	}
+
+	/// <summary>
+	/// Ends the session with an error. The owner disarms the engine when it sees the idle state and then shows the
+	/// error, so nothing here has to wait on any other part of the engine.
+	/// </summary>
+	private void Fail(string error)
+	{
+		// A session that was already disarmed has nothing left to report.
+		if (Interlocked.Exchange(ref _state, (int)TopBarSentryState.Idle) == (int)TopBarSentryState.Idle) return;
+		Error = error;
+		RaiseStatus();
 	}
 
 	/// <summary>
 	/// Raises the status event. Every raise happens on the UI thread already, because the only places that raise are
-	/// the arm request and the capture orchestration, both of which run on the dispatcher.
+	/// the arm request, the recognition restart and capture orchestration, all of which run on the dispatcher.
 	/// </summary>
-	private void RaiseStatus() =>
-		StatusChanged?.Invoke(this, new TopBarSentryStatus((TopBarSentryState)_state, _completedCycles));
+	private void RaiseStatus() => StatusChanged?.Invoke(this, EventArgs.Empty);
 
 	/// <summary>
-	/// Best effort synchronous teardown for when the window is closing and there is no opportunity to await.
-	/// A capture that is in flight is finalized on a fire and forget basis so that it is not left truncated.
+	/// Starts asynchronous teardown from the synchronous IDisposable entry point during window closure.
+	/// A capture in flight is finalized by the tracked teardown task, which the owner awaits through DisarmAsync.
 	/// </summary>
-	public void Dispose()
-	{
-		if (_disposed)
-		{
-			return;
-		}
-
-		_disposed = true;
-		Volatile.Write(ref _state, (int)TopBarSentryState.Idle);
-		// The token source is cancelled to end any capture wait, then disposed here so that the only IDisposable field
-		// of the engine is released deterministically. Nulling it afterwards keeps the teardown below from touching it.
-		_recordingStopSource?.Cancel();
-		_recordingStopSource?.Dispose();
-		_recordingStopSource = null;
-		_ = ShutdownGraphAsync();
-	}
+	public void Dispose() => _shutdownTask ??= DisarmCoreAsync();
 }

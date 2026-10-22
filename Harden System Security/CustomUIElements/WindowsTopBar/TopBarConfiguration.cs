@@ -178,6 +178,17 @@ internal sealed class TopBarConfiguration
 		new TopBarClockEntry { DisplayName = "Pacific", TimeZoneId = "Pacific Standard Time" },
 		new TopBarClockEntry { DisplayName = "Israel", TimeZoneId = "Israel Standard Time" }
 	];
+
+	/// <summary>
+	/// The phrase that on-device speech recognition listens for when <see cref="SentryPhraseMode"/> is selected.
+	/// </summary>
+	public string SentryTriggerPhrase { get; set; } = string.Empty;
+
+	/// <summary>
+	/// Whether the Sentry is triggered by the spoken phrase instead of the decibel level.
+	/// </summary>
+	public bool SentryPhraseMode { get; set; }
+
 	public TopBarCompanion Companion { get; set; } = TopBarCompanion.PrisMatrix;
 	public TopBarBackdrop Backdrop { get; set; } = TopBarBackdrop.MicaAlt;
 

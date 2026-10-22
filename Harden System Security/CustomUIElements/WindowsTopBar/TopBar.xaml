@@ -60,6 +60,15 @@
                        FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+            <!-- Notch content specialized for an armed Sentry in spoken phrase mode. -->
+            <TextBlock x:Name="CollapsedSentryPhraseText"
+                       FontSize="12"
+                       MaxWidth="160"
+                       MaxLines="1"
+                       TextTrimming="CharacterEllipsis"
+                       VerticalAlignment="Center"
+                       Visibility="Collapsed"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
             <!-- Notch content specialized for the Clocks view -->
             <StackPanel x:Name="CollapsedNotchClocksHost" HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal" Spacing="12"/>
             <!-- Notch content specialized for the Performance view -->
@@ -465,6 +474,8 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <!-- Arm and disarm, plus a manual stop for the capture that is in flight. -->
                         <StackPanel Grid.Column="0"
@@ -489,10 +500,28 @@
                                     Content="Stop"
                                     Click="{x:Bind OnSentryStopClick}"/>
                         </StackPanel>
+                        <!-- The trigger mode. The decibel level and the spoken phrase controls are shown only for their own mode. -->
+                        <StackPanel Grid.Column="1"
+                                    Spacing="1"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="MODE"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <ComboBox x:Name="SentryModeBox"
+                                      Width="128"
+                                      FontSize="11"
+                                      ToolTipService.ToolTip="Choose what starts a recording. Disarm before changing it."
+                                      SelectionChanged="{x:Bind OnSentryModeChanged}">
+                                <ComboBoxItem Content="Decibel level"/>
+                                <ComboBoxItem Content="Spoken phrase"/>
+                            </ComboBox>
+                        </StackPanel>
                         <!-- The lightweight live audio graph. It scrolls the recent ambient level and only ticks
                              while the Sentry view is expanded and a session is armed. Bars turn red once their
                              level has crossed the trigger, so the trigger is read straight off the graph. -->
-                        <StackPanel Grid.Column="1"
+                        <StackPanel x:Name="SentryLevelPanel"
+                                    Grid.Column="2"
                                     Spacing="2"
                                     VerticalAlignment="Center">
                             <TextBlock Text="LIVE LEVEL"
@@ -516,8 +545,31 @@
                                        Text="-- dBFS"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </StackPanel>
+                        <!-- The phrase that triggers a recording in spoken phrase mode. -->
+                        <StackPanel x:Name="SentryPhrasePanel"
+                                    Grid.Column="3"
+                                    Width="200"
+                                    Visibility="Collapsed"
+                                    Spacing="2"
+                                    VerticalAlignment="Center">
+                            <TextBlock Text="Spoken Phrase"
+                                       FontSize="9"
+                                       FontWeight="SemiBold"
+                                       Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+                            <TextBox x:Name="SentryPhraseBox"
+                                     MaxLength="160"
+                                     PlaceholderText="Word(s) that start a recording"
+                                     ToolTipService.ToolTip="The phrase is recognized on this device with the installed system speech language. Disarm before editing."
+                                     TextChanged="{x:Bind OnSentryPhraseChanged}"/>
+                            <TextBlock x:Name="SentryPhraseProgressText"
+                                       FontSize="11"
+                                       MaxLines="1"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
                         <!-- Trigger sensitivity in dBFS. -->
-                        <StackPanel Grid.Column="2"
+                        <StackPanel x:Name="SentryTriggerPanel"
+                                    Grid.Column="4"
                                     Spacing="1"
                                     VerticalAlignment="Center">
                             <TextBlock Text="TRIGGER dBFS"
@@ -537,7 +589,7 @@
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </StackPanel>
                         <!-- Capture length per trigger. -->
-                        <StackPanel Grid.Column="3"
+                        <StackPanel Grid.Column="5"
                                     Spacing="1"
                                     VerticalAlignment="Center">
                             <TextBlock Text="REC SEC"
@@ -553,7 +605,7 @@
                                        ValueChanged="{x:Bind OnSentryDurationChanged}"/>
                         </StackPanel>
                         <!-- Cooldown between captures. This is the timeout that governs how often a capture repeats. -->
-                        <StackPanel Grid.Column="4"
+                        <StackPanel Grid.Column="6"
                                     Spacing="1"
                                     VerticalAlignment="Center">
                             <TextBlock Text="GAP SEC"
@@ -569,7 +621,7 @@
                                        ValueChanged="{x:Bind OnSentryCooldownChanged}"/>
                         </StackPanel>
                         <!-- How many capture cycles before the Sentry disarms itself. Zero means unlimited. -->
-                        <StackPanel Grid.Column="5"
+                        <StackPanel Grid.Column="7"
                                     Spacing="1"
                                     VerticalAlignment="Center">
                             <TextBlock Text="CYCLES 0=INF"
@@ -585,7 +637,7 @@
                                        ValueChanged="{x:Bind OnSentryMaxCyclesChanged}"/>
                         </StackPanel>
                         <!-- Where the captures are written. -->
-                        <StackPanel Grid.Column="6"
+                        <StackPanel Grid.Column="8"
                                     Spacing="1"
                                     VerticalAlignment="Center">
                             <TextBlock Text="FOLDER"
@@ -667,7 +719,7 @@
                             </StackPanel>
                         </StackPanel>
                         <!-- Current state and completed cycle count. -->
-                        <StackPanel Grid.Column="7"
+                        <StackPanel Grid.Column="9"
                                     Spacing="1"
                                     Width="128"
                                     VerticalAlignment="Center">

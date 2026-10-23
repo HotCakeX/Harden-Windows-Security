@@ -96,7 +96,7 @@ Global Search is designed for fast searches across every local **NTFS** and **Re
 
 - **Filter by file type.** Select **Pictures**, **Videos**, **Audio**, **Documents**, or **Archives** to only show those kinds of files. You can select more than one, for example Pictures and Videos together to find both your photos and your clips. When none of them is selected, every type of file is included. Hover over a button to see examples of the file types it covers. File types only apply to files, so they are turned off while **Folders** is selected, and folders are not shown while a file type is selected.
 
-- **Search the OS drive or every available drive.** You can configure the indexing scope based on whether you want an OS-drive-only index or broader coverage across all supported drives.
+- **Show large thumbnails.** The picture button at the end of the same row switches the results to taller rows with large thumbnails, so you can preview your photos and videos and recognize them at a glance. Pictures and videos keep their original shape, and other files and folders show a preview when Windows has one, or a large icon otherwise. Select the button again to go back to the compact list. Only the look of the results changes, so the same results stay on screen without searching again. Your choice is remembered.
 
 - **Open results immediately.** Double click or tap a result to launch the file with its associated app.
 
@@ -104,10 +104,19 @@ Global Search is designed for fast searches across every local **NTFS** and **Re
 
 - **On-demand background indexing.** A dedicated LocalSystem service builds and maintains the search indexes using the fastest available file-system mechanisms. The Top Bar starts it when you start typing in the search box or load drive statistics, and indexing begins at that point (this is the default behavior). If you enable the **Index at Windows startup** option, a startup task starts the service when you sign in to Windows, so the index is ready when you need it. You can also turn that startup task on or off from the Startup apps page in the Settings app.
 
+- **Saved index for fast starts.** When the service turns itself off, or when Windows shuts down, it saves the index in the app's machine folder on your OS drive. The next time it starts, it loads the saved index in a few seconds and only applies the changes made to your drives since then, instead of reading every file again. Right before each search, it also applies the latest changes, so new, renamed, and deleted items are always found correctly, and nothing runs in the background between searches. Search reads the index straight from the saved files, so the memory the service needs stays small no matter how many files your drives hold. Windows keeps recently read parts of the files in its cache and frees them whenever other apps need the memory. Only the service, which runs as SYSTEM, can change the saved index, administrators can read it, and Windows removes it when you uninstall the app.
+
+- **Rebuilt only when needed.** The saved index is built again from scratch only when it cannot be trusted, for example when the service was stopped unexpectedly before it could save, when a drive was formatted or replaced, or when so many changes were made while the service was off that the drive's change journal no longer holds all of them.
+
+- **Drives you connect later.** A drive connected while the service is running, such as an external drive, is added to the index the next time the service starts, or right away when you load statistics for it in **Drive Statistics**.
+
 - **Resource-conscious service lifetime.** The service turns itself off if it is not used within 10 minutes after it starts or after it finishes building the initial index. After the first search, it turns itself off after one hour without searches. The Top Bar starts it again automatically the next time it is needed.
 
 > [!NOTE]\
-> The first search after the service turned itself off can take longer because the service must start and rebuild the required indexes.
+> The first search after the service turned itself off takes a moment longer because the service must start and load the saved index. Only the very first search, or one after the saved index had to be built again, takes longer because every file on the indexed drives must be read.
+
+> [!TIP]\
+> The indexed database is a very compact database that the Global Search uses for its search functionality. It can only be [accessed](https://github.com/microsoft/WindowsAppSDK/blob/main/specs/applicationdata/ApplicationData.md#34-per-machine-data-store) by the `Trusted Installer` or the `SYSTEM` accounts.
 
 #### Drive Statistics
 
@@ -124,6 +133,8 @@ Global Search is designed for fast searches across every local **NTFS** and **Re
 The Search view also includes **Drive Statistics**, which provides a quick snapshot of the types of files stored on a selected drive.
 
 - Choose an available drive and select **Load statistics** to calculate the snapshot.
+
+- If the drive isn't in the search index yet, for example because you connected it after the search service started, it is indexed first, so that load takes longer. The drive then stays in the index, so its files show up in your searches too.
 
 - View the results in a color-coded chart and legend, with both the file count and percentage shown for each category.
 
@@ -201,14 +212,16 @@ It's a quick, friendly way to see whether your internet is stable and responsive
 
 </div>
 
-It is a decibel‑triggered environment audio watchdog security capability. Arm it, and it quietly listens to the ambient sound level; the moment the environment crosses a threshold you define, it captures high‑fidelity audio to disk, then waits out a cooldown before it's allowed to trigger again. It keeps working whether the workstation is locked or not. Use it to detect unusual or suspicious sounds in your environment when you are away from your device.
+It is an environment audio watchdog security capability. Arm it, and it quietly listens to your surroundings; the moment the ambient sound level crosses a threshold you define, or someone says a phrase you choose, it captures high‑fidelity audio to disk, then waits out a cooldown before it's allowed to trigger again. It keeps working whether the workstation is locked or not. Use it to detect unusual or suspicious sounds in your environment when you are away from your device.
 
 > [!TIP]\
-> Example Scenario: You are away from your home and the Acoustic Sentry is armed on the device at your home. If a loud noise occurs, such as a window breaking, or door unlocking while you are away, the Sentry will automatically capture the audio and save it to the designated folder. You define how long it should record for each incident and control all aspects of it. **Set the save location to OneDrive and then listen to the recordings from anywhere in the world.** Your own private secure monitoring solution.
+> Example Scenario: You are away from your home and the Acoustic Sentry is armed on the device at your home. If a loud noise occurs, such as a window breaking, or door unlocking while you are away, the Sentry will automatically capture the audio and save it to the designated folder. You can also have it listen for a spoken phrase instead, such as "help me", so it only records when someone says those words. You define how long it should record for each incident and control all aspects of it. **Set the save location to OneDrive and then listen to the recordings from anywhere in the world.** Your own private secure monitoring solution.
 
 #### Highlights
 
-* **Decibel‑triggered capture**: Set a custom trigger level (in dBFS). When the ambient level reaches or exceeds it, recording begins automatically.
+* **Two trigger modes**: Choose what starts a recording from the **MODE** box. Only the settings of the selected mode are shown. The mode, the phrase, and the encryption choice can only be changed while the Sentry is disarmed; the trigger level, capture duration, gap, cycle limit, and folder apply right away, even while it is armed.
+   * **Decibel level**: Set a custom trigger level (in dBFS). When the ambient level reaches or exceeds it, recording begins automatically.
+   * **Spoken phrase**: Type a word or a few words. When someone says them, recording begins automatically, while other sounds, however loud, are ignored. See **Spoken phrase mode** below.
 
 * **Arm / Disarm**: A single toggle opens or releases the microphone. The mic is only ever held open while a session is armed, nothing is captured or monitored when idle.
 
@@ -226,7 +239,7 @@ It is a decibel‑triggered environment audio watchdog security capability. Arm 
 
 * **Highest audio quality**: Recordings are written as lossless WAV PCM at the microphone's native sample rate and channel count (24‑bit), no resampling, no fidelity loss.
 
-* **Live level graph**: A lightweight, scrolling meter shows the ambient level in real time and turns red the instant it crosses your trigger, so you can read the threshold straight off the graph. The meter only runs while the Sentry view is expanded and armed; it costs nothing otherwise.
+* **Live level graph**: In decibel level mode, a lightweight, scrolling meter shows the ambient level in real time and turns red the instant it crosses your trigger, so you can read the threshold straight off the graph. While the bar is collapsed, the standard notch shows the live dBFS reading in place of the view name. The meter only runs while the Sentry is armed and its view is expanded or shown on the standard notch; it costs nothing otherwise.
 
 * **Recordings Encryption**: For privacy and security, you can optionally choose to encrypt any existing recordings and also automatically encrypt any future recordings on disk with user or machine context.
    * User Context will only allow your own user account to decrypt them.
@@ -234,15 +247,53 @@ It is a decibel‑triggered environment audio watchdog security capability. Arm 
 
 * Very efficient and low system resource usage.
 
+#### Spoken phrase mode
+
+
+<div align="center">
+<a href="https://youtu.be/JLRsJfzyBR0">
+<img width="800" src="https://github.com/HotCakeX/.github/blob/main/Pictures/PNG%20and%20JPG/Audio%20Sentry%20Phrase%20Mode%20banner.png?raw=true" alt="Audio Sentry" />
+</a>
+</div>
+
+<br>
+
+* **Private, on‑device recognition**: Your phrase is recognized right on your device by the speech recognition built into Windows, in your system speech language, without any online service. Make sure a speech language is installed in the Settings app under **Time & language** > **Speech**.
+
+* **Choosing a phrase**: Type one or more words in your system speech language, up to 160 characters, in the **Spoken Phrase** box. Two or three distinct words work best and every word of a long phrase must be heard correctly.
+
+* **Said within other speech**: The phrase can be said on its own or in the middle of a sentence, but its words must be said in order and in one go.
+
+* **Only the words count**: Capitalization and punctuation don't matter, so "Help me!" and "help me" are the same phrase.
+
+* **See what it hears**: The words of your phrase light up green as they are heard, with a quick left‑to‑right flash, so you can test your phrase before you leave. If only part of the phrase is heard, those words light up too. The words stay lit while a recording is in progress and clear about 3 seconds after the last speech it heard.
+
+* **Phrase on the notch**: While the Sentry is armed in this mode and is the selected view, the standard notch shows your phrase in place of the view name, and its words light up the same way.
+
+* **Listening and recording take turns**: Listening pauses while a recording is in progress and starts again when the cooldown ends.
+
+* **Recovers on its own**: If the speech session stops by itself, for example when the microphone is briefly unavailable, the Sentry restarts it automatically and shows **Speech not ready** in the meantime. If it keeps stopping right after it starts, the Sentry disarms itself and tells you why.
+
+> [!NOTE]\
+> The speech recognition engine in Windows has a known issue where if you play an audio or video such as a YouTube video in the browser, while the Audio Sentry is armed, it might not be able to recognize the words spoken in the microphone, even if the audio of the video playback comes from the headphones or the video/audio being played is muted.
+
 #### Clear, actionable error reporting
 
-When a session can't be armed, the status area tells you exactly why:
+When a session can't be armed, or has to stop, the status area tells you exactly why:
 
 * Microphone muted, detected up front; the Sentry refuses to arm on a device that can't hear anything, instead of silently recording nothing.
 
 * Access turned off, surfaces a one‑click "Open mic settings" shortcut to the Windows microphone privacy page.
 
 * No microphone found / unsupported format, explained plainly.
+
+* An empty spoken phrase, or one without any words.
+
+* Speech recognition that can't start, with a reminder to install a speech language and allow microphone access.
+
+* A microphone or speech engine that doesn't respond within 15 seconds.
+
+* A failed capture, or spoken phrase listening that keeps stopping on its own; the Sentry disarms itself and shows what happened.
 
 ## The Companion
 
@@ -292,7 +343,7 @@ There are also quick buttons to **add** a new item to the current view, and to *
 
 - **It's light on your system.** The live tools only do their work while you're actually looking at them and the bar is open. A collapsed bar costs practically nothing.
 
-- **Your choices are remembered.** Your pinned apps, folders, websites, clocks, companion choice, notch style, Search **Max results** number, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
+- **Your choices are remembered.** Your pinned apps, folders, websites, clocks, companion choice, notch style, Search **Max results** number and large thumbnails choice, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
 
 - **One bar at a time.** Even if you have more than one copy of the app running, only a single TopBar is shown, so it never clutters your screen.
 

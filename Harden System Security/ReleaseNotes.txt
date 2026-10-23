@@ -1,14 +1,1 @@
-* The app can now be updated while in use, resolving the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1241
-
-* The Global Search service is no longer started automatically, it is now set to manual mode. Also was a request mentioned here: https://github.com/HotCakeX/Harden-Windows-Security/issues/1241
-
-* More Global Search improvements:
-
-    * You can now choose to search between files only, folders only or both (default)
-    * You can now choose to select only between pictures, videos, documents and so on. These filters help you find the items you are looking for faster.
-    * You can now choose how many results is returned for your seach query. Previously, the default limit was maximum 100, but now you can choose a value up to 10,000.
-    * The Global Search service now uses a compressed on-disk database which makes its RAM usage to be on average 2 MBs only, regardless of the number of the drives or files on the system. This makes the cold boot indexing after reboots extremely fast.
-    * The Global Search feature now offers an option to switch between the existing list view or album view where the thumbnails of the files, such as photos or videos, are much bigger, helping you find what you are looking for faster.
-    * Removed the OS-Drive-only indexing option from the Global Search and TopBar.    
-
 * Updated dependencies to the latest version.

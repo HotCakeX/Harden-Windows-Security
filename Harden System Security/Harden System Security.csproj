@@ -69,7 +69,7 @@
         <AssemblyName>HardenSystemSecurity</AssemblyName>
         <!-- https://learn.microsoft.com/dotnet/core/deploying/native-aot/optimizing -->
 
-        <FileVersion>1.0.99.0</FileVersion>
+        <FileVersion>1.0.100.0</FileVersion>
         <AssemblyVersion>$(FileVersion)</AssemblyVersion>
         <AssemblyProduct>HardenSystemSecurity</AssemblyProduct>
         <AssemblyCopyright>Copyright (c) 2023-Present - Violet Hansen</AssemblyCopyright>
@@ -277,7 +277,7 @@
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.23.0" />
         <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
         <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.2705" />
-        <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.6" />
+        <PackageReference Include="Microsoft.Identity.Client.NativeInterop" Version="0.20.7" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Base" Version="2.0.4" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Foundation" Version="2.3.12" />
         <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.9" />

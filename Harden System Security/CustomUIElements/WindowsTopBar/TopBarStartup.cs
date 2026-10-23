@@ -53,8 +53,9 @@ internal enum TopBarStartupState
 }
 
 /// <summary>
-/// Drives the startup task of the package that puts the top bar on the desktop when the user signs in to Windows.
-/// The task is declared as disabled in the package manifest, so it only ever runs after the user asks for it here.
+/// Drives the startup tasks of the package: the one that puts the top bar on the desktop when the user signs in to Windows,
+/// and the one that starts the Global Search service so it builds its index at sign in.
+/// The tasks are declared as disabled in the package manifest, so they only ever run after the user asks for them here.
 /// </summary>
 internal static class TopBarStartupManager
 {
@@ -64,9 +65,19 @@ internal static class TopBarStartupManager
 	private const string StartupTaskId = "HardenSystemSecurityWindowsTopBar";
 
 	/// <summary>
+	/// Has to stay identical to the TaskId of the Global Search windows.startupTask extension of the package manifest.
+	/// </summary>
+	internal const string GlobalSearchStartupTaskId = "HardenSystemSecurityGlobalSearch";
+
+	/// <summary>
 	/// Used by the Startup task and JumpList to detect TopBar-only launches.
 	/// </summary>
 	internal const string WindowsTopBarLaunchArgument = "--windows-top-bar";
+
+	/// <summary>
+	/// Used by the Global Search startup task to start the service with indexing at startup.
+	/// </summary>
+	internal const string GlobalSearchLaunchArgument = "--startGlobalSearch";
 
 	/// <summary>
 	/// Reduces what Windows reports to the outcomes that the bar acts on.
@@ -82,11 +93,11 @@ internal static class TopBarStartupManager
 	/// <summary>
 	/// Asks Windows what it currently does with the startup task, without changing anything about it.
 	/// </summary>
-	internal static async Task<TopBarStartupState> GetStateAsync()
+	internal static async Task<TopBarStartupState> GetStateAsync(string taskId = StartupTaskId)
 	{
 		try
 		{
-			StartupTask task = await StartupTask.GetAsync(StartupTaskId);
+			StartupTask task = await StartupTask.GetAsync(taskId);
 
 			return Translate(task.State);
 		}
@@ -103,11 +114,11 @@ internal static class TopBarStartupManager
 	/// The state that comes back is the one that Windows settled on, which is not always the one that was asked for,
 	/// because a user or a policy that switched the entry off cannot be overridden by any API.
 	/// </summary>
-	internal static async Task<TopBarStartupState> SetAsync(bool enabled)
+	internal static async Task<TopBarStartupState> SetAsync(bool enabled, string taskId = StartupTaskId)
 	{
 		try
 		{
-			StartupTask task = await StartupTask.GetAsync(StartupTaskId);
+			StartupTask task = await StartupTask.GetAsync(taskId);
 
 			if (!enabled)
 			{
@@ -119,7 +130,7 @@ internal static class TopBarStartupManager
 
 				// Reading the task again is what tells the truth, because an entry that a policy forces on
 				// stays on no matter what was just asked of it.
-				StartupTask refreshedTask = await StartupTask.GetAsync(StartupTaskId);
+				StartupTask refreshedTask = await StartupTask.GetAsync(taskId);
 
 				return Translate(refreshedTask.State);
 			}

@@ -140,6 +140,8 @@ internal sealed partial class TopBar
 
 	private static async Task<(long[] Counts, int Skipped)> ReadDriveStatisticsAsync(string drive, CancellationToken token)
 	{
+		// The manual Global Search service stops itself when idle, so start it first if it is not running.
+		await QuantumRelayHSS.ServiceStarter.StartServiceAsync(Atlas.GlobalSearchServiceName, TimeSpan.FromSeconds(30), cancellationToken: token).ConfigureAwait(false);
 		using NamedPipeClientStream pipe = new(".", "GlobalSearchHSS_FileStatisticsPipe",
 			PipeAccessRights.ReadData | PipeAccessRights.WriteData | PipeAccessRights.ReadAttributes | PipeAccessRights.Synchronize,
 			PipeOptions.Asynchronous, TokenImpersonationLevel.Impersonation, HandleInheritability.None);

@@ -94,12 +94,12 @@ Global Search is designed for fast searches across every local **NTFS** and **Re
 
 - **Use native file actions.** Right-click or tap and hold on a result to access rich Windows file operations and other actions relevant to that item.
 
-- **Automatic background indexing.** A dedicated LocalSystem service builds and maintains the search indexes using the fastest available file-system mechanisms. The service has 2 modes, either starts automatically with Windows so Global Search is ready when you need it, or it can start indexing as soon as you start typing in the search box. (this is the default behavior)
+- **On-demand background indexing.** A dedicated LocalSystem service builds and maintains the search indexes using the fastest available file-system mechanisms. The Top Bar starts it when you start typing in the search box or load drive statistics, and indexing begins at that point (this is the default behavior). If you enable the **Index at Windows startup** option, a startup task starts the service when you sign in to Windows, so the index is ready when you need it. You can also turn that startup task on or off from the Startup apps page in the Settings app.
 
-- **Resource-conscious index lifetime.** After the initial index finishes building, the service releases inactive indexes from memory if no search is performed within 10 minutes. After the first search or the initial idle unload, indexes are released after one hour of search inactivity and rebuilt automatically when they are needed again.
+- **Resource-conscious service lifetime.** The service turns itself off if it is not used within 10 minutes after it starts or after it finishes building the initial index. After the first search, it turns itself off after one hour without searches. The Top Bar starts it again automatically the next time it is needed.
 
 > [!NOTE]\
-> The first search after an idle unload can take longer because the service must rebuild the required indexes.
+> The first search after the service turned itself off can take longer because the service must start and rebuild the required indexes.
 
 #### Drive Statistics
 

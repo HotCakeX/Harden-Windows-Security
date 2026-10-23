@@ -130,6 +130,14 @@ internal static partial class SearchServiceHost
 	private static int Main()
 	{
 		NativeEventLogger.EnsureSourceRegistered(ServiceName);
+		// Remove the machine variable older versions used for indexing at startup.
+		const string LegacyStartupVariable = "HardenSystemSecurity_GlobalSearchIndexAtStartup";
+		try
+		{
+			if (Environment.GetEnvironmentVariable(LegacyStartupVariable, EnvironmentVariableTarget.Machine) is not null)
+				Environment.SetEnvironmentVariable(LegacyStartupVariable, null, EnvironmentVariableTarget.Machine);
+		}
+		catch (Exception exception) { SearchLog.ReportError(exception); }
 		nint name = Marshal.StringToHGlobalUni(ServiceName);
 		try
 		{
@@ -153,17 +161,21 @@ internal static partial class SearchServiceHost
 	}
 
 	[UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
-	private static void ServiceMainCallback(uint count, nint arguments) => ServiceMain();
+	private static unsafe void ServiceMainCallback(uint count, nint arguments) =>
+		ServiceMain(count > 1 && string.Equals(new string(((char**)arguments)[1]), Atlas.GlobalSearchIndexAtStartupArgument, StringComparison.OrdinalIgnoreCase));
 
 	[UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
 	private static uint ControlCallback(uint control, uint eventType, nint eventData, nint context)
 	{
-		if (control is NativeMethods.SERVICE_CONTROL_STOP or NativeMethods.SERVICE_CONTROL_SHUTDOWN)
-		{
-			_stop?.Cancel();
-			_pipe?.Dispose();
-		}
+		if (control is NativeMethods.SERVICE_CONTROL_STOP or NativeMethods.SERVICE_CONTROL_SHUTDOWN) RequestStop();
 		return 0;
+	}
+
+	// Ends the listeners so ServiceMain reports SERVICE_STOPPED; used by SCM controls and the idle timeout.
+	private static void RequestStop()
+	{
+		_stop?.Cancel();
+		_pipe?.Dispose();
 	}
 
 	private static void SetStatus(SERVICE_STATE state, uint accepted = 0, uint checkpoint = 0)
@@ -180,7 +192,7 @@ internal static partial class SearchServiceHost
 			SearchLog.ReportError(new Win32Exception(Marshal.GetLastPInvokeError(), "SetServiceStatus failed"));
 	}
 
-	private static void ServiceMain()
+	private static void ServiceMain(bool indexAtStartup)
 	{
 		_status = NativeMethods.RegisterServiceCtrlHandlerExW(ServiceName,
 			(nint)(delegate* unmanaged[Stdcall]<uint, uint, nint, nint, uint>)&ControlCallback, 0);
@@ -196,7 +208,7 @@ internal static partial class SearchServiceHost
 			SetStatus(SERVICE_STATE.SERVICE_START_PENDING);
 			EnableStartupSecurityPrivilege();
 			// Report RUNNING promptly while the worker starts the listeners and optional startup index.
-			Task worker = Task.Run(() => ServeWithStatisticsAsync(stop.Token));
+			Task worker = Task.Run(() => ServeWithStatisticsAsync(indexAtStartup, stop.Token));
 			SetStatus(SERVICE_STATE.SERVICE_RUNNING, NativeMethods.SERVICE_ACCEPT_STOP | NativeMethods.SERVICE_ACCEPT_SHUTDOWN);
 			worker.GetAwaiter().GetResult();
 		}
@@ -214,7 +226,7 @@ internal static partial class SearchServiceHost
 		? $"{win32.Message} (Win32 error {win32.NativeErrorCode}: {new Win32Exception(win32.NativeErrorCode).Message})"
 		: exception.Message;
 
-	private static async Task ServeAsync(IndexState state, CancellationToken cancellationToken)
+	private static async Task ServeAsync(IndexState state, bool indexAtStartup, CancellationToken cancellationToken)
 	{
 		try
 		{
@@ -226,12 +238,12 @@ internal static partial class SearchServiceHost
 			using NamedPipeServerStream startupPipe = CreatePipeWithMandatoryLabel(security);
 			_pipe = startupPipe;
 			bool firstPipe = true;
-			// Missing, invalid or unreadable machine values leave indexing request-driven.
+			// Arm the idle timeout now, so a start that never receives a request still stops the service.
+			lock (state.Sync) state.ResetIdleTimer();
+			// Only the Global Search startup task asks for indexing at start; other starts stay request-driven.
 			try
 			{
-				if (string.Equals(Environment.GetEnvironmentVariable("HardenSystemSecurity_GlobalSearchIndexAtStartup",
-					EnvironmentVariableTarget.Machine), "STARTUP", StringComparison.OrdinalIgnoreCase))
-					state.EnsureIndexes(cancellationToken);
+				if (indexAtStartup) state.EnsureIndexes(cancellationToken);
 			}
 			catch (Exception exception) when (!cancellationToken.IsCancellationRequested) { SearchLog.ReportError(exception); }
 			while (!cancellationToken.IsCancellationRequested)
@@ -329,7 +341,7 @@ internal static partial class SearchServiceHost
 	}
 
 	// One service-wide index and one one-shot timer. All index operations use the
-	// same lock, so the timer cannot dispose a volume during refresh or search.
+	// same lock, so the idle timeout cannot stop the service during refresh or search.
 	private sealed class IndexState : IDisposable
 	{
 		internal readonly Lock Sync = new();
@@ -339,13 +351,13 @@ internal static partial class SearchServiceHost
 		// Searches answered since the last periodic reclamation, across all sessions. Guarded by Sync.
 		internal int SearchesSinceReclaim;
 		private long idleDeadline = long.MaxValue;
-		// Ten minutes initially; one hour after the first query or initial idle unload.
+		// Ten minutes initially; one hour after the first query.
 		internal TimeSpan IdleDelay = TimeSpan.FromMinutes(10);
 
 		internal IndexState() => IdleTimer = new(static value => ((IndexState)value!).OnIdleTimerTick(),
 			this, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
 
-		// Startup, queries and statistics share one build gate, including retries after unload.
+		// Startup, queries and statistics share one build gate, including retries after a failed build.
 		internal void EnsureIndexes(CancellationToken token)
 		{
 			lock (Sync)
@@ -360,7 +372,7 @@ internal static partial class SearchServiceHost
 
 		private void OnIdleTimerTick()
 		{
-			try { UnloadIfIdle(); }
+			try { StopIfIdle(); }
 			catch (Exception exception) { SearchLog.ReportError(exception); }
 		}
 
@@ -377,11 +389,12 @@ internal static partial class SearchServiceHost
 			_ = IdleTimer.Change(Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
 		}
 
-		private void UnloadIfIdle()
+		// The service stops itself once idle; the Top Bar starts it again when it is needed.
+		private void StopIfIdle()
 		{
 			lock (Sync)
 			{
-				if (Unloaded || idleDeadline == long.MaxValue) return;
+				if (idleDeadline == long.MaxValue) return;
 				long now = Stopwatch.GetTimestamp();
 				if (now < idleDeadline)
 				{
@@ -390,20 +403,8 @@ internal static partial class SearchServiceHost
 					return;
 				}
 				StopIdleTimer();
-				ReleaseIndexes();
-				Unloaded = true;
-				IdleDelay = TimeSpan.FromHours(1);
-				// Collect only once per idle unload, after ReleaseIndexes has returned
-				// so its last VolumeIndex local cannot keep the final volume alive.
-				ReclaimReleasedIndexMemory();
+				RequestStop();
 			}
-		}
-
-		private void ReleaseIndexes()
-		{
-			foreach (VolumeIndex index in Indexes) index.Dispose();
-			Indexes.Clear();
-			Indexes.TrimExcess();
 		}
 
 		public void Dispose()
@@ -412,7 +413,8 @@ internal static partial class SearchServiceHost
 			{
 				StopIdleTimer();
 				IdleTimer.Dispose();
-				ReleaseIndexes();
+				foreach (VolumeIndex index in Indexes) index.Dispose();
+				Indexes.Clear();
 			}
 		}
 	}
@@ -554,7 +556,7 @@ internal static partial class SearchServiceHost
 				{
 					if (state.Unloaded && query.Length != 0)
 					{
-						// Notify the client before the synchronous build, including rebuilds after idle unload.
+						// Notify the client before the synchronous build, including retries after a failed build.
 						writer.Write((byte)5); // Indexing; the normal result frame still follows.
 						writer.Flush();
 						// Keep build failures distinct from ordinary client disconnects.

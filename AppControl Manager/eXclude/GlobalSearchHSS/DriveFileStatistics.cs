@@ -96,13 +96,13 @@ internal static partial class SearchServiceHost
 {
 	private const string StatisticsPipeName = "GlobalSearchHSS_FileStatisticsPipe";
 
-	private static async Task ServeWithStatisticsAsync(CancellationToken token)
+	private static async Task ServeWithStatisticsAsync(bool indexAtStartup, CancellationToken token)
 	{
 		using IndexState state = new();
 		using CancellationTokenSource lifetime = CancellationTokenSource.CreateLinkedTokenSource(token);
 		// Await inside the delegate so the disposable index lifetime is explicit.
 		Task statistics = Task.Run(async () => await ServeStatisticsAsync(state, lifetime.Token).ConfigureAwait(false), token);
-		try { await ServeAsync(state, token).ConfigureAwait(false); }
+		try { await ServeAsync(state, indexAtStartup, token).ConfigureAwait(false); }
 		finally
 		{
 			// Always join the worker before disposing its state, even if a cancellation callback fails.
@@ -117,7 +117,7 @@ internal static partial class SearchServiceHost
 	private static (long[] Counts, int Skipped) CalculateDriveStatistics(IndexState state, char drive, CancellationToken token)
 	{
 		// Count from the shared search index when it covers this drive, so a second
-		// index of the same volume is never built. Holding Sync blocks idle unload,
+		// index of the same volume is never built. Holding Sync blocks the idle stop,
 		// searches and refreshes while the entries are enumerated.
 		lock (state.Sync)
 		{
@@ -176,6 +176,8 @@ internal static partial class SearchServiceHost
 						token.ThrowIfCancellationRequested();
 						// A valid statistics request also activates the shared search index.
 						state.EnsureIndexes(token);
+						// Statistics are activity too, so the idle timeout cannot stop the service while they are calculated.
+						lock (state.Sync) state.StopIdleTimer();
 						try
 						{
 							(counts, skipped) = CalculateDriveStatistics(state, (char)request[2], token);
@@ -185,6 +187,7 @@ internal static partial class SearchServiceHost
 							// The calculation frame has unwound and disposed any private index.
 							// Reclaim after success, failure or cancellation, before the next drive.
 							ReclaimReleasedIndexMemory();
+							if (!token.IsCancellationRequested) lock (state.Sync) state.ResetIdleTimer();
 						}
 					}
 					catch (Exception exception) when (!token.IsCancellationRequested)

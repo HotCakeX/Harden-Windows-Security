@@ -26,10 +26,11 @@ internal static partial class ServiceStarter
 {
 	/// <summary>
 	/// Starts the given service and waits until it reaches "running" status or the timeout/cancellation is hit.
+	/// The optional argument is passed to the service only when this call starts it.
 	/// </summary>
 	/// <exception cref="ArgumentOutOfRangeException"></exception>
 	/// <exception cref="Win32Exception"></exception>
-	internal static async Task StartServiceAsync(string serviceName, TimeSpan timeout, CancellationToken cancellationToken = default)
+	internal static async Task StartServiceAsync(string serviceName, TimeSpan timeout, string? argument = null, CancellationToken cancellationToken = default)
 	{
 		if (timeout <= TimeSpan.Zero)
 		{
@@ -73,7 +74,7 @@ internal static partial class ServiceStarter
 			}
 
 			// Attempt to start (ignore "already running" error).
-			bool startOk = NativeMethods.StartServiceW(serviceHandle, 0, IntPtr.Zero);
+			bool startOk = StartService(serviceHandle, argument);
 			if (!startOk)
 			{
 				int error = Marshal.GetLastPInvokeError();
@@ -112,6 +113,17 @@ internal static partial class ServiceStarter
 			{
 				Logger.Write(ex);
 			}
+		}
+	}
+
+	// The SCM passes the service name as the first argument; the optional argument follows it.
+	private static bool StartService(IntPtr serviceHandle, string? argument)
+	{
+		if (argument is null) return NativeMethods.StartServiceW(serviceHandle, 0, IntPtr.Zero);
+		fixed (char* value = argument)
+		{
+			char* vector = value;
+			return NativeMethods.StartServiceW(serviceHandle, 1, (IntPtr)(&vector));
 		}
 	}
 

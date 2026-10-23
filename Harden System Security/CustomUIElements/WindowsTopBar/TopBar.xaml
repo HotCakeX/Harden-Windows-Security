@@ -1015,12 +1015,12 @@
                                     <FontIcon Glyph="&#xED37;"/>
                                 </ToggleMenuFlyoutItem.Icon>
                             </ToggleMenuFlyoutItem>
-                            <!-- Only an explicit startup opt-in bypasses request-driven indexing. -->
+                            <!-- Enables or disables the Global Search startup task, which is disabled by default. -->
                             <ToggleMenuFlyoutItem x:Name="SearchIndexAtStartupToggle"
                                                   Text="Index at Windows startup"
                                                   IsEnabled="False"
-                                                  Loaded="{x:Bind OnSearchScopeLoaded}"
-                                                  Click="{x:Bind OnSearchScopeToggled}">
+                                                  Loaded="{x:Bind OnSearchStartupLoaded}"
+                                                  Click="{x:Bind OnSearchStartupToggled}">
                                 <ToggleMenuFlyoutItem.Icon>
                                     <FontIcon Glyph="&#xF71C;"/>
                                 </ToggleMenuFlyoutItem.Icon>

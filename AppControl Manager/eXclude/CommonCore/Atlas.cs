@@ -31,7 +31,10 @@ internal static partial class Atlas
 {
 	internal const string QuantumRelayHSSServiceName = "QuantumRelayHSS";
 	internal const string QuantumRelayHSSPipeName = $"{QuantumRelayHSSServiceName}_CommandPipe";
+	internal const string GlobalSearchServiceName = "GlobalSearchHSS";
 	internal const string GlobalSearchPipeName = "GlobalSearchHSS_SearchPipe";
+	// Service start argument passed only by the Global Search startup task, so the service indexes right away.
+	internal const string GlobalSearchIndexAtStartupArgument = "STARTUP";
 
 	// User Mode block rules
 	//internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");

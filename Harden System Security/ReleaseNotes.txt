@@ -1,1 +1,3 @@
 * The app can now be updated while in use, resolving the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1241
+
+* The Global Search service is no longer started automatically, it is now set to manual mode. Also was a request mentioned here: https://github.com/HotCakeX/Harden-Windows-Security/issues/1241

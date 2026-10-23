@@ -79,6 +79,8 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 				NamedPipeClientStream? pipe = null;
 				try
 				{
+					// The manual service stops itself when idle, so start it first if it is not running.
+					await Task.Run(() => QuantumRelayHSS.ServiceStarter.StartServiceAsync(Atlas.GlobalSearchServiceName, TimeSpan.FromSeconds(30), cancellationToken: token), token);
 					// Match the service's 0x00100083 client grant without requesting server-instance creation.
 					pipe = new NamedPipeClientStream(".", Atlas.GlobalSearchPipeName,
 						PipeAccessRights.ReadData | PipeAccessRights.WriteData | PipeAccessRights.ReadAttributes | PipeAccessRights.Synchronize,
@@ -90,8 +92,10 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 					if (!string.IsNullOrWhiteSpace(_query)) _ = _queryChanged.Writer.TryWrite(true);
 					NamedPipeClientStream connectedPipe = pipe;
 					string? rejectedQuery = await Task.Run(() => Exchange(connectedPipe));
+					// The idle service closed this session; reconnect at once, which starts it and reissues the query.
+					if (rejectedQuery is null) continue;
 					// Use the existing result callback on the UI thread; -1 identifies an explicit rejection.
-					if (!_disposed && rejectedQuery is not null) _results(rejectedQuery, [], -1);
+					if (!_disposed) _results(rejectedQuery, [], -1);
 				}
 				catch (OperationCanceledException) when (token.IsCancellationRequested) { break; }
 				catch (ObjectDisposedException) when (token.IsCancellationRequested) { break; }
@@ -138,9 +142,15 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			_receivedResponse = false;
 			QueueSearchStatus(query, "Searching, please wait...");
 			// Only the service decides whether the declared UTF-8 length is acceptable.
-			output.Write7BitEncodedInt(Encoding.UTF8.GetByteCount(query));
-			output.Flush();
-			byte admission = input.ReadByte();
+			byte admission;
+			try
+			{
+				output.Write7BitEncodedInt(Encoding.UTF8.GetByteCount(query));
+				output.Flush();
+				admission = input.ReadByte();
+			}
+			// The service stopped itself while this connection was idle.
+			catch (IOException) { return null; }
 			if (admission == 3) return query;
 			if (admission != 4) throw new InvalidDataException("Unexpected search admission response.");
 			output.Write(query.AsSpan()); // Raw payload; its length has already been sent.

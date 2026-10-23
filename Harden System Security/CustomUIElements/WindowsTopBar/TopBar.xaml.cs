@@ -5954,45 +5954,34 @@ internal sealed partial class TopBar : Window, IDisposable
 			SearchOsDriveOnlyToggle.IsChecked = string.Equals(
 				Environment.GetEnvironmentVariable(Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
 				"OS", StringComparison.OrdinalIgnoreCase);
-			SearchIndexAtStartupToggle.IsChecked = string.Equals(
-				Environment.GetEnvironmentVariable(Program.GlobalSearchStartupVariable, EnvironmentVariableTarget.Machine),
-				"STARTUP", StringComparison.OrdinalIgnoreCase);
 			SearchOsDriveOnlyToggle.IsEnabled = true;
-			SearchIndexAtStartupToggle.IsEnabled = true;
 			_searchScopeReady = true;
 		}
 		catch (Exception exception)
 		{
 			Logger.Write(exception);
 			SearchOsDriveOnlyToggle.IsEnabled = false;
-			SearchIndexAtStartupToggle.IsEnabled = false;
 		}
 	}
 
-	private async void OnSearchScopeToggled(object sender, RoutedEventArgs e)
+	private async void OnSearchScopeToggled()
 	{
 		if (!_searchScopeReady) return;
 		_searchScopeReady = false;
 		_searchScopePending = true;
 		SearchOsDriveOnlyToggle.IsEnabled = false;
-		SearchIndexAtStartupToggle.IsEnabled = false;
-		// Both settings share elevation, read-back and pending-state handling.
-		bool scope = ReferenceEquals(sender, SearchOsDriveOnlyToggle);
-		string variable = scope ? Program.GlobalSearchScopeVariable : Program.GlobalSearchStartupVariable;
-		string argument = scope ? "--global-search-scope" : "--global-search-startup";
-		string requested = scope ? (SearchOsDriveOnlyToggle.IsChecked ? "OS" : "ALL")
-			: (SearchIndexAtStartupToggle.IsChecked ? "STARTUP" : "REQUEST");
+		string requested = SearchOsDriveOnlyToggle.IsChecked ? "OS" : "ALL";
 		bool saved = false;
 		try
 		{
-			if (Relaunch.Start(Atlas.AUMID, $"{argument} {requested}", Relaunch.Context.Elevated))
+			if (Relaunch.Start(Atlas.AUMID, $"--global-search-scope {requested}", Relaunch.Context.Elevated))
 			{
 				// Activation completes before the elevated process writes the machine value.
 				for (int attempt = 0; attempt < 50 && !saved && !_isClosed; attempt++)
 				{
 					await Task.Delay(100);
 					saved = string.Equals(Environment.GetEnvironmentVariable(
-						variable, EnvironmentVariableTarget.Machine),
+						Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
 						requested, StringComparison.OrdinalIgnoreCase);
 				}
 			}
@@ -6002,9 +5991,31 @@ internal sealed partial class TopBar : Window, IDisposable
 		_searchScopePending = false;
 		OnSearchScopeLoaded();
 		if (SearchOsDriveOnlyToggle.IsEnabled)
-			SearchStatusText.Text = saved
-				? (scope ? "Scope saved; takes effect on the next index build." : "Startup indexing saved; takes effect on the next service start.")
-				: "Search setting change was not saved.";
+			SearchStatusText.Text = saved ? "Scope saved; takes effect on the next index build." : "Search setting change was not saved.";
+	}
+
+	// The Global Search startup task starts the manual service at sign in so it indexes right away; no elevation is needed.
+	private async void OnSearchStartupLoaded() =>
+		ApplySearchStartupState(await TopBarStartupManager.GetStateAsync(TopBarStartupManager.GlobalSearchStartupTaskId));
+
+	private async void OnSearchStartupToggled()
+	{
+		bool requested = SearchIndexAtStartupToggle.IsChecked;
+		SearchIndexAtStartupToggle.IsEnabled = false;
+		TopBarStartupState state = await TopBarStartupManager.SetAsync(requested, TopBarStartupManager.GlobalSearchStartupTaskId);
+		if (_isClosed) return;
+		ApplySearchStartupState(state);
+		SearchStatusText.Text = SearchIndexAtStartupToggle.IsChecked == requested
+			? "Startup indexing saved; takes effect at the next sign in."
+			: "Startup indexing was not changed; it is controlled by the Startup apps settings or a policy.";
+	}
+
+	// Windows forbids the app from switching back on a startup task that the user or a policy switched off.
+	private void ApplySearchStartupState(TopBarStartupState state)
+	{
+		if (_isClosed) return;
+		SearchIndexAtStartupToggle.IsChecked = state is TopBarStartupState.Enabled;
+		SearchIndexAtStartupToggle.IsEnabled = state is TopBarStartupState.Enabled or TopBarStartupState.Disabled;
 	}
 
 	/// <summary>

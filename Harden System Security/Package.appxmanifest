@@ -287,6 +287,17 @@
                             DisplayName="Harden System Security Clipboard Monitor" />
         </uap5:Extension>
 
+        <!-- Starts the manual Global Search service at user sign-in so it builds its index right away. -->
+        <!-- It is declared as disabled; the "Index at Windows startup" option of the Top Bar enables it via the StartupTask class. -->
+        <uap5:Extension Category="windows.startupTask"
+                        Executable="HardenSystemSecurity.exe"
+                        EntryPoint="Windows.FullTrustApplication"
+                        uap10:Parameters="--startGlobalSearch">
+          <uap5:StartupTask TaskId="HardenSystemSecurityGlobalSearch"
+                            Enabled="false"
+                            DisplayName="Harden System Security Global Search" />
+        </uap5:Extension>
+
         <!-- POL File Association -->
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name="harden-system-security.grouppolicy" DesiredView="default">
@@ -301,8 +312,9 @@
         </uap:Extension>
 
         <!-- Global Search Service -->
+        <!-- Started on demand by the Top Bar or the Global Search startup task, and stops itself when idle. -->
         <desktop6:Extension Category="windows.service" Executable="GlobalSearchHSS.exe" EntryPoint="main">
-            <desktop6:Service Name="GlobalSearchHSS" StartupType="auto" StartAccount="localSystem" />
+            <desktop6:Service Name="GlobalSearchHSS" StartupType="manual" StartAccount="localSystem" />
         </desktop6:Extension>
         <!-- Quantum Relay Service -->
         <desktop6:Extension Category="windows.service" Executable="QuantumRelayHSS.exe" EntryPoint="main">

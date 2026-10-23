@@ -32,7 +32,6 @@ internal static class Program
 	private static string[] _launchArguments = [];
 #if HARDEN_SYSTEM_SECURITY
 	internal const string GlobalSearchScopeVariable = "HardenSystemSecurity_GlobalSearchScope";
-	internal const string GlobalSearchStartupVariable = "HardenSystemSecurity_GlobalSearchIndexAtStartup";
 #endif
 
 	/// <summary>
@@ -100,18 +99,31 @@ internal static class Program
 				Environment.Exit(ClipboardMonitor.Run());
 			}
 			// Persist only supported search settings in the machine-wide environment.
-			if (string.Equals(args[0], "--global-search-scope", StringComparison.OrdinalIgnoreCase) ||
-				string.Equals(args[0], "--global-search-startup", StringComparison.OrdinalIgnoreCase))
+			if (string.Equals(args[0], "--global-search-scope", StringComparison.OrdinalIgnoreCase))
 			{
 				try
 				{
-					bool scope = string.Equals(args[0], "--global-search-scope", StringComparison.OrdinalIgnoreCase);
 					if (args.Length != 2 ||
-						(!string.Equals(args[1], scope ? "OS" : "STARTUP", StringComparison.OrdinalIgnoreCase) &&
-						 !string.Equals(args[1], scope ? "ALL" : "REQUEST", StringComparison.OrdinalIgnoreCase)))
+						(!string.Equals(args[1], "OS", StringComparison.OrdinalIgnoreCase) &&
+						 !string.Equals(args[1], "ALL", StringComparison.OrdinalIgnoreCase)))
 						throw new ArgumentException("Invalid Global Search setting.");
-					Environment.SetEnvironmentVariable(scope ? GlobalSearchScopeVariable : GlobalSearchStartupVariable,
-						args[1], EnvironmentVariableTarget.Machine);
+					Environment.SetEnvironmentVariable(GlobalSearchScopeVariable, args[1], EnvironmentVariableTarget.Machine);
+					Environment.Exit(0);
+				}
+				catch (Exception exception)
+				{
+					Logger.Write(exception);
+					Environment.Exit(1);
+				}
+			}
+
+			// Global Search startup task: start the manual service and ask it to build its index right away.
+			if (string.Equals(args[0], CustomUIElements.WindowsTopBar.TopBarStartupManager.GlobalSearchLaunchArgument, StringComparison.OrdinalIgnoreCase))
+			{
+				try
+				{
+					QuantumRelayHSS.ServiceStarter.StartServiceAsync(Atlas.GlobalSearchServiceName, TimeSpan.FromSeconds(30),
+						argument: Atlas.GlobalSearchIndexAtStartupArgument).GetAwaiter().GetResult();
 					Environment.Exit(0);
 				}
 				catch (Exception exception)

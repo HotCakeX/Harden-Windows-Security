@@ -610,6 +610,9 @@ internal sealed partial class TopBar : Window, IDisposable
 		_viewTiles[TopBarView.Search] = [new TopBarTile(SearchPanel, AttachEntranceTransform(SearchPanel))];
 		// The change handler skips this value because it matches the saved limit.
 		SearchLimitBox.Value = Atlas.Settings.WindowsTopBarSearchResultLimit;
+		// Click is raised only by the user, so the saved way of showing the results is applied here.
+		SearchLargeThumbnailsToggle.IsChecked = Atlas.Settings.WindowsTopBarSearchLargeThumbnails;
+		ApplySearchItemTemplate();
 		InitializeSentryView();
 
 		RebuildAppTiles();
@@ -4025,7 +4028,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			}
 			// Default layout fits the viewport. A manually widened Path may overflow into the ListView's scrollbar.
 			if (!_searchPathResized)
-				SearchPathWidth.Width = new GridLength(Math.Max(80.0, availableWidthDips - SearchThumbnailColumnWidth -
+				SearchPathWidth.Width = new GridLength(Math.Max(80.0, availableWidthDips - SearchThumbnailHeaderColumn.Width.Value -
 					SearchColumnManager.ColumnWidths[0].Width.Value - SearchColumnManager.ColumnWidths[1].Width.Value -
 					SearchColumnManager.ColumnWidths[2].Width.Value - 24.0));
 		}
@@ -5865,9 +5868,13 @@ internal sealed partial class TopBar : Window, IDisposable
 
 	/// <summary>
 	/// Fixed leading column is excluded from text measurement and Path resizing.
-	/// It is set manually in the XAML too and must match it always.
+	/// Each width is set manually in its XAML item template too and must match it always.
 	/// </summary>
 	internal const double SearchThumbnailColumnWidth = 36.0;
+	internal const double SearchLargeThumbnailColumnWidth = 104.0;
+
+	// The width and height of the Image in the large item template. It is set manually in the XAML too and must match it always.
+	private const int SearchLargeThumbnailSize = 96;
 
 	[DynamicWindowsRuntimeCast(typeof(Image))]
 	private async void OnSearchThumbnailLoaded(object sender, RoutedEventArgs e)
@@ -5889,6 +5896,10 @@ internal sealed partial class TopBar : Window, IDisposable
 	{
 		if (_isClosed || !icon.IsLoaded || icon.DataContext is not TopBarSearchResult result) return;
 		CancellationToken cancellationToken = _searchThumbnailCancellation.Token;
+		// The Image of the large item template asks for a preview in the original aspect ratio, and the compact one for a small square icon.
+		bool large = icon.Width >= SearchLargeThumbnailSize;
+		ThumbnailMode mode = large ? ThumbnailMode.SingleItem : ThumbnailMode.ListView;
+		uint requestedSize = large ? SearchLargeThumbnailSize : 40U;
 		try
 		{
 			await FileIconLoadGate.WaitAsync(cancellationToken);
@@ -5900,19 +5911,31 @@ internal sealed partial class TopBar : Window, IDisposable
 				if (result.IsDirectory)
 				{
 					StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(result.Path);
-					thumbnail = await folder.GetThumbnailAsync(ThumbnailMode.ListView, 40U, ThumbnailOptions.UseCurrentScale);
+					thumbnail = await folder.GetThumbnailAsync(mode, requestedSize, ThumbnailOptions.UseCurrentScale);
 				}
 				else
 				{
 					StorageFile file = await StorageFile.GetFileFromPathAsync(result.Path);
-					thumbnail = await file.GetThumbnailAsync(ThumbnailMode.ListView, 40U, ThumbnailOptions.UseCurrentScale);
+					thumbnail = await file.GetThumbnailAsync(mode, requestedSize, ThumbnailOptions.UseCurrentScale);
 				}
 				using (thumbnail)
 				{
-					if (cancellationToken.IsCancellationRequested || !icon.IsLoaded || !ReferenceEquals(icon.DataContext, result))
+					// Windows returns no thumbnail when an item has none.
+					if (thumbnail is null || cancellationToken.IsCancellationRequested || !icon.IsLoaded || !ReferenceEquals(icon.DataContext, result))
 						return;
 
-					BitmapImage bitmap = new() { DecodePixelWidth = 40 };
+					BitmapImage bitmap = new();
+					// A large preview is decoded along its longer edge at the physical size of its box,
+					// so it stays sharp at any display scale without keeping a bigger bitmap in memory.
+					int decodePixels = large ? (int)Math.Round(SearchLargeThumbnailSize * _rasterizationScale) : 40;
+					if (large && thumbnail.OriginalHeight > thumbnail.OriginalWidth)
+					{
+						bitmap.DecodePixelHeight = decodePixels;
+					}
+					else
+					{
+						bitmap.DecodePixelWidth = decodePixels;
+					}
 					await bitmap.SetSourceAsync(thumbnail);
 
 					if (!cancellationToken.IsCancellationRequested && icon.IsLoaded && ReferenceEquals(icon.DataContext, result))
@@ -5938,8 +5961,6 @@ internal sealed partial class TopBar : Window, IDisposable
 	// The selected kind: 0 files and folders, 1 files only, 2 folders only.
 	private byte _searchKind;
 	private CancellationTokenSource _searchThumbnailCancellation = new();
-	private bool _searchScopeReady;
-	private bool _searchScopePending;
 	private Task _searchDisposalTask = Task.CompletedTask;
 	private IntPtr _shellContextMenu2;
 	private IntPtr _shellContextMenu3;
@@ -5948,55 +5969,6 @@ internal sealed partial class TopBar : Window, IDisposable
 	private static readonly Guid ContextMenuInterfaceId = new("000214E4-0000-0000-C000-000000000046");
 	private static readonly Guid ContextMenu2InterfaceId = new("000214F4-0000-0000-C000-000000000046");
 	private static readonly Guid ContextMenu3InterfaceId = new("BCFCE0A0-EC17-11D0-8D10-00A0C90F2719");
-
-	private void OnSearchScopeLoaded()
-	{
-		if (_searchScopePending) return;
-		_searchScopeReady = false;
-		try
-		{
-			SearchOsDriveOnlyToggle.IsChecked = string.Equals(
-				Environment.GetEnvironmentVariable(Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
-				"OS", StringComparison.OrdinalIgnoreCase);
-			SearchOsDriveOnlyToggle.IsEnabled = true;
-			_searchScopeReady = true;
-		}
-		catch (Exception exception)
-		{
-			Logger.Write(exception);
-			SearchOsDriveOnlyToggle.IsEnabled = false;
-		}
-	}
-
-	private async void OnSearchScopeToggled()
-	{
-		if (!_searchScopeReady) return;
-		_searchScopeReady = false;
-		_searchScopePending = true;
-		SearchOsDriveOnlyToggle.IsEnabled = false;
-		string requested = SearchOsDriveOnlyToggle.IsChecked ? "OS" : "ALL";
-		bool saved = false;
-		try
-		{
-			if (Relaunch.Start(Atlas.AUMID, $"--global-search-scope {requested}", Relaunch.Context.Elevated))
-			{
-				// Activation completes before the elevated process writes the machine value.
-				for (int attempt = 0; attempt < 50 && !saved && !_isClosed; attempt++)
-				{
-					await Task.Delay(100);
-					saved = string.Equals(Environment.GetEnvironmentVariable(
-						Program.GlobalSearchScopeVariable, EnvironmentVariableTarget.Machine),
-						requested, StringComparison.OrdinalIgnoreCase);
-				}
-			}
-		}
-		catch (Exception exception) { Logger.Write(exception); }
-		if (_isClosed) return;
-		_searchScopePending = false;
-		OnSearchScopeLoaded();
-		if (SearchOsDriveOnlyToggle.IsEnabled)
-			SearchStatusText.Text = saved ? "Scope saved; takes effect on the next index build." : "Search setting change was not saved.";
-	}
 
 	// The Global Search startup task starts the manual service at sign in so it indexes right away; no elevation is needed.
 	private async void OnSearchStartupLoaded() =>
@@ -6299,6 +6271,26 @@ internal sealed partial class TopBar : Window, IDisposable
 		SearchDocumentsToggle.IsEnabled = typesEnabled;
 		SearchArchivesToggle.IsEnabled = typesEnabled;
 		OnSearchTextChanged();
+	}
+
+	// Switches between the compact rows and the rows with large thumbnails, and remembers the choice.
+	// The results stay as they are, so no new search is needed.
+	private void OnSearchLargeThumbnailsClick()
+	{
+		Atlas.Settings.WindowsTopBarSearchLargeThumbnails = SearchLargeThumbnailsToggle.IsChecked == true;
+		ApplySearchItemTemplate();
+		// The automatic Path width leaves room for the thumbnail column, whose width just changed.
+		UpdateViewsMaximumWidth();
+	}
+
+	// Gives the ListView the item template of the saved choice. The ListView then creates the shown rows again from
+	// that template, and each new Image loads a thumbnail of its own size.
+	[DynamicWindowsRuntimeCast(typeof(DataTemplate))]
+	private void ApplySearchItemTemplate()
+	{
+		bool large = Atlas.Settings.WindowsTopBarSearchLargeThumbnails;
+		SearchThumbnailHeaderColumn.Width = new GridLength(large ? SearchLargeThumbnailColumnWidth : SearchThumbnailColumnWidth);
+		SearchResultsListView.ItemTemplate = (DataTemplate)SearchResultsListView.Resources[large ? "SearchLargeItemTemplate" : "SearchCompactItemTemplate"];
 	}
 
 	// Bit i selects the service's file category i, in the drive statistics order:

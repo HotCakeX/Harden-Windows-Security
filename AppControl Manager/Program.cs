@@ -30,9 +30,6 @@ namespace AppControlManager;
 internal static class Program
 {
 	private static string[] _launchArguments = [];
-#if HARDEN_SYSTEM_SECURITY
-	internal const string GlobalSearchScopeVariable = "HardenSystemSecurity_GlobalSearchScope";
-#endif
 
 	/// <summary>
 	/// Gets the command-line arguments supplied to the managed entry point for the current process.
@@ -97,24 +94,6 @@ internal static class Program
 			if (string.Equals(args[0], "--startClipBoardMonitor", StringComparison.OrdinalIgnoreCase))
 			{
 				Environment.Exit(ClipboardMonitor.Run());
-			}
-			// Persist only supported search settings in the machine-wide environment.
-			if (string.Equals(args[0], "--global-search-scope", StringComparison.OrdinalIgnoreCase))
-			{
-				try
-				{
-					if (args.Length != 2 ||
-						(!string.Equals(args[1], "OS", StringComparison.OrdinalIgnoreCase) &&
-						 !string.Equals(args[1], "ALL", StringComparison.OrdinalIgnoreCase)))
-						throw new ArgumentException("Invalid Global Search setting.");
-					Environment.SetEnvironmentVariable(GlobalSearchScopeVariable, args[1], EnvironmentVariableTarget.Machine);
-					Environment.Exit(0);
-				}
-				catch (Exception exception)
-				{
-					Logger.Write(exception);
-					Environment.Exit(1);
-				}
 			}
 
 			// Global Search startup task: start the manual service and ask it to build its index right away.

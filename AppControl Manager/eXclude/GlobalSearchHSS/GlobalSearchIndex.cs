@@ -26,6 +26,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 using System.Text;
 using System.Threading;
+using Microsoft.Win32.SafeHandles;
 
 namespace GlobalSearchService;
 
@@ -146,31 +147,127 @@ internal static unsafe class IndexMemory
 	private const uint MEM_COMMIT = 0x00001000;
 	private const uint MEM_RESERVE = 0x00002000;
 	private const uint MEM_RELEASE = 0x00008000;
-	private const uint PAGE_NOACCESS = 0x01;
 	private const uint PAGE_READWRITE = 0x04;
 
 	// Reserves and commits a zero-filled range.
 	internal static void* Allocate(nuint size) => Check(NativeMethods.VirtualAlloc(null, size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE), "VirtualAlloc");
 
-	// Reserves address space only; Commit makes parts of it usable.
-	internal static void* Reserve(nuint size) => Check(NativeMethods.VirtualAlloc(null, size, MEM_RESERVE, PAGE_NOACCESS), "VirtualAlloc reserve");
-
-	internal static void Commit(void* address, nuint size) => _ = Check(NativeMethods.VirtualAlloc(address, size, MEM_COMMIT, PAGE_READWRITE), "VirtualAlloc commit");
-
-	// Releases a whole range returned by Allocate or Reserve.
+	// Releases a whole range returned by Allocate.
 	internal static void Free(void* address) => _ = NativeMethods.VirtualFree(address, 0, MEM_RELEASE);
 
 	private static void* Check(void* address, string operation) =>
 		address is not null ? address : throw new Win32Exception(Marshal.GetLastPInvokeError(), operation);
 }
 
+// One growable range of index storage. A region maps its database file, so its pages belong to the file cache instead
+// of the service's private memory: Windows reads them when they are first used and can drop them under memory pressure
+// without writing them to the page file, so the service's memory does not grow with the number of indexed files.
+// Growing a region maps the longer file at a new address, so users read Base again after every Ensure.
+internal sealed unsafe class IndexRegion
+{
+	private const uint PAGE_READWRITE = 0x04;
+	private const uint FILE_MAP_WRITE = 0x0002;
+	// The allocation granularity of Windows, which every region size is rounded up to.
+	private const long Granularity = 64 * 1024;
+	private readonly long maximum;
+	private readonly SafeFileHandle file;
+
+	internal byte* Base { get; private set; }
+	// Bytes usable from Base. Bytes that were never written read as zero.
+	internal long Size { get; private set; }
+
+	// Creates a new file at path, or opens the saved one to load it. Loading maps the whole saved file and reads it
+	// ahead with large reads instead of one page fault at a time.
+	internal IndexRegion(string path, long maximum, bool load, FileOptions options = FileOptions.None)
+	{
+		this.maximum = maximum;
+		file = File.OpenHandle(path, load ? FileMode.Open : FileMode.Create, FileAccess.ReadWrite, FileShare.None, options);
+		if (!load) return;
+		try
+		{
+			long length = RandomAccess.GetLength(file);
+			if (length > maximum) throw new InvalidDataException($"{Path.GetFileName(path)} is larger than its index structure allows.");
+			if (length == 0) return;
+			Map(length);
+			WIN32_MEMORY_RANGE_ENTRY range = new() { VirtualAddress = (IntPtr)Base, NumberOfBytes = (nuint)length };
+			// Only a hint: if it fails, each page is read when it is first used.
+			_ = NativeMethods.PrefetchVirtualMemory(NativeMethods.GetCurrentProcess(), 1, &range, 0);
+		}
+		catch
+		{
+			Close();
+			throw;
+		}
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	private static long RoundUp(long value) => (value + Granularity - 1) & ~(Granularity - 1);
+
+	// Makes at least size bytes usable. The file grows by half its size at a time, so it is rarely mapped again.
+	// A file that cannot grow, for example on a full disk, throws, and the index of that drive stops being used.
+	internal void Ensure(long size)
+	{
+		if (size <= Size) return;
+		if (size > maximum) throw new NotSupportedException("The volume has more files than an index can hold.");
+		Map(Math.Min(maximum, RoundUp(Math.Max(size, Size + Math.Max(Size / 2, 1024 * 1024)))));
+	}
+
+	// Maps size bytes of the file in place of the current view. The file grows to that size with zeros.
+	private void Map(long size)
+	{
+		// The size is split into the high and low halves of a 64-bit value.
+		nint section = NativeMethods.CreateFileMappingW(file.DangerousGetHandle(), IntPtr.Zero, PAGE_READWRITE, (uint)(size >> 32), unchecked((uint)size), null);
+		if (section == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastPInvokeError(), "CreateFileMappingW");
+		nint view;
+		try
+		{
+			// The view keeps the mapping alive after its handle is closed.
+			view = NativeMethods.MapViewOfFile(section, FILE_MAP_WRITE, 0, 0, (nint)size);
+			if (view == IntPtr.Zero) throw new Win32Exception(Marshal.GetLastPInvokeError(), "MapViewOfFile");
+		}
+		finally
+		{
+			_ = NativeMethods.CloseHandle(section);
+		}
+		// Both views map the same file, so everything written through the old one is already in the new one.
+		if (Base is not null) _ = NativeMethods.UnmapViewOfFile((nint)Base);
+		Base = (byte*)view;
+		Size = size;
+	}
+
+	// Writes every change to disk with the file cut to length bytes, then closes the region.
+	internal void Save(long length)
+	{
+		if (Base is not null)
+		{
+			if (!NativeMethods.FlushViewOfFile(Base, 0)) throw new Win32Exception(Marshal.GetLastPInvokeError(), "FlushViewOfFile");
+			// A mapped file cannot be shortened, so the view is closed first.
+			_ = NativeMethods.UnmapViewOfFile((nint)Base);
+			Base = null;
+			Size = 0;
+		}
+		RandomAccess.SetLength(file, length);
+		RandomAccess.FlushToDisk(file);
+		Close();
+	}
+
+	// Closes the file. Changes that were not saved stay in the file, which is never trusted without a header that
+	// Save writes after it. Safe to call more than once.
+	internal void Close()
+	{
+		if (Base is not null) _ = NativeMethods.UnmapViewOfFile((nint)Base);
+		Base = null;
+		Size = 0;
+		file.Dispose();
+	}
+}
+
 // Own stable storage instead of retaining pointers into reusable enumeration buffers.
 // ASCII-only names are stored with one byte per character; any other name keeps its exact UTF-16 code units.
-// All names are stored in one address range outside the GC heap, reserved once and committed as it fills, so a
-// 4-byte NameRef locates a name directly. Each name follows a header byte holding its encoding, whether it is shared
-// and its length; a name of LongLength or more code units stores its length in the two bytes before the header
-// instead. Headers are at odd offsets, so a NameRef addresses them in 2-byte units and every name starts at an even
-// offset, keeping UTF-16 code units naturally aligned.
+// All names are stored in one IndexRegion, so a 4-byte NameRef locates a name directly. Each name follows a header
+// byte holding its encoding, whether it is shared and its length; a name of LongLength or more code units stores its
+// length in the two bytes before the header instead. Headers are at odd offsets, so a NameRef addresses them in
+// 2-byte units and every name starts at an even offset, keeping UTF-16 code units naturally aligned.
 // Identical names are stored once while a volume is first enumerated, because most names on a volume repeat, and
 // the NameRef of every entry with that name points to the same stored copy. A shared copy is never reused for
 // another name, since the arena does not count how many entries still reference it.
@@ -179,16 +276,19 @@ internal sealed unsafe class NameArena
 	private const int WideFlag = 0x80;
 	private const int SharedFlag = 0x40;
 	private const int LongLength = 0x3F;
+	// NTFS and ReFS names have at most 255 UTF-16 code units.
+	private const int MaxNameLength = 255;
+	// One free list for each length and encoding a file name can have.
+	private const int FreeListCount = (MaxNameLength << 1) + 2;
 	// 2^31 two-byte positions address 4 GiB of names, over 100 million typical file names.
 	private const long MaxHeaderOffset = uint.MaxValue;
 	// Offset 1 holds the empty name's header, so names are stored from offset 2.
 	private const long FirstOffset = 2;
-	// Committed memory always extends this far past the end of every name, so the vectorized ASCII search
+	// The storage always extends this far past the end of every name, so the vectorized ASCII search
 	// can read a full vector after a name, which needs Vector128<byte>.Count - 1 bytes.
 	private const int ReadPadding = 16;
-	private const int CommitSize = 64 * 1024;
-	// Room after the last possible header for the longest name and the padding, in whole commit units.
-	private const long ReservedSize = MaxHeaderOffset + 1 + 3 * CommitSize;
+	// The largest the names file can be: the last possible header, the longest name after it and the padding.
+	private const long MaximumSize = MaxHeaderOffset + 1 + (MaxNameLength * 2) + ReadPadding;
 	// The deduplication table stops growing here and deduplication ends, so it never holds more than 3/4 of this
 	// many names. Twice that many shared names still round up to an int capacity for the compaction table.
 	private const int MaxLookupCapacity = 1 << 29;
@@ -198,10 +298,12 @@ internal sealed unsafe class NameArena
 #pragma warning restore CA5394
 	// The empty name's header, shared by every arena until it stores its first name.
 	private static readonly byte* EmptyStore = (byte*)NativeMemory.AllocZeroed((nuint)FirstOffset);
+	private readonly IndexRegion region;
 	private byte* store = EmptyStore;
-	private long committed;
-	// Keyed by length and encoding, so a reused slot has the exact byte size and header.
-	private readonly Dictionary<int, Stack<NameRef>> freeSlots = [];
+	// The first released name of each length and encoding, so a reused slot has the exact byte size and header.
+	// Each released name's own bytes hold the position of the next one, so the lists need no memory of their own.
+	// They are not saved; released names of a loaded index are reclaimed by compaction instead.
+	private FreeLists freeHeads;
 	private long used = FirstOffset;
 	// Each shared name is counted once and stays counted, so released references never make this negative.
 	private long liveBytes;
@@ -216,25 +318,63 @@ internal sealed unsafe class NameArena
 	private int lookupCount;
 	private bool deduplicating;
 
+	[InlineArray(FreeListCount)]
+	private struct FreeLists
+	{
+		private uint head;
+	}
+
+	// The names are kept in the file at path. Loading opens the saved file; Load then uses it.
+	internal NameArena(string path, bool load) => region = new(path, MaximumSize, load);
+
 	// Compact only after enough dead space accumulates to justify a full copy.
 	// Every byte past FirstOffset was written by a stored name, so used - FirstOffset is the bytes written.
 	internal bool NeedsCompaction =>
 		used - FirstOffset - liveBytes + sharedReleasedBytes >= 16L * 1024 * 1024 &&
 		used - FirstOffset - liveBytes + sharedReleasedBytes >= liveBytes / 4;
 
-	// Returns the memory to Windows. The arena is empty and can be reused.
-	internal void Clear()
+	// Closes the storage. The arena must not be used afterwards.
+	internal void Close()
 	{
-		if (store != EmptyStore) IndexMemory.Free(store);
+		region.Close();
 		store = EmptyStore;
-		committed = 0;
-		freeSlots.Clear();
-		used = FirstOffset;
-		liveBytes = 0;
-		sharedCount = 0;
-		sharedReleasedBytes = 0;
 		FreeLookup();
-		deduplicating = false;
+	}
+
+	// Writes the names to disk and records them in the header. The arena must not be used afterwards.
+	internal void Save(ref IndexHeader header)
+	{
+		header.NamesUsed = used;
+		header.NamesLiveBytes = liveBytes;
+		header.NamesSharedCount = sharedCount;
+		header.NamesSharedReleasedBytes = sharedReleasedBytes;
+		store = EmptyStore;
+		region.Save(used + ReadPadding);
+	}
+
+	// Uses the names saved with this header. Their file must hold every byte the header describes.
+	internal void Load(in IndexHeader header)
+	{
+		if (header.NamesUsed < FirstOffset || header.NamesUsed > region.Size - ReadPadding || header.NamesLiveBytes < 0 ||
+			header.NamesSharedCount < 0 || header.NamesSharedReleasedBytes < 0 || region.Base[1] != 0)
+			throw new InvalidDataException("The saved names do not match their file.");
+		store = region.Base;
+		used = header.NamesUsed;
+		liveBytes = header.NamesLiveBytes;
+		sharedCount = header.NamesSharedCount;
+		sharedReleasedBytes = header.NamesSharedReleasedBytes;
+	}
+
+	// True when the name is a file name stored entirely before the end of the used bytes, as every stored name is.
+	// Checked for each entry of a loaded index, so a damaged file causes a rebuild instead of a read out of bounds.
+	internal bool IsValid(NameRef name)
+	{
+		long header = ((long)name.Position << 1) | 1;
+		if (header >= used) return false;
+		int value = store[header];
+		int length = value & LongLength;
+		if (length == LongLength) length = Unsafe.ReadUnaligned<ushort>(store + header - 2);
+		return length <= MaxNameLength && header + 1 + (value >= WideFlag ? length * 2 : length) <= used;
 	}
 
 	// Stores identical names added from now on once, until EndDeduplication.
@@ -394,70 +534,46 @@ internal sealed unsafe class NameArena
 		return header + 1;
 	}
 
-	// Commits whole units up to the required offset, reserving the address range on first use.
+	// Makes the storage usable up to the required offset. The region may move, so the store is read again.
 	private void Commit(long required)
 	{
-		long target = (required + CommitSize - 1) & ~(CommitSize - 1);
-		if (store != EmptyStore)
-		{
-			IndexMemory.Commit(store + committed, (nuint)(target - committed));
-		}
-		else
-		{
-			// The new range replaces the shared empty name only once it is readable.
-			// x64 and ARM64 processes have a 64-bit address space, so the size is never truncated.
-			byte* range = (byte*)IndexMemory.Reserve(unchecked((nuint)ReservedSize));
-			try
-			{
-				IndexMemory.Commit(range, (nuint)target);
-			}
-			catch
-			{
-				IndexMemory.Free(range);
-				throw;
-			}
-			store = range;
-		}
-		committed = target;
+		region.Ensure(required);
+		store = region.Base;
 	}
 
-	// Commits enough memory to copy every live name of the source before any entry references this arena,
+	// Commits enough storage to copy every live name of the source before any entry references this arena,
 	// so the copy cannot fail midway. Each copied name needs at most one byte of alignment padding.
 	// The table that keeps shared names shared is sized for every shared source name, so it never grows midway.
+	// If this fails, the caller closes the arena.
 	internal void PrepareCopy(NameArena source, int nameCount)
 	{
 		long required = FirstOffset + source.liveBytes + nameCount;
 		if (required > MaxHeaderOffset) throw CapacityExceeded();
 		Commit(required + ReadPadding);
-		try
-		{
-			AllocateLookup((int)BitOperations.RoundUpToPowerOf2((uint)Math.Max(16, source.sharedCount * 2)));
-		}
-		catch
-		{
-			// The replacement is discarded, so its committed memory is returned now.
-			Clear();
-			throw;
-		}
+		AllocateLookup((int)BitOperations.RoundUpToPowerOf2((uint)Math.Max(16, source.sharedCount * 2)));
 	}
 
 	private Span<byte> Reserve(int length, bool isWide, out NameRef name)
 	{
 		int byteLength = isWide ? length * 2 : length;
+		int key = SlotKey(length, isWide);
 		// Reuse an exact-size slot; references to other names remain stable. Its header already matches.
 		// While deduplicating, names are only appended, so a duplicate can be removed by moving the end back.
-		if (!deduplicating && freeSlots.TryGetValue(SlotKey(length, isWide), out Stack<NameRef>? slots) && slots.Count != 0)
+		if (!deduplicating && key < FreeListCount && freeHeads[key] != 0)
 		{
-			name = slots.Pop();
+			uint position = freeHeads[key];
+			byte* reused = store + (((nuint)position << 1) | 1) + 1;
+			freeHeads[key] = Unsafe.ReadUnaligned<uint>(reused);
+			name = new(position, isDirectory: false);
 			liveBytes += RecordLength(length, isWide);
-			return new Span<byte>(store + (((nuint)name.Position << 1) | 1) + 1, byteLength);
+			return new Span<byte>(reused, byteLength);
 		}
 		bool isLong = length >= LongLength;
 		// The first odd offset after the used bytes, leaving room for a long length before it.
 		long header = (isLong ? used + 2 : used) | 1;
 		long end = header + 1 + byteLength;
 		if (header > MaxHeaderOffset) throw CapacityExceeded();
-		if (end + ReadPadding > committed) Commit(end + ReadPadding);
+		if (end + ReadPadding > region.Size) Commit(end + ReadPadding);
 		byte* target = store + header;
 		if (isLong) Unsafe.WriteUnaligned(target - 2, (ushort)length);
 		*target = (byte)((isWide ? WideFlag : 0) | (isLong ? LongLength : length));
@@ -479,14 +595,13 @@ internal sealed unsafe class NameArena
 			sharedReleasedBytes += RecordLength(length, isWide);
 			return;
 		}
-		int key = SlotKey(length, isWide);
-		if (!freeSlots.TryGetValue(key, out Stack<NameRef>? slots))
-		{
-			slots = new Stack<NameRef>();
-			freeSlots.Add(key, slots);
-		}
-		slots.Push(name);
 		liveBytes -= RecordLength(length, isWide);
+		// The first bytes of the released name link it to the next free name of its length and encoding.
+		// A name shorter than a link is not reused; compaction reclaims it with the other unused bytes.
+		int key = SlotKey(length, isWide);
+		if ((isWide ? length * 2 : length) < sizeof(uint) || key >= FreeListCount) return;
+		Unsafe.WriteUnaligned(start, freeHeads[key]);
+		freeHeads[key] = name.Position;
 	}
 
 	// Callers validate that Windows filename bytes contain complete UTF-16LE code units.
@@ -598,19 +713,17 @@ internal sealed unsafe class NameArena
 }
 
 // NTFS file reference numbers hold a 48-bit MFT segment number and a 16-bit sequence number.
-// Segment numbers are dense, so entries are addressed directly by segment in fixed-size pages
-// instead of being hashed. Pages are allocated on first use and released when they become empty.
-// Pages are allocated outside the GC heap; a 12-byte slot makes each page exactly three 4 KiB memory pages.
+// Segment numbers are dense, so entries are addressed directly by segment in one IndexRegion of 12-byte slots
+// instead of being hashed. The region extends to the highest segment stored so far; every slot past it is empty.
 internal sealed unsafe class NtfsEntryTable
 {
-	private const int PageShift = 10;
-	private const int PageSize = 1 << PageShift;
-	private const int PageMask = PageSize - 1;
 	private const ulong SegmentMask = 0x0000_FFFF_FFFF_FFFFUL;
 	// NTFS holds at most 2^32 - 1 files per volume, so every MFT segment number fits in 32 bits.
 	private const ulong ParentSegmentMask = uint.MaxValue;
-	private nint[] pages = [];
-	private int[] pageCounts = [];
+	private const long MaximumSlots = 1L << 32;
+	private readonly IndexRegion region;
+	// One past the highest segment stored so far.
+	private long extent;
 
 	// Link layout: own sequence (bits 48-63), parent sequence (32-47), parent segment (0-31).
 	// An occupied link is never zero: every entry has a parent directory, and segment 0 is $MFT, never a directory.
@@ -622,7 +735,12 @@ internal sealed unsafe class NtfsEntryTable
 		internal NameRef Name;
 	}
 
+	// The slots are kept in the file at path. Loading opens the saved file; Load then uses it.
+	internal NtfsEntryTable(string path, bool load) => region = new(path, MaximumSlots * sizeof(Slot), load);
+
 	internal int Count { get; private set; }
+
+	private Slot* Slots => (Slot*)region.Base;
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static ulong Pack(ulong id, ulong parent) => (id & ~SegmentMask) | ((parent >> 48) << 32) | (parent & ParentSegmentMask);
@@ -633,26 +751,43 @@ internal sealed unsafe class NtfsEntryTable
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static ulong GetSequence(ulong link) => link >> 48;
 
-	// Returns every page to Windows. The table must not be used afterwards.
-	internal void Clear()
+	// Closes the storage. The table must not be used afterwards.
+	internal void Close() => region.Close();
+
+	// Writes the slots to disk and records them in the header. The table must not be used afterwards.
+	internal void Save(ref IndexHeader header)
 	{
-		foreach (nint page in pages)
+		header.EntryCount = Count;
+		header.Extent = extent;
+		region.Save(extent * sizeof(Slot));
+	}
+
+	// Uses the slots saved with this header. Every saved entry is checked, so a damaged file is rebuilt instead of read
+	// out of bounds. The file holds exactly the saved slots, so every slot past them is empty as Set expects.
+	internal void Load(in IndexHeader header, NameArena names)
+	{
+		if (header.Extent < 0 || header.Extent > MaximumSlots || header.Extent * sizeof(Slot) != region.Size)
+			throw new InvalidDataException("The saved entries do not match their file.");
+		Slot* slots = Slots;
+		long count = 0;
+		for (long i = 0; i < header.Extent; i++)
 		{
-			if (page != 0) IndexMemory.Free((void*)page);
+			if (slots[i].Link == 0) continue;
+			if (!names.IsValid(slots[i].Name)) throw new InvalidDataException("A saved entry has an invalid name.");
+			count++;
 		}
+		if (count != header.EntryCount) throw new InvalidDataException("The saved entry count does not match the entries.");
+		extent = header.Extent;
+		Count = header.EntryCount;
 	}
 
 	// Returns the occupied slot with this exact file reference number, or a null reference.
-	private ref Slot Find(ulong id, out int pageIndex)
+	private ref Slot Find(ulong id)
 	{
 		ulong segment = id & SegmentMask;
-		ulong pageNumber = segment >> PageShift;
-		// Checked casts: the page number is converted only after the bounds check.
-		pageIndex = pageNumber < (ulong)pages.Length ? (int)pageNumber : -1;
-		Slot* page = pageIndex >= 0 ? (Slot*)pages[pageIndex] : null;
-		if (page != null)
+		if (segment < (ulong)extent)
 		{
-			ref Slot slot = ref page[(int)(segment & PageMask)];
+			ref Slot slot = ref Slots[segment];
 			if (slot.Link != 0 && GetSequence(slot.Link) == id >> 48) return ref slot;
 		}
 		return ref Unsafe.NullRef<Slot>();
@@ -660,7 +795,7 @@ internal sealed unsafe class NtfsEntryTable
 
 	internal bool TryGetValue(ulong id, out NtfsEntry entry)
 	{
-		ref Slot slot = ref Find(id, out _);
+		ref Slot slot = ref Find(id);
 		if (Unsafe.IsNullRef(ref slot))
 		{
 			entry = default;
@@ -674,23 +809,17 @@ internal sealed unsafe class NtfsEntryTable
 	// replaces any entry in the segment and returns its name for release.
 	internal bool Set(ulong id, ulong parent, NameRef name, out NameRef replaced)
 	{
-		int pageIndex = (int)((id & SegmentMask) >> PageShift);
-		if (pageIndex >= pages.Length)
+		long segment = (long)(id & SegmentMask);
+		if (segment >= extent)
 		{
-			int length = Math.Max(pageIndex + 1, pages.Length * 2);
-			Array.Resize(ref pages, length);
-			Array.Resize(ref pageCounts, length);
+			// The slots between the old and new extent are new storage, so they are empty.
+			region.Ensure((segment + 1) * sizeof(Slot));
+			extent = segment + 1;
 		}
-		Slot* page = (Slot*)pages[pageIndex];
-		if (page == null) pages[pageIndex] = (nint)(page = (Slot*)IndexMemory.Allocate((nuint)(PageSize * sizeof(Slot))));
-		ref Slot slot = ref page[(int)(id & PageMask)];
+		ref Slot slot = ref Slots[segment];
 		bool exists = slot.Link != 0;
 		replaced = slot.Name;
-		if (!exists)
-		{
-			pageCounts[pageIndex]++;
-			Count++;
-		}
+		if (!exists) Count++;
 		slot.Link = Pack(id, parent);
 		slot.Name = name;
 		return exists;
@@ -699,28 +828,18 @@ internal sealed unsafe class NtfsEntryTable
 	// Call only for an ID that TryGetValue just found.
 	internal void Remove(ulong id)
 	{
-		ref Slot slot = ref Find(id, out int pageIndex);
-		slot = default;
+		Find(id) = default;
 		Count--;
-		if (--pageCounts[pageIndex] == 0)
-		{
-			IndexMemory.Free((void*)pages[pageIndex]);
-			pages[pageIndex] = 0;
-		}
 	}
 
 	// Rewrites every name into the target arena in place.
 	internal void RewriteNames(NameArena source, NameArena target)
 	{
-		foreach (nint pointer in pages)
+		Slot* slots = Slots;
+		for (long i = 0; i < extent; i++)
 		{
-			if (pointer == 0) continue;
-			Slot* page = (Slot*)pointer;
-			for (int i = 0; i < PageSize; i++)
-			{
-				ref Slot slot = ref page[i];
-				if (slot.Link != 0) slot.Name = target.AddCopy(source, slot.Name);
-			}
+			ref Slot slot = ref slots[i];
+			if (slot.Link != 0) slot.Name = target.AddCopy(source, slot.Name);
 		}
 	}
 
@@ -729,56 +848,44 @@ internal sealed unsafe class NtfsEntryTable
 	// Enumerates occupied slots in segment order without boxing. The table must not be modified during enumeration.
 	internal struct Enumerator
 	{
-		private readonly nint[] pages;
-		private Slot* page;
-		private int pageIndex;
-		private int slotIndex;
+		private readonly Slot* slots;
+		private readonly long extent;
+		private long index;
 
 		internal Enumerator(NtfsEntryTable table)
 		{
-			pages = table.pages;
-			pageIndex = -1;
-			slotIndex = PageSize;
+			slots = table.Slots;
+			extent = table.extent;
+			index = -1;
 		}
 
 		internal bool MoveNext()
 		{
-			while (true)
+			while (++index < extent)
 			{
-				if (++slotIndex >= PageSize)
-				{
-					do
-					{
-						if (++pageIndex >= pages.Length) return false;
-						page = (Slot*)pages[pageIndex];
-					}
-					while (page == null);
-					slotIndex = 0;
-				}
-				if (page[slotIndex].Link != 0) return true;
+				if (slots[index].Link != 0) return true;
 			}
+			return false;
 		}
 
-		internal readonly NameRef Name => page[slotIndex].Name;
+		internal readonly NameRef Name => slots[index].Name;
 
-		internal readonly ulong Id => (GetSequence(page[slotIndex].Link) << 48) | ((ulong)(uint)pageIndex << PageShift) | (uint)slotIndex;
+		internal readonly ulong Id => (GetSequence(slots[index].Link) << 48) | (ulong)index;
 
-		internal readonly NtfsEntry Entry => new(GetParent(page[slotIndex].Link), page[slotIndex].Name);
+		internal readonly NtfsEntry Entry => new(GetParent(slots[index].Link), slots[index].Name);
 	}
 }
 
 // ReFS uses 128-bit file IDs, so its entries cannot be addressed by segment like NTFS entries.
-// They are stored in fixed-size pages in insertion order and found through a chained hash index.
+// They are stored in one IndexRegion in insertion order and found through a chained hash index.
 // Each entry links to its parent directory by slot index instead of repeating the parent's 16-byte ID,
-// so a slot is 28 bytes, pages are never copied when the table grows, and a path is resolved by
-// following slot indices instead of hashing every component. Pages and buckets are allocated outside the GC heap;
-// a 28-byte slot makes each page exactly seven 4 KiB memory pages.
+// so a slot is 28 bytes and a path is resolved by following slot indices instead of hashing every component.
+// The hash index is rebuilt from the slots whenever they are loaded, so its file is temporary and never saved.
 internal sealed unsafe class WideEntryTable
 {
-	private const int PageShift = 10;
-	private const int PageSize = 1 << PageShift;
-	private const int PageMask = PageSize - 1;
 	private const int MinimumBucketCount = 16;
+	// Slot and bucket counts stay at or below 2^30, so doubling them never overflows.
+	private const int MaximumSlots = 1 << 30;
 	// Reclaim removed slots only after enough accumulate to justify rewriting the table.
 	private const int CompactionThreshold = 100_000;
 	// The parent link of entries in the volume root directory.
@@ -788,9 +895,9 @@ internal sealed unsafe class WideEntryTable
 	// for example when a directory is renamed.
 	private const int Absent = -2;
 	private readonly FileId rootId;
-	private nint[] pages = [];
+	private readonly IndexRegion slotRegion;
 	// Bucket heads and chain links hold a slot index plus one, so zero ends a chain.
-	private int* buckets;
+	private readonly IndexRegion bucketRegion;
 	private int bucketCount;
 	private int bucketShift;
 	private int slotCount;
@@ -810,21 +917,73 @@ internal sealed unsafe class WideEntryTable
 		internal int Next;
 	}
 
-	internal WideEntryTable(FileId rootId) => this.rootId = rootId;
+	// The slots are kept in the file at slotsPath. Loading opens the saved slots; Load then uses them.
+	// The buckets file is deleted when it is closed, including when the process ends.
+	internal WideEntryTable(FileId rootId, string slotsPath, string bucketsPath, bool load)
+	{
+		this.rootId = rootId;
+		slotRegion = new(slotsPath, (long)MaximumSlots * sizeof(Slot), load);
+		try
+		{
+			bucketRegion = new(bucketsPath, (long)MaximumSlots * sizeof(int), load: false, FileOptions.DeleteOnClose);
+		}
+		catch
+		{
+			// Nothing references the table yet, so the slots it opened are closed here.
+			slotRegion.Close();
+			throw;
+		}
+	}
 
 	internal int Count { get; private set; }
 
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private ref Slot At(int index) => ref ((Slot*)pages[index >> PageShift])[index & PageMask];
+	private Slot* Slots => (Slot*)slotRegion.Base;
 
-	// Returns all pages and buckets to Windows. The table must not be used afterwards.
-	internal void Clear()
+	private int* Buckets => (int*)bucketRegion.Base;
+
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	private ref Slot At(int index) => ref Slots[index];
+
+	// Closes the storage. The table must not be used afterwards.
+	internal void Close()
 	{
-		foreach (nint page in pages)
+		slotRegion.Close();
+		bucketRegion.Close();
+	}
+
+	// Writes the slots to disk and records them in the header. The table must not be used afterwards.
+	internal void Save(ref IndexHeader header)
+	{
+		header.EntryCount = Count;
+		header.Extent = slotCount;
+		header.RetainedSlots = retainedSlots;
+		slotRegion.Save((long)slotCount * sizeof(Slot));
+		bucketRegion.Close();
+	}
+
+	// Uses the slots saved with this header and rebuilds their hash index. Every saved entry is checked, so a damaged
+	// file is rebuilt instead of read out of bounds.
+	internal void Load(in IndexHeader header, NameArena names)
+	{
+		if (header.Extent < 0 || header.Extent > MaximumSlots || header.Extent * sizeof(Slot) != slotRegion.Size ||
+			header.RetainedSlots < 0 || header.RetainedSlots > header.Extent)
+			throw new InvalidDataException("The saved entries do not match their file.");
+		int extent = (int)header.Extent;
+		Slot* slots = Slots;
+		int count = 0;
+		for (int i = 0; i < extent; i++)
 		{
-			if (page != 0) IndexMemory.Free((void*)page);
+			int parent = slots[i].Parent;
+			if (parent == Absent) continue;
+			if (parent < Root || parent >= extent || !names.IsValid(slots[i].Name))
+				throw new InvalidDataException("A saved entry has an invalid parent or name.");
+			count++;
 		}
-		if (buckets != null) IndexMemory.Free(buckets);
+		if (count != header.EntryCount) throw new InvalidDataException("The saved entry count does not match the entries.");
+		slotCount = extent;
+		Count = count;
+		retainedSlots = header.RetainedSlots;
+		Rehash(Math.Max(MinimumBucketCount, (int)BitOperations.RoundUpToPowerOf2((uint)extent)));
 	}
 
 	// Fibonacci hashing: the top bits of the mixed ID select the bucket.
@@ -835,7 +994,7 @@ internal sealed unsafe class WideEntryTable
 	private int Find(FileId id)
 	{
 		if (bucketCount == 0) return -1;
-		int link = buckets[GetBucket(id)];
+		int link = Buckets[GetBucket(id)];
 		while (link != 0)
 		{
 			ref Slot slot = ref At(link - 1);
@@ -849,26 +1008,24 @@ internal sealed unsafe class WideEntryTable
 	{
 		int index = Find(id);
 		if (index >= 0) return index;
+		index = slotCount;
+		// Fails at MaximumSlots, before the buckets would double past it.
+		slotRegion.Ensure((index + 1L) * sizeof(Slot));
 		// Keep at most one slot per bucket on average.
 		if (slotCount == bucketCount) Rehash(Math.Max(MinimumBucketCount, bucketCount * 2));
-		index = slotCount;
-		int pageIndex = index >> PageShift;
-		if (pageIndex == pages.Length) Array.Resize(ref pages, Math.Max(4, pages.Length * 2));
-		Slot* page = (Slot*)pages[pageIndex];
-		if (page == null) pages[pageIndex] = (nint)(page = (Slot*)IndexMemory.Allocate((nuint)(PageSize * sizeof(Slot))));
 		int bucket = GetBucket(id);
-		page[index & PageMask] = new Slot { Id = id, Parent = Absent, Next = buckets[bucket] };
-		buckets[bucket] = index + 1;
+		At(index) = new Slot { Id = id, Parent = Absent, Next = Buckets[bucket] };
+		Buckets[bucket] = index + 1;
 		slotCount++;
 		return index;
 	}
 
 	private void Rehash(int bucketCount)
 	{
-		// The old buckets are released only after the new ones are allocated.
-		int* replacement = (int*)IndexMemory.Allocate((nuint)bucketCount * sizeof(int));
-		if (buckets != null) IndexMemory.Free(buckets);
-		buckets = replacement;
+		// The buckets grow before anything changes, so a failure leaves the table as it was.
+		bucketRegion.Ensure((long)bucketCount * sizeof(int));
+		int* buckets = Buckets;
+		new Span<int>(buckets, bucketCount).Clear();
 		this.bucketCount = bucketCount;
 		bucketShift = 64 - BitOperations.Log2((uint)bucketCount);
 		for (int i = 0; i < slotCount; i++)
@@ -984,13 +1141,6 @@ internal sealed unsafe class WideEntryTable
 			ref Slot slot = ref At(i);
 			if (slot.Next >= 0 && slot.Next != i) At(slot.Next) = slot;
 		}
-		int pageCount = (kept + PageMask) >> PageShift;
-		// Return the pages that no longer hold slots.
-		for (int i = pageCount; i < pages.Length; i++)
-		{
-			if (pages[i] != 0) IndexMemory.Free((void*)pages[i]);
-		}
-		Array.Resize(ref pages, pageCount);
 		slotCount = kept;
 		retainedSlots = kept - Count;
 		lastParentIndex = -1;
@@ -1002,13 +1152,12 @@ internal sealed unsafe class WideEntryTable
 	// Enumerates entries in slot order. The table must not be modified during enumeration.
 	internal struct Enumerator
 	{
-		private readonly nint[] pages;
+		private readonly Slot* slots;
 		private readonly int count;
-		private Slot* page;
 
 		internal Enumerator(WideEntryTable table)
 		{
-			pages = table.pages;
+			slots = table.Slots;
 			count = table.slotCount;
 			Index = -1;
 		}
@@ -1017,8 +1166,7 @@ internal sealed unsafe class WideEntryTable
 		{
 			while (++Index < count)
 			{
-				if ((Index & PageMask) == 0) page = (Slot*)pages[Index >> PageShift];
-				if (page[Index & PageMask].Parent != Absent) return true;
+				if (slots[Index].Parent != Absent) return true;
 			}
 			return false;
 		}
@@ -1026,7 +1174,7 @@ internal sealed unsafe class WideEntryTable
 		// The slot index, for TryGetLink.
 		internal int Index { get; private set; }
 
-		internal readonly NameRef Name => page[Index & PageMask].Name;
+		internal readonly NameRef Name => slots[Index].Name;
 	}
 }
 
@@ -1034,6 +1182,40 @@ internal readonly record struct FileId(ulong Low, ulong High);
 internal readonly record struct Entry(FileId Parent, NameRef Name);
 internal readonly record struct NtfsEntry(ulong Parent, NameRef Name);
 internal readonly record struct Journal(ulong Id, long First, long Next);
+
+// The start of a volume's saved index file, followed by the IDs of its inaccessible directories. The other files of a
+// saved index are trusted only while this header is valid: saving writes it after every other file is on disk, and
+// loading clears it before the loaded files change, so an index that was not saved completely is rebuilt instead.
+// 112 bytes without padding, so every byte of it is covered by the checksum.
+[StructLayout(LayoutKind.Sequential)]
+internal struct IndexHeader
+{
+	// "GSHSIDX1" in little-endian byte order.
+	internal const ulong ExpectedSignature = 0x3158_4449_5348_5347;
+	// Increase whenever the layout of a saved file changes, so files of an older layout are rebuilt instead of misread.
+	internal const int CurrentVersion = 1;
+	internal ulong Signature;
+	internal int Version;
+	// CRC-32C of the whole index file, computed with this field as zero.
+	internal uint Checksum;
+	internal FileId RootId;
+	internal ulong JournalId;
+	internal long NextUsn;
+	internal long NamesUsed;
+	internal long NamesLiveBytes;
+	internal long NamesSharedReleasedBytes;
+	// One past the last saved slot of the entry table.
+	internal long Extent;
+	internal ulong VolumeSerial;
+	internal int NamesSharedCount;
+	internal int EntryCount;
+	internal int RetainedSlots;
+	// Which of the two names files holds the names.
+	internal int NamesFile;
+	internal int InaccessibleDirectoryCount;
+	// 1 when the entries are in the wide table: always on ReFS, and on NTFS once 128-bit IDs were seen.
+	internal int WideEntries;
+}
 
 internal sealed unsafe partial class VolumeIndex : IDisposable
 {
@@ -1060,11 +1242,20 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	private readonly FileId rootId;
 	private WideEntryTable? wideEntries;
 	private NtfsEntryTable? ntfsEntries;
-	private NameArena nameArena = new();
+	// Open assigns it before the index is used; Load and Build both call Open.
+	private NameArena nameArena = null!;
 	private readonly HashSet<FileId> inaccessibleDirectories = [];
 	private ulong journalId;
 	private long nextUsn;
 	private byte[]? refreshBuffer;
+	// The files of the saved index are this path followed by an extension.
+	private readonly string databasePrefix;
+	private readonly uint serial;
+	// Which of NamesExtensions holds the names; compacted names are copied into the other one.
+	private int namesFile;
+	// Set once the index has caught up with the journal, and cleared when a refresh fails, so only a whole index is saved.
+	private bool saveable;
+	private static readonly string[] NamesExtensions = [".names0", ".names1"];
 	// Path scratch reused by every search instead of being allocated per search. Searches of one volume never overlap.
 	private readonly List<NameRef> pathNames = [];
 	private readonly HashSet<ulong> pathVisited = [];
@@ -1073,12 +1264,15 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	internal int IndexedItemCount => wideEntries?.Count ?? ntfsEntries!.Count;
 	internal int InaccessibleDirectoryCount => inaccessibleDirectories.Count;
 
-	internal VolumeIndex(char drive)
+	// The index is saved in the database directory when it is disposed, and loaded from there by LoadOrBuild.
+	internal VolumeIndex(char drive, string databaseDirectory)
 	{
 		root = $"{drive}:\\";
 		byte* fsName = stackalloc byte[64];
-		if (!NativeMethods.GetVolumeInformationW(root, null, 0, null, null, null, (char*)fsName, 32))
+		uint volumeSerial = 0;
+		if (!NativeMethods.GetVolumeInformationW(root, null, 0, &volumeSerial, null, null, (char*)fsName, 32))
 			throw Error("GetVolumeInformationW");
+		serial = volumeSerial;
 		string fs = new((char*)fsName);
 		refs = string.Equals(fs, "ReFS", StringComparison.OrdinalIgnoreCase);
 		if (!refs && !string.Equals(fs, "NTFS", StringComparison.OrdinalIgnoreCase))
@@ -1107,14 +1301,96 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 			volume = InvalidHandleValue;
 			throw;
 		}
-		// The ReFS table needs the root ID to recognize entries in the root directory.
-		if (refs) wideEntries = new(rootId);
-		else ntfsEntries = new();
+		databasePrefix = Path.Join(databaseDirectory, root.AsSpan(0, 1));
 	}
 
-	internal void Build()
+	// Loads the index saved for this volume if the journal still holds every change made since, and builds it otherwise.
+	// Returns true when the saved index was loaded.
+	internal bool LoadOrBuild()
+	{
+		try
+		{
+			if (Load()) return true;
+		}
+		// Any failure only means the saved index cannot be used, so the volume is read again instead.
+		catch (Exception exception)
+		{
+			SearchLog.ReportWarning($"Rebuilding the saved index of {root}: {exception.Message}");
+		}
+		Build();
+		return false;
+	}
+
+	// Loads the saved index if it belongs to this volume and the journal still holds every change made since it was
+	// saved, then applies those changes. Returns false when no index was saved, and throws when it cannot be used.
+	private bool Load()
+	{
+		string indexPath = databasePrefix + ".index";
+		if (!File.Exists(indexPath)) return false;
+		IndexHeader header = default;
+		Span<byte> headerBytes = MemoryMarshal.AsBytes(new Span<IndexHeader>(ref header));
+		byte[] directories;
+		using (SafeFileHandle file = File.OpenHandle(indexPath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+		{
+			if (RandomAccess.Read(file, headerBytes, 0) != headerBytes.Length || header.Signature != IndexHeader.ExpectedSignature ||
+				header.Version != IndexHeader.CurrentVersion || header.InaccessibleDirectoryCount < 0 ||
+				RandomAccess.GetLength(file) != headerBytes.Length + (long)header.InaccessibleDirectoryCount * sizeof(FileId))
+				throw new InvalidDataException("The index was not saved completely the last time the service stopped, or its file is damaged.");
+			directories = new byte[header.InaccessibleDirectoryCount * sizeof(FileId)];
+			uint checksum = header.Checksum;
+			header.Checksum = 0;
+			if (RandomAccess.Read(file, directories, headerBytes.Length) != directories.Length || Checksum(headerBytes, directories) != checksum)
+				throw new InvalidDataException("The saved index file is damaged.");
+			if (header.VolumeSerial != serial || header.RootId != rootId || (refs && header.WideEntries == 0) || header.NamesFile is not (0 or 1))
+				throw new InvalidDataException("The saved index belongs to another volume.");
+			journalId = header.JournalId;
+			nextUsn = header.NextUsn;
+			if (!JournalContinues(QueryJournal())) throw new IOException("The USN journal no longer holds every change made since the index was saved.");
+			// The saved files change from here on, so the header stops vouching for them before they do.
+			RandomAccess.Write(file, stackalloc byte[sizeof(ulong)], 0);
+			RandomAccess.FlushToDisk(file);
+		}
+		namesFile = header.NamesFile;
+		bool wide = header.WideEntries != 0;
+		Open(wide, load: true);
+		nameArena.Load(header);
+		if (wide) wideEntries!.Load(header, nameArena);
+		else ntfsEntries!.Load(header, nameArena);
+		foreach (FileId directory in MemoryMarshal.Cast<byte, FileId>(directories.AsSpan())) _ = inaccessibleDirectories.Add(directory);
+		// Applies the changes made while the service was not running.
+		Refresh();
+		saveable = true;
+		return true;
+	}
+
+	// Opens new storage to build the index in, or the saved files to load it from.
+	private void Open(bool wide, bool load)
+	{
+		nameArena = new(databasePrefix + NamesExtensions[namesFile], load);
+		if (wide) wideEntries = new(rootId, databasePrefix + ".wide", databasePrefix + ".buckets", load);
+		else ntfsEntries = new(databasePrefix + ".ntfs", load);
+	}
+
+	// Closes the names and entries. Their files are kept, and trusted again only under a header written by Save.
+	private void CloseStructures()
+	{
+		wideEntries?.Close();
+		wideEntries = null;
+		ntfsEntries?.Close();
+		ntfsEntries = null;
+		// Null until the first Open, when a saved index fails before its files are opened.
+		nameArena?.Close();
+	}
+
+	private void Build()
 	{
 		Journal start = QueryJournal();
+		// Start over: a saved index that could not be loaded is closed and replaced.
+		CloseStructures();
+		inaccessibleDirectories.Clear();
+		DeleteDatabase();
+		namesFile = 0;
+		Open(refs, load: false);
 		byte[]? enumerationBuffer = null;
 		// Store each distinct name of the volume once. The table is only needed while every name is added at once.
 		nameArena.BeginDeduplication();
@@ -1138,6 +1414,69 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 		journalId = start.Id;
 		nextUsn = start.Next;
 		Refresh(enumerationBuffer); // Replay changes that happened while enumerating.
+		saveable = true;
+	}
+
+	// Deletes the saved index. The header goes first, so files that cannot be deleted are never trusted again.
+	// If even the header cannot be deleted, the exception ends the build and the saved files stay as they are.
+	private void DeleteDatabase()
+	{
+		File.Delete(databasePrefix + ".index");
+		foreach (string extension in NamesExtensions) TryDelete(databasePrefix + extension);
+		TryDelete(databasePrefix + ".ntfs");
+		TryDelete(databasePrefix + ".wide");
+		// Normally deleted when it is closed; only left behind if Windows stopped while the service was running.
+		TryDelete(databasePrefix + ".buckets");
+	}
+
+	// A file left behind is never trusted without its header, and is replaced or deleted later.
+	internal static void TryDelete(string path)
+	{
+		try
+		{
+			File.Delete(path);
+		}
+		catch (Exception exception) when (exception is IOException or UnauthorizedAccessException) { }
+	}
+
+	// Saves the index so the next start loads it instead of reading the whole volume. The header is written last, after
+	// every other file is on disk, so a save that does not finish leaves no header and the index is rebuilt.
+	private void Save()
+	{
+		IndexHeader header = new()
+		{
+			Signature = IndexHeader.ExpectedSignature,
+			Version = IndexHeader.CurrentVersion,
+			RootId = rootId,
+			JournalId = journalId,
+			NextUsn = nextUsn,
+			VolumeSerial = serial,
+			NamesFile = namesFile,
+			InaccessibleDirectoryCount = inaccessibleDirectories.Count,
+			WideEntries = wideEntries is not null ? 1 : 0
+		};
+		nameArena.Save(ref header);
+		if (wideEntries is not null) wideEntries.Save(ref header);
+		else ntfsEntries!.Save(ref header);
+		byte[] bytes = new byte[sizeof(IndexHeader) + header.InaccessibleDirectoryCount * sizeof(FileId)];
+		Span<FileId> directories = MemoryMarshal.Cast<byte, FileId>(bytes.AsSpan(sizeof(IndexHeader)));
+		int count = 0;
+		foreach (FileId directory in inaccessibleDirectories) directories[count++] = directory;
+		header.Checksum = Checksum(MemoryMarshal.AsBytes(new ReadOnlySpan<IndexHeader>(in header)), bytes.AsSpan(sizeof(IndexHeader)));
+		MemoryMarshal.Write(bytes, in header);
+		using SafeFileHandle file = File.OpenHandle(databasePrefix + ".index", FileMode.Create, FileAccess.Write, FileShare.None);
+		RandomAccess.Write(file, bytes, 0);
+		RandomAccess.FlushToDisk(file);
+	}
+
+	// CRC-32C of an index file, computed with its header's checksum as zero. Both parts are whole 8-byte words.
+	private static uint Checksum(ReadOnlySpan<byte> header, ReadOnlySpan<byte> directories) =>
+		~Crc32C(Crc32C(uint.MaxValue, header), directories);
+
+	private static uint Crc32C(uint crc, ReadOnlySpan<byte> bytes)
+	{
+		foreach (ulong word in MemoryMarshal.Cast<byte, ulong>(bytes)) crc = BitOperations.Crc32C(crc, word);
+		return crc;
 	}
 
 	// FSCTL_ENUM_USN_DATA is already the fastest way to enumerate NTFS. Manually reading and parsing the raw $MFT
@@ -1372,12 +1711,19 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	internal void Refresh(byte[]? enumerationBuffer = null)
 	{
 		Journal current = QueryJournal();
-		if (current.Id != journalId || nextUsn < current.First || nextUsn > current.Next)
+		if (!JournalContinues(current))
+		{
+			// The index can no longer catch up, so it is not saved either.
+			saveable = false;
 			throw new IOException("USN journal changed or lost records. Restart to rebuild the index.");
+		}
 		if (nextUsn == current.Next) return;
 		// Allocate only when there are changes, then reuse this volume's buffer on later refreshes.
 		// Reuse the NTFS enumeration buffer for the initial catch-up; it is released when the build returns.
 		byte[] buffer = enumerationBuffer ?? (refreshBuffer ??= new byte[RefreshBufferSize]);
+		// A refresh that stops midway may leave changes applied past nextUsn, so only a completed one can be saved.
+		bool wasSaveable = saveable;
+		saveable = false;
 		fixed (byte* output = buffer)
 		{
 			while (nextUsn < current.Next)
@@ -1395,7 +1741,11 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 				TrimEntriesIfNeeded();
 			}
 		}
+		saveable = wasSaveable;
 	}
+
+	// True when the journal still holds every change made after nextUsn.
+	private bool JournalContinues(Journal journal) => journal.Id == journalId && nextUsn >= journal.First && nextUsn <= journal.Next;
 
 	// Adds matching paths to the response until it is full. Nothing is allocated per search or per match.
 	internal void Search(NameQuery query, SearchResponse response)
@@ -1502,7 +1852,7 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	private void PromoteNtfsToWideIds()
 	{
 		NtfsEntryTable source = ntfsEntries!;
-		WideEntryTable replacement = new(rootId);
+		WideEntryTable replacement = new(rootId, databasePrefix + ".wide", databasePrefix + ".buckets", load: false);
 		try
 		{
 			NtfsEntryTable.Enumerator entries = source.GetEnumerator();
@@ -1515,31 +1865,44 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 		catch
 		{
 			// The NTFS table is unchanged and stays in use.
-			replacement.Clear();
+			replacement.Close();
 			throw;
 		}
 		wideEntries = replacement;
 		ntfsEntries = null;
-		source.Clear();
+		source.Close();
+		TryDelete(databasePrefix + ".ntfs");
 	}
 
 	// Reclaim removed ReFS slots after a substantial net deletion, not on every update.
-	// The NTFS table releases its empty pages as entries are removed.
+	// NTFS slots need no compaction: Windows reuses freed MFT records, and with them their slots.
 	private void TrimEntriesIfNeeded() => wideEntries?.CompactIfNeeded();
 
 	// Copy only referenced names, then update slots in place to preserve their order.
+	// A saved index alternates between its two names files, so the copy never overwrites the names it reads.
 	private void CompactNamesIfNeeded()
 	{
 		if (!nameArena.NeedsCompaction) return;
-		NameArena replacement = new();
-		// Commit the copy's full size first: slots are rewritten one by one, so the copy must not fail midway.
-		replacement.PrepareCopy(nameArena, IndexedItemCount);
+		int target = namesFile ^ 1;
+		NameArena replacement = new(databasePrefix + NamesExtensions[target], load: false);
+		try
+		{
+			// Commit the copy's full size first: slots are rewritten one by one, so the copy must not fail midway.
+			replacement.PrepareCopy(nameArena, IndexedItemCount);
+		}
+		catch
+		{
+			replacement.Close();
+			throw;
+		}
 		// Slots are rewritten in place; no ID snapshot is needed.
 		if (wideEntries is not null) wideEntries.RewriteNames(nameArena, replacement);
 		else ntfsEntries!.RewriteNames(nameArena, replacement);
 		replacement.FinishCopy();
-		nameArena.Clear();
+		nameArena.Close();
 		nameArena = replacement;
+		TryDelete(databasePrefix + NamesExtensions[namesFile]);
+		namesFile = target;
 	}
 
 	private void UpsertUsn(FileId id, FileId parent, ReadOnlySpan<byte> nameBytes, bool isDirectory)
@@ -1652,19 +2015,28 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	// Safe to call more than once: every step below leaves the index in a state that repeating it does not change.
 	public void Dispose()
 	{
-		// A disposed request index may remain referenced by the listener's async state.
-		// Release its index memory and managed payload as well as its native handle.
-		wideEntries?.Clear();
-		wideEntries = null;
-		ntfsEntries?.Clear();
-		ntfsEntries = null;
-		nameArena.Clear();
-		refreshBuffer = null;
-		// The constructor never keeps a zero handle, so only the invalid value marks a closed one.
-		if (volume != InvalidHandleValue)
+		try
 		{
-			_ = NativeMethods.CloseHandle(volume);
-			volume = InvalidHandleValue;
+			// Only an index that is complete and up to date with the journal is saved.
+			if (saveable) Save();
+		}
+		// The saved index then has no valid header, so the next start builds the index again.
+		catch (Exception exception)
+		{
+			SearchLog.ReportWarning($"The index of {root} could not be saved, so it will be built again at the next start: {exception.Message}");
+		}
+		finally
+		{
+			saveable = false;
+			// Release the index files, managed payload and native handle now instead of when the object is collected.
+			CloseStructures();
+			refreshBuffer = null;
+			// The constructor never keeps a zero handle, so only the invalid value marks a closed one.
+			if (volume != InvalidHandleValue)
+			{
+				_ = NativeMethods.CloseHandle(volume);
+				volume = InvalidHandleValue;
+			}
 		}
 	}
 }

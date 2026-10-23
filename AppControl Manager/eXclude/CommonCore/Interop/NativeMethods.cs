@@ -4448,4 +4448,22 @@ internal static unsafe partial class NativeMethods
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool VirtualFree(void* address, nuint size, uint freeType);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/memoryapi/nf-memoryapi-flushviewoffile
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool FlushViewOfFile(void* baseAddress, nuint numberOfBytesToFlush);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/memoryapi/nf-memoryapi-prefetchvirtualmemory
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool PrefetchVirtualMemory(IntPtr process, nuint numberOfEntries, WIN32_MEMORY_RANGE_ENTRY* virtualAddresses, uint flags);
+
 }

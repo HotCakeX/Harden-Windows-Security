@@ -30,7 +30,7 @@ namespace GlobalSearchService;
 internal sealed partial class VolumeIndex
 {
 	/// <summary>
-	/// Statistics classify names only on a privately owned index.
+	/// Statistics classify the file names of a drive's search index.
 	/// Category IDs are fixed by protocol version 1 and match the Top Bar labels.
 	/// The search file type filter uses the same IDs as its bits.
 	/// </summary>
@@ -48,7 +48,7 @@ internal sealed partial class VolumeIndex
 	internal long[] CountFileCategories(CancellationToken token)
 	{
 		long[] counts = new long[10];
-		// Built per request so the lookup is reclaimed together with the private index.
+		// Built per request, so the lookup is not kept in memory between requests.
 		FrozenDictionary<string, int>.AlternateLookup<ReadOnlySpan<char>> categories = CreateStatisticsCategories();
 		// ASCII names are stored as bytes; widen them here to classify the original UTF-16 name.
 		Span<char> scratch = stackalloc char[256];
@@ -129,14 +129,12 @@ internal static partial class SearchServiceHost
 		}
 	}
 
-	// Keep the private index out of the listener's async state and the collection frame.
-	// NoInlining ensures its local is no longer a GC root when reclamation starts.
-	[System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+	// Counts from the drive's shared search index, so a second index of the same volume is never built. A drive without
+	// a usable one, such as a drive connected after the indexes were built, is indexed first and its index is kept,
+	// so the drive becomes searchable too.
 	private static (long[] Counts, int Skipped) CalculateDriveStatistics(IndexState state, char drive, CancellationToken token)
 	{
-		// Count from the shared search index when it covers this drive, so a second
-		// index of the same volume is never built. Holding Sync blocks the idle stop,
-		// searches and refreshes while the entries are enumerated.
+		// Holding Sync blocks the idle stop, searches and refreshes while the entries are enumerated.
 		lock (state.Sync)
 		{
 			foreach (VolumeIndex shared in state.Indexes)
@@ -148,23 +146,28 @@ internal static partial class SearchServiceHost
 					shared.Refresh();
 					return (shared.CountFileCategories(token), shared.InaccessibleDirectoryCount);
 				}
-				catch (Exception exception) when (exception is Win32Exception or IOException or NotSupportedException)
+				catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or NotSupportedException)
 				{
-					// The next search reports and removes the unusable shared index.
-					SearchLog.ReportWarning($"Shared index for {drive}:\\ could not be refreshed for statistics: {Describe(exception)}");
+					// Removed as a search would remove it, then the drive is indexed again below.
+					SearchLog.ReportWarning($"Index for {drive}:\\ is no longer usable: {Describe(exception)}");
+					shared.Dispose();
+					_ = state.Indexes.Remove(shared);
 				}
 				break;
 			}
 		}
-		// The drive is outside the indexed scope or its shared index failed, so a
-		// private index with its own handle, arena and dictionaries is built instead.
-		using VolumeIndex index = new(drive);
-		index.Build();
-		return (index.CountFileCategories(token), index.InaccessibleDirectoryCount);
+		// Indexed outside the lock, so searches of the other drives continue meanwhile. Statistics requests are served
+		// one at a time and searches never add indexes, so nothing else indexes this drive meanwhile.
+		VolumeIndex added = OpenIndex(drive, GetDatabaseDirectory(), out _);
+		lock (state.Sync)
+		{
+			state.Indexes.Add(added);
+			return (added.CountFileCategories(token), added.InaccessibleDirectoryCount);
+		}
 	}
 
-	// Idle cost is one independent listener. After shared index activation, the
-	// statistics snapshot reuses that index and only builds its own when needed.
+	// Idle cost is one independent listener. Statistics are counted from the shared search indexes,
+	// and a drive without one is indexed first.
 	private static async Task ServeStatisticsAsync(IndexState state, CancellationToken token)
 	{
 		try
@@ -202,7 +205,7 @@ internal static partial class SearchServiceHost
 						}
 						finally
 						{
-							// The calculation frame has unwound and disposed any private index.
+							// Indexing a drive leaves its build buffers behind, and counting leaves its lookup.
 							// Reclaim after success, failure or cancellation, before the next drive.
 							ReclaimReleasedIndexMemory();
 							if (!token.IsCancellationRequested) lock (state.Sync) state.ResetIdleTimer();

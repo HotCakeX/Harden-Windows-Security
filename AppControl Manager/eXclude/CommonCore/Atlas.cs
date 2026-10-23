@@ -136,7 +136,7 @@ internal static partial class Atlas
 	/// <summary>
 	/// The package family name of the Harden System Security app.
 	/// </summary>
-	private const string HardenSystemSecurityPackageFamilyName = "VioletHansen.HardenSystemSecurity_ea7andspwdn10";
+	internal const string HardenSystemSecurityPackageFamilyName = "VioletHansen.HardenSystemSecurity_ea7andspwdn10";
 
 	/// <summary>
 	/// Reads the package family name out of the token with the documented two-call pattern and compares it.

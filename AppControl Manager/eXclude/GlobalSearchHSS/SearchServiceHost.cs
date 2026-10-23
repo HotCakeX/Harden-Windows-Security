@@ -133,14 +133,17 @@ internal static partial class SearchServiceHost
 	private static int Main()
 	{
 		NativeEventLogger.EnsureSourceRegistered(ServiceName);
-		// Remove the machine variable older versions used for indexing at startup.
-		const string LegacyStartupVariable = "HardenSystemSecurity_GlobalSearchIndexAtStartup";
-		try
+		// Remove the machine variables older versions used for indexing at startup and for indexing only the OS drive.
+		ReadOnlySpan<string> legacyVariables = ["HardenSystemSecurity_GlobalSearchIndexAtStartup", "HardenSystemSecurity_GlobalSearchScope"];
+		foreach (string legacyVariable in legacyVariables)
 		{
-			if (Environment.GetEnvironmentVariable(LegacyStartupVariable, EnvironmentVariableTarget.Machine) is not null)
-				Environment.SetEnvironmentVariable(LegacyStartupVariable, null, EnvironmentVariableTarget.Machine);
+			try
+			{
+				if (Environment.GetEnvironmentVariable(legacyVariable, EnvironmentVariableTarget.Machine) is not null)
+					Environment.SetEnvironmentVariable(legacyVariable, null, EnvironmentVariableTarget.Machine);
+			}
+			catch (Exception exception) { SearchLog.ReportError(exception); }
 		}
-		catch (Exception exception) { SearchLog.ReportError(exception); }
 		nint name = Marshal.StringToHGlobalUni(ServiceName);
 		try
 		{
@@ -175,8 +178,11 @@ internal static partial class SearchServiceHost
 	}
 
 	// Ends the listeners so ServiceMain reports SERVICE_STOPPED; used by SCM controls and the idle timeout.
+	// The indexes are saved before the service stops, so it is reported as stopping before its pipe closes. A client
+	// that starts the service meanwhile then waits for it to stop and starts it again, instead of waiting for the pipe.
 	private static void RequestStop()
 	{
+		SetStatus(SERVICE_STATE.SERVICE_STOP_PENDING);
 		_stop?.Cancel();
 		_pipe?.Dispose();
 	}
@@ -280,46 +286,31 @@ internal static partial class SearchServiceHost
 	{
 		Stopwatch initialTime = Stopwatch.StartNew();
 		string[] driveRoots = Environment.GetLogicalDrives();
-		bool osOnly = false;
-		try
-		{
-			// Read the persistent machine value on each build, not the service's process environment.
-			osOnly = string.Equals(Environment.GetEnvironmentVariable("HardenSystemSecurity_GlobalSearchScope", EnvironmentVariableTarget.Machine),
-				"OS", StringComparison.OrdinalIgnoreCase);
-		}
-		catch (Exception exception)
-		{
-			SearchLog.ReportWarning($"Could not read Global Search scope; using all drives: {Describe(exception)}");
-		}
-		string? osRoot = osOnly ? Path.GetPathRoot(Environment.SystemDirectory) : null;
-		_ = indexes.EnsureCapacity(osOnly ? 1 : driveRoots.Length);
+		// Each index is saved here when the service stops and loaded from here at the next start.
+		string databaseDirectory = GetDatabaseDirectory();
+		int loaded = 0;
+		_ = indexes.EnsureCapacity(driveRoots.Length);
 		try
 		{
 			foreach (string driveRoot in driveRoots)
 			{
 				cancellationToken.ThrowIfCancellationRequested();
-				if (osOnly && !string.Equals(driveRoot, osRoot, StringComparison.OrdinalIgnoreCase)) continue;
 				char drive = driveRoot[0];
-				VolumeIndex? index = null;
 				try
 				{
-					index = new VolumeIndex(drive);
-					index.Build();
-					if (index.InaccessibleDirectoryCount != 0)
-						SearchLog.ReportWarning($"WARNING: {drive}:\\ index is PARTIAL: {index.InaccessibleDirectoryCount:N0} inaccessible director{(index.InaccessibleDirectoryCount == 1 ? "y" : "ies")} not traversed.");
-					indexes.Add(index);
-					index = null; // Ownership transferred to indexes.
+					indexes.Add(OpenIndex(drive, databaseDirectory, out bool wasLoaded));
+					if (wasLoaded) loaded++;
 				}
-				catch (Exception exception) when (exception is Win32Exception or IOException or NotSupportedException)
+				catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or NotSupportedException)
 				{
 					SearchLog.ReportWarning($"Skipping {drive}:\\: {Describe(exception)}");
 				}
-				finally { index?.Dispose(); }
 			}
 			initialTime.Stop();
-			SearchLog.Report($"Completion time: {initialTime.Elapsed.TotalMilliseconds / 1000} seconds ");
+			SearchLog.Report($"Completion time: {initialTime.Elapsed.TotalMilliseconds / 1000} seconds. Indexes loaded from disk: {loaded} of {indexes.Count}.");
 			if (indexes.Count == 0)
 				SearchLog.ReportWarning("No drives could be indexed. Check that an NTFS or ReFS volume with a USN journal is available.");
+			DeleteUnusedSavedIndexes(databaseDirectory, indexes);
 			// Indexing leaves outgrown hash buckets, enumeration buffers and walk state behind. The large ones
 			// are only freed by a full collection, which may not happen for a long time, so collect once now.
 			ReclaimReleasedIndexMemory();
@@ -330,6 +321,49 @@ internal static partial class SearchServiceHost
 			foreach (VolumeIndex index in indexes) index.Dispose();
 			indexes.Clear();
 			throw;
+		}
+	}
+
+	// Loads the saved index of a drive, or builds it when the saved one cannot be used. loaded is true when it was loaded.
+	private static VolumeIndex OpenIndex(char drive, string databaseDirectory, out bool loaded)
+	{
+		VolumeIndex index = new(drive, databaseDirectory);
+		try
+		{
+			loaded = index.LoadOrBuild();
+			if (index.InaccessibleDirectoryCount != 0)
+				SearchLog.ReportWarning($"WARNING: {drive}:\\ index is PARTIAL: {index.InaccessibleDirectoryCount:N0} inaccessible director{(index.InaccessibleDirectoryCount == 1 ? "y" : "ies")} not traversed.");
+			return index;
+		}
+		catch
+		{
+			index.Dispose();
+			throw;
+		}
+	}
+
+	// The package's per-machine folder, which Windows creates when the app is installed and deletes when it is removed.
+	// Only SYSTEM and TrustedInstaller can write to it; administrators can read it.
+	// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/applicationdata/ApplicationData.md#34-per-machine-data-store
+	private static string GetDatabaseDirectory() =>
+		Directory.CreateDirectory(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+			"Microsoft", "Windows", "AppRepository", "Families", "ApplicationData", Atlas.HardenSystemSecurityPackageFamilyName, "Machine", "GlobalSearch")).FullName;
+
+	// Deletes the saved indexes of drives that are no longer indexed, such as a removed drive, so they do not keep
+	// using disk space. Every saved file name starts with its drive letter.
+	private static void DeleteUnusedSavedIndexes(string databaseDirectory, List<VolumeIndex> indexes)
+	{
+		try
+		{
+			foreach (string path in Directory.EnumerateFiles(databaseDirectory))
+			{
+				char drive = char.ToUpperInvariant(Path.GetFileName(path.AsSpan())[0]);
+				if (!indexes.Exists(index => index.Drive == drive)) VolumeIndex.TryDelete(path);
+			}
+		}
+		catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
+		{
+			SearchLog.ReportWarning($"Could not delete unused saved indexes: {Describe(exception)}");
 		}
 	}
 
@@ -527,7 +561,7 @@ internal static partial class SearchServiceHost
 				index.Search(prepared, response);
 				i++;
 			}
-			catch (Exception exception) when (exception is Win32Exception or IOException or NotSupportedException)
+			catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or NotSupportedException)
 			{
 				SearchLog.ReportWarning($"Index for {index.Drive}:\\ is no longer usable: {Describe(exception)}");
 				index.Dispose();

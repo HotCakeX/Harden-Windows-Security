@@ -140,6 +140,7 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarSentryOutputDirectory = ReadValue(nameof(WindowsTopBarSentryOutputDirectory), WindowsTopBarSentryOutputDirectory);
 		WindowsTopBarSentryEncryptionMode = ReadValue(nameof(WindowsTopBarSentryEncryptionMode), WindowsTopBarSentryEncryptionMode);
 		WindowsTopBarSearchResultLimit = ReadValue(nameof(WindowsTopBarSearchResultLimit), WindowsTopBarSearchResultLimit);
+		WindowsTopBarSearchLargeThumbnails = ReadValue(nameof(WindowsTopBarSearchLargeThumbnails), WindowsTopBarSearchLargeThumbnails);
 		CustomizableScanLevelsFallbackOrder = ReadValue(nameof(CustomizableScanLevelsFallbackOrder), CustomizableScanLevelsFallbackOrder);
 		AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation = ReadValue(nameof(AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation);
 	}
@@ -1363,6 +1364,21 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = Atlas.GlobalSearchDefaultResultLimit;
+
+	/// <summary>
+	/// Harden System Security app only.
+	/// Whether the Top Bar Search view shows its results with large thumbnails instead of compact rows.
+	/// </summary>
+	internal bool WindowsTopBarSearchLargeThumbnails
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarSearchLargeThumbnails), field);
+			}
+		}
+	}
 
 	/// <summary>
 	/// For AppControl Manager.

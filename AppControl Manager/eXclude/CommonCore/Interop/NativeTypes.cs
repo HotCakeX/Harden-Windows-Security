@@ -2708,3 +2708,14 @@ internal struct BITMAPINFO
 	internal BITMAPINFOHEADER bmiHeader;
 	internal uint bmiColors;
 }
+
+/// <summary>
+/// One address range for PrefetchVirtualMemory.
+/// https://learn.microsoft.com/windows/win32/api/memoryapi/ns-memoryapi-win32_memory_range_entry
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct WIN32_MEMORY_RANGE_ENTRY
+{
+	internal IntPtr VirtualAddress;
+	internal nuint NumberOfBytes;
+}

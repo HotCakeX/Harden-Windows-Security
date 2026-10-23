@@ -797,7 +797,8 @@
                                            VerticalAlignment="Center"
                                            Text="Type to search"
                                            TextTrimming="CharacterEllipsis"/>
-                                <!-- Search filters. The kind is one choice. File types combine, and none selected includes every file. -->
+                                <!-- Search filters. The kind is one choice. File types combine, and none selected includes every file.
+                                     The last toggle only changes how the results are shown. -->
                                 <StackPanel Grid.Column="2"
                                             Orientation="Horizontal"
                                             Spacing="4">
@@ -848,6 +849,18 @@
                                                   Content="Archives"
                                                   ToolTipService.ToolTip="Archives, such as ZIP, 7Z and RAR"
                                                   Click="{x:Bind OnSearchTextChanged}"/>
+                                    <Border Width="1"
+                                            Height="16"
+                                            Margin="4,0"
+                                            VerticalAlignment="Center"
+                                            Background="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                                    <ToggleButton x:Name="SearchLargeThumbnailsToggle"
+                                                  AutomationProperties.Name="Large thumbnails"
+                                                  ToolTipService.ToolTip="Show large thumbnails to preview pictures and videos"
+                                                  Click="{x:Bind OnSearchLargeThumbnailsClick}">
+                                        <FontIcon FontSize="12"
+                                                  Glyph="&#xE8B9;"/>
+                                    </ToggleButton>
                                 </StackPanel>
                                 <TextBlock x:Name="SearchIndexCountText"
                                            Grid.Column="3"
@@ -872,6 +885,60 @@
                                         <ResourceDictionary.MergedDictionaries>
                                             <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
                                         </ResourceDictionary.MergedDictionaries>
+                                        <!-- The two ways to show the same results. The code assigns one of them as the ItemTemplate.
+                                             The width of the thumbnail column of each and the size of its Image must match the code. -->
+                                        <DataTemplate x:Key="SearchCompactItemTemplate" x:DataType="search:TopBarSearchResult">
+                                            <Grid Height="30"
+                                                  Background="Transparent"
+                                                  DoubleTapped="OnSearchResultDoubleTapped"
+                                                  RightTapped="OnSearchResultRightTapped">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="36"/>
+                                                    <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[0].Width, Mode=OneWay}"/>
+                                                    <ColumnDefinition Width="{x:Bind search:TopBar.SearchPathWidth.Width, Mode=OneWay}"/>
+                                                    <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=OneWay}"/>
+                                                    <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=OneWay}"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Image Grid.Column="0"
+                                                       Width="20"
+                                                       Height="20"
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                       Stretch="Uniform"
+                                                       Loaded="OnSearchThumbnailLoaded"
+                                                       DataContextChanged="OnSearchThumbnailDataContextChanged"/>
+                                                <TextBlock Grid.Column="1" Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                                <TextBlock Grid.Column="2" Text="{x:Bind Path}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="3" Text="{x:Bind Size}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                                <TextBlock Grid.Column="4" Text="{x:Bind DateModified}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                        <DataTemplate x:Key="SearchLargeItemTemplate" x:DataType="search:TopBarSearchResult">
+                                            <Grid Height="104"
+                                                  Background="Transparent"
+                                                  DoubleTapped="OnSearchResultDoubleTapped"
+                                                  RightTapped="OnSearchResultRightTapped">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="104"/>
+                                                    <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[0].Width, Mode=OneWay}"/>
+                                                    <ColumnDefinition Width="{x:Bind search:TopBar.SearchPathWidth.Width, Mode=OneWay}"/>
+                                                    <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=OneWay}"/>
+                                                    <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=OneWay}"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Image Grid.Column="0"
+                                                       Width="96"
+                                                       Height="96"
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Center"
+                                                       Stretch="Uniform"
+                                                       Loaded="OnSearchThumbnailLoaded"
+                                                       DataContextChanged="OnSearchThumbnailDataContextChanged"/>
+                                                <TextBlock Grid.Column="1" Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                                <TextBlock Grid.Column="2" Text="{x:Bind Path}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="3" Text="{x:Bind Size}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                                <TextBlock Grid.Column="4" Text="{x:Bind DateModified}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+                                            </Grid>
+                                        </DataTemplate>
                                     </ResourceDictionary>
                                 </ListView.Resources>
                                 <ListView.ItemContainerStyle>
@@ -887,7 +954,9 @@
                                             customUI:StickyHeaderBehaviorV2.IsEnabled="True">
                                         <Grid Height="32">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="36"/>
+                                                <!-- The code sets this to the thumbnail column width of the shown item template. -->
+                                                <ColumnDefinition x:Name="SearchThumbnailHeaderColumn"
+                                                                  Width="36"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[0].Width, Mode=TwoWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchPathWidth.Width, Mode=TwoWay}"/>
                                                 <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=TwoWay}"/>
@@ -907,34 +976,6 @@
                                         </Grid>
                                     </Border>
                                 </ListView.Header>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate x:DataType="search:TopBarSearchResult">
-                                        <Grid Height="30"
-                                              Background="Transparent"
-                                              DoubleTapped="OnSearchResultDoubleTapped"
-                                              RightTapped="OnSearchResultRightTapped">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="36"/>
-                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[0].Width, Mode=OneWay}"/>
-                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchPathWidth.Width, Mode=OneWay}"/>
-                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[1].Width, Mode=OneWay}"/>
-                                                <ColumnDefinition Width="{x:Bind search:TopBar.SearchColumnManager.ColumnWidths[2].Width, Mode=OneWay}"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Image Grid.Column="0"
-                                               Width="20"
-                                               Height="20"
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Center"
-                                               Stretch="Uniform"
-                                               Loaded="OnSearchThumbnailLoaded"
-                                               DataContextChanged="OnSearchThumbnailDataContextChanged"/>
-                                            <TextBlock Grid.Column="1" Text="{x:Bind Name}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
-                                            <TextBlock Grid.Column="2" Text="{x:Bind Path}" Margin="8,0" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                            <TextBlock Grid.Column="3" Text="{x:Bind Size}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
-                                            <TextBlock Grid.Column="4" Text="{x:Bind DateModified}" Margin="8,0" VerticalAlignment="Center" TextWrapping="NoWrap"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
                             </ListView>
                         </StackPanel>
                     </Grid>
@@ -1087,15 +1128,6 @@
                                 </ToggleMenuFlyoutItem.Icon>
                             </ToggleMenuFlyoutItem>
                             <MenuFlyoutSeparator/>
-                            <ToggleMenuFlyoutItem x:Name="SearchOsDriveOnlyToggle"
-                                                  Text="Index OS Drive Only"
-                                                  IsEnabled="False"
-                                                  Loaded="{x:Bind OnSearchScopeLoaded}"
-                                                  Click="{x:Bind OnSearchScopeToggled}">
-                                <ToggleMenuFlyoutItem.Icon>
-                                    <FontIcon Glyph="&#xED37;"/>
-                                </ToggleMenuFlyoutItem.Icon>
-                            </ToggleMenuFlyoutItem>
                             <!-- Enables or disables the Global Search startup task, which is disabled by default. -->
                             <ToggleMenuFlyoutItem x:Name="SearchIndexAtStartupToggle"
                                                   Text="Index at Windows startup"

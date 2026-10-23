@@ -759,19 +759,100 @@
                           VerticalAlignment="Center"
                           Visibility="Collapsed">
                         <StackPanel Spacing="8">
+                            <!-- Only the status trims on a narrow row; the result limit, the filters and the item count keep their full width. -->
                             <Grid ColumnSpacing="12">
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
+                                <!-- The result limit applies on Enter, when focus leaves the box, or with the arrows. Compact density keeps it as tall as the filters. -->
+                                <StackPanel Grid.Column="0"
+                                            Orientation="Horizontal"
+                                            Spacing="6">
+                                    <TextBlock FontSize="10"
+                                               VerticalAlignment="Center"
+                                               Text="Max results"/>
+                                    <NumberBox x:Name="SearchLimitBox"
+                                               Width="110"
+                                               FontSize="11"
+                                               VerticalAlignment="Center"
+                                               Minimum="1"
+                                               Maximum="10000"
+                                               SmallChange="100"
+                                               LargeChange="1000"
+                                               SpinButtonPlacementMode="Compact"
+                                               AutomationProperties.Name="Max results"
+                                               ToolTipService.ToolTip="The most results to show, from 1 to 10,000. Higher numbers can take longer."
+                                               ValueChanged="{x:Bind OnSearchLimitChanged}">
+                                        <NumberBox.Resources>
+                                            <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml"/>
+                                        </NumberBox.Resources>
+                                    </NumberBox>
+                                </StackPanel>
                                 <TextBlock x:Name="SearchStatusText"
-                                           Grid.Column="0"
-                                           FontSize="10"
-                                           Text="Type to search"
-                                           TextTrimming="CharacterEllipsis"/>
-                                <TextBlock x:Name="SearchIndexCountText"
                                            Grid.Column="1"
                                            FontSize="10"
+                                           VerticalAlignment="Center"
+                                           Text="Type to search"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <!-- Search filters. The kind is one choice. File types combine, and none selected includes every file. -->
+                                <StackPanel Grid.Column="2"
+                                            Orientation="Horizontal"
+                                            Spacing="4">
+                                    <StackPanel.Resources>
+                                        <Style TargetType="ToggleButton"
+                                               BasedOn="{StaticResource DefaultToggleButtonStyle}">
+                                            <Setter Property="Height" Value="24"/>
+                                            <Setter Property="MinWidth" Value="0"/>
+                                            <Setter Property="Padding" Value="8,0"/>
+                                            <Setter Property="FontSize" Value="11"/>
+                                        </Style>
+                                    </StackPanel.Resources>
+                                    <ToggleButton x:Name="SearchAllToggle"
+                                                  Content="All"
+                                                  IsChecked="True"
+                                                  ToolTipService.ToolTip="Files and folders"
+                                                  Click="{x:Bind OnSearchKindClick}"/>
+                                    <ToggleButton x:Name="SearchFilesToggle"
+                                                  Content="Files"
+                                                  ToolTipService.ToolTip="Files only"
+                                                  Click="{x:Bind OnSearchKindClick}"/>
+                                    <ToggleButton x:Name="SearchFoldersToggle"
+                                                  Content="Folders"
+                                                  ToolTipService.ToolTip="Folders only"
+                                                  Click="{x:Bind OnSearchKindClick}"/>
+                                    <Border Width="1"
+                                            Height="16"
+                                            Margin="4,0"
+                                            VerticalAlignment="Center"
+                                            Background="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+                                    <ToggleButton x:Name="SearchPicturesToggle"
+                                                  Content="Pictures"
+                                                  ToolTipService.ToolTip="Pictures, such as JPG, PNG and HEIC"
+                                                  Click="{x:Bind OnSearchTextChanged}"/>
+                                    <ToggleButton x:Name="SearchVideosToggle"
+                                                  Content="Videos"
+                                                  ToolTipService.ToolTip="Videos, such as MP4, MKV and MOV"
+                                                  Click="{x:Bind OnSearchTextChanged}"/>
+                                    <ToggleButton x:Name="SearchAudioToggle"
+                                                  Content="Audio"
+                                                  ToolTipService.ToolTip="Audio, such as MP3, WAV and FLAC"
+                                                  Click="{x:Bind OnSearchTextChanged}"/>
+                                    <ToggleButton x:Name="SearchDocumentsToggle"
+                                                  Content="Documents"
+                                                  ToolTipService.ToolTip="Documents, such as PDF, Word, Excel and text files"
+                                                  Click="{x:Bind OnSearchTextChanged}"/>
+                                    <ToggleButton x:Name="SearchArchivesToggle"
+                                                  Content="Archives"
+                                                  ToolTipService.ToolTip="Archives, such as ZIP, 7Z and RAR"
+                                                  Click="{x:Bind OnSearchTextChanged}"/>
+                                </StackPanel>
+                                <TextBlock x:Name="SearchIndexCountText"
+                                           Grid.Column="3"
+                                           FontSize="10"
+                                           VerticalAlignment="Center"
                                            Text="Indexed items: --"/>
                             </Grid>
                             <TextBox x:Name="SearchTextBox"

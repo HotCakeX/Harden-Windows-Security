@@ -76,7 +76,7 @@ A strip of pinned folders for one‑click access to the places you use most. It 
 
 ### Search
 
-The **Search** view provides instant, system-wide file search directly from the TopBar. Start typing part of a file name and matching files from the indexed drives appear in real time, without waiting for Windows Search to scan each location.
+The **Search** view provides instant, system-wide file and folder search directly from the TopBar. Start typing part of a file or folder name and matching items from the indexed drives appear in real time, without waiting for Windows Search to scan each location.
 
 <div align="center">
 
@@ -87,6 +87,14 @@ The **Search** view provides instant, system-wide file search directly from the 
 Global Search is designed for fast searches across every local **NTFS** and **ReFS** drives.
 
 - **Search as you type.** Results update in real time as the search text changes.
+
+- **Search by name.** Search looks at the names of files and folders, not their full paths. For example, typing `vacation` finds a folder named `Vacation` and a file named `Vacation.jpg`, but not `beach.jpg` that is saved inside that folder. If there are more matches than your **Max results** number, type more of the name to narrow them down.
+
+- **Choose how many results to show.** The **Max results** box at the top left of the Search view sets the most results shown for each search. It starts at 100 and accepts any number from 1 to 10,000. Type a number and press Enter, or click the box and use the up and down arrows that appear, which change it by 100 at a time. Higher numbers can take a little longer to show because the size and date of every result are read from the drive, so a smaller number keeps Search at its fastest. Your choice is remembered.
+
+- **Choose files, folders, or both.** The small buttons on the top row of the Search view, next to the indexed items count, let you pick what to find. **All** shows both files and folders and is selected by default, **Files** shows only files, and **Folders** shows only folders.
+
+- **Filter by file type.** Select **Pictures**, **Videos**, **Audio**, **Documents**, or **Archives** to only show those kinds of files. You can select more than one, for example Pictures and Videos together to find both your photos and your clips. When none of them is selected, every type of file is included. Hover over a button to see examples of the file types it covers. File types only apply to files, so they are turned off while **Folders** is selected, and folders are not shown while a file type is selected.
 
 - **Search the OS drive or every available drive.** You can configure the indexing scope based on whether you want an OS-drive-only index or broader coverage across all supported drives.
 
@@ -284,7 +292,7 @@ There are also quick buttons to **add** a new item to the current view, and to *
 
 - **It's light on your system.** The live tools only do their work while you're actually looking at them and the bar is open. A collapsed bar costs practically nothing.
 
-- **Your choices are remembered.** Your pinned apps, folders, websites, clocks, companion choice, notch style, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
+- **Your choices are remembered.** Your pinned apps, folders, websites, clocks, companion choice, notch style, Search **Max results** number, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
 
 - **One bar at a time.** Even if you have more than one copy of the app running, only a single TopBar is shown, so it never clutters your screen.
 

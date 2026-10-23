@@ -46,6 +46,10 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 	private readonly Task _worker;
 	private NamedPipeClientStream? _pipe;
 	private string _query = string.Empty;
+	// The service's kind (0 files and folders, 1 files only, 2 folders only) and file type bits.
+	private byte _kind;
+	private byte _fileTypes;
+	private int _limit = Atlas.GlobalSearchDefaultResultLimit;
 	private bool _disposed;
 	private bool _receivedResponse;
 	// Service readiness belongs to the current pipe handshake, not the index lifetime.
@@ -60,9 +64,12 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 		_worker = RunAsync();
 	}
 
-	internal void SetQuery(string query)
+	internal void SetQuery(string query, byte kind = 0, byte fileTypes = 0, int limit = Atlas.GlobalSearchDefaultResultLimit)
 	{
 		if (_disposed) return;
+		_kind = kind;
+		_fileTypes = fileTypes;
+		_limit = limit;
 		_query = query;
 		_ = _queryChanged.Writer.TryWrite(true);
 	}
@@ -139,12 +146,19 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			if (_disposed) break;
 			string query = _query;
 			if (string.IsNullOrWhiteSpace(query)) continue;
+			byte kind = _kind;
+			byte fileTypes = _fileTypes;
+			int limit = _limit;
 			_receivedResponse = false;
 			QueueSearchStatus(query, "Searching, please wait...");
 			// Only the service decides whether the declared UTF-8 length is acceptable.
 			byte admission;
 			try
 			{
+				// The filter and the result limit precede the length.
+				output.Write(kind);
+				output.Write(fileTypes);
+				output.Write7BitEncodedInt(limit);
 				output.Write7BitEncodedInt(Encoding.UTF8.GetByteCount(query));
 				output.Flush();
 				admission = input.ReadByte();
@@ -164,14 +178,24 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			}
 			if (response != 2) throw new InvalidDataException("Unexpected search response.");
 			int count = input.ReadInt32();
-			if (count is < 0 or > 100) throw new InvalidDataException("Invalid search result count.");
+			if (count < 0 || count > limit) throw new InvalidDataException("Invalid search result count.");
 			// The service writes this snapshot immediately after the result count.
 			long indexedItems = input.ReadInt64();
 			if (indexedItems < 0) throw new InvalidDataException("Invalid indexed item count.");
 			List<TopBarSearchResult> results = new(count);
-			for (int i = 0; i < count; i++) results.Add(CreateResult(input.ReadString()));
+			// Once a newer query, filter or limit is pending, the rest of the frame is read without file lookups.
+			bool superseded = false;
+			for (int i = 0; i < count; i++)
+			{
+				string path = input.ReadString();
+				superseded = superseded || _queryChanged.Reader.Count != 0;
+				if (!superseded) results.Add(CreateResult(path));
+			}
 			_receivedResponse = true;
-			_ = _dispatcher.TryEnqueue(() => { if (!_disposed) _results(query, results, indexedItems); });
+			// The pending search follows at once and shows its own results.
+			if (superseded) continue;
+			// Results of an older filter or limit for the same text are dropped; the newer search follows.
+			_ = _dispatcher.TryEnqueue(() => { if (!_disposed && _kind == kind && _fileTypes == fileTypes && _limit == limit) _results(query, results, indexedItems); });
 		}
 		return null;
 	}

@@ -1,3 +1,11 @@
 * The app can now be updated while in use, resolving the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1241
 
 * The Global Search service is no longer started automatically, it is now set to manual mode. Also was a request mentioned here: https://github.com/HotCakeX/Harden-Windows-Security/issues/1241
+
+* More Global Search improvements:
+
+    * You can now choose to search between files only, folders only or both (default)
+    * You can now choose to select only between pictures, videos, documents and so on. These filters help you find the items you are looking for faster.
+    * You can now choose how many results is returned for your seach query. Previously, the default limit was maximum 100, but now you can choose a value up to 10,000.
+
+* Updated dependencies to the latest version.

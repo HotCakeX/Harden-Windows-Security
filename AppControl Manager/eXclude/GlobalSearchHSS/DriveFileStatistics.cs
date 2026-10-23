@@ -32,6 +32,7 @@ internal sealed partial class VolumeIndex
 	/// <summary>
 	/// Statistics classify names only on a privately owned index.
 	/// Category IDs are fixed by protocol version 1 and match the Top Bar labels.
+	/// The search file type filter uses the same IDs as its bits.
 	/// </summary>
 	private static readonly string[][] StatisticsExtensions =
 	[
@@ -89,6 +90,23 @@ internal sealed partial class VolumeIndex
 		ReadOnlySpan<char> extension = Path.GetExtension(name);
 		if (extension.IsEmpty) return 8;
 		return categories.TryGetValue(extension, out int category) ? category : 9;
+	}
+
+	// True when the name's extension is in a category whose bit is set in fileTypes.
+	// Only the selected categories are scanned, so search keeps no lookup in memory and allocates nothing.
+	private static bool HasFileType(ReadOnlySpan<char> name, byte fileTypes)
+	{
+		ReadOnlySpan<char> extension = Path.GetExtension(name);
+		if (extension.IsEmpty) return false;
+		for (int category = 0; category < StatisticsExtensions.Length; category++)
+		{
+			if ((fileTypes & (1 << category)) == 0) continue;
+			foreach (string candidate in StatisticsExtensions[category])
+			{
+				if (extension.Equals(candidate, StringComparison.OrdinalIgnoreCase)) return true;
+			}
+		}
+		return false;
 	}
 }
 

@@ -61,12 +61,22 @@ internal sealed class NameQuery
 	private readonly Vector128<byte> firstMask;
 	private readonly Vector128<byte> lastLower;
 	private readonly Vector128<byte> lastMask;
+	// The kind filter, read from the entry's directory bit before its name is compared.
+	internal readonly bool IncludeFiles;
+	internal readonly bool IncludeFolders;
+	// Bit i accepts files of statistics category i; 0 accepts every file.
+	internal readonly byte FileTypes;
 	internal int Length => Text.Length;
 
 	// The text must not be empty; the service never searches for an empty query.
-	internal NameQuery(string text)
+	// Kind 0 accepts files and folders, 1 files only and 2 folders only. Folders have no file type,
+	// so a file type filter accepts files only.
+	internal NameQuery(string text, byte kind, byte fileTypes)
 	{
 		Text = text;
+		IncludeFiles = kind != 2;
+		IncludeFolders = kind != 1 && fileTypes == 0;
+		FileTypes = fileTypes;
 		IsAscii = Ascii.IsValid(text);
 		if (!IsAscii)
 		{
@@ -1390,12 +1400,14 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	// Adds matching paths to the response until it is full. Nothing is allocated per search or per match.
 	internal void Search(NameQuery query, SearchResponse response)
 	{
+		// Widens ASCII names for the file type filter. NTFS and ReFS names fit in 255 UTF-16 code units.
+		Span<char> scratch = stackalloc char[256];
 		if (wideEntries is not null)
 		{
 			WideEntryTable.Enumerator entries = wideEntries.GetEnumerator();
 			while (entries.MoveNext())
 			{
-				if (!nameArena.Contains(entries.Name, query) || !ResolveWide(entries.Index)) continue;
+				if (!Matches(entries.Name, query, scratch) || !ResolveWide(entries.Index)) continue;
 				WritePath(response);
 				if (response.IsFull) return;
 			}
@@ -1406,12 +1418,20 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 			NtfsEntryTable.Enumerator entries = ntfsEntries!.GetEnumerator();
 			while (entries.MoveNext())
 			{
-				if (!nameArena.Contains(entries.Name, query) || !ResolveNtfs(entries.Id)) continue;
+				if (!Matches(entries.Name, query, scratch) || !ResolveNtfs(entries.Id)) continue;
 				WritePath(response);
 				if (response.IsFull) return;
 			}
 		}
 	}
+
+	// The kind is a single bit test, so it skips entries before their names are compared.
+	// The file type is classified only for names that already contain the query.
+	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+	private bool Matches(NameRef name, NameQuery query, Span<char> scratch) =>
+		(name.IsDirectory ? query.IncludeFolders : query.IncludeFiles) &&
+		nameArena.Contains(name, query) &&
+		(query.FileTypes == 0 || HasFileType(nameArena.GetChars(name, scratch), query.FileTypes));
 
 	// Collects the path's names, leaf first, into pathNames. Returns false if the path cannot be shown.
 	private bool ResolveWide(int index)

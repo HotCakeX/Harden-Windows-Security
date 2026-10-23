@@ -247,7 +247,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private const double CompactCollapsedSpacingDips = 5.0;
 
 	private const double ExpandedHeightDips = 92.0;
-	private const double SearchExpandedHeightDips = 500.0;
+	private const double SearchExpandedHeightDips = 512.0;
 	private const double ExpandedCornerRadiusDips = 24.0;
 	private const double MinimumExpandedWidthDips = 380.0;
 	private const double ExpandedContentPaddingDips = 14.0;
@@ -608,6 +608,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		SearchColumnManager.ColumnWidths[2].Width = new GridLength(150.0);
 		// Animate Search as one cell while the list scrolls independently.
 		_viewTiles[TopBarView.Search] = [new TopBarTile(SearchPanel, AttachEntranceTransform(SearchPanel))];
+		// The change handler skips this value because it matches the saved limit.
+		SearchLimitBox.Value = Atlas.Settings.WindowsTopBarSearchResultLimit;
 		InitializeSentryView();
 
 		RebuildAppTiles();
@@ -3105,8 +3107,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		_displayBottom = bounds.Y + bounds.Height;
 		_displayWidth = bounds.Width;
 		_displayHeight = bounds.Height;
-		// Preserve space for the TextBox when the display is shorter than the Search panel.
-		SearchResultsListView.Height = Math.Min(400.0, Math.Max(0.0, bounds.Height / _rasterizationScale - 100.0));
+		// Preserve space for the header row with the filters and the TextBox when the display is shorter than the Search panel.
+		SearchResultsListView.Height = Math.Min(400.0, Math.Max(0.0, bounds.Height / _rasterizationScale - 112.0));
 		UpdateViewsMaximumWidth();
 		if (_activeView == TopBarView.Search)
 		{
@@ -5933,6 +5935,8 @@ internal sealed partial class TopBar : Window, IDisposable
 	private bool _searchPathResized;
 	private readonly RangedObservableCollection<TopBarSearchResult> _searchResults = [];
 	private TopBarSearchClient? _searchClient;
+	// The selected kind: 0 files and folders, 1 files only, 2 folders only.
+	private byte _searchKind;
 	private CancellationTokenSource _searchThumbnailCancellation = new();
 	private bool _searchScopeReady;
 	private bool _searchScopePending;
@@ -6262,7 +6266,52 @@ internal sealed partial class TopBar : Window, IDisposable
 			return;
 		}
 		_searchClient ??= new TopBarSearchClient(DispatcherQueue, OnSearchStatus, OnSearchResults);
-		_searchClient.SetQuery(query);
+		// Folders have no file type, so the type filter is sent only when files are included.
+		_searchClient.SetQuery(query, _searchKind, _searchKind == 2 ? (byte)0 : GetSearchFileTypes(), Atlas.Settings.WindowsTopBarSearchResultLimit);
+	}
+
+	// Saves a new result limit and repeats the current search with it.
+	private void OnSearchLimitChanged(NumberBox sender, NumberBoxValueChangedEventArgs e)
+	{
+		// An empty box shows the saved limit again, and a typed fraction shows the whole number that is used.
+		// The NumberBox does not raise ValueChanged again for a value set inside this handler.
+		int limit = double.IsNaN(e.NewValue) ? Atlas.Settings.WindowsTopBarSearchResultLimit : (int)Math.Round(e.NewValue);
+		sender.Value = limit;
+		if (limit == Atlas.Settings.WindowsTopBarSearchResultLimit) return;
+		Atlas.Settings.WindowsTopBarSearchResultLimit = limit;
+		OnSearchTextChanged();
+	}
+
+	// The kind toggles act as one choice. Selecting the current kind again keeps it and its results.
+	private void OnSearchKindClick(object sender, RoutedEventArgs e)
+	{
+		byte kind = ReferenceEquals(sender, SearchFilesToggle) ? (byte)1 : ReferenceEquals(sender, SearchFoldersToggle) ? (byte)2 : (byte)0;
+		SearchAllToggle.IsChecked = kind == 0;
+		SearchFilesToggle.IsChecked = kind == 1;
+		SearchFoldersToggle.IsChecked = kind == 2;
+		if (kind == _searchKind) return;
+		_searchKind = kind;
+		// File types apply only while files are included.
+		bool typesEnabled = kind != 2;
+		SearchPicturesToggle.IsEnabled = typesEnabled;
+		SearchVideosToggle.IsEnabled = typesEnabled;
+		SearchAudioToggle.IsEnabled = typesEnabled;
+		SearchDocumentsToggle.IsEnabled = typesEnabled;
+		SearchArchivesToggle.IsEnabled = typesEnabled;
+		OnSearchTextChanged();
+	}
+
+	// Bit i selects the service's file category i, in the drive statistics order:
+	// 0 Pictures, 1 Audio, 2 Videos, 5 Documents and 6 Archives. None selected includes every file.
+	private byte GetSearchFileTypes()
+	{
+		int types = 0;
+		if (SearchPicturesToggle.IsChecked == true) types |= 1 << 0;
+		if (SearchAudioToggle.IsChecked == true) types |= 1 << 1;
+		if (SearchVideosToggle.IsChecked == true) types |= 1 << 2;
+		if (SearchDocumentsToggle.IsChecked == true) types |= 1 << 5;
+		if (SearchArchivesToggle.IsChecked == true) types |= 1 << 6;
+		return (byte)types;
 	}
 
 	// The Path column uses the horizontal space left after the fixed Name, Size, and Date modified columns are measured.
@@ -6303,7 +6352,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			SearchColumnManager.CalculateColumnWidths(results);
 			UpdateViewsMaximumWidth();
 		}
-		SearchStatusText.Text = results.Count == 0 ? "No matching files." : $"{results.Count} result(s) shown (limit 100). Search is by filename, not full path.";
+		SearchStatusText.Text = results.Count == 0 ? "No matching items." : results.Count.ToString("N0", CultureInfo.CurrentCulture) + " result(s) shown.";
 	}
 
 	#endregion

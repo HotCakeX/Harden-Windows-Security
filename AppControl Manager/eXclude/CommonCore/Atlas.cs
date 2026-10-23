@@ -35,6 +35,9 @@ internal static partial class Atlas
 	internal const string GlobalSearchPipeName = "GlobalSearchHSS_SearchPipe";
 	// Service start argument passed only by the Global Search startup task, so the service indexes right away.
 	internal const string GlobalSearchIndexAtStartupArgument = "STARTUP";
+	// Results per Global Search query. The maximum bounds the response frame and the client's per-result file lookups.
+	internal const int GlobalSearchDefaultResultLimit = 100;
+	internal const int GlobalSearchMaxResultLimit = 10_000;
 
 	// User Mode block rules
 	//internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");

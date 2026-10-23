@@ -46,24 +46,27 @@ internal static class SearchLog
 // followed by its UTF-8 bytes.
 internal sealed class SearchResponse
 {
-	internal const int MaxResults = 100;
 	// Tag, count and indexed items.
 	private const int HeaderSize = 13;
 	private const int InitialFrameSize = 16 * 1024;
 	private const int InitialPathSize = 1024;
-	// Buffers grown by unusually long paths are released after the response instead of being kept for the session.
-	// 256 KB holds 100 paths averaging over 850 characters, even when each character takes 3 UTF-8 bytes.
+	// Buffers grown by many or unusually long paths are released after the response instead of being kept for the session.
+	// 256 KB holds the default 100 paths averaging over 850 characters, even when each character takes 3 UTF-8 bytes.
+	// A higher result limit grows the frame only while that response is built and sent.
 	private const int RetainedFrameSize = 256 * 1024;
 	private const int RetainedPathSize = 32 * 1024;
 	private byte[] frame = new byte[InitialFrameSize];
 	private char[] path = new char[InitialPathSize];
 	private int length = HeaderSize;
+	private int limit;
 
 	internal int Count { get; private set; }
-	internal bool IsFull => Count >= MaxResults;
+	internal bool IsFull => Count >= limit;
 
-	internal void Clear()
+	// Starts the response of a query that accepts up to limit results.
+	internal void Clear(int limit)
 	{
+		this.limit = limit;
 		length = HeaderSize;
 		Count = 0;
 	}
@@ -483,9 +486,17 @@ internal static partial class SearchServiceHost
 		return allowed;
 	}
 
-	// Reject the declared length before reading or allocating the payload. The service owns the limit.
-	private static string? ReadQuery(BinaryReader reader, BinaryWriter writer)
+	// The filter and the result limit precede the length: kind (0 files and folders, 1 files only, 2 folders only),
+	// file type bits, then the 7-bit encoded result limit.
+	// Reject the declared length before reading or allocating the payload. The service owns the length limit.
+	private static string? ReadQuery(BinaryReader reader, BinaryWriter writer, out byte kind, out byte fileTypes, out int limit)
 	{
+		kind = reader.ReadByte();
+		fileTypes = reader.ReadByte();
+		// Folders have no file type, so a type filter is valid only when files are included.
+		if (kind > 2 || (kind == 2 && fileTypes != 0)) throw new InvalidDataException("Invalid search filter.");
+		limit = reader.Read7BitEncodedInt();
+		if (limit < 1 || limit > Atlas.GlobalSearchMaxResultLimit) throw new InvalidDataException("Invalid search result limit.");
 		int length = reader.Read7BitEncodedInt();
 		if (length < 0) throw new InvalidDataException("Invalid search query length.");
 		writer.Write(length > 1000 ? (byte)3 : (byte)4); // 3: rejected; 4: send payload.
@@ -500,12 +511,12 @@ internal static partial class SearchServiceHost
 		return Encoding.UTF8.GetString(bytes);
 	}
 
-	private static void SearchIndexes(string query, List<VolumeIndex> indexes, SearchResponse response)
+	private static void SearchIndexes(string query, byte kind, byte fileTypes, int limit, List<VolumeIndex> indexes, SearchResponse response)
 	{
-		response.Clear();
+		response.Clear(limit);
 		if (query.Length == 0) return;
 		// Prepared once and shared by every volume.
-		NameQuery prepared = new(query);
+		NameQuery prepared = new(query, kind, fileTypes);
 		// Refresh each volume separately so one journal failure does not hide other results.
 		for (int i = 0; i < indexes.Count;)
 		{
@@ -538,7 +549,10 @@ internal static partial class SearchServiceHost
 		while (!token.IsCancellationRequested)
 		{
 			string? query;
-			try { query = ReadQuery(reader, writer); }
+			byte kind;
+			byte fileTypes;
+			int limit;
+			try { query = ReadQuery(reader, writer, out kind, out fileTypes, out limit); }
 			catch (Exception exception) when (exception is InvalidDataException or FormatException)
 			{
 				// A malformed request closes only this client session, not the service or its indexes.
@@ -564,7 +578,7 @@ internal static partial class SearchServiceHost
 						state.EnsureIndexes(token);
 						buildingIndexes = false;
 					}
-					SearchIndexes(query, state.Indexes, response);
+					SearchIndexes(query, kind, fileTypes, limit, state.Indexes, response);
 					// Snapshot the indexes currently held after this query's refresh, without walking their entries.
 					long indexedItems = 0;
 					foreach (VolumeIndex index in state.Indexes) indexedItems += index.IndexedItemCount;

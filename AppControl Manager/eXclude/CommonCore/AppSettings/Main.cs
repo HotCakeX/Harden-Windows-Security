@@ -139,6 +139,7 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarSentryMaxCycles = ReadValue(nameof(WindowsTopBarSentryMaxCycles), WindowsTopBarSentryMaxCycles);
 		WindowsTopBarSentryOutputDirectory = ReadValue(nameof(WindowsTopBarSentryOutputDirectory), WindowsTopBarSentryOutputDirectory);
 		WindowsTopBarSentryEncryptionMode = ReadValue(nameof(WindowsTopBarSentryEncryptionMode), WindowsTopBarSentryEncryptionMode);
+		WindowsTopBarSearchResultLimit = ReadValue(nameof(WindowsTopBarSearchResultLimit), WindowsTopBarSearchResultLimit);
 		CustomizableScanLevelsFallbackOrder = ReadValue(nameof(CustomizableScanLevelsFallbackOrder), CustomizableScanLevelsFallbackOrder);
 		AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation = ReadValue(nameof(AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation);
 	}
@@ -1346,6 +1347,22 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	}
+
+	/// <summary>
+	/// Harden System Security app only.
+	/// The maximum number of results the Top Bar Search view requests from the Global Search service per query.
+	/// The value is kept within the range the service accepts.
+	/// </summary>
+	internal int WindowsTopBarSearchResultLimit
+	{
+		get; set
+		{
+			if (SP(ref field, Math.Clamp(value, 1, Atlas.GlobalSearchMaxResultLimit)))
+			{
+				SaveValue(nameof(WindowsTopBarSearchResultLimit), field);
+			}
+		}
+	} = Atlas.GlobalSearchDefaultResultLimit;
 
 	/// <summary>
 	/// For AppControl Manager.

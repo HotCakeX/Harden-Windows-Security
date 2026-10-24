@@ -116,7 +116,8 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 	internal TopBarMetricsSnapshot Sample()
 	{
 		InitializeExpandedResources();
-		PerformanceMetricsSampler performanceSampler = _performanceSampler ?? throw new InvalidOperationException();
+		// InitializeExpandedResources always leaves the samplers set, and they are only released on this same thread.
+		PerformanceMetricsSampler performanceSampler = _performanceSampler!;
 		PerformanceSnapshot performance = performanceSampler.Sample(includeStorageTemperature: true);
 
 		double memoryUsagePercent = performance.TotalPhysicalBytes > 0UL
@@ -242,7 +243,7 @@ internal sealed partial class TopBarMetricsSampler : IDisposable
 
 		try
 		{
-			HomeNetworkThroughputSampler sampler = _networkSampler ?? throw new InvalidOperationException();
+			HomeNetworkThroughputSampler sampler = _networkSampler!;
 			if (sampler.TrySample(out double receive, out double send, out _, out _))
 			{
 				receiveBytesPerSecond = receive;

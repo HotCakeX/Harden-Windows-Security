@@ -585,7 +585,6 @@
                                     ValueChanged="{x:Bind OnSentryThresholdChanged}"/>
                             <TextBlock x:Name="SentryThresholdText"
                                        FontSize="9"
-                                       Text="-30 dBFS"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         </StackPanel>
                         <!-- Capture length per trigger. -->
@@ -655,8 +654,7 @@
                             <StackPanel Orientation="Horizontal"
                                         Spacing="4"
                                         Margin="0,4,0,0">
-                                <Button x:Name="SentryActionsButton"
-                                        FontSize="10"
+                                <Button FontSize="10"
                                         Content="Actions">
                                     <Button.Flyout>
                                         <MenuFlyout x:Name="SentryActionsMenu"
@@ -664,22 +662,19 @@
                                                     Closed="{x:Bind OnFlyoutClosed}"
                                                     Placement="Bottom"
                                                     ShouldConstrainToRootBounds="False">
-                                            <MenuFlyoutItem x:Name="SentryBrowseMenuItem"
-                                                            Text="Browse"
+                                            <MenuFlyoutItem Text="Browse"
                                                             Click="{x:Bind OnSentryBrowseClick}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE838;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem x:Name="SentryOpenFolderMenuItem"
-                                                            Text="Open"
+                                            <MenuFlyoutItem Text="Open"
                                                             Click="{x:Bind OnSentryOpenFolderClick}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE8DA;"/>
                                                 </MenuFlyoutItem.Icon>
                                             </MenuFlyoutItem>
-                                            <MenuFlyoutItem x:Name="SentryDefaultFolderMenuItem"
-                                                            Text="Reset"
+                                            <MenuFlyoutItem Text="Reset"
                                                             Click="{x:Bind OnSentryDefaultFolderClick}">
                                                 <MenuFlyoutItem.Icon>
                                                     <FontIcon Glyph="&#xE777;"/>
@@ -1076,7 +1071,7 @@
                                     <FontIcon Glyph="&#xF120;"/>
                                 </ToggleMenuFlyoutItem.Icon>
                             </ToggleMenuFlyoutItem>
-                            <MenuFlyoutSubItem x:Name="BackdropMenuItem" Text="Background">
+                            <MenuFlyoutSubItem Text="Background">
                                 <MenuFlyoutSubItem.Icon>
                                     <FontIcon Glyph="&#xE790;"/>
                                 </MenuFlyoutSubItem.Icon>

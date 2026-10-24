@@ -133,17 +133,6 @@ internal static partial class SearchServiceHost
 	private static int Main()
 	{
 		NativeEventLogger.EnsureSourceRegistered(ServiceName);
-		// Remove the machine variables older versions used for indexing at startup and for indexing only the OS drive.
-		ReadOnlySpan<string> legacyVariables = ["HardenSystemSecurity_GlobalSearchIndexAtStartup", "HardenSystemSecurity_GlobalSearchScope"];
-		foreach (string legacyVariable in legacyVariables)
-		{
-			try
-			{
-				if (Environment.GetEnvironmentVariable(legacyVariable, EnvironmentVariableTarget.Machine) is not null)
-					Environment.SetEnvironmentVariable(legacyVariable, null, EnvironmentVariableTarget.Machine);
-			}
-			catch (Exception exception) { SearchLog.ReportError(exception); }
-		}
 		nint name = Marshal.StringToHGlobalUni(ServiceName);
 		try
 		{
@@ -287,7 +276,6 @@ internal static partial class SearchServiceHost
 		Stopwatch initialTime = Stopwatch.StartNew();
 		string[] driveRoots = Environment.GetLogicalDrives();
 		// Each index is saved here when the service stops and loaded from here at the next start.
-		string databaseDirectory = GetDatabaseDirectory();
 		int loaded = 0;
 		_ = indexes.EnsureCapacity(driveRoots.Length);
 		try
@@ -298,7 +286,7 @@ internal static partial class SearchServiceHost
 				char drive = driveRoot[0];
 				try
 				{
-					indexes.Add(OpenIndex(drive, databaseDirectory, out bool wasLoaded));
+					indexes.Add(OpenIndex(drive, out bool wasLoaded));
 					if (wasLoaded) loaded++;
 				}
 				catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or NotSupportedException)
@@ -310,11 +298,10 @@ internal static partial class SearchServiceHost
 			SearchLog.Report($"Completion time: {initialTime.Elapsed.TotalMilliseconds / 1000} seconds. Indexes loaded from disk: {loaded} of {indexes.Count}.");
 			if (indexes.Count == 0)
 				SearchLog.ReportWarning("No drives could be indexed. Check that an NTFS or ReFS volume with a USN journal is available.");
-			DeleteUnusedSavedIndexes(databaseDirectory, indexes);
+			DeleteUnusedSavedIndexes(indexes);
 			// Indexing leaves outgrown hash buckets, enumeration buffers and walk state behind. The large ones
 			// are only freed by a full collection, which may not happen for a long time, so collect once now.
 			ReclaimReleasedIndexMemory();
-
 		}
 		catch
 		{
@@ -325,9 +312,9 @@ internal static partial class SearchServiceHost
 	}
 
 	// Loads the saved index of a drive, or builds it when the saved one cannot be used. loaded is true when it was loaded.
-	private static VolumeIndex OpenIndex(char drive, string databaseDirectory, out bool loaded)
+	private static VolumeIndex OpenIndex(char drive, out bool loaded)
 	{
-		VolumeIndex index = new(drive, databaseDirectory);
+		VolumeIndex index = new(drive, DatabaseDirectory);
 		try
 		{
 			loaded = index.LoadOrBuild();
@@ -345,17 +332,16 @@ internal static partial class SearchServiceHost
 	// The package's per-machine folder, which Windows creates when the app is installed and deletes when it is removed.
 	// Only SYSTEM and TrustedInstaller can write to it; administrators can read it.
 	// https://github.com/microsoft/WindowsAppSDK/blob/main/specs/applicationdata/ApplicationData.md#34-per-machine-data-store
-	private static string GetDatabaseDirectory() =>
-		Directory.CreateDirectory(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+	private static readonly string DatabaseDirectory = Directory.CreateDirectory(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
 			"Microsoft", "Windows", "AppRepository", "Families", "ApplicationData", Atlas.HardenSystemSecurityPackageFamilyName, "Machine", "GlobalSearch")).FullName;
 
 	// Deletes the saved indexes of drives that are no longer indexed, such as a removed drive, so they do not keep
 	// using disk space. Every saved file name starts with its drive letter.
-	private static void DeleteUnusedSavedIndexes(string databaseDirectory, List<VolumeIndex> indexes)
+	private static void DeleteUnusedSavedIndexes(List<VolumeIndex> indexes)
 	{
 		try
 		{
-			foreach (string path in Directory.EnumerateFiles(databaseDirectory))
+			foreach (string path in Directory.EnumerateFiles(DatabaseDirectory))
 			{
 				char drive = char.ToUpperInvariant(Path.GetFileName(path.AsSpan())[0]);
 				if (!indexes.Exists(index => index.Drive == drive)) VolumeIndex.TryDelete(path);
@@ -388,8 +374,8 @@ internal static partial class SearchServiceHost
 		// Searches answered since the last periodic reclamation, across all sessions. Guarded by Sync.
 		internal int SearchesSinceReclaim;
 		private long idleDeadline = long.MaxValue;
-		// Ten minutes initially; one hour after the first query.
-		internal TimeSpan IdleDelay = TimeSpan.FromMinutes(10);
+		// The service stops after two hours without activity, counted from its start, the index build, or the last response.
+		private static readonly TimeSpan IdleDelay = TimeSpan.FromHours(2);
 
 		internal IndexState() => IdleTimer = new(static value => ((IndexState)value!).OnIdleTimerTick(),
 			this, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
@@ -598,7 +584,6 @@ internal static partial class SearchServiceHost
 			if (query is null) break;
 			lock (state.Sync)
 			{
-				state.IdleDelay = TimeSpan.FromHours(1);
 				state.StopIdleTimer();
 				try
 				{

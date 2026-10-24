@@ -806,7 +806,6 @@ internal sealed partial class PopForgeAnimation : UserControl
 							 3.0f * inverse * parameter * parameter * 0.25f +
 							 parameter * parameter * parameter;
 			float derivative = 3.0f * inverse * inverse * 0.25f +
-							   6.0f * inverse * parameter * (0.25f - 0.25f) +
 							   3.0f * parameter * parameter * (1.0f - 0.25f);
 			if (MathF.Abs(derivative) < 0.0001f) break;
 			parameter = Math.Clamp(parameter - (estimate - x) / derivative, 0.0f, 1.0f);

@@ -110,7 +110,7 @@ Global Search is designed for fast searches across every local **NTFS** and **Re
 
 - **Drives you connect later.** A drive connected while the service is running, such as an external drive, is added to the index the next time the service starts, or right away when you load statistics for it in **Drive Statistics**.
 
-- **Resource-conscious service lifetime.** The service turns itself off if it is not used within 10 minutes after it starts or after it finishes building the initial index. After the first search, it turns itself off after one hour without searches. The Top Bar starts it again automatically the next time it is needed.
+- **Resource-conscious service lifetime.** The service turns itself off after two hours without use, counted from when it starts, when it finishes building the initial index, or when it answers the last request. The Top Bar starts it again automatically the next time it is needed.
 
 > [!NOTE]\
 > The first search after the service turned itself off takes a moment longer because the service must start and load the saved index. Only the very first search, or one after the saved index had to be built again, takes longer because every file on the indexed drives must be read.

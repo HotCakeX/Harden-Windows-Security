@@ -247,7 +247,8 @@ internal sealed partial class TopBar : Window, IDisposable
 	private const double CompactCollapsedSpacingDips = 5.0;
 
 	private const double ExpandedHeightDips = 92.0;
-	private const double SearchExpandedHeightDips = 512.0;
+	private const double SearchExpandedHeightDips = 500.0;
+	private const double SearchResultsMaximumHeightDips = 400.0;
 	private const double ExpandedCornerRadiusDips = 24.0;
 	private const double MinimumExpandedWidthDips = 380.0;
 	private const double ExpandedContentPaddingDips = 14.0;
@@ -584,9 +585,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		// Buttons can consume wheel input before it reaches the root.
 		ViewSwitcherButton.AddHandler(UIElement.PointerWheelChangedEvent, new PointerEventHandler(OnViewSwitcherWheelChanged), true);
 
-		// Both hosts keep a fixed size so that the visual tree is not re-laid out while the window is being resized.
+		// The collapsed host keeps a fixed size so that the visual tree is not re-laid out while the window is being resized.
 		ApplyNotchStyle(_notchStyle);
-		ExpandedHost.Height = ExpandedHeightDips;
 
 		AppsPanel.Spacing = TileSpacingDips;
 		FoldersPanel.Spacing = TileSpacingDips;
@@ -3111,7 +3111,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		_displayWidth = bounds.Width;
 		_displayHeight = bounds.Height;
 		// Preserve space for the header row with the filters and the TextBox when the display is shorter than the Search panel.
-		SearchResultsListView.Height = Math.Min(400.0, Math.Max(0.0, bounds.Height / _rasterizationScale - 112.0));
+		SearchResultsListView.Height = Math.Min(SearchResultsMaximumHeightDips, Math.Max(0.0, bounds.Height / _rasterizationScale - (SearchExpandedHeightDips - SearchResultsMaximumHeightDips)));
 		UpdateViewsMaximumWidth();
 		if (_activeView == TopBarView.Search)
 		{
@@ -4426,7 +4426,8 @@ internal sealed partial class TopBar : Window, IDisposable
 				return null;
 			}
 
-			using IRandomAccessStream stream = new MemoryStream(data).AsRandomAccessStream();
+			using MemoryStream memoryStream = new(data, writable: false);
+			using IRandomAccessStream stream = memoryStream.AsRandomAccessStream();
 
 			// Bitmap decoding does not understand SVG, which many sites declare as their icon.
 			if (string.Equals(mediaType, "image/svg+xml", StringComparison.OrdinalIgnoreCase) ||

@@ -158,7 +158,7 @@ internal static partial class SearchServiceHost
 		}
 		// Indexed outside the lock, so searches of the other drives continue meanwhile. Statistics requests are served
 		// one at a time and searches never add indexes, so nothing else indexes this drive meanwhile.
-		VolumeIndex added = OpenIndex(drive, GetDatabaseDirectory(), out _);
+		VolumeIndex added = OpenIndex(drive, out _);
 		lock (state.Sync)
 		{
 			state.Indexes.Add(added);

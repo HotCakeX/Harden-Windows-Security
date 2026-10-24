@@ -93,9 +93,7 @@ internal sealed partial class TopBar
 				(long[] counts, int skipped) = await Task.Run(() => ReadDriveStatisticsAsync(drive, cancellation.Token));
 				cancellation.Token.ThrowIfCancellationRequested();
 				if (_isClosed || !ReferenceEquals(_statisticsFlyout, flyout)) return;
-				RenderDriveStatistics(chart, legend, counts);
-				long total = 0;
-				foreach (long count in counts) total = checked(total + count);
+				long total = RenderDriveStatistics(chart, legend, counts);
 				status.Text = drive + " " + total.ToString("N0", CultureInfo.CurrentCulture) + " files counted. " +
 					(skipped == 0 ? "Hard links are not counted separately." :
 					"Partial snapshot: " + skipped.ToString("N0", CultureInfo.CurrentCulture) + " inaccessible directories.");
@@ -156,12 +154,10 @@ internal sealed partial class TopBar
 			int skipped = reader.ReadInt32();
 			if (skipped < 0) throw new InvalidDataException("Invalid partial snapshot metadata.");
 			long[] counts = new long[10];
-			long total = 0;
 			for (int i = 0; i < counts.Length; i++)
 			{
 				counts[i] = reader.ReadInt64();
 				if (counts[i] < 0) throw new InvalidDataException("Invalid category count.");
-				total = checked(total + counts[i]);
 			}
 			return (counts, skipped);
 		}
@@ -171,7 +167,8 @@ internal sealed partial class TopBar
 		}
 	}
 
-	private static void RenderDriveStatistics(Grid chart, StackPanel legend, long[] counts)
+	// Returns the total file count, which is summed before anything is rendered.
+	private static long RenderDriveStatistics(Grid chart, StackPanel legend, long[] counts)
 	{
 		long total = 0;
 		foreach (long count in counts) total = checked(total + count);
@@ -248,6 +245,7 @@ internal sealed partial class TopBar
 			chart.Children.Add(slice);
 			angle += sweep;
 		}
+		return total;
 	}
 
 	[DynamicWindowsRuntimeCast(typeof(Grid))]

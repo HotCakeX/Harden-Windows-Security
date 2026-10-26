@@ -840,6 +840,22 @@ internal struct SERVICE_TABLE_ENTRY
 }
 
 /// <summary>
+/// https://learn.microsoft.com/windows/win32/api/cfgmgr32/ns-cfgmgr32-cm_notify_filter
+/// The union starts at offset 16 and is sized by DeviceInstance.InstanceId, MAX_DEVICE_ID_LEN (200) characters.
+/// Only the DeviceInterface.ClassGuid and DeviceHandle.hTarget members are modeled.
+/// </summary>
+[StructLayout(LayoutKind.Explicit, Size = 416)]
+internal struct CM_NOTIFY_FILTER
+{
+	[FieldOffset(0)] internal uint cbSize;
+	[FieldOffset(4)] internal uint Flags;
+	[FieldOffset(8)] internal uint FilterType; // CM_NOTIFY_FILTER_TYPE
+	[FieldOffset(12)] internal uint Reserved;
+	[FieldOffset(16)] internal Guid ClassGuid;
+	[FieldOffset(16)] internal IntPtr hTarget;
+}
+
+/// <summary>
 /// https://learn.microsoft.com/windows/win32/api/bcrypt/ns-bcrypt-crypt_context_functions
 /// </summary>
 [StructLayout(LayoutKind.Sequential)]

@@ -47,9 +47,18 @@ internal readonly record struct NameRef
 }
 
 // A search query prepared once per search instead of once per compared name.
+// A query without a wildcard matches every name that contains it. A query with * wildcards (at most
+// Atlas.GlobalSearchMaxWildcards) is a pattern that matches whole names: the name starts with Prefix, ends with Suffix,
+// and Text, the part between two wildcards, is found between them. Each * matches any number of characters.
 internal sealed class NameQuery
 {
+	// The text a name contains. For a pattern, the part between its two wildcards, empty with one wildcard.
 	internal readonly string Text;
+	internal readonly bool IsPattern;
+	internal readonly string Prefix = string.Empty;
+	internal readonly string Suffix = string.Empty;
+	// The length of the shortest name that can match. Every name is at least 1 character long.
+	internal readonly int Length;
 	// Only an ASCII-only query can match an ASCII-only name: under OrdinalIgnoreCase,
 	// no non-ASCII UTF-16 code unit compares equal to an ASCII code unit.
 	internal readonly bool IsAscii;
@@ -67,19 +76,30 @@ internal sealed class NameQuery
 	internal readonly bool IncludeFolders;
 	// Bit i accepts files of statistics category i; 0 accepts every file.
 	internal readonly byte FileTypes;
-	internal int Length => Text.Length;
 
-	// The text must not be empty; the service never searches for an empty query.
+	// The text must not be empty; the service never searches for an empty query, and rejects one with more than
+	// Atlas.GlobalSearchMaxWildcards wildcards.
 	// Kind 0 accepts files and folders, 1 files only and 2 folders only. Folders have no file type,
 	// so a file type filter accepts files only.
 	internal NameQuery(string text, byte kind, byte fileTypes)
 	{
-		Text = text;
 		IncludeFiles = kind != 2;
 		IncludeFolders = kind != 1 && fileTypes == 0;
 		FileTypes = fileTypes;
 		IsAscii = Ascii.IsValid(text);
-		if (!IsAscii)
+		int first = text.IndexOf('*');
+		if (first >= 0)
+		{
+			int last = text.LastIndexOf('*');
+			IsPattern = true;
+			Prefix = text[..first];
+			Suffix = text[(last + 1)..];
+			text = first == last ? string.Empty : text[(first + 1)..last];
+		}
+		Text = text;
+		Length = Math.Max(1, Prefix.Length + text.Length + Suffix.Length);
+		// The vectors are only used to find a non-empty Text in ASCII names.
+		if (!IsAscii || text.Length == 0)
 		{
 			lower = [];
 			caseMask = [];
@@ -96,10 +116,25 @@ internal sealed class NameQuery
 		lastMask = Vector128.Create(caseMask[^1]);
 	}
 
+	// Pattern match of an ASCII name, the first nameLength bytes of source, with the same padding as MatchesAscii.
+	// The caller guarantees nameLength >= Length, so Prefix, Text and Suffix fit without overlapping.
+	internal bool MatchesPatternAscii(ReadOnlySpan<byte> source, int nameLength) =>
+		Ascii.EqualsIgnoreCase(source[..Prefix.Length], Prefix) &&
+		Ascii.EqualsIgnoreCase(source.Slice(nameLength - Suffix.Length, Suffix.Length), Suffix) &&
+		// Searched only between the prefix and the suffix. The source after the prefix still holds the padding.
+		(Text.Length == 0 || MatchesAscii(source[Prefix.Length..], nameLength - Prefix.Length - Suffix.Length));
+
+	// Pattern match of a UTF-16 name. OrdinalIgnoreCase maps code units one-to-one, so the prefix and the suffix
+	// take exactly their own lengths of the name. The caller guarantees name.Length >= Length.
+	internal bool MatchesPattern(ReadOnlySpan<char> name) =>
+		name.StartsWith(Prefix, StringComparison.OrdinalIgnoreCase) &&
+		name.EndsWith(Suffix, StringComparison.OrdinalIgnoreCase) &&
+		(Text.Length == 0 || name[Prefix.Length..^Suffix.Length].IndexOf(Text, StringComparison.OrdinalIgnoreCase) >= 0);
+
 	// ASCII case-insensitive substring search. Equivalent to an OrdinalIgnoreCase IndexOf when both
 	// the name and the query are ASCII-only. The name is the first nameLength bytes of source; the bytes
 	// after it are only read as vector padding and never affect the result.
-	// The caller guarantees nameLength >= Length > 0, and that source holds Vector128<byte>.Count bytes after the
+	// The caller guarantees nameLength >= Text.Length > 0, and that source holds Vector128<byte>.Count bytes after the
 	// name, so both vectors of every candidate start position are in bounds and no scalar tail is needed.
 	internal bool MatchesAscii(ReadOnlySpan<byte> source, int nameLength)
 	{
@@ -696,8 +731,9 @@ internal sealed unsafe class NameArena
 			: Ascii.EqualsIgnoreCase(bytes, other);
 	}
 
-	// Same result as an OrdinalIgnoreCase IndexOf of the query in the original UTF-16 name.
-	internal bool Contains(NameRef name, NameQuery query)
+	// Same result as an OrdinalIgnoreCase IndexOf of the query in the original UTF-16 name, or for a pattern, the same
+	// result as matching the original name with OrdinalIgnoreCase comparisons.
+	internal bool Matches(NameRef name, NameQuery query)
 	{
 		byte* start = Locate(name, out int length, out bool isWide);
 		// OrdinalIgnoreCase maps code units one-to-one, so a match is never shorter than the query.
@@ -705,10 +741,12 @@ internal sealed unsafe class NameArena
 		if (isWide)
 		{
 			ReadOnlySpan<char> characters = new(start, length);
-			return characters.IndexOf(query.Text.AsSpan(), StringComparison.OrdinalIgnoreCase) >= 0;
+			return query.IsPattern ? query.MatchesPattern(characters) : characters.IndexOf(query.Text.AsSpan(), StringComparison.OrdinalIgnoreCase) >= 0;
 		}
+		if (!query.IsAscii) return false;
 		// The committed padding after the name is passed so the vectorized search can read past its end.
-		return query.IsAscii && query.MatchesAscii(new ReadOnlySpan<byte>(start, length + ReadPadding), length);
+		ReadOnlySpan<byte> bytes = new(start, length + ReadPadding);
+		return query.IsPattern ? query.MatchesPatternAscii(bytes, length) : query.MatchesAscii(bytes, length);
 	}
 }
 
@@ -1217,6 +1255,15 @@ internal struct IndexHeader
 	internal int WideEntries;
 }
 
+// Thrown for a volume that cannot be indexed by design: a file system other than NTFS and ReFS, such as FAT32 or exFAT,
+// or a volume without a USN journal, such as the recovery partition. Such a volume is skipped without being logged.
+internal sealed class UnindexableVolumeException : NotSupportedException
+{
+	internal UnindexableVolumeException() { }
+	internal UnindexableVolumeException(string message) : base(message) { }
+	internal UnindexableVolumeException(string message, Exception innerException) : base(message, innerException) { }
+}
+
 internal sealed unsafe partial class VolumeIndex : IDisposable
 {
 	private const int BufferSize = 1024 * 1024;
@@ -1237,7 +1284,7 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	private const int ReFsWorkerStackSize = 256 * 1024;
 	private static readonly nint InvalidHandleValue = -1;
 	private nint volume;
-	private readonly string root;
+	// The volume GUID path, \\?\Volume{GUID}\, which stays the same when the volume's drive letter changes.
 	private readonly bool refs;
 	private readonly FileId rootId;
 	private WideEntryTable? wideEntries;
@@ -1256,32 +1303,43 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	// Set once the index has caught up with the journal, and cleared when a refresh fails, so only a whole index is saved.
 	private bool saveable;
 	private static readonly string[] NamesExtensions = [".names0", ".names1"];
+	// The files of a saved index besides its .index header. The temporary .buckets file is never part of one.
+	internal static readonly string[] DataExtensions = [.. NamesExtensions, ".ntfs", ".wide"];
 	// Path scratch reused by every search instead of being allocated per search. Searches of one volume never overlap.
 	private readonly List<NameRef> pathNames = [];
 	private readonly HashSet<ulong> pathVisited = [];
-	internal char Drive => root[0];
+	// Receives the paths the volume is mounted at, and grows when they do not fit.
+	private char[] mountPaths = new char[64];
+	// The path shown for the volume's results, reused while the volume stays mounted at the same path.
+	private string mountRoot = string.Empty;
+	internal string Root { get; }
+	// The registration that reports the removal of the volume, so the index can release its volume handle and the removal
+	// can go ahead. Zero before it is registered, and after a query remove callback takes it over.
+	internal nint RemovalNotification;
 	// Includes indexed files and directories; reading Count does not scan the index.
 	internal int IndexedItemCount => wideEntries?.Count ?? ntfsEntries!.Count;
 	internal int InaccessibleDirectoryCount => inaccessibleDirectories.Count;
 
+	// volumeGuidPath is a \\?\Volume{GUID}\ path as FindFirstVolumeW returns it.
 	// The index is saved in the database directory when it is disposed, and loaded from there by LoadOrBuild.
-	internal VolumeIndex(char drive, string databaseDirectory)
+	internal VolumeIndex(string volumeGuidPath, string databaseDirectory)
 	{
-		root = $"{drive}:\\";
+		Root = volumeGuidPath;
 		byte* fsName = stackalloc byte[64];
 		uint volumeSerial = 0;
-		if (!NativeMethods.GetVolumeInformationW(root, null, 0, &volumeSerial, null, null, (char*)fsName, 32))
+		if (!NativeMethods.GetVolumeInformationW(Root, null, 0, &volumeSerial, null, null, (char*)fsName, 32))
 			throw Error("GetVolumeInformationW");
 		serial = volumeSerial;
 		string fs = new((char*)fsName);
 		refs = string.Equals(fs, "ReFS", StringComparison.OrdinalIgnoreCase);
 		if (!refs && !string.Equals(fs, "NTFS", StringComparison.OrdinalIgnoreCase))
-			throw new NotSupportedException($"Only local NTFS and ReFS volumes are supported; found {fs}.");
-		volume = NativeMethods.CreateFileW($"\\\\.\\{drive}:", 0x80000000, 7, IntPtr.Zero, 3, 0, IntPtr.Zero);
+			throw new UnindexableVolumeException($"Only local NTFS and ReFS volumes are supported; found {fs}.");
+		// Without its trailing backslash, the volume GUID path opens the volume instead of its root directory.
+		volume = NativeMethods.CreateFileW(Root[..^1], 0x80000000, 7, IntPtr.Zero, 3, 0, IntPtr.Zero);
 		if (volume == 0 || volume == InvalidHandleValue) throw Error("Open volume (run elevated)");
 		try
 		{
-			nint rootHandle = NativeMethods.CreateFileW(root, 0, 7, IntPtr.Zero, 3, 0x02000000, IntPtr.Zero);
+			nint rootHandle = NativeMethods.CreateFileW(Root, 0, 7, IntPtr.Zero, 3, 0x02000000, IntPtr.Zero);
 			if (rootHandle == 0 || rootHandle == InvalidHandleValue) throw Error("Open volume root");
 			try
 			{
@@ -1301,7 +1359,18 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 			volume = InvalidHandleValue;
 			throw;
 		}
-		databasePrefix = Path.Join(databaseDirectory, root.AsSpan(0, 1));
+		// Every saved file name is the {GUID} of the volume, which follows \\?\Volume, and an extension.
+		databasePrefix = Path.Join(databaseDirectory, Root.AsSpan(10, Root.Length - 11));
+	}
+
+	// Registers callback for the removal events of the volume. The open volume handle would otherwise block the safe
+	// removal of the drive. The handle is only needed during the call; the registration stays valid after it is closed.
+	internal void RegisterRemovalNotification(nint callback)
+	{
+		CM_NOTIFY_FILTER filter = new() { cbSize = (uint)sizeof(CM_NOTIFY_FILTER), FilterType = 1, hTarget = volume }; // CM_NOTIFY_FILTER_TYPE_DEVICEHANDLE
+		uint result = NativeMethods.CM_Register_Notification(ref filter, 0, callback, out nint registered);
+		if (result != 0) throw new IOException($"CM_Register_Notification failed with CONFIGRET {result}.");
+		RemovalNotification = registered;
 	}
 
 	// Loads the index saved for this volume if the journal still holds every change made since, and builds it otherwise.
@@ -1312,10 +1381,10 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 		{
 			if (Load()) return true;
 		}
-		// Any failure only means the saved index cannot be used, so the volume is read again instead.
-		catch (Exception exception)
+		// Any other failure only means the saved index cannot be used, so the volume is read again instead.
+		catch (Exception exception) when (exception is not UnindexableVolumeException)
 		{
-			SearchLog.ReportWarning($"Rebuilding the saved index of {root}: {exception.Message}");
+			SearchLog.Report($"Rebuilding the saved index of {Root}: {exception.Message}");
 		}
 		Build();
 		return false;
@@ -1422,9 +1491,7 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	private void DeleteDatabase()
 	{
 		File.Delete(databasePrefix + ".index");
-		foreach (string extension in NamesExtensions) TryDelete(databasePrefix + extension);
-		TryDelete(databasePrefix + ".ntfs");
-		TryDelete(databasePrefix + ".wide");
+		foreach (string extension in DataExtensions) TryDelete(databasePrefix + extension);
 		// Normally deleted when it is closed; only left behind if Windows stopped while the service was running.
 		TryDelete(databasePrefix + ".buckets");
 	}
@@ -1495,7 +1562,7 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 				{
 					int error = Marshal.GetLastPInvokeError();
 					if (error == 38) break; // ERROR_HANDLE_EOF.
-					throw new Win32Exception(error, $"FSCTL_ENUM_USN_DATA failed on {root}");
+					throw new Win32Exception(error, $"FSCTL_ENUM_USN_DATA failed on {Root}");
 				}
 				if (bytes < 8 || bytes > BufferSize) throw new InvalidDataException("Invalid enumeration response.");
 				ulong next = BinaryPrimitives.ReadUInt64LittleEndian(buffer.AsSpan(0, 8));
@@ -1640,7 +1707,7 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 				lock (walk.Sync) _ = inaccessibleDirectories.Add(parent);
 				return;
 			}
-			throw new Win32Exception(error, $"Open ReFS directory {root} file ID {parent.High:X16}{parent.Low:X16}");
+			throw new Win32Exception(error, $"Open ReFS directory {Root} file ID {parent.High:X16}{parent.Low:X16}");
 		}
 
 		try
@@ -1657,7 +1724,7 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 						lock (walk.Sync) _ = inaccessibleDirectories.Add(parent);
 						break;
 					}
-					throw new Win32Exception(error, $"FileIdExtdDirectoryInfo failed for {root} file ID {parent.High:X16}{parent.Low:X16}");
+					throw new Win32Exception(error, $"FileIdExtdDirectoryInfo failed for {Root} file ID {parent.High:X16}{parent.Low:X16}");
 				}
 
 				lock (walk.Sync)
@@ -1667,14 +1734,14 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 					while (true)
 					{
 						ReadOnlySpan<byte> remaining = buffer.AsSpan(offset);
-						if (remaining.Length < 88) throw new InvalidDataException($"Truncated ReFS directory entry in {root} file ID {parent.High:X16}{parent.Low:X16}.");
+						if (remaining.Length < 88) throw new InvalidDataException($"Truncated ReFS directory entry in {Root} file ID {parent.High:X16}{parent.Low:X16}.");
 						uint next = BinaryPrimitives.ReadUInt32LittleEndian(remaining);
 						uint nameLength = BinaryPrimitives.ReadUInt32LittleEndian(remaining.Slice(60, 4));
 						if ((nameLength & 1) != 0 || nameLength == 0 || nameLength > remaining.Length - 88)
-							throw new InvalidDataException($"Invalid ReFS filename in {root} file ID {parent.High:X16}{parent.Low:X16}.");
+							throw new InvalidDataException($"Invalid ReFS filename in {Root} file ID {parent.High:X16}{parent.Low:X16}.");
 						int requiredLength = 88 + (int)nameLength;
 						if (next != 0 && ((next & 7) != 0 || next < requiredLength || next > remaining.Length))
-							throw new InvalidDataException($"Invalid ReFS directory entry size in {root} file ID {parent.High:X16}{parent.Low:X16}.");
+							throw new InvalidDataException($"Invalid ReFS directory entry size in {Root} file ID {parent.High:X16}{parent.Low:X16}.");
 						int entryLength = next == 0 ? requiredLength : (int)next;
 						ReadOnlySpan<byte> item = remaining[..entryLength];
 						ReadOnlySpan<byte> nameBytes = item.Slice(88, (int)nameLength);
@@ -1752,13 +1819,15 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 	{
 		// Widens ASCII names for the file type filter. NTFS and ReFS names fit in 255 UTF-16 code units.
 		Span<char> scratch = stackalloc char[256];
+		// Read at the first match only, so a volume without matches costs nothing more.
+		string? mountedAt = null;
 		if (wideEntries is not null)
 		{
 			WideEntryTable.Enumerator entries = wideEntries.GetEnumerator();
 			while (entries.MoveNext())
 			{
 				if (!Matches(entries.Name, query, scratch) || !ResolveWide(entries.Index)) continue;
-				WritePath(response);
+				WritePath(response, mountedAt ??= GetMountRoot());
 				if (response.IsFull) return;
 			}
 		}
@@ -1769,18 +1838,43 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 			while (entries.MoveNext())
 			{
 				if (!Matches(entries.Name, query, scratch) || !ResolveNtfs(entries.Id)) continue;
-				WritePath(response);
+				WritePath(response, mountedAt ??= GetMountRoot());
 				if (response.IsFull) return;
 			}
 		}
 	}
 
+	// Returns the shortest path the volume is mounted at now, so its drive letter is preferred over a folder it is
+	// mounted at, or the volume GUID path when it is mounted nowhere. Read for each search because drive letters and
+	// mount folders can change while the service runs.
+	private string GetMountRoot()
+	{
+		uint length = 0;
+		// Only a buffer that is too small sets a length larger than itself; any other failure leaves the GUID path.
+		while (!NativeMethods.GetVolumePathNamesForVolumeNameW(Root, mountPaths, (uint)mountPaths.Length, ref length))
+		{
+			if (length <= mountPaths.Length) return Root;
+			mountPaths = new char[length];
+		}
+		// A list of null-terminated paths that ends with an empty one.
+		ReadOnlySpan<char> list = mountPaths.AsSpan(0, (int)length);
+		ReadOnlySpan<char> shortest = default;
+		foreach (Range range in list.Split('\0'))
+		{
+			ReadOnlySpan<char> path = list[range];
+			if (!path.IsEmpty && (shortest.IsEmpty || path.Length < shortest.Length)) shortest = path;
+		}
+		if (shortest.IsEmpty) return Root;
+		if (!shortest.Equals(mountRoot, StringComparison.OrdinalIgnoreCase)) mountRoot = new string(shortest);
+		return mountRoot;
+	}
+
 	// The kind is a single bit test, so it skips entries before their names are compared.
-	// The file type is classified only for names that already contain the query.
+	// The file type is classified only for names that already match the query.
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private bool Matches(NameRef name, NameQuery query, Span<char> scratch) =>
 		(name.IsDirectory ? query.IncludeFolders : query.IncludeFiles) &&
-		nameArena.Contains(name, query) &&
+		nameArena.Matches(name, query) &&
 		(query.FileTypes == 0 || HasFileType(nameArena.GetChars(name, scratch), query.FileTypes));
 
 	// Collects the path's names, leaf first, into pathNames. Returns false if the path cannot be shown.
@@ -1813,20 +1907,21 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 		return true;
 	}
 
-	private void WritePath(SearchResponse response)
+	// Writes the path of the collected names under the root the volume is mounted at.
+	private void WritePath(SearchResponse response, string mountedAt)
 	{
 		List<NameRef> names = pathNames;
 		if (names.Count == 0)
 		{
-			response.Add(root);
+			response.Add(mountedAt);
 			return;
 		}
-		int length = root.Length + names.Count - 1;
+		int length = mountedAt.Length + names.Count - 1;
 		foreach (NameRef name in names) length += nameArena.GetLength(name);
 		// Write the root and reverse-ordered components into the response's reusable scratch instead of a new string.
 		Span<char> destination = response.GetPathBuffer(length);
-		root.AsSpan().CopyTo(destination);
-		int offset = root.Length;
+		mountedAt.AsSpan().CopyTo(destination);
+		int offset = mountedAt.Length;
 		for (int i = names.Count - 1; i >= 0; i--)
 		{
 			NameRef component = names[i];
@@ -1969,7 +2064,13 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 		byte* output = stackalloc byte[80];
 		uint bytes = 0;
 		if (!NativeMethods.DeviceIoControl(volume, QueryUsn, null, 0, output, 80, ref bytes, IntPtr.Zero))
-			throw Error("FSCTL_QUERY_USN_JOURNAL (journal must already exist)");
+		{
+			const int ErrorJournalNotActive = 1179;
+			// The service never creates a journal, so a volume without one cannot be indexed.
+			int error = Marshal.GetLastPInvokeError();
+			if (error == ErrorJournalNotActive) throw new UnindexableVolumeException("The volume has no USN journal.");
+			throw new Win32Exception(error, "FSCTL_QUERY_USN_JOURNAL");
+		}
 		if (bytes < 56) throw new InvalidDataException("Invalid USN journal metadata.");
 		ReadOnlySpan<byte> data = new(output, (int)bytes);
 		return new(BinaryPrimitives.ReadUInt64LittleEndian(data[..8]),
@@ -2023,7 +2124,7 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 		// The saved index then has no valid header, so the next start builds the index again.
 		catch (Exception exception)
 		{
-			SearchLog.ReportWarning($"The index of {root} could not be saved, so it will be built again at the next start: {exception.Message}");
+			SearchLog.ReportWarning($"The index of {Root} could not be saved, so it will be built again at the next start: {exception.Message}");
 		}
 		finally
 		{
@@ -2036,6 +2137,11 @@ internal sealed unsafe partial class VolumeIndex : IDisposable
 			{
 				_ = NativeMethods.CloseHandle(volume);
 				volume = InvalidHandleValue;
+			}
+			if (RemovalNotification != 0)
+			{
+				SearchServiceHost.UnregisterLater(RemovalNotification);
+				RemovalNotification = 0;
 			}
 		}
 	}

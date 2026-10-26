@@ -209,6 +209,18 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/fileapi/nf-fileapi-getvolumenameforvolumemountpointw
+	/// </summary>
+	[LibraryImport("kernel32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool GetVolumeNameForVolumeMountPointW(
+		string lpszVolumeMountPoint,
+		[MarshalUsing(CountElementName = "cchBufferLength")][Out] char[] lpszVolumeName,
+		uint cchBufferLength);
+
+
+	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/mssip/nf-mssip-cryptsipretrievesubjectguid
 	/// </summary>
 	[LibraryImport("crypt32.dll", StringMarshalling = StringMarshalling.Utf16)]
@@ -4017,6 +4029,22 @@ internal static unsafe partial class NativeMethods
 	[LibraryImport("cfgmgr32.dll")]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial int CM_Get_DevNode_Status(out uint pulStatus, out uint pulProblemNumber, uint dnDevInst, uint ulFlags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/cfgmgr32/nf-cfgmgr32-cm_register_notification
+	/// </summary>
+	[LibraryImport("cfgmgr32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint CM_Register_Notification(ref CM_NOTIFY_FILTER pFilter, IntPtr pContext, IntPtr pCallback, out IntPtr pNotifyContext);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/cfgmgr32/nf-cfgmgr32-cm_unregister_notification
+	/// </summary>
+	[LibraryImport("cfgmgr32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial uint CM_Unregister_Notification(IntPtr NotifyContext);
 
 
 	/// <summary>

@@ -38,6 +38,17 @@ internal static partial class Atlas
 	// Results per Global Search query. The maximum bounds the response frame and the client's per-result file lookups.
 	internal const int GlobalSearchDefaultResultLimit = 100;
 	internal const int GlobalSearchMaxResultLimit = 10_000;
+	// The * wildcards a Global Search query can hold.
+	internal const int GlobalSearchMaxWildcards = 2;
+	// A search pipe frame. It sets whether the service indexes the drives connected while it runs,
+	// is followed by 0 or 1, and has no response.
+	internal const byte GlobalSearchIndexConnectedDrivesFrame = 3;
+	// Requests to the Global Search statistics pipe. Each follows the version byte and is followed by one argument byte,
+	// the drive letter for statistics and 0 for the others.
+	internal const byte GlobalSearchStatisticsRequest = 1;
+	internal const byte GlobalSearchSavedIndexSizeRequest = 2;
+	internal const byte GlobalSearchDeleteUnusedIndexesRequest = 3;
+	internal const byte GlobalSearchIndexNewDrivesRequest = 4;
 
 	// User Mode block rules
 	//internal static readonly Uri MSFTRecommendedBlockRulesURL = new("https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md");

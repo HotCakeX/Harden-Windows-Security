@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.IO.Pipes;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
@@ -129,17 +130,24 @@ internal static partial class SearchServiceHost
 		}
 	}
 
-	// Counts from the drive's shared search index, so a second index of the same volume is never built. A drive without
-	// a usable one, such as a drive connected after the indexes were built, is indexed first and its index is kept,
-	// so the drive becomes searchable too.
+	// Counts from the volume's shared search index, so a second index of the same volume is never built. A volume without
+	// a usable one, such as a drive that could not be indexed when it was connected, is indexed first and its index is
+	// kept, so the volume becomes searchable too.
 	private static (long[] Counts, int Skipped) CalculateDriveStatistics(IndexState state, char drive, CancellationToken token)
 	{
+		// The indexes are kept by volume, so the drive letter is mapped to the volume it currently refers to.
+		char[] name = new char[50];
+		if (!NativeMethods.GetVolumeNameForVolumeMountPointW($"{drive}:\\", name, (uint)name.Length))
+			throw new Win32Exception(Marshal.GetLastPInvokeError(), $"GetVolumeNameForVolumeMountPointW failed for {drive}:\\");
+		string volume = new(name.AsSpan(0, Array.IndexOf(name, '\0')));
+		// Held until the end, so the volume is not indexed meanwhile by a drive arrival.
+		using Lock.Scope adding = state.AddSync.EnterScope();
 		// Holding Sync blocks the idle stop, searches and refreshes while the entries are enumerated.
 		lock (state.Sync)
 		{
 			foreach (VolumeIndex shared in state.Indexes)
 			{
-				if (shared.Drive != drive) continue;
+				if (!string.Equals(shared.Root, volume, StringComparison.OrdinalIgnoreCase)) continue;
 				try
 				{
 					// Brings the shared index up to date with the change journal first.
@@ -148,17 +156,17 @@ internal static partial class SearchServiceHost
 				}
 				catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or NotSupportedException)
 				{
-					// Removed as a search would remove it, then the drive is indexed again below.
-					SearchLog.ReportWarning($"Index for {drive}:\\ is no longer usable: {Describe(exception)}");
+					// Removed as a search would remove it, then the volume is indexed again below.
+					SearchLog.ReportWarning($"Index for {volume} is no longer usable: {Describe(exception)}");
 					shared.Dispose();
 					_ = state.Indexes.Remove(shared);
 				}
 				break;
 			}
 		}
-		// Indexed outside the lock, so searches of the other drives continue meanwhile. Statistics requests are served
-		// one at a time and searches never add indexes, so nothing else indexes this drive meanwhile.
-		VolumeIndex added = OpenIndex(drive, out _);
+		// Indexed outside Sync, so searches of the other volumes continue meanwhile. AddSync keeps anything else from
+		// indexing this volume meanwhile.
+		VolumeIndex added = OpenIndex(volume, out _);
 		lock (state.Sync)
 		{
 			state.Indexes.Add(added);
@@ -167,7 +175,7 @@ internal static partial class SearchServiceHost
 	}
 
 	// Idle cost is one independent listener. Statistics are counted from the shared search indexes,
-	// and a drive without one is indexed first.
+	// and a drive without one is indexed first. The same listener answers the requests that manage the saved indexes.
 	private static async Task ServeStatisticsAsync(IndexState state, CancellationToken token)
 	{
 		try
@@ -187,42 +195,66 @@ internal static partial class SearchServiceHost
 					await pipe.ReadExactlyAsync(request.AsMemory(0, 1), admission.Token).ConfigureAwait(false);
 					if (request[0] != 1 || !IsClientAuthorized(pipe)) continue;
 					await pipe.ReadExactlyAsync(request.AsMemory(1, 2), admission.Token).ConfigureAwait(false);
-					if (request[1] != 1 || request[2] is < (byte)'A' or > (byte)'Z') continue;
-					long[] counts;
-					int skipped;
+					byte operation = request[1];
+					if (operation == Atlas.GlobalSearchStatisticsRequest ? request[2] is < (byte)'A' or > (byte)'Z' :
+						(operation is < Atlas.GlobalSearchSavedIndexSizeRequest or > Atlas.GlobalSearchIndexNewDrivesRequest || request[2] != 0)) continue;
+					using MemoryStream response = new();
+					using BinaryWriter writer = new(response, Encoding.UTF8, leaveOpen: true);
+					writer.Write((byte)1); // Version.
+					writer.Write((byte)0); // Success.
 					try
 					{
 						// Build is synchronous and observes shutdown only before and after
 						// its existing enumeration, rather than altering normal indexing.
 						token.ThrowIfCancellationRequested();
-						// A valid statistics request also activates the shared search index.
-						state.EnsureIndexes(token);
-						// Statistics are activity too, so the idle timeout cannot stop the service while they are calculated.
+						// Every request except the size also activates the shared search index. Deleting unused saved
+						// indexes then keeps those of the connected drives, which are in use.
+						if (operation != Atlas.GlobalSearchSavedIndexSizeRequest) state.EnsureIndexes(token);
+						// Requests are activity too, so the idle timeout cannot stop the service while they are answered.
 						lock (state.Sync) state.StopIdleTimer();
 						try
 						{
-							(counts, skipped) = CalculateDriveStatistics(state, (char)request[2], token);
+							switch (operation)
+							{
+								case Atlas.GlobalSearchStatisticsRequest:
+									(long[] counts, int skipped) = CalculateDriveStatistics(state, (char)request[2], token);
+									writer.Write(skipped);
+									foreach (long count in counts) writer.Write(count);
+									break;
+								case Atlas.GlobalSearchSavedIndexSizeRequest:
+									writer.Write(GetSavedIndexesSize());
+									break;
+								case Atlas.GlobalSearchDeleteUnusedIndexesRequest:
+									state.DeleteUnusedSavedIndexes();
+									// The size left, so the client shows it without another request.
+									writer.Write(GetSavedIndexesSize());
+									break;
+								default:
+									// Indexes the drives connected or unlocked since the indexes were built.
+									writer.Write(state.IndexVolumes(null));
+									lock (state.Sync) writer.Write(state.Indexes.Count);
+									break;
+							}
 						}
 						finally
 						{
 							// Indexing a drive leaves its build buffers behind, and counting leaves its lookup.
 							// Reclaim after success, failure or cancellation, before the next drive.
-							ReclaimReleasedIndexMemory();
+							if (operation == Atlas.GlobalSearchStatisticsRequest) ReclaimReleasedIndexMemory();
 							if (!token.IsCancellationRequested) lock (state.Sync) state.ResetIdleTimer();
 						}
 					}
 					catch (Exception exception) when (!token.IsCancellationRequested)
 					{
-						SearchLog.ReportWarning("Drive statistics failed: " + Describe(exception));
+						// The client reports a drive that cannot be indexed.
+						if (exception is not UnindexableVolumeException)
+							SearchLog.ReportWarning($"Global Search request {operation} failed: " + Describe(exception));
 						pipe.Write([1, 1]); // Version, failure.
 						continue;
 					}
-					using BinaryWriter writer = new(pipe, Encoding.UTF8, leaveOpen: true);
-					writer.Write((byte)1); // Version.
-					writer.Write((byte)0); // Success.
-					writer.Write(skipped);
-					foreach (long count in counts) writer.Write(count);
 					writer.Flush();
+					// Buffered until the request succeeds, so a failure is answered with the failure frame alone.
+					response.WriteTo(pipe);
 				}
 				catch (Exception) when (token.IsCancellationRequested) { break; }
 				catch (Exception exception) when (exception is IOException or OperationCanceledException or ObjectDisposedException)

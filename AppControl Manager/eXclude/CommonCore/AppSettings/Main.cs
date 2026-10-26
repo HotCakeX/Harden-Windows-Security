@@ -141,6 +141,7 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarSentryEncryptionMode = ReadValue(nameof(WindowsTopBarSentryEncryptionMode), WindowsTopBarSentryEncryptionMode);
 		WindowsTopBarSearchResultLimit = ReadValue(nameof(WindowsTopBarSearchResultLimit), WindowsTopBarSearchResultLimit);
 		WindowsTopBarSearchLargeThumbnails = ReadValue(nameof(WindowsTopBarSearchLargeThumbnails), WindowsTopBarSearchLargeThumbnails);
+		WindowsTopBarSearchIndexConnectedDrives = ReadValue(nameof(WindowsTopBarSearchIndexConnectedDrives), WindowsTopBarSearchIndexConnectedDrives);
 		CustomizableScanLevelsFallbackOrder = ReadValue(nameof(CustomizableScanLevelsFallbackOrder), CustomizableScanLevelsFallbackOrder);
 		AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation = ReadValue(nameof(AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation);
 	}
@@ -1376,6 +1377,21 @@ internal sealed partial class Main : ViewModelBase
 			if (SP(ref field, value))
 			{
 				SaveValue(nameof(WindowsTopBarSearchLargeThumbnails), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Harden System Security app only.
+	/// Whether the Global Search service detects and automatically indexes any drive that is connected to the system while the service runs.
+	/// </summary>
+	internal bool WindowsTopBarSearchIndexConnectedDrives
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarSearchIndexConnectedDrives), field);
 			}
 		}
 	}

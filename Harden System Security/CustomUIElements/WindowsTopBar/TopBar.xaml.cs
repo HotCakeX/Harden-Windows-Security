@@ -1378,7 +1378,7 @@ internal sealed partial class TopBar : Window, IDisposable
 				WriteableBitmap bitmap = new(size, size);
 				using (Stream stream = bitmap.PixelBuffer.AsStream())
 				{
-					stream.Write(pixels, 0, pixels.Length);
+					await stream.WriteAsync(pixels);
 				}
 				bitmap.Invalidate();
 				icon.Source = bitmap;
@@ -2157,6 +2157,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		SentryPanel.Visibility = view == TopBarView.Sentry ? Visibility.Visible : Visibility.Collapsed;
 		SearchPanel.Visibility = view == TopBarView.Search ? Visibility.Visible : Visibility.Collapsed;
 		DriveStatisticsButton.Visibility = view == TopBarView.Search ? Visibility.Visible : Visibility.Collapsed;
+		GlobalSearchSettingsButton.Visibility = DriveStatisticsButton.Visibility;
 		if (view != TopBarView.Search)
 		{
 			SearchPanel.Width = double.NaN;
@@ -5908,6 +5909,21 @@ internal sealed partial class TopBar : Window, IDisposable
 			{
 				if (_isClosed || cancellationToken.IsCancellationRequested || !icon.IsLoaded || !ReferenceEquals(icon.DataContext, result))
 					return;
+				if (!result.IsDirectory && string.Equals(Path.GetExtension(result.Path), ".lnk", StringComparison.OrdinalIgnoreCase))
+				{
+					// StorageFile cannot reliably represent shortcuts. Use the Shell's shortcut icon instead.
+					int size = Math.Clamp((int)Math.Ceiling(requestedSize * _rasterizationScale), 16, 256);
+					byte[] pixels = await Task.Run(() => LoadShortcutIconPixels(result.Path, size), cancellationToken);
+					WriteableBitmap shortcutBitmap = new(size, size);
+					using (Stream stream = shortcutBitmap.PixelBuffer.AsStream())
+					{
+						await stream.WriteAsync(pixels);
+					}
+					shortcutBitmap.Invalidate();
+					if (!cancellationToken.IsCancellationRequested && icon.IsLoaded && ReferenceEquals(icon.DataContext, result))
+						icon.Source = shortcutBitmap;
+					return;
+				}
 				StorageItemThumbnail thumbnail;
 				if (result.IsDirectory)
 				{
@@ -6238,6 +6254,13 @@ internal sealed partial class TopBar : Window, IDisposable
 			_searchClient?.SetQuery(string.Empty);
 			return;
 		}
+		// The service rejects a query with more wildcards, so it is not sent.
+		if (query.AsSpan().Count('*') > Atlas.GlobalSearchMaxWildcards)
+		{
+			SearchStatusText.Text = $"Use at most {Atlas.GlobalSearchMaxWildcards} wildcards (*).";
+			_searchClient?.SetQuery(string.Empty);
+			return;
+		}
 		_searchClient ??= new TopBarSearchClient(DispatcherQueue, OnSearchStatus, OnSearchResults);
 		// Folders have no file type, so the type filter is sent only when files are included.
 		_searchClient.SetQuery(query, _searchKind, _searchKind == 2 ? (byte)0 : GetSearchFileTypes(), Atlas.Settings.WindowsTopBarSearchResultLimit);
@@ -6310,7 +6333,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	// The Path column uses the horizontal space left after the fixed Name, Size, and Date modified columns are measured.
 	// Recalculate the Search layout when one of those header elements changes size, but only while the Path width is still managed automatically.
 	// After the user manually resizes Path, preserve their selected width instead of overwriting it during later layout passes.
-	private void OnSearchFixedColumnSizeChanged(object sender, SizeChangedEventArgs e)
+	private void OnSearchFixedColumnSizeChanged()
 	{
 		if (!_isClosed && _activeView == TopBarView.Search && _searchResults.Count > 0 && !_searchPathResized)
 			UpdateViewsMaximumWidth();
@@ -6376,6 +6399,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		_isClosed = true;
 		_statisticsCancellation?.Cancel();
 		_statisticsFlyout?.Hide();
+		_globalSearchSettingsCancellation?.Cancel();
+		_globalSearchSettingsFlyout?.Hide();
 		_searchThumbnailCancellation.Cancel();
 		_searchThumbnailCancellation.Dispose();
 		if (_searchClient is not null) _searchDisposalTask = _searchClient.DisposeAsync().AsTask();

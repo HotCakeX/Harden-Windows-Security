@@ -90,6 +90,8 @@ Global Search is designed for fast searches across every local **NTFS** and **Re
 
 - **Search by name.** Search looks at the names of files and folders, not their full paths. For example, typing `vacation` finds a folder named `Vacation` and a file named `Vacation.jpg`, but not `beach.jpg` that is saved inside that folder. If there are more matches than your **Max results** number, type more of the name to narrow them down.
 
+- **Search with wildcards.** Use `*` in the search text to match any number of characters, with up to 2 of them in one search. A search with a wildcard matches the whole name instead of any part of it, and capital and small letters are treated the same. For example, `HardenSystem*.exe` and `Ha*ystem*ity.exe` both find `HardenSystemSecurity.exe`, `*.pdf` finds every name that ends with `.pdf`, and `report*` finds every name that starts with `report`. A search without a wildcard keeps finding every name that contains the text, at the same speed as before.
+
 - **Choose how many results to show.** The **Max results** box at the top left of the Search view sets the most results shown for each search. It starts at 100 and accepts any number from 1 to 10,000. Type a number and press Enter, or click the box and use the up and down arrows that appear, which change it by 100 at a time. Higher numbers can take a little longer to show because the size and date of every result are read from the drive, so a smaller number keeps Search at its fastest. Your choice is remembered.
 
 - **Choose files, folders, or both.** The small buttons on the top row of the Search view, next to the indexed items count, let you pick what to find. **All** shows both files and folders and is selected by default, **Files** shows only files, and **Folders** shows only folders.
@@ -108,15 +110,29 @@ Global Search is designed for fast searches across every local **NTFS** and **Re
 
 - **Rebuilt only when needed.** The saved index is built again from scratch only when it cannot be trusted, for example when the service was stopped unexpectedly before it could save, when a drive was formatted or replaced, or when so many changes were made while the service was off that the drive's change journal no longer holds all of them.
 
-- **Drives you connect later.** A drive connected while the service is running, such as an external drive, is added to the index the next time the service starts, or right away when you load statistics for it in **Drive Statistics**.
+- **Drives you connect later.** By default, a drive connected while the service is already running, such as an external SSD, is added to the index the next time the service starts, when you select **Detect and index drives** or when you load statistics for it in **Drive Statistics**. Turn on **Index drives when they are connected** to have the service add every drive as soon as it is connected to your system.
 
-- **Resource-conscious service lifetime.** The service turns itself off after two hours without use, counted from when it starts, when it finishes building the initial index, or when it answers the last request. The Top Bar starts it again automatically the next time it is needed.
+- **Safe removal of drives.** When you safely remove or eject an indexed drive, the service saves its index and releases the drive right away, so Windows never reports the drive as in use because of Global Search. If the removal does not happen, for example because another app is still using the drive, the drive is added back to the index.
+
+- **Resource-conscious service lifetime.** The service turns itself off after 6 hours without use, counted from when it starts, when it finishes building the initial index, or when it answers the last request. The Top Bar starts it again automatically the next time it is needed.
 
 > [!NOTE]\
 > The first search after the service turned itself off takes a moment longer because the service must start and load the saved index. Only the very first search, or one after the saved index had to be built again, takes longer because every file on the indexed drives must be read.
 
 > [!TIP]\
 > The indexed database is a very compact database that the Global Search uses for its search functionality. It can only be [accessed](https://github.com/microsoft/WindowsAppSDK/blob/main/specs/applicationdata/ApplicationData.md#34-per-machine-data-store) by the `Trusted Installer` or the `SYSTEM` accounts.
+
+#### Global Search Settings
+
+The **Global Search Settings** button, next to the **Drive Statistics** button in the Search view, opens a panel to manage the saved index of Global Search.
+
+- **Calculate size.** Shows the total size of the saved index on your OS drive. Select it again at any time to see the current size.
+
+- **Delete unused indexes.** The saved index of a drive that is not connected is kept for 10 days, so the drive is found again quickly when you reconnect it, and is then deleted automatically. Select this button to delete such saved indexes right away instead of waiting. The indexes of the drives that are in the index now are kept, and the new size is shown when it finishes.
+
+- **Index drives when they are connected.** When this is on, the service adds every drive you connect while it is running to the index right away, and also adds the drives that were connected while the option was off. It is off by default, and your choice is remembered and applied every time the Top Bar connects to the service.
+
+- **Detect and index drives.** Looks for connected drives that are not in the index yet and adds them, then shows how many drives were added and how many are indexed in total. Use it when a drive could not be indexed when you connected it, such as a BitLocker encrypted drive that you unlocked afterwards.
 
 #### Drive Statistics
 

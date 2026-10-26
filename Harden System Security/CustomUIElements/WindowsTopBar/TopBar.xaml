@@ -1002,6 +1002,21 @@
                     <FontIcon Glyph="&#xE9D2;"
                               FontSize="12"/>
                 </Button>
+                <!-- Global Search settings, such as managing its indexes. Available only in Search. -->
+                <Button x:Name="GlobalSearchSettingsButton"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        MinWidth="0"
+                        CornerRadius="14"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed"
+                        ToolTipService.ToolTip="Global Search Settings"
+                        AutomationProperties.Name="Global Search Settings"
+                        Click="{x:Bind OnGlobalSearchSettingsClick}">
+                    <FontIcon Glyph="&#xE712;"
+                              FontSize="12"/>
+                </Button>
                 <!-- Adds a new entry to the active view. It is hidden for the view that has nothing to add to. -->
                 <Button x:Name="AddButton"
                         Width="28"

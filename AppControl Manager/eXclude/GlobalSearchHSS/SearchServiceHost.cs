@@ -274,31 +274,29 @@ internal static partial class SearchServiceHost
 	private static void BuildIndexes(List<VolumeIndex> indexes, CancellationToken cancellationToken)
 	{
 		Stopwatch initialTime = Stopwatch.StartNew();
-		string[] driveRoots = Environment.GetLogicalDrives();
 		// Each index is saved here when the service stops and loaded from here at the next start.
 		int loaded = 0;
-		_ = indexes.EnsureCapacity(driveRoots.Length);
 		try
 		{
-			foreach (string driveRoot in driveRoots)
+			foreach (string volume in GetVolumes())
 			{
 				cancellationToken.ThrowIfCancellationRequested();
-				char drive = driveRoot[0];
 				try
 				{
-					indexes.Add(OpenIndex(drive, out bool wasLoaded));
+					indexes.Add(OpenIndex(volume, out bool wasLoaded));
 					if (wasLoaded) loaded++;
 				}
+				catch (UnindexableVolumeException) { }
 				catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or NotSupportedException)
 				{
-					SearchLog.ReportWarning($"Skipping {drive}:\\: {Describe(exception)}");
+					SearchLog.ReportWarning($"Skipping {volume}: {Describe(exception)}");
 				}
 			}
 			initialTime.Stop();
 			SearchLog.Report($"Completion time: {initialTime.Elapsed.TotalMilliseconds / 1000} seconds. Indexes loaded from disk: {loaded} of {indexes.Count}.");
 			if (indexes.Count == 0)
 				SearchLog.ReportWarning("No drives could be indexed. Check that an NTFS or ReFS volume with a USN journal is available.");
-			DeleteUnusedSavedIndexes(indexes);
+			DeleteUnusedSavedIndexes(DisconnectedIndexRetention);
 			// Indexing leaves outgrown hash buckets, enumeration buffers and walk state behind. The large ones
 			// are only freed by a full collection, which may not happen for a long time, so collect once now.
 			ReclaimReleasedIndexMemory();
@@ -311,15 +309,36 @@ internal static partial class SearchServiceHost
 		}
 	}
 
-	// Loads the saved index of a drive, or builds it when the saved one cannot be used. loaded is true when it was loaded.
-	private static VolumeIndex OpenIndex(char drive, out bool loaded)
+	// Returns the GUID path of every volume. Volumes are enumerated by their GUID paths instead of drive letters, so
+	// volumes without a drive letter are indexed too, and a volume with several drive letters or mount folders is
+	// indexed once.
+	private static List<string> GetVolumes()
 	{
-		VolumeIndex index = new(drive, DatabaseDirectory);
+		List<string> volumes = [];
+		// The buffer holds a whole \\?\Volume{GUID}\ path, 49 characters and the null, so FindNextVolumeW fails
+		// only when no volume is left.
+		char[] name = new char[50];
+		nint find = NativeMethods.FindFirstVolumeW(name, (uint)name.Length);
+		if (find == NativeMethods.INVALID_HANDLE_VALUE) throw new Win32Exception(Marshal.GetLastPInvokeError(), "FindFirstVolumeW failed");
+		try
+		{
+			do volumes.Add(new string(name.AsSpan(0, Array.IndexOf(name, '\0'))));
+			while (NativeMethods.FindNextVolumeW(find, name, (uint)name.Length));
+		}
+		finally { _ = NativeMethods.FindVolumeClose(find); }
+		return volumes;
+	}
+
+	// Loads the saved index of a volume, or builds it when the saved one cannot be used. loaded is true when it was loaded.
+	private static VolumeIndex OpenIndex(string volume, out bool loaded)
+	{
+		VolumeIndex index = new(volume, DatabaseDirectory);
 		try
 		{
 			loaded = index.LoadOrBuild();
+			index.RegisterRemovalNotification(VolumeNotificationCallback);
 			if (index.InaccessibleDirectoryCount != 0)
-				SearchLog.ReportWarning($"WARNING: {drive}:\\ index is PARTIAL: {index.InaccessibleDirectoryCount:N0} inaccessible director{(index.InaccessibleDirectoryCount == 1 ? "y" : "ies")} not traversed.");
+				SearchLog.ReportWarning($"{volume} index is PARTIAL: {index.InaccessibleDirectoryCount:N0} inaccessible director{(index.InaccessibleDirectoryCount == 1 ? "y" : "ies")} not traversed.");
 			return index;
 		}
 		catch
@@ -335,22 +354,49 @@ internal static partial class SearchServiceHost
 	private static readonly string DatabaseDirectory = Directory.CreateDirectory(Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
 			"Microsoft", "Windows", "AppRepository", "Families", "ApplicationData", Atlas.HardenSystemSecurityPackageFamilyName, "Machine", "GlobalSearch")).FullName;
 
-	// Deletes the saved indexes of drives that are no longer indexed, such as a removed drive, so they do not keep
-	// using disk space. Every saved file name starts with its drive letter.
-	private static void DeleteUnusedSavedIndexes(List<VolumeIndex> indexes)
+	// Saved indexes of volumes that are not connected are kept this long after they were last saved or loaded, so an
+	// external drive that is connected again loads its index and applies the journal instead of being read again.
+	private static readonly TimeSpan DisconnectedIndexRetention = TimeSpan.FromDays(10);
+
+	// Keeps a file only when it belongs to a saved index whose header was written within retention, when the index was
+	// last saved or loaded. Every other file in the folder is deleted, such as a .buckets file left behind when Windows stopped, or a file the service did not write.
+	// The other files of the indexes in use are open without sharing, so deleting them fails and they stay. An index in
+	// use has no valid header to lose, because loading zeroes it and building starts without one, and saving writes it.
+	private static void DeleteUnusedSavedIndexes(TimeSpan retention)
 	{
 		try
 		{
+			DateTime oldestKept = DateTime.UtcNow - retention;
 			foreach (string path in Directory.EnumerateFiles(DatabaseDirectory))
 			{
-				char drive = char.ToUpperInvariant(Path.GetFileName(path.AsSpan())[0]);
-				if (!indexes.Exists(index => index.Drive == drive)) VolumeIndex.TryDelete(path);
+				string extension = Path.GetExtension(path);
+				// A saved file name is the volume GUID and the extension of a file of its index. A missing header reads as
+				// written in 1601.
+				if (!Guid.TryParseExact(Path.GetFileNameWithoutExtension(path.AsSpan()), "B", out _) ||
+					!(string.Equals(extension, ".index", StringComparison.OrdinalIgnoreCase) ||
+					  Array.Exists(VolumeIndex.DataExtensions, saved => string.Equals(saved, extension, StringComparison.OrdinalIgnoreCase))) ||
+					File.GetLastWriteTimeUtc(Path.ChangeExtension(path, ".index")) < oldestKept)
+					VolumeIndex.TryDelete(path);
 			}
 		}
 		catch (Exception exception) when (exception is IOException or UnauthorizedAccessException)
 		{
 			SearchLog.ReportWarning($"Could not delete unused saved indexes: {Describe(exception)}");
 		}
+	}
+
+	// The total size of the files in the index folder, including those of the indexes in use. Each size is read from
+	// the file, because the size its directory entry holds can lag behind a file that is open.
+	private static long GetSavedIndexesSize()
+	{
+		long size = 0;
+		foreach (string path in Directory.EnumerateFiles(DatabaseDirectory))
+		{
+			try { size += new FileInfo(path).Length; }
+			// Deleted after it was listed.
+			catch (FileNotFoundException) { }
+		}
+		return size;
 	}
 
 	// Call only after releasing an index and returning from its owning frame, after a build completes,
@@ -363,6 +409,33 @@ internal static partial class SearchServiceHost
 		GC.Collect(GC.MaxGeneration, GCCollectionMode.Aggressive, blocking: true, compacting: true);
 	}
 
+	// CM_NOTIFY_ACTION values handled by IndexState.HandleVolumeNotification.
+	private const uint DeviceInterfaceArrival = 0;
+	private const uint DeviceQueryRemove = 2;
+	private const uint DeviceQueryRemoveFailed = 3;
+	private const uint DeviceRemovePending = 4;
+	private const uint DeviceRemoveComplete = 5;
+	// GUID_DEVINTERFACE_VOLUME: https://learn.microsoft.com/windows-hardware/drivers/install/guid-devinterface-volume
+	private static readonly Guid VolumeInterfaceClass = new(0x53F5630D, 0xB6BF, 0x11D0, 0x94, 0xF2, 0x00, 0xA0, 0xC9, 0x1E, 0xFB, 0x8B);
+	private static readonly nint VolumeNotificationCallback = (nint)(delegate* unmanaged[Stdcall]<nint, nint, uint, nint, uint, uint>)&OnVolumeNotification;
+	// The state that volume notifications act on; there is one per service run.
+	private static IndexState? _indexState;
+
+	// Receives the arrivals of volumes and the removal events of indexed volumes, on a thread of the notification thread
+	// pool. A removal is never vetoed; the index releases its volume handle instead, so a drive can be removed safely.
+	[UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]
+	private static uint OnVolumeNotification(nint notification, nint context, uint action, nint eventData, uint eventDataSize)
+	{
+		try { Volatile.Read(ref _indexState)?.HandleVolumeNotification(notification, action); }
+		catch (Exception exception) { SearchLog.ReportError(exception); }
+		return 0; // ERROR_SUCCESS
+	}
+
+	// CM_Unregister_Notification waits for the running callbacks of the registration, and those can wait for Sync, so it
+	// is never called from a callback or under Sync; a thread pool thread calls it instead.
+	internal static void UnregisterLater(nint notification) =>
+		_ = ThreadPool.UnsafeQueueUserWorkItem(static notification => _ = NativeMethods.CM_Unregister_Notification(notification), notification, preferLocal: false);
+
 	// One service-wide index and one one-shot timer. All index operations use the
 	// same lock, so the idle timeout cannot stop the service during refresh or search.
 	private sealed class IndexState : IDisposable
@@ -373,12 +446,164 @@ internal static partial class SearchServiceHost
 		internal bool Unloaded = true;
 		// Searches answered since the last periodic reclamation, across all sessions. Guarded by Sync.
 		internal int SearchesSinceReclaim;
+		// Taken before Sync and never under it, so indexes added after the first build are added by one caller at a
+		// time, and a volume is never indexed twice.
+		internal readonly Lock AddSync = new();
+		// Reports the arrivals of volumes while the client asks for the drives connected while the service runs to be
+		// indexed. Zero while it does not, which is the default. Changed only by the search session, which ends before Dispose.
+		private nint arrivalNotification;
+		// Set from when indexing of new volumes is queued until it starts enumerating them, so arrivals that come
+		// together queue one pass.
+		private int newVolumesQueued;
+		// Removal registrations whose index was released for a query remove, and the volume of each. Each is kept until
+		// the removal completes or fails, so a removal that something else vetoes is reported and the volume is indexed
+		// again. Guarded by Sync.
+		private readonly Dictionary<nint, string> releasedForRemoval = [];
 		private long idleDeadline = long.MaxValue;
-		// The service stops after two hours without activity, counted from its start, the index build, or the last response.
-		private static readonly TimeSpan IdleDelay = TimeSpan.FromHours(2);
+		// The service stops after six hours without activity, counted from its start, the index build, or the last response.
+		private static readonly TimeSpan IdleDelay = TimeSpan.FromHours(6);
 
-		internal IndexState() => IdleTimer = new(static value => ((IndexState)value!).OnIdleTimerTick(),
-			this, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+		internal IndexState()
+		{
+			IdleTimer = new(static value => ((IndexState)value!).OnIdleTimerTick(), this, Timeout.InfiniteTimeSpan, Timeout.InfiniteTimeSpan);
+			_indexState = this;
+		}
+
+		// Starts or stops indexing the drives connected while the service runs. Starting it also indexes the drives
+		// connected while it was stopped.
+		internal void SetIndexConnectedDrives(bool enabled)
+		{
+			if (enabled == (arrivalNotification != 0)) return;
+			if (!enabled)
+			{
+				// Its callback only queues work and never waits, so it is unregistered here directly.
+				_ = NativeMethods.CM_Unregister_Notification(arrivalNotification);
+				arrivalNotification = 0;
+				return;
+			}
+			CM_NOTIFY_FILTER filter = new() { cbSize = (uint)Unsafe.SizeOf<CM_NOTIFY_FILTER>(), FilterType = 0, ClassGuid = VolumeInterfaceClass }; // CM_NOTIFY_FILTER_TYPE_DEVICEINTERFACE
+			uint result = NativeMethods.CM_Register_Notification(ref filter, 0, VolumeNotificationCallback, out nint registered);
+			if (result != 0)
+			{
+				SearchLog.ReportWarning($"Drives connected while the service runs are not indexed: CM_Register_Notification failed with CONFIGRET {result}.");
+				return;
+			}
+			arrivalNotification = registered;
+			QueueIndexNewVolumes();
+		}
+
+		internal void HandleVolumeNotification(nint notification, uint action)
+		{
+			if (action == DeviceInterfaceArrival)
+			{
+				QueueIndexNewVolumes();
+				return;
+			}
+			if (action is not (DeviceQueryRemove or DeviceQueryRemoveFailed or DeviceRemovePending or DeviceRemoveComplete)) return;
+			lock (Sync)
+			{
+				if (releasedForRemoval.Remove(notification, out string? volume))
+				{
+					// The removal of a released volume ended. A vetoed one leaves the volume connected, so it is indexed
+					// again, which loads the index saved when it was released.
+					UnregisterLater(notification);
+					if (action == DeviceQueryRemoveFailed) QueueIndexVolumes(volume);
+					return;
+				}
+				// Only a removal that goes ahead releases an index.
+				if (action == DeviceQueryRemoveFailed) return;
+				int position = Indexes.FindIndex(index => index.RemovalNotification == notification);
+				if (position < 0) return;
+				VolumeIndex released = Indexes[position];
+				Indexes.RemoveAt(position);
+				// The registration reports how the query remove ends, so it is kept instead of being unregistered with the index.
+				if (action == DeviceQueryRemove)
+				{
+					released.RemovalNotification = 0;
+					_ = releasedForRemoval.TryAdd(notification, released.Root);
+				}
+				// Saves the index, so it is loaded when the drive is connected again, and closes the volume handle.
+				released.Dispose();
+			}
+		}
+
+		private void QueueIndexNewVolumes()
+		{
+			if (Interlocked.Exchange(ref newVolumesQueued, 1) == 0) QueueIndexVolumes(null);
+		}
+
+		// Runs IndexVolumes on the thread pool, because the notification callbacks that call this cannot wait for it.
+		private void QueueIndexVolumes(string? volume) =>
+			_ = ThreadPool.UnsafeQueueUserWorkItem(static work =>
+			{
+				try { _ = work.State.IndexVolumes(work.Volume); }
+				catch (Exception exception) { SearchLog.ReportError(exception); }
+			}, (State: this, Volume: volume), preferLocal: false);
+
+		// Indexes volume, or every volume when it is null, unless it already has an index, such as a drive connected after
+		// the indexes were built. Each volume is indexed outside Sync, so searches of the other volumes continue meanwhile.
+		// Returns how many volumes were indexed.
+		internal int IndexVolumes(string? volume)
+		{
+			int indexed = 0;
+			try
+			{
+				lock (AddSync)
+				{
+					List<string> volumes;
+					if (volume is null)
+					{
+						// Arrivals from here on queue another pass, which sees their volumes.
+						Volatile.Write(ref newVolumesQueued, 0);
+						volumes = GetVolumes();
+					}
+					else volumes = [volume];
+					lock (Sync)
+					{
+						// The first build indexes every volume, and nothing is added after the indexes are released.
+						if (Unloaded) return 0;
+						_ = volumes.RemoveAll(volume => Indexes.Exists(index => string.Equals(index.Root, volume, StringComparison.OrdinalIgnoreCase)));
+					}
+					foreach (string candidate in volumes)
+					{
+						try
+						{
+							VolumeIndex index = OpenIndex(candidate, out _);
+							lock (Sync)
+							{
+								if (Unloaded)
+								{
+									index.Dispose();
+									return indexed;
+								}
+								Indexes.Add(index);
+							}
+							indexed++;
+						}
+						catch (UnindexableVolumeException) { }
+						catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or NotSupportedException)
+						{
+							SearchLog.ReportWarning($"Skipping {candidate}: {Describe(exception)}");
+						}
+					}
+				}
+			}
+			finally
+			{
+				// Indexing a volume leaves its build buffers behind.
+				if (indexed != 0) ReclaimReleasedIndexMemory();
+			}
+			return indexed;
+		}
+
+		// Deletes every saved index file that no index in use holds open, such as the saved indexes of drives that are
+		// not connected, instead of waiting for DisconnectedIndexRetention. Holding AddSync and Sync keeps every index
+		// from being saved meanwhile, so the files of an index are never deleted while it is being saved.
+		internal void DeleteUnusedSavedIndexes()
+		{
+			using Lock.Scope adding = AddSync.EnterScope();
+			lock (Sync) SearchServiceHost.DeleteUnusedSavedIndexes(TimeSpan.Zero);
+		}
 
 		// Startup, queries and statistics share one build gate, including retries after a failed build.
 		internal void EnsureIndexes(CancellationToken token)
@@ -432,8 +657,11 @@ internal static partial class SearchServiceHost
 
 		public void Dispose()
 		{
+			SetIndexConnectedDrives(false);
 			lock (Sync)
 			{
+				// A pass that is still indexing a volume then releases its index instead of adding it.
+				Unloaded = true;
 				StopIdleTimer();
 				IdleTimer.Dispose();
 				foreach (VolumeIndex index in Indexes) index.Dispose();
@@ -509,9 +737,17 @@ internal static partial class SearchServiceHost
 	// The filter and the result limit precede the length: kind (0 files and folders, 1 files only, 2 folders only),
 	// file type bits, then the 7-bit encoded result limit.
 	// Reject the declared length before reading or allocating the payload. The service owns the length limit.
-	private static string? ReadQuery(BinaryReader reader, BinaryWriter writer, out byte kind, out byte fileTypes, out int limit)
+	// Setting frames can come in place of a query at any time; each is applied and the next frame is read.
+	private static string? ReadQuery(BinaryReader reader, BinaryWriter writer, IndexState state, out byte kind, out byte fileTypes, out int limit)
 	{
 		kind = reader.ReadByte();
+		while (kind == Atlas.GlobalSearchIndexConnectedDrivesFrame)
+		{
+			byte enabled = reader.ReadByte();
+			if (enabled > 1) throw new InvalidDataException("Invalid drive indexing setting.");
+			state.SetIndexConnectedDrives(enabled == 1);
+			kind = reader.ReadByte();
+		}
 		fileTypes = reader.ReadByte();
 		// Folders have no file type, so a type filter is valid only when files are included.
 		if (kind > 2 || (kind == 2 && fileTypes != 0)) throw new InvalidDataException("Invalid search filter.");
@@ -528,7 +764,10 @@ internal static partial class SearchServiceHost
 		}
 		Span<byte> bytes = stackalloc byte[length];
 		reader.BaseStream.ReadExactly(bytes);
-		return Encoding.UTF8.GetString(bytes);
+		string query = Encoding.UTF8.GetString(bytes);
+		// The client never sends more wildcards than a query can hold.
+		if (query.AsSpan().Count('*') > Atlas.GlobalSearchMaxWildcards) throw new InvalidDataException("Too many wildcards in the search query.");
+		return query;
 	}
 
 	private static void SearchIndexes(string query, byte kind, byte fileTypes, int limit, List<VolumeIndex> indexes, SearchResponse response)
@@ -549,7 +788,7 @@ internal static partial class SearchServiceHost
 			}
 			catch (Exception exception) when (exception is Win32Exception or IOException or UnauthorizedAccessException or NotSupportedException)
 			{
-				SearchLog.ReportWarning($"Index for {index.Drive}:\\ is no longer usable: {Describe(exception)}");
+				SearchLog.ReportWarning($"Index for {index.Root} is no longer usable: {Describe(exception)}");
 				index.Dispose();
 				indexes.RemoveAt(i);
 			}
@@ -572,7 +811,7 @@ internal static partial class SearchServiceHost
 			byte kind;
 			byte fileTypes;
 			int limit;
-			try { query = ReadQuery(reader, writer, out kind, out fileTypes, out limit); }
+			try { query = ReadQuery(reader, writer, state, out kind, out fileTypes, out limit); }
 			catch (Exception exception) when (exception is InvalidDataException or FormatException)
 			{
 				// A malformed request closes only this client session, not the service or its indexes.

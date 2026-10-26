@@ -36,7 +36,8 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 	private readonly DispatcherQueue _dispatcher;
 	private readonly Action<string> _status;
 	private readonly Action<string, List<TopBarSearchResult>, long> _results;
-	private readonly Channel<bool> _queryChanged = Channel.CreateBounded<bool>(new BoundedChannelOptions(1)
+	// Signaled when the query or the drive indexing setting changes.
+	private readonly Channel<bool> _changed = Channel.CreateBounded<bool>(new BoundedChannelOptions(1)
 	{
 		FullMode = BoundedChannelFullMode.DropWrite,
 		SingleReader = true,
@@ -50,6 +51,11 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 	private byte _kind;
 	private byte _fileTypes;
 	private int _limit = Atlas.GlobalSearchDefaultResultLimit;
+	// Incremented after each query change, so a session searches only when the query changed, not when only the
+	// drive indexing setting changed.
+	private int _queryVersion;
+	// Whether the service indexes the drives connected while it runs. Sent after every handshake and whenever it changes.
+	private volatile bool _indexConnectedDrives = Atlas.Settings.WindowsTopBarSearchIndexConnectedDrives;
 	private bool _disposed;
 	private bool _receivedResponse;
 	// Service readiness belongs to the current pipe handshake, not the index lifetime.
@@ -71,7 +77,16 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 		_fileTypes = fileTypes;
 		_limit = limit;
 		_query = query;
-		_ = _queryChanged.Writer.TryWrite(true);
+		_ = Interlocked.Increment(ref _queryVersion);
+		_ = _changed.Writer.TryWrite(true);
+	}
+
+	// Sent to the running service at once, or after the next handshake.
+	internal void SetIndexConnectedDrives(bool enabled)
+	{
+		if (_disposed) return;
+		_indexConnectedDrives = enabled;
+		_ = _changed.Writer.TryWrite(true);
 	}
 
 	private async Task RunAsync()
@@ -96,7 +111,7 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 					_receivedResponse = false;
 					await pipe.ConnectAsync(30000, token);
 					// Reissue current text after reconnecting; explicit rejection clears it before the next attempt.
-					if (!string.IsNullOrWhiteSpace(_query)) _ = _queryChanged.Writer.TryWrite(true);
+					if (!string.IsNullOrWhiteSpace(_query)) _ = _changed.Writer.TryWrite(true);
 					NamedPipeClientStream connectedPipe = pipe;
 					string? rejectedQuery = await Task.Run(() => Exchange(connectedPipe));
 					// The idle service closed this session; reconnect at once, which starts it and reissues the query.
@@ -135,15 +150,33 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 		// Send a byte before server impersonation and PFN validation.
 		pipe.WriteByte(1);
 		using BinaryReader input = new(pipe, Encoding.UTF8, leaveOpen: true);
-		using BinaryWriter output = new(pipe, Encoding.UTF8, leaveOpen: true);
+		// Each frame is built here and sent with one write. A writer on the pipe itself flushes the pipe when it is disposed,
+		// which throws once the service has closed the session, and so turns a reconnect into an error.
+		using MemoryStream frame = new();
+		using BinaryWriter output = new(frame, Encoding.UTF8, leaveOpen: true);
 		if (input.ReadByte() != 1 || !string.Equals(input.ReadString(), "Search service ready.", StringComparison.OrdinalIgnoreCase))
 			throw new InvalidDataException("The Global Search rejected the connection.");
 		_serviceReady = true;
 		_ = _dispatcher.TryEnqueue(() => { if (!_disposed) _status("Search service ready."); });
-		while (_queryChanged.Reader.WaitToReadAsync().AsTask().GetAwaiter().GetResult())
+		// A new service process starts with the setting off, so it is sent at once.
+		bool indexConnectedDrives = _indexConnectedDrives;
+		try { SendIndexConnectedDrives(pipe, frame, output, indexConnectedDrives); }
+		// The service stopped itself while this connection was idle.
+		catch (IOException) { return null; }
+		int searchedVersion = -1;
+		while (_changed.Reader.WaitToReadAsync().AsTask().GetAwaiter().GetResult())
 		{
-			_ = _queryChanged.Reader.TryRead(out _);
+			_ = _changed.Reader.TryRead(out _);
 			if (_disposed) break;
+			if (indexConnectedDrives != _indexConnectedDrives)
+			{
+				indexConnectedDrives = !indexConnectedDrives;
+				try { SendIndexConnectedDrives(pipe, frame, output, indexConnectedDrives); }
+				catch (IOException) { return null; }
+			}
+			int version = Volatile.Read(ref _queryVersion);
+			if (version == searchedVersion) continue;
+			searchedVersion = version;
 			string query = _query;
 			if (string.IsNullOrWhiteSpace(query)) continue;
 			byte kind = _kind;
@@ -160,7 +193,7 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 				output.Write(fileTypes);
 				output.Write7BitEncodedInt(limit);
 				output.Write7BitEncodedInt(Encoding.UTF8.GetByteCount(query));
-				output.Flush();
+				Send(pipe, frame);
 				admission = input.ReadByte();
 			}
 			// The service stopped itself while this connection was idle.
@@ -168,7 +201,7 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			if (admission == 3) return query;
 			if (admission != 4) throw new InvalidDataException("Unexpected search admission response.");
 			output.Write(query.AsSpan()); // Raw payload; its length has already been sent.
-			output.Flush();
+			Send(pipe, frame);
 			// Status frames precede, but never replace, the existing result frame.
 			byte response = input.ReadByte();
 			while (response == 5)
@@ -188,7 +221,7 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			for (int i = 0; i < count; i++)
 			{
 				string path = input.ReadString();
-				superseded = superseded || _queryChanged.Reader.Count != 0;
+				superseded = superseded || Volatile.Read(ref _queryVersion) != version;
 				if (!superseded) results.Add(CreateResult(path));
 			}
 			_receivedResponse = true;
@@ -198,6 +231,21 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 			_ = _dispatcher.TryEnqueue(() => { if (!_disposed && _kind == kind && _fileTypes == fileTypes && _limit == limit) _results(query, results, indexedItems); });
 		}
 		return null;
+	}
+
+	// The service applies the setting frame in place of a query and sends no response.
+	private static void SendIndexConnectedDrives(NamedPipeClientStream pipe, MemoryStream frame, BinaryWriter output, bool enabled)
+	{
+		output.Write(Atlas.GlobalSearchIndexConnectedDrivesFrame);
+		output.Write(enabled);
+		Send(pipe, frame);
+	}
+
+	// Sends the frame that the writer built and empties it for the next one. The writer has no buffer of its own.
+	private static void Send(NamedPipeClientStream pipe, MemoryStream frame)
+	{
+		pipe.Write(frame.GetBuffer(), 0, (int)frame.Length);
+		frame.SetLength(0);
 	}
 
 	// Ignore queued status updates after the user changes or clears the query, or closes the bar.
@@ -225,7 +273,7 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 		}
 	}
 
-	private static string FormatFileSize(long bytes)
+	internal static string FormatFileSize(long bytes)
 	{
 		double size = bytes;
 		int unit = 0;
@@ -244,7 +292,7 @@ internal sealed partial class TopBarSearchClient : IAsyncDisposable
 		try
 		{
 			await _shutdown.CancelAsync();
-			_ = _queryChanged.Writer.TryComplete();
+			_ = _changed.Writer.TryComplete();
 			if (_pipe is not null) await _pipe.DisposeAsync().ConfigureAwait(false);
 			await _worker.ConfigureAwait(false);
 		}

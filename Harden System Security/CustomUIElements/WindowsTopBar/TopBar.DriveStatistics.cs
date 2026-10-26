@@ -90,13 +90,14 @@ internal sealed partial class TopBar
 			status.Text = "Counting files on " + drive + "...";
 			try
 			{
-				(long[] counts, int skipped) = await Task.Run(() => ReadDriveStatisticsAsync(drive, cancellation.Token));
+				(long[] counts, int skipped) = await Task.Run(() => SendGlobalSearchRequestAsync(Atlas.GlobalSearchStatisticsRequest,
+					(byte)char.ToUpperInvariant(drive[0]), ReadDriveStatistics, cancellation.Token));
 				cancellation.Token.ThrowIfCancellationRequested();
 				if (_isClosed || !ReferenceEquals(_statisticsFlyout, flyout)) return;
 				long total = RenderDriveStatistics(chart, legend, counts);
-				status.Text = drive + " " + total.ToString("N0", CultureInfo.CurrentCulture) + " files counted. " +
-					(skipped == 0 ? "Hard links are not counted separately." :
-					"Partial snapshot: " + skipped.ToString("N0", CultureInfo.CurrentCulture) + " inaccessible directories.");
+				status.Text = drive + " " + total.ToString("N0", CultureInfo.CurrentCulture) + " files counted." +
+					(skipped == 0 ? string.Empty :
+					" Partial snapshot: " + skipped.ToString("N0", CultureInfo.CurrentCulture) + " inaccessible directories.");
 			}
 			catch (OperationCanceledException)
 			{
@@ -136,7 +137,8 @@ internal sealed partial class TopBar
 		flyout.ShowAt(DriveStatisticsButton);
 	}
 
-	private static async Task<(long[] Counts, int Skipped)> ReadDriveStatisticsAsync(string drive, CancellationToken token)
+	// Sends one request to the statistics pipe of the Global Search service and reads its successful response.
+	private static async Task<T> SendGlobalSearchRequestAsync<T>(byte operation, byte argument, Func<BinaryReader, T> read, CancellationToken token)
 	{
 		// The manual Global Search service stops itself when idle, so start it first if it is not running.
 		await QuantumRelayHSS.ServiceStarter.StartServiceAsync(Atlas.GlobalSearchServiceName, TimeSpan.FromSeconds(30), cancellationToken: token).ConfigureAwait(false);
@@ -147,24 +149,29 @@ internal sealed partial class TopBar
 		using CancellationTokenRegistration registration = token.Register(pipe.Dispose);
 		try
 		{
-			byte[] request = [1, 1, (byte)char.ToUpperInvariant(drive[0])];
+			byte[] request = [1, operation, argument];
 			await pipe.WriteAsync(request, token).ConfigureAwait(false);
 			using BinaryReader reader = new(pipe, Encoding.UTF8, leaveOpen: true);
-			if (reader.ReadByte() != 1 || reader.ReadByte() != 0) throw new InvalidDataException("Statistics request failed.");
-			int skipped = reader.ReadInt32();
-			if (skipped < 0) throw new InvalidDataException("Invalid partial snapshot metadata.");
-			long[] counts = new long[10];
-			for (int i = 0; i < counts.Length; i++)
-			{
-				counts[i] = reader.ReadInt64();
-				if (counts[i] < 0) throw new InvalidDataException("Invalid category count.");
-			}
-			return (counts, skipped);
+			if (reader.ReadByte() != 1 || reader.ReadByte() != 0) throw new InvalidDataException("The Global Search request failed.");
+			return read(reader);
 		}
 		catch (Exception) when (token.IsCancellationRequested)
 		{
 			throw new OperationCanceledException(token);
 		}
+	}
+
+	private static (long[] Counts, int Skipped) ReadDriveStatistics(BinaryReader reader)
+	{
+		int skipped = reader.ReadInt32();
+		if (skipped < 0) throw new InvalidDataException("Invalid partial snapshot metadata.");
+		long[] counts = new long[10];
+		for (int i = 0; i < counts.Length; i++)
+		{
+			counts[i] = reader.ReadInt64();
+			if (counts[i] < 0) throw new InvalidDataException("Invalid category count.");
+		}
+		return (counts, skipped);
 	}
 
 	// Returns the total file count, which is summed before anything is rendered.

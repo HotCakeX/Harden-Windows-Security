@@ -1,1 +1,9 @@
-* Updated dependencies to the latest version.
+* New features for the Global Search in the TopBar
+
+    * You can now use up to 2 wildcard "*" characters to fine-tune your searches. A search with a wildcard matches the whole name instead of any part of it, and capital and small letters are treated the same. For example, "HardenSystem*.exe" and "Ha*ystem*ity.exe" both find "HardenSystemSecurity.exe", "*.pdf" finds every name that ends with ".pdf", and "report*" finds every name that starts with "report". A search without a wildcard keeps finding every name that contains the text, at the same speed as before.
+
+    * Drives will maintain their index database now even if the drive letters are changed, useful for fixed drives and especially useful for removable drives or external disks that you plug to the system.
+
+    * You can now configure the Global Search to automatically index the drives you plug into your system, such as an external SSD. Its index on disk will remain up to 10 days so that if you unplug and replug it again, it won't have to be indexed from the beginning again and only needs to update which usually takes 1 second.
+   
+* There are a lot more changes. View them all on GitHub because this place has a max character limit: https://github.com/HotCakeX/Harden-Windows-Security/releases

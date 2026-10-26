@@ -434,6 +434,7 @@ internal static class SettingsBackupRestoreSerializer
 		CreateInt(nameof(Main.WindowsTopBarSentryEncryptionMode), "Integer in range 0-2", 0, 2, static settings => settings.WindowsTopBarSentryEncryptionMode, static (settings, value) => settings.WindowsTopBarSentryEncryptionMode = value),
 		CreateInt(nameof(Main.WindowsTopBarSearchResultLimit), "Integer in range 1-10000", 1, Atlas.GlobalSearchMaxResultLimit, static settings => settings.WindowsTopBarSearchResultLimit, static (settings, value) => settings.WindowsTopBarSearchResultLimit = value),
 		CreateBoolean(nameof(Main.WindowsTopBarSearchLargeThumbnails), static settings => settings.WindowsTopBarSearchLargeThumbnails, static (settings, value) => settings.WindowsTopBarSearchLargeThumbnails = value),
+		CreateBoolean(nameof(Main.WindowsTopBarSearchIndexConnectedDrives), static settings => settings.WindowsTopBarSearchIndexConnectedDrives, static (settings, value) => settings.WindowsTopBarSearchIndexConnectedDrives = value),
 		CreateString(nameof(Main.CustomizableScanLevelsFallbackOrder), "String", static settings => settings.CustomizableScanLevelsFallbackOrder, static (settings, value) => settings.CustomizableScanLevelsFallbackOrder = value),
 
 		CreateBoolean(nameof(Main.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), static settings => settings.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation, static (settings, value) => settings.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation = value)

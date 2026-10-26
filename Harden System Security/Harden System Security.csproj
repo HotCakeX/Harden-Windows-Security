@@ -268,10 +268,10 @@
         <PackageReference Include="Microsoft.Identity.Client.Extensions.Msal" Version="4.91.1" />
         <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.3.1" />
         <PackageReference Include="Microsoft.WindowsAppSDK.AI" Version="2.5.5" />
-        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.2.26504.105" />
+        <PackageReference Include="System.Security.Cryptography.Pkcs" Version="11.0.0-rc.3.26522.148" />
         <PackageReference Include="Microsoft.WindowsAppSDK.WinUI" Version="2.3.9" />
         <PackageReference Include="Microsoft.WindowsAppSDK.Search" Version="2.5.5" />
-        <PackageReference Include="System.Diagnostics.EventLog" Version="11.0.0-rc.2.26504.105" />
+        <PackageReference Include="System.Diagnostics.EventLog" Version="11.0.0-rc.3.26522.148" />
 
         <!-- Transitive Packages - Without these packages, there will not be compilation error related to missing types -->
         <PackageReference Include="Microsoft.IdentityModel.Abstractions" Version="8.23.0" />
@@ -287,7 +287,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.WindowsPackageManager.ComInterop" Version="1.30.100-preview" />
-        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="11.0.0-rc.2.26504.105" />
+        <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="11.0.0-rc.3.26522.148" />
 
     </ItemGroup>
 

@@ -223,7 +223,7 @@ internal static unsafe partial class NativeMethods
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/mssip/nf-mssip-cryptsipretrievesubjectguid
 	/// </summary>
-	[LibraryImport("crypt32.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[LibraryImport("crypt32.dll", StringMarshalling = StringMarshalling.Utf16, SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool CryptSIPRetrieveSubjectGuid(
@@ -4493,5 +4493,29 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	[return: MarshalAs(UnmanagedType.Bool)]
 	internal static partial bool PrefetchVirtualMemory(IntPtr process, nuint numberOfEntries, WIN32_MEMORY_RANGE_ENTRY* virtualAddresses, uint flags);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/mssip/nf-mssip-cryptsipgetsigneddatamsg
+	/// </summary>
+	[LibraryImport("crypt32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CryptSIPGetSignedDataMsg(SIP_SUBJECTINFO* subject, uint* encoding, uint index, uint* size, byte* data);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/mssip/nf-mssip-cryptsipremovesigneddatamsg
+	/// </summary>
+	[LibraryImport("crypt32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int CryptSIPRemoveSignedDataMsg(SIP_SUBJECTINFO* subject, uint index);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/shlwapi/nf-shlwapi-shcreatememstream
+	/// </summary>
+	[LibraryImport("shlwapi.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial IntPtr SHCreateMemStream(byte* initialData, uint initialSize);
 
 }

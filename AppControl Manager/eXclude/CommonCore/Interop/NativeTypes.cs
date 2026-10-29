@@ -1872,6 +1872,7 @@ internal struct VARIANT
 	[FieldOffset(4)] internal ushort wReserved2;
 	[FieldOffset(6)] internal ushort wReserved3;
 	[FieldOffset(8)] internal IntPtr bstrVal;
+	[FieldOffset(8)] internal IntPtr punkVal; // VT_UNKNOWN; ownership follows the native call contract.
 	[FieldOffset(8)] internal long llVal;
 	[FieldOffset(8)] internal int lVal;
 	[FieldOffset(8)] internal uint uintVal;
@@ -2734,4 +2735,45 @@ internal struct WIN32_MEMORY_RANGE_ENTRY
 {
 	internal IntPtr VirtualAddress;
 	internal nuint NumberOfBytes;
+}
+
+/// <summary>
+/// Blittable SIP subject data; default alignment is 128 bytes on X64 and ARM64.
+/// https://learn.microsoft.com/windows/win32/api/mssip/ns-mssip-sip_subjectinfo
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SIP_SUBJECTINFO
+{
+	internal uint cbSize;
+	internal Guid* pgSubjectType;
+	internal IntPtr hFile;
+	internal char* pwsFileName;
+	internal char* pwsDisplayName;
+	internal uint dwReserved1;
+	internal uint dwIntVersion;
+	internal nuint hProv;
+	// Inline CRYPT_ALGORITHM_IDENTIFIER and its parameter blob.
+	internal IntPtr DigestAlgorithmOid;
+	internal uint DigestAlgorithmParametersSize;
+	internal IntPtr DigestAlgorithmParametersData;
+	internal uint dwFlags;
+	internal uint dwEncodingType;
+	internal uint dwReserved2;
+	internal uint fdwCAPISettings;
+	internal uint fdwSecuritySettings;
+	internal uint dwIndex;
+	internal uint dwUnionChoice;
+	internal IntPtr AdditionalInformation;
+	internal IntPtr pClientData;
+}
+
+/// <summary>
+/// Native package-writer settings. BOOL is Int32; hashMethod is a borrowed IUri pointer.
+/// https://learn.microsoft.com/windows/win32/api/appxpackaging/ns-appxpackaging-appx_package_settings
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct APPX_PACKAGE_SETTINGS
+{
+	internal int forceZip32;
+	internal IntPtr hashMethod;
 }

@@ -1061,7 +1061,7 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 	/// For values below 1 KB it shows raw bytes without decimal.
 	/// </summary>
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-	private static string FormatDataSize(ulong bytes)
+	internal static string FormatDataSize(ulong bytes)
 	{
 		const double OneKB = 1024.0;
 		const double OneMB = OneKB * 1024.0;
@@ -1071,27 +1071,27 @@ internal sealed partial class HomeVM : ViewModelBase, IDisposable
 		if (bytes >= (ulong)OneTB)
 		{
 			double val = bytes / OneTB;
-			return val.ToString("0.0", CultureInfo.InvariantCulture) + " TB";
+			return val.ToString("0.0", CultureInfo.InvariantCulture) + " " + Atlas.SizeUnits[4];
 		}
 		else if (bytes >= (ulong)OneGB)
 		{
 			double val = bytes / OneGB;
-			return val.ToString("0.0", CultureInfo.InvariantCulture) + " GB";
+			return val.ToString("0.0", CultureInfo.InvariantCulture) + " " + Atlas.SizeUnits[3];
 		}
 		else if (bytes >= (ulong)OneMB)
 		{
 			double val = bytes / OneMB;
-			return val.ToString("0.0", CultureInfo.InvariantCulture) + " MB";
+			return val.ToString("0.0", CultureInfo.InvariantCulture) + " " + Atlas.SizeUnits[2];
 		}
 		else if (bytes >= (ulong)OneKB)
 		{
 			double val = bytes / OneKB;
-			return val.ToString("0.0", CultureInfo.InvariantCulture) + " KB";
+			return val.ToString("0.0", CultureInfo.InvariantCulture) + " " + Atlas.SizeUnits[1];
 		}
 		else
 		{
 			// Show raw bytes for very small totals
-			return bytes.ToString(CultureInfo.InvariantCulture) + " B";
+			return bytes.ToString(CultureInfo.InvariantCulture) + " " + Atlas.SizeUnits[0];
 		}
 	}
 

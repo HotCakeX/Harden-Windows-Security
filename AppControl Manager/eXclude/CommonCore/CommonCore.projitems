@@ -159,6 +159,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Others\CertificateCreator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Signing\Helper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Signing\Main.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Signing\PackageSignatureRemover.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Signing\Structure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppSettings\AppThemeManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AppSettings\Main.cs" />

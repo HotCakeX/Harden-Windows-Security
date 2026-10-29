@@ -16,6 +16,7 @@
 //
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -27,6 +28,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AppControlManager.Others;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.Management.Deployment;
@@ -59,8 +61,6 @@ internal sealed partial class UpdateVM : ViewModelBase
 		{
 			if (SP(ref field, value))
 			{
-				MainInfoBar.IsClosable = field;
-				AppPackageInstallerInfoBar.IsClosable = field;
 				ProgressBarVisibility = field ? Visibility.Collapsed : Visibility.Visible;
 			}
 		}
@@ -91,6 +91,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
+			MainInfoBar.IsClosable = false;
 
 			if (Atlas.PackageSource is 1)
 			{
@@ -240,6 +241,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 			ProgressBarValue = 0;
 			ElementsAreEnabled = true;
 			ProgressBarIsIndeterminate = true;
+			MainInfoBar.IsClosable = true;
 		}
 	}
 
@@ -383,7 +385,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// Opens a file picker to select a MSIX/MSIXBundle package file.
 	/// </summary>
 	internal void BrowseForCustomMSIXPathButton_Click() =>
-		LocalPackageFilePath = FileDialogHelper.ShowFilePickerDialog("MSIX/MSIXBundle files|*.msixbundle;*.msix");
+		LocalPackageFilePath = FileDialogHelper.ShowFilePickerDialog(Atlas.AppPackagesPickerFilter);
 
 	/// <summary>
 	/// Event handler to clear the selected file path.
@@ -398,6 +400,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 		try
 		{
 			ElementsAreEnabled = false;
+			AppPackageInstallerInfoBar.IsClosable = false;
 			await InstallAppPackage(LocalPackageFilePath, UseHardenedInstallationProcess, AppPackageInstallerInfoBar);
 		}
 		catch (Exception ex)
@@ -407,6 +410,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
+			AppPackageInstallerInfoBar.IsClosable = true;
 		}
 	}
 
@@ -528,6 +532,291 @@ internal sealed partial class UpdateVM : ViewModelBase
 				AddASRExclusionsForAppControlManager(packageManager);
 			}
 		});
+	}
+
+	#endregion
+
+	#region Package Signature Removal
+
+	internal readonly InfoBarSettings PackageSignatureRemovalInfoBar = new();
+
+	internal string? PackageSignatureRemovalPath
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SignatureSelectionIsBundle = string.Equals(Path.GetExtension(value), ".msixbundle", StringComparison.OrdinalIgnoreCase);
+			}
+		}
+	}
+
+	internal bool SignatureSelectionIsBundle { get; set => SP(ref field, value); }
+	internal bool RemoveInnerPackageSignatures { get; set => SP(ref field, value); }
+
+	internal void BrowseForSignatureRemoval_Click()
+	{
+		if (!ElementsAreEnabled)
+		{
+			return;
+		}
+		string? selected = FileDialogHelper.ShowFilePickerDialog(Atlas.AppPackagesPickerFilter);
+		if (!string.IsNullOrWhiteSpace(selected))
+		{
+			PackageSignatureRemovalPath = selected;
+		}
+	}
+
+	internal void Clear_PackageSignatureRemovalPath() => PackageSignatureRemovalPath = null;
+
+	/// <summary>
+	/// UI-bound handler for removing signatures from app packages.
+	/// </summary>
+	internal async void RemovePackageSignature_Click()
+	{
+		if (!ElementsAreEnabled)
+		{
+			return;
+		}
+		try
+		{
+			ElementsAreEnabled = false;
+			PackageSignatureRemovalInfoBar.IsClosable = false;
+
+			if (!File.Exists(PackageSignatureRemovalPath))
+			{
+				PackageSignatureRemovalInfoBar.WriteWarning("Browse for a package first.");
+				return;
+			}
+
+			bool removeInner = SignatureSelectionIsBundle && RemoveInnerPackageSignatures;
+			string extension = Path.GetExtension(PackageSignatureRemovalPath);
+
+			string? destination = FileDialogHelper.ShowSaveFileDialog(
+				$"Unsigned package (*{extension})|*{extension}",
+				$"{Path.GetFileNameWithoutExtension(PackageSignatureRemovalPath)}-unsigned{extension}");
+
+			if (string.IsNullOrWhiteSpace(destination))
+			{
+				return;
+			}
+
+			PackageSignatureRemovalInfoBar.WriteInfo(removeInner
+				? "Removing inner signatures and rebuilding the bundle. The original will not be modified."
+				: "Creating and validating an unsigned copy. The original and inner packages will not be modified.");
+
+			bool removed = await Task.Run(() => CommonCore.Signing.PackageSignatureRemover.CreateUnsignedCopy(PackageSignatureRemovalPath, destination, removeInner));
+
+			if (removed)
+			{
+				PackageSignatureRemovalInfoBar.WriteSuccess($"Unsigned copy saved to '{destination}'.");
+			}
+			else
+			{
+				PackageSignatureRemovalInfoBar.WriteWarning("No signature was found in the selected scope. No output was created.");
+			}
+		}
+		catch (Exception ex)
+		{
+			PackageSignatureRemovalInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+		}
+	}
+
+	#endregion
+
+	#region Package Explorer
+
+	/// <summary>
+	/// Hide the empty explorer tree without a XAML converter or duplicated state.
+	/// </summary>
+	internal Visibility PackageContentVisibility(int count) => count > 0 ? Visibility.Visible : Visibility.Collapsed;
+
+	internal string? PackageExplorerPath { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Collection for the hierarchical XAML template.
+	/// </summary>
+	internal readonly ObservableCollection<CommonCore.Signing.PackageExplorerItem> PackageExplorerItems = new();
+
+	internal readonly InfoBarSettings PackageExplorerInfoBar = new();
+
+	/// <summary>
+	/// Select a package and read its contents into a hierarchical collection for XAML display.
+	/// </summary>
+	internal async void BrowseForPackageExplorer_Click()
+	{
+		if (!ElementsAreEnabled)
+		{
+			return;
+		}
+
+		string? selected = FileDialogHelper.ShowFilePickerDialog(Atlas.AppPackagesPickerFilter);
+
+		if (string.IsNullOrWhiteSpace(selected))
+		{
+			return;
+		}
+		try
+		{
+			ElementsAreEnabled = false;
+			PackageExplorerInfoBar.IsClosable = false;
+
+			PackageExplorerPath = selected;
+			PackageExplorerItems.Clear();
+			PackageExplorerInfoBar.WriteInfo("Reading the package contents.");
+			CommonCore.Signing.PackageSignatureRemover.PackageTreeEntry contents = await Task.Run(
+				() => CommonCore.Signing.PackageSignatureRemover.ReadPackageTree(selected));
+
+			CommonCore.Signing.PackageExplorerItem root = CreatePackageExplorerItem(contents);
+
+			root.IsExpanded = true;
+			PackageExplorerItems.Add(root);
+			PackageExplorerInfoBar.WriteSuccess("Expand folders and package nodes to inspect their contents.");
+		}
+		catch (Exception ex)
+		{
+			PackageExplorerItems.Clear();
+			PackageExplorerInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Convert native-reader results to data-only items. Each XAML template creates
+	/// its own icons and text controls. Nothing in this hierarchy has a visual parent.
+	/// </summary>
+	private static CommonCore.Signing.PackageExplorerItem CreatePackageExplorerItem(CommonCore.Signing.PackageSignatureRemover.PackageTreeEntry entry)
+	{
+		string sizeText = entry.Size.HasValue ? AppControlManager.ViewModels.HomeVM.FormatDataSize(entry.Size.Value) : string.Empty;
+		string toolTip = entry.Size.HasValue ? $"{entry.Name} ({entry.Size.Value:N0} bytes)" : entry.Name;
+
+		CommonCore.Signing.PackageExplorerItem item = new(entry.Name, sizeText, toolTip, entry.IsDirectory, entry.Children.Count);
+
+		foreach (CommonCore.Signing.PackageSignatureRemover.PackageTreeEntry child in entry.Children)
+		{
+			item.Children.Add(CreatePackageExplorerItem(child));
+		}
+		return item;
+	}
+
+	internal void ClearPackageExplorer_Click()
+	{
+		PackageExplorerItems.Clear();
+		PackageExplorerPath = null;
+	}
+
+	#endregion
+
+	#region Package Version Editor
+
+	/// <summary>
+	/// Show selection guidance only when no content is loaded and the UI is idle.
+	/// </summary>
+	internal Visibility PackageEmptyStateVisibility(int count, bool enabled) => count is 0 && enabled ? Visibility.Visible : Visibility.Collapsed;
+
+	internal readonly InfoBarSettings PackageVersionInfoBar = new();
+
+	internal string? PackageVersionPath { get; set => SP(ref field, value); }
+
+	internal readonly ObservableCollection<CommonCore.Signing.PackageVersionItem> PackageVersionItems = new();
+
+	internal async void BrowseForPackageVersions_Click()
+	{
+		if (!ElementsAreEnabled)
+		{
+			return;
+		}
+		try
+		{
+			string? selected = FileDialogHelper.ShowFilePickerDialog(Atlas.AppPackagesPickerFilter);
+			if (string.IsNullOrWhiteSpace(selected))
+			{
+				return;
+			}
+			ElementsAreEnabled = false;
+			PackageVersionInfoBar.IsClosable = false;
+			PackageVersionItems.Clear();
+			PackageVersionPath = selected;
+			PackageVersionInfoBar.WriteInfo("Reading package versions.");
+
+			List<CommonCore.Signing.PackageVersionRecord> versions = await Task.Run(() => CommonCore.Signing.PackageSignatureRemover.ReadPackageVersions(selected));
+
+			foreach (CommonCore.Signing.PackageVersionRecord version in versions)
+			{
+				PackageVersionItems.Add(new(version, SavePackageVersionAsync));
+			}
+
+			PackageVersionInfoBar.WriteSuccess("Each Save updates only that row in the selected file after validation. The modified package is unsigned.");
+		}
+		catch (Exception ex)
+		{
+			PackageVersionItems.Clear();
+			PackageVersionInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+		}
+	}
+
+	internal void ClearPackageVersions_Click()
+	{
+		PackageVersionItems.Clear();
+		PackageVersionPath = null;
+	}
+
+	/// <summary>
+	/// Awaited row callback; snapshots exactly one draft and never applies other rows.
+	/// </summary>
+	internal async Task SavePackageVersionAsync(CommonCore.Signing.PackageVersionItem row)
+	{
+		if (!ElementsAreEnabled)
+		{
+			return;
+		}
+		try
+		{
+			ElementsAreEnabled = false;
+			PackageVersionInfoBar.IsClosable = false;
+
+			string? source = PackageVersionPath;
+
+			if (!File.Exists(source))
+			{
+				throw new FileNotFoundException("Browse for a package first.");
+			}
+
+			ulong version = CommonCore.Signing.PackageSignatureRemover.ParsePackageVersion(row.VersionText);
+			ulong expectedVersion = row.OriginalVersion;
+			if (version == expectedVersion)
+			{
+				PackageVersionInfoBar.WriteInfo("This row's version has not changed.");
+				return;
+			}
+			string? innerName = row.InnerName;
+			PackageVersionInfoBar.WriteInfo("Rebuilding and validating only the selected version change before replacing this package.");
+			await Task.Run(() => CommonCore.Signing.PackageSignatureRemover.WritePackageVersionInPlace(source, innerName, expectedVersion, version));
+
+			// Continue at the same path so later saves preserve earlier committed edits.
+			// Other rows retain their unsaved text and are never submitted implicitly.
+			row.AcceptVersion(version);
+			PackageVersionInfoBar.WriteSuccess($"Saved '{row.DisplayName}' as {row.VersionText} in '{source}'. The package is now unsigned.");
+		}
+		catch (Exception ex)
+		{
+			PackageVersionInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			ElementsAreEnabled = true;
+		}
 	}
 
 	#endregion

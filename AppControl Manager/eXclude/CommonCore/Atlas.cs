@@ -84,6 +84,7 @@ internal static partial class Atlas
 	internal const string JSONPickerFilter = "JSON Files|*.json";
 	internal const string SecurityINFPickerFilter = "Security INF Files|*.inf";
 	internal const string CIPFilesPickerFilter = "CIP file|*.cip";
+	internal const string AppPackagesPickerFilter = "App Packages|*.msixbundle;*.msix";
 	internal const string MultiAppControlPolicyPickerFilter = "XML, CIP, P7B, BIN files (*.xml;*.cip;*.p7b;*.bin)|*.xml;*.cip;*.p7b;*.bin";
 
 	// Name of the special automatic supplemental policy

@@ -4518,4 +4518,23 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial IntPtr SHCreateMemStream(byte* initialData, uint initialSize);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/winuser/nf-winuser-setwindowshookexw
+	/// </summary>
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint SetWindowsHookExW(int idHook, nint lpfn, nint hmod, uint dwThreadId);
+
+
+	[LibraryImport("USER32", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool UnhookWindowsHookEx(nint hhk);
+
+
+	[LibraryImport("USER32")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial nint CallNextHookEx(nint hhk, int nCode, nuint wParam, nint lParam);
+
 }

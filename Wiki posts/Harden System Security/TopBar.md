@@ -46,7 +46,10 @@ While collapsed, the TopBar appears as a slim pill at the top of your display. I
 
 - **Touch friendly.** If you tap it with your finger, the bar opens and stays open until you tap somewhere else, so it won't collapse the instant you lift your finger.
 
-- **Two notch shapes.** You can choose between the standard notch (which shows an icon, the tool name, and a little chevron) or a slimmer, lower‑profile notch that takes up even less of your screen.
+- **Shy Bar mode.** If you want the TopBar completely out of sight when you are not using it, enable **Shy Bar mode** from the settings menu. The notch disappears and the bar remains hidden until you move your pointer back and forth three times along the screen edge where the TopBar is docked. The gesture works directly on the screen edge as well as slightly inside it. Requiring three completed changes of direction helps prevent accidental reveals. While Shy Bar mode is enabled, the notch style, open-on-hover, and pin-open options are unavailable because there is no visible notch to hover over, click, or keep open.
+   * Note that if the current program window that you are using is elevated, the reveal gesture will not be detected until you change the focus to an unelevated window or simply clicking somewhere on taskbar first and then perform the gesture.
+
+- **Two notch shapes.** When Shy Bar mode is off, you can choose between the standard notch (which shows an icon, the tool name, and a little chevron) or a slimmer, lower‑profile notch that takes up even less of your screen.
 
 ## The Views
 
@@ -339,13 +342,15 @@ Or you can turn the companion off entirely if you want. Each companion only uses
 
 A settings menu in the expanded bar lets you tailor how the TopBar behaves:
 
-- **Notch style.** Switch between the standard and the slim notch.
+- **Notch style.** Switch between the standard and the slim notch when Shy Bar mode is off.
 
 - **Open on hover.** Choose whether the bar opens automatically on hover, or only when clicked/tapped.
 
+- **Shy Bar mode.** Hide the TopBar completely, including its notch, and reveal it by moving your pointer back and forth three times along its screen edge. This deliberate gesture helps prevent the bar from appearing accidentally. Turning the mode off restores the normal collapsed notch.
+
 - **Always on top.** Keep the bar above every other window so it's always visible.
 
-- **Pin open.** Keep the bar expanded so it doesn't retract while you work with it.
+- **Pin open.** Keep the bar expanded so it doesn't retract while you work with it. This option is unavailable while Shy Bar mode is enabled.
 
 - **Companion.** Pick your animated companion (or none).
 
@@ -359,7 +364,7 @@ There are also quick buttons to **add** a new item to the current view, and to *
 
 - **It's light on your system.** The live tools only do their work while you're actually looking at them and the bar is open. A collapsed bar costs practically nothing.
 
-- **Your choices are remembered.** Your pinned apps, folders, websites, clocks, companion choice, notch style, Search **Max results** number and large thumbnails choice, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
+- **Your choices are remembered.** Your pinned apps, folders, websites, clocks, companion choice, notch style, Shy Bar mode choice, Search **Max results** number and large thumbnails choice, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
 
 - **One bar at a time.** Even if you have more than one copy of the app running, only a single TopBar is shown, so it never clutters your screen.
 

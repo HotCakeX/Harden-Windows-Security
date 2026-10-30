@@ -1,0 +1,1 @@
+* The TopBar introduces a new behavior called Shy Bar mode. When enabled, it hides the TopBar completely until you reveal it by moving your pointer back and forth horizontally three times along the screen edge. The gesture works with a mouse, pen, or touch input and is easy to perform intentionally while helping prevent accidental reveals.

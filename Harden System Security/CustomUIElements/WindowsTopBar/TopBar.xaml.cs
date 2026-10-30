@@ -557,6 +557,7 @@ internal sealed partial class TopBar : Window, IDisposable
 
 		NotchStyleMenuItem.Text = Atlas.GetStr("TopBarNotchStyleMenuItem");
 		OpenOnHoverMenuItem.Text = Atlas.GetStr("TopBarOpenOnHoverMenuItem");
+		ShyBarModeMenuItem.IsChecked = _configuration.ShyBarMode;
 		AlwaysOnTopMenuItem.Text = Atlas.GetStr("TopBarAlwaysOnTopMenuItem");
 		PinMenuItem.Text = Atlas.GetStr("TopBarPinMenuItem");
 		StartupMenuItem.Text = Atlas.GetStr("TopBarStartupMenuItem");
@@ -632,6 +633,7 @@ internal sealed partial class TopBar : Window, IDisposable
 
 		_liveRefreshTimer.Interval = TimeSpan.FromMilliseconds(LiveRefreshIntervalMilliseconds);
 		_liveRefreshTimer.Tick += OnLiveRefreshTimerTick;
+		ApplyShyBarModeOptions();
 
 		RefreshDisplayMetrics();
 		ApplyState(0.0);
@@ -650,12 +652,13 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 
 		_currentInstance = new TopBar();
-		_currentInstance.Activate();
+		if (!_currentInstance._configuration.ShyBarMode) _currentInstance.Activate();
 
 		// Showing the window makes the presenter lay out its own frame again, so the frame is stripped once more afterwards.
 		RemoveWindowBorder();
 		ApplyAlwaysOnTop();
 		_currentInstance.UpdateFullScreenRegistration();
+		if (_currentInstance._configuration.ShyBarMode) _currentInstance.HideForShyBarMode();
 	}
 
 	/// <summary>
@@ -2814,8 +2817,8 @@ internal sealed partial class TopBar : Window, IDisposable
 	{
 		UpdateSentryMeterTimer();
 
-		bool collapsedPerformance = _activeView == TopBarView.Performance && _notchStyle == TopBarNotchStyle.Standard && _progress <= 0.0;
-		bool collapsedClocks = _activeView == TopBarView.Clocks && _notchStyle == TopBarNotchStyle.Standard && _progress <= 0.0 && _notchClockTimeLabels.Count > 0;
+		bool collapsedPerformance = !_configuration.ShyBarMode && _activeView == TopBarView.Performance && _notchStyle == TopBarNotchStyle.Standard && _progress <= 0.0;
+		bool collapsedClocks = !_configuration.ShyBarMode && _activeView == TopBarView.Clocks && _notchStyle == TopBarNotchStyle.Standard && _progress <= 0.0 && _notchClockTimeLabels.Count > 0;
 		if (_activeView != TopBarView.Performance || (_progress <= 0.0 && _notchStyle != TopBarNotchStyle.Standard))
 		{
 			_metricsSampler?.Dispose();
@@ -3156,8 +3159,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		// The corner radius must not follow the overshoot of the expansion, otherwise the bar would look inflated.
 		double expansion = Math.Min(clampedProgress, 1.0);
 
-		double collapsedWidthDips = _notchStyle == TopBarNotchStyle.Compact ? CompactCollapsedWidthDips : StandardCollapsedWidthDips;
-		double collapsedHeightDips = _notchStyle == TopBarNotchStyle.Compact ? CompactCollapsedHeightDips : StandardCollapsedHeightDips;
+		double collapsedWidthDips = _configuration.ShyBarMode ? _expandedWidthDips : _notchStyle == TopBarNotchStyle.Compact ? CompactCollapsedWidthDips : StandardCollapsedWidthDips;
+		double collapsedHeightDips = _configuration.ShyBarMode ? 0.0 : _notchStyle == TopBarNotchStyle.Compact ? CompactCollapsedHeightDips : StandardCollapsedHeightDips;
 		double collapsedCornerRadiusDips = _notchStyle == TopBarNotchStyle.Compact ? CompactCollapsedCornerRadiusDips : StandardCollapsedCornerRadiusDips;
 
 		double widthDips = collapsedWidthDips + ((_expandedWidthDips - collapsedWidthDips) * clampedProgress);
@@ -3167,7 +3170,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		// The two flares sit outside of the body of the bar, so the window has to carry one of them on each side on top
 		// of whatever the body itself takes.
 		int filletRadius = (int)Math.Round(EdgeFilletRadiusDips * _rasterizationScale);
-		int height = (int)Math.Round(heightDips * _rasterizationScale);
+		int height = Math.Max(1, (int)Math.Round(heightDips * _rasterizationScale));
 		// Search can fill a short display, so cap the expansion overshoot.
 		if (_activeView == TopBarView.Search && _displayHeight > 0)
 		{
@@ -3437,6 +3440,12 @@ internal sealed partial class TopBar : Window, IDisposable
 
 		if (targetProgress > 0.0)
 		{
+			StopShyBarMouseHook();
+			if (_isHiddenByShyBarMode)
+			{
+				_isHiddenByShyBarMode = false;
+				AppWindow.Show(false);
+			}
 			AttachExpandedHost();
 		}
 
@@ -3539,6 +3548,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			if (animationCompleted && _animationTargetProgress <= 0.0)
 			{
 				DetachExpandedHost();
+				if (_configuration.ShyBarMode) HideForShyBarMode();
 			}
 		}
 		else
@@ -3587,6 +3597,7 @@ internal sealed partial class TopBar : Window, IDisposable
 
 	private void OnRootPointerEntered(object sender, PointerRoutedEventArgs e)
 	{
+		if (_configuration.ShyBarMode && _progress <= 0.0) return;
 		// A touch contact reports itself as entering the bar the moment the finger lands on it, so the bar is remembered
 		// as being driven by touch and stays open once it is opened by a tap.
 		bool isTouchInteraction = e.Pointer.PointerDeviceType == PointerDeviceType.Touch;
@@ -3776,9 +3787,14 @@ internal sealed partial class TopBar : Window, IDisposable
 		_isAutoHidden = shouldHide;
 		if (shouldHide)
 		{
+			StopShyBarMouseHook();
 			_retractionTimer.Stop();
 			StartAnimation(0.0);
 			AppWindow.Hide();
+		}
+		else if (_configuration.ShyBarMode)
+		{
+			HideForShyBarMode();
 		}
 		else
 		{
@@ -5379,11 +5395,11 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// </summary>
 	private void UpdateSentryMeterTimer()
 	{
-		if (_activeView != TopBarView.Sentry || (_progress <= 0.0 && _notchStyle != TopBarNotchStyle.Standard)) _sentryPhraseAnimation.Stop();
+		if (_activeView != TopBarView.Sentry || (_progress <= 0.0 && (_configuration.ShyBarMode || _notchStyle != TopBarNotchStyle.Standard))) _sentryPhraseAnimation.Stop();
 		if (!_isClosed && _activeView == TopBarView.Sentry) CollapsedLabel.Text = GetViewName(_activeView);
 		if (!_isClosed) UpdateCollapsedPerformanceVisibility();
 		bool isNeeded = !_isClosed && _activeView == TopBarView.Sentry &&
-			(_progress > 0.0 || _notchStyle == TopBarNotchStyle.Standard) && _sentryEngine is not null;
+			(_progress > 0.0 || (!_configuration.ShyBarMode && _notchStyle == TopBarNotchStyle.Standard)) && _sentryEngine is not null;
 		if (isNeeded)
 		{
 			if (!_sentryMeterTimer.IsEnabled)
@@ -6385,6 +6401,230 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 	}
 
+	#region Shy Bar
+
+	// Shy Bar mode uses an event-driven hook.
+	private const int ShyBarLowLevelMouseHook = 14;
+	private const uint ShyBarMouseMoveMessage = 0x0200;
+	// Shy Bar input and display bounds both use physical desktop pixels.
+	private const int ShyBarEdgeThicknessPixels = 24;
+	private const int ShyBarLegDistancePixels = 18;
+	private const int ShyBarExactEdgeLegDistancePixels = 8;
+	private const int ShyBarRequiredReversals = 3;
+	private static readonly long ShyBarSequenceMaximumTicks = Stopwatch.Frequency * 5;
+	private static nint _shyBarMouseHook;
+	private long _shyBarSequenceStartTicks;
+	private int _shyBarLastX;
+	private int _shyBarLegTravel;
+	private int _shyBarDirection;
+	private int _shyBarReversalCount;
+	private bool _shyBarCurrentLegIsReversal;
+	private bool _shyBarCurrentLegCounted;
+	private bool _shyBarHasPoint;
+	private bool _shyBarRevealQueued;
+	private bool _isHiddenByShyBarMode;
+
+	private void OnShyBarModeToggleClick()
+	{
+		_configuration.ShyBarMode = ShyBarModeMenuItem.IsChecked;
+		TopBarConfigurationManager.Save(_configuration);
+		ApplyShyBarModeOptions();
+		if (_configuration.ShyBarMode)
+		{
+			_isPinned = false;
+			PinMenuItem.IsChecked = false;
+			if (_progress <= 0.0) HideForShyBarMode();
+			else StartAnimation(0.0);
+		}
+		else
+		{
+			StopShyBarMouseHook();
+			_isHiddenByShyBarMode = false;
+			AppWindow.Show(false);
+			if (_progress <= 0.0) ApplyState(0.0);
+			else StartAnimation(0.0);
+		}
+	}
+
+	private void ApplyShyBarModeOptions()
+	{
+		bool enabled = _configuration.ShyBarMode;
+		ShyBarModeMenuItem.IsChecked = enabled;
+		NotchStyleMenuItem.IsEnabled = !enabled;
+		OpenOnHoverMenuItem.IsEnabled = !enabled;
+		PinMenuItem.IsEnabled = !enabled;
+	}
+
+	/// <summary>
+	/// Hides the window and starts the input hook that waits for the Shy Bar reveal gesture.
+	/// </summary>
+	private void HideForShyBarMode()
+	{
+		if (_isClosed || !_configuration.ShyBarMode || _isAutoHidden) return;
+		_isHiddenByShyBarMode = true;
+		AppWindow.Hide();
+		ResetShyBarGesture();
+		StartShyBarMouseHook();
+		UpdateLiveRefreshTimer();
+	}
+
+	/// <summary>
+	/// Installs the single event-driven mouse hook used only while Shy Bar mode has hidden the window.
+	/// </summary>
+	private void StartShyBarMouseHook()
+	{
+		if (_shyBarMouseHook != 0 || _isClosed || !_configuration.ShyBarMode || !_isHiddenByShyBarMode)
+			return;
+
+		_shyBarMouseHook = NativeMethods.SetWindowsHookExW(ShyBarLowLevelMouseHook,
+			(nint)(delegate* unmanaged[Stdcall]<int, nuint, nint, nint>)&ShyBarMouseHook,
+			NativeMethods.GetModuleHandleW(null), 0U);
+
+		if (_shyBarMouseHook == 0)
+		{
+			Logger.Write("Failed to install the Shy Bar mouse hook.", LogTypeIntel.Error);
+		}
+	}
+
+	/// <summary>
+	/// Removes the process-wide Shy Bar mouse hook. A failed removal retains the handle so a later cleanup path can retry it.
+	/// </summary>
+	private static void StopShyBarMouseHook()
+	{
+		nint hook = _shyBarMouseHook;
+		if (hook == 0)
+		{
+			return;
+		}
+		if (NativeMethods.UnhookWindowsHookEx(hook))
+		{
+			_shyBarMouseHook = 0;
+		}
+		else
+		{
+			Logger.Write("Failed to remove the Shy Bar mouse hook.", LogTypeIntel.Error);
+		}
+	}
+
+	[UnmanagedCallersOnly(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvStdcall) })]
+	private static unsafe nint ShyBarMouseHook(int code, nuint message, nint data)
+	{
+		if (code >= 0 && _currentInstance is TopBar bar)
+		{
+			try
+			{
+				if (message == ShyBarMouseMoveMessage && data != 0)
+				{
+					bar.ProcessShyBarGesturePoint(((MSLLHOOKSTRUCT*)data)->pt);
+				}
+				else
+				{
+					bar.ResetShyBarGesture();
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write(ex);
+			}
+		}
+		return NativeMethods.CallNextHookEx(0, code, message, data);
+	}
+
+	/// <summary>
+	/// Recognizes three completed horizontal reversals within the Shy Bar edge band.
+	/// </summary>
+	private void ProcessShyBarGesturePoint(POINT point)
+	{
+		if (_isClosed || !_isHiddenByShyBarMode || _isAutoHidden || _shyBarRevealQueued) return;
+		int boundary = _dockToBottom ? _displayBottom - 1 : _displayTop;
+		int edgeDistance = Math.Abs(point.y - boundary);
+		if (edgeDistance > ShyBarEdgeThicknessPixels)
+		{
+			ResetShyBarGesture();
+			return;
+		}
+		if (!_shyBarHasPoint)
+		{
+			_shyBarHasPoint = true;
+			_shyBarLastX = point.x;
+			return;
+		}
+		int delta = point.x - _shyBarLastX;
+		_shyBarLastX = point.x;
+		if (delta == 0) return;
+		int direction = Math.Sign(delta);
+		int requiredTravel = edgeDistance <= 1 ? ShyBarExactEdgeLegDistancePixels : ShyBarLegDistancePixels;
+		if (_shyBarDirection == 0)
+		{
+			_shyBarDirection = direction;
+			_shyBarLegTravel = Math.Abs(delta);
+			return;
+		}
+		if (_shyBarSequenceStartTicks != 0L && Stopwatch.GetTimestamp() - _shyBarSequenceStartTicks > ShyBarSequenceMaximumTicks)
+		{
+			ResetShyBarGesture();
+			_shyBarHasPoint = true;
+			_shyBarLastX = point.x;
+			_shyBarDirection = direction;
+			_shyBarLegTravel = Math.Abs(delta);
+			return;
+		}
+		if (direction != _shyBarDirection)
+		{
+			if (_shyBarLegTravel < requiredTravel)
+			{
+				ResetShyBarGesture();
+				_shyBarHasPoint = true;
+				_shyBarLastX = point.x;
+				_shyBarDirection = direction;
+				_shyBarLegTravel = Math.Abs(delta);
+				return;
+			}
+			if (_shyBarSequenceStartTicks == 0L) _shyBarSequenceStartTicks = Stopwatch.GetTimestamp();
+			_shyBarDirection = direction;
+			_shyBarLegTravel = Math.Abs(delta);
+			_shyBarCurrentLegIsReversal = true;
+			_shyBarCurrentLegCounted = false;
+		}
+		else
+		{
+			_shyBarLegTravel += Math.Abs(delta);
+		}
+		if (!_shyBarCurrentLegIsReversal || _shyBarCurrentLegCounted || _shyBarLegTravel < requiredTravel) return;
+		_shyBarCurrentLegCounted = true;
+		_shyBarReversalCount++;
+		if (_shyBarReversalCount < ShyBarRequiredReversals) return;
+		_shyBarRevealQueued = true;
+		ResetShyBarGesture();
+		if (!DispatcherQueue.TryEnqueue(RevealFromShyBarGesture)) _shyBarRevealQueued = false;
+	}
+
+	/// <summary>
+	/// Runs the successful Shy Bar reveal on the UI dispatcher after the native callback returns.
+	/// </summary>
+	private void RevealFromShyBarGesture()
+	{
+		_shyBarRevealQueued = false;
+		if (_isClosed || _isAutoHidden || !_configuration.ShyBarMode) return;
+		StopShyBarMouseHook();
+		_retractionTimer.Stop();
+		StartAnimation(1.0);
+	}
+
+	private void ResetShyBarGesture()
+	{
+		_shyBarSequenceStartTicks = 0L;
+		_shyBarLastX = 0;
+		_shyBarLegTravel = 0;
+		_shyBarDirection = 0;
+		_shyBarReversalCount = 0;
+		_shyBarCurrentLegIsReversal = false;
+		_shyBarCurrentLegCounted = false;
+		_shyBarHasPoint = false;
+	}
+
+	#endregion
+
 	/// <summary>
 	/// Releases every resource owned by the Top Bar. The closed-state guard makes disposal idempotent because the
 	/// WinUI close notification and an explicit disposal request can both reach this method.
@@ -6397,6 +6637,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		}
 
 		_isClosed = true;
+		StopShyBarMouseHook();
 		_statisticsCancellation?.Cancel();
 		_statisticsFlyout?.Hide();
 		_globalSearchSettingsCancellation?.Cancel();

@@ -2777,3 +2777,17 @@ internal struct APPX_PACKAGE_SETTINGS
 	internal int forceZip32;
 	internal IntPtr hashMethod;
 }
+
+/// <summary>
+/// Low-level mouse input delivered to a WH_MOUSE_LL hook.
+/// https://learn.microsoft.com/windows/win32/api/winuser/ns-winuser-msllhookstruct
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct MSLLHOOKSTRUCT
+{
+	internal POINT pt;
+	internal uint mouseData;
+	internal uint flags;
+	internal uint time;
+	internal nuint dwExtraInfo;
+}

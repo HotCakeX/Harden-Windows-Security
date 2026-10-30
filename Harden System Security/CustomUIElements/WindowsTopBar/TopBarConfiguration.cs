@@ -196,6 +196,10 @@ internal sealed class TopBarConfiguration
 	/// Whether the next TopBar-only process launch requests the system composition engine before XAML startup.
 	/// </summary>
 	public bool UseSystemComposition { get; set; }
+	/// <summary>
+	/// Enables Shy Bar mode, which hides the bar until the deliberate edge gesture is completed.
+	/// </summary>
+	public bool ShyBarMode { get; set; }
 }
 
 /// <summary>

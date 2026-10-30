@@ -1058,6 +1058,14 @@
                                     <FontIcon Glyph="&#xE962;"/>
                                 </ToggleMenuFlyoutItem.Icon>
                             </ToggleMenuFlyoutItem>
+                            <ToggleMenuFlyoutItem x:Name="ShyBarModeMenuItem"
+                                                  Text="Shy Bar mode"
+                                                  ToolTipService.ToolTip="Hide the Top Bar and reveal it by moving your pointer back and forth three times along the screen edge."
+                                                  Click="{x:Bind OnShyBarModeToggleClick}">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE890;"/>
+                                </ToggleMenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
                             <ToggleMenuFlyoutItem x:Name="AlwaysOnTopMenuItem"
                                                   Click="{x:Bind OnAlwaysOnTopMenuItemClick}">
                                 <ToggleMenuFlyoutItem.Icon>

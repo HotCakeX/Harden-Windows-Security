@@ -3160,18 +3160,13 @@ internal sealed partial class TopBar : Window, IDisposable
 		// Query the system taskbar even when auto-hide leaves no work-area inset.
 		// Side-mounted taskbars leave the bar at the top.
 		APPBARDATA taskbar = new() { cbSize = (uint)sizeof(APPBARDATA) };
-		if (NativeMethods.SHAppBarMessage(ABM_GETTASKBARPOS, ref taskbar) != 0U)
-		{
-			_dockToBottom = taskbar.rc.top <= bounds.Y && taskbar.rc.bottom > bounds.Y &&
+		_dockToBottom = NativeMethods.SHAppBarMessage(ABM_GETTASKBARPOS, ref taskbar) != 0U
+			? taskbar.rc.top <= bounds.Y && taskbar.rc.bottom > bounds.Y &&
 				taskbar.rc.right > bounds.X && taskbar.rc.left < bounds.X + bounds.Width &&
 				taskbar.rc.right - taskbar.rc.left >= bounds.Width / 2 &&
-				taskbar.rc.bottom - taskbar.rc.top < bounds.Height / 2;
-		}
-		else
-		{
+				taskbar.rc.bottom - taskbar.rc.top < bounds.Height / 2
 			// Preserve the work-area fallback if Explorer is not ready to report the taskbar.
-			_dockToBottom = workArea.Y > 0 && workArea.Y >= bounds.Height - (workArea.Y + workArea.Height);
-		}
+			: workArea.Y > 0 && workArea.Y >= bounds.Height - (workArea.Y + workArea.Height);
 
 		FlyoutPlacementMode placement = _dockToBottom ? FlyoutPlacementMode.Top : FlyoutPlacementMode.Bottom;
 		ViewSwitcherMenu.Placement = placement;

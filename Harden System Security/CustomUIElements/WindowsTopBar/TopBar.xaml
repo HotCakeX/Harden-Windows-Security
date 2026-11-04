@@ -1032,7 +1032,7 @@
                                     <DataTemplate x:Key="ClipboardExplorerItemTemplate"
                                                   x:DataType="search:TopBarClipboardViewerItem">
                                         <Border BorderThickness="0,0,0,1"
-                                                BorderBrush="#28FFFFFF">
+                                                BorderBrush="{ThemeResource DividerStrokeColorDefaultBrush}">
                                             <Grid MinHeight="76"
                                                   Padding="8"
                                                   ColumnSpacing="12"

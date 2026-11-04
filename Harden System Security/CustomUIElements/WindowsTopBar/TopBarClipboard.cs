@@ -348,8 +348,10 @@ internal sealed class TopBarClipboardExplorerWindow : Window
 	// The clips of the bucket. Each row can be dragged to another application or onto another bucket.
 	internal ListView ItemsList { get; } = new() { SelectionMode = ListViewSelectionMode.None, CanDragItems = true };
 
-	internal TopBarClipboardExplorerWindow()
+	internal TopBarClipboardExplorerWindow(ElementTheme theme)
 	{
+		// Capture the owner's effective theme once. Reopening creates a new window with the current theme.
+		bool isDark = theme == ElementTheme.Dark;
 		Title = "Clipboard bucket";
 		AppWindow.IsShownInSwitchers = false;
 		ExtendsContentIntoTitleBar = true;
@@ -359,7 +361,7 @@ internal sealed class TopBarClipboardExplorerWindow : Window
 		presenter.IsMaximizable = false;
 		presenter.IsMinimizable = false;
 		AppWindow.SetPresenter(presenter);
-		AppWindow.TitleBar.PreferredTheme = TitleBarTheme.Dark;
+		AppWindow.TitleBar.PreferredTheme = isDark ? TitleBarTheme.Dark : TitleBarTheme.Light;
 		AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
 		AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Collapsed;
 
@@ -367,7 +369,10 @@ internal sealed class TopBarClipboardExplorerWindow : Window
 		{
 			Padding = new Thickness(16.0),
 			RowSpacing = 12.0,
-			Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 24, 24, 28))
+			RequestedTheme = theme,
+			Background = new SolidColorBrush(isDark
+				? Windows.UI.Color.FromArgb(255, 24, 24, 28)
+				: Windows.UI.Color.FromArgb(255, 243, 243, 245))
 		};
 		root.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 		root.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1.0, GridUnitType.Star) });
@@ -456,7 +461,7 @@ internal sealed partial class TopBar
 	private const double ClipboardRowPreviewDecodeWidthDips = 64.0;
 	private static readonly TimeSpan ClipboardLinkTimeout = TimeSpan.FromSeconds(15);
 	private static readonly byte[] ClipboardEntropy = Encoding.UTF8.GetBytes("HotCakeX");
-	private static string ClipboardStoreFolder => field ??= Path.Combine(ApplicationData.Current.LocalCacheFolder.Path, "TopBarClipboard");
+	private static string ClipboardStoreFolder => field ??= Path.Join(ApplicationData.Current.LocalCacheFolder.Path, "TopBarClipboard");
 
 	// Link cards are read the way social sites read them. Redirects are followed by GetFollowingRedirectsAsync, the request
 	// names a link preview crawler, and connections only reach public addresses, so copying the address of a device on the
@@ -2447,7 +2452,7 @@ internal sealed partial class TopBar
 
 	private static string GetClipboardBlobFileName(Guid id) => id.ToString("N", CultureInfo.InvariantCulture) + ".dat";
 
-	private static string GetClipboardBlobPath(Guid id) => Path.Combine(ClipboardStoreFolder, GetClipboardBlobFileName(id));
+	private static string GetClipboardBlobPath(Guid id) => Path.Join(ClipboardStoreFolder, GetClipboardBlobFileName(id));
 
 	private static Task WriteClipboardBlobAsync(Guid id, ArraySegment<byte> payload, CancellationToken cancellationToken) =>
 		Task.Run(() => WriteClipboardBlob(id, payload), cancellationToken);
@@ -2518,7 +2523,7 @@ internal sealed partial class TopBar
 		{
 			return (collections, activeIndex, referencedBlobs);
 		}
-		string indexPath = Path.Combine(ClipboardStoreFolder, ClipboardIndexFileName);
+		string indexPath = Path.Join(ClipboardStoreFolder, ClipboardIndexFileName);
 		if (File.Exists(indexPath))
 		{
 			byte[] plainBytes = ProtectedData.Unprotect(File.ReadAllBytes(indexPath), ClipboardEntropy, DataProtectionScope.CurrentUser);
@@ -2658,7 +2663,7 @@ internal sealed partial class TopBar
 			_ = Directory.CreateDirectory(ClipboardStoreFolder);
 
 			// The new index is written next to the old one and then replaces it, so a failed write never leaves a truncated index.
-			string indexPath = Path.Combine(ClipboardStoreFolder, ClipboardIndexFileName);
+			string indexPath = Path.Join(ClipboardStoreFolder, ClipboardIndexFileName);
 			File.WriteAllBytes(indexPath + ".tmp", protectedBytes);
 			File.Move(indexPath + ".tmp", indexPath, overwrite: true);
 			foreach (Guid id in storedBlobs)
@@ -2783,7 +2788,7 @@ internal sealed partial class TopBar
 		_clipboardViewerBucket = bucket;
 		_clipboardViewerEntries.Clear();
 		SyncClipboardViewerEntries();
-		TopBarClipboardExplorerWindow explorer = new();
+		TopBarClipboardExplorerWindow explorer = new(RootGrid.ActualTheme);
 		explorer.ItemsList.ItemTemplate = (DataTemplate)ClipboardBucketsList.Resources["ClipboardExplorerItemTemplate"];
 		explorer.ItemsList.ItemsSource = _clipboardViewerEntries;
 		explorer.ItemsList.ContainerContentChanging += OnClipboardViewerContainerContentChanging;

@@ -293,20 +293,18 @@ internal sealed partial class CertificateCheckingVM : ViewModelBase
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			NonStlRootCertPropertyMappings.TryGetValue(key, out (string Label, Func<NonStlRootCert, object?> Getter) mapping))
 		{
-			// Look up the mapping in the property mappings dictionary.
-			if (NonStlRootCertPropertyMappings.TryGetValue(key, out (string Label, Func<NonStlRootCert, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					SearchKeyword,
-					AllNonStlCertificates,
-					NonStlCertificates,
-					SortState,
-					key,
-					regKey: ListViewHelper.ListViewsRegistry.CertificateChecking_NonStlCerts);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				SearchKeyword,
+				AllNonStlCertificates,
+				NonStlCertificates,
+				SortState,
+				key,
+				regKey: ListViewHelper.ListViewsRegistry.CertificateChecking_NonStlCerts);
 		}
 	}
 

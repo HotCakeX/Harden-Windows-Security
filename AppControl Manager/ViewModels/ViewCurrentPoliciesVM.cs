@@ -1028,12 +1028,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 				SiPolicy.PolicyFileRepresent? policy = null;
 
 				// First see if the policy is P7B type so we can get its object from the dictionary instead of decoding it again.
-				if (P7BPoliciesPathToID.TryGetValue(SelectedPolicyLocalFilePath, out string? possibleP7BPolicyID))
+				if (P7BPoliciesPathToID.TryGetValue(SelectedPolicyLocalFilePath, out string? possibleP7BPolicyID) &&
+					P7BPoliciesDictionary.TryGetValue(possibleP7BPolicyID, out SiPolicy.SiPolicy? policyObj))
 				{
-					if (P7BPoliciesDictionary.TryGetValue(possibleP7BPolicyID, out SiPolicy.SiPolicy? policyObj))
-					{
-						policy = new(policyObj);
-					}
+					policy = new(policyObj);
 				}
 
 				// If the policy couldn't be found among P7B files that have been already decoded then decode it via the provided file path which is for CIP files.
@@ -1076,12 +1074,10 @@ internal sealed partial class ViewCurrentPoliciesVM : ViewModelBase
 			SiPolicy.PolicyFileRepresent? policy = null;
 
 			// First see if the policy is P7B type so we can get its object from the dictionary instead of decoding it again.
-			if (P7BPoliciesPathToID.TryGetValue(SelectedPolicyLocalFilePath, out string? possibleP7BPolicyID))
+			if (P7BPoliciesPathToID.TryGetValue(SelectedPolicyLocalFilePath, out string? possibleP7BPolicyID) &&
+				P7BPoliciesDictionary.TryGetValue(possibleP7BPolicyID, out SiPolicy.SiPolicy? policyObj))
 			{
-				if (P7BPoliciesDictionary.TryGetValue(possibleP7BPolicyID, out SiPolicy.SiPolicy? policyObj))
-				{
-					policy = new(policyObj);
-				}
+				policy = new(policyObj);
 			}
 
 			// If the policy couldn't be found among P7B files that have been already decoded then decode it via the provided file path which is for CIP files.

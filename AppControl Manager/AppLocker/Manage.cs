@@ -560,7 +560,7 @@ internal static partial class Manage
 
 	private static object[] BuildRuleAttributes(string ruleName) =>
 	[
-		new XAttribute("Id", Guid.NewGuid().ToString("D", CultureInfo.InvariantCulture)),
+		new XAttribute("Id", Guid.CreateVersion7().ToString("D", CultureInfo.InvariantCulture)),
 		new XAttribute("Name", ruleName),
 		new XAttribute("Description", "Designates the specified executable as a Managed Installer."),
 		new XAttribute("UserOrGroupSid", "S-1-1-0"),
@@ -580,7 +580,7 @@ internal static partial class Manage
 			new XAttribute("Type", type),
 			new XAttribute("EnforcementMode", "AuditOnly"),
 			new XElement("FilePathRule",
-				new XAttribute("Id", Guid.NewGuid().ToString("D", CultureInfo.InvariantCulture)),
+				new XAttribute("Id", Guid.CreateVersion7().ToString("D", CultureInfo.InvariantCulture)),
 				new XAttribute("Name", name),
 				new XAttribute("Description", description),
 				new XAttribute("UserOrGroupSid", "S-1-1-0"),

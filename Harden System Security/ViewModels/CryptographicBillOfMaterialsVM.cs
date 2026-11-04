@@ -145,19 +145,18 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void CA_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			CA_PropertyMappings.TryGetValue(key, out (string Label, Func<CryptoAlgorithm, object?> Getter) mapping))
 		{
-			if (CA_PropertyMappings.TryGetValue(key, out (string Label, Func<CryptoAlgorithm, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					CryptoAlgorithmsSearchKeyword,
-					AllCryptoAlgorithms,
-					CryptoAlgorithms,
-					CA_SortState,
-					key,
-					ListViewHelper.ListViewsRegistry.CBOM_CryptoAlgorithms);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				CryptoAlgorithmsSearchKeyword,
+				AllCryptoAlgorithms,
+				CryptoAlgorithms,
+				CA_SortState,
+				key,
+				ListViewHelper.ListViewsRegistry.CBOM_CryptoAlgorithms);
 		}
 	}
 
@@ -303,19 +302,18 @@ internal sealed partial class CryptographicBillOfMaterialsVM : ViewModelBase
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void CNG_HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			CNG_PropertyMappings.TryGetValue(key, out (string Label, Func<EccCurveCng, object?> Getter) mapping))
 		{
-			if (CNG_PropertyMappings.TryGetValue(key, out (string Label, Func<EccCurveCng, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					CngCurvesSearchKeyword,
-					AllCngCurves,
-					CngCurves,
-					CNG_SortState,
-					key,
-					ListViewHelper.ListViewsRegistry.CBOM_CNGCurves);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				CngCurvesSearchKeyword,
+				AllCngCurves,
+				CngCurves,
+				CNG_SortState,
+				key,
+				ListViewHelper.ListViewsRegistry.CBOM_CNGCurves);
 		}
 	}
 

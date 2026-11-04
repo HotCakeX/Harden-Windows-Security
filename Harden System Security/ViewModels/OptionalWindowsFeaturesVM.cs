@@ -48,7 +48,7 @@ internal sealed partial class DismServiceClient : IDisposable
 	private NamedPipeClientStream? _pipeClient;
 	private BinaryWriter? _writer;
 	private BinaryReader? _reader;
-	private readonly string _pipeName = $"DismService_{Guid.NewGuid():N}";
+	private readonly string _pipeName = $"DismService_{Guid.CreateVersion7():N}";
 	private bool _disposed;
 	internal bool LastOperationWasCancelled { get; private set; }
 

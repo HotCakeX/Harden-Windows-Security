@@ -290,13 +290,10 @@ internal static class DataDump
 		try
 		{
 			using RegistryKey? key = Registry.LocalMachine.OpenSubKey(@"HARDWARE\RESOURCEMAP\System Resources\Physical Memory");
-			if (key != null)
+			if (key != null && key.GetValue(".Translated") is byte[] data && data.Length >= 20)
 			{
-				if (key.GetValue(".Translated") is byte[] data && data.Length >= 20)
-				{
-					long memory = BitConverter.ToInt64(data, 12);
-					return FormatBytes(memory);
-				}
+				long memory = BitConverter.ToInt64(data, 12);
+				return FormatBytes(memory);
 			}
 			return "Unknown";
 		}

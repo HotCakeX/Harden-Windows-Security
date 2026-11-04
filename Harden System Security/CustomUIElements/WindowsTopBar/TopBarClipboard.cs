@@ -36,6 +36,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AppControlManager.ViewModels;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -271,7 +272,7 @@ internal sealed class TopBarClipboardEntry
 		: GetTextPreview();
 
 	internal string Metadata => Files.Count == 1
-		? Files[0].Path + "  |  " + FormatFileSize(Files[0].Size)
+		? Files[0].Path + "  |  " + HomeVM.FormatDataSize(Files[0].Size)
 		: ShowsLinkCard ? (LinkDescription is null ? string.Empty : LinkDescription + "  |  ") + GetTextPreview()
 		: Summary + "  |  " + CapturedAt.LocalDateTime.ToString("g", CultureInfo.CurrentCulture);
 
@@ -282,13 +283,6 @@ internal sealed class TopBarClipboardEntry
 		return normalized.Length <= 160 ? normalized : normalized[..157] + "...";
 	}
 
-	internal static string FormatFileSize(ulong size) => size switch
-	{
-		>= 1UL << 30 => (size / (double)(1UL << 30)).ToString("0.##", CultureInfo.CurrentCulture) + " GB",
-		>= 1UL << 20 => (size / (double)(1UL << 20)).ToString("0.##", CultureInfo.CurrentCulture) + " MB",
-		>= 1UL << 10 => (size / (double)(1UL << 10)).ToString("0.##", CultureInfo.CurrentCulture) + " KB",
-		_ => size.ToString(CultureInfo.CurrentCulture) + " bytes"
-	};
 	public override string ToString() => DisplayName;
 }
 
@@ -722,7 +716,7 @@ internal sealed partial class TopBar
 			{
 				if (!_isClosed && size is long bytes && generation == _clipboardSizeGeneration)
 				{
-					CollapsedClipboardSizeText.Text = TopBarClipboardEntry.FormatFileSize((ulong)bytes);
+					CollapsedClipboardSizeText.Text = HomeVM.FormatDataSize((ulong)bytes);
 				}
 			});
 		});
@@ -938,7 +932,7 @@ internal sealed partial class TopBar
 		Dictionary<Guid, Guid> newIds = new(referencedBlobs.Count);
 		foreach (Guid id in referencedBlobs)
 		{
-			Guid newId = Guid.NewGuid();
+			Guid newId = Guid.CreateVersion7();
 			newIds.Add(id, newId);
 			if (archive.GetEntry(GetClipboardBlobFileName(id)) is not { } entry)
 			{
@@ -1196,7 +1190,7 @@ internal sealed partial class TopBar
 			CapturedAt = DateTimeOffset.Now,
 			Text = text,
 			Formats = formats,
-			PayloadId = payload.Count == 0 ? null : Guid.NewGuid(),
+			PayloadId = payload.Count == 0 ? null : Guid.CreateVersion7(),
 			Files = files,
 			Summary = string.Join(" + ", parts)
 		}, payload);
@@ -2143,7 +2137,7 @@ internal sealed partial class TopBar
 				}
 				if (image is not null)
 				{
-					Guid imageId = Guid.NewGuid();
+					Guid imageId = Guid.CreateVersion7();
 					await WriteClipboardBlobAsync(imageId, CreateClipboardPayload(null, null, image), token);
 					_ = _clipboardStoredBlobs.Add(imageId);
 					entry.LinkImageId = imageId;

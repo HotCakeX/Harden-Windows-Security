@@ -240,12 +240,9 @@ internal static class AlgorithmManager
 			finally
 			{
 				// Ensure the algorithm provider handle is always closed if opened
-				if (hAlgorithm != IntPtr.Zero)
+				if (hAlgorithm != IntPtr.Zero && NativeMethods.BCryptCloseAlgorithmProvider(hAlgorithm, 0) != 0)
 				{
-					if (NativeMethods.BCryptCloseAlgorithmProvider(hAlgorithm, 0) != 0)
-					{
-						Logger.Write($"Failed to close algorithm provider for {alg.Name}", LogTypeIntel.Warning);
-					}
+					Logger.Write($"Failed to close algorithm provider for {alg.Name}", LogTypeIntel.Warning);
 				}
 			}
 		}
@@ -288,12 +285,9 @@ internal static class AlgorithmManager
 		}
 		finally
 		{
-			if (hProbeKey != IntPtr.Zero)
+			if (hProbeKey != IntPtr.Zero && NativeMethods.BCryptDestroyKey(hProbeKey) != 0)
 			{
-				if (NativeMethods.BCryptDestroyKey(hProbeKey) != 0)
-				{
-					Logger.Write($"Failed to destroy probe key for {alg.Name}", LogTypeIntel.Warning);
-				}
+				Logger.Write($"Failed to destroy probe key for {alg.Name}", LogTypeIntel.Warning);
 			}
 		}
 
@@ -338,12 +332,9 @@ internal static class AlgorithmManager
 			}
 			finally
 			{
-				if (hKey != IntPtr.Zero)
+				if (hKey != IntPtr.Zero && NativeMethods.BCryptDestroyKey(hKey) != 0)
 				{
-					if (NativeMethods.BCryptDestroyKey(hKey) != 0)
-					{
-						Logger.Write($"Failed to destroy key for {alg.Name} with parameter set {paramSet}", LogTypeIntel.Warning);
-					}
+					Logger.Write($"Failed to destroy key for {alg.Name} with parameter set {paramSet}", LogTypeIntel.Warning);
 				}
 			}
 		}

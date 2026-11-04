@@ -341,19 +341,18 @@ internal sealed partial class IntuneDeploymentDetailsVM : ViewModelBase
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			IntuneGroupPropertyMappings.TryGetValue(key, out (string Label, Func<IntuneGroupItemListView, object?> Getter) mapping))
 		{
-			if (IntuneGroupPropertyMappings.TryGetValue(key, out (string Label, Func<IntuneGroupItemListView, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					keySelector: mapping.Getter,
-					searchBoxText: SearchBoxText,
-					originalList: AllGroupItems,
-					observableCollection: GroupNamesCollection,
-					sortState: SortState,
-					newKey: key,
-					regKey: ListViewHelper.ListViewsRegistry.Deployment_IntuneGroupsListView);
-			}
+			ListViewHelper.SortColumn(
+				keySelector: mapping.Getter,
+				searchBoxText: SearchBoxText,
+				originalList: AllGroupItems,
+				observableCollection: GroupNamesCollection,
+				sortState: SortState,
+				newKey: key,
+				regKey: ListViewHelper.ListViewsRegistry.Deployment_IntuneGroupsListView);
 		}
 	}
 

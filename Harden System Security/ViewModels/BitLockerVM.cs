@@ -365,20 +365,18 @@ internal sealed partial class BitLockerVM : MUnitListViewModelBase
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			_volumeMappings.TryGetValue(key, out (string Label, Func<BitLockerVolume, object?> Getter) mapping))
 		{
-			// Look up the mapping in the reusable property mappings dictionary.
-			if (_volumeMappings.TryGetValue(key, out (string Label, Func<BitLockerVolume, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					mapping.Getter,
-					BitLockerSearchText,
-					AllBitLockerVolumes,
-					BitLockerVolumes,
-					SortState,
-					key,
-					regKey: ListViewHelper.ListViewsRegistry.BitLockerVolumes);
-			}
+			ListViewHelper.SortColumn(
+				mapping.Getter,
+				BitLockerSearchText,
+				AllBitLockerVolumes,
+				BitLockerVolumes,
+				SortState,
+				key,
+				regKey: ListViewHelper.ListViewsRegistry.BitLockerVolumes);
 		}
 	}
 	#endregion

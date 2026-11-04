@@ -221,7 +221,7 @@ internal static class Management
 	/// <param name="policyDirectoryPath">Directory that contains SiPolicy XML files.</param>
 	internal static void VerifyPolicyXmlDirectory(string policyDirectoryPath)
 	{
-		string temporaryDirectoryPath = Path.Join(Path.GetTempPath(), $"SiPolicyXmlVerification_{Guid.NewGuid():N}");
+		string temporaryDirectoryPath = Path.Join(Path.GetTempPath(), $"SiPolicyXmlVerification_{Guid.CreateVersion7():N}");
 
 		try
 		{

@@ -247,6 +247,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private const double CompactCollapsedSpacingDips = 5.0;
 
 	private const double ExpandedHeightDips = 92.0;
+	private const double ClipboardExpandedHeightDips = 232.0;
 	private const double SearchExpandedHeightDips = 500.0;
 	private const double SearchResultsMaximumHeightDips = 400.0;
 	private const double ExpandedCornerRadiusDips = 24.0;
@@ -428,7 +429,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private static IntPtr _windowHandle;
 
 	// The cells of every view, so that switching a view only swaps which list the animations are applied to.
-	private readonly Dictionary<TopBarView, List<TopBarTile>> _viewTiles = new(8);
+	private readonly Dictionary<TopBarView, List<TopBarTile>> _viewTiles = new(9);
 
 	/// <summary>
 	/// Follow the order shown by the view switcher menu, not the persisted enum values.
@@ -436,7 +437,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private static readonly TopBarView[] ViewSwitcherOrder =
 	[
 		TopBarView.Apps, TopBarView.Folders, TopBarView.Websites, TopBarView.Performance,
-		TopBarView.Clocks, TopBarView.NetworkQuality, TopBarView.Sentry, TopBarView.Search
+		TopBarView.Clocks, TopBarView.NetworkQuality, TopBarView.Sentry, TopBarView.Search, TopBarView.Clipboard
 	];
 
 	private readonly TopBarConfiguration _configuration = TopBarConfigurationManager.Load();
@@ -553,6 +554,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		ClocksViewMenuItem.Text = Atlas.GetStr("TopBarViewClocks");
 		NetworkQualityViewMenuItem.Text = "Network quality";
 		SentryViewMenuItem.Text = "Sentry";
+		ClipboardViewMenuItem.Text = "Clipboard";
 		SearchViewMenuItem.Text = "Search";
 
 		NotchStyleMenuItem.Text = Atlas.GetStr("TopBarNotchStyleMenuItem");
@@ -615,6 +617,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		SearchLargeThumbnailsToggle.IsChecked = Atlas.Settings.WindowsTopBarSearchLargeThumbnails;
 		ApplySearchItemTemplate();
 		InitializeSentryView();
+		InitializeClipboardView();
 
 		RebuildAppTiles();
 		RebuildFolderTiles();
@@ -890,6 +893,10 @@ internal sealed partial class TopBar : Window, IDisposable
 				_currentInstance?.QueueDisplayMetricsRefresh();
 				break;
 
+			case WinMsg.WM_CLIPBOARDUPDATE:
+				bar?.OnClipboardUpdated();
+				return IntPtr.Zero;
+
 			// The subclass has to be released while the window still exists, otherwise it outlives the window.
 			// https://learn.microsoft.com/windows/win32/winmsg/wm-ncdestroy
 			case WinMsg.WM_NCDESTROY:
@@ -1153,9 +1160,10 @@ internal sealed partial class TopBar : Window, IDisposable
 	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
 	private async void OnStorageDragEnter(object sender, DragEventArgs e)
 	{
-		// Ignore our own Search payload without tracking drag lifetime or blocking collapse.
-		// When we drag a search result, we don't want the TopBar to switch to Apps or Folders view.
-		if (e.DataView.Properties.ContainsKey(SearchDragSourceProperty))
+		// Ignore our own Search or Clipboard payloads without tracking drag lifetime or blocking collapse.
+		// When we drag a search result or clipboard payload, we don't want the TopBar to switch to Apps or Folders view.
+		if (e.DataView.Properties.ContainsKey(SearchDragSourceProperty) ||
+			e.DataView.Properties.ContainsKey(ClipboardDragSourceProperty))
 		{
 			_doesStorageDragContainItems = false;
 			e.AcceptedOperation = DataPackageOperation.None;
@@ -2132,10 +2140,13 @@ internal sealed partial class TopBar : Window, IDisposable
 		CancelForegroundPerformanceSample();
 		_activeView = view;
 
-		// Animate only Search to a taller height; keep the existing window edge anchored.
-		double targetHeight = view == TopBarView.Search
-			? Math.Min(SearchExpandedHeightDips, _displayHeight > 0 ? _displayHeight / _rasterizationScale : SearchExpandedHeightDips)
-			: ExpandedHeightDips;
+		// Search and Clipboard use view-specific expanded heights while keeping the existing window edge anchored.
+		double targetHeight = view switch
+		{
+			TopBarView.Search => Math.Min(SearchExpandedHeightDips, _displayHeight > 0 ? _displayHeight / _rasterizationScale : SearchExpandedHeightDips),
+			TopBarView.Clipboard => ClipboardExpandedHeightDips,
+			_ => ExpandedHeightDips
+		};
 		ExpandedHost.Height = targetHeight;
 		if (animate && _progress > 0.0 && Math.Abs(targetHeight - _expandedHeightDips) >= ProgressEpsilon)
 		{
@@ -2158,9 +2169,25 @@ internal sealed partial class TopBar : Window, IDisposable
 		ClocksPanel.Visibility = view == TopBarView.Clocks ? Visibility.Visible : Visibility.Collapsed;
 		NetworkQualityPanel.Visibility = view == TopBarView.NetworkQuality ? Visibility.Visible : Visibility.Collapsed;
 		SentryPanel.Visibility = view == TopBarView.Sentry ? Visibility.Visible : Visibility.Collapsed;
+		ClipboardPanel.Visibility = view == TopBarView.Clipboard ? Visibility.Visible : Visibility.Collapsed;
+		if (view == TopBarView.Clipboard)
+		{
+			EnsureSelectedClipboardBucketVisible();
+		}
+		else
+		{
+			// The buttons that the TeachingTips of the Clipboard view point at are hidden with the view.
+			ClipboardClearTip.IsOpen = false;
+			ClipboardTransferTip.IsOpen = false;
+		}
 		SearchPanel.Visibility = view == TopBarView.Search ? Visibility.Visible : Visibility.Collapsed;
 		DriveStatisticsButton.Visibility = view == TopBarView.Search ? Visibility.Visible : Visibility.Collapsed;
 		GlobalSearchSettingsButton.Visibility = DriveStatisticsButton.Visibility;
+		ClipboardEnabledToggle.Visibility = ClipboardPanel.Visibility;
+		ClipboardTransferButton.Visibility = ClipboardPanel.Visibility;
+		ClipboardLinkPreviewToggle.Visibility = ClipboardPanel.Visibility;
+		ClipboardClearButton.Visibility = ClipboardPanel.Visibility;
+		UpdateClipboardEnableHint();
 		if (view != TopBarView.Search)
 		{
 			SearchPanel.Width = double.NaN;
@@ -2177,10 +2204,11 @@ internal sealed partial class TopBar : Window, IDisposable
 		PerformanceViewMenuItem.IsChecked = view == TopBarView.Performance;
 		ClocksViewMenuItem.IsChecked = view == TopBarView.Clocks;
 		SentryViewMenuItem.IsChecked = view == TopBarView.Sentry;
+		ClipboardViewMenuItem.IsChecked = view == TopBarView.Clipboard;
 		SearchViewMenuItem.IsChecked = view == TopBarView.Search;
 
-		// There is nothing to add to Performance, Network quality, Sentry or Search.
-		AddButton.Visibility = view is TopBarView.Performance or TopBarView.NetworkQuality or TopBarView.Sentry or TopBarView.Search
+		// There is nothing to add to Performance, Network quality, Sentry, Search or Clipboard.
+		AddButton.Visibility = view is TopBarView.Performance or TopBarView.NetworkQuality or TopBarView.Sentry or TopBarView.Clipboard or TopBarView.Search
 			? Visibility.Collapsed
 			: Visibility.Visible;
 
@@ -2269,6 +2297,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		TopBarView.Clocks => Atlas.GetStr("TopBarViewClocks"),
 		TopBarView.NetworkQuality => "Network quality",
 		TopBarView.Sentry => "Sentry",
+		TopBarView.Clipboard => "Clipboard",
 		TopBarView.Search => "Search",
 		_ => Atlas.GetStr("TopBarViewApps")
 	};
@@ -2284,6 +2313,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		TopBarView.Clocks => "\uE823",
 		TopBarView.NetworkQuality => "\uE968",
 		TopBarView.Sentry => "\uE720",
+		TopBarView.Clipboard => "\uE8C8",
 		TopBarView.Search => "\uE721",
 		_ => "\uECAA"
 	};
@@ -2295,6 +2325,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private void OnClocksViewButtonClick() => SetActiveView(TopBarView.Clocks, animate: true);
 
 	private void OnNetworkQualityViewButtonClick() => SetActiveView(TopBarView.NetworkQuality, animate: true);
+	private void OnClipboardViewButtonClick() => SetActiveView(TopBarView.Clipboard, animate: true);
 	private void OnSearchViewButtonClick() => SetActiveView(TopBarView.Search, animate: true);
 
 	/// <summary>
@@ -2371,6 +2402,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			case TopBarView.Performance: // The metrics of the machine are read from the machine itself, so there is nothing to add to them.
 			case TopBarView.NetworkQuality:
 			case TopBarView.Sentry:
+			case TopBarView.Clipboard:
 			case TopBarView.Search:
 			default:
 				break;
@@ -2874,6 +2906,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		CollapsedLabel.Visibility = showNotchClocks || showPerformance || showSentryPhrase ? Visibility.Collapsed : Visibility.Visible;
 		CollapsedSentryPhraseText.Visibility = showSentryPhrase ? Visibility.Visible : Visibility.Collapsed;
 		CollapsedPerformanceHost.Visibility = showPerformance ? Visibility.Visible : Visibility.Collapsed;
+		CollapsedClipboardSizeText.Visibility = _activeView == TopBarView.Clipboard && _notchStyle == TopBarNotchStyle.Standard ? Visibility.Visible : Visibility.Collapsed;
 	}
 
 	/// <summary>
@@ -3410,6 +3443,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		int insertionIndex = Math.Clamp(_expandedHostIndex, 0, RootGrid.Children.Count);
 		RootGrid.Children.Insert(insertionIndex, ExpandedHost);
 		_isExpandedHostAttached = true;
+		UpdateClipboardEnableHint();
 	}
 
 	/// <summary>
@@ -3425,6 +3459,7 @@ internal sealed partial class TopBar : Window, IDisposable
 
 		_ = RootGrid.Children.Remove(ExpandedHost);
 		_isExpandedHostAttached = false;
+		UpdateClipboardEnableHint();
 	}
 
 	private void StartAnimation(double targetProgress)
@@ -3630,8 +3665,9 @@ internal sealed partial class TopBar : Window, IDisposable
 	private void OnRootPointerExited(object sender, PointerRoutedEventArgs e)
 	{
 		// A flyout of the bar lives in a window of its own, so moving the pointer onto it makes the pointer leave the
-		// bar, and retracting at that point would take the flyout away from underneath the pointer.
-		if (_isPinned || _openFlyoutCount > 0 || _isStorageDragInProgress)
+		// bar, and retracting at that point would take the flyout away from underneath the pointer. The TeachingTips of the
+		// Clipboard view are not light dismissed, so they hold the bar open the same way while they are open.
+		if (_isPinned || _openFlyoutCount > 0 || IsClipboardTipOpen || _isStorageDragInProgress)
 		{
 			return;
 		}
@@ -3680,7 +3716,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		_retractionTimer.Stop();
 
 		// A browser window that is being carried over the bar keeps it open until it is dropped or carried away.
-		if (_isPinned || _openFlyoutCount > 0 || _isBrowserDragOverBar)
+		if (_isPinned || _openFlyoutCount > 0 || IsClipboardTipOpen || _isBrowserDragOverBar)
 		{
 			return;
 		}
@@ -4339,7 +4375,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			pageTimeout.CancelAfter(WebsitePageTimeout);
 
 			// Relative icon links belong to the address that the site finally redirected to.
-			(byte[] html, page, _) = await DownloadAsync(site, MaximumWebsitePageBytes, pageTimeout.Token);
+			(byte[] html, page, _) = await DownloadAsync(_websiteClient, site, MaximumWebsitePageBytes, pageTimeout.Token);
 
 			foreach (Match tag in LinkTagRegex().Matches(System.Text.Encoding.UTF8.GetString(html)))
 			{
@@ -4391,11 +4427,11 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// Sends a GET request and follows its redirects the way a browser does, including a redirect from https to http.
 	/// The request message of the returned response carries the final address.
 	/// </summary>
-	private static async Task<HttpResponseMessage> GetFollowingRedirectsAsync(Uri uri, CancellationToken token)
+	private static async Task<HttpResponseMessage> GetFollowingRedirectsAsync(HttpClient client, Uri uri, CancellationToken token)
 	{
 		for (int redirect = 0; ; redirect++)
 		{
-			HttpResponseMessage response = await _websiteClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, token);
+			HttpResponseMessage response = await client.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, token);
 
 			// A response that is not a redirect ends the chain, and so does a redirect that goes nowhere a browser would follow.
 			if ((int)response.StatusCode is < 300 or > 399 || response.Headers.Location is null || redirect == MaximumWebsiteRedirects ||
@@ -4412,9 +4448,9 @@ internal sealed partial class TopBar : Window, IDisposable
 	/// Downloads at most the supplied amount of bytes and reports the address that the response finally came from.
 	/// A failed response carries no bytes, but its final address is still reported so that its host can be tried.
 	/// </summary>
-	private static async Task<(byte[] Data, Uri Location, string? MediaType)> DownloadAsync(Uri uri, int maximumBytes, CancellationToken token)
+	private static async Task<(byte[] Data, Uri Location, string? MediaType)> DownloadAsync(HttpClient client, Uri uri, int maximumBytes, CancellationToken token)
 	{
-		using HttpResponseMessage response = await GetFollowingRedirectsAsync(uri, token);
+		using HttpResponseMessage response = await GetFollowingRedirectsAsync(client, uri, token);
 		Uri location = response.RequestMessage?.RequestUri ?? uri;
 		if (!response.IsSuccessStatusCode)
 		{
@@ -4436,7 +4472,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		{
 			// One byte past the limit is read so that an icon that is too large is told apart from one that fits exactly.
 			// A text response is the page that some sites serve in place of a missing icon.
-			(byte[] data, Uri location, string? mediaType) = await DownloadAsync(uri, MaximumFaviconBytes + 1, token);
+			(byte[] data, Uri location, string? mediaType) = await DownloadAsync(_websiteClient, uri, MaximumFaviconBytes + 1, token);
 			if (data.Length is 0 or > MaximumFaviconBytes ||
 				mediaType?.StartsWith("text/", StringComparison.OrdinalIgnoreCase) == true)
 			{
@@ -6396,6 +6432,8 @@ internal sealed partial class TopBar : Window, IDisposable
 		{
 			try { await _sentryDisposalTask; }
 			catch (Exception exception) { Logger.Write(exception); }
+			try { await _clipboardDisposalTask; }
+			catch (Exception exception) { Logger.Write(exception); }
 			try { await _searchDisposalTask; }
 			catch (Exception exception) { Logger.Write(exception); }
 		}
@@ -6662,6 +6700,7 @@ internal sealed partial class TopBar : Window, IDisposable
 			_networkQualityTask = null;
 		}
 
+		TeardownClipboard();
 		TeardownSentry();
 		TeardownWebsites();
 		StopBrowserDragWatch();

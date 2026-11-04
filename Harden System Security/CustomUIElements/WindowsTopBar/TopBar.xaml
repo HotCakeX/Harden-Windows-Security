@@ -60,6 +60,12 @@
                        FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        Foreground="{ThemeResource TextFillColorPrimaryBrush}"/>
+            <!-- Notch content specialized for the Clipboard view, the size of every file that the view keeps on disk. -->
+            <TextBlock x:Name="CollapsedClipboardSizeText"
+                       FontSize="12"
+                       VerticalAlignment="Center"
+                       Visibility="Collapsed"
+                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
             <!-- Notch content specialized for an armed Sentry in spoken phrase mode. -->
             <TextBlock x:Name="CollapsedSentryPhraseText"
                        FontSize="12"
@@ -169,6 +175,13 @@
                                              Click="{x:Bind OnSentryViewButtonClick}">
                             <RadioMenuFlyoutItem.Icon>
                                 <FontIcon Glyph="&#xE720;"/>
+                            </RadioMenuFlyoutItem.Icon>
+                        </RadioMenuFlyoutItem>
+                        <RadioMenuFlyoutItem x:Name="ClipboardViewMenuItem"
+                                             GroupName="TopBarViewSwitcher"
+                                             Click="{x:Bind OnClipboardViewButtonClick}">
+                            <RadioMenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8C8;"/>
                             </RadioMenuFlyoutItem.Icon>
                         </RadioMenuFlyoutItem>
                         <RadioMenuFlyoutItem x:Name="SearchViewMenuItem"
@@ -748,6 +761,506 @@
                                              Click="{x:Bind OnSentryOpenPrivacyClick}"/>
                         </StackPanel>
                     </Grid>
+                    <!-- Clipboard View's implementation. Clipboard cards show a 4-by-4 preview mosaic. -->
+                    <StackPanel x:Name="ClipboardPanel"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="5"
+                                PointerWheelChanged="{x:Bind OnViewSwitcherWheelChanged}"
+                                Visibility="Collapsed">
+                        <!-- The search button with its sliding search box, the status, and the collections with the button that adds one. -->
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="32"/>
+                                <!-- The scroll bar of the collections is drawn in this strip, so it never covers them, even while it is expanded under the pointer. -->
+                                <RowDefinition Height="12"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <ToggleButton x:Name="ClipboardSearchToggle"
+                                          Width="28"
+                                          Height="28"
+                                          Padding="0"
+                                          MinWidth="0"
+                                          CornerRadius="14"
+                                          VerticalAlignment="Center"
+                                          ToolTipService.ToolTip="Search among all clips in any collection"
+                                          AutomationProperties.Name="Search among all clips in any collection"
+                                          Click="{x:Bind OnClipboardSearchToggleClick}">
+                                <FontIcon Glyph="&#xE721;"
+                                          FontSize="12"/>
+                            </ToggleButton>
+                            <!-- The width of the host slides open and closed, and the box inside is clipped while it slides. -->
+                            <Border x:Name="ClipboardSearchHost"
+                                    Grid.Column="1"
+                                    Width="0"
+                                    VerticalAlignment="Center"
+                                    Visibility="Collapsed">
+                                <TextBox x:Name="ClipboardSearchBox"
+                                         Width="200"
+                                         Margin="8,0,0,0"
+                                         HorizontalAlignment="Left"
+                                         PlaceholderText="Search clips"
+                                         ToolTipService.ToolTip="Press Enter for the next match and Esc to close"
+                                         TextChanged="{x:Bind OnClipboardSearchTextChanged}"
+                                         KeyDown="{x:Bind OnClipboardSearchKeyDown}"/>
+                            </Border>
+                            <TextBlock x:Name="ClipboardStatusText"
+                                       Grid.Column="2"
+                                       Margin="10,0"
+                                       FontSize="11"
+                                       VerticalAlignment="Center"
+                                       Text="Clipboard history is off."
+                                       TextTrimming="CharacterEllipsis"/>
+                            <!-- Two collections fit at a time and the rest are revealed by scrolling. Right-click a collection to rename or delete it. -->
+                            <ListView x:Name="ClipboardCollectionsList"
+                                      Grid.Column="3"
+                                      Grid.RowSpan="2"
+                                      Width="248"
+                                      Padding="0,0,0,12"
+                                      SelectionMode="Single"
+                                      SelectionChanged="{x:Bind OnClipboardCollectionSelectionChanged}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                      ScrollViewer.HorizontalScrollMode="Enabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      ScrollViewer.VerticalScrollMode="Disabled">
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <ItemsStackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem"
+                                           BasedOn="{StaticResource DefaultListViewItemStyle}">
+                                        <Setter Property="MinWidth" Value="0"/>
+                                        <Setter Property="MinHeight" Value="0"/>
+                                        <Setter Property="Padding" Value="0"/>
+                                        <Setter Property="Margin" Value="0,0,4,0"/>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="search:TopBarClipboardCollection">
+                                        <!-- The left padding keeps the icon clear of the selection indicator, which is drawn 4 to 7 DIPs from the left edge. -->
+                                        <Grid Width="120"
+                                              Height="28"
+                                              Padding="14,0,8,0"
+                                              ColumnSpacing="6"
+                                              Background="Transparent"
+                                              RightTapped="OnClipboardCollectionRightTapped"
+                                              ToolTipService.ToolTip="{x:Bind Name, Mode=OneWay}">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <FontIcon FontSize="12"
+                                                      Glyph="{x:Bind Glyph}"/>
+                                            <TextBlock Grid.Column="1"
+                                                       FontSize="11"
+                                                       VerticalAlignment="Center"
+                                                       Text="{x:Bind Name, Mode=OneWay}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                            <Border Grid.Column="2"
+                                                    MinWidth="18"
+                                                    Padding="5,0"
+                                                    CornerRadius="8"
+                                                    VerticalAlignment="Center"
+                                                    Background="{ThemeResource ControlAltFillColorSecondaryBrush}">
+                                                <TextBlock FontSize="10"
+                                                           HorizontalAlignment="Center"
+                                                           Text="{x:Bind CountText, Mode=OneWay}"/>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <Button x:Name="ClipboardAddCollectionButton"
+                                    Grid.Column="4"
+                                    Width="28"
+                                    Height="28"
+                                    Margin="6,0,0,0"
+                                    Padding="0"
+                                    MinWidth="0"
+                                    CornerRadius="14"
+                                    VerticalAlignment="Center"
+                                    ToolTipService.ToolTip="Create a collection"
+                                    AutomationProperties.Name="Create a collection">
+                                <Button.Flyout>
+                                    <Flyout x:Name="ClipboardAddCollectionFlyout"
+                                            Opened="{x:Bind OnFlyoutOpened}"
+                                            Closed="{x:Bind OnClipboardAddCollectionFlyoutClosed}"
+                                            ShouldConstrainToRootBounds="False">
+                                        <StackPanel Orientation="Horizontal"
+                                                    Spacing="8">
+                                            <TextBox x:Name="ClipboardCollectionNameBox"
+                                                     Width="160"
+                                                     MaxLength="16"
+                                                     PlaceholderText="Collection name"
+                                                     KeyDown="{x:Bind OnClipboardCollectionNameKeyDown}"/>
+                                            <Button x:Name="ClipboardCollectionNameButton"
+                                                    Content="Create"
+                                                    Click="{x:Bind OnClipboardCreateCollectionClick}"/>
+                                        </StackPanel>
+                                    </Flyout>
+                                </Button.Flyout>
+                                <FontIcon Glyph="&#xE710;"
+                                          FontSize="12"/>
+                            </Button>
+                            <!-- Confirms Clear all. -->
+                            <TeachingTip x:Name="ClipboardClearTip"
+                                         Target="{x:Bind ClipboardClearButton}"
+                                         Title="Clear all clipboard history?"
+                                         Subtitle="Every collection, bucket and clip, and all of the encrypted clipboard data saved on this device, will be permanently deleted."
+                                         ActionButtonContent="Delete everything"
+                                         ActionButtonClick="{x:Bind OnClearClipboardHistoryConfirmed}"
+                                         IsLightDismissEnabled="False"
+                                         ShouldConstrainToRootBounds="False">
+                                <TeachingTip.IconSource>
+                                    <FontIconSource Glyph="&#xE74D;"/>
+                                </TeachingTip.IconSource>
+                            </TeachingTip>
+                            <!-- Exports or imports every collection. It is not light dismissed, so the bar stays expanded while a file is picked. -->
+                            <TeachingTip x:Name="ClipboardTransferTip"
+                                         Target="{x:Bind ClipboardTransferButton}"
+                                         Title="Export or import clipboard history"
+                                         Subtitle="Export saves every collection, bucket and clip to a zip file that is not encrypted, so keep it somewhere safe. Import replaces all of the current clipboard history with the history in such a file. Copied files are saved as their locations only."
+                                         IsLightDismissEnabled="False"
+                                         ShouldConstrainToRootBounds="False">
+                                <TeachingTip.IconSource>
+                                    <FontIconSource Glyph="&#xE7B8;"/>
+                                </TeachingTip.IconSource>
+                                <StackPanel Orientation="Horizontal"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,15,0,0"
+                                            Spacing="15">
+                                    <Button Style="{StaticResource AccentButtonStyle}"
+                                            Click="{x:Bind OnClipboardExportClick}">
+                                        <StackPanel Orientation="Horizontal"
+                                                    Spacing="8">
+                                            <FontIcon Glyph="&#xEDE1;"
+                                                      FontSize="14"/>
+                                            <TextBlock Text="Export"/>
+                                        </StackPanel>
+                                    </Button>
+                                    <Button Click="{x:Bind OnClipboardImportClick}">
+                                        <StackPanel Orientation="Horizontal"
+                                                    Spacing="8">
+                                            <FontIcon Glyph="&#xE8B5;"
+                                                      FontSize="14"/>
+                                            <TextBlock Text="Import"/>
+                                        </StackPanel>
+                                    </Button>
+                                </StackPanel>
+                            </TeachingTip>
+                        </Grid>
+                        <Grid ColumnSpacing="8" Height="175">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="116"/>
+                            </Grid.ColumnDefinitions>
+                            <!-- The main ListView that shows the populated buckets.
+                                 It is never stretched past its cards, so a lone bucket next to a wider status line lays out the same way
+                                 as many buckets do, and the NEW BUCKET card is not pushed out of view. -->
+                            <ListView x:Name="ClipboardBucketsList"
+                                      Grid.Column="0"
+                                      MaxWidth="820"
+                                      HorizontalAlignment="Left"
+                                      CanDragItems="True"
+                                      ContainerContentChanging="{x:Bind OnClipboardBucketContainerContentChanging}"
+                                      DragItemsStarting="{x:Bind OnClipboardBucketDragItemsStarting}"
+                                      DragItemsCompleted="{x:Bind OnClipboardDragItemsCompleted}"
+                                      SelectionChanged="OnClipboardBucketSelectionChanged"
+                                      SelectionMode="Single"
+                                      IsItemClickEnabled="True"
+                                      ItemClick="{x:Bind OnClipboardBucketItemClick}"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                      ScrollViewer.HorizontalScrollMode="Enabled"
+                                      ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                      ScrollViewer.VerticalScrollMode="Disabled">
+                                <ListView.Resources>
+                                    <DataTemplate x:Key="ClipboardPreviewTemplate"
+                                                  x:DataType="search:TopBarClipboardPreview">
+                                        <Grid Background="Transparent"
+                                              ToolTipService.ToolTip="{x:Bind ToolTip}">
+                                            <TextBlock Margin="8,4"
+                                                       FontSize="10"
+                                                       MaxLines="4"
+                                                       Text="{x:Bind PreviewText}"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="WrapWholeWords"
+                                                       TextTrimming="CharacterEllipsis"
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Stretch"/>
+                                            <Image Source="{x:Bind Image}"
+                                                   HorizontalAlignment="Stretch"
+                                                   VerticalAlignment="Stretch"
+                                                   Stretch="Uniform"/>
+                                            <!-- A clip that is only a color shows the color with its text on top. -->
+                                            <Border Background="{x:Bind Swatch}"
+                                                    CornerRadius="4"
+                                                    Visibility="{x:Bind SwatchVisibility}">
+                                                <TextBlock Margin="4"
+                                                           FontSize="10"
+                                                           MaxLines="3"
+                                                           Foreground="{x:Bind SwatchForeground}"
+                                                           Text="{x:Bind ToolTip}"
+                                                           TextAlignment="Center"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           VerticalAlignment="Center"/>
+                                            </Border>
+                                            <!-- The title of a link card is shown over its image. -->
+                                            <Border Padding="4,2"
+                                                    VerticalAlignment="Bottom"
+                                                    Background="#B0000000"
+                                                    Visibility="{x:Bind LinkVisibility}">
+                                                <TextBlock FontSize="9"
+                                                           MaxLines="2"
+                                                           Foreground="White"
+                                                           Text="{x:Bind LinkTitle}"
+                                                           TextWrapping="Wrap"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                            </Border>
+                                        </Grid>
+                                    </DataTemplate>
+                                    <!-- The rows of the explorer window of a bucket. Each row can be dragged to another application or onto another bucket. -->
+                                    <DataTemplate x:Key="ClipboardExplorerItemTemplate"
+                                                  x:DataType="search:TopBarClipboardViewerItem">
+                                        <Border BorderThickness="0,0,0,1"
+                                                BorderBrush="#28FFFFFF">
+                                            <Grid MinHeight="76"
+                                                  Padding="8"
+                                                  ColumnSpacing="12"
+                                                  Background="Transparent">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="64"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <ContentControl Width="64"
+                                                                Height="64"
+                                                                Padding="0"
+                                                                HorizontalContentAlignment="Stretch"
+                                                                VerticalContentAlignment="Stretch"
+                                                                Content="{x:Bind Preview, Mode=OneWay}"
+                                                                ContentTemplate="{StaticResource ClipboardPreviewTemplate}"/>
+                                                <StackPanel Grid.Column="1"
+                                                            Spacing="4"
+                                                            VerticalAlignment="Center">
+                                                    <TextBlock FontSize="13"
+                                                               FontWeight="SemiBold"
+                                                               Text="{x:Bind DisplayName}"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock FontSize="10"
+                                                               Opacity="0.72"
+                                                               MaxLines="2"
+                                                               Text="{x:Bind Metadata}"
+                                                               TextWrapping="Wrap"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="2"
+                                                        Width="36"
+                                                        Height="36"
+                                                        Padding="0"
+                                                        VerticalAlignment="Center"
+                                                        Command="{x:Bind DeleteCommand}"
+                                                        ToolTipService.ToolTip="Delete this item from the bucket">
+                                                    <FontIcon FontSize="14"
+                                                              Glyph="&#xE74D;"/>
+                                                </Button>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListView.Resources>
+                                <ListView.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <ItemsStackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListView.ItemsPanel>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="search:TopBarClipboardBucket">
+                                        <Grid Width="246"
+                                              Height="170"
+                                              Margin="0,0,0,5"
+                                              Background="Transparent"
+                                              AllowDrop="True"
+                                              DoubleTapped="OnClipboardBucketDoubleTapped"
+                                              DragOver="OnClipboardBucketDragOver"
+                                              Drop="OnClipboardBucketDrop">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid HorizontalAlignment="Center"
+                                                  ColumnSpacing="10"
+                                                  Margin="0,5,0,5">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border Padding="0"
+                                                        CornerRadius="8"
+                                                        BorderThickness="1"
+                                                        BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                                                        Background="{ThemeResource ControlAltFillColorSecondaryBrush}"
+                                                        VerticalAlignment="Center">
+                                                    <Border.Resources>
+                                                        <ResourceDictionary Source="ms-appx:///Microsoft.UI.Xaml/DensityStyles/Compact.xaml" />
+                                                    </Border.Resources>
+                                                    <TextBox Width="112"
+                                                             Height="19"
+                                                             MinHeight="0"
+                                                             Padding="3,0"
+                                                             MaxLength="18"
+                                                             VerticalAlignment="Center"
+                                                             VerticalContentAlignment="Center"
+                                                             HorizontalContentAlignment="Center"
+                                                             FontSize="12"
+                                                             Text="{x:Bind Title, Mode=OneWay}"
+                                                             TextAlignment="Center"
+                                                             LostFocus="OnClipboardBucketNameLostFocus"
+                                                             KeyDown="OnClipboardBucketNameKeyDown"
+                                                             ToolTipService.ToolTip="Click or tap to rename this bucket"/>
+                                                </Border>
+                                                <Border Grid.Column="1"
+                                                        Padding="7,2"
+                                                        CornerRadius="8"
+                                                        BorderThickness="1"
+                                                        BorderBrush="{ThemeResource SurfaceStrokeColorDefaultBrush}"
+                                                        Background="{ThemeResource ControlAltFillColorSecondaryBrush}"
+                                                        VerticalAlignment="Center">
+                                                    <TextBlock FontSize="12" Text="{x:Bind CountText, Mode=OneWay}"/>
+                                                </Border>
+                                            </Grid>
+                                            <Grid Grid.Row="1">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <ContentControl Grid.Row="0"
+                                                                Grid.Column="0"
+                                                                Grid.RowSpan="{x:Bind Preview1RowSpan, Mode=OneWay}"
+                                                                Grid.ColumnSpan="{x:Bind Preview1ColumnSpan, Mode=OneWay}"
+                                                                Padding="0"
+                                                                HorizontalContentAlignment="Stretch"
+                                                                VerticalContentAlignment="Stretch"
+                                                                Content="{x:Bind Preview1, Mode=OneWay}"
+                                                                ContentTemplate="{StaticResource ClipboardPreviewTemplate}"
+                                                                Visibility="{x:Bind Preview1Visibility, Mode=OneWay}"/>
+                                                <ContentControl Grid.Row="0"
+                                                                Grid.Column="1"
+                                                                Grid.RowSpan="{x:Bind Preview2RowSpan, Mode=OneWay}"
+                                                                Padding="0"
+                                                                HorizontalContentAlignment="Stretch"
+                                                                VerticalContentAlignment="Stretch"
+                                                                Content="{x:Bind Preview2, Mode=OneWay}"
+                                                                ContentTemplate="{StaticResource ClipboardPreviewTemplate}"
+                                                                Visibility="{x:Bind Preview2Visibility, Mode=OneWay}"/>
+                                                <ContentControl Grid.Row="1"
+                                                                Grid.Column="0"
+                                                                Padding="0"
+                                                                HorizontalContentAlignment="Stretch"
+                                                                VerticalContentAlignment="Stretch"
+                                                                Content="{x:Bind Preview3, Mode=OneWay}"
+                                                                ContentTemplate="{StaticResource ClipboardPreviewTemplate}"
+                                                                Visibility="{x:Bind Preview3Visibility, Mode=OneWay}"/>
+                                                <ContentControl Grid.Row="1"
+                                                                Grid.Column="1"
+                                                                Padding="0"
+                                                                HorizontalContentAlignment="Stretch"
+                                                                VerticalContentAlignment="Stretch"
+                                                                Content="{x:Bind Preview4, Mode=OneWay}"
+                                                                ContentTemplate="{StaticResource ClipboardPreviewTemplate}"
+                                                                Visibility="{x:Bind Preview4Visibility, Mode=OneWay}"/>
+                                            </Grid>
+                                            <Grid Grid.Row="2"
+                                                  ColumnSpacing="8"
+                                                  Margin="0,5,0,5">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Button HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Center"
+                                                        Padding="4"
+                                                        Command="{x:Bind OpenDetailsCommand}"
+                                                        ToolTipService.ToolTip="Open bucket details">
+                                                    <StackPanel Orientation="Horizontal"
+                                                                HorizontalAlignment="Center"
+                                                                Spacing="5">
+                                                        <FontIcon FontSize="11"
+                                                                  Glyph="&#xE8A7;"/>
+                                                        <TextBlock FontSize="10"
+                                                                   Text="Open details"/>
+                                                    </StackPanel>
+                                                </Button>
+                                                <Button Grid.Column="1"
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Center"
+                                                        Padding="4"
+                                                        Command="{x:Bind DeleteCommand}"
+                                                        ToolTipService.ToolTip="Delete this bucket and all of its saved items">
+                                                    <StackPanel Orientation="Horizontal"
+                                                                HorizontalAlignment="Center"
+                                                                Spacing="5">
+                                                        <FontIcon FontSize="11"
+                                                                  Glyph="&#xE74D;"/>
+                                                        <TextBlock FontSize="10"
+                                                                   Text="Delete bucket"/>
+                                                    </StackPanel>
+                                                </Button>
+                                            </Grid>
+                                            <!-- Marks the bucket that holds the current search match. -->
+                                            <Border Grid.RowSpan="3"
+                                                    CornerRadius="8"
+                                                    BorderThickness="2"
+                                                    BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
+                                                    IsHitTestVisible="False"
+                                                    Visibility="{x:Bind HighlightVisibility, Mode=OneWay}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
+                            <!-- The plus card is outside the ScrollViewer so the new-bucket routing mode is always visible.
+                                 A clip dropped on it moves to a new bucket of its own. -->
+                            <ToggleButton x:Name="ClipboardNewBucketToggle"
+                                          Margin="0,0,0,8"
+                                          Grid.Column="1"
+                                          HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"
+                                          AllowDrop="True"
+                                          Click="{x:Bind OnClipboardNewBucketClick}"
+                                          DragOver="{x:Bind OnClipboardNewBucketDragOver}"
+                                          Drop="{x:Bind OnClipboardNewBucketDrop}"
+                                          ToolTipService.ToolTip="Create a new bucket for each future copy, or drop a clip here to move it to a new bucket">
+                                <StackPanel HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Spacing="5">
+                                    <FontIcon FontSize="28" Glyph="&#xE710;"/>
+                                    <TextBlock FontSize="10"
+                                               Text="NEW BUCKET"
+                                               TextAlignment="Center"/>
+                                    <!-- The opacity keeps the inherited foreground, which stays readable on the accent fill of the checked state. -->
+                                    <TextBlock FontSize="9"
+                                               Opacity="0.8"
+                                               Text="Every copy gets its own bucket"
+                                               TextAlignment="Center"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </ToggleButton>
+                        </Grid>
+                    </StackPanel>
                     <!-- Global Search results arrive from the independent service pipe. -->
                     <Grid x:Name="SearchPanel"
                           HorizontalAlignment="Center"
@@ -1015,6 +1528,73 @@
                         AutomationProperties.Name="Global Search Settings"
                         Click="{x:Bind OnGlobalSearchSettingsClick}">
                     <FontIcon Glyph="&#xE712;"
+                              FontSize="12"/>
+                </Button>
+                <!-- Clipboard history options. Available only in Clipboard. -->
+                <ToggleButton x:Name="ClipboardEnabledToggle"
+                              Width="28"
+                              Height="28"
+                              Padding="0"
+                              MinWidth="0"
+                              CornerRadius="14"
+                              VerticalAlignment="Center"
+                              Visibility="Collapsed"
+                              ToolTipService.ToolTip="Turn clipboard history on or off"
+                              AutomationProperties.Name="Clipboard history"
+                              Click="{x:Bind OnClipboardEnabledToggled}">
+                    <Grid>
+                        <!-- Pulses while clipboard history is off, which shows what turns the Clipboard view on. -->
+                        <Ellipse x:Name="ClipboardEnableHint"
+                                 Width="24"
+                                 Height="24"
+                                 Opacity="0"
+                                 StrokeThickness="2"
+                                 Stroke="{ThemeResource AccentFillColorDefaultBrush}"
+                                 IsHitTestVisible="False"/>
+                        <FontIcon Glyph="&#xE7E8;"
+                                  FontSize="12"/>
+                    </Grid>
+                </ToggleButton>
+                <Button x:Name="ClipboardTransferButton"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        MinWidth="0"
+                        CornerRadius="14"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed"
+                        ToolTipService.ToolTip="Export or import all clipboard history"
+                        AutomationProperties.Name="Export or import clipboard history"
+                        Click="{x:Bind OnClipboardTransferClick}">
+                    <FontIcon Glyph="&#xE7B8;"
+                              FontSize="12"/>
+                </Button>
+                <ToggleButton x:Name="ClipboardLinkPreviewToggle"
+                              Width="28"
+                              Height="28"
+                              Padding="0"
+                              MinWidth="0"
+                              CornerRadius="14"
+                              VerticalAlignment="Center"
+                              Visibility="Collapsed"
+                              ToolTipService.ToolTip="Show copied links as cards with their website's preview"
+                              AutomationProperties.Name="Link previews"
+                              Click="{x:Bind OnClipboardLinkPreviewToggled}">
+                    <FontIcon Glyph="&#xE71B;"
+                              FontSize="12"/>
+                </ToggleButton>
+                <Button x:Name="ClipboardClearButton"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        MinWidth="0"
+                        CornerRadius="14"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed"
+                        ToolTipService.ToolTip="Permanently delete all encrypted clipboard history"
+                        AutomationProperties.Name="Clear all clipboard history"
+                        Click="{x:Bind OnClearClipboardHistoryClick}">
+                    <FontIcon Glyph="&#xE74D;"
                               FontSize="12"/>
                 </Button>
                 <!-- Adds a new entry to the active view. It is hidden for the view that has nothing to add to. -->

@@ -35,7 +35,8 @@ internal enum TopBarView
 	NetworkQuality = 4,
 	Sentry = 5,
 	Websites = 6,
-	Search = 7
+	Search = 7,
+	Clipboard = 8
 }
 
 /// <summary>

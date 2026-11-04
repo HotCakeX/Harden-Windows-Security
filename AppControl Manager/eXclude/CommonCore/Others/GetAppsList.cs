@@ -744,7 +744,7 @@ internal static class GetAppsList
 	/// <summary>
 	/// Recursively computes the size of a directory while ignoring inaccessible entries and reparse points.
 	/// </summary>
-	private static long? GetDirectorySizeInBytes(string directoryPath)
+	internal static long? GetDirectorySizeInBytes(string directoryPath)
 	{
 		if (!Directory.Exists(directoryPath))
 		{

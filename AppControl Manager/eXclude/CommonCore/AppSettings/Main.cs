@@ -133,6 +133,8 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarOpenOnHover = ReadValue(nameof(WindowsTopBarOpenOnHover), WindowsTopBarOpenOnHover);
 		WindowsTopBarAlwaysOnTop = ReadValue(nameof(WindowsTopBarAlwaysOnTop), WindowsTopBarAlwaysOnTop);
 		WindowsTopBarAutoHideInFullScreen = ReadValue(nameof(WindowsTopBarAutoHideInFullScreen), WindowsTopBarAutoHideInFullScreen);
+		WindowsTopBarClipboardMonitoring = ReadValue(nameof(WindowsTopBarClipboardMonitoring), WindowsTopBarClipboardMonitoring);
+		WindowsTopBarClipboardLinkPreviews = ReadValue(nameof(WindowsTopBarClipboardLinkPreviews), WindowsTopBarClipboardLinkPreviews);
 		WindowsTopBarSentryTriggerDecibel = ReadValue(nameof(WindowsTopBarSentryTriggerDecibel), WindowsTopBarSentryTriggerDecibel);
 		WindowsTopBarSentryRecordingDurationSeconds = ReadValue(nameof(WindowsTopBarSentryRecordingDurationSeconds), WindowsTopBarSentryRecordingDurationSeconds);
 		WindowsTopBarSentryCooldownSeconds = ReadValue(nameof(WindowsTopBarSentryCooldownSeconds), WindowsTopBarSentryCooldownSeconds);
@@ -1223,6 +1225,35 @@ internal sealed partial class Main : ViewModelBase
 		}
 	} = true;
 	internal event EventHandler<bool>? WindowsTopBarAutoHideInFullScreenChanged;
+
+	/// <summary>
+	/// Whether the Top Bar monitors clipboard changes and persists captured clipboard history.
+	/// </summary>
+	internal bool WindowsTopBarClipboardMonitoring
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarClipboardMonitoring), field);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Whether the Top Bar Clipboard view shows a copied web link as a card with the preview image, title, and description
+	/// that the website publishes for link previews. The preview is downloaded only when this is on.
+	/// </summary>
+	internal bool WindowsTopBarClipboardLinkPreviews
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(WindowsTopBarClipboardLinkPreviews), field);
+			}
+		}
+	}
 
 	/// <summary>
 	/// The dBFS signal level at or above which the Top Bar Sentry view begins an audio capture cycle.

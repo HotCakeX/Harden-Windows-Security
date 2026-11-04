@@ -1,1 +1,19 @@
 * The TopBar introduces a new behavior called Shy Bar mode. When enabled, it hides the TopBar completely until you reveal it by moving your pointer back and forth horizontally three times along the screen edge. The gesture works with a mouse, pen, or touch input and is easy to perform intentionally while helping prevent accidental reveals.
+
+* New feature for the TopBar: Clipboard
+
+* The new Clipboard view makes it easy to save and organize everything you copy in one convenient place.
+
+* Copied text, pictures, and files are automatically stored in visual buckets, so you can quickly see and find them later.
+
+* You can continue adding new items to a chosen bucket or automatically create a separate bucket for each new copy.
+
+* Buckets can be renamed, rearranged, combined, dragged to other apps, or opened to browse and manage their individual items.
+
+* Saved content can be selected again whenever you want to paste it, while duplicate file entries are automatically removed.
+
+* You can delete individual items, remove complete buckets, or clear the entire clipboard history at once.
+
+* Everything is securely encrypted for your Windows account, and your buckets, names, order, and selection are restored when you reopen the Top Bar.
+
+* Refer to the GitHub releases for complete change log since there isn't enough space here to cover them all: https://github.com/HotCakeX/Harden-Windows-Security/releases

@@ -49,6 +49,14 @@ While collapsed, the TopBar appears as a slim pill at the top of your display. I
 - **Shy Bar mode.** If you want the TopBar completely out of sight when you are not using it, enable **Shy Bar mode** from the settings menu. The notch disappears and the bar remains hidden until you move your pointer back and forth three times along the screen edge where the TopBar is docked. The gesture works directly on the screen edge as well as slightly inside it. Requiring three completed changes of direction helps prevent accidental reveals. While Shy Bar mode is enabled, the notch style, open-on-hover, and pin-open options are unavailable because there is no visible notch to hover over, click, or keep open.
    * Note that if the current program window that you are using is elevated, the reveal gesture will not be detected until you change the focus to an unelevated window or simply clicking somewhere on taskbar first and then perform the gesture.
 
+<div align="center">
+
+<img alt="TopBar Shy Bar Mode" src="https://github.com/user-attachments/assets/cc799c73-79cf-45f9-8c8c-4d6ad0e72341" />
+
+</div>
+
+<br>
+
 - **Two notch shapes.** When Shy Bar mode is off, you can choose between the standard notch (which shows an icon, the tool name, and a little chevron) or a slimmer, lower‑profile notch that takes up even less of your screen.
 
 ## The Views
@@ -316,6 +324,14 @@ When a session can't be armed, or has to stop, the status area tells you exactly
 
 ### Clipboard
 
+<div align="center">
+
+<img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/TopBar%20Clipboard%20Demo.gif?raw=true" alt="ClipBoard" />
+
+</div>
+
+<br>
+
 The **Clipboard** view keeps a private, encrypted history of what you copy. Your copies are sorted into **buckets**, and buckets are grouped into **collections**, so you can keep things such as work, personal, and project copies apart. You can name, rearrange, merge, search, and paste from them at any time. Clipboard history is off by default. Once you turn it on, every copy you make is saved, even while the bar is collapsed or showing another view, as long as the TopBar is running.
 
 - **The Clipboard buttons.** While the Clipboard view is shown, four small round buttons appear next to the **Close** and **Settings** buttons. Hover over a button to see what it does.
@@ -441,6 +457,14 @@ Text and pictures only exist on the clipboard, so the TopBar saves them in full.
    * Import replaces your whole current clipboard history with the history in the zip file. The imported history is encrypted for your Windows user account again, just like before.
    * Copied files are saved by their location only, so the files themselves aren't in the zip file. Put them back in the same locations if you want to paste them from your buckets.
    * Clipboard history must be on to export or import.
+
+<div align="center">
+
+<img alt="image" src="https://github.com/user-attachments/assets/e30de57b-4f90-485b-a900-bb4ea8cbcd67" />
+
+</div>
+
+<br>
 
 > [!TIP]\
 > Turn on **Start with Windows** in the settings menu so the TopBar is running and saving your copies from the moment you sign in. Copies made while the TopBar is closed aren't saved.

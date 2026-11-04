@@ -393,6 +393,14 @@ The **Clipboard** view keeps a private, encrypted history of what you copy. Your
 
 - **Copying the same thing twice in a row saves it once.** If what you copy is exactly the same as your previous copy, and that copy is still the newest item in its bucket, it isn't saved again. Some apps, such as Sticky Notes, report a single copy to Windows twice, and this makes sure it's saved only once.
 
+<div align="center">
+
+<img alt="TopBar ClipBoard File Copying Demo" src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/TopBar%20ClipBoard%20File%20Copying%20Demo.gif?raw=true" />
+
+</div>
+
+<br>
+
 #### What Is Saved for Each Kind of Copy
 
 Text and pictures only exist on the clipboard, so the TopBar saves them in full. Files already exist on your drives, so the TopBar only remembers where they are and never makes a copy of them.

@@ -362,20 +362,18 @@ internal sealed partial class ViewOnlinePoliciesVM : ViewModelBase, IGraphAuthHo
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			ViewCurrentPoliciesVM.CiPolicyInfoPropertyMappings.TryGetValue(key, out (string Label, Func<CiPolicyInfo, object?> Getter) mapping))
 		{
-			// Look up the mapping in the reusable property mappings dictionary.
-			if (ViewCurrentPoliciesVM.CiPolicyInfoPropertyMappings.TryGetValue(key, out (string Label, Func<CiPolicyInfo, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					keySelector: mapping.Getter,
-					searchBoxText: SearchBoxTextBox,
-					originalList: AllPoliciesOutput,
-					observableCollection: AllPolicies,
-					sortState: SortState,
-					newKey: key,
-					regKey: ListViewHelper.ListViewsRegistry.Online_Deployed_Policies);
-			}
+			ListViewHelper.SortColumn(
+				keySelector: mapping.Getter,
+				searchBoxText: SearchBoxTextBox,
+				originalList: AllPoliciesOutput,
+				observableCollection: AllPolicies,
+				sortState: SortState,
+				newKey: key,
+				regKey: ListViewHelper.ListViewsRegistry.Online_Deployed_Policies);
 		}
 	}
 

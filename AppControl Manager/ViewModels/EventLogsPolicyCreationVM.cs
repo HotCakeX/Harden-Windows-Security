@@ -885,20 +885,19 @@ internal sealed partial class EventLogsPolicyCreationVM : ViewModelBase
 	[WinRT.DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 		{
-			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					keySelector: mapping.Getter,
-					searchBoxText: SearchBoxText,
-					originalList: GetFileIdentitiesForActiveAnalysisRange(),
-					observableCollection: FileIdentities,
-					sortState: SortState,
-					newKey: key,
-					regKey: ListViewHelper.ListViewsRegistry.Event_Logs,
-					selectedDate: DatePickerDate);
-			}
+			ListViewHelper.SortColumn(
+				keySelector: mapping.Getter,
+				searchBoxText: SearchBoxText,
+				originalList: GetFileIdentitiesForActiveAnalysisRange(),
+				observableCollection: FileIdentities,
+				sortState: SortState,
+				newKey: key,
+				regKey: ListViewHelper.ListViewsRegistry.Event_Logs,
+				selectedDate: DatePickerDate);
 		}
 	}
 

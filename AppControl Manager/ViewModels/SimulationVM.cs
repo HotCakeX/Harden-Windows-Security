@@ -226,20 +226,18 @@ internal sealed partial class SimulationVM : ViewModelBase
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			SimulationOutputPropertyMappings.TryGetValue(key, out (string Label, Func<SimulationOutput, object?> Getter) mapping))
 		{
-			// Look up the mapping in the reusable property mappings dictionary.
-			if (SimulationOutputPropertyMappings.TryGetValue(key, out (string Label, Func<SimulationOutput, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					keySelector: mapping.Getter,
-					searchBoxText: SearchBoxTextBox,
-					originalList: AllSimulationOutputs,
-					observableCollection: SimulationOutputs,
-					sortState: SortState,
-					newKey: key,
-					regKey: ListViewHelper.ListViewsRegistry.Simulation);
-			}
+			ListViewHelper.SortColumn(
+				keySelector: mapping.Getter,
+				searchBoxText: SearchBoxTextBox,
+				originalList: AllSimulationOutputs,
+				observableCollection: SimulationOutputs,
+				sortState: SortState,
+				newKey: key,
+				regKey: ListViewHelper.ListViewsRegistry.Simulation);
 		}
 	}
 

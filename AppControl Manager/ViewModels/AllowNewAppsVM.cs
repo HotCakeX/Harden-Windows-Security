@@ -1234,40 +1234,36 @@ internal sealed partial class AllowNewAppsVM : ViewModelBase
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click_LocalFiles(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 		{
-			// Look up the mapping in the reusable property mappings dictionary.
-			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					keySelector: mapping.Getter,
-					searchBoxText: LocalFilesAllFileIdentitiesSearchText,
-					originalList: LocalFilesAllFileIdentities,
-					observableCollection: LocalFilesFileIdentities,
-					sortState: SortStateLocalFiles,
-					newKey: key,
-					regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
-			}
+			ListViewHelper.SortColumn(
+				keySelector: mapping.Getter,
+				searchBoxText: LocalFilesAllFileIdentitiesSearchText,
+				originalList: LocalFilesAllFileIdentities,
+				observableCollection: LocalFilesFileIdentities,
+				sortState: SortStateLocalFiles,
+				newKey: key,
+				regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_LocalFiles_ScanResults);
 		}
 	}
 
 	[DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click_EventLogs(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
 		{
-			// Look up the mapping using the key.
-			if (ListViewHelper.FileIdentityPropertyMappings.Value.TryGetValue(key, out (string Label, Func<FileIdentity, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-						keySelector: mapping.Getter,
-						searchBoxText: EventLogsAllFileIdentitiesSearchText,
-						originalList: EventLogsAllFileIdentities,
-						observableCollection: EventLogsFileIdentities,
-						sortState: SortStateEventLogs,
-						newKey: key,
-						regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
-			}
+			ListViewHelper.SortColumn(
+					keySelector: mapping.Getter,
+					searchBoxText: EventLogsAllFileIdentitiesSearchText,
+					originalList: EventLogsAllFileIdentities,
+					observableCollection: EventLogsFileIdentities,
+					sortState: SortStateEventLogs,
+					newKey: key,
+					regKey: ListViewHelper.ListViewsRegistry.Allow_New_Apps_EventLogs_ScanResults);
 		}
 	}
 

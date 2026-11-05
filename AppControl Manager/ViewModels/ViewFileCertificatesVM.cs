@@ -177,7 +177,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 		_ = Sv?.ChangeView(savedHorizontal, null, null, disableAnimation: false);
 	}
 
-
 	#region Sort
 
 	private ListViewHelper.SortState SortState { get; set; } = new();
@@ -215,25 +214,22 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 	[WinRT.DynamicWindowsRuntimeCast(typeof(Button))]
 	internal void HeaderColumnSortingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (sender is Button button && button.Tag is string key)
+		if (sender is Button button &&
+			button.Tag is string key &&
+			FileCertificateInfoColPropertyMappings.TryGetValue(key, out (string Label, Func<FileCertificateInfoCol, object?> Getter) mapping))
 		{
-			// Look up the mapping in the reusable property mappings dictionary.
-			if (FileCertificateInfoColPropertyMappings.TryGetValue(key, out (string Label, Func<FileCertificateInfoCol, object?> Getter) mapping))
-			{
-				ListViewHelper.SortColumn(
-					keySelector: mapping.Getter,
-					searchBoxText: SearchBoxTextBox,
-					originalList: FilteredCertificates,
-					observableCollection: FileCertificates,
-					sortState: SortState,
-					newKey: key,
-					regKey: ListViewHelper.ListViewsRegistry.View_File_Certificates);
-			}
+			ListViewHelper.SortColumn(
+				keySelector: mapping.Getter,
+				searchBoxText: SearchBoxTextBox,
+				originalList: FilteredCertificates,
+				observableCollection: FileCertificates,
+				sortState: SortState,
+				newKey: key,
+				regKey: ListViewHelper.ListViewsRegistry.View_File_Certificates);
 		}
 	}
 
 	#endregion
-
 
 	#region Copy
 
@@ -323,7 +319,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			return output;
 		}
 	}
-
 
 	/// <summary>
 	/// Fetch for the .cer files
@@ -732,7 +727,6 @@ internal sealed partial class ViewFileCertificatesVM : ViewModelBase
 			MainInfoBar.IsClosable = true;
 		}
 	}
-
 
 	/// <summary>
 	/// DragOver handler.

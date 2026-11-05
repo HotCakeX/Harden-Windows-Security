@@ -94,12 +94,10 @@ internal static class PolicySettingsManager
 		{
 			if (string.Equals(item.ValueName, "Id", StringComparison.OrdinalIgnoreCase) &&
 				string.Equals(item.Provider, "PolicyInfo", StringComparison.OrdinalIgnoreCase) &&
-				string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase))
+				string.Equals(item.Key, "Information", StringComparison.OrdinalIgnoreCase) &&
+				item.Value.Item is not null)
 			{
-				if (item.Value.Item is not null)
-				{
-					return (string)item.Value.Item;
-				}
+				return (string)item.Value.Item;
 			}
 		}
 

@@ -581,12 +581,11 @@ internal static class SpecializedStrategiesRegistry
 					}
 					else if (string.Equals(dv.Type, "int", StringComparison.OrdinalIgnoreCase))
 					{
-						if (int.TryParse(result, out int actual) && int.TryParse(dv.Value, out int desired))
+						if (int.TryParse(result, out int actual) &&
+							int.TryParse(dv.Value, out int desired) &&
+							actual == desired)
 						{
-							if (actual == desired)
-							{
-								return true;
-							}
+							return true;
 						}
 					}
 					else if (string.Equals(dv.Type, "bool", StringComparison.OrdinalIgnoreCase))

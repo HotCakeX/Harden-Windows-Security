@@ -8069,4 +8069,10 @@ Thumbprint: {3}</value>
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Apri le cartelle dei dati dell’applicazione utilizzate dall’app.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>Questa impostazione controlla la protezione degli agenti di intelligenza artificiale in fase di esecuzione di Defender, che analizza i prompt inviati agli agenti di programmazione con intelligenza artificiale gestiti (ad esempio, Claude Code e GitHub Copilot CLI). Quando è abilitata, Defender richiama un processo bridge dal framework di hook dell’agente per analizzare ogni prompt alla ricerca di segnali di malware o abusi prima che l’agente lo esegua.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>Questa impostazione controlla la protezione di rete degli agenti di intelligenza artificiale in fase di esecuzione di Defender, che analizza il traffico di rete generato dagli agenti di intelligenza artificiale. Quando è abilitata, Defender ispeziona il traffico di rete dei processi degli agenti e blocca qualsiasi traffico che corrisponda al rilevamento di segnali di malware o abusi prima che l’agente lo esegua.</value>
+  </data>
 </root>

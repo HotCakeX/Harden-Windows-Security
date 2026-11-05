@@ -641,6 +641,102 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				id: new("019a9063-824a-71a0-9564-1618d602830c")
 				));
 
+		// AiAgentProtection
+		temp.Add(new(
+			category: Categories.MicrosoftDefender,
+			name: Atlas.GetStr("AiAgentProtection-MSDefender"),
+
+			applyStrategy: new DefaultApply(static () =>
+			{
+				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "AiAgentProtection"))
+				{
+					return;
+				}
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AiAgentProtection 1");
+			}),
+
+			verifyStrategy: new DefaultVerify(static () =>
+			{
+				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "AiAgentProtection"))
+				{
+					return false;
+				}
+
+				string result1 = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AiAgentProtection");
+
+				if (string.Equals(result1, "1", StringComparison.OrdinalIgnoreCase))
+					return true;
+
+				return false;
+			}),
+
+			removeStrategy: new DefaultRemove(static () =>
+			{
+				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "AiAgentProtection"))
+				{
+					return;
+				}
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AiAgentProtection 0");
+			}),
+
+			subCategory: null,
+
+			url: "https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationaiagentprotection",
+
+			deviceIntents: [
+				Intent.All
+			],
+			id: new("01a1ac98-f03b-7d98-977b-98fb72ac53a3")
+			));
+
+		// AiAgentNetworkInspection
+		temp.Add(new(
+			category: Categories.MicrosoftDefender,
+			name: Atlas.GetStr("AiAgentNetworkInspection-MSDefender"),
+
+			applyStrategy: new DefaultApply(static () =>
+			{
+				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "AiAgentNetworkInspection"))
+				{
+					return;
+				}
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AiAgentNetworkInspection 1");
+			}),
+
+			verifyStrategy: new DefaultVerify(static () =>
+			{
+				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "AiAgentNetworkInspection"))
+				{
+					return false;
+				}
+
+				string result1 = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "get ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference AiAgentNetworkInspection");
+
+				if (string.Equals(result1, "1", StringComparison.OrdinalIgnoreCase))
+					return true;
+
+				return false;
+			}),
+
+			removeStrategy: new DefaultRemove(static () =>
+			{
+				if (!IsWmiPropertyAvailable("ROOT\\Microsoft\\Windows\\Defender", "MSFT_MpPreference", "AiAgentNetworkInspection"))
+				{
+					return;
+				}
+				_ = QuantumRelayHSS.Client.RunCommand(Atlas.ComManagerProcessPath, "wmi string ROOT\\Microsoft\\Windows\\Defender MSFT_MpPreference Set AiAgentNetworkInspection 0");
+			}),
+
+			subCategory: null,
+
+			url: "https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationaiagentnetworkinspection",
+
+			deviceIntents: [
+				Intent.All
+			],
+			id: new("01a1ac99-ae18-7ea8-8fe5-ca2f6f1622ef")
+			));
+
 		return temp;
 	}
 

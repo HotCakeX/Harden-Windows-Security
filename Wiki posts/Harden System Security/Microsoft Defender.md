@@ -265,6 +265,14 @@ You can retrieve, filter, sort, and search exclusions across these branches. Add
 
 <br>
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables a setting that controls Defender's runtime AI Agent network protection that scans network traffic originated from [AI Agents](https://learn.microsoft.com/en-us/defender-endpoint/defender-endpoint-demonstration-ai-agent-runtime-protection). When enabled, Defender inspects the network traffic of agent processes and blocks any traffic that matches a detection for malware/abuse signals before the agent executes it. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationaiagentnetworkinspection)
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables a setting that controls Defender's [runtime AI Agent protection](https://learn.microsoft.com/en-us/defender-endpoint/configure-ai-agent-runtime-protection) that scans prompts submitted to managed AI coding agents (e.g., Claude Code, GitHub Copilot CLI). When enabled, Defender invokes a bridge process from the agent's hook framework to scan each prompt for malware/abuse signals before the agent executes it. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationaiagentprotection)
+
+<br>
+
 > [!TIP]\
 > [Performance analyzer for Microsoft Defender Antivirus](https://learn.microsoft.com/defender-endpoint/tune-performance-defender-antivirus)
 

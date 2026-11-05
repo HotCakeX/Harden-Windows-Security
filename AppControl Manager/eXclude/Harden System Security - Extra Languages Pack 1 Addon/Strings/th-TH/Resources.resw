@@ -8069,4 +8069,10 @@
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>เปิดโฟลเดอร์ข้อมูลแอปที่แอปใช้งาน.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>การตั้งค่านี้ควบคุมการป้องกัน AI Agent ขณะทำงานของ Defender ซึ่งจะสแกนพรอมต์ที่ส่งไปยังเอเจนต์ AI สำหรับการเขียนโค้ดที่มีการจัดการ (เช่น Claude Code, GitHub Copilot CLI) เมื่อเปิดใช้งาน Defender จะเรียกใช้กระบวนการบริดจ์จากเฟรมเวิร์กฮุกของเอเจนต์ เพื่อสแกนแต่ละพรอมต์หาสัญญาณของมัลแวร์หรือการใช้งานในทางที่ผิดก่อนที่เอเจนต์จะดำเนินการกับพรอมต์นั้น</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>การตั้งค่านี้ควบคุมการป้องกันเครือข่ายของ AI Agent ขณะทำงานของ Defender ซึ่งจะสแกนการรับส่งข้อมูลเครือข่ายที่มาจาก AI Agent เมื่อเปิดใช้งาน Defender จะตรวจสอบการรับส่งข้อมูลเครือข่ายของกระบวนการเอเจนต์ และบล็อกการรับส่งข้อมูลใดๆ ที่ตรงกับการตรวจพบสัญญาณของมัลแวร์หรือการใช้งานในทางที่ผิดก่อนที่เอเจนต์จะดำเนินการกับการรับส่งข้อมูลนั้น</value>
+  </data>
 </root>

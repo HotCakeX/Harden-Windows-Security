@@ -8069,4 +8069,10 @@ Thumbprint: {3}</value>
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>پوشه‌های داده‌ای را که برنامه از آن‌ها استفاده می‌کند باز کنید.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>این تنظیم، محافظت زمان اجرای عامل هوش مصنوعی در Defender را کنترل می‌کند که درخواست‌های ارسال‌شده به عامل‌های مدیریت‌شده هوش مصنوعی برای کدنویسی (برای مثال Claude Code وGitHub Copilot CLI) را اسکن می‌کند. در صورت فعال بودن، Defender یک فرایند واسط را از چارچوب hook عامل فراخوانی می‌کند تا هر درخواست را پیش از اجرای آن توسط عامل، برای یافتن نشانه‌های بدافزار یا سوءاستفاده اسکن کند.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>این تنظیم، محافظت شبکه زمان اجرای عامل هوش مصنوعی در Defender را کنترل می‌کند که ترافیک شبکه ایجادشده توسط عامل‌های هوش مصنوعی را اسکن می‌کند. در صورت فعال بودن، Defender ترافیک شبکه فرایندهای عامل را بررسی می‌کند و هرگونه ترافیکی را که با تشخیص نشانه‌های بدافزار یا سوءاستفاده مطابقت داشته باشد، پیش از اجرای آن توسط عامل مسدود می‌کند.</value>
+  </data>
 </root>

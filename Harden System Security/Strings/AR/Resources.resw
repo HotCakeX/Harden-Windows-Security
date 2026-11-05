@@ -8069,4 +8069,10 @@
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>افتح مجلدات بيانات التطبيق التي يستخدمها التطبيق.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>يتحكم هذا الإعداد في حماية وكيل الذكاء الاصطناعي في Defender أثناء وقت التشغيل، والتي تفحص المطالبات المرسلة إلى وكلاء برمجة الذكاء الاصطناعي المُدارين (مثل Claude Code وGitHub Copilot CLI). عند تمكينه، يستدعي Defender عملية وسيطة من إطار عمل الخطافات الخاص بالوكيل لفحص كل مطالبة بحثًا عن مؤشرات على برامج ضارة أو إساءة استخدام قبل أن ينفذها الوكيل.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>يتحكم هذا الإعداد في حماية شبكة وكيل الذكاء الاصطناعي في Defender أثناء وقت التشغيل، والتي تفحص حركة مرور الشبكة الصادرة من وكلاء الذكاء الاصطناعي. عند تمكينه، يفحص Defender حركة مرور الشبكة لعمليات الوكيل ويحظر أي حركة مرور تطابق اكتشافًا لمؤشرات على برامج ضارة أو إساءة استخدام قبل أن ينفذها الوكيل.</value>
+  </data>
 </root>

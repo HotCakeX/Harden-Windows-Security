@@ -8069,4 +8069,10 @@ Thumbprint: {3}</value>
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Open the application data folders used by the app.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>This setting controls Defender's runtime AI Agent protection that scans prompts submitted to managed AI coding agents (e.g., Claude Code, GitHub Copilot CLI). When enabled, Defender invokes a bridge process from the agent's hook framework to scan each prompt for malware/abuse signals before the agent executes it.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>This setting controls Defender's runtime AI Agent network protection that scans network traffic originated from AI Agents. When enabled, Defender inspects the network traffic of agent processes and blocks any traffic that matches a detection for malware/abuse signals before the agent executes it.</value>
+  </data>
 </root>

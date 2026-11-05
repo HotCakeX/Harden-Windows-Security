@@ -8069,4 +8069,10 @@
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>アプリで使用するアプリケーション データ フォルダーを開きます.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>この設定は、管理対象の AI コーディング エージェント (Claude Code、GitHub Copilot CLI など) に送信されたプロンプトをスキャンする、Defender の実行時 AI エージェント保護を制御します。有効にすると、Defender はエージェントのフック フレームワークからブリッジ プロセスを呼び出し、エージェントが実行する前に各プロンプトをスキャンして、マルウェアや不正使用の兆候がないか確認します。</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>この設定は、AI エージェントから発生したネットワーク トラフィックをスキャンする、Defender の実行時 AI エージェント ネットワーク保護を制御します。有効にすると、Defender はエージェント プロセスのネットワーク トラフィックを検査し、マルウェアや不正使用の兆候の検出に一致するトラフィックを、エージェントが実行する前にブロックします。</value>
+  </data>
 </root>

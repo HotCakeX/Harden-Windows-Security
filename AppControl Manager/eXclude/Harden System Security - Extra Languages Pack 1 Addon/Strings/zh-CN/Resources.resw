@@ -8069,4 +8069,10 @@
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>打开此应用使用的应用数据文件夹.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>此设置控制 Defender 的 AI 代理运行时保护，该保护会扫描提交给托管 AI 编码代理（例如 Claude Code、GitHub Copilot CLI）的提示。启用后，Defender 会从代理的挂钩框架调用桥接进程，在代理执行每个提示之前扫描其中是否存在恶意软件或滥用行为的迹象。</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>此设置控制 Defender 的 AI 代理运行时网络保护，该保护会扫描源自 AI 代理的网络流量。启用后，Defender 会检查代理进程的网络流量，并在代理执行相关流量之前阻止任何与恶意软件或滥用行为迹象的检测结果相匹配的流量。</value>
+  </data>
 </root>

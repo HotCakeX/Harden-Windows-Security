@@ -8069,4 +8069,10 @@ Odcisk Palca: {3}</value>
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Otwórz foldery danych aplikacji używane przez tę aplikację.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>To ustawienie steruje ochroną agentów AI w czasie wykonywania w usłudze Defender, która skanuje monity przesyłane do zarządzanych agentów AI wspomagających programowanie (np. Claude Code, GitHub Copilot CLI). Po włączeniu usługa Defender uruchamia proces pośredniczący z platformy mechanizmów hook agenta, aby skanować każdy monit pod kątem sygnałów złośliwego oprogramowania lub nadużyć, zanim agent go wykona.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>To ustawienie steruje ochroną sieciową agentów AI w czasie wykonywania w usłudze Defender, która skanuje ruch sieciowy pochodzący od agentów AI. Po włączeniu usługa Defender sprawdza ruch sieciowy procesów agentów i blokuje wszelki ruch odpowiadający wykrytym sygnałom złośliwego oprogramowania lub nadużyć, zanim agent go wykona.</value>
+  </data>
 </root>

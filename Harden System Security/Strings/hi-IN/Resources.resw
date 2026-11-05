@@ -8069,4 +8069,10 @@
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>ऐप द्वारा उपयोग किए जाने वाले ऐप डेटा फ़ोल्डर खोलें.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>यह सेटिंग Defender की रनटाइम AI एजेंट सुरक्षा को नियंत्रित करती है, जो प्रबंधित AI कोडिंग एजेंटों (जैसे Claude Code, GitHub Copilot CLI) को भेजे गए प्रॉम्प्ट स्कैन करती है। सक्षम होने पर, Defender एजेंट के हुक फ़्रेमवर्क से एक ब्रिज प्रक्रिया शुरू करता है, ताकि एजेंट द्वारा प्रॉम्प्ट निष्पादित किए जाने से पहले प्रत्येक प्रॉम्प्ट को मैलवेयर या दुरुपयोग के संकेतों के लिए स्कैन किया जा सके।</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>यह सेटिंग Defender की रनटाइम AI एजेंट नेटवर्क सुरक्षा को नियंत्रित करती है, जो AI एजेंटों से उत्पन्न नेटवर्क ट्रैफ़िक को स्कैन करती है। सक्षम होने पर, Defender एजेंट प्रक्रियाओं के नेटवर्क ट्रैफ़िक की जाँच करता है और ऐसे किसी भी ट्रैफ़िक को ब्लॉक करता है जो मैलवेयर या दुरुपयोग के संकेतों की पहचान से मेल खाता हो, इससे पहले कि एजेंट उसे निष्पादित करे।</value>
+  </data>
 </root>

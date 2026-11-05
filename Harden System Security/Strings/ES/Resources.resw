@@ -8069,4 +8069,10 @@ Huella Digital: {3}</value>
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Abre las carpetas de datos de la aplicación que utiliza esta aplicación.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>Esta configuración controla la protección en tiempo de ejecución de agentes de IA de Defender, que analiza las indicaciones enviadas a agentes administrados de programación con IA (por ejemplo, Claude Code y GitHub Copilot CLI). Cuando se habilita, Defender invoca un proceso puente desde el marco de enlaces del agente para analizar cada indicación en busca de señales de malware o abuso antes de que el agente la ejecute.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>Esta configuración controla la protección de red en tiempo de ejecución de agentes de IA de Defender, que analiza el tráfico de red originado por agentes de IA. Cuando se habilita, Defender inspecciona el tráfico de red de los procesos de los agentes y bloquea cualquier tráfico que coincida con una detección de señales de malware o abuso antes de que el agente lo ejecute.</value>
+  </data>
 </root>

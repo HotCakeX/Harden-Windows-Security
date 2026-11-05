@@ -8069,4 +8069,10 @@
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>פתח את תיקיות הנתונים שבהן האפליקציה משתמשת.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>הגדרה זו שולטת בהגנת סוכן הבינה המלאכותית בזמן הריצה של Defender, אשר סורקת הנחיות שנשלחות לסוכני תכנות מנוהלים המבוססים על בינה מלאכותית (לדוגמה, Claude Code, GitHub Copilot CLI). כאשר ההגדרה מופעלת, Defender מפעיל תהליך גישור מתוך מסגרת ה-hooks של הסוכן כדי לסרוק כל הנחיה לאיתור סימנים לתוכנות זדוניות או לשימוש לרעה לפני שהסוכן מבצע אותה.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>הגדרה זו שולטת בהגנת הרשת בזמן הריצה של סוכן הבינה המלאכותית ב-Defender, אשר סורקת תעבורת רשת שמקורה בסוכני בינה מלאכותית. כאשר ההגדרה מופעלת, Defender בודק את תעבורת הרשת של תהליכי הסוכן וחוסם כל תעבורה התואמת לזיהוי של סימנים לתוכנות זדוניות או לשימוש לרעה לפני שהסוכן מבצע אותה.</value>
+  </data>
 </root>

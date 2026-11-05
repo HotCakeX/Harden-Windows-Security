@@ -8069,4 +8069,10 @@ Empreinte : {3}</value>
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Ouvrez les dossiers de données de l’application utilisés par celle-ci.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>Ce paramètre contrôle la protection à l’exécution des agents IA de Defender, qui analyse les invites soumises aux agents de programmation IA gérés (par exemple, Claude Code et GitHub Copilot CLI). Lorsqu’il est activé, Defender appelle un processus de pont à partir de l’infrastructure de hooks de l’agent afin d’analyser chaque invite à la recherche de signes de programme malveillant ou d’utilisation abusive avant son exécution par l’agent.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>Ce paramètre contrôle la protection réseau à l’exécution des agents IA de Defender, qui analyse le trafic réseau provenant des agents IA. Lorsqu’il est activé, Defender inspecte le trafic réseau des processus des agents et bloque tout trafic correspondant à une détection de signes de programme malveillant ou d’utilisation abusive avant son exécution par l’agent.</value>
+  </data>
 </root>

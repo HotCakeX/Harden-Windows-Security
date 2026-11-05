@@ -8069,4 +8069,10 @@ Fingerabdruck: {3}</value>
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Öffnen Sie die von der App verwendeten Anwendungsdatenordner.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>Diese Einstellung steuert den Laufzeitschutz von Defender für KI-Agenten, der Eingabeaufforderungen scannt, die an verwaltete KI-Coding-Agenten (z. B. Claude Code, GitHub Copilot CLI) übermittelt werden. Wenn die Einstellung aktiviert ist, ruft Defender über das Hook-Framework des Agenten einen Bridgeprozess auf, um jede Eingabeaufforderung auf Anzeichen für Schadsoftware oder Missbrauch zu prüfen, bevor der Agent sie ausführt.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>Diese Einstellung steuert den Laufzeit-Netzwerkschutz von Defender für KI-Agenten, der von KI-Agenten ausgehenden Netzwerkdatenverkehr scannt. Wenn die Einstellung aktiviert ist, überprüft Defender den Netzwerkdatenverkehr der Agentenprozesse und blockiert jeglichen Datenverkehr, der einer Erkennung von Anzeichen für Schadsoftware oder Missbrauch entspricht, bevor der Agent ihn ausführt.</value>
+  </data>
 </root>

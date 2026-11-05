@@ -8069,4 +8069,10 @@ Thumbprint: {3}</value>
   <data name="ApplicationDataDropDownButton.AutomationProperties.HelpText" xml:space="preserve">
     <value>Buka folder data aplikasi yang digunakan oleh aplikasi.</value>
   </data>
+  <data name="AiAgentProtection-MSDefender" xml:space="preserve">
+    <value>Pengaturan ini mengontrol perlindungan Agen AI runtime Defender yang memindai prompt yang dikirimkan ke agen pengodean AI terkelola (misalnya, Claude Code, GitHub Copilot CLI). Saat diaktifkan, Defender memanggil proses jembatan dari kerangka kerja hook agen untuk memindai setiap prompt guna mendeteksi indikasi malware atau penyalahgunaan sebelum agen menjalankannya.</value>
+  </data>
+    <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
+    <value>Pengaturan ini mengontrol perlindungan jaringan Agen AI runtime Defender yang memindai lalu lintas jaringan yang berasal dari Agen AI. Saat diaktifkan, Defender memeriksa lalu lintas jaringan proses agen dan memblokir setiap lalu lintas yang cocok dengan deteksi indikasi malware atau penyalahgunaan sebelum agen menjalankannya.</value>
+  </data>
 </root>

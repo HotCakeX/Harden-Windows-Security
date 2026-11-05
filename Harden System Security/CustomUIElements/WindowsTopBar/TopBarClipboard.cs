@@ -993,12 +993,12 @@ internal sealed partial class TopBar
 			return;
 		}
 		_clipboardHandledSequence = sequence;
-		(TopBarClipboardEntry Entry, ArraySegment<byte> Payload)? capture = await ReadClipboardEntryWithRetryAsync(cancellationToken);
+		(TopBarClipboardEntry Entry, ArraySegment<byte> Payload, byte[]? PayloadHash)? capture = await ReadClipboardEntryWithRetryAsync(cancellationToken);
 		if (capture is null)
 		{
 			return;
 		}
-		(TopBarClipboardEntry entry, ArraySegment<byte> payload) = capture.Value;
+		(TopBarClipboardEntry entry, ArraySegment<byte> payload, byte[]? payloadHash) = capture.Value;
 		try
 		{
 			if (_isClosed)
@@ -1011,7 +1011,6 @@ internal sealed partial class TopBar
 			List<TopBarClipboardEntry> entries = entry.Files.Count > 1
 				? entry.Files.ConvertAll(file => new TopBarClipboardEntry { CapturedAt = entry.CapturedAt, Files = [file], Summary = "File" })
 				: [entry];
-			byte[]? payloadHash = payload.Count == 0 ? null : SHA256.HashData(payload);
 
 			// Apps such as Sticky Notes place a copy on the clipboard and then flush it, which raises a second clipboard update
 			// with the same content. A capture that repeats the last capture while that is still the newest in its bucket is skipped.
@@ -1074,7 +1073,7 @@ internal sealed partial class TopBar
 	/// Materializes the standard text, HTML, RTF, bitmap, and storage-item formats contained in a clipboard package.
 	/// Multiple available formats are retained together so applications can choose the format they understand on paste.
 	/// </summary>
-	private static async Task<(TopBarClipboardEntry Entry, ArraySegment<byte> Payload)?> ReadClipboardEntryWithRetryAsync(CancellationToken cancellationToken)
+	private static async Task<(TopBarClipboardEntry Entry, ArraySegment<byte> Payload, byte[]? PayloadHash)?> ReadClipboardEntryWithRetryAsync(CancellationToken cancellationToken)
 	{
 		const int ClipboardCannotOpenHResult = unchecked((int)0x800401D0);
 		const int RpcServerUnavailableHResult = unchecked((int)0x800706BA);
@@ -1119,10 +1118,11 @@ internal sealed partial class TopBar
 
 	/// <summary>
 	/// Reads one clipboard package. The returned payload is the unencrypted layout of the clip's payload file, which the
-	/// caller zeroes once it is written, and it is empty when the clip has no HTML, RTF or bitmap format.
+	/// caller zeroes once it is written, and it is empty when the clip has no HTML, RTF or bitmap format. The returned hash
+	/// identifies the content of the payload for <see cref="IsRepeatedClipboardCapture"/>, and it is null for an empty payload.
 	/// </summary>
 	[DynamicWindowsRuntimeCast(typeof(StorageFile))]
-	private static async Task<(TopBarClipboardEntry Entry, ArraySegment<byte> Payload)?> ReadClipboardEntryAsync(DataPackageView view, CancellationToken cancellationToken)
+	private static async Task<(TopBarClipboardEntry Entry, ArraySegment<byte> Payload, byte[]? PayloadHash)?> ReadClipboardEntryAsync(DataPackageView view, CancellationToken cancellationToken)
 	{
 		if (await IsClipboardContentExcludedAsync(view, cancellationToken))
 		{
@@ -1183,6 +1183,17 @@ internal sealed partial class TopBar
 
 		ArraySegment<byte> payload = formats == TopBarClipboardFormats.None ? default : CreateClipboardPayload(html, rtf, bitmap);
 
+		// An app (such as Snipping Tool in Windows) can place a picture on the clipboard again with only the resolution that its bitmap header records changed, such
+		// as when it flushes its copy, so the hash leaves out the 8 resolution bytes of a BMP header. The bitmap ends the payload.
+		// This prevents saving duplicate clips of the same image. The hash still covers width, height, bit depth, compression, every pixel byte, and any HTML or RTF, so it's accurate, only the DPI tag is ignored
+		int resolutionOffset = payload.Count > 0 && bitmap is [(byte)'B', (byte)'M', ..] and { Length: >= 54 } && BitConverter.ToInt32(bitmap, 14) >= 40
+			? payload.Count - bitmap.Length + 38
+			: payload.Count;
+		using IncrementalHash hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+		hash.AppendData(payload.AsSpan(0, resolutionOffset));
+		hash.AppendData(payload.AsSpan(Math.Min(resolutionOffset + 8, payload.Count)));
+		byte[]? payloadHash = payload.Count == 0 ? null : hash.GetHashAndReset();
+
 		CryptographicOperations.ZeroMemory(bitmap);
 
 		return (new TopBarClipboardEntry
@@ -1193,7 +1204,7 @@ internal sealed partial class TopBar
 			PayloadId = payload.Count == 0 ? null : Guid.CreateVersion7(),
 			Files = files,
 			Summary = string.Join(" + ", parts)
-		}, payload);
+		}, payload, payloadHash);
 	}
 
 	/// <summary>
@@ -1246,7 +1257,8 @@ internal sealed partial class TopBar
 	/// <summary>
 	/// Returns whether captured entries hold the same content, in the same order, as the entries of the last capture while
 	/// all of those are still the newest entries of the routing bucket. Text is compared exactly because letter case is part
-	/// of the content, the rich formats through the hash of their payload, and file paths ignore case to match Windows paths.
+	/// of the content, the rich formats through the hash of their payload, which leaves out the resolution that a bitmap header
+	/// records, and file paths ignore case to match Windows paths.
 	/// </summary>
 	private bool IsRepeatedClipboardCapture(List<TopBarClipboardEntry> entries, byte[]? payloadHash)
 	{

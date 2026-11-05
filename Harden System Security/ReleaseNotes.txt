@@ -1,1 +1,3 @@
 * The details window of a bucket in the Clipboards view of the TopBar was always using dark them; it's now been fixed to be theme aware.
+
+* Improved deduplication logic of the Clipboard view in the TopBar to include Bitmap images.

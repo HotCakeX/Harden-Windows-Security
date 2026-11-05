@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>スリープボタンを押したときに、システムが休止状態になるように設定します(バッテリー使用時).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>Windows がデバイスのメタデータおよび関連するデバイス アプリケーションをネットワークから自動的にダウンロードしないようにします.</value>
+</data>
 </root>

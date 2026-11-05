@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>ตั้งค่าให้ระบบเข้าสู่โหมดไฮเบอร์เนตเมื่อกดปุ่มสลีป (ขณะใช้แบตเตอรี่).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>ป้องกันไม่ให้ Windows ดาวน์โหลดเมตาดาต้าของอุปกรณ์และแอปพลิเคชันที่เกี่ยวข้องกับอุปกรณ์จากเครือข่ายโดยอัตโนมัติ.</value>
+</data>
 </root>

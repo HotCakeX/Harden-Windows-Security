@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>Налаштуйте систему на перехід у режим гібернації після натискання кнопки сну (під час живлення від акумулятора).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>Забороніть Windows автоматично завантажувати з мережі метадані пристроїв і пов’язані з ними програми.</value>
+</data>
 </root>

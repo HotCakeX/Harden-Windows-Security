@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>سیستم را طوری تنظیم کنید که هنگام فشردن دکمهٔ خواب به حالت خواب زمستانی برود (هنگام استفاده از باتری).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>از دانلود خودکار فراداده‌های دستگاه‌ها و برنامه‌های مرتبط با آن‌ها از شبکه توسط Windows جلوگیری کنید.</value>
+</data>
 </root>

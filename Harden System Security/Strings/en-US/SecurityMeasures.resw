@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>Set the system to Hibernate when the sleep button is pressed (on battery).</value>
 </data>
+  <data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+      <value>Prevent Windows from automatically downloading device metadata and associated device applications from the network.</value>
+  </data>
 </root>

@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>स्लीप बटन दबाए जाने पर सिस्टम को हाइबरनेट मोड में जाने के लिए सेट करें (बैटरी पर चलने के दौरान).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>Windows को नेटवर्क से डिवाइस मेटाडेटा और डिवाइस से संबंधित ऐप्लिकेशन अपने आप डाउनलोड करने से रोकें.</value>
+</data>
 </root>

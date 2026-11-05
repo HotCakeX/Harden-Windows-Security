@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>Atur sistem agar masuk ke mode hibernasi saat tombol tidur ditekan (menggunakan daya baterai).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>Cegah Windows mengunduh metadata perangkat dan aplikasi terkait perangkat secara otomatis dari jaringan.</value>
+</data>
 </root>

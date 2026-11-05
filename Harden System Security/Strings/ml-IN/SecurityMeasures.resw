@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>സ്ലീപ്പ് ബട്ടൺ അമർത്തുമ്പോൾ സിസ്റ്റം ഹൈബർനേറ്റ് മോഡിലേക്ക് മാറുന്ന രീതിയിൽ ക്രമീകരിക്കുക (ബാറ്ററിയിൽ പ്രവർത്തിക്കുമ്പോൾ).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>നെറ്റ്‌വർക്കിൽ നിന്ന് ഉപകരണങ്ങളുടെ മെറ്റാഡാറ്റയും അവയുമായി ബന്ധപ്പെട്ട ആപ്ലിക്കേഷനുകളും Windows സ്വയമേവ ഡൗൺലോഡ് ചെയ്യുന്നത് തടയുക.</value>
+</data>
 </root>

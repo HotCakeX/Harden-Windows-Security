@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>اضبط النظام للدخول في وضع الإسبات عند الضغط على زر السكون (عند التشغيل باستخدام البطارية).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>امنع Windows من تنزيل بيانات تعريف الأجهزة والتطبيقات المرتبطة بها تلقائيًا من الشبكة.</value>
+</data>
 </root>

@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>Ustaw przechodzenie systemu w stan hibernacji po naciśnięciu przycisku uśpienia (przy zasilaniu bateryjnym).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>Zapobiegaj automatycznemu pobieraniu przez system Windows metadanych urządzeń i powiązanych z nimi aplikacji z sieci.</value>
+</data>
 </root>

@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>Versetzen Sie das System beim Drücken der Energiespartaste in den Ruhezustand (im Akkubetrieb).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>Verhindern Sie, dass Windows Gerätemetadaten und zugehörige Geräteanwendungen automatisch aus dem Netzwerk herunterlädt.</value>
+</data>
 </root>

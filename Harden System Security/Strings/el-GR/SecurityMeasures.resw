@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>Ρυθμίστε το σύστημα ώστε να μεταβαίνει σε αδρανοποίηση όταν πατιέται το κουμπί αναστολής λειτουργίας (με τροφοδοσία από την μπαταρία).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>Αποτρέψτε την αυτόματη λήψη μεταδεδομένων συσκευών και σχετικών εφαρμογών συσκευών από το δίκτυο από τα Windows.</value>
+</data>
 </root>

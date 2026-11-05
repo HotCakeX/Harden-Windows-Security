@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>Imposta il sistema affinché entri in ibernazione alla pressione del pulsante di sospensione (con alimentazione a batteria).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>Impedisci a Windows di scaricare automaticamente dalla rete i metadati dei dispositivi e le applicazioni associate ai dispositivi.</value>
+</data>
 </root>

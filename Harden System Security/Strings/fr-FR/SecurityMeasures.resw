@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>Configurez le système pour qu’il passe en veille prolongée lorsque le bouton de mise en veille est enfoncé (sur batterie).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>Empêchez Windows de télécharger automatiquement les métadonnées des appareils et les applications associées depuis le réseau.</value>
+</data>
 </root>

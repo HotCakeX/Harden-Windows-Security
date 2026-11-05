@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>הגדר את המערכת לעבור למצב תרדמה בעת לחיצה על לחצן השינה (בהפעלה באמצעות סוללה).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>מנע מ-Windows להוריד באופן אוטומטי מהרשת מטא-נתונים של התקנים ויישומים המשויכים להתקנים.</value>
+</data>
 </root>

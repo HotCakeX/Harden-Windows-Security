@@ -1030,4 +1030,7 @@
 <data name="SelectSleepButtonActionOnBattery-BitLocker" xml:space="preserve">
     <value>将系统设置为在按下睡眠按钮时进入休眠状态(使用电池时).</value>
 </data>
+<data name="PreventDeviceMetadataFromNetwork-Miscellaneous" xml:space="preserve">
+    <value>阻止 Windows 自动从网络下载设备元数据和相关设备应用程序.</value>
+</data>
 </root>

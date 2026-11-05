@@ -154,7 +154,7 @@ internal static partial class Atlas
 	/// Reads the package family name out of the token with the documented two-call pattern and compares it.
 	/// A token with no package identity makes the first call return APPMODEL_ERROR_NO_PACKAGE instead, so it is denied.
 	/// </summary>
-	internal static bool IsTokenFromAuthorizedPackage(IntPtr token, string PFN = HardenSystemSecurityPackageFamilyName)
+	internal static bool IsTokenFromAuthorizedPackage(IntPtr token, string PackageFamilyName = HardenSystemSecurityPackageFamilyName)
 	{
 		/// <summary>
 		/// Returned by the first GetPackageFamilyNameFromToken call because no output buffer is supplied to it.
@@ -165,7 +165,7 @@ internal static partial class Atlas
 
 		// The first call supplies no buffer and only reports the required character count, including the null terminator.
 		if (NativeMethods.GetPackageFamilyNameFromToken(token, ref length, null) != ERROR_INSUFFICIENT_BUFFER
-			|| length != PFN.Length + 1)
+			|| length != PackageFamilyName.Length + 1)
 		{
 			return false;
 		}
@@ -173,6 +173,6 @@ internal static partial class Atlas
 		char[] packageFamilyName = new char[length];
 
 		return NativeMethods.GetPackageFamilyNameFromToken(token, ref length, packageFamilyName) == 0
-			&& PFN.AsSpan().Equals(packageFamilyName.AsSpan(0, (int)length - 1), StringComparison.OrdinalIgnoreCase);
+			&& PackageFamilyName.AsSpan().Equals(packageFamilyName.AsSpan(0, (int)length - 1), StringComparison.OrdinalIgnoreCase);
 	}
 }

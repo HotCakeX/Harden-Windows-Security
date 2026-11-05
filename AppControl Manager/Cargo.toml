@@ -8,7 +8,6 @@ resolver = "3"
 edition = "2024"
 authors = ["Violet Hansen"]
 license = "MIT"
-homepage = "https://github.com/HotCakeX/Harden-Windows-Security"
 repository = "https://github.com/HotCakeX/Harden-Windows-Security"
 documentation = "https://github.com/HotCakeX/Harden-Windows-Security"
 publish = false

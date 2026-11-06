@@ -65,6 +65,19 @@ internal sealed partial class GraphAuthPanel : UserControl
 
 	private async void GraphAuthPanel_Loaded() => await RestoreAccountsAsync();
 
+	/// <summary>
+	/// Keeps the tab content exactly as wide as the tab strip.
+	/// The flyout's width is driven by the tab strip (its tabs share the width of the widest tab name),
+	/// so the content fills the flyout without its own desired width (e.g. long wrapping texts) being able to widen it.
+	/// </summary>
+	private void SegmentedControl_SizeChanged(object sender, SizeChangedEventArgs e)
+	{
+		if (e.NewSize.Width > 0)
+		{
+			TabContentSwitchPresenter.Width = e.NewSize.Width;
+		}
+	}
+
 	// https://learn.microsoft.com/en-us/windows/apps/develop/win2d/avoiding-memory-leaks
 	internal void CleanUpBeforeNavigation()
 	{
@@ -151,6 +164,43 @@ internal sealed partial class GraphAuthPanel : UserControl
 		if (account is not null && host is not null)
 		{
 			await host.AuthCompanionCLS.LogOutOfAccountAsync(account);
+		}
+	}
+
+	/// <summary>
+	/// Collection bound to the saved tenants ListView and the Target Tenant ComboBox.
+	/// </summary>
+	internal ThreadSafeObservableCollection<SavedTenant> SavedTenants => AuthenticationCompanion.SavedTenants;
+
+	/// <summary>
+	/// Gets the saved tenant associated with an action button inside a saved tenant item template.
+	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(FrameworkElement))]
+	private static SavedTenant? GetSavedTenantFromSender(object sender) => sender is FrameworkElement frameworkElement ? frameworkElement.DataContext as SavedTenant : null;
+
+	/// <summary>
+	/// Switches the active account of this panel's host to the saved tenant that raised the click.
+	/// </summary>
+	private async void SwitchToTenantButton_Click(object sender, RoutedEventArgs e)
+	{
+		SavedTenant? tenant = GetSavedTenantFromSender(sender);
+		IGraphAuthHost? host = Host;
+		if (tenant is not null && host is not null)
+		{
+			await host.AuthCompanionCLS.SwitchToTenantAsync(tenant);
+		}
+	}
+
+	/// <summary>
+	/// Removes the saved tenant that raised the click.
+	/// </summary>
+	private async void RemoveSavedTenantButton_Click(object sender, RoutedEventArgs e)
+	{
+		SavedTenant? tenant = GetSavedTenantFromSender(sender);
+		IGraphAuthHost? host = Host;
+		if (tenant is not null && host is not null)
+		{
+			await host.AuthCompanionCLS.RemoveSavedTenantAsync(tenant);
 		}
 	}
 

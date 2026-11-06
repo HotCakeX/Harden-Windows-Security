@@ -599,6 +599,49 @@ internal sealed class AzureCloudEnvironmentComboBoxItem(string name, AzureCloudI
 	internal AzureCloudInstance Environment => environment;
 }
 
+/// <summary>
+/// A Microsoft Entra tenant saved by the user so it can be targeted by sign-ins and tenant switches.
+/// Used for B2B guest access and GDAP (granular delegated admin privileges) access to customer tenants.
+/// </summary>
+internal sealed class SavedTenant(
+	string tenantID,
+	string displayName,
+	AzureCloudInstance environment)
+{
+	/// <summary>
+	/// The tenant ID (GUID) resolved from the tenant's OpenID Connect discovery document.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("tenantID")]
+	internal string TenantID => tenantID;
+
+	/// <summary>
+	/// Friendly name of the tenant.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("displayName")]
+	internal string DisplayName => displayName;
+
+	/// <summary>
+	/// The cloud environment the tenant belongs to.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("environment")]
+	internal AzureCloudInstance Environment => environment;
+
+	/// <summary>
+	/// Display friendly name of the cloud environment of the tenant.
+	/// </summary>
+	[JsonIgnore]
+	internal string EnvironmentName => AuthenticationCompanion.GetCloudEnvironmentName(environment);
+
+	/// <summary>
+	/// Determines whether this tenant represents the same tenant in the same cloud environment as the provided values.
+	/// </summary>
+	internal bool IsSameTenant(string otherTenantID, AzureCloudInstance otherEnvironment) =>
+		Environment == otherEnvironment && string.Equals(TenantID, otherTenantID, StringComparison.OrdinalIgnoreCase);
+}
+
 internal sealed partial class AuthenticatedAccounts(
 	string accountIdentifier,
 	string username,
@@ -609,7 +652,9 @@ internal sealed partial class AuthenticatedAccounts(
 	IAccount account,
 	SignInMethods methodUsed,
 	AzureCloudInstance environment,
-	bool useCache) : ViewModelBase
+	bool useCache,
+	string? targetTenantID,
+	string? targetTenantName) : ViewModelBase
 {
 	internal string AccountIdentifier { get; } = accountIdentifier;
 	internal string Username => username;
@@ -621,6 +666,28 @@ internal sealed partial class AuthenticatedAccounts(
 	internal SignInMethods MethodUsed => methodUsed;
 	internal AzureCloudInstance Environment => environment;
 	internal bool UseCache => useCache;
+
+	/// <summary>
+	/// The tenant that was explicitly targeted for this session (B2B guest or GDAP access).
+	/// Null when the session uses the account's home tenant, which is the default sign-in behavior.
+	/// Every token request for this session must be sent to this tenant.
+	/// </summary>
+	internal string? TargetTenantID => targetTenantID;
+
+	/// <summary>
+	/// Friendly name of the explicitly targeted tenant, if any.
+	/// </summary>
+	internal string? TargetTenantName => targetTenantName;
+
+	/// <summary>
+	/// Text displayed on the account cards for sessions that target a specific tenant.
+	/// </summary>
+	internal string TargetTenantLabel => targetTenantID is null ? string.Empty : string.Format(Atlas.GetStr("TargetTenantLabelFormat"), targetTenantName ?? targetTenantID);
+
+	/// <summary>
+	/// Visibility of the target tenant label on the account cards.
+	/// </summary>
+	internal Visibility TargetTenantLabelVisibility => targetTenantID is null ? Visibility.Collapsed : Visibility.Visible;
 
 	internal string Initials => BuildInitials(Username);
 
@@ -788,7 +855,9 @@ internal sealed class SavedAccountMetadata(
 	AuthenticationContext authContext,
 	SignInMethods methodUsed,
 	AzureCloudInstance environment,
-	bool useCache)
+	bool useCache,
+	string? targetTenantID,
+	string? targetTenantName)
 {
 	[JsonInclude]
 	[JsonPropertyName("accountIdentifier")]
@@ -821,6 +890,17 @@ internal sealed class SavedAccountMetadata(
 	[JsonInclude]
 	[JsonPropertyName("useCache")]
 	internal bool UseCache => useCache;
+
+	/// <summary>
+	/// The explicitly targeted tenant of the session. Absent in metadata saved by older versions, which means the home tenant.
+	/// </summary>
+	[JsonInclude]
+	[JsonPropertyName("targetTenantID")]
+	internal string? TargetTenantID => targetTenantID;
+
+	[JsonInclude]
+	[JsonPropertyName("targetTenantName")]
+	internal string? TargetTenantName => targetTenantName;
 }
 
 /// <summary>

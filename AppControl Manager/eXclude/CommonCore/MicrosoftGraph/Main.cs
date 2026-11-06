@@ -196,6 +196,75 @@ internal static class Main
 	};
 
 	/// <summary>
+	/// Least-privileged delegated scope required for listing the GDAP customers of the partner tenant.
+	/// https://learn.microsoft.com/graph/api/tenantrelationship-list-delegatedadmincustomers
+	/// </summary>
+	private static readonly string[] GdapCustomersScopes = ["DelegatedAdminRelationship.Read.All"];
+
+	/// <summary>
+	/// Creates a silent token request for the provided account.
+	/// When the session targets a specific tenant, the request is sent to that tenant via WithTenantId which preserves the cloud's authority host.
+	/// The same account (refresh token) can obtain tokens for any tenant it has access to, such as B2B guest or GDAP customer tenants.
+	/// https://learn.microsoft.com/entra/msal/dotnet/how-to/get-tenant-profiles
+	/// </summary>
+	private static AcquireTokenSilentParameterBuilder BuildSilentRequest(IPublicClientApplication app, string[] scopes, IAccount account, string? targetTenantID)
+	{
+		AcquireTokenSilentParameterBuilder builder = app.AcquireTokenSilent(scopes, account);
+		return string.IsNullOrEmpty(targetTenantID) ? builder : builder.WithTenantId(targetTenantID);
+	}
+
+	/// <summary>
+	/// Creates an interactive token request for the provided sign-in method.
+	/// Optionally pre-selects an account and targets a specific tenant.
+	/// </summary>
+	private static AcquireTokenInteractiveParameterBuilder BuildInteractiveRequest(IPublicClientApplication app, string[] scopes, SignInMethods method, IAccount? account, string? targetTenantID)
+	{
+		AcquireTokenInteractiveParameterBuilder builder = method switch
+		{
+			SignInMethods.WebBrowser => app.AcquireTokenInteractive(scopes).WithUseEmbeddedWebView(false),
+			SignInMethods.WebAccountManager => app.AcquireTokenInteractive(scopes),
+			_ => throw new InvalidOperationException(Atlas.GetStr("InvalidSignInMethodUsedMessage"))
+		};
+
+		if (account is not null)
+		{
+			builder = builder.WithAccount(account);
+		}
+
+		if (!string.IsNullOrEmpty(targetTenantID))
+		{
+			builder = builder.WithTenantId(targetTenantID);
+		}
+
+		return builder;
+	}
+
+	/// <summary>
+	/// Acquires a token for additional scopes (incremental consent) for an already authenticated account in the tenant of its session.
+	/// Silent acquisition is attempted first. Interactive consent is used only when explicitly allowed, otherwise null is returned.
+	/// </summary>
+	private static async Task<AuthenticationResult?> AcquireTokenForScopesAsync(AuthenticatedAccounts account, string[] scopes, bool allowInteractiveConsent, CancellationToken cancellationToken)
+	{
+		IPublicClientApplication selectedApp = await GetAppAsync(account.MethodUsed, account.Environment, account.UseCache);
+
+		try
+		{
+			return await BuildSilentRequest(selectedApp, scopes, account.Account, account.TargetTenantID)
+				.ExecuteAsync(cancellationToken);
+		}
+		catch (MsalUiRequiredException)
+		{
+			if (!allowInteractiveConsent)
+			{
+				return null;
+			}
+
+			return await BuildInteractiveRequest(selectedApp, scopes, account.MethodUsed, account.Account, account.TargetTenantID)
+				.ExecuteAsync(cancellationToken);
+		}
+	}
+
+	/// <summary>
 	/// Helper method to retrieve a valid access token. It performs a proactive (10 minute) refresh using AcquireTokenSilent.
 	/// Uses the account's recorded SignIn method to decide which IPublicClientApplication instance to use.
 	/// If the access token is still sufficiently valid it is returned directly.
@@ -222,9 +291,9 @@ internal static class Main
 		// Select correct application based on original sign-in method, environment, and cache policy
 		IPublicClientApplication selectedApp = await GetAppAsync(account.MethodUsed, account.Environment, account.UseCache);
 
-		// Perform silent acquisition using the original scopes for this authentication context
-		AuthenticationResult refreshedResult = await selectedApp
-			.AcquireTokenSilent(Scopes[account.AuthContext], account.Account)
+		// Perform silent acquisition using the original scopes for this authentication context.
+		// Sessions that target a specific tenant (B2B guest / GDAP) must keep requesting tokens from that tenant.
+		AuthenticationResult refreshedResult = await BuildSilentRequest(selectedApp, Scopes[account.AuthContext], account.Account, account.TargetTenantID)
 			.ExecuteAsync(cancellationToken);
 
 		// Update stored result so subsequent calls benefit
@@ -243,46 +312,7 @@ internal static class Main
 	/// </summary>
 	internal static async Task<byte[]?> GetSignedInUserProfilePhotoAsync(AuthenticatedAccounts account, bool allowInteractiveConsent, CancellationToken cancellationToken)
 	{
-		IPublicClientApplication selectedApp = await GetAppAsync(account.MethodUsed, account.Environment, account.UseCache);
-		AuthenticationResult? profilePhotoAuthResult = null;
-
-		try
-		{
-			profilePhotoAuthResult = await selectedApp
-				.AcquireTokenSilent(ProfilePhotoScopes, account.Account)
-				.ExecuteAsync(cancellationToken);
-		}
-		catch (MsalUiRequiredException) when (allowInteractiveConsent)
-		{
-			switch (account.MethodUsed)
-			{
-				case SignInMethods.WebBrowser:
-					{
-						profilePhotoAuthResult = await selectedApp
-							.AcquireTokenInteractive(ProfilePhotoScopes)
-							.WithAccount(account.Account)
-							.WithUseEmbeddedWebView(false)
-							.ExecuteAsync(cancellationToken);
-
-						break;
-					}
-				case SignInMethods.WebAccountManager:
-					{
-						profilePhotoAuthResult = await selectedApp
-							.AcquireTokenInteractive(ProfilePhotoScopes)
-							.WithAccount(account.Account)
-							.ExecuteAsync(cancellationToken);
-
-						break;
-					}
-				default:
-					throw new InvalidOperationException(Atlas.GetStr("InvalidSignInMethodUsedMessage"));
-			}
-		}
-		catch (MsalUiRequiredException) when (!allowInteractiveConsent)
-		{
-			return null;
-		}
+		AuthenticationResult? profilePhotoAuthResult = await AcquireTokenForScopesAsync(account, ProfilePhotoScopes, allowInteractiveConsent, cancellationToken);
 
 		if (profilePhotoAuthResult is null)
 		{
@@ -513,102 +543,136 @@ DeviceEvents
 	}
 
 	/// <summary>
-	/// Signs into a tenant
+	/// Signs into a tenant.
+	/// When <paramref name="targetTenant"/> is null, the account signs into its home tenant (default behavior).
+	/// When it is provided, the sign-in is sent to that tenant, which allows B2B guest and GDAP users to sign into customer tenants with their own accounts.
 	/// </summary>
-	internal static async Task<(bool, AuthenticatedAccounts?)> SignIn(
+	internal static async Task<AuthenticatedAccounts> SignIn(
 	AuthenticationContext context,
 	SignInMethods signInMethod,
 	AzureCloudInstance environment,
+	SavedTenant? targetTenant,
 	CancellationToken cancellationToken)
 	{
-		AuthenticationResult? authResult = null;
-		bool error = false;
+		// A saved tenant can only be targeted in the cloud environment it belongs to
+		if (targetTenant is not null)
+		{
+			EnsureTenantEnvironmentMatches(targetTenant, environment);
+		}
 
 		// Capture the specific user choice regarding cache at sign in time
 		bool useCache = Atlas.Settings.CacheAuthenticationTokensLocally;
 
-		AuthenticatedAccounts? newAccount = null;
+		AuthenticationResult authResult;
 
 		try
 		{
 			IPublicClientApplication app = await GetAppAsync(signInMethod, environment, useCache);
 
-			switch (signInMethod)
+			AcquireTokenInteractiveParameterBuilder request = BuildInteractiveRequest(app, Scopes[context], signInMethod, null, targetTenant?.TenantID);
+
+			// Always let the user pick the account when using the web browser
+			if (signInMethod == SignInMethods.WebBrowser)
 			{
-				case SignInMethods.WebBrowser:
-					{
-						// Perform the interactive token acquisition with the cancellation token
-						authResult = await app.AcquireTokenInteractive(Scopes[context])
-							.WithPrompt(Prompt.SelectAccount)
-							.WithUseEmbeddedWebView(false)
-							.ExecuteAsync(cancellationToken);
-
-						break;
-					}
-				case SignInMethods.WebAccountManager:
-					{
-						authResult = await app.AcquireTokenInteractive(Scopes[context])
-							.ExecuteAsync(cancellationToken);
-
-						break;
-					}
-				default:
-					throw new InvalidOperationException(
-						Atlas.GetStr("InvalidSignInMethodUsedMessage"));
+				request = request.WithPrompt(Prompt.SelectAccount);
 			}
+
+			// Perform the interactive token acquisition with the cancellation token
+			authResult = await request.ExecuteAsync(cancellationToken);
 		}
 		catch (OperationCanceledException)
 		{
-			error = true;
 			throw new OperationCanceledException(
 				Atlas.GetStr("SignInOperationCanceledByCallerMessage"));
 		}
-		finally
+
+		// Store the successful result in the authenticated accounts
+		return await RegisterAuthenticatedAccountAsync(authResult, context, signInMethod, environment, useCache, targetTenant);
+	}
+
+	/// <summary>
+	/// Switches an already authenticated account to another tenant, the same way the Azure and Intune portals switch directories.
+	/// The existing account's refresh token is used to silently acquire a token for the target tenant.
+	/// If the target tenant requires user interaction (consent, MFA, Conditional Access, etc.), an interactive prompt is shown for the same account.
+	/// The result is added as a new session so the source session stays usable.
+	/// </summary>
+	internal static async Task<AuthenticatedAccounts> SwitchTenantAsync(AuthenticatedAccounts sourceAccount, SavedTenant targetTenant, CancellationToken cancellationToken)
+	{
+		EnsureTenantEnvironmentMatches(targetTenant, sourceAccount.Environment);
+
+		// The new session must use the same application instance and token cache as the source account since it reuses its tokens.
+		IPublicClientApplication app = await GetAppAsync(sourceAccount.MethodUsed, sourceAccount.Environment, sourceAccount.UseCache);
+		string[] scopes = Scopes[sourceAccount.AuthContext];
+
+		AuthenticationResult authResult;
+
+		try
 		{
-			// If successful, store the result in SavedAccounts
-			if (!error && authResult is not null)
-			{
-				// Add the account that was successfully authenticated to the dictionary
-				newAccount = new(
-					accountIdentifier: authResult.Account.HomeAccountId.Identifier,
-					username: authResult.Account.Username,
-					tenantID: authResult.TenantId,
-					permissions: string.Join(", ", Scopes[context]),
-					authContext: context,
-					authResult: authResult,
-					account: authResult.Account,
-					methodUsed: signInMethod, // Record the method used for future silent refresh
-					environment: environment,
-					useCache: useCache // Bind this sign in session strictly to this cache setting
-				);
-
-				AuthenticatedAccounts? possibleDuplicate =
-					AuthenticationCompanion.AuthenticatedAccounts
-						.FirstOrDefault(x =>
-							string.Equals(authResult.Account.HomeAccountId.Identifier, x.AccountIdentifier, StringComparison.OrdinalIgnoreCase) &&
-							string.Equals(authResult.Account.Username, x.Username, StringComparison.OrdinalIgnoreCase) &&
-							string.Equals(authResult.TenantId, x.TenantID, StringComparison.OrdinalIgnoreCase) &&
-							string.Equals(newAccount.Permissions, x.Permissions, StringComparison.OrdinalIgnoreCase) &&
-							x.AuthContext == context &&
-							x.Environment == environment
-						);
-
-				// Check if the account is already authenticated
-				if (possibleDuplicate is not null)
-				{
-					Logger.Write(string.Format(
-						Atlas.GetStr("DuplicateAccountReplacedMessage"),
-						authResult.Account.Username));
-
-					_ = AuthenticationCompanion.AuthenticatedAccounts.Remove(possibleDuplicate);
-				}
-
-				AuthenticationCompanion.AuthenticatedAccounts.Add(newAccount);
-				await SaveAccountsMetadataAsync();
-			}
+			authResult = await BuildSilentRequest(app, scopes, sourceAccount.Account, targetTenant.TenantID)
+				.ExecuteAsync(cancellationToken);
+		}
+		catch (MsalUiRequiredException)
+		{
+			authResult = await BuildInteractiveRequest(app, scopes, sourceAccount.MethodUsed, sourceAccount.Account, targetTenant.TenantID)
+				.ExecuteAsync(cancellationToken);
 		}
 
-		return (!error, newAccount);
+		return await RegisterAuthenticatedAccountAsync(authResult, sourceAccount.AuthContext, sourceAccount.MethodUsed, sourceAccount.Environment, sourceAccount.UseCache, targetTenant);
+	}
+
+	/// <summary>
+	/// Adds a successfully authenticated session to the authenticated accounts, replacing any duplicate, and persists the metadata.
+	/// </summary>
+	private static async Task<AuthenticatedAccounts> RegisterAuthenticatedAccountAsync(
+		AuthenticationResult authResult,
+		AuthenticationContext context,
+		SignInMethods signInMethod,
+		AzureCloudInstance environment,
+		bool useCache,
+		SavedTenant? targetTenant)
+	{
+		// Add the account that was successfully authenticated to the collection
+		AuthenticatedAccounts newAccount = new(
+			accountIdentifier: authResult.Account.HomeAccountId.Identifier,
+			username: authResult.Account.Username,
+			tenantID: authResult.TenantId,
+			permissions: string.Join(", ", Scopes[context]),
+			authContext: context,
+			authResult: authResult,
+			account: authResult.Account,
+			methodUsed: signInMethod, // Record the method used for future silent refresh
+			environment: environment,
+			useCache: useCache, // Bind this sign in session strictly to this cache setting
+			// Bind targeted sessions to the tenant ID that issued the token so silent refreshes keep targeting the same tenant
+			targetTenantID: targetTenant is null ? null : (string.IsNullOrEmpty(authResult.TenantId) ? targetTenant.TenantID : authResult.TenantId),
+			targetTenantName: targetTenant?.DisplayName
+		);
+
+		AuthenticatedAccounts? possibleDuplicate =
+			AuthenticationCompanion.AuthenticatedAccounts
+				.FirstOrDefault(x =>
+					string.Equals(authResult.Account.HomeAccountId.Identifier, x.AccountIdentifier, StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(authResult.Account.Username, x.Username, StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(authResult.TenantId, x.TenantID, StringComparison.OrdinalIgnoreCase) &&
+					string.Equals(newAccount.Permissions, x.Permissions, StringComparison.OrdinalIgnoreCase) &&
+					x.AuthContext == context &&
+					x.Environment == environment
+				);
+
+		// Check if the account is already authenticated
+		if (possibleDuplicate is not null)
+		{
+			Logger.Write(string.Format(
+				Atlas.GetStr("DuplicateAccountReplacedMessage"),
+				authResult.Account.Username));
+
+			_ = AuthenticationCompanion.AuthenticatedAccounts.Remove(possibleDuplicate);
+		}
+
+		AuthenticationCompanion.AuthenticatedAccounts.Add(newAccount);
+		await SaveAccountsMetadataAsync();
+
+		return newAccount;
 	}
 
 	/// <summary>
@@ -618,7 +682,21 @@ DeviceEvents
 	{
 		// Make sure we select the exact same instance used for token creation
 		IPublicClientApplication app = await GetAppAsync(account.MethodUsed, account.Environment, account.UseCache);
-		await app.RemoveAsync(account.Account);
+
+		// Removing an account from MSAL removes its tokens for every tenant and context.
+		// Only do it when no other session (another tenant or authentication context) still relies on the same account in the same token cache.
+		bool accountUsedByOtherSessions = AuthenticationCompanion.AuthenticatedAccounts.Any(x =>
+			!ReferenceEquals(x, account) &&
+			x.MethodUsed == account.MethodUsed &&
+			x.Environment == account.Environment &&
+			x.UseCache == account.UseCache &&
+			string.Equals(x.AccountIdentifier, account.AccountIdentifier, StringComparison.OrdinalIgnoreCase));
+
+		if (!accountUsedByOtherSessions)
+		{
+			await app.RemoveAsync(account.Account);
+		}
+
 		_ = AuthenticationCompanion.AuthenticatedAccounts.Remove(account);
 		await SaveAccountsMetadataAsync();
 
@@ -2221,6 +2299,337 @@ DeviceEvents
 	}
 
 	/// <summary>
+	/// Throws when a saved tenant is used with a cloud environment it does not belong to.
+	/// </summary>
+	private static void EnsureTenantEnvironmentMatches(SavedTenant tenant, AzureCloudInstance environment)
+	{
+		if (tenant.Environment != environment)
+		{
+			throw new InvalidOperationException(string.Format(
+				Atlas.GetStr("TenantEnvironmentMismatchMessage"),
+				tenant.DisplayName,
+				tenant.EnvironmentName,
+				AuthenticationCompanion.GetCloudEnvironmentName(environment)));
+		}
+	}
+
+	/// <summary>
+	/// Returns the Microsoft Entra authority host for the specific Azure environment.
+	/// https://learn.microsoft.com/entra/identity-platform/authentication-national-cloud
+	/// </summary>
+	private static string GetLoginHost(AzureCloudInstance environment) =>
+		environment == AzureCloudInstance.AzureUsGovernment ? "https://login.microsoftonline.us" : "https://login.microsoftonline.com";
+
+	/// <summary>
+	/// The value of the "cloud_instance_name" field of the OpenID Connect discovery document for tenants that belong to the specific Azure environment.
+	/// </summary>
+	private static string GetCloudInstanceName(AzureCloudInstance environment) =>
+		environment == AzureCloudInstance.AzureUsGovernment ? "microsoftonline.us" : "microsoftonline.com";
+
+	/// <summary>
+	/// Resolves a tenant ID (GUID) or a verified domain name (e.g. contoso.onmicrosoft.com) of a tenant to its tenant ID.
+	/// Uses the anonymous OpenID Connect discovery endpoint of Microsoft Entra ID, so no permission or sign-in is required.
+	/// It also validates that the tenant exists and belongs to the selected cloud environment.
+	/// https://learn.microsoft.com/entra/identity-platform/v2-protocols-oidc#find-your-apps-openid-configuration-document-uri
+	/// </summary>
+	internal static async Task<string> ResolveTenantIDAsync(string tenantIdentifier, AzureCloudInstance environment, CancellationToken cancellationToken)
+	{
+		string input = tenantIdentifier.Trim();
+
+		// Accept only a GUID or a DNS domain name to prevent sending arbitrary paths to the endpoint
+		if (Guid.TryParse(input, out Guid tenantGuid))
+		{
+			input = tenantGuid.ToString("D");
+		}
+		else if (!input.Contains('.', StringComparison.OrdinalIgnoreCase) || Uri.CheckHostName(input) != UriHostNameType.Dns)
+		{
+			throw new ArgumentException(string.Format(Atlas.GetStr("InvalidTenantIdentifierMessage"), tenantIdentifier));
+		}
+
+		Uri discoveryUri = new($"{GetLoginHost(environment)}/{Uri.EscapeDataString(input)}/v2.0/.well-known/openid-configuration");
+
+		using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+			"ResolveTenantIDAsync",
+			() =>
+			{
+				HttpRequestMessage request = new(HttpMethod.Get, discoveryUri);
+				request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				return request;
+			},
+			cancellationToken);
+
+		string content = await response.Content.ReadAsStringAsync(cancellationToken);
+
+		JsonElement root;
+		try
+		{
+			root = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.JsonElement);
+		}
+		catch (JsonException)
+		{
+			root = default;
+		}
+
+		if (!response.IsSuccessStatusCode)
+		{
+			// Microsoft Entra ID returns 400 with AADSTS90002 in the error description for tenants that do not exist in this cloud
+			string details = root.ValueKind == JsonValueKind.Object && root.TryGetProperty("error_description", out JsonElement errorDescription)
+				? errorDescription.GetString() ?? response.StatusCode.ToString()
+				: response.StatusCode.ToString();
+
+			throw new InvalidOperationException(string.Format(
+				Atlas.GetStr("TenantNotFoundInCloudMessage"),
+				tenantIdentifier,
+				AuthenticationCompanion.GetCloudEnvironmentName(environment),
+				details));
+		}
+
+		if (root.ValueKind != JsonValueKind.Object)
+		{
+			throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), content));
+		}
+
+		// The discovery endpoint of one cloud can return documents of tenants in other clouds, so the cloud instance must be verified
+		if (root.TryGetProperty("cloud_instance_name", out JsonElement cloudInstanceElement) &&
+			cloudInstanceElement.GetString() is string cloudInstanceName &&
+			!string.Equals(cloudInstanceName, GetCloudInstanceName(environment), StringComparison.OrdinalIgnoreCase))
+		{
+			throw new InvalidOperationException(string.Format(
+				Atlas.GetStr("TenantBelongsToDifferentCloudMessage"),
+				tenantIdentifier,
+				cloudInstanceName,
+				AuthenticationCompanion.GetCloudEnvironmentName(environment)));
+		}
+
+		// The issuer has the format of "https://{login host}/{tenant ID}/v2.0"
+		if (root.TryGetProperty("issuer", out JsonElement issuerElement) &&
+			Uri.TryCreate(issuerElement.GetString(), UriKind.Absolute, out Uri? issuerUri) &&
+			issuerUri.Segments.Length > 1 &&
+			Guid.TryParse(issuerUri.Segments[1].TrimEnd('/'), out Guid resolvedTenantID))
+		{
+			return resolvedTenantID.ToString("D");
+		}
+
+		throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), content));
+	}
+
+	/// <summary>
+	/// Retrieves the customer tenants that the partner tenant of the signed-in account has GDAP (granular delegated admin privileges) relationships with.
+	/// Requires the DelegatedAdminRelationship.Read.All delegated permission, the user is prompted for consent if it has not been granted yet.
+	/// https://learn.microsoft.com/graph/api/tenantrelationship-list-delegatedadmincustomers
+	/// </summary>
+	internal static async Task<List<SavedTenant>> GetGdapCustomerTenantsAsync(AuthenticatedAccounts account, CancellationToken cancellationToken)
+	{
+		AuthenticationResult authResult = await AcquireTokenForScopesAsync(account, GdapCustomersScopes, true, cancellationToken)
+			?? throw new InvalidOperationException(Atlas.GetStr("NoActiveAccountForTenantOperationMessage"));
+
+		List<SavedTenant> customers = [];
+
+		string? nextLink = $"{GetGraphBaseUrl(account.Environment)}/v1.0/tenantRelationships/delegatedAdminCustomers?$select=tenantId,displayName";
+
+		while (!string.IsNullOrEmpty(nextLink))
+		{
+			Uri requestUri = new(nextLink);
+
+			using HttpResponseMessage response = await HTTPHandler.ExecuteHttpWithRetryAsync(
+				"GetGdapCustomerTenantsAsync",
+				() =>
+				{
+					HttpRequestMessage request = new(HttpMethod.Get, requestUri);
+					request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authResult.AccessToken);
+					request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+					return request;
+				},
+				cancellationToken);
+
+			string content = await response.Content.ReadAsStringAsync(cancellationToken);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				throw new InvalidOperationException(string.Format(Atlas.GetStr("ErrorDetailsMessage"), content));
+			}
+
+			JsonElement root = JsonSerializer.Deserialize(content, MSGraphJsonContext.Default.JsonElement);
+
+			if (root.TryGetProperty("value", out JsonElement valueElement) && valueElement.ValueKind == JsonValueKind.Array)
+			{
+				foreach (JsonElement customer in valueElement.EnumerateArray())
+				{
+					if (customer.TryGetProperty("tenantId", out JsonElement tenantIdElement) &&
+						Guid.TryParse(tenantIdElement.GetString(), out Guid customerTenantID))
+					{
+						string tenantIDString = customerTenantID.ToString("D");
+
+						string? displayName = customer.TryGetProperty("displayName", out JsonElement displayNameElement)
+							? displayNameElement.GetString()
+							: null;
+
+						customers.Add(new SavedTenant(
+							tenantID: tenantIDString,
+							displayName: string.IsNullOrWhiteSpace(displayName) ? tenantIDString : displayName,
+							environment: account.Environment));
+					}
+				}
+			}
+
+			nextLink = root.TryGetProperty("@odata.nextLink", out JsonElement nextLinkElement) ? nextLinkElement.GetString() : null;
+		}
+
+		return customers;
+	}
+
+	/// <summary>
+	/// Lock for the saved tenants file.
+	/// </summary>
+	private static readonly SemaphoreSlim SavedTenantsFileLock = new(1, 1);
+
+	/// <summary>
+	/// Path to the file where the saved tenants are persisted.
+	/// It is intentionally not stored in the token cache directory so clearing the token cache does not remove the saved tenants.
+	/// </summary>
+	private static string SavedTenantsFilePath => Path.Join(
+		Directory.CreateDirectory(Path.Join(Microsoft.Windows.Storage.ApplicationData.GetDefault().LocalPath, "MicrosoftGraph")).FullName,
+		"SavedTenants.json");
+
+	/// <summary>
+	/// Loads the saved tenants from the disk into the saved tenants collection.
+	/// </summary>
+	internal static async Task RestoreSavedTenantsAsync()
+	{
+		await SavedTenantsFileLock.WaitAsync();
+		try
+		{
+			string filePath = SavedTenantsFilePath;
+
+			if (!File.Exists(filePath))
+			{
+				return;
+			}
+
+			string json = string.Empty;
+
+			// Cross-process file reading safety with retry loop
+			for (int i = 0; i < 5; i++)
+			{
+				try
+				{
+					json = await File.ReadAllTextAsync(filePath);
+					break;
+				}
+				catch (IOException) when (i < 4)
+				{
+					await Task.Delay(100);
+				}
+			}
+
+			List<SavedTenant>? tenants = JsonSerializer.Deserialize(json, MSGraphJsonContext.Default.ListSavedTenant);
+
+			if (tenants is null)
+			{
+				return;
+			}
+
+			foreach (SavedTenant tenant in tenants)
+			{
+				if (string.IsNullOrWhiteSpace(tenant.TenantID) ||
+					AuthenticationCompanion.SavedTenants.Any(x => x.IsSameTenant(tenant.TenantID, tenant.Environment)))
+				{
+					continue;
+				}
+
+				AuthenticationCompanion.SavedTenants.Add(tenant);
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"Failed to restore the saved tenants: {ex.Message}");
+		}
+		finally
+		{
+			_ = SavedTenantsFileLock.Release();
+		}
+	}
+
+	/// <summary>
+	/// Adds tenants to the saved tenants collection, skipping the ones that already exist, and persists them.
+	/// </summary>
+	/// <returns>The number of tenants that were added.</returns>
+	internal static async Task<int> AddSavedTenantsAsync(IEnumerable<SavedTenant> tenants)
+	{
+		int addedCount = 0;
+
+		foreach (SavedTenant tenant in tenants)
+		{
+			if (AuthenticationCompanion.SavedTenants.Any(x => x.IsSameTenant(tenant.TenantID, tenant.Environment)))
+			{
+				continue;
+			}
+
+			AuthenticationCompanion.SavedTenants.Add(tenant);
+			addedCount++;
+		}
+
+		if (addedCount > 0)
+		{
+			await SaveSavedTenantsAsync();
+		}
+
+		return addedCount;
+	}
+
+	/// <summary>
+	/// Removes a tenant from the saved tenants collection and persists the change.
+	/// Existing sessions that target the tenant are not affected.
+	/// </summary>
+	internal static async Task RemoveSavedTenantAsync(SavedTenant tenant)
+	{
+		if (AuthenticationCompanion.SavedTenants.Remove(tenant))
+		{
+			await SaveSavedTenantsAsync();
+		}
+	}
+
+	/// <summary>
+	/// Persists the saved tenants collection to the disk.
+	/// </summary>
+	private static async Task SaveSavedTenantsAsync()
+	{
+		await SavedTenantsFileLock.WaitAsync();
+		try
+		{
+			List<SavedTenant> tenants = [.. AuthenticationCompanion.SavedTenants];
+
+			string json = JsonSerializer.Serialize(tenants, MSGraphJsonContext.Default.ListSavedTenant);
+
+			string filePath = SavedTenantsFilePath;
+
+			// Cross-process file writing safety with retry loop
+			for (int i = 0; i < 5; i++)
+			{
+				try
+				{
+					using FileStream stream = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+					using StreamWriter writer = new(stream);
+					await writer.WriteAsync(json);
+					break;
+				}
+				catch (IOException) when (i < 4)
+				{
+					await Task.Delay(100);
+				}
+			}
+		}
+		catch (Exception ex)
+		{
+			Logger.Write($"Failed to save the tenants: {ex.Message}");
+		}
+		finally
+		{
+			_ = SavedTenantsFileLock.Release();
+		}
+	}
+
+	/// <summary>
 	/// Persist current signed in accounts metadata so it can be restored on app restart.
 	/// </summary>
 	internal static async Task SaveAccountsMetadataAsync()
@@ -2246,7 +2655,9 @@ DeviceEvents
 						authContext: a.AuthContext,
 						methodUsed: a.MethodUsed,
 						environment: a.Environment,
-						useCache: a.UseCache
+						useCache: a.UseCache,
+						targetTenantID: a.TargetTenantID,
+						targetTenantName: a.TargetTenantName
 					));
 				}
 			}
@@ -2443,7 +2854,8 @@ DeviceEvents
 
 					try
 					{
-						authResult = await app.AcquireTokenSilent(Scopes[meta.AuthContext], account).ExecuteAsync();
+						// Sessions that target a specific tenant must be restored for that same tenant
+						authResult = await BuildSilentRequest(app, Scopes[meta.AuthContext], account, meta.TargetTenantID).ExecuteAsync();
 					}
 					catch (MsalUiRequiredException)
 					{
@@ -2471,11 +2883,15 @@ DeviceEvents
 							account: account,
 							methodUsed: meta.MethodUsed,
 							environment: meta.Environment,
-							useCache: meta.UseCache
+							useCache: meta.UseCache,
+							targetTenantID: meta.TargetTenantID,
+							targetTenantName: meta.TargetTenantName
 						);
 
+						// The same account can have sessions in multiple tenants, so the tenant is part of the identity of a session
 						bool exists = AuthenticationCompanion.AuthenticatedAccounts.Any(x =>
 							string.Equals(x.AccountIdentifier, meta.AccountIdentifier, StringComparison.OrdinalIgnoreCase) &&
+							string.Equals(x.TenantID, meta.TenantID, StringComparison.OrdinalIgnoreCase) &&
 							x.AuthContext == meta.AuthContext &&
 							x.Environment == meta.Environment);
 

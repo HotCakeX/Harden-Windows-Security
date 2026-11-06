@@ -8075,4 +8075,112 @@ Huella Digital: {3}</value>
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>Esta configuración controla la protección de red en tiempo de ejecución de agentes de IA de Defender, que analiza el tráfico de red originado por agentes de IA. Cuando se habilita, Defender inspecciona el tráfico de red de los procesos de los agentes y bloquea cualquier tráfico que coincida con una detección de señales de malware o abuso antes de que el agente lo ejecute.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>Inquilinos</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>Inquilino de destino</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>Inquilino principal (predeterminado)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opcionalmente, seleccione un inquilino guardado en el que iniciar sesión, como un inquilino de cliente donde tenga acceso de invitado B2B o GDAP. Déjelo vacío para iniciar sesión en el inquilino principal de su cuenta.</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opcionalmente, seleccione un inquilino guardado en el que iniciar sesión, como un inquilino de cliente donde tenga acceso de invitado B2B o GDAP. Déjelo vacío para iniciar sesión en el inquilino principal de su cuenta.</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usar el inquilino principal</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Usar el inquilino principal</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Guarde los inquilinos que administra mediante acceso de invitado B2B o GDAP. Después puede iniciar sesión en ellos desde la pestaña Iniciar sesión o cambiar la cuenta activa a ellos aquí, iniciando sesión con su propia cuenta.</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>Id. o dominio del inquilino</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>Nombre descriptivo (opcional)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>Agregar inquilino</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verificar el inquilino en el entorno de nube seleccionado y guardarlo</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>Importar clientes GDAP</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Guardar los inquilinos de clientes con los que el inquilino asociado de la cuenta activa tiene relaciones GDAP. Requiere el permiso DelegatedAdminRelationship.Read.All.</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Inquilinos guardados</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>Todavía no se ha guardado ningún inquilino.</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cambiar la cuenta activa a este inquilino</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Cambiar la cuenta activa a este inquilino</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Quitar este inquilino</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Quitar este inquilino</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>Inquilino: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>Seleccione primero una cuenta activa. Las operaciones de inquilino usan la cuenta activa.</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>Cambiando {0} al inquilino {1}...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} ha iniciado sesión en el inquilino {1} y se ha establecido como la cuenta activa.</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>El inquilino {0} pertenece al entorno de nube {1}, pero está seleccionado el entorno de nube {2}.</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>El inquilino {0} ({1}) se guardó correctamente.</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>El inquilino {0} ya está guardado.</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' no es un id. de inquilino ni un nombre de dominio válido. Escriba un id. de inquilino (GUID) o un nombre de dominio como contoso.onmicrosoft.com.</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>No se encontró el inquilino {0} en el entorno de nube {1}. Detalles: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>El inquilino {0} pertenece a una nube diferente ({1}) del entorno de nube {2} seleccionado.</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>Recuperando los inquilinos de clientes GDAP del inquilino asociado de la cuenta activa...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>Se encontraron {0} inquilinos de clientes GDAP. Se guardaron {1} inquilinos nuevos.</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>El inquilino {0} se quitó de los inquilinos guardados.</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>Verificando el inquilino...</value>
+  </data>
 </root>

@@ -349,8 +349,8 @@
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="AuthenticatedAccountCardTemplate" x:DataType="MSGraph:AuthenticatedAccounts">
-            <Border Width="500"
-                    HorizontalAlignment="Center"
+            <!-- Stretches to the width of the tab content area, which follows the width of the tab strip -->
+            <Border HorizontalAlignment="Stretch"
                     CornerRadius="10"
                     Padding="6"
                     BorderThickness="1"
@@ -398,6 +398,12 @@
                                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"/>
                                 </Border>
                             </StackPanel>
+                            <!-- Displayed only for sessions that target a specific tenant (B2B guest / GDAP) -->
+                            <TextBlock Text="{x:Bind TargetTenantLabel, Mode=OneWay}"
+                                       Visibility="{x:Bind TargetTenantLabelVisibility, Mode=OneWay}"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
                         </StackPanel>
                     </Grid>
                     <ContentPresenter Grid.Row="1"
@@ -410,8 +416,8 @@
         </DataTemplate>
 
         <DataTemplate x:Key="AuthenticatedAccountCardWithActionsTemplate" x:DataType="MSGraph:AuthenticatedAccounts">
-            <Border Width="500"
-                    HorizontalAlignment="Center"
+            <!-- Stretches to the width of the tab content area, which follows the width of the tab strip -->
+            <Border HorizontalAlignment="Stretch"
                     CornerRadius="10"
                     Padding="6"
                     BorderThickness="1"
@@ -460,6 +466,12 @@
                                                Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"/>
                                 </Border>
                             </StackPanel>
+                            <!-- Displayed only for sessions that target a specific tenant (B2B guest / GDAP) -->
+                            <TextBlock Text="{x:Bind TargetTenantLabel, Mode=OneWay}"
+                                       Visibility="{x:Bind TargetTenantLabelVisibility, Mode=OneWay}"
+                                       Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                       TextTrimming="CharacterEllipsis"/>
                         </StackPanel>
                         <Button Grid.Column="2"
                                 Width="32"
@@ -572,13 +584,20 @@
                     </Style>
                 </Flyout.FlyoutPresenterStyle>
 
-                <StackPanel Width="520"
+                <!--
+                No fixed Width here so the flyout can grow to fit the tab strip.
+                The Segmented control uses an EqualPanel, which gives every tab the width of the widest one,
+                so a fixed width would truncate the tab names (especially with 4 tabs and in longer languages).
+                The tabs' content below follows the width of the tab strip via the SwitchPresenter.
+                -->
+                <StackPanel MinWidth="520"
                             VerticalAlignment="Top"
                             Orientation="Vertical"
                             Spacing="8">
                     <Grid>
                         <CCToolKit:Segmented x:Name="segmentedControl1"
                                              SelectedIndex="0"
+                                             SizeChanged="{x:Bind SegmentedControl_SizeChanged}"
                                              HorizontalAlignment="Stretch">
                             <CCToolKit:SegmentedItem x:Uid="ActiveAccountSegmentedItem"
                                                      Tag="Active">
@@ -607,10 +626,23 @@
                                     </IconSourceElement>
                                 </CCToolKit:SegmentedItem.Icon>
                             </CCToolKit:SegmentedItem>
+
+                            <CCToolKit:SegmentedItem x:Uid="TenantsSegmentedItem"
+                                                     Tag="Tenants">
+                                <CCToolKit:SegmentedItem.Icon>
+                                    <FontIcon Glyph="&#xE774;"/>
+                                </CCToolKit:SegmentedItem.Icon>
+                            </CCToolKit:SegmentedItem>
                         </CCToolKit:Segmented>
                     </Grid>
 
-                    <CCToolKit:SwitchPresenter TargetValue="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl1.SelectedItem).Tag, Mode=OneWay}"
+                    <!--
+                    The initial Width matches the flyout's MinWidth. SegmentedControl_SizeChanged then keeps it equal to the width of the tab strip
+                    so the content fills the flyout, without the content's own desired width (e.g. long wrapping texts) being able to widen the flyout.
+                    -->
+                    <CCToolKit:SwitchPresenter x:Name="TabContentSwitchPresenter"
+                                               TargetValue="{x:Bind ((CCToolKit:SegmentedItem)segmentedControl1.SelectedItem).Tag, Mode=OneWay}"
+                                               Width="520"
                                                HorizontalAlignment="Center"
                                                VerticalAlignment="Center">
                         <CCToolKit:Case TargetValue="Active">
@@ -631,9 +663,8 @@
                                                     Visibility="{x:Bind Host.AuthCompanionCLS.ActiveAccountDetailsVisibility, Mode=OneWay}"
                                                     Content="{x:Bind Host.AuthCompanionCLS.CurrentActiveAccount, Mode=OneWay}"
                                                     ContentTemplate="{StaticResource AuthenticatedAccountCardTemplate}"/>
-                                    <Border Width="500"
-                                            MinHeight="150"
-                                            HorizontalAlignment="Center"
+                                    <Border MinHeight="150"
+                                            HorizontalAlignment="Stretch"
                                             CornerRadius="10"
                                             Padding="16"
                                             Margin="0,0,0,8"
@@ -762,6 +793,44 @@
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>
 
+                                <!-- Optional target tenant for B2B guest / GDAP sign-ins. No selection means the home tenant of the account. -->
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="6"
+                                            Margin="0,5,0,0"
+                                            HorizontalAlignment="Center">
+                                    <ComboBox ItemsSource="{x:Bind SavedTenants, Mode=OneWay}"
+                                              MinWidth="260"
+                                              MaxWidth="400"
+                                              x:Uid="TargetTenantComboBox"
+                                              SelectedItem="{x:Bind Host.AuthCompanionCLS.TargetTenantComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <ComboBox.HeaderTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <TextBlock Text="{x:Bind}"
+                                                           HorizontalAlignment="Center"
+                                                           TextAlignment="Center" />
+                                            </DataTemplate>
+                                        </ComboBox.HeaderTemplate>
+
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="MSGraph:SavedTenant">
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBlock Text="{x:Bind DisplayName}"
+                                                               TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{x:Bind TenantID}"
+                                                               Style="{StaticResource CaptionTextBlockStyle}"
+                                                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+
+                                    <Button x:Uid="ClearTargetTenantButton"
+                                            VerticalAlignment="Bottom"
+                                            Click="{x:Bind Host.AuthCompanionCLS.ClearTargetTenant}">
+                                        <FontIcon Glyph="&#xE894;" FontSize="14"/>
+                                    </Button>
+                                </StackPanel>
+
                                 <Border CornerRadius="10"
                                         Margin="0,5,0,0"
                                         Padding="6,4"
@@ -810,7 +879,7 @@
                                 <StackPanel Margin="0,10,0,10"
                                             Grid.Row="0"
                                             Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}"
-                                            Width="450"
+                                            HorizontalAlignment="Stretch"
                                             Height="255"
                                             Padding="16"
                                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
@@ -818,16 +887,16 @@
                                             BorderThickness="1"
                                             CornerRadius="4"
                                             Spacing="12">
-                                    <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
+                                    <Grid Height="45" CornerRadius="7" HorizontalAlignment="Stretch">
                                         <CCToolKit:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                     </Grid>
-                                    <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
+                                    <Grid Height="45" CornerRadius="7" HorizontalAlignment="Stretch">
                                         <CCToolKit:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                     </Grid>
-                                    <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
+                                    <Grid Height="45" CornerRadius="7" HorizontalAlignment="Stretch">
                                         <CCToolKit:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                     </Grid>
-                                    <Grid Width="400" Height="45" CornerRadius="7" HorizontalAlignment="Center">
+                                    <Grid Height="45" CornerRadius="7" HorizontalAlignment="Stretch">
                                         <CCToolKit:Shimmer Visibility="{x:Bind Host.AuthCompanionCLS.AuthenticatedAccountsShimmerVisibility, Mode=OneWay}" />
                                     </Grid>
                                 </StackPanel>
@@ -856,6 +925,130 @@
                                     </ListView.ItemContainerStyle>
                                 </ListView>
                             </Grid>
+                        </CCToolKit:Case>
+                        <CCToolKit:Case TargetValue="Tenants">
+                            <StackPanel Style="{StaticResource PanelStyle}"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Center"
+                                        Orientation="Vertical"
+                                        Spacing="10"
+                                        Padding="10"
+                                        XYFocusKeyboardNavigation="Enabled">
+
+                                <TextBlock x:Uid="TenantsDescriptionTextBlock"
+                                           TextWrapping="WrapWholeWords"/>
+
+                                <TextBox x:Uid="TenantIdOrDomainTextBox"
+                                         Text="{x:Bind Host.AuthCompanionCLS.TenantInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBox x:Uid="TenantFriendlyNameTextBox"
+                                         Text="{x:Bind Host.AuthCompanionCLS.TenantFriendlyNameText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <ComboBox ItemsSource="{x:Bind MSGraph:AuthenticationCompanion.AzureCloudEnvironmentComboBoxSource}"
+                                          HorizontalAlignment="Stretch"
+                                          x:Uid="AzureCloudEnvironmentComboBox"
+                                          SelectedItem="{x:Bind Host.AuthCompanionCLS.AzureCloudEnvironmentComboBoxSelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="MSGraph:AzureCloudEnvironmentComboBoxItem">
+                                            <TextBlock Text="{x:Bind Name}" VerticalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="8"
+                                            HorizontalAlignment="Center">
+                                    <Button x:Uid="AddTenantButton"
+                                            IsEnabled="{x:Bind Host.AuthCompanionCLS.SignInButtonState, Mode=OneWay}"
+                                            Click="{x:Bind Host.AuthCompanionCLS.AddTenantButton_Click}"/>
+
+                                    <Button x:Uid="ImportGdapCustomersButton"
+                                            IsEnabled="{x:Bind Host.AuthCompanionCLS.SignInButtonState, Mode=OneWay}"
+                                            Click="{x:Bind Host.AuthCompanionCLS.ImportGdapCustomersButton_Click}"/>
+
+                                    <Button x:Uid="CancelSigningInButton"
+                                            IsEnabled="{x:Bind Host.AuthCompanionCLS.SignOutButtonState, Mode=OneWay}"
+                                            Click="{x:Bind Host.AuthCompanionCLS.MSGraphCancelSignInButton_Click}">
+                                        <Button.Content>
+                                            <TextBlock x:Uid="CancelSigningInTextBlock"/>
+                                        </Button.Content>
+                                    </Button>
+                                </StackPanel>
+
+                                <TextBlock x:Uid="SavedTenantsHeaderTextBlock"
+                                           Style="{StaticResource BodyStrongTextBlockStyle}"/>
+
+                                <TextBlock x:Uid="NoSavedTenantsTextBlock"
+                                           TextWrapping="WrapWholeWords"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
+                                           Visibility="{x:Bind Host.AuthCompanionCLS.NoSavedTenantsVisibility, Mode=OneWay}"/>
+
+                                <ListView ItemsSource="{x:Bind SavedTenants, Mode=OneWay}"
+                                          Visibility="{x:Bind Host.AuthCompanionCLS.SavedTenantsListViewVisibility, Mode=OneWay}"
+                                          MaxHeight="260"
+                                          Padding="0"
+                                          IsItemClickEnabled="False"
+                                          SelectionMode="None">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                            <Setter Property="Padding" Value="0" />
+                                            <Setter Property="Margin" Value="0,0,0,6" />
+                                            <Setter Property="MinHeight" Value="0" />
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="MSGraph:SavedTenant">
+                                            <Border CornerRadius="8"
+                                                    Padding="10,6"
+                                                    BorderThickness="1"
+                                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                                                <Grid ColumnSpacing="8">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel Grid.Column="0"
+                                                                VerticalAlignment="Center">
+                                                        <TextBlock Text="{x:Bind DisplayName}"
+                                                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                                   TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Text="{x:Bind TenantID}"
+                                                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                                   IsTextSelectionEnabled="True"/>
+                                                        <TextBlock Text="{x:Bind EnvironmentName}"
+                                                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                                    </StackPanel>
+                                                    <Button Grid.Column="1"
+                                                            Width="32"
+                                                            Height="32"
+                                                            Padding="0"
+                                                            VerticalAlignment="Center"
+                                                            x:Uid="SwitchToTenantButton"
+                                                            Click="SwitchToTenantButton_Click">
+                                                        <FontIcon Glyph="&#xE8AB;" FontSize="16"/>
+                                                    </Button>
+                                                    <Button Grid.Column="2"
+                                                            Width="32"
+                                                            Height="32"
+                                                            Padding="0"
+                                                            VerticalAlignment="Center"
+                                                            x:Uid="RemoveSavedTenantButton"
+                                                            Click="RemoveSavedTenantButton_Click">
+                                                        <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                                    </Button>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+
+                            </StackPanel>
                         </CCToolKit:Case>
                     </CCToolKit:SwitchPresenter>
 

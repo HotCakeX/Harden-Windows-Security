@@ -8075,4 +8075,112 @@ Thumbprint: {3}</value>
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>This setting controls Defender's runtime AI Agent network protection that scans network traffic originated from AI Agents. When enabled, Defender inspects the network traffic of agent processes and blocks any traffic that matches a detection for malware/abuse signals before the agent executes it.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>Tenants</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>Target Tenant</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>Home tenant (default)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Optionally select a saved tenant to sign into, such as a customer tenant where you have B2B guest or GDAP access. Leave it empty to sign into the home tenant of your account.</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Optionally select a saved tenant to sign into, such as a customer tenant where you have B2B guest or GDAP access. Leave it empty to sign into the home tenant of your account.</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Use the home tenant</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Use the home tenant</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Save the tenants you manage through B2B guest access or GDAP. You can then sign into them from the Sign In tab or switch the active account to them here, while signing in with your own account.</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>Tenant ID or domain</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>Friendly name (optional)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>Add Tenant</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Verify the tenant in the selected cloud environment and save it</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>Import GDAP Customers</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Save the customer tenants that the partner tenant of the active account has GDAP relationships with. Requires the DelegatedAdminRelationship.Read.All permission.</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Saved Tenants</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>No tenants have been saved yet.</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Switch the active account to this tenant</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Switch the active account to this tenant</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Remove this tenant</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Remove this tenant</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>Tenant: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>Select an active account first. Tenant operations use the active account.</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>Switching {0} to the tenant {1}...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} is now signed into the tenant {1} and set as the active account.</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>The tenant {0} belongs to the {1} cloud environment but the {2} cloud environment is selected.</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>The tenant {0} ({1}) was saved successfully.</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>The tenant {0} is already saved.</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' is not a valid tenant ID or domain name. Enter a tenant ID (GUID) or a domain name such as contoso.onmicrosoft.com.</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>The tenant {0} could not be found in the {1} cloud environment. Details: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>The tenant {0} belongs to a different cloud ({1}) than the selected {2} cloud environment.</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>Retrieving the GDAP customer tenants of the partner tenant of the active account...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>Found {0} GDAP customer tenants. {1} new tenants were saved.</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>The tenant {0} was removed from the saved tenants.</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>Verifying the tenant...</value>
+  </data>
 </root>

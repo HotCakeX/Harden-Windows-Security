@@ -7791,4 +7791,112 @@
   <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
     <value>هیچ App Manifest انتخاب نشده است.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>مستأجرها</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>مستأجر هدف</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>مستأجر اصلی (پیش‌فرض)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>به‌صورت اختیاری یک مستأجر ذخیره‌شده را برای ورود انتخاب کنید، مانند مستأجر مشتری که در آن دسترسی مهمان B2B یا GDAP دارید. برای ورود به مستأجر اصلی حساب خود آن را خالی بگذارید.</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>به‌صورت اختیاری یک مستأجر ذخیره‌شده را برای ورود انتخاب کنید، مانند مستأجر مشتری که در آن دسترسی مهمان B2B یا GDAP دارید. برای ورود به مستأجر اصلی حساب خود آن را خالی بگذارید.</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استفاده از مستأجر اصلی</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>استفاده از مستأجر اصلی</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>مستأجرهایی را که از طریق دسترسی مهمان B2B یا GDAP مدیریت می‌کنید ذخیره کنید. سپس می‌توانید از زبانه ورود به آن‌ها وارد شوید یا حساب فعال را در اینجا به آن‌ها تغییر دهید، در حالی که با حساب خود وارد می‌شوید.</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>شناسه یا دامنه مستأجر</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>نام دوستانه (اختیاری)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>افزودن مستأجر</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تأیید مستأجر در محیط ابری انتخاب‌شده و ذخیره آن</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>وارد کردن مشتریان GDAP</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ذخیره مستأجرهای مشتری که مستأجر شریک حساب فعال با آن‌ها روابط GDAP دارد. به مجوز DelegatedAdminRelationship.Read.All نیاز دارد.</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>مستأجرهای ذخیره‌شده</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>هنوز هیچ مستأجری ذخیره نشده است.</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تغییر حساب فعال به این مستأجر</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>تغییر حساب فعال به این مستأجر</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حذف این مستأجر</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>حذف این مستأجر</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>مستأجر: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>ابتدا یک حساب فعال انتخاب کنید. عملیات مستأجر از حساب فعال استفاده می‌کنند.</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>در حال تغییر {0} به مستأجر {1}...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} اکنون وارد مستأجر {1} شده و به‌عنوان حساب فعال تنظیم شده است.</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>مستأجر {0} متعلق به محیط ابری {1} است اما محیط ابری {2} انتخاب شده است.</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>مستأجر {0} ({1}) با موفقیت ذخیره شد.</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>مستأجر {0} از قبل ذخیره شده است.</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' شناسه مستأجر یا نام دامنه معتبری نیست. یک شناسه مستأجر (GUID) یا نام دامنه‌ای مانند contoso.onmicrosoft.com وارد کنید.</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>مستأجر {0} در محیط ابری {1} یافت نشد. جزئیات: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>مستأجر {0} متعلق به ابر دیگری ({1}) غیر از محیط ابری انتخاب‌شده {2} است.</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>در حال بازیابی مستأجرهای مشتری GDAP مستأجر شریک حساب فعال...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>{0} مستأجر مشتری GDAP یافت شد. {1} مستأجر جدید ذخیره شد.</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>مستأجر {0} از مستأجرهای ذخیره‌شده حذف شد.</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>در حال تأیید مستأجر...</value>
+  </data>
 </root>

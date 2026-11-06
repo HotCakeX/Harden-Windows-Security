@@ -7791,4 +7791,112 @@
   <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
     <value>アプリ マニフェストが選択されていません。</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>テナント</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>対象テナント</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>ホーム テナント (既定)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>必要に応じて、サインインする保存済みテナント (B2B ゲストまたは GDAP アクセス権を持つ顧客テナントなど) を選択します。アカウントのホーム テナントにサインインする場合は空のままにします。</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>必要に応じて、サインインする保存済みテナント (B2B ゲストまたは GDAP アクセス権を持つ顧客テナントなど) を選択します。アカウントのホーム テナントにサインインする場合は空のままにします。</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ホーム テナントを使用する</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>ホーム テナントを使用する</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>B2B ゲスト アクセスまたは GDAP で管理するテナントを保存します。その後、自分のアカウントでサインインしたまま、[サインイン] タブからそれらにサインインするか、ここでアクティブ アカウントをそれらに切り替えることができます。</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>テナント ID またはドメイン</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>表示名 (省略可能)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>テナントを追加</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>選択したクラウド環境でテナントを確認して保存します</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>GDAP 顧客をインポート</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>アクティブ アカウントのパートナー テナントが GDAP 関係を持つ顧客テナントを保存します。DelegatedAdminRelationship.Read.All アクセス許可が必要です。</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>保存済みテナント</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>保存されたテナントはまだありません。</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>アクティブ アカウントをこのテナントに切り替える</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>アクティブ アカウントをこのテナントに切り替える</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>このテナントを削除</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>このテナントを削除</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>テナント: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>最初にアクティブ アカウントを選択してください。テナント操作はアクティブ アカウントを使用します。</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>{0} をテナント {1} に切り替えています...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} はテナント {1} にサインインし、アクティブ アカウントとして設定されました。</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>テナント {0} はクラウド環境 {1} に属していますが、クラウド環境 {2} が選択されています。</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>テナント {0} ({1}) を正常に保存しました。</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>テナント {0} は既に保存されています。</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' は有効なテナント ID またはドメイン名ではありません。テナント ID (GUID) または contoso.onmicrosoft.com などのドメイン名を入力してください。</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>クラウド環境 {1} でテナント {0} が見つかりませんでした。詳細: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>テナント {0} は、選択したクラウド環境 {2} とは異なるクラウド ({1}) に属しています。</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>アクティブ アカウントのパートナー テナントの GDAP 顧客テナントを取得しています...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>{0} 件の GDAP 顧客テナントが見つかりました。{1} 件の新しいテナントを保存しました。</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>テナント {0} を保存済みテナントから削除しました。</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>テナントを確認しています...</value>
+  </data>
 </root>

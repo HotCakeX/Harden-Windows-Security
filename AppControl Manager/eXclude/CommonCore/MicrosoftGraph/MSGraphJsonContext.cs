@@ -45,6 +45,8 @@ namespace CommonCore.MicrosoftGraph;
 [JsonSerializable(typeof(PolicyAssignmentTarget))]
 [JsonSerializable(typeof(SavedAccountMetadata))]
 [JsonSerializable(typeof(List<SavedAccountMetadata>))]
+[JsonSerializable(typeof(SavedTenant))]
+[JsonSerializable(typeof(List<SavedTenant>))]
 internal sealed partial class MSGraphJsonContext : JsonSerializerContext
 {
 }

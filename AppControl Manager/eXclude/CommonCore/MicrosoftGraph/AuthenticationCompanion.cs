@@ -39,6 +39,12 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	internal static readonly ThreadSafeObservableCollection<AuthenticatedAccounts> AuthenticatedAccounts = [];
 
 	/// <summary>
+	/// Collection of the tenants saved by the user that can be targeted for sign-in or tenant switching.
+	/// Shared among every page so all of them display the same saved tenants.
+	/// </summary>
+	internal static readonly ThreadSafeObservableCollection<SavedTenant> SavedTenants = [];
+
+	/// <summary>
 	/// The constructor needs methods to run when the Active Account is updated
 	/// </summary>
 	internal AuthenticationCompanion(Action<bool> updateButtons, InfoBarSettings infoBar, AuthenticationContext authContext)
@@ -51,9 +57,11 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		AuthenticationContextComboBoxSelectedItem = _AuthContext;
 
 		AuthenticatedAccounts.CollectionChanged += AuthenticatedAccounts_CollectionChanged;
+		SavedTenants.CollectionChanged += SavedTenants_CollectionChanged;
 
 		// Detect and set the Shimmer/ListView visibility when the class is instantiated in each ViewModel/Page
 		ShimmerListViewVisibilityConfig();
+		SavedTenantsVisibilityConfig();
 		UpdateAuthenticatedAccountCardStates();
 	}
 
@@ -88,6 +96,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		ManageButtonsStates(false);
 		try
 		{
+			await Main.RestoreSavedTenantsAsync();
 			await Main.RestoreCachedAccountsAsync();
 			UpdateAuthenticatedAccountCardStates();
 			AutoSelectAccountIfApplicable();
@@ -391,9 +400,32 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 	internal AzureCloudEnvironmentComboBoxItem AzureCloudEnvironmentComboBoxSelectedItem { get; set => SP(ref field, value); } = AzureCloudEnvironmentComboBoxSource[0];
 
 	/// <summary>
-	/// Signs into the Microsoft tenant
+	/// Signs into the Microsoft tenant.
+	/// If a target tenant is selected, the sign-in is performed against that tenant instead of the home tenant of the account.
 	/// </summary>
-	internal async void SignIn()
+	internal async void SignIn() => await RunCancellableOperationAsync(
+		Atlas.GetStr("SigningIntoMSGraphMessage"),
+		Atlas.GetStr("ErrorSigningIntoMSGraphMessage"),
+		async (CancellationToken token) =>
+		{
+			CurrentActiveAccount = await Main.SignIn(
+				AuthenticationContextComboBoxSelectedItem,
+				SignInMethodsComboBoxSelectedItem.AuthContext,
+				AzureCloudEnvironmentComboBoxSelectedItem.Environment,
+				TargetTenantComboBoxSelectedItem,
+				token);
+
+			_InfoBar.WriteSuccess(Atlas.GetStr("SuccessfullySignedIntoMSGraphMessage"));
+		});
+
+	/// <summary>
+	/// Runs an operation that can be cancelled with the Cancel button of the sign in section.
+	/// Handles the cancellation token source, the UI elements states and the errors in a uniform way.
+	/// </summary>
+	/// <param name="startMessage">The message to display when the operation starts.</param>
+	/// <param name="errorMessage">The message to display when the operation fails.</param>
+	/// <param name="operation">The operation to run, receives the cancellation token.</param>
+	private async Task RunCancellableOperationAsync(string startMessage, string? errorMessage, Func<CancellationToken, Task> operation)
 	{
 		CancelAndDisposeCts(); // Make sure any previous token is cancelled and disposed of before storing a new one.
 
@@ -404,20 +436,9 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		{
 			SignInButtonState = false;
 
-			_InfoBar.WriteInfo(Atlas.GetStr("SigningIntoMSGraphMessage"));
+			_InfoBar.WriteInfo(startMessage);
 
-			(bool, AuthenticatedAccounts?) signInResult = await Main.SignIn(
-				AuthenticationContextComboBoxSelectedItem,
-				SignInMethodsComboBoxSelectedItem.AuthContext,
-				AzureCloudEnvironmentComboBoxSelectedItem.Environment,
-				cancellationTokenSource.Token);
-
-			if (signInResult.Item1)
-			{
-				CurrentActiveAccount = signInResult.Item2;
-
-				_InfoBar.WriteSuccess(Atlas.GetStr("SuccessfullySignedIntoMSGraphMessage"));
-			}
+			await operation(cancellationTokenSource.Token);
 		}
 		catch (OperationCanceledException)
 		{
@@ -430,7 +451,7 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		}
 		catch (Exception ex)
 		{
-			_InfoBar.WriteError(ex, Atlas.GetStr("ErrorSigningIntoMSGraphMessage"));
+			_InfoBar.WriteError(ex, errorMessage);
 		}
 		finally
 		{
@@ -441,10 +462,212 @@ internal sealed partial class AuthenticationCompanion : ViewModelBase, IDisposab
 		}
 	}
 
+	/// <summary>
+	/// Returns the display friendly name of a cloud environment.
+	/// </summary>
+	internal static string GetCloudEnvironmentName(AzureCloudInstance environment)
+	{
+		foreach (AzureCloudEnvironmentComboBoxItem item in AzureCloudEnvironmentComboBoxSource)
+		{
+			if (item.Environment == environment)
+			{
+				return item.Name;
+			}
+		}
+
+		return environment.ToString();
+	}
+
+	/// <summary>
+	/// The tenant to target during sign in. Null means the home tenant of the account, which is the default behavior.
+	/// Bound to the Target Tenant ComboBox's SelectedItem property.
+	/// </summary>
+	internal SavedTenant? TargetTenantComboBoxSelectedItem { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Resets the target tenant so the sign in uses the home tenant of the account.
+	/// </summary>
+	internal void ClearTargetTenant() => TargetTenantComboBoxSelectedItem = null;
+
+	/// <summary>
+	/// Tenant ID or verified domain name entered by the user to add a new tenant.
+	/// </summary>
+	internal string? TenantInputText { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Optional friendly name entered by the user for the new tenant.
+	/// </summary>
+	internal string? TenantFriendlyNameText { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Visibility of the ListView that displays the saved tenants.
+	/// </summary>
+	internal Visibility SavedTenantsListViewVisibility { get; set => SP(ref field, value); } = Visibility.Collapsed;
+
+	/// <summary>
+	/// Visibility of the placeholder displayed when there are no saved tenants.
+	/// </summary>
+	internal Visibility NoSavedTenantsVisibility { get; set => SP(ref field, value); } = Visibility.Visible;
+
+	/// <summary>
+	/// Keeps the saved tenants related UI in sync with the saved tenants collection.
+	/// </summary>
+	private void SavedTenants_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+	{
+		SavedTenantsVisibilityConfig();
+
+		// If the selected target tenant was removed, revert to the home tenant
+		if (TargetTenantComboBoxSelectedItem is not null && !SavedTenants.Contains(TargetTenantComboBoxSelectedItem))
+		{
+			TargetTenantComboBoxSelectedItem = null;
+		}
+	}
+
+	/// <summary>
+	/// Determines the visibility of the saved tenants ListView and its placeholder.
+	/// </summary>
+	private void SavedTenantsVisibilityConfig()
+	{
+		bool hasTenants = SavedTenants.Count > 0;
+		SavedTenantsListViewVisibility = hasTenants ? Visibility.Visible : Visibility.Collapsed;
+		NoSavedTenantsVisibility = hasTenants ? Visibility.Collapsed : Visibility.Visible;
+	}
+
+	/// <summary>
+	/// Resolves the tenant entered by the user and adds it to the saved tenants.
+	/// </summary>
+	internal async void AddTenantButton_Click()
+	{
+		string? input = TenantInputText?.Trim();
+
+		if (string.IsNullOrEmpty(input))
+		{
+			_InfoBar.WriteWarning(string.Format(Atlas.GetStr("InvalidTenantIdentifierMessage"), string.Empty));
+			return;
+		}
+
+		AzureCloudInstance environment = AzureCloudEnvironmentComboBoxSelectedItem.Environment;
+
+		await RunCancellableOperationAsync(
+			Atlas.GetStr("ResolvingTenantMessage"),
+			null,
+			async (CancellationToken token) =>
+			{
+				string tenantID = await Main.ResolveTenantIDAsync(input, environment, token);
+
+				// Use the friendly name if provided, otherwise the domain name, or the tenant ID if a GUID was entered
+				string? friendlyName = TenantFriendlyNameText?.Trim();
+				string displayName = !string.IsNullOrEmpty(friendlyName)
+					? friendlyName
+					: Guid.TryParse(input, out _) ? tenantID : input;
+
+				SavedTenant tenant = new(tenantID, displayName, environment);
+
+				int added = await Main.AddSavedTenantsAsync([tenant]);
+
+				if (added > 0)
+				{
+					TenantInputText = null;
+					TenantFriendlyNameText = null;
+
+					_InfoBar.WriteSuccess(string.Format(Atlas.GetStr("TenantAddedSuccessfullyMessage"), displayName, tenantID));
+				}
+				else
+				{
+					_InfoBar.WriteWarning(string.Format(Atlas.GetStr("TenantAlreadySavedMessage"), tenantID));
+				}
+			});
+	}
+
+	/// <summary>
+	/// Imports the GDAP customer tenants of the partner tenant of the active account into the saved tenants.
+	/// </summary>
+	internal async void ImportGdapCustomersButton_Click()
+	{
+		AuthenticatedAccounts? account = CurrentActiveAccount;
+
+		if (account is null)
+		{
+			_InfoBar.WriteWarning(Atlas.GetStr("NoActiveAccountForTenantOperationMessage"));
+			return;
+		}
+
+		await RunCancellableOperationAsync(
+			Atlas.GetStr("ImportingGdapCustomersMessage"),
+			null,
+			async (CancellationToken token) =>
+			{
+				List<SavedTenant> customers = await Main.GetGdapCustomerTenantsAsync(account, token);
+
+				int added = await Main.AddSavedTenantsAsync(customers);
+
+				_InfoBar.WriteSuccess(string.Format(Atlas.GetStr("ImportedGdapCustomersMessage"), customers.Count, added));
+			});
+	}
+
+	/// <summary>
+	/// Switches the active account to the provided tenant and sets the resulting session as the active account.
+	/// </summary>
+	internal async Task SwitchToTenantAsync(SavedTenant? tenant)
+	{
+		if (tenant is null)
+		{
+			return;
+		}
+
+		AuthenticatedAccounts? account = CurrentActiveAccount;
+
+		if (account is null)
+		{
+			_InfoBar.WriteWarning(Atlas.GetStr("NoActiveAccountForTenantOperationMessage"));
+			return;
+		}
+
+		await RunCancellableOperationAsync(
+			string.Format(Atlas.GetStr("SwitchingTenantMessage"), account.Username, tenant.DisplayName),
+			null,
+			async (CancellationToken token) =>
+			{
+				CurrentActiveAccount = await Main.SwitchTenantAsync(account, tenant, token);
+
+				_InfoBar.WriteSuccess(string.Format(Atlas.GetStr("SwitchedTenantSuccessfullyMessage"), account.Username, tenant.DisplayName));
+			});
+	}
+
+	/// <summary>
+	/// Removes the provided tenant from the saved tenants.
+	/// </summary>
+	internal async Task RemoveSavedTenantAsync(SavedTenant? tenant)
+	{
+		if (tenant is null)
+		{
+			return;
+		}
+
+		try
+		{
+			ManageButtonsStates(false);
+
+			await Main.RemoveSavedTenantAsync(tenant);
+
+			_InfoBar.WriteInfo(string.Format(Atlas.GetStr("SavedTenantRemovedMessage"), tenant.DisplayName));
+		}
+		catch (Exception ex)
+		{
+			_InfoBar.WriteError(ex);
+		}
+		finally
+		{
+			_InfoBar.IsClosable = true;
+			ManageButtonsStates(true);
+		}
+	}
+
 	public void Dispose()
 	{
 		// Unsubscribe from the event to avoid leaks.
 		AuthenticatedAccounts.CollectionChanged -= AuthenticatedAccounts_CollectionChanged;
+		SavedTenants.CollectionChanged -= SavedTenants_CollectionChanged;
 		CancelAndDisposeCts();
 	}
 

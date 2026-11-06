@@ -7791,4 +7791,112 @@ HINWEIS: Diese Option wird immer erzwungen, wenn eine beliebige App Control-UMCI
   <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
     <value>Keine App-Manifeste ausgewählt.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>Mandanten</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>Zielmandant</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>Basismandant (Standard)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Wählen Sie optional einen gespeicherten Mandanten für die Anmeldung aus, z. B. einen Kundenmandanten, in dem Sie B2B-Gast- oder GDAP-Zugriff haben. Lassen Sie das Feld leer, um sich beim Basismandanten Ihres Kontos anzumelden.</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Wählen Sie optional einen gespeicherten Mandanten für die Anmeldung aus, z. B. einen Kundenmandanten, in dem Sie B2B-Gast- oder GDAP-Zugriff haben. Lassen Sie das Feld leer, um sich beim Basismandanten Ihres Kontos anzumelden.</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Basismandanten verwenden</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Basismandanten verwenden</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Speichern Sie die Mandanten, die Sie über B2B-Gastzugriff oder GDAP verwalten. Anschließend können Sie sich auf der Registerkarte Anmelden bei ihnen anmelden oder das aktive Konto hier zu ihnen wechseln, während Sie sich mit Ihrem eigenen Konto anmelden.</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>Mandanten-ID oder Domäne</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>Anzeigename (optional)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>Mandant hinzufügen</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Den Mandanten in der ausgewählten Cloudumgebung überprüfen und speichern</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>GDAP-Kunden importieren</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Die Kundenmandanten speichern, mit denen der Partnermandant des aktiven Kontos GDAP-Beziehungen hat. Erfordert die Berechtigung DelegatedAdminRelationship.Read.All.</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Gespeicherte Mandanten</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>Es wurden noch keine Mandanten gespeichert.</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Das aktive Konto zu diesem Mandanten wechseln</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Das aktive Konto zu diesem Mandanten wechseln</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Diesen Mandanten entfernen</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Diesen Mandanten entfernen</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>Mandant: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>Wählen Sie zuerst ein aktives Konto aus. Mandantenvorgänge verwenden das aktive Konto.</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>{0} wird zum Mandanten {1} gewechselt...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} ist jetzt beim Mandanten {1} angemeldet und als aktives Konto festgelegt.</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>Der Mandant {0} gehört zur Cloudumgebung {1}, aber die Cloudumgebung {2} ist ausgewählt.</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>Der Mandant {0} ({1}) wurde erfolgreich gespeichert.</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>Der Mandant {0} ist bereits gespeichert.</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>„{0}“ ist keine gültige Mandanten-ID und kein gültiger Domänenname. Geben Sie eine Mandanten-ID (GUID) oder einen Domänennamen wie contoso.onmicrosoft.com ein.</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>Der Mandant {0} wurde in der Cloudumgebung {1} nicht gefunden. Details: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>Der Mandant {0} gehört zu einer anderen Cloud ({1}) als die ausgewählte Cloudumgebung {2}.</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>Die GDAP-Kundenmandanten des Partnermandanten des aktiven Kontos werden abgerufen...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>{0} GDAP-Kundenmandanten gefunden. {1} neue Mandanten wurden gespeichert.</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>Der Mandant {0} wurde aus den gespeicherten Mandanten entfernt.</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>Mandant wird überprüft...</value>
+  </data>
 </root>

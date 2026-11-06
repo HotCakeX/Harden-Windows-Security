@@ -8075,4 +8075,112 @@ Empreinte : {3}</value>
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>Ce paramètre contrôle la protection réseau à l’exécution des agents IA de Defender, qui analyse le trafic réseau provenant des agents IA. Lorsqu’il est activé, Defender inspecte le trafic réseau des processus des agents et bloque tout trafic correspondant à une détection de signes de programme malveillant ou d’utilisation abusive avant son exécution par l’agent.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>Locataires</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>Locataire cible</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>Locataire d'origine (par défaut)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Sélectionnez éventuellement un locataire enregistré auquel vous connecter, par exemple un locataire client où vous disposez d'un accès invité B2B ou GDAP. Laissez vide pour vous connecter au locataire d'origine de votre compte.</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Sélectionnez éventuellement un locataire enregistré auquel vous connecter, par exemple un locataire client où vous disposez d'un accès invité B2B ou GDAP. Laissez vide pour vous connecter au locataire d'origine de votre compte.</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utiliser le locataire d'origine</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Utiliser le locataire d'origine</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Enregistrez les locataires que vous gérez via un accès invité B2B ou GDAP. Vous pouvez ensuite vous y connecter depuis l'onglet Connexion ou y basculer le compte actif ici, tout en vous connectant avec votre propre compte.</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>ID ou domaine du locataire</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>Nom convivial (facultatif)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>Ajouter le locataire</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Vérifier le locataire dans l'environnement cloud sélectionné et l'enregistrer</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>Importer les clients GDAP</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Enregistrer les locataires clients avec lesquels le locataire partenaire du compte actif a des relations GDAP. Nécessite l'autorisation DelegatedAdminRelationship.Read.All.</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Locataires enregistrés</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>Aucun locataire n'a encore été enregistré.</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Basculer le compte actif vers ce locataire</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Basculer le compte actif vers ce locataire</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Supprimer ce locataire</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Supprimer ce locataire</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>Locataire : {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>Sélectionnez d'abord un compte actif. Les opérations sur les locataires utilisent le compte actif.</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>Basculement de {0} vers le locataire {1}...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} est maintenant connecté au locataire {1} et défini comme compte actif.</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>Le locataire {0} appartient à l'environnement cloud {1}, mais l'environnement cloud {2} est sélectionné.</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>Le locataire {0} ({1}) a été enregistré avec succès.</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>Le locataire {0} est déjà enregistré.</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>« {0} » n'est pas un ID de locataire ou un nom de domaine valide. Entrez un ID de locataire (GUID) ou un nom de domaine tel que contoso.onmicrosoft.com.</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>Le locataire {0} est introuvable dans l'environnement cloud {1}. Détails : {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>Le locataire {0} appartient à un autre cloud ({1}) que l'environnement cloud {2} sélectionné.</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>Récupération des locataires clients GDAP du locataire partenaire du compte actif...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>{0} locataires clients GDAP trouvés. {1} nouveaux locataires ont été enregistrés.</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>Le locataire {0} a été supprimé des locataires enregistrés.</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>Vérification du locataire...</value>
+  </data>
 </root>

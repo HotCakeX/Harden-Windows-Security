@@ -8075,4 +8075,112 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>AI ഏജന്റുകളിൽ നിന്ന് ഉത്ഭവിക്കുന്ന നെറ്റ്‌വർക്ക് ട്രാഫിക് സ്കാൻ ചെയ്യുന്ന Defender-ന്റെ റൺടൈം AI ഏജന്റ് നെറ്റ്‌വർക്ക് പരിരക്ഷയെ ഈ ക്രമീകരണം നിയന്ത്രിക്കുന്നു. ഇത് പ്രവർത്തനക്ഷമമാക്കിയാൽ, Defender ഏജന്റ് പ്രോസസുകളുടെ നെറ്റ്‌വർക്ക് ട്രാഫിക് പരിശോധിക്കുകയും മാൽവെയർ അല്ലെങ്കിൽ ദുരുപയോഗ സൂചനകൾ കണ്ടെത്തിയതുമായി പൊരുത്തപ്പെടുന്ന ഏത് ട്രാഫിക്കും ഏജന്റ് അത് നിർവഹിക്കുന്നതിന് മുമ്പ് തടയുകയും ചെയ്യുന്നു.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>ടെനന്റുകൾ</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>ലക്ഷ്യ ടെനന്റ്</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>ഹോം ടെനന്റ് (സ്ഥിരസ്ഥിതി)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഓപ്ഷണലായി സൈൻ ഇൻ ചെയ്യാൻ സംരക്ഷിച്ച ഒരു ടെനന്റ് തിരഞ്ഞെടുക്കുക, ഉദാഹരണത്തിന് നിങ്ങൾക്ക് B2B അതിഥി അല്ലെങ്കിൽ GDAP ആക്സസ് ഉള്ള ഒരു ഉപഭോക്തൃ ടെനന്റ്. നിങ്ങളുടെ അക്കൗണ്ടിന്റെ ഹോം ടെനന്റിലേക്ക് സൈൻ ഇൻ ചെയ്യാൻ ഇത് ശൂന്യമായി വിടുക.</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ഓപ്ഷണലായി സൈൻ ഇൻ ചെയ്യാൻ സംരക്ഷിച്ച ഒരു ടെനന്റ് തിരഞ്ഞെടുക്കുക, ഉദാഹരണത്തിന് നിങ്ങൾക്ക് B2B അതിഥി അല്ലെങ്കിൽ GDAP ആക്സസ് ഉള്ള ഒരു ഉപഭോക്തൃ ടെനന്റ്. നിങ്ങളുടെ അക്കൗണ്ടിന്റെ ഹോം ടെനന്റിലേക്ക് സൈൻ ഇൻ ചെയ്യാൻ ഇത് ശൂന്യമായി വിടുക.</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഹോം ടെനന്റ് ഉപയോഗിക്കുക</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>ഹോം ടെനന്റ് ഉപയോഗിക്കുക</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>B2B അതിഥി ആക്സസ് അല്ലെങ്കിൽ GDAP വഴി നിങ്ങൾ നിയന്ത്രിക്കുന്ന ടെനന്റുകൾ സംരക്ഷിക്കുക. തുടർന്ന് നിങ്ങളുടെ സ്വന്തം അക്കൗണ്ട് ഉപയോഗിച്ച് സൈൻ ഇൻ ചെയ്തുകൊണ്ട് സൈൻ ഇൻ ടാബിൽ നിന്ന് അവയിലേക്ക് സൈൻ ഇൻ ചെയ്യാം അല്ലെങ്കിൽ ഇവിടെ സജീവ അക്കൗണ്ട് അവയിലേക്ക് മാറ്റാം.</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>ടെനന്റ് ID അല്ലെങ്കിൽ ഡൊമെയ്ൻ</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>സൗഹൃദ നാമം (ഓപ്ഷണൽ)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>ടെനന്റ് ചേർക്കുക</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>തിരഞ്ഞെടുത്ത ക്ലൗഡ് പരിതസ്ഥിതിയിൽ ടെനന്റ് പരിശോധിച്ച് സംരക്ഷിക്കുക</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>GDAP ഉപഭോക്താക്കളെ ഇമ്പോർട്ട് ചെയ്യുക</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സജീവ അക്കൗണ്ടിന്റെ പങ്കാളി ടെനന്റിന് GDAP ബന്ധങ്ങളുള്ള ഉപഭോക്തൃ ടെനന്റുകൾ സംരക്ഷിക്കുക. DelegatedAdminRelationship.Read.All അനുമതി ആവശ്യമാണ്.</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>സംരക്ഷിച്ച ടെനന്റുകൾ</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>ഇതുവരെ ടെനന്റുകളൊന്നും സംരക്ഷിച്ചിട്ടില്ല.</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>സജീവ അക്കൗണ്ട് ഈ ടെനന്റിലേക്ക് മാറ്റുക</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>സജീവ അക്കൗണ്ട് ഈ ടെനന്റിലേക്ക് മാറ്റുക</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ഈ ടെനന്റ് നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>ഈ ടെനന്റ് നീക്കം ചെയ്യുക</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>ടെനന്റ്: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>ആദ്യം ഒരു സജീവ അക്കൗണ്ട് തിരഞ്ഞെടുക്കുക. ടെനന്റ് പ്രവർത്തനങ്ങൾ സജീവ അക്കൗണ്ട് ഉപയോഗിക്കുന്നു.</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>{0} ടെനന്റ് {1}-ലേക്ക് മാറ്റുന്നു...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} ഇപ്പോൾ ടെനന്റ് {1}-ൽ സൈൻ ഇൻ ചെയ്തു, സജീവ അക്കൗണ്ടായി സജ്ജമാക്കി.</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>ടെനന്റ് {0} ക്ലൗഡ് പരിതസ്ഥിതി {1}-ൽ ഉൾപ്പെടുന്നു, എന്നാൽ ക്ലൗഡ് പരിതസ്ഥിതി {2} തിരഞ്ഞെടുത്തിരിക്കുന്നു.</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>ടെനന്റ് {0} ({1}) വിജയകരമായി സംരക്ഷിച്ചു.</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>ടെനന്റ് {0} ഇതിനകം സംരക്ഷിച്ചിട്ടുണ്ട്.</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' സാധുവായ ടെനന്റ് ID അല്ലെങ്കിൽ ഡൊമെയ്ൻ നാമം അല്ല. ഒരു ടെനന്റ് ID (GUID) അല്ലെങ്കിൽ contoso.onmicrosoft.com പോലുള്ള ഡൊമെയ്ൻ നാമം നൽകുക.</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>ടെനന്റ് {0} ക്ലൗഡ് പരിതസ്ഥിതി {1}-ൽ കണ്ടെത്താനായില്ല. വിശദാംശങ്ങൾ: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>ടെനന്റ് {0} തിരഞ്ഞെടുത്ത ക്ലൗഡ് പരിതസ്ഥിതി {2}-ൽ നിന്ന് വ്യത്യസ്തമായ ക്ലൗഡിൽ ({1}) ഉൾപ്പെടുന്നു.</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>സജീവ അക്കൗണ്ടിന്റെ പങ്കാളി ടെനന്റിന്റെ GDAP ഉപഭോക്തൃ ടെനന്റുകൾ വീണ്ടെടുക്കുന്നു...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>{0} GDAP ഉപഭോക്തൃ ടെനന്റുകൾ കണ്ടെത്തി. {1} പുതിയ ടെനന്റുകൾ സംരക്ഷിച്ചു.</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>ടെനന്റ് {0} സംരക്ഷിച്ച ടെനന്റുകളിൽ നിന്ന് നീക്കം ചെയ്തു.</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>ടെനന്റ് പരിശോധിക്കുന്നു...</value>
+  </data>
 </root>

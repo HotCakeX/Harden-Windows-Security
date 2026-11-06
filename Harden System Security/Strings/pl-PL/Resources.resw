@@ -8075,4 +8075,112 @@ Odcisk Palca: {3}</value>
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>To ustawienie steruje ochroną sieciową agentów AI w czasie wykonywania w usłudze Defender, która skanuje ruch sieciowy pochodzący od agentów AI. Po włączeniu usługa Defender sprawdza ruch sieciowy procesów agentów i blokuje wszelki ruch odpowiadający wykrytym sygnałom złośliwego oprogramowania lub nadużyć, zanim agent go wykona.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>Dzierżawy</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>Dzierżawa docelowa</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>Dzierżawa macierzysta (domyślnie)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Opcjonalnie wybierz zapisaną dzierżawę, do której chcesz się zalogować, na przykład dzierżawę klienta, w której masz dostęp gościa B2B lub GDAP. Pozostaw puste, aby zalogować się do dzierżawy macierzystej konta.</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Opcjonalnie wybierz zapisaną dzierżawę, do której chcesz się zalogować, na przykład dzierżawę klienta, w której masz dostęp gościa B2B lub GDAP. Pozostaw puste, aby zalogować się do dzierżawy macierzystej konta.</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Użyj dzierżawy macierzystej</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Użyj dzierżawy macierzystej</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>Zapisz dzierżawy, którymi zarządzasz za pomocą dostępu gościa B2B lub GDAP. Następnie możesz zalogować się do nich na karcie Logowanie lub przełączyć do nich aktywne konto tutaj, logując się własnym kontem.</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>Identyfikator lub domena dzierżawy</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>Przyjazna nazwa (opcjonalnie)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>Dodaj dzierżawę</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zweryfikuj dzierżawę w wybranym środowisku chmury i zapisz ją</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>Importuj klientów GDAP</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Zapisz dzierżawy klientów, z którymi dzierżawa partnera aktywnego konta ma relacje GDAP. Wymaga uprawnienia DelegatedAdminRelationship.Read.All.</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>Zapisane dzierżawy</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>Nie zapisano jeszcze żadnych dzierżaw.</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Przełącz aktywne konto do tej dzierżawy</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Przełącz aktywne konto do tej dzierżawy</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Usuń tę dzierżawę</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Usuń tę dzierżawę</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>Dzierżawa: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>Najpierw wybierz aktywne konto. Operacje na dzierżawach używają aktywnego konta.</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>Przełączanie {0} do dzierżawy {1}...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} jest teraz zalogowany do dzierżawy {1} i ustawiony jako aktywne konto.</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>Dzierżawa {0} należy do środowiska chmury {1}, ale wybrano środowisko chmury {2}.</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>Dzierżawa {0} ({1}) została pomyślnie zapisana.</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>Dzierżawa {0} jest już zapisana.</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' nie jest prawidłowym identyfikatorem dzierżawy ani nazwą domeny. Wprowadź identyfikator dzierżawy (GUID) lub nazwę domeny, na przykład contoso.onmicrosoft.com.</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>Nie można znaleźć dzierżawy {0} w środowisku chmury {1}. Szczegóły: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>Dzierżawa {0} należy do innej chmury ({1}) niż wybrane środowisko chmury {2}.</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>Pobieranie dzierżaw klientów GDAP dzierżawy partnera aktywnego konta...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>Znaleziono dzierżawy klientów GDAP: {0}. Zapisano nowe dzierżawy: {1}.</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>Dzierżawa {0} została usunięta z zapisanych dzierżaw.</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>Weryfikowanie dzierżawy...</value>
+  </data>
 </root>

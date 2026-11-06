@@ -7791,4 +7791,112 @@ NOTE: यदि कोई भी App Control UMCI नीति इसे सक�
   <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
     <value>कोई ऐप मैनिफ़ेस्ट चयनित नहीं है.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>टेनेंट</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>लक्ष्य टेनेंट</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>होम टेनेंट (डिफ़ॉल्ट)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>वैकल्पिक रूप से साइन इन करने के लिए एक सहेजा गया टेनेंट चुनें, जैसे कोई ग्राहक टेनेंट जहाँ आपके पास B2B अतिथि या GDAP पहुँच है। अपने खाते के होम टेनेंट में साइन इन करने के लिए इसे खाली छोड़ें।</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>वैकल्पिक रूप से साइन इन करने के लिए एक सहेजा गया टेनेंट चुनें, जैसे कोई ग्राहक टेनेंट जहाँ आपके पास B2B अतिथि या GDAP पहुँच है। अपने खाते के होम टेनेंट में साइन इन करने के लिए इसे खाली छोड़ें।</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>होम टेनेंट का उपयोग करें</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>होम टेनेंट का उपयोग करें</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>उन टेनेंट को सहेजें जिन्हें आप B2B अतिथि पहुँच या GDAP के माध्यम से प्रबंधित करते हैं। फिर आप अपने स्वयं के खाते से साइन इन करते हुए साइन इन टैब से उनमें साइन इन कर सकते हैं या यहाँ सक्रिय खाते को उन पर स्विच कर सकते हैं।</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>टेनेंट ID या डोमेन</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>अनुकूल नाम (वैकल्पिक)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>टेनेंट जोड़ें</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>चयनित क्लाउड परिवेश में टेनेंट को सत्यापित करें और सहेजें</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>GDAP ग्राहक आयात करें</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>उन ग्राहक टेनेंट को सहेजें जिनके साथ सक्रिय खाते के पार्टनर टेनेंट के GDAP संबंध हैं। DelegatedAdminRelationship.Read.All अनुमति आवश्यक है।</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>सहेजे गए टेनेंट</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>अभी तक कोई टेनेंट सहेजा नहीं गया है।</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>सक्रिय खाते को इस टेनेंट पर स्विच करें</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>सक्रिय खाते को इस टेनेंट पर स्विच करें</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>यह टेनेंट हटाएँ</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>यह टेनेंट हटाएँ</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>टेनेंट: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>पहले एक सक्रिय खाता चुनें। टेनेंट संचालन सक्रिय खाते का उपयोग करते हैं।</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>{0} को टेनेंट {1} पर स्विच किया जा रहा है...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} अब टेनेंट {1} में साइन इन है और सक्रिय खाते के रूप में सेट है।</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>टेनेंट {0} क्लाउड परिवेश {1} से संबंधित है लेकिन क्लाउड परिवेश {2} चयनित है।</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>टेनेंट {0} ({1}) सफलतापूर्वक सहेजा गया।</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>टेनेंट {0} पहले से सहेजा गया है।</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' मान्य टेनेंट ID या डोमेन नाम नहीं है। टेनेंट ID (GUID) या contoso.onmicrosoft.com जैसा डोमेन नाम दर्ज करें।</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>टेनेंट {0} क्लाउड परिवेश {1} में नहीं मिला। विवरण: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>टेनेंट {0} चयनित क्लाउड परिवेश {2} से भिन्न क्लाउड ({1}) से संबंधित है।</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>सक्रिय खाते के पार्टनर टेनेंट के GDAP ग्राहक टेनेंट प्राप्त किए जा रहे हैं...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>{0} GDAP ग्राहक टेनेंट मिले। {1} नए टेनेंट सहेजे गए।</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>टेनेंट {0} को सहेजे गए टेनेंट से हटा दिया गया।</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>टेनेंट सत्यापित किया जा रहा है...</value>
+  </data>
 </root>

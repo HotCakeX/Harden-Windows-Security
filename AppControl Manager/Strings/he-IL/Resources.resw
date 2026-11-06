@@ -7791,4 +7791,112 @@
   <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
     <value>לא נבחרו מניפסטי אפליקציות.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>דיירים</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>דייר יעד</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>דייר הבית (ברירת מחדל)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>באופן אופציונלי, בחר דייר שמור להתחברות, כגון דייר לקוח שבו יש לך גישת אורח B2B או GDAP. השאר ריק כדי להתחבר לדייר הבית של החשבון שלך.</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>באופן אופציונלי, בחר דייר שמור להתחברות, כגון דייר לקוח שבו יש לך גישת אורח B2B או GDAP. השאר ריק כדי להתחבר לדייר הבית של החשבון שלך.</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השתמש בדייר הבית</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>השתמש בדייר הבית</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>שמור את הדיירים שאתה מנהל באמצעות גישת אורח B2B או GDAP. לאחר מכן תוכל להתחבר אליהם מהכרטיסייה התחברות או להעביר אליהם את החשבון הפעיל כאן, תוך התחברות עם החשבון שלך.</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>מזהה דייר או תחום</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>שם ידידותי (אופציונלי)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>הוסף דייר</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>אמת את הדייר בסביבת הענן שנבחרה ושמור אותו</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>ייבא לקוחות GDAP</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>שמור את דיירי הלקוחות שאיתם לדייר השותף של החשבון הפעיל יש קשרי GDAP. נדרשת ההרשאה DelegatedAdminRelationship.Read.All.</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>דיירים שמורים</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>עדיין לא נשמרו דיירים.</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>העבר את החשבון הפעיל לדייר זה</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>העבר את החשבון הפעיל לדייר זה</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הסר דייר זה</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>הסר דייר זה</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>דייר: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>בחר תחילה חשבון פעיל. פעולות דייר משתמשות בחשבון הפעיל.</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>מעביר את {0} לדייר {1}...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} מחובר כעת לדייר {1} והוגדר כחשבון הפעיל.</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>הדייר {0} שייך לסביבת הענן {1}, אך נבחרה סביבת הענן {2}.</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>הדייר {0} ({1}) נשמר בהצלחה.</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>הדייר {0} כבר שמור.</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' אינו מזהה דייר או שם תחום חוקי. הזן מזהה דייר (GUID) או שם תחום כגון contoso.onmicrosoft.com.</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>הדייר {0} לא נמצא בסביבת הענן {1}. פרטים: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>הדייר {0} שייך לענן אחר ({1}) מסביבת הענן {2} שנבחרה.</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>מאחזר את דיירי לקוחות GDAP של הדייר השותף של החשבון הפעיל...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>נמצאו {0} דיירי לקוחות GDAP. נשמרו {1} דיירים חדשים.</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>הדייר {0} הוסר מהדיירים השמורים.</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>מאמת את הדייר...</value>
+  </data>
 </root>

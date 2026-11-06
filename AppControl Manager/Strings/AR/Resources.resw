@@ -7791,4 +7791,112 @@
   <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
     <value>لم يتم تحديد أي ملفات بيان للتطبيقات.</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>المستأجرون</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>المستأجر الهدف</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>المستأجر الرئيسي (افتراضي)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>اختياريًا، حدد مستأجرًا محفوظًا لتسجيل الدخول إليه، مثل مستأجر عميل لديك فيه وصول ضيف B2B أو GDAP. اتركه فارغًا لتسجيل الدخول إلى المستأجر الرئيسي لحسابك.</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>اختياريًا، حدد مستأجرًا محفوظًا لتسجيل الدخول إليه، مثل مستأجر عميل لديك فيه وصول ضيف B2B أو GDAP. اتركه فارغًا لتسجيل الدخول إلى المستأجر الرئيسي لحسابك.</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استخدام المستأجر الرئيسي</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>استخدام المستأجر الرئيسي</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>احفظ المستأجرين الذين تديرهم عبر وصول الضيف B2B أو GDAP. يمكنك بعد ذلك تسجيل الدخول إليهم من علامة التبويب تسجيل الدخول أو تبديل الحساب النشط إليهم هنا، مع تسجيل الدخول بحسابك الخاص.</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>معرف المستأجر أو المجال</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>اسم مألوف (اختياري)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>إضافة مستأجر</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>التحقق من المستأجر في بيئة السحابة المحددة وحفظه</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>استيراد عملاء GDAP</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>حفظ مستأجري العملاء الذين لدى مستأجر الشريك للحساب النشط علاقات GDAP معهم. يتطلب الإذن DelegatedAdminRelationship.Read.All.</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>المستأجرون المحفوظون</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>لم يتم حفظ أي مستأجرين بعد.</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>تبديل الحساب النشط إلى هذا المستأجر</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>تبديل الحساب النشط إلى هذا المستأجر</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إزالة هذا المستأجر</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>إزالة هذا المستأجر</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>المستأجر: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>حدد حسابًا نشطًا أولاً. تستخدم عمليات المستأجر الحساب النشط.</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>جارٍ تبديل {0} إلى المستأجر {1}...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>تم تسجيل دخول {0} الآن إلى المستأجر {1} وتعيينه كحساب نشط.</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>ينتمي المستأجر {0} إلى بيئة السحابة {1} ولكن تم تحديد بيئة السحابة {2}.</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>تم حفظ المستأجر {0} ({1}) بنجاح.</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>المستأجر {0} محفوظ بالفعل.</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' ليس معرف مستأجر أو اسم مجال صالحًا. أدخل معرف مستأجر (GUID) أو اسم مجال مثل contoso.onmicrosoft.com.</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>تعذر العثور على المستأجر {0} في بيئة السحابة {1}. التفاصيل: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>ينتمي المستأجر {0} إلى سحابة مختلفة ({1}) عن بيئة السحابة المحددة {2}.</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>جارٍ استرداد مستأجري عملاء GDAP لمستأجر الشريك للحساب النشط...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>تم العثور على {0} من مستأجري عملاء GDAP. تم حفظ {1} من المستأجرين الجدد.</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>تمت إزالة المستأجر {0} من المستأجرين المحفوظين.</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>جارٍ التحقق من المستأجر...</value>
+  </data>
 </root>

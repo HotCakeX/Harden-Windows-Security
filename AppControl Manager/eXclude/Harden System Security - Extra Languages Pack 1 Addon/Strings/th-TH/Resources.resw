@@ -8075,4 +8075,112 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>การตั้งค่านี้ควบคุมการป้องกันเครือข่ายของ AI Agent ขณะทำงานของ Defender ซึ่งจะสแกนการรับส่งข้อมูลเครือข่ายที่มาจาก AI Agent เมื่อเปิดใช้งาน Defender จะตรวจสอบการรับส่งข้อมูลเครือข่ายของกระบวนการเอเจนต์ และบล็อกการรับส่งข้อมูลใดๆ ที่ตรงกับการตรวจพบสัญญาณของมัลแวร์หรือการใช้งานในทางที่ผิดก่อนที่เอเจนต์จะดำเนินการกับการรับส่งข้อมูลนั้น</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>ผู้เช่า</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>ผู้เช่าเป้าหมาย</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>ผู้เช่าหลัก (ค่าเริ่มต้น)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>เลือกผู้เช่าที่บันทึกไว้เพื่อลงชื่อเข้าใช้ได้ตามต้องการ เช่น ผู้เช่าของลูกค้าที่คุณมีสิทธิ์เข้าถึงแบบผู้เยี่ยมชม B2B หรือ GDAP เว้นว่างไว้เพื่อลงชื่อเข้าใช้ผู้เช่าหลักของบัญชีของคุณ</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>เลือกผู้เช่าที่บันทึกไว้เพื่อลงชื่อเข้าใช้ได้ตามต้องการ เช่น ผู้เช่าของลูกค้าที่คุณมีสิทธิ์เข้าถึงแบบผู้เยี่ยมชม B2B หรือ GDAP เว้นว่างไว้เพื่อลงชื่อเข้าใช้ผู้เช่าหลักของบัญชีของคุณ</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ใช้ผู้เช่าหลัก</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>ใช้ผู้เช่าหลัก</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>บันทึกผู้เช่าที่คุณจัดการผ่านการเข้าถึงแบบผู้เยี่ยมชม B2B หรือ GDAP จากนั้นคุณสามารถลงชื่อเข้าใช้ผู้เช่าเหล่านั้นจากแท็บลงชื่อเข้าใช้ หรือสลับบัญชีที่ใช้งานอยู่ไปยังผู้เช่าเหล่านั้นได้ที่นี่ โดยลงชื่อเข้าใช้ด้วยบัญชีของคุณเอง</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>ID หรือโดเมนของผู้เช่า</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>ชื่อที่จำง่าย (ไม่บังคับ)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>เพิ่มผู้เช่า</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ตรวจสอบผู้เช่าในสภาพแวดล้อมคลาวด์ที่เลือกและบันทึก</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>นำเข้าลูกค้า GDAP</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>บันทึกผู้เช่าของลูกค้าที่ผู้เช่าพาร์ทเนอร์ของบัญชีที่ใช้งานอยู่มีความสัมพันธ์ GDAP ด้วย ต้องใช้สิทธิ์ DelegatedAdminRelationship.Read.All</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>ผู้เช่าที่บันทึกไว้</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>ยังไม่มีผู้เช่าที่บันทึกไว้</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>สลับบัญชีที่ใช้งานอยู่ไปยังผู้เช่านี้</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>สลับบัญชีที่ใช้งานอยู่ไปยังผู้เช่านี้</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ลบผู้เช่านี้</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>ลบผู้เช่านี้</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>ผู้เช่า: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>เลือกบัญชีที่ใช้งานอยู่ก่อน การดำเนินการของผู้เช่าจะใช้บัญชีที่ใช้งานอยู่</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>กำลังสลับ {0} ไปยังผู้เช่า {1}...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} ลงชื่อเข้าใช้ผู้เช่า {1} แล้วและถูกตั้งเป็นบัญชีที่ใช้งานอยู่</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>ผู้เช่า {0} อยู่ในสภาพแวดล้อมคลาวด์ {1} แต่เลือกสภาพแวดล้อมคลาวด์ {2} ไว้</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>บันทึกผู้เช่า {0} ({1}) สำเร็จแล้ว</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>ผู้เช่า {0} ถูกบันทึกไว้แล้ว</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>'{0}' ไม่ใช่ ID ผู้เช่าหรือชื่อโดเมนที่ถูกต้อง ป้อน ID ผู้เช่า (GUID) หรือชื่อโดเมน เช่น contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>ไม่พบผู้เช่า {0} ในสภาพแวดล้อมคลาวด์ {1} รายละเอียด: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>ผู้เช่า {0} อยู่ในคลาวด์อื่น ({1}) ที่ไม่ใช่สภาพแวดล้อมคลาวด์ {2} ที่เลือก</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>กำลังดึงข้อมูลผู้เช่าลูกค้า GDAP ของผู้เช่าพาร์ทเนอร์ของบัญชีที่ใช้งานอยู่...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>พบผู้เช่าลูกค้า GDAP {0} ราย บันทึกผู้เช่าใหม่ {1} ราย</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>ลบผู้เช่า {0} ออกจากผู้เช่าที่บันทึกไว้แล้ว</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>กำลังตรวจสอบผู้เช่า...</value>
+  </data>
 </root>

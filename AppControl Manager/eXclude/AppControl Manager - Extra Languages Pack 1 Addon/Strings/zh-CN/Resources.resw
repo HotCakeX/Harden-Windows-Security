@@ -7791,4 +7791,112 @@
   <data name="NoAppManifestsSelectedWarning" xml:space="preserve">
     <value>未选择应用程序清单。</value>
   </data>
+  <data name="TenantsSegmentedItem.Content" xml:space="preserve">
+    <value>租户</value>
+  </data>
+  <data name="TargetTenantComboBox.Header" xml:space="preserve">
+    <value>目标租户</value>
+  </data>
+  <data name="TargetTenantComboBox.PlaceholderText" xml:space="preserve">
+    <value>主租户(默认)</value>
+  </data>
+  <data name="TargetTenantComboBox.ToolTipService.ToolTip" xml:space="preserve">
+    <value>可以选择要登录的已保存租户,例如你拥有 B2B 来宾或 GDAP 访问权限的客户租户。留空则登录到你帐户的主租户。</value>
+  </data>
+  <data name="TargetTenantComboBox.AutomationProperties.HelpText" xml:space="preserve">
+    <value>可以选择要登录的已保存租户,例如你拥有 B2B 来宾或 GDAP 访问权限的客户租户。留空则登录到你帐户的主租户。</value>
+  </data>
+  <data name="ClearTargetTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>使用主租户</value>
+  </data>
+  <data name="ClearTargetTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>使用主租户</value>
+  </data>
+  <data name="TenantsDescriptionTextBlock.Text" xml:space="preserve">
+    <value>保存你通过 B2B 来宾访问或 GDAP 管理的租户。然后,你可以使用自己的帐户从“登录”选项卡登录到这些租户,或在此处将活动帐户切换到这些租户。</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.Header" xml:space="preserve">
+    <value>租户 ID 或域</value>
+  </data>
+  <data name="TenantIdOrDomainTextBox.PlaceholderText" xml:space="preserve">
+    <value>00000000-0000-0000-0000-000000000000 / contoso.onmicrosoft.com</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.Header" xml:space="preserve">
+    <value>友好名称(可选)</value>
+  </data>
+  <data name="TenantFriendlyNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Contoso</value>
+  </data>
+  <data name="AddTenantButton.Content" xml:space="preserve">
+    <value>添加租户</value>
+  </data>
+  <data name="AddTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>在所选云环境中验证租户并保存</value>
+  </data>
+  <data name="ImportGdapCustomersButton.Content" xml:space="preserve">
+    <value>导入 GDAP 客户</value>
+  </data>
+  <data name="ImportGdapCustomersButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>保存活动帐户的合作伙伴租户与之建立了 GDAP 关系的客户租户。需要 DelegatedAdminRelationship.Read.All 权限。</value>
+  </data>
+  <data name="SavedTenantsHeaderTextBlock.Text" xml:space="preserve">
+    <value>已保存的租户</value>
+  </data>
+  <data name="NoSavedTenantsTextBlock.Text" xml:space="preserve">
+    <value>尚未保存任何租户。</value>
+  </data>
+  <data name="SwitchToTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>将活动帐户切换到此租户</value>
+  </data>
+  <data name="SwitchToTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>将活动帐户切换到此租户</value>
+  </data>
+  <data name="RemoveSavedTenantButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>删除此租户</value>
+  </data>
+  <data name="RemoveSavedTenantButton.AutomationProperties.Name" xml:space="preserve">
+    <value>删除此租户</value>
+  </data>
+  <data name="TargetTenantLabelFormat" xml:space="preserve">
+    <value>租户: {0}</value>
+  </data>
+  <data name="NoActiveAccountForTenantOperationMessage" xml:space="preserve">
+    <value>请先选择一个活动帐户。租户操作使用活动帐户。</value>
+  </data>
+  <data name="SwitchingTenantMessage" xml:space="preserve">
+    <value>正在将 {0} 切换到租户 {1}...</value>
+  </data>
+  <data name="SwitchedTenantSuccessfullyMessage" xml:space="preserve">
+    <value>{0} 现已登录到租户 {1} 并设置为活动帐户。</value>
+  </data>
+  <data name="TenantEnvironmentMismatchMessage" xml:space="preserve">
+    <value>租户 {0} 属于 {1} 云环境,但当前选择的是 {2} 云环境。</value>
+  </data>
+  <data name="TenantAddedSuccessfullyMessage" xml:space="preserve">
+    <value>已成功保存租户 {0} ({1})。</value>
+  </data>
+  <data name="TenantAlreadySavedMessage" xml:space="preserve">
+    <value>租户 {0} 已保存。</value>
+  </data>
+  <data name="InvalidTenantIdentifierMessage" xml:space="preserve">
+    <value>“{0}”不是有效的租户 ID 或域名。请输入租户 ID (GUID) 或域名,例如 contoso.onmicrosoft.com。</value>
+  </data>
+  <data name="TenantNotFoundInCloudMessage" xml:space="preserve">
+    <value>在 {1} 云环境中找不到租户 {0}。详细信息: {2}</value>
+  </data>
+  <data name="TenantBelongsToDifferentCloudMessage" xml:space="preserve">
+    <value>租户 {0} 属于与所选 {2} 云环境不同的云 ({1})。</value>
+  </data>
+  <data name="ImportingGdapCustomersMessage" xml:space="preserve">
+    <value>正在检索活动帐户的合作伙伴租户的 GDAP 客户租户...</value>
+  </data>
+  <data name="ImportedGdapCustomersMessage" xml:space="preserve">
+    <value>找到 {0} 个 GDAP 客户租户。已保存 {1} 个新租户。</value>
+  </data>
+  <data name="SavedTenantRemovedMessage" xml:space="preserve">
+    <value>已从已保存的租户中删除租户 {0}。</value>
+  </data>
+  <data name="ResolvingTenantMessage" xml:space="preserve">
+    <value>正在验证租户...</value>
+  </data>
 </root>

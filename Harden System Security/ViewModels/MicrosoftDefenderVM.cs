@@ -641,6 +641,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 				id: new("019a9063-824a-71a0-9564-1618d602830c")
 				));
 
+
 		// AiAgentProtection
 		temp.Add(new(
 			category: Categories.MicrosoftDefender,
@@ -688,6 +689,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			],
 			id: new("01a1ac98-f03b-7d98-977b-98fb72ac53a3")
 			));
+
 
 		// AiAgentNetworkInspection
 		temp.Add(new(

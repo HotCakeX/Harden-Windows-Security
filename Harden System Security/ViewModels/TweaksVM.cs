@@ -2286,6 +2286,5 @@ internal sealed partial class TweaksVM : ViewModelBase
 
 	#endregion
 
-
 	#endregion
 }

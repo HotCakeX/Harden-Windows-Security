@@ -114,7 +114,8 @@ internal static class EccCurveManager
 	}
 
 
-	// Helper methods
+	#region Helper methods
+
 	private static string ReadUnicodeString(IntPtr basePtr, int byteOffset, int maxChars)
 	{
 		StringBuilder sb = new();
@@ -408,4 +409,6 @@ internal static class EccCurveManager
 
 		return string.Empty;
 	}
+
+	#endregion
 }

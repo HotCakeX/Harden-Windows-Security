@@ -273,7 +273,6 @@
 
                                         </customUI:SettingsCardV3>
 
-
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
                                                        x:Uid="SelectOtherPolFilesForMergeSettingsCard">
                                             <customUI:SettingsCardV3.HeaderIcon>
@@ -346,7 +345,6 @@
                                                    HorizontalAlignment="Center"
                                                    HorizontalTextAlignment="Center"/>
 
-
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
                                                        x:Uid="SelectPOLFilesForJSONConversionSettingsCard">
                                             <customUI:SettingsCardV3.HeaderIcon>
@@ -410,7 +408,6 @@
 
                                         </customUI:SettingsCardV3>
 
-
                                         <Button x:Uid="ConvertPOLToJSONButton"
                                                 VerticalAlignment="Center"
                                                 HorizontalAlignment="Center"
@@ -455,7 +452,6 @@
                                                    Style="{ThemeResource SubtitleTextBlockStyle}"
                                                    HorizontalAlignment="Center"
                                                    HorizontalTextAlignment="Center"/>
-
 
                                         <customUI:SettingsCardV3 HorizontalContentAlignment="Center"
                                                                  x:Uid="SelectJSONFilesForPOLConversionSettingsCard">
@@ -519,7 +515,6 @@
                                             </customUI:ButtonV2>
 
                                         </customUI:SettingsCardV3>
-
 
                                         <Button x:Uid="ConvertJSONToPOLButton"
                                                 VerticalAlignment="Center"

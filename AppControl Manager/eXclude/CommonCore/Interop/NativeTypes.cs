@@ -2243,6 +2243,19 @@ internal struct PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY
 	internal uint Flags;
 }
 
+/// <summary>
+/// https://learn.microsoft.com/windows/win32/api/winnt/ns-winnt-process_mitigation_dep_policy
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct PROCESS_MITIGATION_DEP_POLICY
+{
+	// Bit 0 = Enable, Bit 1 = DisableAtlThunkEmulation, the remaining bits are reserved.
+	internal uint Flags;
+
+	// BOOLEAN: DEP is permanently enabled for the process when this is non-zero.
+	internal byte Permanent;
+}
+
 [StructLayout(LayoutKind.Sequential)]
 internal struct SID_AND_ATTRIBUTES
 {

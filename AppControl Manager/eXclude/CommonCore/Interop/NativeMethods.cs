@@ -3477,6 +3477,7 @@ internal static unsafe partial class NativeMethods
 
 	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessmitigationpolicy
+	/// The buffer is PVOID because its layout depends on the requested policy, so callers pass a pointer to the policy's structure and that structure's size.
 	/// </summary>
 	[LibraryImport("kernel32.dll", SetLastError = true)]
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
@@ -3484,8 +3485,8 @@ internal static unsafe partial class NativeMethods
 	internal static partial bool GetProcessMitigationPolicy(
 		IntPtr processHandle,
 		PROCESS_MITIGATION_POLICY mitigationPolicy,
-		ref int buffer,
-		uint length);
+		void* buffer,
+		nuint length);
 
 
 	[LibraryImport("FirewallAPI.dll")]

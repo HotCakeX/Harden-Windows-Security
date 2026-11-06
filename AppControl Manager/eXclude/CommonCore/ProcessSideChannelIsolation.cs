@@ -149,14 +149,14 @@ internal static class ProcessSideChannelIsolation
 	/// Queries Windows for the current PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY value.
 	/// </summary>
 	/// <exception cref="InvalidOperationException">Thrown when Windows fails to return the policy.</exception>
-	private static PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY QueryCurrentPolicy()
+	private static unsafe PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY QueryCurrentPolicy()
 	{
 		int policyFlags = 0;
 
 		bool getSucceeded = NativeMethods.GetProcessMitigationPolicy(
 			NativeMethods.GetCurrentProcess(),
 			PROCESS_MITIGATION_POLICY.SideChannelIsolation,
-			ref policyFlags,
+			&policyFlags,
 			sizeof(uint));
 
 		if (!getSucceeded)

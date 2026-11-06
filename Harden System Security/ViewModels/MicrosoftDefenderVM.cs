@@ -767,7 +767,7 @@ internal sealed partial class MicrosoftDefenderVM : MUnitListViewModelBase
 			if (enableList is null && disableList is null)
 				return new Result(false, "The input parameters are invalid. Please specify a list of mitigations to enable or disable for this process.");
 
-			if (processName.Equals(Path.GetFileNameWithoutExtension(processName)))
+			if (processName.Equals(Path.GetFileNameWithoutExtension(processName), StringComparison.OrdinalIgnoreCase))
 				processName = (processName + ".exe").ToLowerInvariant();
 
 			Result<List<AppMitigations>> fromRegistryByNameResult = SecurityPolicyRepository.RetrieveSecurityConfigurationFromRegistryByName(processName);

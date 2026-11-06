@@ -1,11 +1,1 @@
-* The details window of a bucket in the Clipboards view of the TopBar was always using dark them; it's now been fixed to be theme aware.
-
-* Improved deduplication logic of the Clipboard view in the TopBar to include Bitmap images.
-
-* Added a new security policy to the Miscellaneous category: Prevent Windows from automatically downloading device metadata and associated device applications from the network. Completes the following request: https://github.com/HotCakeX/Harden-Windows-Security/issues/1245
-
-* Added 2 new security measures to the Microsoft Defender category:
-
-    * Controls Defender's runtime AI Agent protection that scans prompts submitted to managed AI coding agents (e.g., Claude Code, GitHub Copilot CLI). When enabled, Microsoft Defender invokes a bridge process from the agent's hook framework to scan each prompt for malware/abuse signals before the agent executes it.
-
-    * Controls Defender's runtime AI Agent network protection that scans network traffic originated from AI Agents. When enabled, Microsoft Defender inspects the network traffic of agent processes and blocks any traffic that matches a detection for malware/abuse signals before the agent executes it.
+* Updated the WinGet dependency to fix the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1253

@@ -1,1 +1,0 @@
-* Updated the WinGet dependency to fix the following issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1253

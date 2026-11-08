@@ -64,6 +64,24 @@ internal enum TopBarCompanion
 }
 
 /// <summary>
+/// What the standard notch shows for the Performance view. The values follow the order of the metric cells of the
+/// Performance view after <see cref="ActiveProgram"/>, which is also the order of the items of the selection ComboBox.
+/// </summary>
+internal enum TopBarPerformanceNotchMetric
+{
+	ActiveProgram = 0,
+	CpuUsage = 1,
+	CpuTemperature = 2,
+	Memory = 3,
+	StorageTemperature = 4,
+	DiskActivity = 5,
+	Network = 6,
+	SystemPower = 7,
+	BatteryDischarge = 8,
+	AppMemory = 9
+}
+
+/// <summary>
 /// A single launchable application of the top bar.
 /// </summary>
 internal sealed class TopBarAppEntry
@@ -192,6 +210,11 @@ internal sealed class TopBarConfiguration
 
 	public TopBarCompanion Companion { get; set; } = TopBarCompanion.PrisMatrix;
 	public TopBarBackdrop Backdrop { get; set; } = TopBarBackdrop.MicaAlt;
+
+	/// <summary>
+	/// What the standard notch shows while the Performance view is active.
+	/// </summary>
+	public TopBarPerformanceNotchMetric PerformanceNotchMetric { get; set; }
 
 	/// <summary>
 	/// Whether the next TopBar-only process launch requests the system composition engine before XAML startup.

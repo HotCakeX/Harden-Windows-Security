@@ -1610,6 +1610,33 @@
                               FontSize="12"/>
                 </Button>
 
+                <!-- Selects what the standard notch shows for the Performance view. Available only in Performance. -->
+                <Button x:Name="PerformanceNotchMetricButton"
+                        Width="28"
+                        Height="28"
+                        Padding="0"
+                        MinWidth="0"
+                        CornerRadius="14"
+                        VerticalAlignment="Center"
+                        Visibility="Collapsed"
+                        ToolTipService.ToolTip="Choose what the notch shows for Performance"
+                        AutomationProperties.Name="Notch content for Performance">
+                    <Button.Flyout>
+                        <Flyout x:Name="PerformanceNotchMetricFlyout"
+                                Opened="{x:Bind OnFlyoutOpened}"
+                                Closed="{x:Bind OnFlyoutClosed}"
+                                Placement="Bottom"
+                                ShouldConstrainToRootBounds="False">
+                            <ComboBox x:Name="PerformanceNotchMetricBox"
+                                      Width="220"
+                                      Header="Shown on the notch"
+                                      SelectionChanged="{x:Bind OnPerformanceNotchMetricChanged}"/>
+                        </Flyout>
+                    </Button.Flyout>
+                    <FontIcon Glyph="&#xE712;"
+                              FontSize="12"/>
+                </Button>
+
                 <!-- Carries every general option of the bar. The options are offered as a vertical list.
                  The menu is the one that stays open while the pointer is over it, which is what lets several options be
                  flipped in a row without the menu closing after each of them. -->

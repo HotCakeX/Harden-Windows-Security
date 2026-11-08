@@ -451,6 +451,8 @@ internal sealed partial class TopBar : Window, IDisposable
 
 	private List<TopBarTile> _tiles = [];
 	private TopBarMetricsSampler? _metricsSampler;
+	// The caption and value cells of the Performance view, indexed by TopBarPerformanceNotchMetric - 1, which the notch copies from.
+	private readonly (TextBlock Caption, TextBlock Value)[] _performanceNotchMetricCells;
 	private readonly TopBarMetricsSampler _foregroundMetricsSampler = new();
 	private CancellationTokenSource? _foregroundSampleCancellation;
 	private Task? _foregroundSampleTask;
@@ -602,6 +604,26 @@ internal sealed partial class TopBar : Window, IDisposable
 
 		ApplyMetricCaptions();
 		PrepareMetricCells();
+
+		// The notch selection offers the active program followed by every metric cell, in the order of TopBarPerformanceNotchMetric.
+		_performanceNotchMetricCells =
+		[
+			(CpuUsageCaption, CpuUsageValue),
+			(CpuTemperatureCaption, CpuTemperatureValue),
+			(MemoryCaption, MemoryValue),
+			(StorageTemperatureCaption, StorageTemperatureValue),
+			(DiskActivityCaption, DiskActivityValue),
+			(NetworkCaption, NetworkValue),
+			(SystemPowerCaption, SystemPowerValue),
+			(BatteryDischargeCaption, BatteryDischargeValue),
+			(AppMemoryCaption, AppMemoryValue)
+		];
+		PerformanceNotchMetricBox.Items.Add("Active program");
+		foreach ((TextBlock caption, _) in _performanceNotchMetricCells)
+		{
+			PerformanceNotchMetricBox.Items.Add(caption.Text);
+		}
+		PerformanceNotchMetricBox.SelectedIndex = (int)_configuration.PerformanceNotchMetric;
 		PrepareNetworkQualityView();
 		NetworkQualityDestinationBox.SelectedIndex = 0;
 
@@ -2281,6 +2303,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		SearchPanel.Visibility = view == TopBarView.Search ? Visibility.Visible : Visibility.Collapsed;
 		DriveStatisticsButton.Visibility = view == TopBarView.Search ? Visibility.Visible : Visibility.Collapsed;
 		GlobalSearchSettingsButton.Visibility = DriveStatisticsButton.Visibility;
+		PerformanceNotchMetricButton.Visibility = PerformancePanel.Visibility;
 		ClipboardEnabledToggle.Visibility = ClipboardPanel.Visibility;
 		ClipboardTransferButton.Visibility = ClipboardPanel.Visibility;
 		ClipboardLinkPreviewToggle.Visibility = ClipboardPanel.Visibility;
@@ -2954,7 +2977,8 @@ internal sealed partial class TopBar : Window, IDisposable
 			_metricsSampler?.Dispose();
 			_metricsSampler = null;
 		}
-		else if (collapsedPerformance)
+		// A metric shown on the notch keeps sampling through the expanded resources.
+		else if (collapsedPerformance && _configuration.PerformanceNotchMetric == TopBarPerformanceNotchMetric.ActiveProgram)
 		{
 			_metricsSampler?.ReleaseExpandedResources();
 		}
@@ -2981,7 +3005,15 @@ internal sealed partial class TopBar : Window, IDisposable
 		{
 			if (_progress <= 0.0 && _notchStyle == TopBarNotchStyle.Standard)
 			{
-				QueueCollapsedPerformanceUpdate();
+				if (_configuration.PerformanceNotchMetric == TopBarPerformanceNotchMetric.ActiveProgram)
+				{
+					QueueCollapsedPerformanceUpdate();
+				}
+				else
+				{
+					UpdateMetrics();
+					ApplyPerformanceNotchMetric();
+				}
 			}
 			else if (_progress > 0.0)
 			{
@@ -2992,6 +3024,39 @@ internal sealed partial class TopBar : Window, IDisposable
 		{
 			UpdateClocks();
 		}
+	}
+
+	/// <summary>
+	/// Persists the selection of the Performance notch metric made in its flyout.
+	/// </summary>
+	private void OnPerformanceNotchMetricChanged()
+	{
+		TopBarPerformanceNotchMetric metric = (TopBarPerformanceNotchMetric)PerformanceNotchMetricBox.SelectedIndex;
+
+		// Setting the saved selection during construction raises this event too.
+		if (metric == _configuration.PerformanceNotchMetric)
+		{
+			return;
+		}
+		_configuration.PerformanceNotchMetric = metric;
+		TopBarConfigurationManager.Save(_configuration);
+		ApplyPerformanceNotchMetric();
+	}
+
+	/// <summary>
+	/// Copies the selected metric cell of the Performance view onto the notch. The active program is written by the
+	/// foreground process sample, so its text is only cleared here until that sample arrives.
+	/// </summary>
+	private void ApplyPerformanceNotchMetric()
+	{
+		if (_configuration.PerformanceNotchMetric == TopBarPerformanceNotchMetric.ActiveProgram)
+		{
+			CollapsedProcessName.Text = CollapsedProcessMetrics.Text = string.Empty;
+			return;
+		}
+		(TextBlock caption, TextBlock value) = _performanceNotchMetricCells[(int)_configuration.PerformanceNotchMetric - 1];
+		CollapsedProcessName.Text = caption.Text;
+		CollapsedProcessMetrics.Text = value.Text;
 	}
 
 	private void UpdateCollapsedPerformanceVisibility()
@@ -3270,6 +3335,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		ViewSwitcherMenu.Placement = placement;
 		SettingsMenu.Placement = placement;
 		SentryActionsMenu.Placement = placement;
+		PerformanceNotchMetricFlyout.Placement = placement;
 		CollapsedHost.VerticalAlignment = _dockToBottom ? VerticalAlignment.Bottom : VerticalAlignment.Top;
 		ExpandedHost.VerticalAlignment = _dockToBottom ? VerticalAlignment.Bottom : VerticalAlignment.Top;
 	}

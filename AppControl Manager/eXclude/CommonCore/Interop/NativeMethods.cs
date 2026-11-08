@@ -4462,6 +4462,22 @@ internal static unsafe partial class NativeMethods
 
 
 	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/wingdi/nf-wingdi-getdibits
+	/// </summary>
+	[LibraryImport("gdi32.dll")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int GetDIBits(IntPtr hdc, IntPtr hbm, uint start, uint cLines, void* lpvBits, ref BITMAPINFO lpbmi, uint usage);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname
+	/// </summary>
+	[LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	internal static partial int SHCreateItemFromParsingName(string pszPath, IntPtr pbc, in Guid riid, out IntPtr ppv);
+
+
+	/// <summary>
 	/// https://learn.microsoft.com/windows/win32/api/memoryapi/nf-memoryapi-virtualalloc
 	/// </summary>
 	[LibraryImport("kernel32.dll", SetLastError = true)]

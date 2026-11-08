@@ -1106,7 +1106,7 @@ internal sealed partial class TopBar : Window, IDisposable
 		foreach (TopBarAppEntry entry in _configuration.Apps)
 		{
 			// The entry is captured by the handlers so the sender of the event never needs to be cast.
-			string? iconPath = ResolveFilePath(entry.LaunchTarget);
+			string? iconPath = IsAppsFolderTarget(entry.LaunchTarget) ? entry.LaunchTarget : ResolveFilePath(entry.LaunchTarget);
 			FrameworkElement icon = iconPath is null ? CreateGlyphIcon(entry.Glyph) : CreateFileIcon(iconPath);
 			TopBarTile tile = CreateTile(icon, entry.DisplayName, () => LaunchTarget(entry.LaunchTarget), () => RemoveAppEntry(entry), RemoveAllAppEntries);
 
@@ -1226,7 +1226,8 @@ internal sealed partial class TopBar : Window, IDisposable
 			return;
 		}
 
-		e.AcceptedOperation = DataPackageOperation.Copy;
+		// The Start menu only allows creating shortcuts (Link), and a drop is denied for any operation the source did not allow.
+		e.AcceptedOperation = e.AllowedOperations.HasFlag(DataPackageOperation.Copy) ? DataPackageOperation.Copy : DataPackageOperation.Link;
 		e.DragUIOverride.Caption = _activeView == TopBarView.Websites ? "Pin website to Top Bar" : _activeView == TopBarView.Apps ? "Add file to Top Bar" : "Add folder to Top Bar";
 		e.DragUIOverride.IsCaptionVisible = true;
 		e.DragUIOverride.IsContentVisible = true;
@@ -1272,9 +1273,22 @@ internal sealed partial class TopBar : Window, IDisposable
 			bool foldersChanged = false;
 			foreach (IStorageItem storageItem in storageItems)
 			{
-				if (storageItem is StorageFile file && !string.IsNullOrWhiteSpace(file.Path) && !AppEntryExists(file.Path))
+				if (storageItem is StorageFile file && !string.IsNullOrWhiteSpace(file.Path))
 				{
-					_configuration.Apps.Add(new TopBarAppEntry { DisplayName = string.IsNullOrWhiteSpace(file.DisplayName) ? file.Name : file.DisplayName, LaunchTarget = file.Path });
+					// Apps dragged from the Start menu are AppsFolder items whose path is their app ID (such as an AppUserModelId)
+					// instead of a file system path, and the shell launches them through the AppsFolder.
+					bool isAppsFolderItem = !Path.IsPathFullyQualified(file.Path);
+					string launchTarget = isAppsFolderItem ? ShellAppsFolderPrefix + file.Path : file.Path;
+					if (AppEntryExists(launchTarget)) continue;
+
+					string displayName = string.IsNullOrWhiteSpace(file.DisplayName) ? file.Name : file.DisplayName;
+					// Start menu entries of desktop apps are named after their shortcut file.
+					if (isAppsFolderItem && string.Equals(Path.GetExtension(displayName), ".lnk", StringComparison.OrdinalIgnoreCase))
+					{
+						displayName = Path.GetFileNameWithoutExtension(displayName);
+					}
+
+					_configuration.Apps.Add(new TopBarAppEntry { DisplayName = displayName, LaunchTarget = launchTarget });
 					appsChanged = true;
 				}
 				else if (storageItem is StorageFolder folder && !string.IsNullOrWhiteSpace(folder.Path) && !FolderEntryExists(folder.Path))
@@ -1294,6 +1308,15 @@ internal sealed partial class TopBar : Window, IDisposable
 			Logger.Write(ex);
 		}
 	}
+
+	/// <summary>
+	/// The shell location of all installed apps, which is what the Start menu shows. Its items are launched and
+	/// rendered by appending their app ID to it.
+	/// </summary>
+	private const string ShellAppsFolderPrefix = "shell:AppsFolder\\";
+
+	private static bool IsAppsFolderTarget(string launchTarget) => launchTarget.StartsWith(ShellAppsFolderPrefix, StringComparison.OrdinalIgnoreCase);
+
 	private bool AppEntryExists(string launchTarget)
 	{
 		foreach (TopBarAppEntry entry in _configuration.Apps)
@@ -1380,12 +1403,13 @@ internal sealed partial class TopBar : Window, IDisposable
 		await FileIconLoadGate.WaitAsync();
 		try
 		{
-			if (string.Equals(Path.GetExtension(path), ".lnk", StringComparison.OrdinalIgnoreCase))
+			bool isAppsFolderItem = IsAppsFolderTarget(path);
+			if (isAppsFolderItem || string.Equals(Path.GetExtension(path), ".lnk", StringComparison.OrdinalIgnoreCase))
 			{
-				// StorageFile cannot represent shortcuts. Use the Shell's shortcut icon
+				// StorageFile cannot represent shortcuts or AppsFolder items. Use the Shell's icon
 				// without changing the saved launch target or shortcut arguments.
 				int size = Math.Clamp((int)Math.Ceiling(40.0 * (icon.XamlRoot?.RasterizationScale ?? 1.0)), 16, 256);
-				byte[] pixels = await Task.Run(() => LoadShortcutIconPixels(path, size));
+				byte[] pixels = await Task.Run(() => isAppsFolderItem ? LoadShellItemIconPixels(path, size) : LoadShortcutIconPixels(path, size));
 				WriteableBitmap bitmap = new(size, size);
 				using (Stream stream = bitmap.PixelBuffer.AsStream())
 				{
@@ -1455,6 +1479,80 @@ internal sealed partial class TopBar : Window, IDisposable
 			{
 				_ = NativeMethods.DestroyIcon(icon);
 			}
+			if (initializationResult >= 0)
+			{
+				NativeMethods.CoUninitialize();
+			}
+		}
+	}
+
+	/// <summary>
+	/// Extracts the icon of a shell item, such as an AppsFolder app, on a background thread. Packaged apps have no icon
+	/// file, so the icon is requested from the item itself through IShellItemImageFactory, the same way Explorer draws it.
+	/// https://learn.microsoft.com/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemimagefactory
+	/// </summary>
+	private static unsafe byte[] LoadShellItemIconPixels(string parsingName, int size)
+	{
+		// Returns the icon only, never a thumbnail of the item.
+		// https://learn.microsoft.com/windows/win32/api/shobjidl_core/ne-shobjidl_core-siigbf
+		const int SIIGBF_ICONONLY = 0x4;
+
+		int initializationResult = NativeMethods.CoInitializeEx(IntPtr.Zero, 0U);
+		// RPC_E_CHANGED_MODE means COM is already initialized in a different apartment.
+		// Do not balance that failed initialization call with CoUninitialize.
+		if (initializationResult < 0 && initializationResult != unchecked((int)0x80010106))
+		{
+			Marshal.ThrowExceptionForHR(initializationResult);
+		}
+		IntPtr factory = IntPtr.Zero;
+		IntPtr bitmap = IntPtr.Zero;
+		IntPtr dc = IntPtr.Zero;
+		try
+		{
+			Guid factoryId = ShellItemImageFactoryInterfaceId;
+			Marshal.ThrowExceptionForHR(NativeMethods.SHCreateItemFromParsingName(parsingName, IntPtr.Zero, in factoryId, out factory));
+
+			// IShellItemImageFactory::GetImage is the first method after IUnknown. The bitmap is a 32-bit DIB with premultiplied alpha.
+			SIZE requestedSize = new() { cx = size, cy = size };
+			Marshal.ThrowExceptionForHR(((delegate* unmanaged[Stdcall]<IntPtr, SIZE, int, IntPtr*, int>)(*(void***)factory)[3])(factory, requestedSize, SIIGBF_ICONONLY, &bitmap));
+
+			dc = NativeMethods.CreateCompatibleDC(IntPtr.Zero);
+			if (dc == IntPtr.Zero)
+			{
+				throw new IOException("Could not create an icon device context.");
+			}
+			BITMAPINFO bitmapInfo = new()
+			{
+				bmiHeader = new BITMAPINFOHEADER
+				{
+					biSize = (uint)sizeof(BITMAPINFOHEADER),
+					biWidth = size,
+					biHeight = -size, // Top-down rows match the XAML pixel buffer.
+					biPlanes = 1,
+					biBitCount = 32
+				}
+			};
+			byte[] pixels = new byte[checked(size * size * 4)];
+			fixed (byte* bits = pixels)
+			{
+				if (NativeMethods.GetDIBits(dc, bitmap, 0U, (uint)size, bits, ref bitmapInfo, 0U) != size)
+				{
+					throw new IOException("Could not read the shell item icon.");
+				}
+			}
+			return pixels;
+		}
+		finally
+		{
+			if (dc != IntPtr.Zero)
+			{
+				_ = NativeMethods.DeleteDC(dc);
+			}
+			if (bitmap != IntPtr.Zero)
+			{
+				_ = NativeMethods.DeleteObject(bitmap);
+			}
+			NativeMethods.ReleaseComObject(factory);
 			if (initializationResult >= 0)
 			{
 				NativeMethods.CoUninitialize();
@@ -6033,6 +6131,7 @@ internal sealed partial class TopBar : Window, IDisposable
 	private static readonly Guid ContextMenuInterfaceId = new("000214E4-0000-0000-C000-000000000046");
 	private static readonly Guid ContextMenu2InterfaceId = new("000214F4-0000-0000-C000-000000000046");
 	private static readonly Guid ContextMenu3InterfaceId = new("BCFCE0A0-EC17-11D0-8D10-00A0C90F2719");
+	private static readonly Guid ShellItemImageFactoryInterfaceId = new("BCC18B79-BA16-442F-80C4-8A59C30C463B");
 
 	// The Global Search startup task starts the manual service at sign in so it indexes right away; no elevation is needed.
 	private async void OnSearchStartupLoaded() =>

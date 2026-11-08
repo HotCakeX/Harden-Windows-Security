@@ -1,0 +1,1 @@
+* The Apps view/section of the TopBar now supports drag & dropping Windows Start Menu pinned apps and icons.

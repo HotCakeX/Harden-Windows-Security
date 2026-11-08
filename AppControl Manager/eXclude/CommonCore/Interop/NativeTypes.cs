@@ -2709,6 +2709,16 @@ internal struct FILE_ID_DESCRIPTOR
 }
 
 /// <summary>
+/// https://learn.microsoft.com/windows/win32/api/windef/ns-windef-size
+/// </summary>
+[StructLayout(LayoutKind.Sequential)]
+internal struct SIZE
+{
+	internal int cx;
+	internal int cy;
+}
+
+/// <summary>
 /// https://learn.microsoft.com/windows/win32/api/wingdi/ns-wingdi-bitmapinfoheader
 /// Blittable 40-byte header on X64 and ARM64.
 /// </summary>

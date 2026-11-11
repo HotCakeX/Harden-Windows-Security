@@ -2,6 +2,6 @@
   "sdk": {
     "version": "11.0.100",
     "rollForward": "latestMinor",
-    "allowPrerelease": true
+    "allowPrerelease": false
   }
 }

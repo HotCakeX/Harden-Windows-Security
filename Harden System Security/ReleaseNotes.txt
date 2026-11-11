@@ -1,3 +1,5 @@
 * The Apps view/section of the TopBar now supports drag & dropping Windows Start Menu pinned apps and icons.
 
 * You can now choose which metric appears on the standard notch of the TopBar when it's on the Performance view. Previously, the currently active/focused program's metric would be shown but now you can choose between the old behavior or displaying any single metric that matters to you instead. Your choices are saved.
+
+* Updated dependencies to the latest versions.

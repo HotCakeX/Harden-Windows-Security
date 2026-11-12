@@ -1188,9 +1188,9 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 		try
 		{
 			string root = Path.GetFullPath(bundlePath);
-			return File.Exists(Path.Combine(root, "tor", "tor.exe")) &&
-				File.Exists(Path.Combine(root, "data", "geoip")) &&
-				File.Exists(Path.Combine(root, "data", "geoip6"));
+			return File.Exists(Path.Join(root, "tor", "tor.exe")) &&
+				File.Exists(Path.Join(root, "data", "geoip")) &&
+				File.Exists(Path.Join(root, "data", "geoip6"));
 		}
 		catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException or System.Security.SecurityException)
 		{

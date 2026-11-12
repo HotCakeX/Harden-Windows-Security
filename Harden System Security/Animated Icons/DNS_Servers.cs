@@ -1298,7 +1298,7 @@ namespace AnimatedVisuals
 
 			CompositionEffectFactory EffectFactory()
 			{
-				var compositeEffect = new CompositeEffect();
+				using var compositeEffect = new CompositeEffect();
 				compositeEffect.Mode = CanvasComposite.DestinationIn;
 				compositeEffect.Sources.Add(new CompositionEffectSourceParameter("destination"));
 				compositeEffect.Sources.Add(new CompositionEffectSourceParameter("source"));

@@ -179,14 +179,14 @@ internal sealed partial class TorProcessSession(Process process, string dataDire
 			throw new InvalidOperationException("Select the Tor Expert Bundle folder before starting.");
 		}
 		string root = Path.GetFullPath(bundlePath);
-		string executablePath = Path.Combine(root, "tor", "tor.exe");
-		string geoIpPath = Path.Combine(root, "data", "geoip");
-		string geoIp6Path = Path.Combine(root, "data", "geoip6");
+		string executablePath = Path.Join(root, "tor", "tor.exe");
+		string geoIpPath = Path.Join(root, "data", "geoip");
+		string geoIp6Path = Path.Join(root, "data", "geoip6");
 		if (!File.Exists(executablePath) || !File.Exists(geoIpPath) || !File.Exists(geoIp6Path))
 		{
 			throw new FileNotFoundException("The selected folder is not a complete Tor Expert Bundle.", executablePath);
 		}
-		string dataDirectory = Path.Combine(Path.GetTempPath(), $"{dataDirectoryPrefix}-{Environment.ProcessId}");
+		string dataDirectory = Path.Join(Path.GetTempPath(), $"{dataDirectoryPrefix}-{Environment.ProcessId}");
 		_ = Directory.CreateDirectory(dataDirectory);
 		ProcessStartInfo startInfo = new(executablePath)
 		{
@@ -279,9 +279,9 @@ internal sealed partial class TorProcessSession(Process process, string dataDire
 		{
 			return;
 		}
-		string pluggableTransportsPath = Path.Combine(root, "tor", "pluggable_transports");
-		string configurationPath = Path.Combine(pluggableTransportsPath, "pt_config.json");
-		string lyrebirdPath = Path.Combine(pluggableTransportsPath, "lyrebird.exe");
+		string pluggableTransportsPath = Path.Join(root, "tor", "pluggable_transports");
+		string configurationPath = Path.Join(pluggableTransportsPath, "pt_config.json");
+		string lyrebirdPath = Path.Join(pluggableTransportsPath, "lyrebird.exe");
 		if (!File.Exists(configurationPath) || !File.Exists(lyrebirdPath))
 		{
 			throw new FileNotFoundException("The selected Tor Expert Bundle does not contain the required Lyrebird files.", configurationPath);

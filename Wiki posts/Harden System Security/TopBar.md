@@ -18,7 +18,7 @@
 
 <br>
 
-The **TopBar** is a small, elegant companion bar that lives at the very top‑center edge of your screen. Most of the time it stays tucked away as a tidy little "notch," quietly out of your way. When you move your pointer to it (or tap it), it smoothly expands into a compact panel packed with handy tools, and it slides back into its notch the moment you're done. It's designed to always be within easy reach without ever getting in the way of your work.
+The **TopBar** is a small, elegant companion bar that lives at the center of the screen edge opposite your taskbar. Most of the time it stays tucked away as a tidy little "notch," quietly out of your way. When you move your pointer to it (or tap it), it smoothly expands into a compact panel packed with handy tools, and it slides back into its notch the moment you're done. It's designed to always be within easy reach without ever getting in the way of your work.
 
 ## How To Start
 
@@ -40,7 +40,7 @@ https://github.com/user-attachments/assets/a7c1e10a-0d33-4c52-8120-4cfd34e52780
 
 ## The Notch and How It Opens
 
-While collapsed, the TopBar appears as a slim pill at the top of your display. It shows the name (and a small icon) of whichever tool it's currently set to, so you always know what it holds at a glance. Depending on the tool you've chosen, the notch can also show a live preview right there without opening.
+While collapsed, the TopBar appears as a slim pill at its docked screen edge. It normally sits at the top; if your taskbar is at the top, the TopBar docks at the bottom instead. It shows the name (and a small icon) of whichever tool it's currently set to, so you always know what it holds at a glance. Depending on the tool you've chosen, the notch can also show a live preview right there without opening.
 
 - **Open on hover or on click.** By default, the bar opens the moment your pointer reaches it. If you prefer, you can switch it to only open when you actually click or tap the notch, so it never expands just because your pointer passed over it.
 
@@ -66,6 +66,8 @@ The TopBar can display one tool at a time, and you switch between them from a sm
 ### Apps
 
 A quick‑launch strip of your favorite programs. Each app appears as a tile with its own icon and name; click one to open it. You can add your own apps, remove ones you don't want, and the bar comes preloaded with common shortcuts like Settings, File Explorer, Notepad, Calculator, and Task Manager. If you're running the app normally (not as an administrator), you can even **drag one or more programs' file(s) straight onto the bar** to pin them.
+
+- **Drag pinned apps from the Windows Start Menu.** Drag a pinned app from the Start Menu onto the TopBar to add it to the Apps view. Both desktop app shortcuts and packaged apps are supported, with their app names and icons shown on the tiles.
 
 ### Folders
 
@@ -197,7 +199,17 @@ A compact, live dashboard of how your computer is doing, refreshed every second 
 
 - **App Memory** used by Harden System Security itself
 
-When this view is selected, the standard notch can even show a tiny live readout of the app you're currently using (its name, CPU, and memory) without opening the bar. For example, if you are watching a video on Edge or coding in Visual Studio, you see the active CPU/RAM usage of them. It is highly optimized and uses very low system resources.
+#### Choose What the Performance Notch Shows
+
+When Performance is selected, you can choose what appears on the **standard notch** without opening the bar:
+
+- **Active program**: In this mode, it shows a tiny live readout of the app you're currently using (its name, CPU, and memory usage). For example, if you are watching a video on Edge or coding in Visual Studio, you can see the active CPU/RAM usage of them. It is highly optimized and uses very low system resources.
+
+- **One metric of your choice**: Choose **CPU Usage**, **CPU Temperature**, **Memory**, **Storage Temperature**, **Disk Activity**, **Network**, **Total System Power**, **Battery Discharge**, or **App Memory**.
+
+To change it, expand the bar, select **Performance**, and select the small **Notch content for Performance** button. Choose an option in **Shown on the notch**. Your selection is saved automatically and restored the next time you launch the TopBar.
+
+The selected reading refreshes every second while the standard Performance notch is visible. Metrics that your hardware cannot report show a dash.
 
 <div align="center">
 
@@ -513,6 +525,12 @@ A settings menu in the expanded bar lets you tailor how the TopBar behaves:
 
 - **Always on top.** Keep the bar above every other window so it's always visible.
 
+- **Auto-hide in full screen.** Hide the TopBar while Windows reports a full-screen app, then show it again when full-screen mode ends. If Shy Bar mode is enabled, the bar returns to its hidden state instead.
+
+- **Background.** Choose **Solid**, **Mica**, **Mica Alt**, or **Acrylic**. Your selection is saved. Acrylic is available only in the dark theme; switching to the light theme while Acrylic is selected changes the background to Mica Alt.
+
+- **Use system composition (next launch).** Save a preference to use the system composition engine for the next TopBar-only launch. Changing it does not switch the engine of the currently running bar.
+
 - **Pin open.** Keep the bar expanded so it doesn't retract while you work with it. This option is unavailable while Shy Bar mode is enabled.
 
 - **Companion.** Pick your animated companion (or none).
@@ -523,11 +541,11 @@ There are also quick buttons to **add** a new item to the current view, and to *
 
 ## Thoughtful Details
 
-- **It stays out of the way.** The bar hugs the top edge of your screen with softly rounded lower corners and gentle "flared" upper edges, so it looks like it grows naturally out of the top of your display. It doesn't appear in the taskbar or the task switcher.
+- **It stays out of the way.** The bar hugs the screen edge opposite your taskbar, with softly rounded corners away from that edge and gentle "flared" corners against it. It docks at the bottom when the taskbar is at the top, and updates its position and layout when the display or taskbar changes. It doesn't appear in the taskbar or the task switcher.
 
 - **It's light on your system.** The live tools only do their work while you're actually looking at them and the bar is open. A collapsed bar costs practically nothing.
 
-- **Your choices are remembered.** Your pinned apps, folders, websites, clocks, companion choice, notch style, Shy Bar mode choice, Search **Max results** number and large thumbnails choice, the Clipboard history and Link previews switches, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
+- **Your choices are remembered.** Your pinned apps, folders, websites, clocks, companion choice, background, composition-engine preference, notch style, Performance notch metric, Shy Bar mode choice, connected-drive indexing preference, Search **Max results** number and large thumbnails choice, the Clipboard history and Link previews switches, and all your Sentry preferences are saved automatically, so the bar looks and behaves exactly the same the next time you open it.
 
 - **One bar at a time.** Even if you have more than one copy of the app running, only a single TopBar is shown, so it never clutters your screen.
 

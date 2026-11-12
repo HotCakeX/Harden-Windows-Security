@@ -74,6 +74,7 @@ internal static class ViewModelProvider
 	private static readonly Lazy<SettingsBackupRestoreVM> _settingsBackupRestore = new(static () => new(), false);
 	private static readonly Lazy<ViewExportedFunctionsVM> _viewExportedFunctionsVM = new(static () => new(), false);
 	private static readonly Lazy<TweaksVM> _tweaksVM = new(static () => new(), false);
+	private static readonly Lazy<DNSVM> _dnsVM = new(static () => new(), false);
 
 	// Internal Properties - View Models \\
 	internal static ProtectVM ProtectVM => _protectVM.Value;
@@ -122,6 +123,7 @@ internal static class ViewModelProvider
 	internal static SettingsBackupRestoreVM SettingsBackupRestore => _settingsBackupRestore.Value;
 	internal static ViewExportedFunctionsVM ViewExportedFunctionsVM => _viewExportedFunctionsVM.Value;
 	internal static TweaksVM TweaksVM => _tweaksVM.Value;
+	internal static DNSVM DNSVM => _dnsVM.Value;
 
 	/// <summary>
 	/// Disposes only those instances that were actually created during the app lifetime and implement <see cref="IDisposable"/>
@@ -134,5 +136,6 @@ internal static class ViewModelProvider
 		try { if (_homeVM.IsValueCreated) _homeVM.Value.Dispose(); } catch { }
 		try { if (_intuneVM.IsValueCreated) _intuneVM.Value.Dispose(); } catch { }
 		try { if (_protectVM.IsValueCreated) _protectVM.Value.Dispose(); } catch { }
+		try { if (_dnsVM.IsValueCreated) _dnsVM.Value.Dispose(); } catch { }
 	}
 }

@@ -8075,4 +8075,331 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>AI ഏജന്റുകളിൽ നിന്ന് ഉത്ഭവിക്കുന്ന നെറ്റ്‌വർക്ക് ട്രാഫിക് സ്കാൻ ചെയ്യുന്ന Defender-ന്റെ റൺടൈം AI ഏജന്റ് നെറ്റ്‌വർക്ക് പരിരക്ഷയെ ഈ ക്രമീകരണം നിയന്ത്രിക്കുന്നു. ഇത് പ്രവർത്തനക്ഷമമാക്കിയാൽ, Defender ഏജന്റ് പ്രോസസുകളുടെ നെറ്റ്‌വർക്ക് ട്രാഫിക് പരിശോധിക്കുകയും മാൽവെയർ അല്ലെങ്കിൽ ദുരുപയോഗ സൂചനകൾ കണ്ടെത്തിയതുമായി പൊരുത്തപ്പെടുന്ന ഏത് ട്രാഫിക്കും ഏജന്റ് അത് നിർവഹിക്കുന്നതിന് മുമ്പ് തടയുകയും ചെയ്യുന്നു.</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>മറ്റ് ഉപകരണങ്ങളുമായി VPN കണക്ഷനുകളും സുരക്ഷിത കണക്ഷനുകളും പങ്കിടാൻ Smart DNS, വെബ്‌സൈറ്റ് വിലാസങ്ങൾ എൻക്രിപ്റ്റ് ചെയ്ത രീതിയിൽ അന്വേഷിക്കാൻ HTTPS വഴിയുള്ള DNS, അല്ലെങ്കിൽ വെബ്‌സൈറ്റ് ഡൊമെയ്‌നുകൾ രേഖപ്പെടുത്താനോ Tor വഴി DNS ഉപയോഗിക്കാനോ സാധാരണ DNS ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>മറ്റ് ഉപകരണങ്ങളുമായി VPN കണക്ഷനുകളും സുരക്ഷിത കണക്ഷനുകളും പങ്കിടാൻ Smart DNS, വെബ്‌സൈറ്റ് വിലാസങ്ങൾ എൻക്രിപ്റ്റ് ചെയ്ത രീതിയിൽ അന്വേഷിക്കാൻ HTTPS വഴിയുള്ള DNS, അല്ലെങ്കിൽ വെബ്‌സൈറ്റ് ഡൊമെയ്‌നുകൾ രേഖപ്പെടുത്താനോ Tor വഴി DNS ഉപയോഗിക്കാനോ സാധാരണ DNS ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>നിർത്തുക</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>അപ്‌ലോഡ്</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>ആകെ</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>സജീവ കണക്ഷനുകൾ</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>ക്ലയന്റിന്റെ IP വിലാസം അനുസരിച്ചുള്ള ട്രാഫിക്</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>അപ്‌ലോഡ് ചെയ്തത്</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>ഡൗൺലോഡ് ചെയ്തത്</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>കണക്ഷനുകൾ</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>ആരംഭിക്കുന്നതിന് മുമ്പ് ഉറവിട അഡാപ്റ്ററും ലക്ഷ്യ അഡാപ്റ്ററും തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS പ്രവർത്തിക്കുന്നു. പ്രാദേശിക ഉപകരണങ്ങളുടെ DNS സെർവർ {0} ആയി സജ്ജമാക്കുക.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS നിർത്തി.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>ഒരു പിശക് കാരണം Smart DNS നിർത്തി</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>ഉപയോഗിക്കാവുന്ന IPv4 വിലാസമുള്ള നെറ്റ്‌വർക്ക് അഡാപ്റ്ററുകളൊന്നും കണ്ടെത്തിയില്ല.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>Tor Expert Bundle ഫോൾഡർ</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>Tor കണക്ഷൻ രീതി</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>നേരിട്ട്</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>സ്വകാര്യ കീ ഉള്ള സർട്ടിഫിക്കറ്റ് തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റ് സൃഷ്ടിച്ച് വിശ്വസനീയമായി സജ്ജമാക്കുക</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>കമ്പനി</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>വിവരണം</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>റിസോൾവർ ചേർക്കുക</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>ടെംപ്ലേറ്റ് കാണിക്കാൻ ഹോസ്റ്റ് നാമമോ IP വിലാസമോ നൽകുക</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>Tor പ്രാരംഭ സജ്ജീകരണം നടത്തുക</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>Tor നിർത്തുക</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>ആരംഭിക്കുന്നതിന് മുമ്പ് ലിസണർ അഡാപ്റ്റർ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>tor\tor.exe, data\geoip, data\geoip6 എന്നിവ അടങ്ങിയ സാധുവായ Tor Expert Bundle ഫോൾഡർ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>ആരംഭിക്കുന്നതിന് മുമ്പ് DoH സെർവർ സർട്ടിഫിക്കറ്റ് തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>DoH സർട്ടിഫിക്കറ്റിനായി സാധുവായ DNS ഹോസ്റ്റ് നാമമോ IP വിലാസമോ നൽകുക.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>1 മുതൽ 65535 വരെയുള്ള സാധുവായ DoH പോർട്ട് നൽകുക.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>കുറഞ്ഞത് ഒരു അപ്‌സ്ട്രീം DoH റിസോൾവറെങ്കിലും തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>HTTPS വഴിയുള്ള DNS സെർവർ പ്രവർത്തിക്കുന്നു. ഇനിപ്പറയുന്ന DoH ടെംപ്ലേറ്റ് ഉപയോഗിക്കാൻ ക്ലയന്റുകളെ കോൺഫിഗർ ചെയ്യുക: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>HTTPS വഴിയുള്ള DNS സെർവർ നിർത്തി.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>ഒരു പിശക് കാരണം HTTPS വഴിയുള്ള DNS സെർവർ നിർത്തി</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>Tor പ്രാരംഭ സജ്ജീകരണം നടത്തുന്നു. ഇതിന് കുറച്ച് മിനിറ്റുകൾ എടുത്തേക്കാം.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor തയ്യാറാണ്.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>Tor പ്രാരംഭ സജ്ജീകരണം പരാജയപ്പെട്ടു</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor നിർത്തി.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>{0}-നുള്ള സ്വയം ഒപ്പിട്ട DoH സർട്ടിഫിക്കറ്റ് സൃഷ്ടിച്ച് വിശ്വസനീയമായി സജ്ജമാക്കി തിരഞ്ഞെടുത്തു.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>DoH സർട്ടിഫിക്കറ്റ് സൃഷ്ടിക്കാനായില്ല</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>കമ്പനി, വിവരണം, DoH റിസോൾവറിന്റെ സാധുവായ HTTPS URL എന്നിവ നൽകുക.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>ആ അപ്‌സ്ട്രീം DoH റിസോൾവർ ഇതിനകം പട്ടികയിലുണ്ട്.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>HTTPS വഴിയുള്ള DNS-ന്റെ സാധാരണ പൊതു റിസോൾവർ.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>മാൽവെയർ ഡൊമെയ്‌നുകൾ തടയുന്നു.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>മാൽവെയറും മുതിർന്നവർക്കുള്ള ഉള്ളടക്കവും തടയുന്നു.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>Google Public DNS-ന്റെ HTTPS വഴിയുള്ള DNS റിസോൾവർ.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>മാൽവെയർ തടയലും DNSSEC സാധൂകരണവും ഉൾപ്പെടുന്ന ശുപാർശ ചെയ്യുന്ന കോൺഫിഗറേഷൻ.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>EDNS Client Subnet പ്രവർത്തനക്ഷമമാക്കിയുള്ള മാൽവെയർ തടയലും DNSSEC സാധൂകരണവും.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>മാൽവെയർ തടയലും DNSSEC സാധൂകരണവും ഇല്ലാതെ, പരിചയസമ്പന്നരായ ഉപയോക്താക്കൾക്കായി.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>Tor Expert Bundle ഡൗൺലോഡ് ചെയ്യുക</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>അപ്‌സ്ട്രീം DoH റിസോൾവർ ചേർക്കുക</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>ചേർക്കുക</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>റദ്ദാക്കുക</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>HTTPS വഴിയുള്ള DNS റിസോൾവറിന്റെ വിശദാംശങ്ങൾ നൽകുക. അതിന്റെ വിലാസം https:// എന്നതിൽ ആരംഭിക്കണം.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>DNS സെർവർ പ്രവർത്തിക്കുന്നു. പ്രാദേശിക ഉപകരണങ്ങളുടെ DNS സെർവർ {0} ആയി സജ്ജമാക്കുക.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>DNS സെർവർ നിർത്തി.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>ഒരു പിശക് കാരണം DNS സെർവർ നിർത്തി</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>ആരംഭിക്കുക</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor പ്രവർത്തിക്കുന്നില്ല.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>അപ്‌സ്ട്രീം DoH റിസോൾവറുകൾ</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>കുറഞ്ഞത് ഒരു അപ്‌സ്ട്രീം DNS സെർവറെങ്കിലും IP വിലാസമായി നൽകുക. ഒന്നിലധികം സെർവറുകളെ കോമ ഉപയോഗിച്ച് വേർതിരിക്കുക.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>സംരക്ഷിക്കുന്നില്ല. ആദ്യം ഒരു ഫയൽ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>ഫയൽ തിരഞ്ഞെടുക്കുക</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>ലോഗുകൾ</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>ഉറവിട അഡാപ്റ്റർ (LAN ലിസണർ)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>പ്രാദേശിക ഉപകരണങ്ങൾ കണക്റ്റ് ചെയ്തിരിക്കുന്ന നെറ്റ്‌വർക്കിന്റെ അഡാപ്റ്റർ. സെർവർ അതിന്റെ IPv4 വിലാസത്തിൽ വരുന്ന കണക്ഷനുകൾ സ്വീകരിക്കാൻ കാത്തിരിക്കുന്നു.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>ലക്ഷ്യ അഡാപ്റ്റർ (പുറത്തേക്കുള്ള ട്രാഫിക്)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>ഇന്റർനെറ്റ് കണക്ഷൻ പങ്കിടുന്ന അഡാപ്റ്റർ. DNS ക്വറികളും പ്രോക്സി വഴി അയയ്ക്കുന്ന കണക്ഷനുകളും ഇതിലൂടെയാണ് പുറത്തേക്ക് പോകുന്നത്.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>ആപ്ലിക്കേഷനുകൾക്കായി UDP, QUIC (HTTP/3) എന്നിവ പ്രവർത്തനക്ഷമമാക്കുക</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>വെബ്‌സൈറ്റിന് സുരക്ഷിതമാണെങ്കിൽ UDP പോർട്ട് 443 വഴി QUIC ട്രാഫിക് കൈമാറുന്നു. അല്ലാത്തപക്ഷം ഉപകരണങ്ങൾ TCP ഉപയോഗിക്കുന്നു.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>Tor ഉപയോഗിക്കുക</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>അജ്ഞാതത്വവും സുരക്ഷയും വർധിപ്പിക്കാൻ ഈ സെർവറിന്റെ ട്രാഫിക് Tor വഴി അയയ്ക്കുന്നു.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>DoH സെർവർ സർട്ടിഫിക്കറ്റ്</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>HTTPS വഴിയുള്ള DNS സെർവർ ക്ലയന്റുകൾക്ക് നൽകുന്ന സർട്ടിഫിക്കറ്റ്.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റ്</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>കമ്പ്യൂട്ടറിന്റെയോ നിലവിലെ ഉപയോക്താവിന്റെയോ വ്യക്തിഗത സർട്ടിഫിക്കറ്റ് സ്റ്റോറിൽ നിന്നുള്ള സ്വകാര്യ കീ ഉള്ള സർട്ടിഫിക്കറ്റ്.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>DoH സർട്ടിഫിക്കറ്റിന്റെ ഹോസ്റ്റ് നാമം അല്ലെങ്കിൽ IP വിലാസം</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>സൃഷ്ടിക്കുന്ന സർട്ടിഫിക്കറ്റ് നൽകപ്പെടുന്ന പേര്. HTTPS വഴിയുള്ള DNS ടെംപ്ലേറ്റിലും ഇത് ഉപയോഗിക്കുന്നു.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>സർട്ടിഫിക്കറ്റ് സൃഷ്ടിക്കുക</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>ഹോസ്റ്റ് നാമത്തിനോ IP വിലാസത്തിനോ വേണ്ടി സ്വയം ഒപ്പിട്ട സർട്ടിഫിക്കറ്റ് സൃഷ്ടിച്ച്, ഈ കമ്പ്യൂട്ടറിൽ അത് വിശ്വസനീയമായി സജ്ജമാക്കി തിരഞ്ഞെടുക്കുന്നു.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>DoH പോർട്ട്</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>HTTPS വഴിയുള്ള DNS സെർവർ കണക്ഷനുകൾ സ്വീകരിക്കാൻ കാത്തിരിക്കുന്ന പോർട്ട്: HTTP/1.1, HTTP/2 എന്നിവയ്ക്ക് TCP, HTTP/3-ന് UDP.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>HTTPS വഴിയുള്ള DNS ടെംപ്ലേറ്റ്</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>ക്ലയന്റുകളിൽ കോൺഫിഗർ ചെയ്യേണ്ട DoH ടെംപ്ലേറ്റ്.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>അപ്‌സ്ട്രീം DNS സെർവറുകൾ</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>ക്വറികൾക്ക് മറുപടി നൽകുന്ന DNS സെർവറുകളുടെ IP വിലാസങ്ങൾ, കോമ ഉപയോഗിച്ച് വേർതിരിച്ചത്.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>ഡൊമെയ്ൻ ലോഗ്</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>അന്വേഷിച്ച ഓരോ ഡൊമെയ്ൻ നാമവും അതിനെക്കുറിച്ച് അന്വേഷിച്ച തവണകളുടെ എണ്ണവും JSON ഫയലായി സംരക്ഷിക്കുന്നു. നിലവിലുള്ള ഫയലിൽ സംരക്ഷിക്കൽ തുടരുന്നതിനാൽ, ഓരോ തവണ പ്രവർത്തിപ്പിക്കുമ്പോഴും എണ്ണം വർധിച്ചുകൊണ്ടിരിക്കും.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>ലോഗ് ഫയൽ</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>അന്വേഷിച്ച ഡൊമെയ്ൻ നാമങ്ങളും അവയുടെ എണ്ണവും സംരക്ഷിക്കുന്ന JSON ഫയൽ.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>റൂട്ട് ഡൊമെയ്‌നുകൾ മാത്രം</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>ഉപഡൊമെയ്‌നുകളെ അവയുടെ റൂട്ട് ഡൊമെയ്‌നിന് കീഴിൽ സംരക്ഷിക്കുന്നു, ഉദാഹരണത്തിന് azure.homefront.microsoft.com എന്നതിന് പകരം microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>കൈകാര്യം ചെയ്ത ക്വറികൾ</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>കാഷിൽ നിന്ന് നൽകിയ മറുപടികൾ</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>പരാജയപ്പെട്ട ക്വറികൾ</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>ക്ലയന്റുകൾ</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>അപ്‌സ്ട്രീം DNS സെർവറുകളുടെ ഉറവിടം</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>ക്വറികൾ കൈമാറുന്ന ലക്ഷ്യസ്ഥാനം. മറ്റ് സെർവറുകളിലേക്കുള്ള DNS ട്രാഫിക് VPN തടയുമ്പോഴും ലക്ഷ്യ അഡാപ്റ്ററിന്റെ DNS സെർവറുകൾ പ്രവർത്തിക്കും.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>ലക്ഷ്യ അഡാപ്റ്ററിന്റെ DNS സെർവറുകൾ</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>ഇഷ്‌ടാനുസൃത DNS സെർവറുകൾ</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>ലക്ഷ്യ അഡാപ്റ്റർ</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>ഈ അഡാപ്റ്ററിലൂടെ അതിന്റെ DNS സെർവറുകളിലേക്ക് ക്വറികൾ അയയ്ക്കുന്നു. VPN കണക്റ്റ് ചെയ്തിരിക്കുമ്പോൾ VPN അഡാപ്റ്റർ തിരഞ്ഞെടുക്കുക.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>ഡൊമെയ്ൻ ലോഗിനായി ഒരു ഫയൽ തിരഞ്ഞെടുക്കുക, അല്ലെങ്കിൽ ഡൊമെയ്ൻ ലോഗ് ഓഫാക്കുക.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>DNS സെർവറുകളുള്ള ലക്ഷ്യ അഡാപ്റ്റർ തിരഞ്ഞെടുക്കുക, അല്ലെങ്കിൽ ഇഷ്‌ടാനുസൃത DNS സെർവറുകൾ ഉപയോഗിക്കുക.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ലോഗുകൾ കാണിക്കുക അല്ലെങ്കിൽ മറയ്ക്കുക</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ലോഗുകൾ കാണിക്കുക അല്ലെങ്കിൽ മറയ്ക്കുക</value>
+  </data>
 </root>

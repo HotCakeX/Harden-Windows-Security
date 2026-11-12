@@ -8075,4 +8075,331 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>הגדרה זו שולטת בהגנת הרשת בזמן הריצה של סוכן הבינה המלאכותית ב-Defender, אשר סורקת תעבורת רשת שמקורה בסוכני בינה מלאכותית. כאשר ההגדרה מופעלת, Defender בודק את תעבורת הרשת של תהליכי הסוכן וחוסם כל תעבורה התואמת לזיהוי של סימנים לתוכנות זדוניות או לשימוש לרעה לפני שהסוכן מבצע אותה.</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>השתמשו ב-Smart DNS לשיתוף חיבורי VPN וחיבורים מאובטחים עם מכשירים אחרים, ב-DNS over HTTPS לבירור מוצפן של כתובות אתרים, או ב-DNS רגיל למעקב אחר שמות מתחם של אתרים או להעברת DNS דרך Tor.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>השתמשו ב-Smart DNS לשיתוף חיבורי VPN וחיבורים מאובטחים עם מכשירים אחרים, ב-DNS over HTTPS לבירור מוצפן של כתובות אתרים, או ב-DNS רגיל למעקב אחר שמות מתחם של אתרים או להעברת DNS דרך Tor.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>עצירה</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>העלאה</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>סך הכול</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>חיבורים פעילים</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>תעבורה לפי כתובת ה-IP של הלקוח</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>הועלה</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>הורד</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>חיבורים</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>יש לבחור גם את מתאם המקור וגם את מתאם היעד לפני ההפעלה.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS פועל. הגדירו את שרת ה-DNS של המכשירים המקומיים ל-{0}.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS נעצר.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>Smart DNS נעצר עקב שגיאה</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>לא נמצאו מתאמי רשת עם כתובת IPv4 שניתן להשתמש בה.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>תיקיית Tor Expert Bundle</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>שיטת החיבור ל-Tor</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>ישיר</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>בחרו אישור עם מפתח פרטי</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>יצירת אישור והגדרתו כמהימן</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>חברה</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>תיאור</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>הוספת פותר DNS</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>הזינו שם מארח או כתובת IP להצגת התבנית</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>אתחול Tor</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>עצירת Tor</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>יש לבחור מתאם להאזנה לפני ההפעלה.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>בחרו תיקיית Tor Expert Bundle תקינה המכילה את tor\tor.exe, את data\geoip ואת data\geoip6.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>יש לבחור אישור לשרת DoH לפני ההפעלה.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>הזינו שם מארח DNS תקין או כתובת IP תקינה עבור אישור ה-DoH.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>הזינו יציאת DoH תקינה בטווח 1 עד 65535.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>בחרו לפחות פותר DoH אחד שאליו יועברו השאילתות.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>שרת ה-DNS over HTTPS פועל. הגדירו את הלקוחות לשימוש בתבנית ה-DoH הבאה: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>שרת ה-DNS over HTTPS נעצר.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>שרת ה-DNS over HTTPS נעצר עקב שגיאה</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>Tor מאותחל. הפעולה עשויה להימשך כמה דקות.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor מוכן.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>אתחול Tor נכשל</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor נעצר.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>אישור ה-DoH בחתימה עצמית עבור {0} נוצר, הוגדר כמהימן ונבחר.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>לא ניתן היה ליצור את אישור ה-DoH</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>הזינו חברה, תיאור וכתובת URL תקינה של פותר DoH בפרוטוקול HTTPS.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>פותר ה-DoH הזה כבר מופיע ברשימת הפותרים שאליהם מועברות השאילתות.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>פותר DNS over HTTPS ציבורי רגיל.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>חוסם שמות מתחם של תוכנות זדוניות.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>חוסם תוכנות זדוניות ותוכן למבוגרים.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>פותר DNS over HTTPS של Google Public DNS.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>תצורה מומלצת עם חסימת תוכנות זדוניות ואימות DNSSEC.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>חסימת תוכנות זדוניות ואימות DNSSEC עם EDNS Client Subnet מופעל.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>ללא חסימת תוכנות זדוניות וללא אימות DNSSEC, למשתמשים מתקדמים.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>הורדת Tor Expert Bundle</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>הוספת פותר DoH להעברת שאילתות</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>הוספה</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>ביטול</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>הזינו את פרטי פותר ה-DNS over HTTPS. הכתובת שלו חייבת להתחיל ב-https://.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>שרת ה-DNS פועל. הגדירו את שרת ה-DNS של המכשירים המקומיים ל-{0}.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>שרת ה-DNS נעצר.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>שרת ה-DNS נעצר עקב שגיאה</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>הפעלה</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor אינו פועל.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>פותרי DoH להעברת שאילתות</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>הזינו לפחות שרת DNS אחד להעברת שאילתות, ככתובת IP. הפרידו בין שרתים מרובים באמצעות פסיקים.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>לא מתבצעת שמירה. בחרו קובץ תחילה.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>בחירת קובץ</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>יומנים</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>מתאם מקור (האזנה ברשת LAN)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>המתאם של הרשת שאליה מחוברים המכשירים המקומיים. השרת מאזין בכתובת ה-IPv4 שלו.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>מתאם יעד (תעבורה יוצאת)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>המתאם שחיבור האינטרנט שלו משותף. שאילתות ה-DNS והחיבורים המועברים דרך שרת ה-Proxy יוצאים דרכו.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>הפעלת UDP ו-QUIC ‏(HTTP/3) עבור יישומים</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>מעביר תעבורת QUIC ביציאת UDP 443 כאשר הדבר בטוח עבור האתר. אחרת, המכשירים משתמשים ב-TCP.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>שימוש ב-Tor</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>מעביר את התעבורה של שרת זה דרך Tor להגברת האנונימיות והאבטחה.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>אישור שרת DoH</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>האישור ששרת ה-DNS over HTTPS מציג ללקוחות.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>אישור</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>אישור עם מפתח פרטי ממאגר האישורים האישי של המחשב או של המשתמש הנוכחי.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>שם מארח או כתובת IP עבור אישור DoH</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>השם שעבורו מונפק האישור שנוצר. הוא משמש גם בתבנית ה-DNS over HTTPS.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>יצירת אישור</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>יוצר אישור בחתימה עצמית עבור שם המארח או כתובת ה-IP, מגדיר אותו כמהימן במחשב זה ובוחר בו.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>יציאת DoH</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>היציאה שבה שרת ה-DNS over HTTPS מאזין: TCP עבור HTTP/1.1 ו-HTTP/2, ו-UDP עבור HTTP/3.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>תבנית DNS over HTTPS</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>תבנית ה-DoH להגדרה בלקוחות.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>שרתי DNS להעברת שאילתות</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>כתובות ה-IP של שרתי ה-DNS שעונים לשאילתות, מופרדות בפסיקים.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>יומן שמות מתחם</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>שומר כל שם מתחם שנשלחה עבורו שאילתה, יחד עם מספר השאילתות עבורו, בקובץ JSON. אם קיים קובץ, השמירה נמשכת בו, כך שהספירות ממשיכות להצטבר בין הפעלות.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>קובץ יומן</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>קובץ ה-JSON שבו נשמרים שמות המתחם שנשלחו עבורם שאילתות ומספר השאילתות עבור כל אחד מהם.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>שמות מתחם ראשיים בלבד</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>שומר תת-מתחמים תחת שם המתחם הראשי שלהם, לדוגמה microsoft.com במקום azure.homefront.microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>שאילתות שטופלו</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>שאילתות שנענו מהמטמון</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>שאילתות שנכשלו</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>לקוחות</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>מקור שרתי ה-DNS להעברת שאילתות</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>היעד שאליו מועברות השאילתות. שרתי ה-DNS של מתאם היעד פועלים גם כאשר VPN חוסם תעבורת DNS לשרתים אחרים.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>שרתי ה-DNS של מתאם היעד</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>שרתי DNS מותאמים אישית</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>מתאם יעד</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>השאילתות נשלחות לשרתי ה-DNS של מתאם זה, דרך מתאם זה. כאשר VPN מחובר, בחרו את מתאם ה-VPN.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>בחרו קובץ ליומן שמות המתחם, או השביתו את יומן שמות המתחם.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>בחרו מתאם יעד שמוגדרים עבורו שרתי DNS, או השתמשו בשרתי DNS מותאמים אישית.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>הצגה או הסתרה של היומנים</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>הצגה או הסתרה של היומנים</value>
+  </data>
 </root>

@@ -8075,4 +8075,331 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>يتحكم هذا الإعداد في حماية شبكة وكيل الذكاء الاصطناعي في Defender أثناء وقت التشغيل، والتي تفحص حركة مرور الشبكة الصادرة من وكلاء الذكاء الاصطناعي. عند تمكينه، يفحص Defender حركة مرور الشبكة لعمليات الوكيل ويحظر أي حركة مرور تطابق اكتشافًا لمؤشرات على برامج ضارة أو إساءة استخدام قبل أن ينفذها الوكيل.</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>استخدم Smart DNS لمشاركة اتصالات VPN والاتصالات الآمنة مع الأجهزة الأخرى، أو DNS عبر HTTPS للاستعلام المشفر عن عناوين المواقع، أو DNS العادي لتسجيل نطاقات المواقع أو لاستخدام DNS عبر Tor.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>استخدم Smart DNS لمشاركة اتصالات VPN والاتصالات الآمنة مع الأجهزة الأخرى، أو DNS عبر HTTPS للاستعلام المشفر عن عناوين المواقع، أو DNS العادي لتسجيل نطاقات المواقع أو لاستخدام DNS عبر Tor.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>إيقاف</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>الرفع</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>الإجمالي</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>الاتصالات النشطة</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>حركة البيانات حسب عنوان IP للعميل</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>تم رفعه</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>تم تنزيله</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>الاتصالات</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>حدد محول المصدر ومحول الوجهة قبل البدء.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS قيد التشغيل. اضبط خادم DNS للأجهزة المحلية على {0}.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>توقف Smart DNS.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>توقف Smart DNS بسبب خطأ</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>لم يتم العثور على محولات شبكة ذات عنوان IPv4 قابل للاستخدام.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>مجلد Tor Expert Bundle</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>طريقة الاتصال بـ Tor</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>مباشر</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>حدد شهادة تحتوي على مفتاح خاص</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>إنشاء شهادة واعتمادها كموثوقة</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>الشركة</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>إضافة محلل</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>أدخل اسم مضيف أو عنوان IP لعرض القالب</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>تهيئة Tor</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>إيقاف Tor</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>حدد محول الاستماع قبل البدء.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>حدد مجلد Tor Expert Bundle صالحًا يحتوي على tor\tor.exe وdata\geoip وdata\geoip6.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>حدد شهادة خادم DoH قبل البدء.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>أدخل اسم مضيف DNS صالحًا أو عنوان IP صالحًا لشهادة DoH.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>أدخل منفذ DoH صالحًا من 1 إلى 65535.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>حدد محلل DoH واحدًا على الأقل لإعادة توجيه الاستعلامات إليه.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>خادم DNS عبر HTTPS قيد التشغيل. اضبط العملاء لاستخدام قالب DoH التالي: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>توقف خادم DNS عبر HTTPS.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>توقف خادم DNS عبر HTTPS بسبب خطأ</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>جارٍ تهيئة Tor. قد يستغرق ذلك بضع دقائق.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor جاهز.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>فشلت تهيئة Tor</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>توقف Tor.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>تم إنشاء شهادة DoH الموقعة ذاتيًا لـ {0} واعتمادها كموثوقة وتحديدها.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>تعذر إنشاء شهادة DoH</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>أدخل شركة ووصفًا وعنوان URL صالحًا عبر HTTPS لمحلل DoH.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>محلل DoH هذا موجود بالفعل في قائمة المحللات التي تُعاد توجيه الاستعلامات إليها.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>محلل DNS عام قياسي عبر HTTPS.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>يحظر نطاقات البرمجيات الضارة.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>يحظر البرمجيات الضارة ومحتوى البالغين.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>محلل DNS عبر HTTPS لخدمة Google Public DNS.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>إعداد موصى به مع حظر البرمجيات الضارة والتحقق من صحة DNSSEC.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>حظر البرمجيات الضارة والتحقق من صحة DNSSEC مع تمكين EDNS Client Subnet.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>دون حظر البرمجيات الضارة أو التحقق من صحة DNSSEC، للمستخدمين المتقدمين.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>تنزيل Tor Expert Bundle</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>إضافة محلل DoH لإعادة توجيه الاستعلامات إليه</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>إضافة</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>أدخل تفاصيل محلل DNS عبر HTTPS. يجب أن يبدأ عنوانه بـ https://.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>خادم DNS قيد التشغيل. اضبط خادم DNS للأجهزة المحلية على {0}.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>توقف خادم DNS.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>توقف خادم DNS بسبب خطأ</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>بدء</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor ليس قيد التشغيل.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>محللات DoH لإعادة توجيه الاستعلامات إليها</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>أدخل خادم DNS واحدًا على الأقل لإعادة توجيه الاستعلامات إليه بصيغة عنوان IP. افصل بين الخوادم المتعددة بفواصل.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>لا يتم الحفظ. حدد ملفًا أولًا.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>تحديد ملف</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>السجلات</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>محول المصدر (الاستماع على شبكة LAN)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>محول الشبكة التي تتصل بها الأجهزة المحلية. يستمع الخادم على عنوان IPv4 الخاص به.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>محول الوجهة (حركة البيانات الصادرة)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>المحول الذي تتم مشاركة اتصاله بالإنترنت. تمر استعلامات DNS والاتصالات الموجهة عبر الوكيل من خلاله.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>تمكين UDP وQUIC ‏(HTTP/3) للتطبيقات</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>يمرر حركة QUIC عبر منفذ UDP رقم 443 عندما يكون ذلك آمنًا للموقع. وإلا، تستخدم الأجهزة TCP.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>استخدام Tor</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>يرسل حركة بيانات هذا الخادم عبر Tor لتعزيز إخفاء الهوية والأمان.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>شهادة خادم DoH</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>الشهادة التي يقدمها خادم DNS عبر HTTPS للعملاء.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>الشهادة</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>شهادة تحتوي على مفتاح خاص من مخزن الشهادات الشخصي للكمبيوتر أو للمستخدم الحالي.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>اسم المضيف أو عنوان IP لشهادة DoH</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>الاسم الذي تُصدر له الشهادة التي يتم إنشاؤها. ويُستخدم أيضًا في قالب DNS عبر HTTPS.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>إنشاء شهادة</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>ينشئ شهادة موقعة ذاتيًا لاسم المضيف أو عنوان IP، ويعتمدها كموثوقة على هذا الكمبيوتر ويحددها.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>منفذ DoH</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>المنفذ الذي يستمع عليه خادم DNS عبر HTTPS: ‏TCP لـ HTTP/1.1 وHTTP/2، وUDP لـ HTTP/3.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>قالب DNS عبر HTTPS</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>قالب DoH المطلوب ضبطه على العملاء.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>خوادم DNS لإعادة توجيه الاستعلامات إليها</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>عناوين IP لخوادم DNS التي تجيب عن الاستعلامات، مفصولة بفواصل.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>سجل النطاقات</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>يحفظ كل اسم نطاق تم الاستعلام عنه مع عدد مرات الاستعلام عنه في ملف JSON. تتم متابعة الحفظ في الملف الموجود، لذا تستمر الأعداد في الزيادة عبر مرات التشغيل.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>ملف السجل</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>ملف JSON الذي تُحفظ فيه أسماء النطاقات التي تم الاستعلام عنها وأعداد الاستعلامات الخاصة بها.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>النطاقات الجذرية فقط</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>يحفظ النطاقات الفرعية ضمن نطاقها الجذري، مثل microsoft.com بدلًا من azure.homefront.microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>الاستعلامات التي تمت معالجتها</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>الإجابات من ذاكرة التخزين المؤقت</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>الاستعلامات الفاشلة</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>العملاء</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>مصدر خوادم DNS لإعادة توجيه الاستعلامات إليها</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>الوجهة التي تُعاد توجيه الاستعلامات إليها. تعمل خوادم DNS لمحول الوجهة أيضًا عندما تحظر شبكة VPN حركة DNS إلى خوادم أخرى.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>خوادم DNS لمحول الوجهة</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>خوادم DNS مخصصة</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>محول الوجهة</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>تُرسل الاستعلامات إلى خوادم DNS لهذا المحول عبر المحول نفسه. عند الاتصال بشبكة VPN، حدد محول VPN.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>حدد ملفًا لسجل النطاقات، أو أوقف سجل النطاقات.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>حدد محول وجهة يحتوي على خوادم DNS، أو استخدم خوادم DNS مخصصة.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>إظهار السجلات أو إخفاؤها</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>إظهار السجلات أو إخفاؤها</value>
+  </data>
 </root>

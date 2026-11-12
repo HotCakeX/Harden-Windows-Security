@@ -8075,4 +8075,331 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>此设置控制 Defender 的 AI 代理运行时网络保护，该保护会扫描源自 AI 代理的网络流量。启用后，Defender 会检查代理进程的网络流量，并在代理执行相关流量之前阻止任何与恶意软件或滥用行为迹象的检测结果相匹配的流量。</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>使用 Smart DNS 与其他设备共享 VPN 和安全连接，使用 DNS over HTTPS 加密查询网站地址，或使用常规 DNS 记录网站域名或通过 Tor 传输 DNS 查询.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>使用 Smart DNS 与其他设备共享 VPN 和安全连接，使用 DNS over HTTPS 加密查询网站地址，或使用常规 DNS 记录网站域名或通过 Tor 传输 DNS 查询.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>上传</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>合计</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>活动连接</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>按客户端 IP 地址统计的流量</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>已上传</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>已下载</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>连接</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>启动前，请同时选择源适配器和目标适配器.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS 正在运行。请将本地设备的 DNS 服务器设置为 {0}.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS 已停止.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>Smart DNS 因错误而停止</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>未找到具有可用 IPv4 地址的网络适配器.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>Tor Expert Bundle 文件夹</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>Tor 连接方式</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>直连</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>选择包含私钥的证书</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>生成并信任证书</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>公司</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>添加解析器</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>输入主机名或 IP 地址以显示模板</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>初始化 Tor</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>停止 Tor</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>启动前，请选择监听适配器.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>请选择包含 tor\tor.exe、data\geoip 和 data\geoip6 的有效 Tor Expert Bundle 文件夹.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>启动前，请选择 DoH 服务器证书.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>请输入用于 DoH 证书的有效 DNS 主机名或 IP 地址.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>请输入 1 到 65535 之间的有效 DoH 端口.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>请至少选择一个上游 DoH 解析器.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>DNS over HTTPS 服务器正在运行。请将客户端配置为使用以下 DoH 模板: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>DNS over HTTPS 服务器已停止.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>DNS over HTTPS 服务器因错误而停止</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>正在初始化 Tor。此过程可能需要几分钟.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor 已就绪.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>Tor 初始化失败</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor 已停止.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>已为 {0} 创建、信任并选择自签名 DoH 证书.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>无法创建 DoH 证书</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>请输入公司、描述以及有效的 DoH 解析器 HTTPS URL.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>该上游 DoH 解析器已在列表中.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>标准公共 DNS over HTTPS 解析器.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>阻止恶意软件域名.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>阻止恶意软件和成人内容.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>Google Public DNS 的 DNS over HTTPS 解析器.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>推荐配置，提供恶意软件拦截和 DNSSEC 验证.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>提供恶意软件拦截和 DNSSEC 验证，并启用 EDNS Client Subnet.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>不拦截恶意软件，也不进行 DNSSEC 验证，适用于高级用户.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>下载 Tor Expert Bundle</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>添加上游 DoH 解析器</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>添加</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>请输入 DNS over HTTPS 解析器的详细信息。其地址必须以 https:// 开头.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>DNS 服务器正在运行。请将本地设备的 DNS 服务器设置为 {0}.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>DNS 服务器已停止.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>DNS 服务器因错误而停止</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>启动</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor 未运行.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>上游 DoH 解析器</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>请以 IP 地址形式输入至少一个上游 DNS 服务器。多个服务器之间用逗号分隔.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>未在保存。请先选择文件.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>选择文件</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>日志</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>源适配器（LAN 监听）</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>本地设备所在网络的适配器。服务器在该适配器的 IPv4 地址上监听.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>目标适配器（出站流量）</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>共享其互联网连接的适配器。DNS 查询和经代理转发的连接均通过该适配器发出.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>为应用程序启用 UDP 和 QUIC (HTTP/3)</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>在对网站安全的情况下，通过 UDP 端口 443 转发 QUIC 流量。否则，设备使用 TCP.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>使用 Tor</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>通过 Tor 发送此服务器的流量，以提高匿名性和安全性.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>DoH 服务器证书</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>DNS over HTTPS 服务器向客户端出示的证书.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>证书</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>来自计算机或当前用户的“个人”证书存储、包含私钥的证书.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>DoH 证书的主机名或 IP 地址</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>生成的证书所签发给的名称。此名称也用于 DNS over HTTPS 模板.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>生成证书</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>为主机名或 IP 地址创建自签名证书，在此计算机上信任该证书并选择它.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>DoH 端口</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>DNS over HTTPS 服务器监听的端口: HTTP/1.1 和 HTTP/2 使用 TCP，HTTP/3 使用 UDP.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>DNS over HTTPS 模板</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>要在客户端上配置的 DoH 模板.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>上游 DNS 服务器</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>响应查询的 DNS 服务器的 IP 地址，以逗号分隔.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>域名日志</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>将每个查询过的域名及其查询次数保存为 JSON 文件。如果文件已存在，则继续写入该文件，因此计数会在多次运行之间持续累加.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>日志文件</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>保存查询过的域名及其计数的 JSON 文件.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>仅根域名</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>将子域名归入其根域名保存，例如保存 microsoft.com，而不是 azure.homefront.microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>已处理的查询</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>从缓存响应的查询</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>失败的查询</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>客户端</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>上游 DNS 服务器来源</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>查询转发的目标。当 VPN 阻止发往其他服务器的 DNS 流量时，目标适配器的 DNS 服务器仍可正常工作.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>目标适配器的 DNS 服务器</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>自定义 DNS 服务器</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>目标适配器</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>查询通过此适配器发送到其 DNS 服务器。连接 VPN 时，请选择 VPN 适配器.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>请选择用于域名日志的文件，或关闭域名日志.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>请选择配置了 DNS 服务器的目标适配器，或使用自定义 DNS 服务器.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>显示或隐藏日志</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>显示或隐藏日志</value>
+  </data>
 </root>

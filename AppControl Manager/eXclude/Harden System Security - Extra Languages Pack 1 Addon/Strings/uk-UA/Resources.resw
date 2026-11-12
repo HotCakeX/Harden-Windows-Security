@@ -8075,4 +8075,331 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>Цей параметр керує мережевим захистом агентів ШІ під час виконання в Defender, який сканує мережевий трафік, що походить від агентів ШІ. Якщо цей параметр увімкнено, Defender перевіряє мережевий трафік процесів агентів і блокує будь-який трафік, що відповідає виявленим ознакам зловмисного програмного забезпечення або зловживання, до того, як агент виконає його.</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Використовуйте Smart DNS для спільного використання VPN-з’єднань і захищених з’єднань з іншими пристроями, DNS через HTTPS для зашифрованих запитів адрес вебсайтів або звичайний DNS для реєстрації доменів вебсайтів чи використання DNS через Tor.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Використовуйте Smart DNS для спільного використання VPN-з’єднань і захищених з’єднань з іншими пристроями, DNS через HTTPS для зашифрованих запитів адрес вебсайтів або звичайний DNS для реєстрації доменів вебсайтів чи використання DNS через Tor.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>Зупинити</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>Передавання</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>Загалом</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>Активні з’єднання</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>Трафік за IP-адресою клієнта</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>Передано</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>Завантажено</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>З’єднання</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>Перед запуском виберіть адаптер джерела й адаптер призначення.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS працює. Установіть для локальних пристроїв DNS-сервер {0}.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS зупинено.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>Smart DNS зупинено через помилку</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>Не знайдено мережевих адаптерів з IPv4-адресою, придатною для використання.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>Папка Tor Expert Bundle</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>Спосіб підключення до Tor</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>Пряме</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>Виберіть сертифікат із закритим ключем</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>Створити сертифікат і додати його до довірених</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>Компанія</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>Опис</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>Додати резолвер</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>Введіть ім’я хоста або IP-адресу, щоб відобразити шаблон</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>Ініціалізувати Tor</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>Зупинити Tor</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>Перед запуском виберіть адаптер для прослуховування.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>Виберіть дійсну папку Tor Expert Bundle, що містить tor\tor.exe, data\geoip і data\geoip6.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>Перед запуском виберіть сертифікат сервера DoH.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>Введіть дійсне ім’я хоста DNS або IP-адресу для сертифіката DoH.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>Введіть дійсний порт DoH від 1 до 65535.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>Виберіть принаймні один вищестоящий резолвер DoH.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>Сервер DNS через HTTPS працює. Налаштуйте клієнти на використання такого шаблону DoH: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>Сервер DNS через HTTPS зупинено.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>Сервер DNS через HTTPS зупинено через помилку</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>Триває ініціалізація Tor. Це може зайняти кілька хвилин.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor готовий.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>Не вдалося ініціалізувати Tor</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor зупинено.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>Самопідписаний сертифікат DoH для {0} створено, додано до довірених і вибрано.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>Не вдалося створити сертифікат DoH</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>Введіть компанію, опис і дійсну HTTPS URL-адресу резолвера DoH.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>Цей вищестоящий резолвер DoH уже є в списку.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>Стандартний загальнодоступний резолвер DNS через HTTPS.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>Блокує домени зловмисного програмного забезпечення.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>Блокує зловмисне програмне забезпечення та вміст для дорослих.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>Резолвер DNS через HTTPS служби Google Public DNS.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>Рекомендована конфігурація з блокуванням зловмисного програмного забезпечення та перевіркою DNSSEC.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>Блокування зловмисного програмного забезпечення та перевірка DNSSEC з увімкненою функцією EDNS Client Subnet.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>Без блокування зловмисного програмного забезпечення та без перевірки DNSSEC, для досвідчених користувачів.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>Завантажити Tor Expert Bundle</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>Додати вищестоящий резолвер DoH</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Додати</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Скасувати</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Введіть відомості про резолвер DNS через HTTPS. Його адреса має починатися з https://.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>DNS-сервер працює. Установіть для локальних пристроїв DNS-сервер {0}.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>DNS-сервер зупинено.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>DNS-сервер зупинено через помилку</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>Запустити</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor не працює.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>Вищестоящі резолвери DoH</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>Введіть IP-адресу принаймні одного вищестоящого DNS-сервера. Відокремлюйте кілька серверів комами.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>Збереження не виконується. Спочатку виберіть файл.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>Вибрати файл</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>Журнали</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Адаптер джерела (прослуховування LAN)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Адаптер мережі, до якої підключено локальні пристрої. Сервер прослуховує його IPv4-адресу.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Адаптер призначення (вихідний трафік)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Адаптер, підключення до Інтернету якого використовується спільно. DNS-запити та з’єднання, що проходять через проксі, виходять через нього.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>Увімкнути UDP і QUIC (HTTP/3) для програм</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>Передає трафік QUIC через UDP-порт 443, коли це безпечно для вебсайту. В іншому разі пристрої використовують TCP.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>Використовувати Tor</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>Надсилає трафік цього сервера через Tor для підвищення анонімності та безпеки.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>Сертифікат сервера DoH</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>Сертифікат, який сервер DNS через HTTPS надає клієнтам.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>Сертифікат</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>Сертифікат із закритим ключем зі сховища «Особисті» комп’ютера або поточного користувача.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>Ім’я хоста або IP-адреса сертифіката DoH</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>Ім’я, для якого видається створений сертифікат. Воно також використовується в шаблоні DNS через HTTPS.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>Створити сертифікат</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>Створює самопідписаний сертифікат для імені хоста або IP-адреси, додає його до довірених на цьому комп’ютері та вибирає його.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>Порт DoH</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>Порт, який прослуховує сервер DNS через HTTPS: TCP для HTTP/1.1 і HTTP/2 та UDP для HTTP/3.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>Шаблон DNS через HTTPS</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>Шаблон DoH для налаштування на клієнтах.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>Вищестоящі DNS-сервери</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>IP-адреси DNS-серверів, які відповідають на запити, відокремлені комами.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>Журнал доменів</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>Зберігає кожне запитане ім’я домену разом із кількістю запитів до нього у файлі JSON. Наявний файл доповнюється, тому лічильники продовжують зростати між запусками.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>Файл журналу</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>Файл JSON, у якому зберігаються запитані імена доменів і їхні лічильники.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>Лише кореневі домени</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>Зберігає піддомени під їхнім кореневим доменом, наприклад microsoft.com замість azure.homefront.microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>Оброблені запити</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>Відповіді з кешу</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>Невдалі запити</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>Клієнти</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>Джерело вищестоящих DNS-серверів</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>Місце, куди пересилаються запити. DNS-сервери адаптера призначення працюють і тоді, коли VPN блокує DNS-трафік до інших серверів.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>DNS-сервери адаптера призначення</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>Настроювані DNS-сервери</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Адаптер призначення</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Запити надсилаються до DNS-серверів цього адаптера через цей самий адаптер. Коли підключено VPN, виберіть адаптер VPN.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>Виберіть файл для журналу доменів або вимкніть журнал доменів.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>Виберіть адаптер призначення з DNS-серверами або використовуйте настроювані DNS-сервери.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Показати або приховати журнали</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Показати або приховати журнали</value>
+  </data>
 </root>

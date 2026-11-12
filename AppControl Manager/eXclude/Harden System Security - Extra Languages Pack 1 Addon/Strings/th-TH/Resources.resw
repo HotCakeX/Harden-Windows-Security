@@ -8075,4 +8075,331 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>การตั้งค่านี้ควบคุมการป้องกันเครือข่ายของ AI Agent ขณะทำงานของ Defender ซึ่งจะสแกนการรับส่งข้อมูลเครือข่ายที่มาจาก AI Agent เมื่อเปิดใช้งาน Defender จะตรวจสอบการรับส่งข้อมูลเครือข่ายของกระบวนการเอเจนต์ และบล็อกการรับส่งข้อมูลใดๆ ที่ตรงกับการตรวจพบสัญญาณของมัลแวร์หรือการใช้งานในทางที่ผิดก่อนที่เอเจนต์จะดำเนินการกับการรับส่งข้อมูลนั้น</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ใช้ Smart DNS เพื่อแชร์การเชื่อมต่อ VPN และการเชื่อมต่อที่ปลอดภัยกับอุปกรณ์อื่น ใช้ DNS ผ่าน HTTPS เพื่อค้นหาที่อยู่เว็บไซต์แบบเข้ารหัส หรือใช้ DNS ปกติเพื่อบันทึกโดเมนของเว็บไซต์หรือใช้ DNS ผ่าน Tor.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ใช้ Smart DNS เพื่อแชร์การเชื่อมต่อ VPN และการเชื่อมต่อที่ปลอดภัยกับอุปกรณ์อื่น ใช้ DNS ผ่าน HTTPS เพื่อค้นหาที่อยู่เว็บไซต์แบบเข้ารหัส หรือใช้ DNS ปกติเพื่อบันทึกโดเมนของเว็บไซต์หรือใช้ DNS ผ่าน Tor.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>หยุด</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>อัปโหลด</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>รวม</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>การเชื่อมต่อที่ใช้งานอยู่</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>ปริมาณการรับส่งข้อมูลตามที่อยู่ IP ของไคลเอนต์</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>อัปโหลดแล้ว</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>ดาวน์โหลดแล้ว</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>การเชื่อมต่อ</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>เลือกทั้งอะแดปเตอร์ต้นทางและอะแดปเตอร์ปลายทางก่อนเริ่ม.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS กำลังทำงาน ตั้งค่าเซิร์ฟเวอร์ DNS ของอุปกรณ์ภายในเครือข่ายเป็น {0}.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS หยุดทำงานแล้ว.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>Smart DNS หยุดทำงานเนื่องจากข้อผิดพลาด</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>ไม่พบอะแดปเตอร์เครือข่ายที่มีที่อยู่ IPv4 ที่ใช้งานได้.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>โฟลเดอร์ Tor Expert Bundle</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>วิธีการเชื่อมต่อ Tor</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>โดยตรง</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>เลือกใบรับรองที่มีคีย์ส่วนตัว</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>สร้างใบรับรองและกำหนดให้เชื่อถือ</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>บริษัท</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>คำอธิบาย</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>เพิ่มตัวแก้ไขชื่อ</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>ป้อนชื่อโฮสต์หรือที่อยู่ IP เพื่อแสดงเทมเพลต</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>เตรียมใช้งาน Tor</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>หยุด Tor</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>เลือกอะแดปเตอร์สำหรับรอรับการเชื่อมต่อก่อนเริ่ม.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>เลือกโฟลเดอร์ Tor Expert Bundle ที่ถูกต้อง ซึ่งมี tor\tor.exe, data\geoip และ data\geoip6.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>เลือกใบรับรองเซิร์ฟเวอร์ DoH ก่อนเริ่ม.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>ป้อนชื่อโฮสต์ DNS หรือที่อยู่ IP ที่ถูกต้องสำหรับใบรับรอง DoH.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>ป้อนพอร์ต DoH ที่ถูกต้องตั้งแต่ 1 ถึง 65535.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>เลือกตัวแก้ไขชื่อ DoH ต้นทางอย่างน้อยหนึ่งรายการ.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ DNS ผ่าน HTTPS กำลังทำงาน กำหนดค่าไคลเอนต์ให้ใช้เทมเพลต DoH ต่อไปนี้: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ DNS ผ่าน HTTPS หยุดทำงานแล้ว.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ DNS ผ่าน HTTPS หยุดทำงานเนื่องจากข้อผิดพลาด</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>กำลังเตรียมใช้งาน Tor ซึ่งอาจใช้เวลาสองสามนาที.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor พร้อมใช้งานแล้ว.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>เตรียมใช้งาน Tor ไม่สำเร็จ</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor หยุดทำงานแล้ว.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>สร้างใบรับรอง DoH แบบลงนามด้วยตนเองสำหรับ {0} กำหนดให้เชื่อถือ และเลือกใบรับรองแล้ว.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>ไม่สามารถสร้างใบรับรอง DoH ได้</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>ป้อนบริษัท คำอธิบาย และ URL แบบ HTTPS ที่ถูกต้องของตัวแก้ไขชื่อ DoH.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>ตัวแก้ไขชื่อ DoH ต้นทางนั้นมีอยู่ในรายการแล้ว.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>ตัวแก้ไขชื่อ DNS ผ่าน HTTPS สาธารณะแบบมาตรฐาน.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>บล็อกโดเมนมัลแวร์.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>บล็อกมัลแวร์และเนื้อหาสำหรับผู้ใหญ่.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>ตัวแก้ไขชื่อ DNS ผ่าน HTTPS ของ Google Public DNS.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>การกำหนดค่าที่แนะนำ พร้อมการบล็อกมัลแวร์และการตรวจสอบความถูกต้องของ DNSSEC.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>การบล็อกมัลแวร์และการตรวจสอบความถูกต้องของ DNSSEC โดยเปิดใช้งาน EDNS Client Subnet.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>ไม่มีการบล็อกมัลแวร์และไม่มีการตรวจสอบความถูกต้องของ DNSSEC สำหรับผู้ใช้ขั้นสูง.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>ดาวน์โหลด Tor Expert Bundle</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>เพิ่มตัวแก้ไขชื่อ DoH ต้นทาง</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>เพิ่ม</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>ยกเลิก</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>ป้อนรายละเอียดของตัวแก้ไขชื่อ DNS ผ่าน HTTPS ที่อยู่ต้องขึ้นต้นด้วย https://.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ DNS กำลังทำงาน ตั้งค่าเซิร์ฟเวอร์ DNS ของอุปกรณ์ภายในเครือข่ายเป็น {0}.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ DNS หยุดทำงานแล้ว.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ DNS หยุดทำงานเนื่องจากข้อผิดพลาด</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>เริ่ม</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor ไม่ได้กำลังทำงาน.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>ตัวแก้ไขชื่อ DoH ต้นทาง</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>ป้อนเซิร์ฟเวอร์ DNS ต้นทางอย่างน้อยหนึ่งรายการในรูปแบบที่อยู่ IP หากมีหลายเซิร์ฟเวอร์ ให้คั่นด้วยเครื่องหมายจุลภาค.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>ไม่ได้บันทึก เลือกไฟล์ก่อน.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>เลือกไฟล์</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>บันทึก</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>อะแดปเตอร์ต้นทาง (รอรับการเชื่อมต่อใน LAN)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>อะแดปเตอร์ของเครือข่ายที่อุปกรณ์ภายในเครือข่ายเชื่อมต่ออยู่ เซิร์ฟเวอร์จะรอรับการเชื่อมต่อที่ที่อยู่ IPv4 ของอะแดปเตอร์นี้.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>อะแดปเตอร์ปลายทาง (การรับส่งข้อมูลขาออก)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>อะแดปเตอร์ที่แชร์การเชื่อมต่ออินเทอร์เน็ต คำขอ DNS และการเชื่อมต่อที่ส่งผ่านพร็อกซีจะออกผ่านอะแดปเตอร์นี้.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>เปิดใช้งาน UDP และ QUIC (HTTP/3) สำหรับแอปพลิเคชัน</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>ส่งต่อ QUIC ผ่านพอร์ต UDP 443 เมื่อปลอดภัยสำหรับเว็บไซต์ มิฉะนั้น อุปกรณ์จะใช้ TCP.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>ใช้ Tor</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>ส่งข้อมูลของเซิร์ฟเวอร์นี้ผ่าน Tor เพื่อเพิ่มการไม่เปิดเผยตัวตนและความปลอดภัย.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>ใบรับรองเซิร์ฟเวอร์ DoH</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>ใบรับรองที่เซิร์ฟเวอร์ DNS ผ่าน HTTPS แสดงให้ไคลเอนต์.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>ใบรับรอง</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>ใบรับรองที่มีคีย์ส่วนตัวจากที่เก็บใบรับรองส่วนบุคคลของคอมพิวเตอร์หรือผู้ใช้ปัจจุบัน.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>ชื่อโฮสต์หรือที่อยู่ IP ของใบรับรอง DoH</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>ชื่อที่ใช้ในการออกใบรับรองที่สร้างขึ้น และใช้ในเทมเพลต DNS ผ่าน HTTPS ด้วย.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>สร้างใบรับรอง</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>สร้างใบรับรองแบบลงนามด้วยตนเองสำหรับชื่อโฮสต์หรือที่อยู่ IP กำหนดให้คอมพิวเตอร์นี้เชื่อถือใบรับรอง และเลือกใบรับรองนั้น.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>พอร์ต DoH</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>พอร์ตที่เซิร์ฟเวอร์ DNS ผ่าน HTTPS รอรับการเชื่อมต่อ: TCP สำหรับ HTTP/1.1 และ HTTP/2 และ UDP สำหรับ HTTP/3.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>เทมเพลต DNS ผ่าน HTTPS</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>เทมเพลต DoH ที่ต้องกำหนดค่าบนไคลเอนต์.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ DNS ต้นทาง</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>ที่อยู่ IP ของเซิร์ฟเวอร์ DNS ที่ตอบคำขอ โดยคั่นด้วยเครื่องหมายจุลภาค.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>บันทึกโดเมน</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>บันทึกชื่อโดเมนทุกชื่อที่มีการสอบถามพร้อมจำนวนครั้งที่สอบถามเป็นไฟล์ JSON หากมีไฟล์อยู่แล้ว จะบันทึกต่อในไฟล์นั้น ทำให้จำนวนสะสมเพิ่มขึ้นอย่างต่อเนื่องในการเรียกใช้งานแต่ละครั้ง.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>ไฟล์บันทึก</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>ไฟล์ JSON ที่ใช้บันทึกชื่อโดเมนที่มีการสอบถามและจำนวนครั้งที่สอบถาม.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>เฉพาะโดเมนหลัก</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>บันทึกโดเมนย่อยภายใต้โดเมนหลัก เช่น microsoft.com แทน azure.homefront.microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>คำขอที่ประมวลผลแล้ว</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>ตอบจากแคช</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>คำขอที่ล้มเหลว</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>ไคลเอนต์</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>แหล่งที่มาของเซิร์ฟเวอร์ DNS ต้นทาง</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>ปลายทางที่ส่งต่อคำขอ เซิร์ฟเวอร์ DNS ของอะแดปเตอร์ปลายทางยังทำงานได้เมื่อ VPN บล็อกการรับส่งข้อมูล DNS ไปยังเซิร์ฟเวอร์อื่น.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ DNS ของอะแดปเตอร์ปลายทาง</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>เซิร์ฟเวอร์ DNS แบบกำหนดเอง</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>อะแดปเตอร์ปลายทาง</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>คำขอจะถูกส่งไปยังเซิร์ฟเวอร์ DNS ของอะแดปเตอร์นี้ผ่านอะแดปเตอร์เดียวกัน เมื่อเชื่อมต่อ VPN ให้เลือกอะแดปเตอร์ของ VPN.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>เลือกไฟล์สำหรับบันทึกโดเมน หรือปิดการบันทึกโดเมน.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>เลือกอะแดปเตอร์ปลายทางที่มีเซิร์ฟเวอร์ DNS หรือใช้เซิร์ฟเวอร์ DNS แบบกำหนดเอง.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>แสดงหรือซ่อนบันทึก</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>แสดงหรือซ่อนบันทึก</value>
+  </data>
 </root>

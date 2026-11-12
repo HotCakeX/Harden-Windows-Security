@@ -8075,4 +8075,331 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>यह सेटिंग Defender की रनटाइम AI एजेंट नेटवर्क सुरक्षा को नियंत्रित करती है, जो AI एजेंटों से उत्पन्न नेटवर्क ट्रैफ़िक को स्कैन करती है। सक्षम होने पर, Defender एजेंट प्रक्रियाओं के नेटवर्क ट्रैफ़िक की जाँच करता है और ऐसे किसी भी ट्रैफ़िक को ब्लॉक करता है जो मैलवेयर या दुरुपयोग के संकेतों की पहचान से मेल खाता हो, इससे पहले कि एजेंट उसे निष्पादित करे।</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>अन्य डिवाइसों के साथ VPN और सुरक्षित कनेक्शन साझा करने के लिए Smart DNS, वेबसाइट के पतों की एन्क्रिप्टेड क्वेरी के लिए HTTPS पर DNS, या वेबसाइट डोमेन रिकॉर्ड करने अथवा Tor के माध्यम से DNS का उपयोग करने के लिए सामान्य DNS का उपयोग करें.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>अन्य डिवाइसों के साथ VPN और सुरक्षित कनेक्शन साझा करने के लिए Smart DNS, वेबसाइट के पतों की एन्क्रिप्टेड क्वेरी के लिए HTTPS पर DNS, या वेबसाइट डोमेन रिकॉर्ड करने अथवा Tor के माध्यम से DNS का उपयोग करने के लिए सामान्य DNS का उपयोग करें.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>रोकें</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>अपलोड</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>कुल</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>सक्रिय कनेक्शन</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>क्लाइंट के IP पते के अनुसार ट्रैफ़िक</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>अपलोड किया गया</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>डाउनलोड किया गया</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>कनेक्शन</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>शुरू करने से पहले स्रोत और गंतव्य, दोनों एडाप्टर चुनें.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS चल रहा है. स्थानीय डिवाइसों का DNS सर्वर {0} पर सेट करें.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS रुक गया है.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>त्रुटि के कारण Smart DNS रुक गया</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>उपयोग करने योग्य IPv4 पते वाला कोई नेटवर्क एडाप्टर नहीं मिला.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>Tor Expert Bundle फ़ोल्डर</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>Tor कनेक्शन विधि</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>सीधा</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>निजी कुंजी वाला प्रमाणपत्र चुनें</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>प्रमाणपत्र बनाएँ और उसे विश्वसनीय बनाएँ</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>कंपनी</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>विवरण</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>रिज़ॉल्वर जोड़ें</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>टेम्पलेट दिखाने के लिए होस्टनाम या IP पता दर्ज करें</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>Tor प्रारंभ करें</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>Tor रोकें</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>शुरू करने से पहले लिसनर एडाप्टर चुनें.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>ऐसा मान्य Tor Expert Bundle फ़ोल्डर चुनें जिसमें tor\tor.exe, data\geoip और data\geoip6 हों.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>शुरू करने से पहले DoH सर्वर प्रमाणपत्र चुनें.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>DoH प्रमाणपत्र के लिए मान्य DNS होस्टनाम या IP पता दर्ज करें.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>1 से 65535 तक का मान्य DoH पोर्ट दर्ज करें.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>कम से कम एक अपस्ट्रीम DoH रिज़ॉल्वर चुनें.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>HTTPS पर DNS सर्वर चल रहा है. क्लाइंट को निम्न DoH टेम्पलेट का उपयोग करने के लिए कॉन्फ़िगर करें: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>HTTPS पर DNS सर्वर रुक गया है.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>त्रुटि के कारण HTTPS पर DNS सर्वर रुक गया</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>Tor प्रारंभ किया जा रहा है. इसमें कुछ मिनट लग सकते हैं.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor तैयार है.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>Tor प्रारंभ नहीं हो सका</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor रुक गया है.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>{0} के लिए स्व-हस्ताक्षरित DoH प्रमाणपत्र बनाया गया, विश्वसनीय बनाया गया और चुना गया.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>DoH प्रमाणपत्र नहीं बनाया जा सका</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>कंपनी, विवरण और DoH रिज़ॉल्वर का मान्य HTTPS URL दर्ज करें.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>वह अपस्ट्रीम DoH रिज़ॉल्वर सूची में पहले से मौजूद है.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>HTTPS पर DNS का मानक सार्वजनिक रिज़ॉल्वर.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>मैलवेयर डोमेन ब्लॉक करता है.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>मैलवेयर और वयस्क सामग्री ब्लॉक करता है.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>Google Public DNS का HTTPS पर DNS रिज़ॉल्वर.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>मैलवेयर ब्लॉकिंग और DNSSEC सत्यापन वाला अनुशंसित कॉन्फ़िगरेशन.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>EDNS Client Subnet सक्षम होने के साथ मैलवेयर ब्लॉकिंग और DNSSEC सत्यापन.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>उन्नत उपयोगकर्ताओं के लिए, बिना मैलवेयर ब्लॉकिंग और बिना DNSSEC सत्यापन के.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>Tor Expert Bundle डाउनलोड करें</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>अपस्ट्रीम DoH रिज़ॉल्वर जोड़ें</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>जोड़ें</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>रद्द करें</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>HTTPS पर DNS रिज़ॉल्वर का विवरण दर्ज करें. इसका पता https:// से शुरू होना चाहिए.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>DNS सर्वर चल रहा है. स्थानीय डिवाइसों का DNS सर्वर {0} पर सेट करें.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>DNS सर्वर रुक गया है.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>त्रुटि के कारण DNS सर्वर रुक गया</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>शुरू करें</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor नहीं चल रहा है.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>अपस्ट्रीम DoH रिज़ॉल्वर</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>कम से कम एक अपस्ट्रीम DNS सर्वर का IP पता दर्ज करें. एक से अधिक सर्वर को अल्पविराम से अलग करें.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>सहेजा नहीं जा रहा है. पहले फ़ाइल चुनें.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>फ़ाइल चुनें</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>लॉग</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>स्रोत एडाप्टर (LAN लिसनर)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>उस नेटवर्क का एडाप्टर जिससे स्थानीय डिवाइस जुड़े हैं. सर्वर इसके IPv4 पते पर आने वाले कनेक्शन सुनता है.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>गंतव्य एडाप्टर (आउटबाउंड ट्रैफ़िक)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>वह एडाप्टर जिसका इंटरनेट कनेक्शन साझा किया जाता है. DNS क्वेरी और प्रॉक्सी के माध्यम से भेजे गए कनेक्शन इसी से बाहर जाते हैं.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>एप्लिकेशन के लिए UDP और QUIC (HTTP/3) सक्षम करें</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>वेबसाइट के लिए सुरक्षित होने पर UDP पोर्ट 443 पर QUIC ट्रैफ़िक आगे भेजता है. अन्यथा डिवाइस TCP का उपयोग करते हैं.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>Tor का उपयोग करें</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>गुमनामी और सुरक्षा बढ़ाने के लिए इस सर्वर का ट्रैफ़िक Tor के माध्यम से भेजता है.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>DoH सर्वर प्रमाणपत्र</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>वह प्रमाणपत्र जो HTTPS पर DNS सर्वर क्लाइंट को प्रस्तुत करता है.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>प्रमाणपत्र</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>कंप्यूटर या वर्तमान उपयोगकर्ता के व्यक्तिगत प्रमाणपत्र स्टोर से निजी कुंजी वाला प्रमाणपत्र.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>DoH प्रमाणपत्र का होस्टनाम या IP पता</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>वह नाम जिसके लिए बनाया गया प्रमाणपत्र जारी किया जाता है. इसका उपयोग HTTPS पर DNS टेम्पलेट में भी किया जाता है.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>प्रमाणपत्र बनाएँ</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>होस्टनाम या IP पते के लिए स्व-हस्ताक्षरित प्रमाणपत्र बनाता है, उसे इस कंप्यूटर पर विश्वसनीय बनाता है और चुनता है.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>DoH पोर्ट</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>वह पोर्ट जिस पर HTTPS पर DNS सर्वर आने वाले कनेक्शन सुनता है: HTTP/1.1 और HTTP/2 के लिए TCP, और HTTP/3 के लिए UDP.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>HTTPS पर DNS टेम्पलेट</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>क्लाइंट पर कॉन्फ़िगर किया जाने वाला DoH टेम्पलेट.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>अपस्ट्रीम DNS सर्वर</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>क्वेरी का उत्तर देने वाले DNS सर्वर के IP पते, अल्पविराम से अलग किए गए.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>डोमेन लॉग</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>क्वेरी किए गए प्रत्येक डोमेन नाम को उसकी क्वेरी की संख्या के साथ JSON फ़ाइल में सहेजता है. मौजूदा फ़ाइल में सहेजना जारी रहता है, इसलिए अलग-अलग बार चलाने पर भी गिनती बढ़ती रहती है.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>लॉग फ़ाइल</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>वह JSON फ़ाइल जिसमें क्वेरी किए गए डोमेन नाम और उनकी गिनती सहेजी जाती है.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>केवल मूल डोमेन</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>उपडोमेन को उनके मूल डोमेन के अंतर्गत सहेजता है, उदाहरण के लिए azure.homefront.microsoft.com के बजाय microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>संसाधित क्वेरी</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>कैश से दिए गए उत्तर</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>विफल क्वेरी</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>क्लाइंट</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>अपस्ट्रीम DNS सर्वर का स्रोत</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>वह गंतव्य जहाँ क्वेरी आगे भेजी जाती हैं. VPN द्वारा अन्य सर्वर पर जाने वाला DNS ट्रैफ़िक ब्लॉक किए जाने पर भी गंतव्य एडाप्टर के DNS सर्वर काम करते हैं.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>गंतव्य एडाप्टर के DNS सर्वर</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>कस्टम DNS सर्वर</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>गंतव्य एडाप्टर</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>क्वेरी इस एडाप्टर के माध्यम से इसके DNS सर्वर को भेजी जाती हैं. VPN कनेक्ट होने पर VPN का एडाप्टर चुनें.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>डोमेन लॉग के लिए फ़ाइल चुनें या डोमेन लॉग बंद करें.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>ऐसा गंतव्य एडाप्टर चुनें जिसमें DNS सर्वर हों, या कस्टम DNS सर्वर का उपयोग करें.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>लॉग दिखाएँ या छिपाएँ</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>लॉग दिखाएँ या छिपाएँ</value>
+  </data>
 </root>

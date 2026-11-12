@@ -349,6 +349,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 			titles: [Atlas.GetStr("TweaksNavItem/Content")],
 			pages: [typeof(Pages.Tweaks)]
 		);
+
+		breadCrumbMappingsV2[typeof(Pages.Extras.DNS)] = new PageTitleMap
+		(
+			titles: [Atlas.GetStr("DNSNavigationViewItem/Content")],
+			pages: [typeof(Pages.Extras.DNS)]
+		);
 	}
 
 	// This collection is bound to the BreadCrumbBar's ItemsSource in the XAML
@@ -402,7 +408,8 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		{ "ExploitMitigations", typeof(Pages.ExploitMitigations) },
 		{ "SandboxMaker", typeof(Pages.SandboxMaker) },
 		{ "SecureVault", typeof(Pages.Extras.SecureVault) },
-		{ "Tweaks", typeof(Pages.Tweaks) }
+		{ "Tweaks", typeof(Pages.Tweaks) },
+		{ "DNS", typeof(Pages.Extras.DNS) }
 	}.ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
 	/// <summary>
@@ -461,6 +468,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 		NavigationPageToItemContentMapForSearch[typeof(AppControlManager.Pages.SettingsBackupRestore)] = Atlas.GetStr("SettingsBackupRestoreSettingsCard/Header");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.SecureVault)] = Atlas.GetStr("SecureVaultNavigationViewItem/Content");
 		NavigationPageToItemContentMapForSearch[typeof(Pages.Tweaks)] = Atlas.GetStr("TweaksNavItem/Content");
+		NavigationPageToItemContentMapForSearch[typeof(Pages.Extras.DNS)] = Atlas.GetStr("DNSNavigationViewItem/Content");
 	}
 
 	/// <summary>
@@ -594,6 +602,11 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	/// Icon for the Tweaks navigation item.
 	/// </summary>
 	internal IconElement? TweaksIcon { get; set => SP(ref field, value); }
+
+	/// <summary>
+	/// Icon for the DNS navigation item.
+	/// </summary>
+	internal IconElement? DNSIcon { get; set => SP(ref field, value); }
 
 	#endregion
 
@@ -750,6 +763,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Source = new Tweaks()
 					};
 
+					DNSIcon = new AnimatedIcon
+					{
+						Margin = new Thickness(0, -12, -12, -12),
+						Source = new DNS_Servers()
+					};
+
 					break;
 				}
 			case "Windows Accent":
@@ -889,6 +908,12 @@ internal sealed partial class MainWindowVM : ViewModelBase
 						Foreground = accentBrush
 					};
 
+					DNSIcon = new FontIcon
+					{
+						Glyph = "\uEC27",
+						Foreground = accentBrush
+					};
+
 					break;
 				}
 			case "Monochromatic":
@@ -916,6 +941,7 @@ internal sealed partial class MainWindowVM : ViewModelBase
 					CSPIcon = new FontIcon { Glyph = "\uE835" };
 					SecureVaultIcon = new FontIcon { Glyph = "\uF540" };
 					TweaksIcon = new FontIcon { Glyph = "\uF1BA" };
+					DNSIcon = new FontIcon { Glyph = "\uEC27" };
 					break;
 				}
 		}

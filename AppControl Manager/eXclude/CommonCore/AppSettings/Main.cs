@@ -146,6 +146,7 @@ internal sealed partial class Main : ViewModelBase
 		WindowsTopBarSearchIndexConnectedDrives = ReadValue(nameof(WindowsTopBarSearchIndexConnectedDrives), WindowsTopBarSearchIndexConnectedDrives);
 		CustomizableScanLevelsFallbackOrder = ReadValue(nameof(CustomizableScanLevelsFallbackOrder), CustomizableScanLevelsFallbackOrder);
 		AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation = ReadValue(nameof(AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation);
+		DNSTorBundleDirectory = ReadValue(nameof(DNSTorBundleDirectory), DNSTorBundleDirectory);
 	}
 
 	/// <summary>
@@ -1456,4 +1457,20 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	}
+
+	/// <summary>
+	/// Harden System Security app only.
+	/// The folder of the extracted Tor Expert Bundle that the DNS page uses for every feature that runs through Tor.
+	/// Empty string means that no folder has been selected yet.
+	/// </summary>
+	internal string DNSTorBundleDirectory
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DNSTorBundleDirectory), field);
+			}
+		}
+	} = string.Empty;
 }

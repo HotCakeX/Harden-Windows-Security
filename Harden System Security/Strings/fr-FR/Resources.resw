@@ -8075,4 +8075,331 @@ Empreinte : {3}</value>
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>Ce paramètre contrôle la protection réseau à l’exécution des agents IA de Defender, qui analyse le trafic réseau provenant des agents IA. Lorsqu’il est activé, Defender inspecte le trafic réseau des processus des agents et bloque tout trafic correspondant à une détection de signes de programme malveillant ou d’utilisation abusive avant son exécution par l’agent.</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Utilisez Smart DNS pour partager des connexions VPN et sécurisées avec d’autres appareils, DNS sur HTTPS pour des requêtes chiffrées sur les adresses des sites web, ou le DNS classique pour enregistrer les domaines des sites web ou utiliser DNS via Tor.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Utilisez Smart DNS pour partager des connexions VPN et sécurisées avec d’autres appareils, DNS sur HTTPS pour des requêtes chiffrées sur les adresses des sites web, ou le DNS classique pour enregistrer les domaines des sites web ou utiliser DNS via Tor.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>Arrêter</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>Envoi</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>Connexions actives</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>Trafic par adresse IP du client</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>Envoyé</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>Téléchargé</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>Connexions</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>Sélectionnez les adaptateurs source et de destination avant de démarrer.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS est en cours d’exécution. Définissez le serveur DNS des appareils locaux sur {0}.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS s’est arrêté.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>Smart DNS s’est arrêté en raison d’une erreur</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>Aucun adaptateur réseau disposant d’une adresse IPv4 utilisable n’a été trouvé.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>Dossier Tor Expert Bundle</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>Méthode de connexion à Tor</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>Directe</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>Sélectionnez un certificat avec une clé privée</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>Générer un certificat et le définir comme approuvé</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>Entreprise</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>Ajouter un résolveur</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>Saisissez un nom d’hôte ou une adresse IP pour afficher le modèle</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>Initialiser Tor</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>Arrêter Tor</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>Sélectionnez un adaptateur d’écoute avant de démarrer.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>Sélectionnez un dossier Tor Expert Bundle valide contenant tor\tor.exe, data\geoip et data\geoip6.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>Sélectionnez un certificat de serveur DoH avant de démarrer.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>Saisissez un nom d’hôte DNS ou une adresse IP valides pour le certificat DoH.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>Saisissez un port DoH valide compris entre 1 et 65535.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>Sélectionnez au moins un résolveur DoH en amont.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>Le serveur DNS sur HTTPS est en cours d’exécution. Configurez les clients pour utiliser le modèle DoH suivant : {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>Le serveur DNS sur HTTPS s’est arrêté.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>Le serveur DNS sur HTTPS s’est arrêté en raison d’une erreur</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>Initialisation de Tor en cours. Cette opération peut prendre quelques minutes.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor est prêt.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>L’initialisation de Tor a échoué</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor s’est arrêté.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>Le certificat DoH autosigné pour {0} a été créé, défini comme approuvé et sélectionné.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>Impossible de créer le certificat DoH</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>Saisissez une entreprise, une description et une URL HTTPS valide de résolveur DoH.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>Ce résolveur DoH en amont figure déjà dans la liste.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>Résolveur public standard DNS sur HTTPS.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>Bloque les domaines de logiciels malveillants.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>Bloque les logiciels malveillants et les contenus pour adultes.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>Résolveur DNS sur HTTPS de Google Public DNS.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>Configuration recommandée avec blocage des logiciels malveillants et validation DNSSEC.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>Blocage des logiciels malveillants et validation DNSSEC avec EDNS Client Subnet activé.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>Sans blocage des logiciels malveillants ni validation DNSSEC, pour les utilisateurs avancés.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>Télécharger Tor Expert Bundle</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>Ajouter un résolveur DoH en amont</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Ajouter</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Annuler</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Saisissez les informations du résolveur DNS sur HTTPS. Son adresse doit commencer par https://.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>Le serveur DNS est en cours d’exécution. Définissez le serveur DNS des appareils locaux sur {0}.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>Le serveur DNS s’est arrêté.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>Le serveur DNS s’est arrêté en raison d’une erreur</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>Démarrer</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor n’est pas en cours d’exécution.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>Résolveurs DoH en amont</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>Saisissez au moins un serveur DNS en amont sous forme d’adresse IP. Séparez les serveurs par des virgules.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>Aucun enregistrement en cours. Sélectionnez d’abord un fichier.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>Sélectionner un fichier</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>Journaux</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Adaptateur source (écoute sur le réseau local)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>L’adaptateur du réseau auquel les appareils locaux sont connectés. Le serveur écoute sur son adresse IPv4.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Adaptateur de destination (trafic sortant)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>L’adaptateur dont la connexion Internet est partagée. Les requêtes DNS et les connexions acheminées par le proxy passent par cet adaptateur.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>Activer UDP et QUIC (HTTP/3) pour les applications</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>Relaie QUIC sur le port UDP 443 lorsque cela est sûr pour le site web. Sinon, les appareils utilisent TCP.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>Utiliser Tor</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>Achemine le trafic de ce serveur via Tor pour renforcer l’anonymat et la sécurité.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>Certificat de serveur DoH</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>Le certificat que le serveur DNS sur HTTPS présente aux clients.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>Certificat</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>Un certificat avec une clé privée provenant du magasin Personnel de l’ordinateur ou de l’utilisateur actuel.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>Nom d’hôte ou adresse IP du certificat DoH</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>Le nom pour lequel un certificat généré est émis. Il est également utilisé dans le modèle DNS sur HTTPS.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>Générer un certificat</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>Crée un certificat autosigné pour le nom d’hôte ou l’adresse IP, le définit comme approuvé sur cet ordinateur et le sélectionne.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>Port DoH</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>Le port sur lequel le serveur DNS sur HTTPS écoute : TCP pour HTTP/1.1 et HTTP/2, et UDP pour HTTP/3.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>Modèle DNS sur HTTPS</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>Le modèle DoH à configurer sur les clients.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>Serveurs DNS en amont</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>Les adresses IP des serveurs DNS qui répondent aux requêtes, séparées par des virgules.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>Journal des domaines</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>Enregistre chaque nom de domaine interrogé avec le nombre de requêtes correspondantes dans un fichier JSON. Si un fichier existe déjà, l’enregistrement s’y poursuit, de sorte que les compteurs continuent d’augmenter au fil des exécutions.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>Fichier journal</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>Le fichier JSON dans lequel sont enregistrés les noms de domaine interrogés et leurs compteurs.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>Domaines racine uniquement</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>Enregistre les sous-domaines sous leur domaine racine, par exemple microsoft.com au lieu de azure.homefront.microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>Requêtes traitées</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>Réponses provenant du cache</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>Requêtes en échec</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>Clients</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>Source des serveurs DNS en amont</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>La destination vers laquelle les requêtes sont transférées. Les serveurs DNS de l’adaptateur de destination fonctionnent également lorsqu’un VPN bloque le trafic DNS vers d’autres serveurs.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>Serveurs DNS de l’adaptateur de destination</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>Serveurs DNS personnalisés</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Adaptateur de destination</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Les requêtes sont envoyées aux serveurs DNS de cet adaptateur via ce même adaptateur. Lorsqu’un VPN est connecté, sélectionnez l’adaptateur du VPN.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>Sélectionnez un fichier pour le journal des domaines ou désactivez le journal des domaines.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>Sélectionnez un adaptateur de destination disposant de serveurs DNS ou utilisez des serveurs DNS personnalisés.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Afficher ou masquer les journaux</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Afficher ou masquer les journaux</value>
+  </data>
 </root>

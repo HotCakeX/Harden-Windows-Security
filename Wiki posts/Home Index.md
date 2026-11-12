@@ -87,6 +87,8 @@
 
     - <img src="https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden%20System%20Security/Assets/External/BootableDrive.png?raw=true" alt="Harden System Security Menu Item" width="30"> [Bootable Driver Maker](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Bootable-Drive-Maker)
 
+    - <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/Harden%20System%20Security%20Menu/DNS.gif?raw=true" alt="Harden System Security Menu Item" width="30"> [DNS](https://github.com/HotCakeX/Harden-Windows-Security/wiki/DNS)
+
 <br>
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="50"> [App Control for Business](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)

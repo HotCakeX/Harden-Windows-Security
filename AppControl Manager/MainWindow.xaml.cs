@@ -1243,6 +1243,10 @@ internal sealed partial class MainWindow : Window, INPCImplant
 			TweaksNavItem.Content = Atlas.GetStr("TweaksNavItem/Content");
 			AutomationProperties.SetHelpText(TweaksNavItem, Atlas.GetStr("TweaksNavItem/AutomationProperties/HelpText"));
 			ToolTipService.SetToolTip(TweaksNavItem, Atlas.GetStr("TweaksNavItem/ToolTipService/ToolTip"));
+
+			DNSNavigationViewItem.Content = Atlas.GetStr("DNSNavigationViewItem/Content");
+			AutomationProperties.SetHelpText(DNSNavigationViewItem, Atlas.GetStr("DNSNavigationViewItem/AutomationProperties/HelpText"));
+			ToolTipService.SetToolTip(DNSNavigationViewItem, Atlas.GetStr("DNSNavigationViewItem/ToolTipService/ToolTip"));
 #endif
 
 #if APP_CONTROL_MANAGER

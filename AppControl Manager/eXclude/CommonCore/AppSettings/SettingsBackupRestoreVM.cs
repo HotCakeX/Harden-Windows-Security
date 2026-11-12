@@ -439,7 +439,11 @@ internal static class SettingsBackupRestoreSerializer
 		CreateBoolean(nameof(Main.WindowsTopBarSearchIndexConnectedDrives), static settings => settings.WindowsTopBarSearchIndexConnectedDrives, static (settings, value) => settings.WindowsTopBarSearchIndexConnectedDrives = value),
 		CreateString(nameof(Main.CustomizableScanLevelsFallbackOrder), "String", static settings => settings.CustomizableScanLevelsFallbackOrder, static (settings, value) => settings.CustomizableScanLevelsFallbackOrder = value),
 
-		CreateBoolean(nameof(Main.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), static settings => settings.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation, static (settings, value) => settings.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation = value)
+		CreateBoolean(nameof(Main.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), static settings => settings.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation, static (settings, value)       => settings.AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation = value),
+
+		CreateStringWithCustomValidation(nameof(Main.DNSTorBundleDirectory), "Absolute path or empty string", static settings => settings.DNSTorBundleDirectory, static (settings, value) => settings.DNSTorBundleDirectory = value,
+			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
+			$"'{nameof(Main.DNSTorBundleDirectory)}' must be empty or an absolute path."),
 		];
 
 	internal static byte[] Export(Main settings)

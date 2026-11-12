@@ -8075,4 +8075,331 @@ Thumbprint: {3}</value>
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>Pengaturan ini mengontrol perlindungan jaringan Agen AI runtime Defender yang memindai lalu lintas jaringan yang berasal dari Agen AI. Saat diaktifkan, Defender memeriksa lalu lintas jaringan proses agen dan memblokir setiap lalu lintas yang cocok dengan deteksi indikasi malware atau penyalahgunaan sebelum agen menjalankannya.</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Gunakan Smart DNS untuk berbagi koneksi VPN dan koneksi aman dengan perangkat lain, DNS melalui HTTPS untuk kueri alamat situs web terenkripsi, atau DNS biasa untuk mencatat domain situs web atau menggunakan DNS melalui Tor.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Gunakan Smart DNS untuk berbagi koneksi VPN dan koneksi aman dengan perangkat lain, DNS melalui HTTPS untuk kueri alamat situs web terenkripsi, atau DNS biasa untuk mencatat domain situs web atau menggunakan DNS melalui Tor.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>Hentikan</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>Unggah</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>Koneksi aktif</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>Lalu lintas berdasarkan alamat IP klien</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>Diunggah</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>Diunduh</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>Koneksi</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>Pilih adaptor sumber dan adaptor tujuan sebelum memulai.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS sedang berjalan. Atur server DNS perangkat lokal ke {0}.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS telah berhenti.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>Smart DNS berhenti karena kesalahan</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>Tidak ditemukan adaptor jaringan dengan alamat IPv4 yang dapat digunakan.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>Folder Tor Expert Bundle</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>Metode koneksi Tor</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>Langsung</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>Pilih sertifikat dengan kunci privat</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>Buat sertifikat dan tetapkan sebagai tepercaya</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>Perusahaan</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>Deskripsi</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>Tambahkan resolver</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>Masukkan nama host atau alamat IP untuk menampilkan templat</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>Inisialisasi Tor</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>Hentikan Tor</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>Pilih adaptor pendengar sebelum memulai.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>Pilih folder Tor Expert Bundle yang valid dan berisi tor\tor.exe, data\geoip, dan data\geoip6.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>Pilih sertifikat server DoH sebelum memulai.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>Masukkan nama host DNS atau alamat IP yang valid untuk sertifikat DoH.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>Masukkan port DoH yang valid dari 1 hingga 65535.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>Pilih setidaknya satu resolver DoH hulu.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>Server DNS melalui HTTPS sedang berjalan. Konfigurasikan klien untuk menggunakan templat DoH berikut: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>Server DNS melalui HTTPS telah berhenti.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>Server DNS melalui HTTPS berhenti karena kesalahan</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>Menginisialisasi Tor. Proses ini dapat memerlukan beberapa menit.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor siap.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>Inisialisasi Tor gagal</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor telah berhenti.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>Sertifikat DoH yang ditandatangani sendiri untuk {0} telah dibuat, ditetapkan sebagai tepercaya, dan dipilih.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>Tidak dapat membuat sertifikat DoH</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>Masukkan perusahaan, deskripsi, dan URL HTTPS resolver DoH yang valid.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>Resolver DoH hulu tersebut sudah ada dalam daftar.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>Resolver DNS melalui HTTPS publik standar.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>Memblokir domain malware.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>Memblokir malware dan konten dewasa.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>Resolver DNS melalui HTTPS dari Google Public DNS.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>Konfigurasi yang direkomendasikan dengan pemblokiran malware dan validasi DNSSEC.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>Pemblokiran malware dan validasi DNSSEC dengan EDNS Client Subnet diaktifkan.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>Tanpa pemblokiran malware dan tanpa validasi DNSSEC, untuk pengguna tingkat lanjut.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>Unduh Tor Expert Bundle</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>Tambahkan resolver DoH hulu</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Tambahkan</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Batal</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Masukkan detail resolver DNS melalui HTTPS. Alamatnya harus diawali dengan https://.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>Server DNS sedang berjalan. Atur server DNS perangkat lokal ke {0}.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>Server DNS telah berhenti.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>Server DNS berhenti karena kesalahan</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>Mulai</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor tidak sedang berjalan.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>Resolver DoH hulu</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>Masukkan setidaknya satu server DNS hulu dalam bentuk alamat IP. Pisahkan beberapa server dengan koma.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>Tidak sedang menyimpan. Pilih file terlebih dahulu.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>Pilih file</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>Log</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Adaptor sumber (pendengar LAN)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Adaptor jaringan yang digunakan perangkat lokal. Server mendengarkan pada alamat IPv4 adaptor tersebut.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Adaptor tujuan (lalu lintas keluar)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Adaptor yang koneksi internetnya dibagikan. Kueri DNS dan koneksi yang diteruskan melalui proksi keluar melalui adaptor ini.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>Aktifkan UDP dan QUIC (HTTP/3) untuk aplikasi</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>Meneruskan QUIC pada port UDP 443 jika aman untuk situs web. Jika tidak, perangkat menggunakan TCP.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>Gunakan Tor</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>Mengirim lalu lintas server ini melalui Tor untuk meningkatkan anonimitas dan keamanan.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>Sertifikat server DoH</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>Sertifikat yang ditunjukkan server DNS melalui HTTPS kepada klien.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>Sertifikat</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>Sertifikat dengan kunci privat dari penyimpanan sertifikat Pribadi komputer atau pengguna saat ini.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>Nama host atau alamat IP sertifikat DoH</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>Nama yang menjadi tujuan penerbitan sertifikat yang dibuat. Nama ini juga digunakan dalam templat DNS melalui HTTPS.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>Buat sertifikat</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>Membuat sertifikat yang ditandatangani sendiri untuk nama host atau alamat IP, menetapkannya sebagai tepercaya pada komputer ini, dan memilihnya.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>Port DoH</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>Port yang digunakan server DNS melalui HTTPS untuk mendengarkan: TCP untuk HTTP/1.1 dan HTTP/2, serta UDP untuk HTTP/3.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>Templat DNS melalui HTTPS</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>Templat DoH yang perlu dikonfigurasi pada klien.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>Server DNS hulu</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>Alamat IP server DNS yang menjawab kueri, dipisahkan dengan koma.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>Log domain</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>Menyimpan setiap nama domain yang dikueri beserta jumlah kuerinya sebagai file JSON. Penyimpanan dilanjutkan pada file yang sudah ada, sehingga jumlahnya terus bertambah pada setiap sesi pengoperasian.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>File log</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>File JSON tempat nama domain yang dikueri dan jumlah kuerinya disimpan.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>Hanya domain akar</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>Menyimpan subdomain di bawah domain akarnya, misalnya microsoft.com, bukan azure.homefront.microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>Kueri yang dilayani</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>Dijawab dari cache</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>Kueri gagal</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>Klien</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>Sumber server DNS hulu</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>Tujuan penerusan kueri. Server DNS adaptor tujuan juga berfungsi saat VPN memblokir lalu lintas DNS ke server lain.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>Server DNS adaptor tujuan</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>Server DNS kustom</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Adaptor tujuan</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Kueri dikirim ke server DNS adaptor ini melalui adaptor yang sama. Saat VPN terhubung, pilih adaptor VPN.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>Pilih file untuk log domain, atau nonaktifkan log domain.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>Pilih adaptor tujuan yang memiliki server DNS, atau gunakan server DNS kustom.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Tampilkan atau sembunyikan log</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Tampilkan atau sembunyikan log</value>
+  </data>
 </root>

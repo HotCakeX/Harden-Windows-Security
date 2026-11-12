@@ -8075,4 +8075,331 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>Αυτή η ρύθμιση ελέγχει την προστασία δικτύου των πρακτόρων AI κατά τον χρόνο εκτέλεσης του Defender, η οποία σαρώνει την κίνηση δικτύου που προέρχεται από πράκτορες AI. Όταν είναι ενεργοποιημένη, το Defender επιθεωρεί την κίνηση δικτύου των διεργασιών των πρακτόρων και αποκλείει κάθε κίνηση που αντιστοιχεί σε ανίχνευση ενδείξεων κακόβουλου λογισμικού ή κατάχρησης πριν την εκτελέσει ο πράκτορας.</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Χρησιμοποιήστε το Smart DNS για κοινή χρήση συνδέσεων VPN και ασφαλών συνδέσεων με άλλες συσκευές, το DNS over HTTPS για κρυπτογραφημένα ερωτήματα διευθύνσεων ιστοτόπων ή το κανονικό DNS για καταγραφή τομέων ιστοτόπων ή για DNS μέσω Tor.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Χρησιμοποιήστε το Smart DNS για κοινή χρήση συνδέσεων VPN και ασφαλών συνδέσεων με άλλες συσκευές, το DNS over HTTPS για κρυπτογραφημένα ερωτήματα διευθύνσεων ιστοτόπων ή το κανονικό DNS για καταγραφή τομέων ιστοτόπων ή για DNS μέσω Tor.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>Διακοπή</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>Αποστολή</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>Σύνολο</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>Ενεργές συνδέσεις</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>Κίνηση ανά διεύθυνση IP πελάτη</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>Απεστάλησαν</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>Λήφθηκαν</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>Συνδέσεις</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>Επιλέξτε τον προσαρμογέα προέλευσης και τον προσαρμογέα προορισμού πριν από την εκκίνηση.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Το Smart DNS εκτελείται. Ορίστε τον διακομιστή DNS των τοπικών συσκευών σε {0}.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Το Smart DNS διακόπηκε.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>Το Smart DNS διακόπηκε λόγω σφάλματος</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>Δεν βρέθηκαν προσαρμογείς δικτύου με χρησιμοποιήσιμη διεύθυνση IPv4.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>Φάκελος Tor Expert Bundle</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>Μέθοδος σύνδεσης Tor</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>Απευθείας</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>Επιλέξτε πιστοποιητικό με ιδιωτικό κλειδί</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>Δημιουργία πιστοποιητικού και ορισμός του ως αξιόπιστου</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>Εταιρεία</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>Περιγραφή</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>Προσθήκη επιλυτή</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>Εισαγάγετε όνομα κεντρικού υπολογιστή ή διεύθυνση IP για να εμφανιστεί το πρότυπο</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>Αρχικοποίηση Tor</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>Διακοπή Tor</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>Επιλέξτε προσαρμογέα ακρόασης πριν από την εκκίνηση.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>Επιλέξτε έγκυρο φάκελο Tor Expert Bundle που περιέχει τα tor\tor.exe, data\geoip και data\geoip6.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>Επιλέξτε πιστοποιητικό διακομιστή DoH πριν από την εκκίνηση.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>Εισαγάγετε έγκυρο όνομα κεντρικού υπολογιστή DNS ή διεύθυνση IP για το πιστοποιητικό DoH.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>Εισαγάγετε έγκυρη θύρα DoH από 1 έως 65535.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>Επιλέξτε τουλάχιστον έναν ανάντη επιλυτή DoH.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>Ο διακομιστής DNS over HTTPS εκτελείται. Ρυθμίστε τους πελάτες ώστε να χρησιμοποιούν το ακόλουθο πρότυπο DoH: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>Ο διακομιστής DNS over HTTPS διακόπηκε.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>Ο διακομιστής DNS over HTTPS διακόπηκε λόγω σφάλματος</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>Γίνεται αρχικοποίηση του Tor. Αυτό μπορεί να διαρκέσει μερικά λεπτά.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Το Tor είναι έτοιμο.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>Η αρχικοποίηση του Tor απέτυχε</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Το Tor διακόπηκε.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>Το αυτοϋπογεγραμμένο πιστοποιητικό DoH για {0} δημιουργήθηκε, ορίστηκε ως αξιόπιστο και επιλέχθηκε.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>Δεν ήταν δυνατή η δημιουργία του πιστοποιητικού DoH</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>Εισαγάγετε εταιρεία, περιγραφή και έγκυρη διεύθυνση URL HTTPS επιλυτή DoH.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>Αυτός ο ανάντη επιλυτής DoH υπάρχει ήδη στη λίστα.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>Τυπικός δημόσιος επιλυτής DNS over HTTPS.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>Αποκλείει τομείς κακόβουλου λογισμικού.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>Αποκλείει κακόβουλο λογισμικό και περιεχόμενο για ενηλίκους.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>Επιλυτής DNS over HTTPS του Google Public DNS.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>Συνιστώμενη διαμόρφωση με αποκλεισμό κακόβουλου λογισμικού και επικύρωση DNSSEC.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>Αποκλεισμός κακόβουλου λογισμικού και επικύρωση DNSSEC με ενεργοποιημένο το EDNS Client Subnet.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>Χωρίς αποκλεισμό κακόβουλου λογισμικού και χωρίς επικύρωση DNSSEC, για προχωρημένους χρήστες.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>Λήψη του Tor Expert Bundle</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>Προσθήκη ανάντη επιλυτή DoH</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Προσθήκη</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>Ακύρωση</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>Εισαγάγετε τα στοιχεία του επιλυτή DNS over HTTPS. Η διεύθυνσή του πρέπει να ξεκινά με https://.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>Ο διακομιστής DNS εκτελείται. Ορίστε τον διακομιστή DNS των τοπικών συσκευών σε {0}.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>Ο διακομιστής DNS διακόπηκε.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>Ο διακομιστής DNS διακόπηκε λόγω σφάλματος</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>Εκκίνηση</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Το Tor δεν εκτελείται.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>Ανάντη επιλυτές DoH</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>Εισαγάγετε τουλάχιστον έναν ανάντη διακομιστή DNS ως διεύθυνση IP. Διαχωρίστε πολλούς διακομιστές με κόμματα.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>Δεν γίνεται αποθήκευση. Επιλέξτε πρώτα ένα αρχείο.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>Επιλογή αρχείου</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>Αρχεία καταγραφής</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Προσαρμογέας προέλευσης (ακρόαση LAN)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Ο προσαρμογέας του δικτύου στο οποίο βρίσκονται οι τοπικές συσκευές. Ο διακομιστής ακούει στη διεύθυνση IPv4 του.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Προσαρμογέας προορισμού (εξερχόμενη κίνηση)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Ο προσαρμογέας του οποίου η σύνδεση στο διαδίκτυο είναι κοινόχρηστη. Τα ερωτήματα DNS και οι συνδέσεις μέσω διακομιστή μεσολάβησης εξέρχονται μέσω αυτού.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>Ενεργοποίηση UDP και QUIC (HTTP/3) για εφαρμογές</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>Προωθεί την κίνηση QUIC στη θύρα UDP 443 όταν αυτό είναι ασφαλές για τον ιστότοπο. Διαφορετικά, οι συσκευές χρησιμοποιούν TCP.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>Χρήση Tor</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>Στέλνει την κίνηση αυτού του διακομιστή μέσω Tor για αυξημένη ανωνυμία και ασφάλεια.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>Πιστοποιητικό διακομιστή DoH</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>Το πιστοποιητικό που παρουσιάζει ο διακομιστής DNS over HTTPS στους πελάτες.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>Πιστοποιητικό</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>Πιστοποιητικό με ιδιωτικό κλειδί από τον χώρο αποθήκευσης «Προσωπικά» του υπολογιστή ή του τρέχοντος χρήστη.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>Όνομα κεντρικού υπολογιστή ή διεύθυνση IP πιστοποιητικού DoH</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>Το όνομα για το οποίο εκδίδεται ένα πιστοποιητικό που δημιουργείται. Χρησιμοποιείται επίσης στο πρότυπο DNS over HTTPS.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>Δημιουργία πιστοποιητικού</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>Δημιουργεί αυτοϋπογεγραμμένο πιστοποιητικό για το όνομα κεντρικού υπολογιστή ή τη διεύθυνση IP, το ορίζει ως αξιόπιστο σε αυτόν τον υπολογιστή και το επιλέγει.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>Θύρα DoH</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>Η θύρα στην οποία ακούει ο διακομιστής DNS over HTTPS: TCP για HTTP/1.1 και HTTP/2 και UDP για HTTP/3.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>Πρότυπο DNS over HTTPS</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>Το πρότυπο DoH που θα ρυθμιστεί στους πελάτες.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>Ανάντη διακομιστές DNS</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>Οι διευθύνσεις IP των διακομιστών DNS που απαντούν στα ερωτήματα, διαχωρισμένες με κόμματα.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>Καταγραφή τομέων</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>Αποθηκεύει κάθε όνομα τομέα για το οποίο έγινε ερώτημα μαζί με τον αριθμό των ερωτημάτων, ως αρχείο JSON. Ένα υπάρχον αρχείο ενημερώνεται, ώστε οι μετρήσεις να συνεχίζουν να αυξάνονται μεταξύ εκτελέσεων.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>Αρχείο καταγραφής</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>Το αρχείο JSON στο οποίο αποθηκεύονται τα ονόματα τομέων για τα οποία έγιναν ερωτήματα και οι μετρήσεις τους.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>Μόνο βασικοί τομείς</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>Αποθηκεύει τους υποτομείς στον βασικό τους τομέα, για παράδειγμα microsoft.com αντί για azure.homefront.microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>Ερωτήματα που εξυπηρετήθηκαν</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>Απαντήσεις από την προσωρινή μνήμη</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>Αποτυχημένα ερωτήματα</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>Πελάτες</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>Προέλευση ανάντη διακομιστών DNS</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>Το σημείο στο οποίο προωθούνται τα ερωτήματα. Οι διακομιστές DNS του προσαρμογέα προορισμού λειτουργούν και όταν ένα VPN αποκλείει την κίνηση DNS προς άλλους διακομιστές.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>Διακομιστές DNS του προσαρμογέα προορισμού</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>Προσαρμοσμένοι διακομιστές DNS</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>Προσαρμογέας προορισμού</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>Τα ερωτήματα αποστέλλονται στους διακομιστές DNS αυτού του προσαρμογέα μέσω του ίδιου προσαρμογέα. Όταν υπάρχει σύνδεση VPN, επιλέξτε τον προσαρμογέα του VPN.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>Επιλέξτε αρχείο για την καταγραφή τομέων ή απενεργοποιήστε την καταγραφή τομέων.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>Επιλέξτε προσαρμογέα προορισμού με διακομιστές DNS ή χρησιμοποιήστε προσαρμοσμένους διακομιστές DNS.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Εμφάνιση ή απόκρυψη των αρχείων καταγραφής</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Εμφάνιση ή απόκρυψη των αρχείων καταγραφής</value>
+  </data>
 </root>

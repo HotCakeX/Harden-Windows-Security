@@ -8075,4 +8075,331 @@ Thumbprint: {3}</value>
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>این تنظیم، محافظت شبکه زمان اجرای عامل هوش مصنوعی در Defender را کنترل می‌کند که ترافیک شبکه ایجادشده توسط عامل‌های هوش مصنوعی را اسکن می‌کند. در صورت فعال بودن، Defender ترافیک شبکه فرایندهای عامل را بررسی می‌کند و هرگونه ترافیکی را که با تشخیص نشانه‌های بدافزار یا سوءاستفاده مطابقت داشته باشد، پیش از اجرای آن توسط عامل مسدود می‌کند.</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>برای اشتراک‌گذاری اتصال‌های VPN و اتصال‌های امن با دستگاه‌های دیگر از Smart DNS، برای پرس‌وجوی رمزگذاری‌شدهٔ نشانی وب‌سایت‌ها از DNS روی HTTPS، یا برای ثبت دامنه‌های وب‌سایت‌ها یا استفاده از DNS از طریق Tor از DNS معمولی استفاده کنید.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>برای اشتراک‌گذاری اتصال‌های VPN و اتصال‌های امن با دستگاه‌های دیگر از Smart DNS، برای پرس‌وجوی رمزگذاری‌شدهٔ نشانی وب‌سایت‌ها از DNS روی HTTPS، یا برای ثبت دامنه‌های وب‌سایت‌ها یا استفاده از DNS از طریق Tor از DNS معمولی استفاده کنید.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>توقف</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>بارگذاری</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>مجموع</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>اتصال‌های فعال</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>ترافیک بر اساس نشانی IP کلاینت</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>بارگذاری‌شده</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>دریافت‌شده</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>اتصال‌ها</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>پیش از شروع، هر دو آداپتور مبدأ و مقصد را انتخاب کنید.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS در حال اجرا است. سرور DNS دستگاه‌های محلی را روی {0} تنظیم کنید.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS متوقف شده است.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>Smart DNS به‌دلیل خطا متوقف شد</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>هیچ آداپتور شبکه‌ای با نشانی IPv4 قابل استفاده پیدا نشد.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>پوشهٔ Tor Expert Bundle</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>روش اتصال Tor</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>مستقیم</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>گواهی دارای کلید خصوصی را انتخاب کنید</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>ایجاد گواهی و تنظیم آن به‌عنوان گواهی مورد اعتماد</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>شرکت</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>توضیحات</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>افزودن حل‌کننده</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>برای نمایش الگو، نام میزبان یا نشانی IP را وارد کنید</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>راه‌اندازی اولیهٔ Tor</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>توقف Tor</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>پیش از شروع، آداپتور شنونده را انتخاب کنید.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>پوشهٔ معتبر Tor Expert Bundle را انتخاب کنید که شامل tor\tor.exe، data\geoip و data\geoip6 باشد.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>پیش از شروع، گواهی سرور DoH را انتخاب کنید.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>نام میزبان DNS یا نشانی IP معتبر را برای گواهی DoH وارد کنید.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>یک درگاه DoH معتبر از 1 تا 65535 وارد کنید.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>حداقل یک حل‌کنندهٔ بالادستی DoH را انتخاب کنید.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>سرور DNS روی HTTPS در حال اجرا است. کلاینت‌ها را برای استفاده از الگوی DoH زیر پیکربندی کنید: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>سرور DNS روی HTTPS متوقف شده است.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>سرور DNS روی HTTPS به‌دلیل خطا متوقف شد</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>راه‌اندازی اولیهٔ Tor در حال انجام است. این کار ممکن است چند دقیقه طول بکشد.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor آماده است.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>راه‌اندازی اولیهٔ Tor ناموفق بود</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor متوقف شده است.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>گواهی خودامضای DoH برای {0} ایجاد شد، به‌عنوان گواهی مورد اعتماد تنظیم شد و انتخاب شد.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>ایجاد گواهی DoH ممکن نشد</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>شرکت، توضیحات و یک نشانی URL معتبر HTTPS برای حل‌کنندهٔ DoH وارد کنید.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>این حل‌کنندهٔ بالادستی DoH از قبل در فهرست وجود دارد.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>حل‌کنندهٔ عمومی استاندارد DNS روی HTTPS.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>دامنه‌های بدافزار را مسدود می‌کند.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>بدافزار و محتوای بزرگسالان را مسدود می‌کند.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>حل‌کنندهٔ DNS روی HTTPS سرویس Google Public DNS.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>پیکربندی پیشنهادی با مسدودسازی بدافزار و اعتبارسنجی DNSSEC.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>مسدودسازی بدافزار و اعتبارسنجی DNSSEC با EDNS Client Subnet فعال.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>بدون مسدودسازی بدافزار و بدون اعتبارسنجی DNSSEC، برای کاربران پیشرفته.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>دریافت Tor Expert Bundle</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>افزودن حل‌کنندهٔ بالادستی DoH</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>افزودن</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>لغو</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>جزئیات حل‌کنندهٔ DNS روی HTTPS را وارد کنید. نشانی آن باید با https:// شروع شود.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>سرور DNS در حال اجرا است. سرور DNS دستگاه‌های محلی را روی {0} تنظیم کنید.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>سرور DNS متوقف شده است.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>سرور DNS به‌دلیل خطا متوقف شد</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>شروع</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor در حال اجرا نیست.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>حل‌کننده‌های بالادستی DoH</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>حداقل یک سرور DNS بالادستی را به‌صورت نشانی IP وارد کنید. چند سرور را با ویرگول از هم جدا کنید.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>ذخیره‌سازی انجام نمی‌شود. ابتدا یک فایل انتخاب کنید.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>انتخاب فایل</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>گزارش‌ها</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>آداپتور مبدأ (شنوندهٔ LAN)</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>آداپتور شبکه‌ای که دستگاه‌های محلی به آن متصل هستند. سرور روی نشانی IPv4 آن به اتصال‌های ورودی گوش می‌دهد.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>آداپتور مقصد (ترافیک خروجی)</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>آداپتوری که اتصال اینترنت آن به اشتراک گذاشته می‌شود. پرس‌وجوهای DNS و اتصال‌های عبوری از پراکسی از طریق آن خارج می‌شوند.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>فعال‌سازی UDP و QUIC ‏(HTTP/3) برای برنامه‌ها</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>هنگامی که برای وب‌سایت امن باشد، ترافیک QUIC را روی درگاه UDP شمارهٔ 443 منتقل می‌کند. در غیر این صورت، دستگاه‌ها از TCP استفاده می‌کنند.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>استفاده از Tor</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>ترافیک این سرور را برای افزایش ناشناس‌ماندن و امنیت از طریق Tor ارسال می‌کند.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>گواهی سرور DoH</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>گواهی‌ای که سرور DNS روی HTTPS به کلاینت‌ها ارائه می‌کند.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>گواهی</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>گواهی دارای کلید خصوصی از مخزن گواهی‌های شخصی رایانه یا کاربر فعلی.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>نام میزبان یا نشانی IP گواهی DoH</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>نامی که گواهی ایجادشده برای آن صادر می‌شود. این نام در الگوی DNS روی HTTPS نیز استفاده می‌شود.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>ایجاد گواهی</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>یک گواهی خودامضا برای نام میزبان یا نشانی IP ایجاد می‌کند، آن را در این رایانه به‌عنوان گواهی مورد اعتماد تنظیم می‌کند و انتخاب می‌کند.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>درگاه DoH</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>درگاهی که سرور DNS روی HTTPS روی آن به اتصال‌های ورودی گوش می‌دهد: TCP برای HTTP/1.1 و HTTP/2، و UDP برای HTTP/3.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>الگوی DNS روی HTTPS</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>الگوی DoH که باید در کلاینت‌ها پیکربندی شود.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>سرورهای DNS بالادستی</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>نشانی‌های IP سرورهای DNS که به پرس‌وجوها پاسخ می‌دهند، جداشده با ویرگول.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>گزارش دامنه‌ها</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>هر نام دامنهٔ پرس‌وجوشده را همراه با تعداد دفعات پرس‌وجوی آن در یک فایل JSON ذخیره می‌کند. ذخیره‌سازی در فایل موجود ادامه می‌یابد، بنابراین شمارنده‌ها در اجراهای بعدی نیز افزایش می‌یابند.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>فایل گزارش</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>فایل JSON که نام دامنه‌های پرس‌وجوشده و شمارنده‌های آن‌ها در آن ذخیره می‌شوند.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>فقط دامنه‌های ریشه</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>زیردامنه‌ها را زیر دامنهٔ ریشهٔ آن‌ها ذخیره می‌کند، برای مثال microsoft.com به‌جای azure.homefront.microsoft.com.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>پرس‌وجوهای پردازش‌شده</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>پاسخ‌داده‌شده از حافظهٔ نهان</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>پرس‌وجوهای ناموفق</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>کلاینت‌ها</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>منبع سرورهای DNS بالادستی</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>مقصدی که پرس‌وجوها به آن هدایت می‌شوند. سرورهای DNS آداپتور مقصد حتی هنگامی که VPN ترافیک DNS به سرورهای دیگر را مسدود می‌کند نیز کار می‌کنند.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>سرورهای DNS آداپتور مقصد</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>سرورهای DNS سفارشی</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>آداپتور مقصد</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>پرس‌وجوها از طریق این آداپتور به سرورهای DNS آن ارسال می‌شوند. هنگام اتصال VPN، آداپتور VPN را انتخاب کنید.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>یک فایل برای گزارش دامنه‌ها انتخاب کنید یا گزارش دامنه‌ها را خاموش کنید.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>آداپتور مقصدی را انتخاب کنید که سرورهای DNS داشته باشد، یا از سرورهای DNS سفارشی استفاده کنید.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>نمایش یا پنهان‌کردن گزارش‌ها</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>نمایش یا پنهان‌کردن گزارش‌ها</value>
+  </data>
 </root>

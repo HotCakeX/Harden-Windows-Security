@@ -8075,4 +8075,331 @@
     <data name="AiAgentNetworkInspection-MSDefender" xml:space="preserve">
     <value>この設定は、AI エージェントから発生したネットワーク トラフィックをスキャンする、Defender の実行時 AI エージェント ネットワーク保護を制御します。有効にすると、Defender はエージェント プロセスのネットワーク トラフィックを検査し、マルウェアや不正使用の兆候の検出に一致するトラフィックを、エージェントが実行する前にブロックします。</value>
   </data>
+  <data name="DNSNavigationViewItem.Content" xml:space="preserve">
+    <value>DNS</value>
+  </data>
+  <data name="DNSNavigationViewItem.AutomationProperties.HelpText" xml:space="preserve">
+    <value>Smart DNS で VPN 接続や安全な接続を他のデバイスと共有したり、DNS over HTTPS で Web サイトのアドレスを暗号化して照会したり、通常の DNS で Web サイトのドメインを記録したり、Tor 経由で DNS を使用したりできます.</value>
+  </data>
+  <data name="DNSNavigationViewItem.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Smart DNS で VPN 接続や安全な接続を他のデバイスと共有したり、DNS over HTTPS で Web サイトのアドレスを暗号化して照会したり、通常の DNS で Web サイトのドメインを記録したり、Tor 経由で DNS を使用したりできます.</value>
+  </data>
+  <data name="DNSStopButton.Content" xml:space="preserve">
+    <value>停止</value>
+  </data>
+  <data name="DNSUploadHeader.Text" xml:space="preserve">
+    <value>アップロード</value>
+  </data>
+  <data name="DNSCombinedHeader.Text" xml:space="preserve">
+    <value>合計</value>
+  </data>
+  <data name="DNSActiveConnectionsHeader.Text" xml:space="preserve">
+    <value>アクティブな接続</value>
+  </data>
+  <data name="DNSClientTrafficHeader.Text" xml:space="preserve">
+    <value>クライアントの IP アドレス別トラフィック</value>
+  </data>
+  <data name="DNSUploadedHeader.Text" xml:space="preserve">
+    <value>アップロード済み</value>
+  </data>
+  <data name="DNSDownloadedHeader.Text" xml:space="preserve">
+    <value>ダウンロード済み</value>
+  </data>
+  <data name="DNSConnectionsHeader.Text" xml:space="preserve">
+    <value>接続</value>
+  </data>
+  <data name="DNSSelectBothAdapters" xml:space="preserve">
+    <value>開始する前に、送信元と送信先の両方のアダプターを選択してください.</value>
+  </data>
+  <data name="SmartDNSRunning" xml:space="preserve">
+    <value>Smart DNS は実行中です。ローカルデバイスの DNS サーバーを {0} に設定してください.</value>
+  </data>
+  <data name="SmartDNSStopped" xml:space="preserve">
+    <value>Smart DNS は停止しました.</value>
+  </data>
+  <data name="SmartDNSFailed" xml:space="preserve">
+    <value>エラーにより Smart DNS が停止しました</value>
+  </data>
+  <data name="DNSNoAdaptersFound" xml:space="preserve">
+    <value>使用可能な IPv4 アドレスを持つネットワークアダプターが見つかりませんでした.</value>
+  </data>
+  <data name="DNSTorBundleFolderHeader.Text" xml:space="preserve">
+    <value>Tor Expert Bundle フォルダー</value>
+  </data>
+  <data name="DNSTorBundlePathTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Path\To\tor-expert-bundle-windows-x86_64</value>
+  </data>
+  <data name="DNSTorConnectionMethodHeader.Text" xml:space="preserve">
+    <value>Tor の接続方法</value>
+  </data>
+  <data name="DNSTorDirectConnectionItem.Content" xml:space="preserve">
+    <value>直接接続</value>
+  </data>
+  <data name="DNSDohCertificateComboBox.PlaceholderText" xml:space="preserve">
+    <value>秘密キーを持つ証明書を選択</value>
+  </data>
+  <data name="DNSGenerateCertificateButton.Content" xml:space="preserve">
+    <value>証明書を生成して信頼する</value>
+  </data>
+  <data name="DNSCustomResolverCompanyTextBox.PlaceholderText" xml:space="preserve">
+    <value>会社</value>
+  </data>
+  <data name="DNSCustomResolverDescriptionTextBox.PlaceholderText" xml:space="preserve">
+    <value>説明</value>
+  </data>
+  <data name="DNSAddResolverButton.Content" xml:space="preserve">
+    <value>リゾルバーを追加</value>
+  </data>
+  <data name="DNSHttpsTemplateTextBox.PlaceholderText" xml:space="preserve">
+    <value>ホスト名または IP アドレスを入力してテンプレートを表示</value>
+  </data>
+  <data name="DNSInitializeTorButton.Content" xml:space="preserve">
+    <value>Tor を初期化</value>
+  </data>
+  <data name="DNSStopTorButton.Content" xml:space="preserve">
+    <value>Tor を停止</value>
+  </data>
+  <data name="DNSSelectListenerAdapter" xml:space="preserve">
+    <value>開始する前に、待ち受け用アダプターを選択してください.</value>
+  </data>
+  <data name="DNSInvalidTorBundle" xml:space="preserve">
+    <value>tor\tor.exe、data\geoip、data\geoip6 を含む有効な Tor Expert Bundle フォルダーを選択してください.</value>
+  </data>
+  <data name="DNSSelectCertificate" xml:space="preserve">
+    <value>開始する前に、DoH サーバー証明書を選択してください.</value>
+  </data>
+  <data name="DNSInvalidDohHostName" xml:space="preserve">
+    <value>DoH 証明書用の有効な DNS ホスト名または IP アドレスを入力してください.</value>
+  </data>
+  <data name="DNSInvalidDohPort" xml:space="preserve">
+    <value>1 から 65535 までの有効な DoH ポートを入力してください.</value>
+  </data>
+  <data name="DNSSelectResolver" xml:space="preserve">
+    <value>上流の DoH リゾルバーを少なくとも 1 つ選択してください.</value>
+  </data>
+  <data name="DNSDohServerRunning" xml:space="preserve">
+    <value>DNS over HTTPS サーバーは実行中です。次の DoH テンプレートを使用するようにクライアントを設定してください: {0}</value>
+  </data>
+  <data name="DNSDohServerStopped" xml:space="preserve">
+    <value>DNS over HTTPS サーバーは停止しました.</value>
+  </data>
+  <data name="DNSDohServerFailed" xml:space="preserve">
+    <value>エラーにより DNS over HTTPS サーバーが停止しました</value>
+  </data>
+  <data name="DNSTorInitializing" xml:space="preserve">
+    <value>Tor を初期化しています。数分かかる場合があります.</value>
+  </data>
+  <data name="DNSTorReady" xml:space="preserve">
+    <value>Tor の準備ができました.</value>
+  </data>
+  <data name="DNSTorInitializationFailed" xml:space="preserve">
+    <value>Tor の初期化に失敗しました</value>
+  </data>
+  <data name="DNSTorStopped" xml:space="preserve">
+    <value>Tor は停止しました.</value>
+  </data>
+  <data name="DNSCertificateCreated" xml:space="preserve">
+    <value>{0} 用の自己署名 DoH 証明書を作成し、信頼する証明書として設定して選択しました.</value>
+  </data>
+  <data name="DNSCertificateCreationFailed" xml:space="preserve">
+    <value>DoH 証明書を作成できませんでした</value>
+  </data>
+  <data name="DNSInvalidCustomResolver" xml:space="preserve">
+    <value>会社、説明、および DoH リゾルバーの有効な HTTPS URL を入力してください.</value>
+  </data>
+  <data name="DNSDuplicateResolver" xml:space="preserve">
+    <value>その上流の DoH リゾルバーは既に一覧にあります.</value>
+  </data>
+  <data name="DNSResolverCloudflareStandardDescription" xml:space="preserve">
+    <value>標準のパブリック DNS over HTTPS リゾルバー.</value>
+  </data>
+  <data name="DNSResolverCloudflareSecurityDescription" xml:space="preserve">
+    <value>マルウェアのドメインをブロックします.</value>
+  </data>
+  <data name="DNSResolverCloudflareFamilyDescription" xml:space="preserve">
+    <value>マルウェアと成人向けコンテンツをブロックします.</value>
+  </data>
+  <data name="DNSResolverGoogleDescription" xml:space="preserve">
+    <value>Google Public DNS の DNS over HTTPS リゾルバー.</value>
+  </data>
+  <data name="DNSResolverQuad9RecommendedDescription" xml:space="preserve">
+    <value>マルウェアのブロックと DNSSEC 検証を行う推奨構成.</value>
+  </data>
+  <data name="DNSResolverQuad9EcsDescription" xml:space="preserve">
+    <value>EDNS Client Subnet を有効にしたマルウェアのブロックと DNSSEC 検証.</value>
+  </data>
+  <data name="DNSResolverQuad9UnsecuredDescription" xml:space="preserve">
+    <value>マルウェアのブロックと DNSSEC 検証を行わない、上級ユーザー向けの構成.</value>
+  </data>
+  <data name="DNSDownloadTorHyperlinkButton.Content" xml:space="preserve">
+    <value>Tor Expert Bundle をダウンロード</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.Title" xml:space="preserve">
+    <value>上流の DoH リゾルバーを追加</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.PrimaryButtonText" xml:space="preserve">
+    <value>追加</value>
+  </data>
+  <data name="DNSAddResolverContentDialog.CloseButtonText" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="DNSAddResolverContentDialogSubTitle.Text" xml:space="preserve">
+    <value>DNS over HTTPS リゾルバーの詳細を入力してください。アドレスは https:// で始まる必要があります.</value>
+  </data>
+  <data name="DNSServerRunning" xml:space="preserve">
+    <value>DNS サーバーは実行中です。ローカルデバイスの DNS サーバーを {0} に設定してください.</value>
+  </data>
+  <data name="DNSServerStopped" xml:space="preserve">
+    <value>DNS サーバーは停止しました.</value>
+  </data>
+  <data name="DNSServerFailed" xml:space="preserve">
+    <value>エラーにより DNS サーバーが停止しました</value>
+  </data>
+  <data name="DNSStartButton.Content" xml:space="preserve">
+    <value>開始</value>
+  </data>
+  <data name="DNSTorNotRunning" xml:space="preserve">
+    <value>Tor は実行されていません.</value>
+  </data>
+  <data name="DNSUpstreamDohResolversHeader.Text" xml:space="preserve">
+    <value>上流の DoH リゾルバー</value>
+  </data>
+  <data name="DNSInvalidUpstreamServers" xml:space="preserve">
+    <value>上流の DNS サーバーを IP アドレスで少なくとも 1 つ入力してください。複数のサーバーはコンマで区切ってください.</value>
+  </data>
+  <data name="DNSDomainLogTextBox.PlaceholderText" xml:space="preserve">
+    <value>保存していません。先にファイルを選択してください.</value>
+  </data>
+  <data name="DNSSelectDomainLogButton.Content" xml:space="preserve">
+    <value>ファイルを選択</value>
+  </data>
+  <data name="DNSLogsHeader.Text" xml:space="preserve">
+    <value>ログ</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Header" xml:space="preserve">
+    <value>送信元アダプター（LAN 待ち受け）</value>
+  </data>
+  <data name="DNSSourceAdapterSettingsCard.Description" xml:space="preserve">
+    <value>ローカルデバイスが接続しているネットワークのアダプター。サーバーはこのアダプターの IPv4 アドレスで待ち受けます.</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>送信先アダプター（送信トラフィック）</value>
+  </data>
+  <data name="DNSDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>インターネット接続を共有するアダプター。DNS クエリとプロキシ経由の接続は、このアダプターを通じて送信されます.</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Header" xml:space="preserve">
+    <value>アプリケーションの UDP と QUIC (HTTP/3) を有効にする</value>
+  </data>
+  <data name="DNSEnableUdpSettingsCard.Description" xml:space="preserve">
+    <value>Web サイトに対して安全な場合、UDP ポート 443 で QUIC を中継します。それ以外の場合、デバイスは TCP を使用します.</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Header" xml:space="preserve">
+    <value>Tor を使用</value>
+  </data>
+  <data name="DNSUseTorSettingsCard.Description" xml:space="preserve">
+    <value>匿名性とセキュリティを高めるため、このサーバーのトラフィックを Tor 経由で送信します.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Header" xml:space="preserve">
+    <value>DoH サーバー証明書</value>
+  </data>
+  <data name="DNSDohCertificateSettingsExpander.Description" xml:space="preserve">
+    <value>DNS over HTTPS サーバーがクライアントに提示する証明書.</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Header" xml:space="preserve">
+    <value>証明書</value>
+  </data>
+  <data name="DNSDohCertificateSettingsCard.Description" xml:space="preserve">
+    <value>コンピューターまたは現在のユーザーの「個人」ストアにある、秘密キーを持つ証明書.</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Header" xml:space="preserve">
+    <value>DoH 証明書のホスト名または IP アドレス</value>
+  </data>
+  <data name="DNSDohHostNameSettingsCard.Description" xml:space="preserve">
+    <value>生成する証明書の発行対象となる名前。DNS over HTTPS テンプレートでも使用されます.</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Header" xml:space="preserve">
+    <value>証明書を生成</value>
+  </data>
+  <data name="DNSGenerateCertificateSettingsCard.Description" xml:space="preserve">
+    <value>ホスト名または IP アドレス用の自己署名証明書を作成し、このコンピューターで信頼する証明書として設定して選択します.</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Header" xml:space="preserve">
+    <value>DoH ポート</value>
+  </data>
+  <data name="DNSDohPortSettingsCard.Description" xml:space="preserve">
+    <value>DNS over HTTPS サーバーが待ち受けるポート: HTTP/1.1 と HTTP/2 には TCP、HTTP/3 には UDP を使用します.</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Header" xml:space="preserve">
+    <value>DNS over HTTPS テンプレート</value>
+  </data>
+  <data name="DNSHttpsTemplateSettingsCard.Description" xml:space="preserve">
+    <value>クライアントに設定する DoH テンプレート.</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Header" xml:space="preserve">
+    <value>上流の DNS サーバー</value>
+  </data>
+  <data name="DNSUpstreamDnsServersSettingsCard.Description" xml:space="preserve">
+    <value>クエリに応答する DNS サーバーの IP アドレス。コンマで区切って指定します.</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Header" xml:space="preserve">
+    <value>ドメインログ</value>
+  </data>
+  <data name="DNSDomainLogSettingsExpander.Description" xml:space="preserve">
+    <value>照会された各ドメイン名とその照会回数を JSON ファイルに保存します。既存のファイルがある場合はそのファイルへの記録を継続するため、実行を重ねてもカウントが累積されます.</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Header" xml:space="preserve">
+    <value>ログファイル</value>
+  </data>
+  <data name="DNSDomainLogFileSettingsCard.Description" xml:space="preserve">
+    <value>照会されたドメイン名とそのカウントを保存する JSON ファイル.</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Header" xml:space="preserve">
+    <value>ルートドメインのみ</value>
+  </data>
+  <data name="DNSDomainLogRootDomainsSettingsCard.Description" xml:space="preserve">
+    <value>サブドメインをそのルートドメインにまとめて保存します。たとえば、azure.homefront.microsoft.com ではなく microsoft.com として保存します.</value>
+  </data>
+  <data name="DNSQueriesServedHeader.Text" xml:space="preserve">
+    <value>処理済みクエリ</value>
+  </data>
+  <data name="DNSCacheHitsHeader.Text" xml:space="preserve">
+    <value>キャッシュからの応答</value>
+  </data>
+  <data name="DNSFailedQueriesHeader.Text" xml:space="preserve">
+    <value>失敗したクエリ</value>
+  </data>
+  <data name="DNSClientsHeader.Text" xml:space="preserve">
+    <value>クライアント</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Header" xml:space="preserve">
+    <value>上流の DNS サーバーの取得元</value>
+  </data>
+  <data name="DNSUpstreamSourceSettingsCard.Description" xml:space="preserve">
+    <value>クエリの転送先。VPN が他のサーバーへの DNS トラフィックをブロックしている場合でも、送信先アダプターの DNS サーバーは機能します.</value>
+  </data>
+  <data name="DNSUpstreamSourceAdapterItem.Content" xml:space="preserve">
+    <value>送信先アダプターの DNS サーバー</value>
+  </data>
+  <data name="DNSUpstreamSourceCustomItem.Content" xml:space="preserve">
+    <value>カスタム DNS サーバー</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Header" xml:space="preserve">
+    <value>送信先アダプター</value>
+  </data>
+  <data name="DNSServerDestinationAdapterSettingsCard.Description" xml:space="preserve">
+    <value>クエリはこのアダプターを通じて、このアダプターの DNS サーバーに送信されます。VPN に接続している場合は、VPN のアダプターを選択してください.</value>
+  </data>
+  <data name="DNSSelectDomainLogFile" xml:space="preserve">
+    <value>ドメインログ用のファイルを選択するか、ドメインログをオフにしてください.</value>
+  </data>
+  <data name="DNSDestinationAdapterHasNoDnsServers" xml:space="preserve">
+    <value>DNS サーバーが設定されている送信先アダプターを選択するか、カスタム DNS サーバーを使用してください.</value>
+  </data>
+  <data name="DNSLogsToggleButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>ログの表示と非表示を切り替え</value>
+  </data>
+  <data name="DNSLogsToggleButton.AutomationProperties.HelpText" xml:space="preserve">
+    <value>ログの表示と非表示を切り替え</value>
+  </data>
 </root>

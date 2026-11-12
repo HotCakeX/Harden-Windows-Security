@@ -1,0 +1,1070 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="HardenSystemSecurity.Pages.Extras.DNS"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:HardenSystemSecurity.ViewModels"
+    xmlns:DNS="using:HardenSystemSecurity.DNS"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:customUI="using:AppControlManager.CustomUIElements"
+    FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
+
+    <Page.Resources>
+
+        <!-- The listener adapter. Every section displays it, and they all select the same adapter. -->
+        <DataTemplate x:Key="DNSListenerAdapterTemplate"
+                      x:DataType="vm:DNSVM">
+            <customUI:SettingsCardV2 x:Uid="DNSSourceAdapterSettingsCard">
+                <customUI:SettingsCardV2.HeaderIcon>
+                    <FontIcon Glyph="&#xF211;"/>
+                </customUI:SettingsCardV2.HeaderIcon>
+                <StackPanel Orientation="Horizontal"
+                            Spacing="8">
+                    <ComboBox MinWidth="260"
+                              MaxWidth="420"
+                              ItemsSource="{x:Bind NetworkAdapters, Mode=OneWay}"
+                              SelectedItem="{x:Bind SelectedSourceAdapter, Mode=TwoWay}"
+                              IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="DNS:NetworkAdapterOption">
+                                <TextBlock Text="{x:Bind DisplayName}"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button x:Uid="RefreshButton"
+                            Click="{x:Bind LoadNetworkAdapters}"
+                            IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}">
+                        <Button.ContentTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                                    <TextBlock Text="{x:Bind}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                </StackPanel>
+            </customUI:SettingsCardV2>
+        </DataTemplate>
+
+        <!-- The Tor settings. A section displays them only while its server is set to use Tor.
+             They are the same in every section: one Tor process serves all of them. -->
+        <DataTemplate x:Key="DNSTorSettingsTemplate"
+                      x:DataType="vm:DNSVM">
+            <Border CornerRadius="8"
+                    Padding="14"
+                    BorderThickness="1"
+                    BorderBrush="{ThemeResource AccentFillColorDefaultBrush}"
+                    Background="{ThemeResource CardBackgroundFillColorSecondaryBrush}">
+                <StackPanel Spacing="12">
+
+                    <!-- Title and the state of Tor -->
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xEA18;"
+                                  FontSize="18"
+                                  Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                        <TextBlock Grid.Column="1"
+                                   Text="Tor"
+                                   VerticalAlignment="Center"
+                                   Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                        <ProgressRing Grid.Column="2"
+                                      Width="16"
+                                      Height="16"
+                                      VerticalAlignment="Center"
+                                      IsActive="{x:Bind TorIsInitializing, Mode=OneWay}"/>
+                        <TextBlock Grid.Column="3"
+                                   VerticalAlignment="Center"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                   Text="{x:Bind TorStatusText, Mode=OneWay}"/>
+                    </Grid>
+
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- The folder is remembered in the app settings -->
+                        <StackPanel Spacing="4">
+                            <TextBlock x:Uid="DNSTorBundleFolderHeader"/>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox x:Uid="DNSTorBundlePathTextBox"
+                                         Text="{x:Bind TorBundlePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{x:Bind InitializeTorButtonIsEnabled, Mode=OneWay}"/>
+                                <Button Grid.Column="1"
+                                        x:Uid="GenericBrowseButton"
+                                        Click="{x:Bind BrowseTorBundle_Click}"
+                                        IsEnabled="{x:Bind InitializeTorButtonIsEnabled, Mode=OneWay}">
+                                    <Button.ContentTemplate>
+                                        <DataTemplate x:DataType="x:String">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <FontIcon Glyph="&#xED25;" FontSize="16"/>
+                                                <TextBlock Text="{x:Bind}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </Button.ContentTemplate>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1"
+                                    Spacing="4">
+                            <TextBlock x:Uid="DNSTorConnectionMethodHeader"/>
+                            <!-- The items follow the order of the TorConnectionMethod enum -->
+                            <ComboBox HorizontalAlignment="Stretch"
+                                      SelectedIndex="{x:Bind TorConnectionMethodIndex, Mode=TwoWay}"
+                                      IsEnabled="{x:Bind InitializeTorButtonIsEnabled, Mode=OneWay}">
+                                <ComboBoxItem x:Uid="DNSTorDirectConnectionItem"/>
+                                <ComboBoxItem Content="obfs4"/>
+                                <ComboBoxItem Content="Snowflake"/>
+                                <ComboBoxItem Content="meek"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+
+                    <CCToolKit:WrapPanel Orientation="Horizontal"
+                                         HorizontalSpacing="8"
+                                         VerticalSpacing="8">
+
+                        <Button x:Uid="DNSInitializeTorButton"
+                                Click="{x:Bind InitializeTor_Click}"
+                                IsEnabled="{x:Bind InitializeTorButtonIsEnabled, Mode=OneWay}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE7E8;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+
+                        <Button x:Uid="DNSStopTorButton"
+                                Click="{x:Bind StopTor_Click}"
+                                IsEnabled="{x:Bind StopTorButtonIsEnabled, Mode=OneWay}">
+                            <Button.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE711;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </Button.ContentTemplate>
+                        </Button>
+
+                        <!-- Where the Tor Expert Bundle can be downloaded -->
+                        <HyperlinkButton x:Uid="DNSDownloadTorHyperlinkButton"
+                                         NavigateUri="https://download.torproject.org/tor/"
+                                         ToolTipService.ToolTip="https://download.torproject.org/tor/">
+                            <HyperlinkButton.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xE896;" FontSize="16"/>
+                                        <TextBlock Text="{x:Bind}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </HyperlinkButton.ContentTemplate>
+                        </HyperlinkButton>
+
+                    </CCToolKit:WrapPanel>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+
+        <!-- The file in which the queried domain names are counted. Used by the DNS over HTTPS and the DNS sections.
+             The toggle switch turns the log on and off, and the items hold the file and the options of the log. -->
+        <DataTemplate x:Key="DNSDomainLogTemplate"
+                      x:DataType="vm:DNSVM">
+            <CCToolKit:SettingsExpander x:Uid="DNSDomainLogSettingsExpander"
+                                        IsExpanded="{x:Bind DomainLogSettingsExpanderIsExpanded, Mode=TwoWay}">
+                <CCToolKit:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xE81C;"/>
+                </CCToolKit:SettingsExpander.HeaderIcon>
+
+                <ToggleSwitch x:Uid="ToggleSwitchGeneral"
+                              IsOn="{x:Bind DomainLogIsEnabled, Mode=TwoWay}"
+                              IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+
+                <CCToolKit:SettingsExpander.Items>
+
+                    <customUI:SettingsCardV2 x:Uid="DNSDomainLogFileSettingsCard">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="8">
+                            <TextBox x:Uid="DNSDomainLogTextBox"
+                                     MinWidth="200"
+                                     MaxWidth="320"
+                                     IsReadOnly="True"
+                                     Text="{x:Bind DomainLogPath, Mode=OneWay}"/>
+                            <Button x:Uid="DNSSelectDomainLogButton"
+                                    Click="{x:Bind SelectDomainLogFile_Click}"
+                                    IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74E;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                    </customUI:SettingsCardV2>
+
+                    <!-- Whether only the root domains are saved, such as microsoft.com for azure.homefront.microsoft.com -->
+                    <customUI:SettingsCardV2 x:Uid="DNSDomainLogRootDomainsSettingsCard">
+                        <CheckBox MinWidth="0"
+                                  IsChecked="{x:Bind DomainLogRootDomainsOnly, Mode=TwoWay}"
+                                  IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}"/>
+                    </customUI:SettingsCardV2>
+
+                </CCToolKit:SettingsExpander.Items>
+            </CCToolKit:SettingsExpander>
+        </DataTemplate>
+
+        <!-- The query statistics of the DNS over HTTPS server or the DNS server -->
+        <DataTemplate x:Key="DNSQueryStatisticsTemplate"
+                      x:DataType="vm:DnsQueryStatisticsDisplay">
+            <Border Padding="12"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="10">
+                <Grid ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Spacing="2">
+                        <TextBlock x:Uid="DNSQueriesServedHeader"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{x:Bind TotalQueries, Mode=OneWay}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1"
+                                Spacing="2">
+                        <TextBlock x:Uid="DNSCacheHitsHeader"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{x:Bind CacheHits, Mode=OneWay}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2"
+                                Spacing="2">
+                        <TextBlock x:Uid="DNSFailedQueriesHeader"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{x:Bind FailedQueries, Mode=OneWay}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="3"
+                                Spacing="2">
+                        <TextBlock x:Uid="DNSClientsHeader"
+                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="{x:Bind Clients, Mode=OneWay}"
+                                   FontSize="18"
+                                   FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!-- Start and Stop act on the server of the section that displays them -->
+        <DataTemplate x:Key="DNSServerButtonsTemplate"
+                      x:DataType="vm:DNSVM">
+            <CCToolKit:WrapPanel Orientation="Horizontal"
+                                 HorizontalSpacing="8"
+                                 VerticalSpacing="8">
+
+                <Button x:Uid="DNSStartButton"
+                        Style="{StaticResource AccentButtonStyle}"
+                        Click="{x:Bind Start_Click}"
+                        IsEnabled="{x:Bind ElementsAreEnabled, Mode=OneWay}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE768;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+                <Button x:Uid="DNSStopButton"
+                        Click="{x:Bind Stop_Click}"
+                        IsEnabled="{x:Bind StopButtonIsEnabled, Mode=OneWay}">
+                    <Button.ContentTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <FontIcon Glyph="&#xE71A;" FontSize="16"/>
+                                <TextBlock Text="{x:Bind}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
+
+            </CCToolKit:WrapPanel>
+        </DataTemplate>
+
+        <!-- The area at the top of each section that holds its Start and Stop buttons -->
+        <Style x:Key="DNSServerControlsBorderStyle"
+               TargetType="Border">
+            <Setter Property="CornerRadius" Value="{ThemeResource OverlayCornerRadius}"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource AccentFillColorDefaultBrush}"/>
+            <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+        </Style>
+
+    </Page.Resources>
+
+    <Grid RowSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- InfoBar -->
+        <customUI:InfoBarV2 Grid.Row="0"
+                            Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
+                            Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
+                            IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
+                            IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
+
+        <!-- The section selector in the middle and the button that opens the logs pane on the side -->
+        <Grid Grid.Row="1"
+              ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Section selector. It stays in place because every section scrolls on its own below it.
+                 The order of the items matches the section indexes of the ViewModel. -->
+            <SelectorBar Grid.Column="1"
+                         SelectionChanged="{x:Bind ViewModel.SectionSelectorBar_SelectionChanged}">
+                <SelectorBarItem Text="Smart DNS"
+                                 IsSelected="True">
+                    <SelectorBarItem.Icon>
+                        <FontIcon Glyph="&#xEABC;"/>
+                    </SelectorBarItem.Icon>
+                </SelectorBarItem>
+                <SelectorBarItem Text="DNS over HTTPS">
+                    <SelectorBarItem.Icon>
+                        <FontIcon Glyph="&#xE72E;"/>
+                    </SelectorBarItem.Icon>
+                </SelectorBarItem>
+                <SelectorBarItem Text="DNS">
+                    <SelectorBarItem.Icon>
+                        <FontIcon Glyph="&#xF081;"/>
+                    </SelectorBarItem.Icon>
+                </SelectorBarItem>
+            </SelectorBar>
+
+            <!-- Opens and closes the logs pane. Clicking anywhere outside the open pane closes it too. -->
+            <ToggleButton Grid.Column="2"
+                          x:Uid="DNSLogsToggleButton"
+                          HorizontalAlignment="Right"
+                          VerticalAlignment="Center"
+                          IsChecked="{x:Bind ViewModel.LogsPaneIsOpen, Mode=TwoWay}">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="8">
+                    <FontIcon Glyph="&#xE9F9;"
+                              FontSize="16"/>
+                    <TextBlock x:Uid="DNSLogsHeader"/>
+                </StackPanel>
+            </ToggleButton>
+        </Grid>
+
+        <!-- The logs of every section are displayed in a resizable pane over the sections -->
+        <SplitView Grid.Row="2"
+                   x:Name="LogsSplitView"
+                   DisplayMode="Overlay"
+                   IsPaneOpen="{x:Bind ViewModel.LogsPaneIsOpen, Mode=TwoWay}"
+                   OpenPaneLength="560"
+                   CompactPaneLength="0"
+                   PanePlacement="Right">
+
+            <SplitView.Content>
+                <Grid>
+
+                    <!-- Smart DNS section -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  Visibility="{x:Bind ViewModel.SmartDnsSectionVisibility, Mode=OneWay}">
+                        <StackPanel Spacing="{StaticResource SettingsCardSpacing}"
+                                    Padding="0,0,14,4">
+
+                            <!-- Start and Stop of the Smart DNS -->
+                            <Border Style="{StaticResource DNSServerControlsBorderStyle}">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Glyph="&#xEABC;"
+                                              FontSize="20"
+                                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="Smart DNS"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               Style="{StaticResource SubtitleTextBlockStyle}"/>
+                                    <ContentPresenter Grid.Column="2"
+                                                      Content="{x:Bind ViewModel}"
+                                                      ContentTemplate="{StaticResource DNSServerButtonsTemplate}"/>
+                                </Grid>
+                            </Border>
+
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Content="{x:Bind ViewModel}"
+                                              ContentTemplate="{StaticResource DNSListenerAdapterTemplate}"/>
+
+                            <customUI:SettingsCardV2 x:Uid="DNSDestinationAdapterSettingsCard">
+                                <customUI:SettingsCardV2.HeaderIcon>
+                                    <FontIcon Glyph="&#xEDA3;"/>
+                                </customUI:SettingsCardV2.HeaderIcon>
+                                <ComboBox MinWidth="260"
+                                          MaxWidth="420"
+                                          ItemsSource="{x:Bind ViewModel.NetworkAdapters, Mode=OneWay}"
+                                          SelectedItem="{x:Bind ViewModel.SelectedDestinationAdapter, Mode=TwoWay}"
+                                          IsEnabled="{x:Bind ViewModel.DestinationAdapterAndUdpAreEnabled, Mode=OneWay}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="DNS:NetworkAdapterOption">
+                                            <TextBlock Text="{x:Bind DisplayName}"
+                                                       TextTrimming="CharacterEllipsis"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </customUI:SettingsCardV2>
+
+                            <customUI:SettingsCardV2 x:Uid="DNSEnableUdpSettingsCard">
+                                <customUI:SettingsCardV2.HeaderIcon>
+                                    <FontIcon Glyph="&#xE945;"/>
+                                </customUI:SettingsCardV2.HeaderIcon>
+                                <CheckBox MinWidth="0"
+                                          IsChecked="{x:Bind ViewModel.EnableUdp, Mode=TwoWay}"
+                                          IsEnabled="{x:Bind ViewModel.DestinationAdapterAndUdpAreEnabled, Mode=OneWay}"/>
+                            </customUI:SettingsCardV2>
+
+                            <!-- With Tor, the traffic goes through Tor instead of the destination adapter -->
+                            <customUI:SettingsCardV2 x:Uid="DNSUseTorSettingsCard">
+                                <customUI:SettingsCardV2.HeaderIcon>
+                                    <FontIcon Glyph="&#xEA18;"/>
+                                </customUI:SettingsCardV2.HeaderIcon>
+                                <ToggleSwitch x:Uid="ToggleSwitchGeneral"
+                                              IsOn="{x:Bind ViewModel.SmartDnsUseTor, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind ViewModel.UseTorToggleIsEnabled, Mode=OneWay}"/>
+                            </customUI:SettingsCardV2>
+
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Content="{x:Bind ViewModel}"
+                                              ContentTemplate="{StaticResource DNSTorSettingsTemplate}"
+                                              Visibility="{x:Bind ViewModel.SmartDnsTorSettingsVisibility, Mode=OneWay}"/>
+
+                            <!-- Overall speed statistics -->
+                            <Border Padding="12"
+                                    Margin="0,8,0,0"
+                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="10">
+                                <Grid ColumnSpacing="24">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Spacing="2">
+                                        <TextBlock x:Uid="DNSUploadHeader"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{x:Bind ViewModel.UploadSpeedText, Mode=OneWay}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1"
+                                                Spacing="2">
+                                        <TextBlock x:Uid="WinGetDownloadMenuFlyoutItem"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{x:Bind ViewModel.DownloadSpeedText, Mode=OneWay}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2"
+                                                Spacing="2">
+                                        <TextBlock x:Uid="DNSCombinedHeader"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{x:Bind ViewModel.CombinedSpeedText, Mode=OneWay}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="3"
+                                                Spacing="2">
+                                        <TextBlock x:Uid="DNSActiveConnectionsHeader"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                        <TextBlock Text="{x:Bind ViewModel.ActiveConnectionsText, Mode=OneWay}"
+                                                   FontSize="18"
+                                                   FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <!-- Traffic by client IP address -->
+                            <StackPanel Spacing="6"
+                                        Margin="0,8,0,0">
+                                <TextBlock x:Uid="DNSClientTrafficHeader"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"/>
+
+                                <Grid Padding="12,0"
+                                      ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1.4*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="0.7*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock x:Uid="IPAddress"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="1"
+                                               x:Uid="DNSUploadHeader"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="2"
+                                               x:Uid="WinGetDownloadMenuFlyoutItem"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="3"
+                                               x:Uid="DNSCombinedHeader"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="4"
+                                               x:Uid="DNSUploadedHeader"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="5"
+                                               x:Uid="DNSDownloadedHeader"
+                                               FontWeight="SemiBold"/>
+                                    <TextBlock Grid.Column="6"
+                                               x:Uid="DNSConnectionsHeader"
+                                               FontWeight="SemiBold"/>
+                                </Grid>
+
+                                <ListView MaxHeight="220"
+                                          SelectionMode="None"
+                                          ItemsSource="{x:Bind ViewModel.ClientTrafficItems, Mode=OneWay}">
+                                    <ListView.ItemContainerTransitions>
+                                        <TransitionCollection/>
+                                    </ListView.ItemContainerTransitions>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="vm:ClientTrafficDisplay">
+                                            <Grid Padding="4"
+                                                  ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.4*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="0.7*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{x:Bind Address}"/>
+                                                <TextBlock Grid.Column="1"
+                                                           Text="{x:Bind UploadSpeed, Mode=OneWay}"/>
+                                                <TextBlock Grid.Column="2"
+                                                           Text="{x:Bind DownloadSpeed, Mode=OneWay}"/>
+                                                <TextBlock Grid.Column="3"
+                                                           Text="{x:Bind CombinedSpeed, Mode=OneWay}"/>
+                                                <TextBlock Grid.Column="4"
+                                                           Text="{x:Bind TotalUploaded, Mode=OneWay}"/>
+                                                <TextBlock Grid.Column="5"
+                                                           Text="{x:Bind TotalDownloaded, Mode=OneWay}"/>
+                                                <TextBlock Grid.Column="6"
+                                                           Text="{x:Bind ActiveConnections, Mode=OneWay}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- DNS over HTTPS section -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  Visibility="{x:Bind ViewModel.DohSectionVisibility, Mode=OneWay}">
+                        <StackPanel Spacing="{StaticResource SettingsCardSpacing}"
+                                    Padding="0,0,14,4">
+
+                            <!-- Start and Stop of the DNS over HTTPS server -->
+                            <Border Style="{StaticResource DNSServerControlsBorderStyle}">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Glyph="&#xE72E;"
+                                              FontSize="20"
+                                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="DNS over HTTPS"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               Style="{StaticResource SubtitleTextBlockStyle}"/>
+                                    <ContentPresenter Grid.Column="2"
+                                                      Content="{x:Bind ViewModel}"
+                                                      ContentTemplate="{StaticResource DNSServerButtonsTemplate}"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- The queries served by the DNS over HTTPS server since it was started -->
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Margin="0,0,0,8"
+                                              Content="{x:Bind ViewModel.DohStatistics}"
+                                              ContentTemplate="{StaticResource DNSQueryStatisticsTemplate}"/>
+
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Content="{x:Bind ViewModel}"
+                                              ContentTemplate="{StaticResource DNSListenerAdapterTemplate}"/>
+
+                            <!-- The certificate of the DoH server -->
+                            <CCToolKit:SettingsExpander x:Uid="DNSDohCertificateSettingsExpander"
+                                                        IsExpanded="{x:Bind ViewModel.DohCertificateSettingsExpanderIsExpanded, Mode=TwoWay}">
+                                <CCToolKit:SettingsExpander.HeaderIcon>
+                                    <FontIcon Glyph="&#xEB95;"/>
+                                </CCToolKit:SettingsExpander.HeaderIcon>
+
+                                <CCToolKit:SettingsExpander.Items>
+
+                                    <customUI:SettingsCardV2 x:Uid="DNSDohCertificateSettingsCard">
+                                        <StackPanel Orientation="Horizontal"
+                                                    Spacing="8">
+                                            <ComboBox x:Name="DohCertificateComboBox"
+                                                      x:Uid="DNSDohCertificateComboBox"
+                                                      MinWidth="260"
+                                                      MaxWidth="420"
+                                                      ItemsSource="{x:Bind ViewModel.DohCertificates, Mode=OneWay}"
+                                                      SelectedItem="{x:Bind ViewModel.SelectedDohCertificate, Mode=TwoWay}"
+                                                      IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate x:DataType="DNS:DohCertificateOption">
+                                                        <Grid ColumnSpacing="8">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="Auto"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Text="{x:Bind DisplayName}"
+                                                                       VerticalAlignment="Center"
+                                                                       TextTrimming="CharacterEllipsis"/>
+                                                            <!-- The tag identifies this exact certificate, not the current selection. -->
+                                                            <Button Grid.Column="1"
+                                                                    Padding="8"
+                                                                    MinWidth="32"
+                                                                    VerticalAlignment="Center"
+                                                                    Tag="{x:Bind}"
+                                                                    Click="DeleteDohCertificate_Click"
+                                                                    ToolTipService.ToolTip="Delete certificate"
+                                                                    AutomationProperties.Name="Delete certificate">
+                                                                <FontIcon Glyph="&#xE74D;"
+                                                                          FontSize="16"/>
+                                                            </Button>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                            <Button x:Uid="RefreshButton"
+                                                    Click="{x:Bind ViewModel.RefreshCertificates_Click}"
+                                                    IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                                <Button.ContentTemplate>
+                                                    <DataTemplate x:DataType="x:String">
+                                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                                            <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                                                            <TextBlock Text="{x:Bind}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </Button.ContentTemplate>
+                                            </Button>
+                                        </StackPanel>
+                                    </customUI:SettingsCardV2>
+
+                                    <CCToolKit:SettingsCard x:Uid="DNSDohHostNameSettingsCard">
+                                        <TextBox PlaceholderText="192.168.1.102 or dns.example.com"
+                                                 MinWidth="260"
+                                                 MaxWidth="420"
+                                                 Text="{x:Bind ViewModel.DohHostName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                                    </CCToolKit:SettingsCard>
+
+                                    <customUI:SettingsCardV2 x:Uid="DNSGenerateCertificateSettingsCard">
+                                        <Button x:Uid="DNSGenerateCertificateButton"
+                                                Click="{x:Bind ViewModel.GenerateCertificate_Click}"
+                                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xEB95;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                    </customUI:SettingsCardV2>
+
+                                </CCToolKit:SettingsExpander.Items>
+                            </CCToolKit:SettingsExpander>
+
+                            <CCToolKit:SettingsCard x:Uid="DNSDohPortSettingsCard">
+                                <CCToolKit:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xE703;"/>
+                                </CCToolKit:SettingsCard.HeaderIcon>
+                                <NumberBox MinWidth="140"
+                                           Minimum="1"
+                                           Maximum="65535"
+                                           SmallChange="1"
+                                           LargeChange="100"
+                                           SpinButtonPlacementMode="Inline"
+                                           Value="{x:Bind ViewModel.DohPort, Mode=TwoWay}"
+                                           IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                            </CCToolKit:SettingsCard>
+
+                            <CCToolKit:SettingsCard x:Uid="DNSHttpsTemplateSettingsCard">
+                                <CCToolKit:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xE72E;"/>
+                                </CCToolKit:SettingsCard.HeaderIcon>
+                                <TextBox x:Uid="DNSHttpsTemplateTextBox"
+                                         MinWidth="260"
+                                         MaxWidth="420"
+                                         IsReadOnly="True"
+                                         Text="{x:Bind ViewModel.DohHttpsTemplate, Mode=OneWay}"/>
+                            </CCToolKit:SettingsCard>
+
+                            <!-- The upstream DoH resolvers. The card has no header and no description so the list gets its full width. -->
+                            <CCToolKit:SettingsCard ContentAlignment="Vertical"
+                                                    HorizontalContentAlignment="Stretch">
+                                <StackPanel Spacing="4"
+                                            HorizontalAlignment="Stretch">
+                                    <!-- The Add button opens a dialog that asks for the details of a custom resolver -->
+                                    <Grid ColumnSpacing="8">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock x:Uid="DNSUpstreamDohResolversHeader"
+                                                   VerticalAlignment="Center"
+                                                   Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                                        <Button Grid.Column="1"
+                                                x:Uid="DNSAddResolverButton"
+                                                Click="{x:Bind ViewModel.AddDohResolver_Click}"
+                                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                            <Button.ContentTemplate>
+                                                <DataTemplate x:DataType="x:String">
+                                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                                        <FontIcon Glyph="&#xE710;" FontSize="16"/>
+                                                        <TextBlock Text="{x:Bind}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </Button.ContentTemplate>
+                                        </Button>
+                                    </Grid>
+                                    <ListView MaxHeight="300"
+                                              HorizontalAlignment="Stretch"
+                                              SelectionMode="None"
+                                              ItemsSource="{x:Bind ViewModel.DohResolvers, Mode=OneWay}"
+                                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate x:DataType="vm:DohResolverOption">
+                                                <Grid Padding="4"
+                                                      ColumnSpacing="8">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <CheckBox MinWidth="0"
+                                                              VerticalAlignment="Center"
+                                                              IsChecked="{x:Bind IsSelected, Mode=TwoWay}"
+                                                              AutomationProperties.Name="{x:Bind UriText}"/>
+                                                    <StackPanel Grid.Column="1"
+                                                                Spacing="2">
+                                                        <TextBlock FontWeight="SemiBold"
+                                                                   Text="{x:Bind Company}"/>
+                                                        <TextBlock IsTextSelectionEnabled="True"
+                                                                   Text="{x:Bind UriText}"/>
+                                                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                                   Text="{x:Bind Description}"
+                                                                   TextWrapping="Wrap"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </StackPanel>
+                            </CCToolKit:SettingsCard>
+
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Content="{x:Bind ViewModel}"
+                                              ContentTemplate="{StaticResource DNSDomainLogTemplate}"/>
+
+                            <!-- With Tor, the upstream resolvers are reached through Tor instead of directly -->
+                            <customUI:SettingsCardV2 x:Uid="DNSUseTorSettingsCard">
+                                <customUI:SettingsCardV2.HeaderIcon>
+                                    <FontIcon Glyph="&#xEA18;"/>
+                                </customUI:SettingsCardV2.HeaderIcon>
+                                <ToggleSwitch x:Uid="ToggleSwitchGeneral"
+                                              IsOn="{x:Bind ViewModel.DohUseTor, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind ViewModel.UseTorToggleIsEnabled, Mode=OneWay}"/>
+                            </customUI:SettingsCardV2>
+
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Content="{x:Bind ViewModel}"
+                                              ContentTemplate="{StaticResource DNSTorSettingsTemplate}"
+                                              Visibility="{x:Bind ViewModel.DohTorSettingsVisibility, Mode=OneWay}"/>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- DNS section -->
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  Visibility="{x:Bind ViewModel.DnsSectionVisibility, Mode=OneWay}">
+                        <StackPanel Spacing="{StaticResource SettingsCardSpacing}"
+                                    Padding="0,0,14,4">
+
+                            <!-- Start and Stop of the DNS server -->
+                            <Border Style="{StaticResource DNSServerControlsBorderStyle}">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <FontIcon Glyph="&#xF081;"
+                                              FontSize="20"
+                                              Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                    <TextBlock Grid.Column="1"
+                                               Text="DNS"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               Style="{StaticResource SubtitleTextBlockStyle}"/>
+                                    <ContentPresenter Grid.Column="2"
+                                                      Content="{x:Bind ViewModel}"
+                                                      ContentTemplate="{StaticResource DNSServerButtonsTemplate}"/>
+                                </Grid>
+                            </Border>
+
+                            <!-- The queries served by the DNS server since it was started -->
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Margin="0,0,0,8"
+                                              Content="{x:Bind ViewModel.DnsStatistics}"
+                                              ContentTemplate="{StaticResource DNSQueryStatisticsTemplate}"/>
+
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Content="{x:Bind ViewModel}"
+                                              ContentTemplate="{StaticResource DNSListenerAdapterTemplate}"/>
+
+                            <!-- Where the queries are sent when Tor is not used -->
+                            <customUI:SettingsCardV2 x:Uid="DNSUpstreamSourceSettingsCard"
+                                                     Visibility="{x:Bind ViewModel.DnsUpstreamSourceVisibility, Mode=OneWay}">
+                                <customUI:SettingsCardV2.HeaderIcon>
+                                    <FontIcon Glyph="&#xE8AB;"/>
+                                </customUI:SettingsCardV2.HeaderIcon>
+                                <ComboBox MinWidth="260"
+                                          MaxWidth="420"
+                                          SelectedIndex="{x:Bind ViewModel.DnsUpstreamSourceIndex, Mode=TwoWay}"
+                                          IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                    <ComboBoxItem x:Uid="DNSUpstreamSourceAdapterItem"/>
+                                    <ComboBoxItem x:Uid="DNSUpstreamSourceCustomItem"/>
+                                </ComboBox>
+                            </customUI:SettingsCardV2>
+
+                            <!-- The DNS servers of this adapter answer the queries, which are sent through it -->
+                            <customUI:SettingsCardV2 x:Uid="DNSServerDestinationAdapterSettingsCard"
+                                                     Visibility="{x:Bind ViewModel.DnsDestinationAdapterVisibility, Mode=OneWay}">
+                                <customUI:SettingsCardV2.HeaderIcon>
+                                    <FontIcon Glyph="&#xEDA3;"/>
+                                </customUI:SettingsCardV2.HeaderIcon>
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="8">
+                                    <ComboBox MinWidth="260"
+                                              MaxWidth="420"
+                                              ItemsSource="{x:Bind ViewModel.NetworkAdapters, Mode=OneWay}"
+                                              SelectedItem="{x:Bind ViewModel.SelectedDestinationAdapter, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate x:DataType="DNS:NetworkAdapterOption">
+                                                <TextBlock Text="{x:Bind DisplayName}"
+                                                           TextTrimming="CharacterEllipsis"/>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    <Button x:Uid="RefreshButton"
+                                            Click="{x:Bind ViewModel.LoadNetworkAdapters}"
+                                            IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                                        <Button.ContentTemplate>
+                                            <DataTemplate x:DataType="x:String">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <FontIcon Glyph="&#xE72C;" FontSize="16"/>
+                                                    <TextBlock Text="{x:Bind}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </Button.ContentTemplate>
+                                    </Button>
+                                </StackPanel>
+                            </customUI:SettingsCardV2>
+
+                            <!-- The custom upstream DNS servers -->
+                            <CCToolKit:SettingsCard x:Uid="DNSUpstreamDnsServersSettingsCard"
+                                                    Visibility="{x:Bind ViewModel.DnsUpstreamServersVisibility, Mode=OneWay}">
+                                <CCToolKit:SettingsCard.HeaderIcon>
+                                    <FontIcon Glyph="&#xE968;"/>
+                                </CCToolKit:SettingsCard.HeaderIcon>
+                                <TextBox MinWidth="260"
+                                         MaxWidth="420"
+                                         PlaceholderText="1.1.1.1, 1.0.0.1"
+                                         Text="{x:Bind ViewModel.DnsUpstreamServers, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"/>
+                            </CCToolKit:SettingsCard>
+
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Content="{x:Bind ViewModel}"
+                                              ContentTemplate="{StaticResource DNSDomainLogTemplate}"/>
+
+                            <!-- With Tor, the names are resolved by Tor instead of the upstream DNS servers -->
+                            <customUI:SettingsCardV2 x:Uid="DNSUseTorSettingsCard">
+                                <customUI:SettingsCardV2.HeaderIcon>
+                                    <FontIcon Glyph="&#xEA18;"/>
+                                </customUI:SettingsCardV2.HeaderIcon>
+                                <ToggleSwitch x:Uid="ToggleSwitchGeneral"
+                                              IsOn="{x:Bind ViewModel.DnsUseTor, Mode=TwoWay}"
+                                              IsEnabled="{x:Bind ViewModel.UseTorToggleIsEnabled, Mode=OneWay}"/>
+                            </customUI:SettingsCardV2>
+
+                            <ContentPresenter HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              Content="{x:Bind ViewModel}"
+                                              ContentTemplate="{StaticResource DNSTorSettingsTemplate}"
+                                              Visibility="{x:Bind ViewModel.DnsTorSettingsVisibility, Mode=OneWay}"/>
+
+                        </StackPanel>
+                    </ScrollViewer>
+
+                </Grid>
+            </SplitView.Content>
+
+            <SplitView.Pane>
+                <Grid>
+                    <!-- Logs of every section. Their text is only updated while the pane is open. -->
+                    <Grid Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                          Padding="12"
+                          RowSpacing="8">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <FontIcon Glyph="&#xE9F9;"
+                                      FontSize="16"
+                                      VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="1"
+                                       x:Uid="DNSLogsHeader"
+                                       VerticalAlignment="Center"
+                                       Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+                            <Button Grid.Column="2"
+                                    x:Uid="CopyButton"
+                                    Click="{x:Bind ViewModel.CopyLogs_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE8C8;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                            <Button Grid.Column="3"
+                                    x:Uid="ClearButton"
+                                    Click="{x:Bind ViewModel.ClearLogs_Click}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate x:DataType="x:String">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="16"/>
+                                            <TextBlock Text="{x:Bind}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </Grid>
+
+                        <TextBox Grid.Row="1"                                 
+                                 AcceptsReturn="True"
+                                 FontFamily="Consolas"
+                                 HorizontalAlignment="Stretch"
+                                 VerticalAlignment="Stretch"
+                                 IsReadOnly="True"
+                                 TextWrapping="NoWrap"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                 Text="{x:Bind ViewModel.LogText, Mode=OneWay}"
+                                 TextChanged="{x:Bind ViewModel.LogTextBox_TextChanged}"/>
+                    </Grid>
+
+                    <!-- Overlay PropertySizer (invisible) to resize the pane by dragging its edge without a visible color strip -->
+                    <CCToolKit:PropertySizer Width="8"
+                                             HorizontalAlignment="Left"
+                                             VerticalAlignment="Stretch"
+                                             Binding="{x:Bind LogsSplitView.OpenPaneLength, Mode=TwoWay}"
+                                             Orientation="Vertical"
+                                             IsDragInverted="True"
+                                             Background="Transparent"
+                                             Minimum="450"
+                                             IsTabStop="False"
+                                             Margin="0"/>
+                </Grid>
+            </SplitView.Pane>
+        </SplitView>
+
+    </Grid>
+</Page>

@@ -61,6 +61,9 @@ A QUIC connection is only relayed when it is safe to do so. Browsers and apps re
 
 While the engine is running, the page displays the live upload and download speeds, the number of active connections and the total amount of relayed data.
 
+> [!TIP]\
+> [How to change DNS servers on Xbox](https://support.xbox.com/help/hardware-network/connect-network/advanced-network-settings)
+
 <br>
 
 ## DNS over HTTPS
@@ -150,7 +153,7 @@ Each tab has a **Use Tor** switch. When it is on, the Tor settings appear and th
 
 ### Setting Up Tor
 
-1. Use the **Download the Tor Expert Bundle** link to download the bundle from the Tor Project's website, and extract it.
+1. Use the [**Download the Tor Expert Bundle** link](https://download.torproject.org/tor/) to download the bundle from the Tor Project's website, and extract it.
 2. Select the extracted folder as the **Tor Expert Bundle folder**. It must contain `tor\tor.exe`, `data\geoip` and `data\geoip6`. The app remembers the folder so you only have to do this once.
 3. Select the **Tor connection method**:
 
@@ -197,7 +200,7 @@ The **Logs** button next to the tabs opens the logs pane, which shows what the r
 
 * **Disable Private DNS / Secure DNS on the device.** A device or browser that uses its own DNS over TLS or DNS over HTTPS resolver does not ask your computer.
 
-* **Android 17 and later require the local network permission.** The Smart DNS answers with your computer's local address, and Android only lets an app connect to local addresses when the app has the *Local network* (*Nearby devices*) permission. An app without it can still resolve names, but it cannot connect, so it fails to load anything while other apps work. For example, Microsoft Edge shows `ERR_TOO_MANY_RETRIES` and Google Play fails to load. To fix it, open **Settings** > **Apps** > *the app* > **Permissions** > **Nearby devices** and select **Allow**, then restart the app. Older Android versions do not have this restriction.
+* **Android 17 and later require [the local network permission](https://developer.android.com/reference/kotlin/android/Manifest.permission#access_local_network).** The Smart DNS answers with your computer's local address, and Android only lets an app connect to local addresses when the app has the [*Local network* (*Nearby devices*) permission](https://developer.android.com/privacy-and-security/local-network-permission). An app without it can still resolve names, but it cannot connect, so it fails to load anything while other apps work. For example, Microsoft Edge shows `ERR_TOO_MANY_RETRIES` and Google Play fails to load. To fix it, open **Settings** > **Apps** > *the app* > **Permissions** > **Nearby devices** and select **Allow**, then restart the app. Older Android versions do not have this restriction.
 
 * **Allow the ports in the firewall.** A device that cannot reach the ports listed above gets no answer.
 

@@ -629,7 +629,7 @@ function Build_HSS {
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install the Rust toolchain: $LASTEXITCODE") }
 
         Write-Host -Object "`nInstalling .NET SDK" -ForegroundColor Magenta
-        $null = winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+        $null = winget install --id Microsoft.DotNet.SDK.11 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
         if ($LASTEXITCODE -ne 0) { throw [System.InvalidOperationException]::New("Failed to install .NET SDK: $LASTEXITCODE") }
 
         Write-Host -Object "`nInstalling Visual Studio Build Tools" -ForegroundColor Magenta

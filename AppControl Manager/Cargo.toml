@@ -11,7 +11,7 @@ license = "MIT"
 repository = "https://github.com/HotCakeX/Harden-Windows-Security"
 documentation = "https://github.com/HotCakeX/Harden-Windows-Security"
 publish = false
-rust-version = "1.99"
+rust-version = "1.100"
 
 [profile.release]
 codegen-units = 1

@@ -102,6 +102,9 @@ The server accepts HTTP/1.1 and HTTP/2 over TCP and HTTP/3 over UDP on the same 
 
 Towards the upstream resolvers, the server starts with HTTP/2 and switches to HTTP/3 once a resolver advertises it, as Cloudflare and Google do. If HTTP/3 fails, for example because the network blocks UDP 443, that resolver is reached over HTTP/2 for the rest of the run. HTTP/3 is never used with Tor, because Tor only carries TCP.
 
+> [!TIP]\
+> You can add the following to the end of the Edge browser shortcut's `Target` field to enable HTTP/3 usage of DNS over HTTPS server you host locally via the app: `--enable-quic --origin-to-force-quic-on=192.168.1.102:443`. Change the IP address and port according to your own setup.
+
 ### Caching and Statistics
 
 Both the DNS over HTTPS server and the DNS server cache the answers for as long as their records allow, so repeated queries are answered right away. Answers for names that do not exist are only kept briefly, and no answer is kept for more than an hour.

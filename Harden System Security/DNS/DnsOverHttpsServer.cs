@@ -32,6 +32,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -476,6 +477,84 @@ internal static class DnsOverHttpsServer
 		}
 		return false;
 	}
+
+	#region Fix for the bug in the Kestrel's HTTP/3 handling
+
+	// This entire region can be removed once the bug in Kestrel is fixed or more proper error handling is implemented.
+
+	// Kestrel starts each HTTP/3 control, encoder, and decoder stream by discarding the task (_ = ProcessRequestAsync(...))
+	// and does not catch the idle-timeout ConnectionResetException.
+	// When Edge's DNS over HTTPS leaves a QUIC connection idle, the finalizer reports that fault, the app logs it, and an error dialog appears.
+	// HTTP/2 has no such discarded stream, which is why this only shows up with HTTP/3.
+
+	// The unobserved-task handler in the App class recognizes a typed QuicError.ConnectionIdle
+	// with a matching Kestrel HTTP/3 control-stream frame, marks it observed, and does not log it or show a dialog.
+	// Any other unobserved exception is still reported.
+
+	// QuicException.InnerException can point back at the ConnectionResetException that wraps it.
+	// Aggregate traversal stops after this many links so that a cycle cannot loop forever.
+	// The leaf check inspects only the exception and its direct QUIC inner exception, without following a back-reference.
+	private const int MaximumExceptionWalkDepth = 8;
+
+	/// <summary>
+	/// Whether <paramref name="exception"/> matches the reported unobserved HTTP/3 control-stream idle timeout.
+	/// A discarded ProcessRequestAsync task can surface <see cref="ConnectionResetException"/> when its QUIC
+	/// connection times out from inactivity. Require the typed idle error and a fully qualified control-stream frame.
+	/// Missing stack information leaves the exception on the normal reporting path.
+	/// </summary>
+	internal static bool IsExpectedHttp3TransportShutdown(Exception exception) => IsExpectedHttp3TransportShutdown(exception, 0);
+
+	private static bool IsExpectedHttp3TransportShutdown(Exception exception, int depth)
+	{
+		if (depth > MaximumExceptionWalkDepth)
+		{
+			return false;
+		}
+		if (exception is AggregateException aggregate)
+		{
+			if (aggregate.InnerExceptions.Count == 0)
+			{
+				return false;
+			}
+			foreach (Exception inner in aggregate.InnerExceptions)
+			{
+				if (!IsExpectedHttp3TransportShutdown(inner, depth + 1))
+				{
+					return false;
+				}
+			}
+			return true;
+		}
+		return IsKestrelHttp3Shutdown(exception);
+	}
+
+	// Kestrel's QUIC transport wraps an idle connection shutdown in ConnectionResetException.
+	// Accepting the next stream can surface the same shutdown as a bare QuicException.
+	private static bool IsKestrelHttp3Shutdown(Exception exception)
+	{
+		// Accept only the known direct exception shapes, not arbitrary application wrappers.
+		QuicException? quicException = exception switch
+		{
+			QuicException found => found,
+			ConnectionResetException { InnerException: QuicException found } => found,
+			_ => null
+		};
+		if (quicException is null || !IsExpectedQuicShutdown(quicException.QuicError))
+		{
+			return false;
+		}
+		// ConnectionResetException alone does not identify the owning protocol or task.
+		// Inspect only these two stacks; QuicException.InnerException can point back to its wrapper.
+		return IsKestrelHttp3Frame(exception.StackTrace) || IsKestrelHttp3Frame(quicException.StackTrace);
+	}
+
+	private static bool IsKestrelHttp3Frame(string? stackTrace) =>
+		stackTrace is not null &&
+		stackTrace.Contains("Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http3.Http3ControlStream.", StringComparison.OrdinalIgnoreCase);
+
+	private static bool IsExpectedQuicShutdown(QuicError error) => error is QuicError.ConnectionIdle;
+
+	#endregion
 
 	private static async Task<ForwardDnsResult> SendDnsRequestToUpstreamAsync(
 		HttpClient upstreamClient,

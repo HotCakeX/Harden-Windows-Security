@@ -27,6 +27,7 @@ using Microsoft.UI.Dispatching;
 #pragma warning restore CA1515
 
 #if HARDEN_SYSTEM_SECURITY
+using HardenSystemSecurity.DNS;
 using HardenSystemSecurity.ViewModels;
 namespace HardenSystemSecurity;
 #endif
@@ -139,6 +140,16 @@ public sealed partial class App : Application
 	/// </summary>
 	private static async void TaskScheduler_UnobservedTaskException(object? sender, UnobservedTaskExceptionEventArgs e)
 	{
+#if HARDEN_SYSTEM_SECURITY
+		// Kestrel discards the HTTP/3 control, encoder, and decoder stream tasks. An idle timeout or a peer
+		// close faults those tasks, and the finalizer reports them here. The query already finished.
+		if (DnsOverHttpsServer.IsExpectedHttp3TransportShutdown(e.Exception))
+		{
+			e.SetObserved();
+			return;
+		}
+#endif
+
 		// Log the unobserved task exception details.
 		Logger.Write(e.Exception);
 

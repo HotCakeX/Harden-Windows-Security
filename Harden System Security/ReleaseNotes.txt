@@ -3,3 +3,5 @@
 * The contacted domains log file path is now saved in the app settings.
 
 * Adjusted the pre-selected list of upstream DNS resolvers.
+
+* Added handling for an issue in the Kestrel's HTTP/3 Quic for DNS over HTTPS. The DoH server in the Harden System Security app fully supports HTTP/3 communication and can be used for the Secure DNS in the Edge or other browsers to make your website lookups private and secure.

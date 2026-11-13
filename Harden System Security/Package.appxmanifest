@@ -20,6 +20,7 @@
   xmlns:uap17="http://schemas.microsoft.com/appx/manifest/uap/windows10/17"
   xmlns:uap18="http://schemas.microsoft.com/appx/manifest/uap/windows10/18"
   xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:desktop2="http://schemas.microsoft.com/appx/manifest/desktop/windows10/2"
   xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
   xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
   xmlns:desktop6="http://schemas.microsoft.com/appx/manifest/desktop/windows10/6"
@@ -33,7 +34,7 @@
   xmlns:systemai="http://schemas.microsoft.com/appx/manifest/systemai/windows10"
   xmlns:appdata="http://schemas.microsoft.com/appx/manifest/appdata/windows10"
   xmlns:trustedlaunch="http://schemas.microsoft.com/appx/manifest/trustedlaunch/windows10"
-  IgnorableNamespaces="mp uap uap3 uap17 uap18 desktop desktop5 com virtualization appdata trustedlaunch systemai">
+  IgnorableNamespaces="mp uap uap3 uap17 uap18 desktop desktop2 desktop5 com virtualization appdata trustedlaunch systemai">
   <!-- IgnorableNamespaces are evaluated during package creation and installation/registration so any optional feature's namespace should be added to it as long as the app can properly function without it. -->
 
   <Identity
@@ -335,6 +336,21 @@
 
     </Application>
   </Applications>
+
+  <!-- Firewall exceptions for DNS, Smart DNS, and default DoH listeners. -->
+  <!--
+  <Extensions>
+    <desktop2:Extension Category="windows.firewallRules">
+      <desktop2:FirewallRules Executable="HardenSystemSecurity.exe">
+        <desktop2:Rule Direction="in" IPProtocol="UDP" Profile="all" LocalPortMin="53" LocalPortMax="53" />
+        <desktop2:Rule Direction="in" IPProtocol="TCP" Profile="all" LocalPortMin="53" LocalPortMax="53" />
+        <desktop2:Rule Direction="in" IPProtocol="TCP" Profile="all" LocalPortMin="80" LocalPortMax="80" />
+        <desktop2:Rule Direction="in" IPProtocol="TCP" Profile="all" LocalPortMin="443" LocalPortMax="443" />
+        <desktop2:Rule Direction="in" IPProtocol="UDP" Profile="all" LocalPortMin="443" LocalPortMax="443" />
+      </desktop2:FirewallRules>
+    </desktop2:Extension>
+  </Extensions>
+  -->
 
   <Capabilities>
     <systemai:Capability Name="systemAIModels" />

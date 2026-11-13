@@ -444,6 +444,10 @@ internal static class SettingsBackupRestoreSerializer
 		CreateStringWithCustomValidation(nameof(Main.DNSTorBundleDirectory), "Absolute path or empty string", static settings => settings.DNSTorBundleDirectory, static (settings, value) => settings.DNSTorBundleDirectory = value,
 			static value => string.IsNullOrEmpty(value) || Path.IsPathRooted(value),
 			$"'{nameof(Main.DNSTorBundleDirectory)}' must be empty or an absolute path."),
+	
+		CreateStringWithCustomValidation(nameof(Main.DNSDomainLogFilePath), "Fully qualified path or empty string", static settings => settings.DNSDomainLogFilePath, static (settings, value) => settings.DNSDomainLogFilePath = value,
+			static value => string.IsNullOrEmpty(value) || Path.IsPathFullyQualified(value),
+			$"'{nameof(Main.DNSDomainLogFilePath)}' must be empty or a fully qualified path."),
 		];
 
 	internal static byte[] Export(Main settings)

@@ -1,0 +1,5 @@
+# Changes in the DNS Page
+
+* The contacted domains log file path is now saved in the app settings.
+
+* Adjusted the pre-selected list of upstream DNS resolvers.

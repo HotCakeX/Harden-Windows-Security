@@ -372,7 +372,17 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 	/// <summary>
 	/// The file in which the DNS over HTTPS server and the DNS server count the queried domain names.
 	/// </summary>
-	internal string DomainLogPath { get; private set => SP(ref field, value); } = string.Empty;
+	internal string DomainLogPath
+	{
+		get; private set
+		{
+			// Remember the location in the app settings.
+			if (SP(ref field, value))
+			{
+				Atlas.Settings.DNSDomainLogFilePath = field;
+			}
+		}
+	} = Atlas.Settings.DNSDomainLogFilePath;
 
 	/// <summary>
 	/// Whether only the root domains are counted, such as <c>microsoft.com</c> for <c>azure.homefront.microsoft.com</c>, instead of the full names.
@@ -1057,7 +1067,7 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 		finally
 		{
 			TorSessionManager.Shutdown();
-			MainInfoBar.WriteInfo(Atlas.GetStr("DNSTorStopped"));
+			MainInfoBar.WriteSuccess(Atlas.GetStr("DNSTorStopped"));
 			UpdateModeControls();
 			StopLogTimerIfIdle();
 		}
@@ -1204,12 +1214,12 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 	private void LoadDefaultDohResolvers()
 	{
 		DohResolvers.Add(new DohResolverOption("Cloudflare", "https://cloudflare-dns.com/dns-query", Atlas.GetStr("DNSResolverCloudflareStandardDescription")));
-		DohResolvers.Add(new DohResolverOption("Cloudflare", "https://security.cloudflare-dns.com/dns-query", Atlas.GetStr("DNSResolverCloudflareSecurityDescription")));
-		DohResolvers.Add(new DohResolverOption("Cloudflare", "https://family.cloudflare-dns.com/dns-query", Atlas.GetStr("DNSResolverCloudflareFamilyDescription")));
+		DohResolvers.Add(new DohResolverOption("Cloudflare", "https://security.cloudflare-dns.com/dns-query", Atlas.GetStr("DNSResolverCloudflareSecurityDescription")) { IsSelected = false });
+		DohResolvers.Add(new DohResolverOption("Cloudflare", "https://family.cloudflare-dns.com/dns-query", Atlas.GetStr("DNSResolverCloudflareFamilyDescription")) { IsSelected = false });
 		DohResolvers.Add(new DohResolverOption("Google", "https://dns.google/dns-query", Atlas.GetStr("DNSResolverGoogleDescription")));
 		DohResolvers.Add(new DohResolverOption("Quad9", "https://dns.quad9.net/dns-query", Atlas.GetStr("DNSResolverQuad9RecommendedDescription")));
-		DohResolvers.Add(new DohResolverOption("Quad9", "https://dns11.quad9.net/dns-query", Atlas.GetStr("DNSResolverQuad9EcsDescription")));
-		DohResolvers.Add(new DohResolverOption("Quad9", "https://dns10.quad9.net/dns-query", Atlas.GetStr("DNSResolverQuad9UnsecuredDescription")));
+		DohResolvers.Add(new DohResolverOption("Quad9", "https://dns11.quad9.net/dns-query", Atlas.GetStr("DNSResolverQuad9EcsDescription")) { IsSelected = false });
+		DohResolvers.Add(new DohResolverOption("Quad9", "https://dns10.quad9.net/dns-query", Atlas.GetStr("DNSResolverQuad9UnsecuredDescription")) { IsSelected = false });
 	}
 
 	/// <summary>

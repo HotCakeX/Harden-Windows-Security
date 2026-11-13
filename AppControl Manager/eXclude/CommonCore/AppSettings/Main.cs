@@ -147,6 +147,7 @@ internal sealed partial class Main : ViewModelBase
 		CustomizableScanLevelsFallbackOrder = ReadValue(nameof(CustomizableScanLevelsFallbackOrder), CustomizableScanLevelsFallbackOrder);
 		AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation = ReadValue(nameof(AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation), AppControlManagerOnlyIncludeSelectedItemsInPolicyCreation);
 		DNSTorBundleDirectory = ReadValue(nameof(DNSTorBundleDirectory), DNSTorBundleDirectory);
+		DNSDomainLogFilePath = ReadValue(nameof(DNSDomainLogFilePath), DNSDomainLogFilePath);
 	}
 
 	/// <summary>
@@ -1473,4 +1474,21 @@ internal sealed partial class Main : ViewModelBase
 			}
 		}
 	} = string.Empty;
+
+	/// <summary>
+	/// Harden System Security app only.
+	/// The selected JSON domain log output file shared by DNS and DNS over HTTPS.
+	/// Empty means no file has been selected. The file need not exist until logging starts.
+	/// </summary>
+	internal string DNSDomainLogFilePath
+	{
+		get; set
+		{
+			if (SP(ref field, value))
+			{
+				SaveValue(nameof(DNSDomainLogFilePath), field);
+			}
+		}
+	} = string.Empty;
+
 }

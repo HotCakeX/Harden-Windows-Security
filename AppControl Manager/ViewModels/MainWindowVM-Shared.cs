@@ -103,9 +103,9 @@ internal sealed partial class MainWindowVM : ViewModelBase
 	} = (int)Enum.Parse<BackDropComboBoxItems>(Atlas.Settings.BackDropBackground);
 
 	/// <summary>
-	/// Defines a private property for the system backdrop style, initialized with a MicaBackdrop of kind BaseAlt.
+	/// Defines a private property for the system backdrop style, initialized with a MicaBackdrop of kind Base.
 	/// </summary>
-	internal SystemBackdrop? SystemBackDropStyle { get; set => SP(ref field, value); } = new MicaBackdrop { Kind = MicaKind.BaseAlt };
+	internal SystemBackdrop? SystemBackDropStyle { get; set => SP(ref field, value); } = new MicaBackdrop { Kind = MicaKind.Base };
 
 	/// <summary>
 	/// The state of the OpenConfigDirectoryButton button which is on the Sidebar

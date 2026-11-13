@@ -262,7 +262,7 @@ internal sealed partial class Main : ViewModelBase
 				SaveValue(nameof(BackDropBackground), field);
 			}
 		}
-	} = "MicaAlt";
+	} = "Mica";
 
 	/// <summary>
 	/// MonoChrome, Animated or accent based
@@ -276,7 +276,7 @@ internal sealed partial class Main : ViewModelBase
 				SaveValue(nameof(IconsStyle), field);
 			}
 		}
-	} = "Monochromatic";
+	} = "Animated";
 
 	/// <summary>
 	/// Width of the main window

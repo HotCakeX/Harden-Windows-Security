@@ -1,0 +1,1 @@
+* Inbound Firewall rules are automatically handled for the DNS page's features. The Firewall rules defined in the manifest are more secure because they are very limited, only for specific ports.

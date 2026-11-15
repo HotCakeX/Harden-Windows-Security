@@ -338,7 +338,6 @@
   </Applications>
 
   <!-- Firewall exceptions for DNS, Smart DNS, and default DoH listeners. -->
-  <!--
   <Extensions>
     <desktop2:Extension Category="windows.firewallRules">
       <desktop2:FirewallRules Executable="HardenSystemSecurity.exe">
@@ -350,7 +349,6 @@
       </desktop2:FirewallRules>
     </desktop2:Extension>
   </Extensions>
-  -->
 
   <Capabilities>
     <systemai:Capability Name="systemAIModels" />

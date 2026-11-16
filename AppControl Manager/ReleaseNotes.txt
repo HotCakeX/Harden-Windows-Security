@@ -1,0 +1,1 @@
+* Added a workaround for a Windows 25H2/26H2 build 26200/26300.9974 related to exporting Firewall rules from GPO store. For further information and technical details please refer to this GitHub issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1259 . It affects the Firewall Sentinel feature.

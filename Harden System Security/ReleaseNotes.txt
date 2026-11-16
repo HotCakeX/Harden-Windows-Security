@@ -1,1 +1,3 @@
 * Inbound Firewall rules are automatically handled for the DNS page's features. The Firewall rules defined in the manifest are more secure because they are very limited, only for specific ports.
+
+* Added a workaround for a Windows 25H2/26H2 build 26200/26300.9974 related to exporting Firewall rules from GPO store. For further information and technical details please refer to this GitHub issue: https://github.com/HotCakeX/Harden-Windows-Security/issues/1259 . It affects the Firewall Management in the app.

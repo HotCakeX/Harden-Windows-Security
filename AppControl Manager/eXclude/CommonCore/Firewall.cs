@@ -15,9 +15,12 @@
 // See here for more information: https://github.com/HotCakeX/Harden-Windows-Security/blob/main/LICENSE
 //
 
+using System.Buffers.Binary;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace CommonCore;
 
@@ -51,6 +54,14 @@ internal static class Firewall
 			fGPO: fGPO,
 			wszFilePath: path,
 			fSomeInfoLost: out bool someInfoLost);
+
+		// This Windows bug only affects GPO exports. Local firewall exports never use the workaround.
+		// https://github.com/HotCakeX/Harden-Windows-Security/issues/1259
+		if (fGPO && result == 5)
+		{
+			Logger.Write("GPO firewall export returned ERROR_ACCESS_DENIED. Retrying with the temporary in-process workaround.");
+			result = FirewallExportWorkaround.Export(path, out someInfoLost);
+		}
 
 		if (result == 0)
 		{
@@ -332,4 +343,242 @@ internal static class FirewallWmiHelper
 
 		return mappings;
 	}
+}
+
+/// <summary>
+/// https://github.com/HotCakeX/Harden-Windows-Security/issues/1259
+/// This entire class can be removed once the bug is fixed in the Windows.
+/// This workaround works for ARM64 and X64.
+/// Affected builds: 25H2 and 26H2 builds (26320.9877 insider beta - 26300.9974 stable)
+/// </summary>
+internal static class FirewallExportWorkaround
+{
+	private const uint PAGE_EXECUTE_READWRITE = 0x40;
+	private const uint IMAGE_SCN_MEM_EXECUTE = 0x20000000;
+	private const ushort IMAGE_DOS_SIGNATURE = 0x5A4D;
+	private const uint IMAGE_NT_SIGNATURE = 0x00004550;
+	private static readonly Lock ExportLock = new();
+	private static ReadOnlySpan<byte> X64ExpectedBytes => [0xBB, 0x05, 0x00, 0x07, 0x80];
+	private static ReadOnlySpan<byte> X64PatchedBytes => [0xBB, 0x02, 0x00, 0x07, 0x80];
+	private static ReadOnlySpan<byte> Arm64ExpectedBytes => [0x05, 0x00, 0x07, 0x80];
+	private static ReadOnlySpan<byte> Arm64PatchedBytes => [0x02, 0x00, 0x07, 0x80];
+
+	internal static uint Export(string path, out bool someInfoLost)
+	{
+		lock (ExportLock)
+		{
+			string modulePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "FWPolicyIOMgr.dll");
+			nint module = NativeLibrary.Load(modulePath);
+			try
+			{
+				if (!TryLocatePatch(module, path, out PatchSite patchSite, out bool exportCompleted, out someInfoLost, out string error))
+				{
+					throw new InvalidOperationException($"The GPO firewall export workaround could not be safely applied. {error}");
+				}
+
+				// Behavioral validation is the requested export on both supported architectures. Calling
+				// FWExportPolicy again would return ERROR_ALREADY_EXISTS because the destination now exists.
+				if (exportCompleted)
+				{
+					Logger.Write($"The GPO firewall export succeeded with the temporary workaround at FWPolicyIOMgr.dll+0x{patchSite.Rva:X}.");
+					return 0;
+				}
+
+				Logger.Write($"Temporarily applying the GPO firewall export workaround at FWPolicyIOMgr.dll+0x{patchSite.Rva:X}.");
+				ApplyPatch(patchSite.Address, patchSite.PatchedBytes.Span);
+				try
+				{
+					return NativeMethods.FWExportPolicy(null, true, path, out someInfoLost);
+				}
+				finally
+				{
+					ApplyPatch(patchSite.Address, patchSite.ExpectedBytes.Span);
+					Logger.Write("Restored the original FWPolicyIOMgr.dll bytes after the GPO firewall export attempt.");
+				}
+			}
+			finally
+			{
+				NativeLibrary.Free(module);
+			}
+		}
+	}
+
+	private static bool TryLocatePatch(
+		nint module,
+		string exportPath,
+		out PatchSite patchSite,
+		out bool exportCompleted,
+		out bool someInfoLost,
+		out string error)
+	{
+		Architecture architecture = RuntimeInformation.ProcessArchitecture;
+		if (architecture == Architecture.X64)
+		{
+			return TryLocatePatchByBehavior(
+				module,
+				exportPath,
+				X64ExpectedBytes,
+				X64PatchedBytes,
+				requireFourByteAlignment: false,
+				architectureName: "X64",
+				out patchSite,
+				out exportCompleted,
+				out someInfoLost,
+				out error);
+		}
+
+		return TryLocatePatchByBehavior(
+			module,
+			exportPath,
+			Arm64ExpectedBytes,
+			Arm64PatchedBytes,
+			requireFourByteAlignment: true,
+			architectureName: "ARM64",
+			out patchSite,
+			out exportCompleted,
+			out someInfoLost,
+			out error);
+	}
+
+	private static bool TryLocatePatchByBehavior(
+		nint module,
+		string exportPath,
+		ReadOnlySpan<byte> expectedBytes,
+		ReadOnlySpan<byte> patchedBytes,
+		bool requireFourByteAlignment,
+		string architectureName,
+		out PatchSite patchSite,
+		out bool exportCompleted,
+		out bool someInfoLost,
+		out string error)
+	{
+		exportCompleted = false;
+		someInfoLost = false;
+
+		List<nint> candidates = FindExecutableMatches(module, expectedBytes, requireFourByteAlignment);
+		if (candidates.Count == 0)
+		{
+			patchSite = default;
+			error = $"No {architectureName} ERROR_ACCESS_DENIED instruction signature was found in an executable section.";
+			return false;
+		}
+
+		foreach (nint candidate in candidates)
+		{
+			// Behavioral validation is also the actual export. Stop at the first successful candidate.
+			ApplyPatch(candidate, patchedBytes);
+			uint result;
+			bool candidateInfoLost;
+			try
+			{
+				result = NativeMethods.FWExportPolicy(null, true, exportPath, out candidateInfoLost);
+			}
+			finally
+			{
+				ApplyPatch(candidate, expectedBytes);
+			}
+
+			if (result == 0)
+			{
+				patchSite = new(candidate, unchecked((nuint)(candidate - module)), expectedBytes.ToArray(), patchedBytes.ToArray());
+				exportCompleted = true;
+				someInfoLost = candidateInfoLost;
+				error = string.Empty;
+				return true;
+			}
+		}
+
+		patchSite = default;
+		error = $"None of the {candidates.Count} {architectureName} candidates corrected the GPO export failure.";
+		return false;
+	}
+
+	private static List<nint> FindExecutableMatches(nint module, ReadOnlySpan<byte> pattern, bool requireFourByteAlignment)
+	{
+		ReadOnlySpan<byte> dosHeader = new((void*)module, 0x40);
+		if (BinaryPrimitives.ReadUInt16LittleEndian(dosHeader) != IMAGE_DOS_SIGNATURE)
+		{
+			return [];
+		}
+
+		int peOffset = BinaryPrimitives.ReadInt32LittleEndian(dosHeader[0x3C..]);
+		if (peOffset < 0)
+		{
+			return [];
+		}
+
+		nint ntHeaders = module + peOffset;
+		ReadOnlySpan<byte> ntPrefix = new((void*)ntHeaders, 24);
+		if (BinaryPrimitives.ReadUInt32LittleEndian(ntPrefix) != IMAGE_NT_SIGNATURE)
+		{
+			return [];
+		}
+
+		ushort sectionCount = BinaryPrimitives.ReadUInt16LittleEndian(ntPrefix[6..]);
+		ushort optionalHeaderSize = BinaryPrimitives.ReadUInt16LittleEndian(ntPrefix[20..]);
+		nint sectionTable = ntHeaders + 24 + optionalHeaderSize;
+		List<nint> matches = new(8);
+		for (int sectionIndex = 0; sectionIndex < sectionCount; sectionIndex++)
+		{
+			ReadOnlySpan<byte> sectionHeader = new((void*)(sectionTable + (sectionIndex * 40)), 40);
+			uint virtualSize = BinaryPrimitives.ReadUInt32LittleEndian(sectionHeader[8..]);
+			uint virtualAddress = BinaryPrimitives.ReadUInt32LittleEndian(sectionHeader[12..]);
+			uint characteristics = BinaryPrimitives.ReadUInt32LittleEndian(sectionHeader[36..]);
+			if ((characteristics & IMAGE_SCN_MEM_EXECUTE) == 0 || virtualSize < pattern.Length || virtualSize > int.MaxValue)
+			{
+				continue;
+			}
+
+			nint sectionAddress = module + unchecked((int)virtualAddress);
+			ReadOnlySpan<byte> section = new((void*)sectionAddress, (int)virtualSize);
+			int offset = 0;
+			while (offset <= section.Length - pattern.Length)
+			{
+				int relativeIndex = section[offset..].IndexOf(pattern);
+				if (relativeIndex < 0)
+				{
+					break;
+				}
+
+				int matchOffset = offset + relativeIndex;
+				if (!requireFourByteAlignment || (matchOffset & 3) == 0)
+				{
+					matches.Add(sectionAddress + matchOffset);
+				}
+				offset = matchOffset + 1;
+			}
+		}
+
+		return matches;
+	}
+
+	private static void ApplyPatch(nint address, ReadOnlySpan<byte> bytes)
+	{
+		if (!NativeMethods.VirtualProtect(address, (nuint)bytes.Length, PAGE_EXECUTE_READWRITE, out uint oldProtection))
+		{
+			throw new Win32Exception(Marshal.GetLastPInvokeError(), "VirtualProtect failed.");
+		}
+
+		try
+		{
+			unsafe
+			{
+				bytes.CopyTo(new Span<byte>((void*)address, bytes.Length));
+			}
+
+			if (!NativeMethods.FlushInstructionCache(NativeMethods.GetCurrentProcess(), address, (nuint)bytes.Length))
+			{
+				throw new Win32Exception(Marshal.GetLastPInvokeError(), "FlushInstructionCache failed.");
+			}
+		}
+		finally
+		{
+			if (!NativeMethods.VirtualProtect(address, (nuint)bytes.Length, oldProtection, out uint _))
+			{
+				Logger.Write($"{Marshal.GetLastPInvokeError()} - Failed to restore page protection.");
+			}
+		}
+	}
+
+	private readonly record struct PatchSite(nint Address, nuint Rva, ReadOnlyMemory<byte> ExpectedBytes, ReadOnlyMemory<byte> PatchedBytes);
 }

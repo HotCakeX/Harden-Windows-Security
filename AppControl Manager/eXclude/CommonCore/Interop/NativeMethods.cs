@@ -4554,4 +4554,22 @@ internal static unsafe partial class NativeMethods
 	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
 	internal static partial nint CallNextHookEx(nint hhk, int nCode, nuint wParam, nint lParam);
 
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/memoryapi/nf-memoryapi-virtualprotect
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool VirtualProtect(nint address, nuint size, uint newProtection, out uint oldProtection);
+
+
+	/// <summary>
+	/// https://learn.microsoft.com/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache
+	/// </summary>
+	[LibraryImport("kernel32.dll", SetLastError = true)]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.System32)]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool FlushInstructionCache(IntPtr process, nint baseAddress, nuint size);
+
 }

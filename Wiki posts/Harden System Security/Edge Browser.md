@@ -114,3 +114,29 @@ Due to security reasons, many policies cannot be used when you are signed into E
         - **You can apply them via the [Harden System Security app](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines#microsoft-edge-security-baseline)**.
 
 <br>
+
+## Management
+
+The **Management** tab provides direct controls for Microsoft Edge settings that you may want to configure independently of the recommended security measures above.
+
+### [DNS over HTTPS Mode](https://learn.microsoft.com/deployedge/microsoft-edge-browser-policies/dnsoverhttpsmode)
+
+Use **DNS over HTTPS mode** to control how Microsoft Edge uses secure DNS. The available modes are:
+
+* **`automatic`**: Edge uses DNS over HTTPS when possible and can fall back to regular, unencrypted DNS when necessary.
+* **`secure`**: Edge uses DNS over HTTPS without falling back to regular DNS. Configure a valid DNS over HTTPS template before using this mode.
+* **`off`**: Disables DNS over HTTPS in Edge.
+
+### [DNS over HTTPS Templates](https://learn.microsoft.com/deployedge/microsoft-edge-browser-policies/dnsoverhttpstemplates)
+
+Use **DNS over HTTPS resolver templates** to configure the DoH server or servers that Microsoft Edge should use. You can enter one or more HTTPS URI templates. This is useful when you want Edge to use a custom DoH provider or a DNS over HTTPS server that you host yourself, including the local DoH server available on the app's [DNS](https://github.com/HotCakeX/Harden-Windows-Security/wiki/DNS) page.
+
+When using **`secure`** mode, at least one DoH template must be configured. If the templates field is left empty when using another mode, the corresponding `DnsOverHttpsTemplates` policy is removed.
+
+### Refresh and Apply
+
+* **Refresh**: Reads the currently configured Edge DNS over HTTPS policies and fills the controls with their current values. The same refresh happens automatically whenever you switch to the **Management** tab.
+* **Apply**: Saves the selected DNS over HTTPS mode and templates to the Microsoft Edge machine policies.
+
+> [!TIP]
+> You can inspect the policies currently loaded by Microsoft Edge by entering `edge://policy/` in the Edge address bar. If you recently changed a policy, use the **Reload policies** button on that page to ask Edge to reload its policies immediately.

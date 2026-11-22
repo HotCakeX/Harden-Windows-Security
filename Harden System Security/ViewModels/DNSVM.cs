@@ -141,6 +141,26 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 	internal readonly InfoBarSettings MainInfoBar = new();
 
 	/// <summary>
+	/// Only the DoH running notification offers navigation to Edge management.
+	/// </summary>
+	internal Visibility EdgeManagementActionVisibility { get; private set => SP(ref field, value); } = Visibility.Collapsed;
+
+	/// <summary>
+	/// XAML action handler that navigates to the Management tab of the Edge page.
+	/// </summary>
+	internal async void OpenEdgeManagement_Click()
+	{
+		try
+		{
+			await ViewModelProvider.EdgeVM.NavigateToManagementAsync();
+		}
+		catch (Exception ex)
+		{
+			MainInfoBar.WriteError(ex);
+		}
+	}
+
+	/// <summary>
 	/// Timer that refreshes the speed statistics of the Smart DNS, or the query statistics of the
 	/// DNS over HTTPS server and the DNS server, every second while one of them is running.
 	/// </summary>
@@ -690,6 +710,7 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal async void Start_Click()
 	{
+		EdgeManagementActionVisibility = Visibility.Collapsed;
 		if (SelectedSourceAdapter is not NetworkAdapterOption sourceAdapter)
 		{
 			MainInfoBar.WriteWarning(Atlas.GetStr("DNSSelectListenerAdapter"));
@@ -832,6 +853,7 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 				StoreLocation certificateStoreLocation = certificate.StoreLocation;
 
 				MainInfoBar.WriteInfo(string.Format(CultureInfo.CurrentCulture, Atlas.GetStr("DNSDohServerRunning"), DnsOverHttpsCertificateManager.BuildHttpsTemplate(dohHostName, dohPort)));
+				EdgeManagementActionVisibility = Visibility.Visible;
 
 				serverTask = Task.Run(async () =>
 				{
@@ -921,6 +943,7 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal void Stop_Click()
 	{
+		EdgeManagementActionVisibility = Visibility.Collapsed;
 		StopButtonIsEnabled = false;
 		ServerCancellationTokenSource?.Cancel();
 	}
@@ -963,6 +986,8 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 		{
 			return true;
 		}
+
+		EdgeManagementActionVisibility = Visibility.Collapsed;
 
 		// An initialization that is already in progress is joined instead of starting a second one.
 		if (ActiveTorInitializationTask is Task initializationInProgress)
@@ -1031,6 +1056,7 @@ internal sealed partial class DNSVM : ViewModelBase, IDisposable
 	/// </summary>
 	internal async void StopTor_Click()
 	{
+		EdgeManagementActionVisibility = Visibility.Collapsed;
 		StopTorButtonIsEnabled = false;
 		InitializeTorButtonIsEnabled = false;
 

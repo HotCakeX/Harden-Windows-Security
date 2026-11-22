@@ -17,6 +17,8 @@
 
 using HardenSystemSecurity.ViewModels;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
+using WinRT;
 
 namespace HardenSystemSecurity.Pages.Protects;
 
@@ -25,6 +27,28 @@ internal sealed partial class Edge : Page, CommonCore.UI.IPageHeaderProvider
 	private EdgeVM ViewModel => ViewModelProvider.EdgeVM;
 
 	internal Edge() => InitializeComponent();
+
+	/// <summary>
+	/// Refresh the data in the management section whenever that tab is selected.
+	/// </summary>
+	[DynamicWindowsRuntimeCast(typeof(TabView))]
+	private async void EdgeTabs_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		if (sender is TabView tabs && ReferenceEquals(tabs.SelectedItem, ManagementTab))
+		{
+			await ViewModel.ProcessDnsPoliciesAsync(false);
+		}
+	}
+
+	/// <summary>
+	/// Dispose only on real navigation, not when switching tabs.
+	/// </summary>
+	protected override void OnNavigatedFrom(NavigationEventArgs e)
+	{
+		base.OnNavigatedFrom(e);
+		ViewModelBase.DisposeExplicitOptInDescendants(SecurityMeasuresList);
+		SecurityMeasuresList.Dispose();
+	}
 
 	string CommonCore.UI.IPageHeaderProvider.HeaderTitle => Atlas.GetStr("EdgePageTitle");
 	Uri? CommonCore.UI.IPageHeaderProvider.HeaderGuideUri => new("https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edge-Browser");

@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customUI="using:AppControlManager.CustomUIElements"
+    xmlns:CCToolKit="using:CommonCore.ToolKits"
     FlowDirection="{x:Bind ViewModel.AppSettings.ApplicationGlobalFlowDirection, Mode=OneWay}">
 
     <Grid>
@@ -19,9 +20,83 @@
                     Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
                     IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}" />
 
-        <customUI:MUnitListViewControl Grid.Row="1"
-                       ViewModel="{x:Bind ViewModel}"
-                       ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}"/>
+        <TabView Grid.Row="1"
+                 SelectedIndex="{x:Bind ViewModel.SelectedTabIndex, Mode=TwoWay}"
+                 SelectionChanged="EdgeTabs_SelectionChanged"
+                 VerticalAlignment="Stretch"
+                 IsAddTabButtonVisible="False"
+                 TabWidthMode="Equal"
+                 CanReorderTabs="False">
+            <!-- Keep the security controls alive across transient TabView unloads. -->
+            <TabViewItem x:Uid="WindowsFirewallSecurityMeasuresTab" IsClosable="False" MinHeight="40">
+                <TabViewItem.IconSource>
+                    <BitmapIconSource UriSource="/Assets/External/SecurityMeasures.png" ShowAsMonochrome="False" />
+                </TabViewItem.IconSource>
+                <Grid>
+                    <Grid.ChildrenTransitions>
+                        <EntranceThemeTransition FromVerticalOffset="50" />
+                        <RepositionThemeTransition IsStaggeringEnabled="False" />
+                    </Grid.ChildrenTransitions>
+                    <customUI:MUnitListViewControl x:Name="SecurityMeasuresList"
+                                                  ViewModel="{x:Bind ViewModel}"
+                                                  DisposeOnlyOnExplicitCall="True"
+                                                  ChildButtonsDisposeOnlyOnExplicitCall="True"
+                                                  ListViewItemsSource="{x:Bind ViewModel.ListViewItemsSource, Mode=OneWay}" />
+                </Grid>
+            </TabViewItem>
+            <TabViewItem x:Name="ManagementTab" Header="Management" IsClosable="False" MinHeight="40">
+                <TabViewItem.IconSource>
+                    <SymbolIconSource Symbol="Setting" />
+                </TabViewItem.IconSource>
+                <ScrollView>
+                    <StackPanel Spacing="{StaticResource SettingsCardSpacing}" Margin="0,5,0,5">
+                        <StackPanel.ChildrenTransitions>
+                            <EntranceThemeTransition FromVerticalOffset="50" />
+                            <RepositionThemeTransition IsStaggeringEnabled="False" />
+                        </StackPanel.ChildrenTransitions>
+                        <CCToolKit:SettingsCard Header="Manage DNS-over-HTTPS policies"
+                                               Description="Refresh fills the controls below from current machine policies and replaces unsaved edits. Apply saves the selected mode and resolver templates."
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False"
+                                               IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                            <CCToolKit:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
+                                <Button x:Uid="RefreshButton"
+                                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.RetrieveDnsPolicies}" />
+                                <Button IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                        Click="{x:Bind ViewModel.ApplyDnsPolicies}">
+                                    <TextBlock x:Uid="ApplyText" />
+                                </Button>
+                            </CCToolKit:WrapPanel>
+                        </CCToolKit:SettingsCard>
+                        <customUI:SettingsCardV2 Header="DNS-over-HTTPS mode"
+                                                 Description="Automatic permits insecure fallback. Secure requires a resolver template and fails DNS resolution on DoH errors. Off disables DoH."
+                                                 IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                            <ComboBox IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                      SelectedIndex="{x:Bind ViewModel.DnsModeSelectedIndex, Mode=TwoWay}">
+                                <ComboBoxItem Content="automatic" />
+                                <ComboBoxItem Content="secure" />
+                                <ComboBoxItem Content="off" />
+                            </ComboBox>
+                        </customUI:SettingsCardV2>
+                        <CCToolKit:SettingsCard Header="DNS-over-HTTPS resolver templates"
+                                               Description="Enter one or more HTTPS URI templates, separated by spaces or new lines. A dns variable uses GET; otherwise Edge uses POST. Leaving this blank removes the templates policy and is not allowed with secure mode."
+                                               ContentAlignment="Vertical"
+                                               HorizontalContentAlignment="Stretch"
+                                               IsClickEnabled="False"
+                                               IsActionIconVisible="False"
+                                               IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                            <TextBox HorizontalAlignment="Stretch"
+                                     IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     IsSpellCheckEnabled="False"
+                                     Text="{x:Bind ViewModel.DnsTemplates, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </CCToolKit:SettingsCard>
+                    </StackPanel>
+                </ScrollView>
+            </TabViewItem>
+        </TabView>
 
     </Grid>
 </Page>

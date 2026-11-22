@@ -1,1 +1,5 @@
 * Updated dependencies to the latest versions.
+
+* Added a new Management section to the Edge Browser page for managing Microsoft Edge settings. Currently, it supports DNS over HTTPS (DoH), with more configuration options planned for future releases. You can set custom DoH templates and switch the mode between off, secure, and automatic.
+
+* Added a quick action button to the DNS page that lets you navigate directly to Edge's Management section after starting your own local DNS over HTTPS server.

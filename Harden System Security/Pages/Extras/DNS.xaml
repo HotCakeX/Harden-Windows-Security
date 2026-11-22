@@ -348,7 +348,13 @@
                             Message="{x:Bind ViewModel.MainInfoBar.Message, Mode=OneWay}"
                             Severity="{x:Bind ViewModel.MainInfoBar.Severity, Mode=OneWay}"
                             IsOpen="{x:Bind ViewModel.MainInfoBar.IsOpen, Mode=TwoWay}"
-                            IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}"/>
+                            IsClosable="{x:Bind ViewModel.MainInfoBar.IsClosable, Mode=OneWay}">
+            <customUI:InfoBarV2.ActionButton>
+                <Button Content="Open Edge Management"
+                        Visibility="{x:Bind ViewModel.EdgeManagementActionVisibility, Mode=OneWay}"
+                        Click="{x:Bind ViewModel.OpenEdgeManagement_Click}" />
+            </customUI:InfoBarV2.ActionButton>
+        </customUI:InfoBarV2>
 
         <!-- The section selector in the middle and the button that opens the logs pane on the side -->
         <Grid Grid.Row="1"

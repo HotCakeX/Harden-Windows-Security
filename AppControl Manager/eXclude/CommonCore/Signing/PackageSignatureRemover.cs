@@ -17,10 +17,12 @@
 
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Formats.Asn1;
 using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
 
@@ -33,6 +35,121 @@ namespace CommonCore.Signing;
 /// </summary>
 internal static partial class PackageSignatureRemover
 {
+	/// <summary>
+	/// https://learn.microsoft.com/windows/msix/package/unsigned-package
+	/// </summary>
+	internal const string UnsignedPublisherOid = "2.25.311729368913984317654407730594956997722";
+	private const string PublisherAttribute = "Publisher";
+	private const string VersionAttribute = "Version";
+
+	/// <summary>
+	/// Rebuild a standalone MSIX for Windows unsigned deployment directly at the deterministic sibling destination.
+	/// </summary>
+	internal static string CreateUnsignedInstallableCopy(string sourcePath)
+	{
+		ArgumentException.ThrowIfNullOrWhiteSpace(sourcePath);
+		string source = Path.GetFullPath(sourcePath);
+		string extension = Path.GetExtension(source);
+		if (!string.Equals(extension, ".msix", StringComparison.OrdinalIgnoreCase))
+		{
+			throw new NotSupportedException("Select a standalone .msix package.");
+		}
+		string? directory = Path.GetDirectoryName(source);
+		string destination = Path.Join(directory, $"{Path.GetFileNameWithoutExtension(source)}_UnsignedInstallable{extension}");
+
+		// Replace an older generated copy, but never modify the selected source.
+		File.Delete(destination);
+
+		int initialization = NativeMethods.CoInitializeEx(IntPtr.Zero, 0);
+		if (initialization < 0 && initialization != unchecked((int)0x80010106))
+		{
+			Marshal.ThrowExceptionForHR(initialization);
+		}
+		bool shouldDeleteDestination = false;
+		try
+		{
+			using FileStream guard = new(source, FileMode.Open, FileAccess.Read, FileShare.Read);
+			using NativePackage original = new(source, false);
+			original.ValidateBlockMap();
+			string publisher = MakeUnsignedPublisher(original.ReadManifestPublisher());
+			using (FileStream placeholder = new(destination, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+			{
+				shouldDeleteDestination = true;
+			}
+			original.WriteStandalonePackage(destination, PublisherAttribute, publisher);
+			using (NativePackage rebuilt = new(destination, false))
+			{
+				if (rebuilt.HasSignature())
+				{
+					throw new InvalidDataException("The rebuilt package still has a package signature.");
+				}
+				rebuilt.ValidateBlockMap();
+				original.CompareStandalonePackage(rebuilt, PublisherAttribute, publisher);
+			}
+			using (FileStream completed = new(destination, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+			{
+				completed.Flush(flushToDisk: true);
+			}
+			shouldDeleteDestination = false;
+			return destination;
+		}
+		finally
+		{
+			try
+			{
+				if (shouldDeleteDestination)
+				{
+					File.Delete(destination);
+				}
+			}
+			catch (Exception ex)
+			{
+				Logger.Write($"Could not delete the incomplete unsigned-installable package '{destination}': {ex.Message}");
+			}
+			finally
+			{
+				if (initialization >= 0)
+				{
+					NativeMethods.CoUninitialize();
+				}
+			}
+		}
+	}
+
+	private static string MakeUnsignedPublisher(string publisher)
+	{
+		ArgumentException.ThrowIfNullOrWhiteSpace(publisher);
+		// Inspect real DN attributes, not OID-like substrings inside a quoted CN.
+		X500DistinguishedName name = new(publisher);
+		AsnReader encoded = new(name.RawData, AsnEncodingRules.DER);
+		AsnReader rdns = encoded.ReadSequence();
+		encoded.ThrowIfNotEmpty();
+		bool found = false;
+		while (rdns.HasData)
+		{
+			AsnReader rdn = rdns.ReadSetOf();
+			while (rdn.HasData)
+			{
+				AsnReader attribute = rdn.ReadSequence();
+				if (!string.Equals(attribute.ReadObjectIdentifier(), UnsignedPublisherOid, StringComparison.OrdinalIgnoreCase))
+				{
+					continue;
+				}
+				Asn1Tag tag = attribute.PeekTag();
+				UniversalTagNumber type = (UniversalTagNumber)tag.TagValue;
+				if (found || tag.TagClass is not TagClass.Universal ||
+					type is not (UniversalTagNumber.PrintableString or UniversalTagNumber.UTF8String or UniversalTagNumber.IA5String or UniversalTagNumber.BMPString or UniversalTagNumber.TeletexString or UniversalTagNumber.UniversalString or UniversalTagNumber.NumericString) ||
+					!string.Equals(attribute.ReadCharacterString(type), "1", StringComparison.OrdinalIgnoreCase))
+				{
+					throw new InvalidDataException("The Publisher contains a duplicate or invalid unsigned-installation marker.");
+				}
+				attribute.ThrowIfNotEmpty();
+				found = true;
+			}
+		}
+		return found ? publisher : $"{publisher}, OID.{UnsignedPublisherOid}=1";
+	}
+
 	internal static bool CreateUnsignedCopy(string sourcePath, string destinationPath, bool removeInnerSignatures = false)
 	{
 		string extension = Path.GetExtension(sourcePath);
@@ -1592,7 +1709,10 @@ internal static partial class PackageSignatureRemover
 		/// <summary>
 		/// Native writer regenerates footprints; payload bytes and MIME types are retained.
 		/// </summary>
-		internal void WriteVersionPackage(string outputPath, ulong version)
+		internal void WriteVersionPackage(string outputPath, ulong version) =>
+			WriteStandalonePackage(outputPath, VersionAttribute, FormatPackageVersion(version));
+
+		internal void WriteStandalonePackage(string outputPath, string attributeName, string attributeValue)
 		{
 			if (bundle)
 			{
@@ -1629,7 +1749,7 @@ internal static partial class PackageSignatureRemover
 					AddVersionPayload(writer, GetFile(name), streams);
 				}
 				// Content-group metadata is retained. The old signing catalog is deliberately
-				// omitted because it cannot authenticate a manifest with a changed version.
+				// omitted because it cannot authenticate a manifest after the identity edit.
 				hr = GetFootprint(4, &groupMapFile);
 				if (hr == FileNotFound)
 				{
@@ -1647,7 +1767,7 @@ internal static partial class PackageSignatureRemover
 				manifestFile = GetFile("AppxManifest.xml");
 				manifestStream = GetPointer(manifestFile, 7);
 				using NativeManifestDocument document = new(manifestStream);
-				document.SetVersion(FormatPackageVersion(version));
+				document.SetIdentityAttribute(attributeName, attributeValue);
 				editedManifest = NativeMethods.SHCreateMemStream(null, 0);
 				if (editedManifest == IntPtr.Zero)
 				{
@@ -1945,7 +2065,28 @@ internal static partial class PackageSignatureRemover
 		private void CompareVersionPackage(NativePackage other, ulong version)
 		{
 			CompareVersionIdentity(ReadVersionIdentity(), other.ReadVersionIdentity(), version);
+			CompareStandalonePackage(other, VersionAttribute);
+		}
 
+		internal string ReadManifestPublisher()
+		{
+			IntPtr file = GetFile("AppxManifest.xml");
+			IntPtr stream = IntPtr.Zero;
+			try
+			{
+				stream = GetPointer(file, 7);
+				using NativeManifestDocument document = new(stream);
+				return document.GetIdentityAttribute(PublisherAttribute);
+			}
+			finally
+			{
+				Release(stream);
+				Release(file);
+			}
+		}
+
+		internal void CompareStandalonePackage(NativePackage other, string attributeName, string? expectedValue = null)
+		{
 			if (!string.Equals(HashMethod(), other.HashMethod(), StringComparison.OrdinalIgnoreCase))
 			{
 				throw new InvalidDataException("The package hash method changed.");
@@ -1984,12 +2125,16 @@ internal static partial class PackageSignatureRemover
 				using NativeManifestDocument before = new(firstStream);
 				using NativeManifestDocument after = new(secondStream);
 
-				// Compare native DOM serializations after restoring only the original
-				// Version value in the comparison document. No other edit is tolerated.
-				after.SetVersion(before.VersionText());
+				if (expectedValue is not null && !after.GetIdentityAttribute(attributeName).AsSpan().SequenceEqual(expectedValue.AsSpan()))
+				{
+					throw new InvalidDataException($"The rebuilt manifest has an unexpected Identity.{attributeName} value.");
+				}
+
+				// Restore only the edited attribute in the comparison DOM. No other edit is tolerated.
+				after.SetIdentityAttribute(attributeName, before.GetIdentityAttribute(attributeName));
 				if (!before.RootXml().AsSpan().SequenceEqual(after.RootXml().AsSpan()))
 				{
-					throw new InvalidDataException("The package manifest changed outside Identity.Version.");
+					throw new InvalidDataException($"The package manifest changed outside Identity.{attributeName}.");
 				}
 			}
 			finally
@@ -2104,13 +2249,13 @@ internal static partial class PackageSignatureRemover
 				}
 			}
 
-			internal void SetVersion(string version)
+			internal void SetIdentityAttribute(string attributeName, string attributeValue)
 			{
-				IntPtr name = AllocateBstr("Version");
+				IntPtr name = AllocateBstr(attributeName);
 				IntPtr text = IntPtr.Zero;
 				try
 				{
-					text = AllocateBstr(version);
+					text = AllocateBstr(attributeValue);
 					VARIANT value = new() { vt = 8, bstrVal = text };
 					Marshal.ThrowExceptionForHR(((delegate* unmanaged[Stdcall]<IntPtr, IntPtr, VARIANT, int>)Slot(identity, 45))(identity, name, value));
 				}
@@ -2121,16 +2266,16 @@ internal static partial class PackageSignatureRemover
 				}
 			}
 
-			internal string VersionText()
+			internal string GetIdentityAttribute(string attributeName)
 			{
-				IntPtr name = AllocateBstr("Version");
+				IntPtr name = AllocateBstr(attributeName);
 				VARIANT value = default;
 				try
 				{
 					Marshal.ThrowExceptionForHR(((delegate* unmanaged[Stdcall]<IntPtr, IntPtr, VARIANT*, int>)Slot(identity, 44))(identity, name, &value));
 					if (value.vt != 8)
 					{
-						throw new InvalidDataException("The native manifest Version attribute is missing.");
+						throw new InvalidDataException($"The native manifest Identity.{attributeName} attribute is missing.");
 					}
 					return Marshal.PtrToStringBSTR(value.bstrVal);
 				}

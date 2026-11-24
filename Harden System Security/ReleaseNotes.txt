@@ -3,3 +3,9 @@
 * Added a new Management section to the Edge Browser page for managing Microsoft Edge settings. Currently, it supports DNS over HTTPS (DoH), with more configuration options planned for future releases. You can set custom DoH templates and switch the mode between off, secure, and automatic.
 
 * Added a quick action button to the DNS page that lets you navigate directly to Edge's Management section after starting your own local DNS over HTTPS server.
+
+* The back button on the top left section of the app window is now animated with rounded corners, improving consistency.
+
+* Slightly improved the buttons design in the WinGet Management page.
+
+* You can now enable unsigned mode in any MSIX app package so that you will be able to install them on the system without certificates. This feature is available in the Update page's Custom MSIX Path section. The package installer section of the same page also now detects such special packages and installs them directly without signing them first. For more information about this mode, please refer to this Microsoft Learn page: https://learn.microsoft.com/windows/msix/package/unsigned-package

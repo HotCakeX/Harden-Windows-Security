@@ -18,6 +18,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
@@ -417,6 +418,7 @@ internal sealed partial class UpdateVM : ViewModelBase
 	/// <summary>
 	/// Installs an app package from a user-supplied path.
 	/// It can automatically detect if the package is signed or unsigned and perform signing if needed.
+	/// Unsigned packages with the Windows publisher marker are not signed.
 	/// </summary>
 	/// <exception cref="InvalidOperationException"></exception>
 	private static async Task InstallAppPackage(
@@ -435,59 +437,90 @@ internal sealed partial class UpdateVM : ViewModelBase
 
 			infoBar.WriteInfo($"Getting the package details for: '{packagePath}'");
 
-			List<AllFileSigners> possibleExistingSigners = AllCertificatesGrabber.GetAllFileSigners(packagePath);
+			// Check the manifest before signer discovery so a marked package cannot fall into auto-signing.
+			string extension = Path.GetExtension(packagePath);
+			bool inspectUnsignedPublisher = string.Equals(extension, ".msix", StringComparison.OrdinalIgnoreCase) ||
+											string.Equals(extension, ".appx", StringComparison.OrdinalIgnoreCase);
 
-			int signerCount = possibleExistingSigners.Count;
+			LLPackageReader.PackageDetails? selectedPackageDetails = inspectUnsignedPublisher
+				? LLPackageReader.GetPackageDetails(packagePath)
+				: null;
 
-			foreach (AllFileSigners signer in CollectionsMarshal.AsSpan(possibleExistingSigners))
+			bool allowUnsigned = selectedPackageDetails is not null && HasUnsignedDeploymentPublisher(selectedPackageDetails.PublisherDistinguishedName);
+
+			if (allowUnsigned)
 			{
-				signer.Dispose();
-			}
-
-			// Only attempt signing if the package doesn't already have signatures
-			if (signerCount == 0)
-			{
-				LLPackageReader.PackageDetails packageDits = LLPackageReader.GetPackageDetails(packagePath);
-
-				// Determine whether this is the AppControl Manager app package provided in GitHub releases that the user is trying to install
-				isNonStoreACM = string.Equals(packageDits.CertCN, CertCommonName, StringComparison.Ordinal);
-
-				infoBar.WriteInfo($"Package details retrieved. Package Publisher: '{packageDits.CertCN}', Package Family Name: '{packageDits.PackageFamilyName}', Package Version: '{packageDits.Version}', Package Hashing Algorithm: '{packageDits.HashAlgorithm}'.");
-
-				// Remove any certificates with the specified common name that may already exist on the system from previous attempts
-				CertificateGenerator.DeleteCertificateByCN(packageDits.CertCN);
-
-				// Generate a certificate whose complete subject matches the manifest Publisher.
-				using X509Certificate2 generatedCert = CertificateGenerator.GenerateSelfSignedCertificate(
-				distinguishedName: packageDits.PublisherDistinguishedName,
-				validityInYears: 100,
-				keySize: 4096,
-				hashAlgorithm: packageDits.HashAlgorithm,
-				storeLocation: CertificateGenerator.CertificateStoreLocation.Machine,
-				cerExportFilePath: null,
-				friendlyName: packageDits.CertCN,
-				UserProtectedPrivateKey: UseHardenedInstallationProcess,
-				ExportablePrivateKey: false);
-
-				// Sign the package
-				CommonCore.Signing.Main.SignAppPackage(packagePath, generatedCert);
-
-				// Remove any certificates with the specified common name again
-				// Because the existing one contains private keys and we don't want that
-				CertificateGenerator.DeleteCertificateByCN(packageDits.CertCN);
-
-				// Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only.
-				// This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else.
-				CertificateGenerator.StoreCertificateInStore(generatedCert, CertificateGenerator.CertificateStoreLocation.Machine, true);
+				// A failed signer lookup must not reclassify a package with a signature as unsigned.
+				using ZipArchive package = ZipFile.OpenRead(packagePath);
+				foreach (ZipArchiveEntry entry in package.Entries)
+				{
+					if (string.Equals(entry.FullName, "AppxSignature.p7x", StringComparison.OrdinalIgnoreCase))
+					{
+						throw new InvalidDataException("The package has the unsigned publisher marker but still contains AppxSignature.p7x. It will not be installed as unsigned.");
+					}
+				}
 			}
 			else
 			{
-				infoBar.WriteInfo("The package is already signed. Proceeding with installation.");
+				List<AllFileSigners> possibleExistingSigners = AllCertificatesGrabber.GetAllFileSigners(packagePath);
+
+				int signerCount = possibleExistingSigners.Count;
+
+				foreach (AllFileSigners signer in CollectionsMarshal.AsSpan(possibleExistingSigners))
+				{
+					signer.Dispose();
+				}
+
+				LLPackageReader.PackageDetails? packageDits = signerCount is 0
+					? selectedPackageDetails ?? LLPackageReader.GetPackageDetails(packagePath)
+					: null;
+
+				// Only attempt signing if the package doesn't already have signatures
+				if (packageDits is not null)
+				{
+
+					// Determine whether this is the AppControl Manager app package provided in GitHub releases that the user is trying to install
+					isNonStoreACM = string.Equals(packageDits.CertCN, CertCommonName, StringComparison.Ordinal);
+
+					infoBar.WriteInfo($"Package details retrieved. Package Publisher: '{packageDits.CertCN}', Package Family Name: '{packageDits.PackageFamilyName}', Package Version: '{packageDits.Version}', Package Hashing Algorithm: '{packageDits.HashAlgorithm}'.");
+
+					// Remove any certificates with the specified common name that may already exist on the system from previous attempts
+					CertificateGenerator.DeleteCertificateByCN(packageDits.CertCN);
+
+					// Generate a certificate whose complete subject matches the manifest Publisher.
+					using X509Certificate2 generatedCert = CertificateGenerator.GenerateSelfSignedCertificate(
+					distinguishedName: packageDits.PublisherDistinguishedName,
+					validityInYears: 100,
+					keySize: 4096,
+					hashAlgorithm: packageDits.HashAlgorithm,
+					storeLocation: CertificateGenerator.CertificateStoreLocation.Machine,
+					cerExportFilePath: null,
+					friendlyName: packageDits.CertCN,
+					UserProtectedPrivateKey: UseHardenedInstallationProcess,
+					ExportablePrivateKey: false);
+
+					// Sign the package
+					CommonCore.Signing.Main.SignAppPackage(packagePath, generatedCert);
+
+					// Remove any certificates with the specified common name again
+					// Because the existing one contains private keys and we don't want that
+					CertificateGenerator.DeleteCertificateByCN(packageDits.CertCN);
+
+					// Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only.
+					// This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else.
+					CertificateGenerator.StoreCertificateInStore(generatedCert, CertificateGenerator.CertificateStoreLocation.Machine, true);
+				}
+				else
+				{
+					infoBar.WriteInfo("The package is already signed. Proceeding with installation.");
+				}
 			}
 
 			PackageManager packageManager = new();
 
-			infoBar.WriteInfo($"Installing '{packagePath}'");
+			infoBar.WriteInfo(allowUnsigned
+				? $"Installing unsigned package '{packagePath}' without signing."
+				: $"Installing '{packagePath}'");
 
 			// https://learn.microsoft.com/uwp/api/windows.management.deployment.addpackageoptions
 			AddPackageOptions options = new()
@@ -495,6 +528,12 @@ internal sealed partial class UpdateVM : ViewModelBase
 				DeferRegistrationWhenPackagesAreInUse = true,
 				ForceUpdateFromAnyVersion = true
 			};
+
+			if (allowUnsigned)
+			{
+				// This opt-in applies only to this request.
+				options.AllowUnsigned = true;
+			}
 
 			IAsyncOperationWithProgress<DeploymentResult, DeploymentProgress> deploymentOperation = packageManager.AddPackageByUriAsync(new(packagePath), options);
 
@@ -532,6 +571,48 @@ internal sealed partial class UpdateVM : ViewModelBase
 				AddASRExclusionsForAppControlManager(packageManager);
 			}
 		});
+	}
+
+	/// <summary>
+	/// Checks the final unsigned marker in the original manifest publisher name.
+	/// </summary>
+	private static bool HasUnsignedDeploymentPublisher(X500DistinguishedName publisher)
+	{
+		const string key = "OID." + CommonCore.Signing.PackageSignatureRemover.UnsignedPublisherOid;
+		const string marker = key + "=1";
+		// The string constructor preserves Name even when encoding changes an OID in RawData.
+		ReadOnlySpan<char> name = publisher.Name.AsSpan().Trim();
+		bool quoted = false;
+		int start = 0;
+		for (int i = 0; i <= name.Length; i++)
+		{
+			bool last = i == name.Length;
+			// Doubled quotes toggle twice; separators in quoted values are not field boundaries.
+			if (!last && name[i] is '"')
+			{
+				quoted = !quoted;
+			}
+			if (quoted || (!last && name[i] is not (',' or ';' or '+')))
+			{
+				continue;
+			}
+
+			ReadOnlySpan<char> field = name[start..i].Trim();
+			int equals = field.IndexOf('=');
+			ReadOnlySpan<char> fieldKey = (equals < 0 ? field : field[..equals]).TrimEnd();
+			if (fieldKey.Equals(key.AsSpan(), StringComparison.OrdinalIgnoreCase) ||
+				fieldKey.Equals(CommonCore.Signing.PackageSignatureRemover.UnsignedPublisherOid.AsSpan(), StringComparison.OrdinalIgnoreCase))
+			{
+				if (!last || (start > 0 && name[start - 1] is '+') ||
+					!field.Equals(marker.AsSpan(), StringComparison.OrdinalIgnoreCase))
+				{
+					throw new InvalidDataException("The Publisher contains a duplicate or invalid unsigned-installation marker.");
+				}
+				return true;
+			}
+			start = i + 1;
+		}
+		return false;
 	}
 
 	#endregion
@@ -816,6 +897,85 @@ internal sealed partial class UpdateVM : ViewModelBase
 		finally
 		{
 			ElementsAreEnabled = true;
+		}
+	}
+
+	#endregion
+
+	#region Unsigned Installable Package
+
+	internal readonly InfoBarSettings UnsignedInstallableInfoBar = new();
+
+	internal string UnsignedInstallablePackagePath { get; set => SP(ref field, value); } = string.Empty;
+
+	internal void BrowseForUnsignedInstallablePackage_Click()
+	{
+		if (!ElementsAreEnabled)
+		{
+			return;
+		}
+		try
+		{
+			string? selected = FileDialogHelper.ShowFilePickerDialog("MSIX package (*.msix)|*.msix");
+			if (!string.IsNullOrWhiteSpace(selected))
+			{
+				UnsignedInstallablePackagePath = selected;
+			}
+		}
+		catch (Exception ex)
+		{
+			UnsignedInstallableInfoBar.WriteError(ex);
+		}
+	}
+	internal void ClearUnsignedInstallablePackagePath() => UnsignedInstallablePackagePath = string.Empty;
+
+	internal bool CanCreateUnsignedInstallableCopy(string path, bool enabled) => enabled && !string.IsNullOrWhiteSpace(path);
+
+	/// <summary>
+	/// Run the native rebuild off the UI thread.
+	/// </summary>
+	internal async void CreateUnsignedInstallableCopy_Click()
+	{
+		string source = UnsignedInstallablePackagePath;
+		if (!CanCreateUnsignedInstallableCopy(source, ElementsAreEnabled))
+		{
+			return;
+		}
+		try
+		{
+			ElementsAreEnabled = false;
+			UnsignedInstallableInfoBar.IsClosable = false;
+			UnsignedInstallableInfoBar.WriteInfo("Rebuilding and validating the unsigned copy. The original will not be modified.");
+			string destination = await Task.Run(() => CommonCore.Signing.PackageSignatureRemover.CreateUnsignedInstallableCopy(source));
+			UnsignedInstallableInfoBar.WriteSuccess($"Saved '{destination}'.");
+		}
+		catch (Exception ex)
+		{
+			UnsignedInstallableInfoBar.WriteError(ex);
+		}
+		finally
+		{
+			UnsignedInstallableInfoBar.IsClosable = true;
+			ElementsAreEnabled = true;
+		}
+	}
+
+	/// <summary>
+	/// Opens the unsigned MSIX guide in the default browser.
+	/// </summary>
+	internal async void OpenUnsignedMsixGuide_Click()
+	{
+		try
+		{
+			bool launched = await Launcher.LaunchUriAsync(new System.Uri("https://learn.microsoft.com/windows/msix/package/unsigned-package"));
+			if (!launched)
+			{
+				UnsignedInstallableInfoBar.WriteWarning("Could not open the unsigned MSIX guide in your browser.");
+			}
+		}
+		catch (Exception ex)
+		{
+			UnsignedInstallableInfoBar.WriteError(ex);
 		}
 	}
 

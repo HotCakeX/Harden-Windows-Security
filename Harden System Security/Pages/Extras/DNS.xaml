@@ -1044,7 +1044,7 @@
                             </Button>
                         </Grid>
 
-                        <TextBox Grid.Row="1"                                 
+                        <TextBox Grid.Row="1"
                                  AcceptsReturn="True"
                                  FontFamily="Consolas"
                                  HorizontalAlignment="Stretch"

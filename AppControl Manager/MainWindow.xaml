@@ -9,6 +9,7 @@
     xmlns:siPolicy="using:AppControlManager.SiPolicy"
     xmlns:vm="using:AppControlManager.ViewModels"
     xmlns:CCToolKit="using:CommonCore.ToolKits"
+    xmlns:builtInAnimatedVisuals="using:Microsoft.UI.Xaml.Controls.AnimatedVisuals"
     xmlns:CC="using:CommonCore.Others"
     xmlns:CommonCore="using:CommonCore"
     SystemBackdrop="{x:Bind ViewModel.SystemBackDropStyle, Mode=OneWay}"
@@ -210,12 +211,25 @@
                 <ColumnDefinition x:Name="RightPaddingColumn" Width="0"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Back button style, mimics the same NavigationView back button's style. If the style isn't set here, we can use the built-in animated icon for the back button -->
+            <!-- Back button -->
             <Button x:Name="BackButtonTitleBar"
                     x:Uid="BackButtonTitleBar"
-                    Style="{StaticResource NavigationBackButtonNormalStyle}"
+                    Style="{StaticResource SubtleButtonStyle}"
+                    Width="45"
+                    Height="45"
                     Grid.Column="1"
-                    Click="{x:Bind Nav.BackButtonTitleBar_Click}" />
+                    Click="{x:Bind Nav.BackButtonTitleBar_Click}">
+                <AnimatedIcon AnimatedIcon.State="Normal"
+                              MirroredWhenRightToLeft="True"
+                              IsHitTestVisible="False">
+                    <AnimatedIcon.Source>
+                        <builtInAnimatedVisuals:AnimatedBackVisualSource />
+                    </AnimatedIcon.Source>
+                    <AnimatedIcon.FallbackIconSource>
+                        <SymbolIconSource Symbol="Back" />
+                    </AnimatedIcon.FallbackIconSource>
+                </AnimatedIcon>
+            </Button>
 
             <!-- Menu button style, mimics the same NavigationView menu (hamburger) button's style. If the style isn't set here, we can use the built-in animated icon for the menu (hamburger) button -->
             <Button VerticalAlignment="Center"
@@ -223,12 +237,25 @@
                     x:Name="HamburgerMenuButton"
                     x:Uid="HamburgerMenuButton"
                     Grid.Column="2"
-                    Style="{StaticResource PaneToggleButtonStyle}"
-                    Margin="10,0,0,0"
-                    Click="{x:Bind ViewModel.HamburgerMenuButton_Click}" />
+                    Style="{StaticResource SubtleButtonStyle}"
+                    Width="45"
+                    Height="45"
+                    Click="{x:Bind ViewModel.HamburgerMenuButton_Click}">
+                <AnimatedIcon AnimatedIcon.State="Normal"
+                              MirroredWhenRightToLeft="True"
+                              IsHitTestVisible="False">
+                    <AnimatedIcon.Source>
+                        <builtInAnimatedVisuals:AnimatedGlobalNavigationButtonVisualSource />
+                    </AnimatedIcon.Source>
+                    <AnimatedIcon.FallbackIconSource>
+                        <SymbolIconSource Symbol="GlobalNavigationButton" />
+                    </AnimatedIcon.FallbackIconSource>
+                </AnimatedIcon>
+            </Button>
 
             <!-- App icon -->
-            <Image x:Name="TitleBarIcon" Source="ms-appx:///Assets/StoreLogo.png" Grid.Column="3"
+            <Image x:Name="TitleBarIcon"
+                   Source="ms-appx:///Assets/StoreLogo.png" Grid.Column="3"
                    Width="16" Height="16"
                    Margin="8,0,4,0"/>
 
@@ -1328,7 +1355,7 @@
 
                     <!-- Global margin settings for every page's content -->
                     <Frame x:Name="ContentFrame"
-                           Margin="15,10,15,10"
+                           Margin="10"
                            Grid.Row="2"
                            Navigated="{x:Bind Nav.UpdateHeaderFromCurrentPage}"
                            AutomationProperties.LandmarkType="Main" />

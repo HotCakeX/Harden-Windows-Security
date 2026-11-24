@@ -1,1 +1,5 @@
 * Updated dependencies to the latest versions.
+
+* The back button on the top left section of the app window is now animated with rounded corners, improving consistency.
+
+* You can now enable unsigned mode in any MSIX app package so that you will be able to install them on the system without certificates. This feature is available in the Update page's Custom MSIX Path section. The package installer section of the same page also now detects such special packages and installs them directly without signing them first. For more information about this mode, please refer to this Microsoft Learn page: https://learn.microsoft.com/windows/msix/package/unsigned-package

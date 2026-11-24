@@ -204,6 +204,7 @@
                     </CCToolKit:SettingsCard>
                 </CCToolKit:SettingsExpander.Items>
             </CCToolKit:SettingsExpander>
+
             <!-- Package content explorer -->
             <CCToolKit:SettingsExpander IsExpanded="False"
                                         Header="Package explorer"
@@ -473,6 +474,76 @@
                     </DataTemplate>
                 </CCToolKit:SettingsExpander.ItemTemplate>
             </CCToolKit:SettingsExpander>
+
+            <!-- Unsigned installable package -->
+            <CCToolKit:SettingsExpander IsExpanded="False"
+                                        Header="Create an unsigned MSIX package"
+                                        Description="This feature is intended to make it easier for you to quickly test apps during development. The new app package will be saved beside the original without replacing it."
+                                        AutomationProperties.Name="Create an unsigned installable copy"
+                                        HorizontalAlignment="Stretch"
+                                        IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}">
+                <CCToolKit:SettingsExpander.HeaderIcon>
+                    <FontIcon Glyph="&#xEB3B;" />
+                </CCToolKit:SettingsExpander.HeaderIcon>
+                <CCToolKit:SettingsExpander.Content>
+                    <CCToolKit:WrapPanel Orientation="Horizontal"
+                                         HorizontalSpacing="8"
+                                         VerticalSpacing="8">
+                        <customUI:ButtonV2 x:Uid="FileBrowseButton"
+                                           IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                           Click="{x:Bind ViewModel.BrowseForUnsignedInstallablePackage_Click}"
+                                           Style="{StaticResource AccentButtonStyle}"
+                                           ObservedData="{x:Bind ViewModel.UnsignedInstallablePackagePath, Mode=OneWay}">
+                            <customUI:ButtonV2.ContentTemplate>
+                                <DataTemplate x:DataType="x:String">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <FontIcon Glyph="&#xEC50;" FontSize="16" />
+                                        <TextBlock Text="{x:Bind}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </customUI:ButtonV2.ContentTemplate>
+                            <customUI:ButtonV2.Flyout>
+                                <Flyout>
+                                    <CCToolKit:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+                                        <Button x:Uid="ClearButton"
+                                                IsEnabled="{x:Bind ViewModel.ElementsAreEnabled, Mode=OneWay}"
+                                                Click="{x:Bind ViewModel.ClearUnsignedInstallablePackagePath}" />
+                                        <TextBlock x:Uid="ViewSelectedFilesTextBlock" TextWrapping="WrapWholeWords" />
+                                        <TextBox Text="{x:Bind ViewModel.UnsignedInstallablePackagePath, Mode=OneWay}"
+                                                 TextWrapping="Wrap"
+                                                 AcceptsReturn="True"
+                                                 IsSpellCheckEnabled="False"
+                                                 MinWidth="400"
+                                                 IsReadOnly="True" />
+                                    </CCToolKit:WrapPanel>
+                                </Flyout>
+                            </customUI:ButtonV2.Flyout>
+                        </customUI:ButtonV2>
+                        <Button Content="Create copy"
+                                Style="{StaticResource AccentButtonStyle}"
+                                IsEnabled="{x:Bind ViewModel.CanCreateUnsignedInstallableCopy(ViewModel.UnsignedInstallablePackagePath, ViewModel.ElementsAreEnabled), Mode=OneWay}"
+                                Click="{x:Bind ViewModel.CreateUnsignedInstallableCopy_Click}" />
+                    </CCToolKit:WrapPanel>
+                </CCToolKit:SettingsExpander.Content>
+                <CCToolKit:SettingsExpander.ItemsHeader>
+                    <customUI:InfoBarV2 IsOpen="{x:Bind ViewModel.UnsignedInstallableInfoBar.IsOpen, Mode=TwoWay}"
+                                        Message="{x:Bind ViewModel.UnsignedInstallableInfoBar.Message, Mode=OneWay}"
+                                        Severity="{x:Bind ViewModel.UnsignedInstallableInfoBar.Severity, Mode=OneWay}"
+                                        IsIconVisible="True"
+                                        IsClosable="{x:Bind ViewModel.UnsignedInstallableInfoBar.IsClosable, Mode=OneWay}" />
+                </CCToolKit:SettingsExpander.ItemsHeader>
+                <CCToolKit:SettingsExpander.Items>
+                    <CCToolKit:SettingsCard Header="Microsoft Learn Guide"
+                                            Description="Open the unsigned MSIX packaging guide in your browser for technical details."
+                                            IsClickEnabled="True"
+                                            Click="{x:Bind ViewModel.OpenUnsignedMsixGuide_Click}">
+                        <CCToolKit:SettingsCard.HeaderIcon>
+                            <FontIcon Glyph="&#xE71B;" />
+                        </CCToolKit:SettingsCard.HeaderIcon>
+                    </CCToolKit:SettingsCard>
+                </CCToolKit:SettingsExpander.Items>
+            </CCToolKit:SettingsExpander>
+
         </StackPanel>
     </ScrollViewer>
 </Page>

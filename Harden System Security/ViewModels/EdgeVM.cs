@@ -179,9 +179,10 @@ internal sealed partial class EdgeVM : MUnitListViewModelBase
 
 		string[] templates = input.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
 
+		System.Text.StringBuilder expanded = new(templates.Length > 0 ? templates[0].Length : 0);
 		foreach (string template in templates)
 		{
-			System.Text.StringBuilder expanded = new(template.Length);
+			_ = expanded.Clear();
 			for (int i = 0; i < template.Length; i++)
 			{
 				char character = template[i];

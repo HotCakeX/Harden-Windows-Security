@@ -1229,9 +1229,10 @@
                                     </Button.ContentTemplate>
                                 </Button>
                                 <Button x:Uid="WinGetSearchResultsBulkActionsButton" MinWidth="36"
-                                            MinHeight="36"
-                                            Padding="6"
-                                            IsEnabled="{x:Bind ViewModel.SearchPackageUIElementsAreEnabled, Mode=OneWay}">
+                                        MinHeight="36"
+                                        Padding="6"
+                                        Style="{StaticResource AccentButtonStyle}"
+                                        IsEnabled="{x:Bind ViewModel.SearchPackageUIElementsAreEnabled, Mode=OneWay}">
                                     <FontIcon Glyph="&#xE712;" />
                                     <Button.Flyout>
                                         <MenuFlyout>
@@ -1379,6 +1380,7 @@
                                 </Button>
                                 <Button x:Uid="WinGetInstalledProgramsBulkActionsButton" MinWidth="36"
                                         MinHeight="36"
+                                        Style="{StaticResource AccentButtonStyle}"
                                         Padding="6"
                                         IsEnabled="{x:Bind ViewModel.InstalledProgramsUIElementsAreEnabled, Mode=OneWay}">
                                     <FontIcon Glyph="&#xE712;" />
@@ -1835,6 +1837,7 @@
                             </Button>
                             <Button x:Uid="WinGetSourcesBulkActionsButton" MinWidth="36"
                                     MinHeight="36"
+                                    Style="{StaticResource AccentButtonStyle}"
                                     Padding="6"
                                     IsEnabled="{x:Bind ViewModel.SourcesUIElementsAreEnabled, Mode=OneWay}">
                                 <FontIcon Glyph="&#xE712;" />

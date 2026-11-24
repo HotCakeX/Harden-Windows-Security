@@ -367,7 +367,7 @@ internal static class FirewallExportWorkaround
 	{
 		lock (ExportLock)
 		{
-			string modulePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "FWPolicyIOMgr.dll");
+			string modulePath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.System), "FWPolicyIOMgr.dll");
 			nint module = NativeLibrary.Load(modulePath);
 			try
 			{

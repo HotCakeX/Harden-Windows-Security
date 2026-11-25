@@ -41,6 +41,8 @@
 
 - <img src="https://github.com/HotCakeX/.github/blob/main/Pictures/Gifs/Harden%20System%20Security%20Menu/TopBar.gif?raw=true" alt="App Top Bar" width="30"> [TopBar](https://github.com/HotCakeX/Harden-Windows-Security/wiki/TopBar)
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControl%20Manager%20Menu/Update.gif" alt="AppControl Manager Menu Item" width="30"> [Update](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Update)
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/be5b79427cba6546ece58984428841a4d1a31789/Pictures/Gifs/Harden%20System%20Security%20Menu/Protect.gif" alt="Harden System Security Menu Item" width="30"> [Protect](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Protect)
 
     - <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png" alt="Harden System Security Menu Item" width="30"> [Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Security-Baselines)
